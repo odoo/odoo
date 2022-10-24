@@ -32,7 +32,7 @@ class MrpWorkorder(models.Model):
         string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True, check_company=True)
     product_tracking = fields.Selection(related="product_id.tracking")
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True)
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
@@ -311,11 +311,11 @@ class MrpWorkorder(models.Model):
         mo_dirty.workorder_ids._action_confirm()
         return res
 
-    @api.depends('production_id.product_qty', 'qty_produced', 'production_id.product_uom_id')
+    @api.depends('production_id.product_qty', 'qty_produced', 'production_id.uom_id')
     def _compute_is_produced(self):
         self.is_produced = False
-        for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
-            rounding = order.production_id.product_uom_id.rounding
+        for order in self.filtered(lambda p: p.production_id and p.production_id.uom_id):
+            rounding = order.production_id.uom_id.rounding
             order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
     @api.depends('operation_id', 'workcenter_id', 'qty_production')
@@ -753,11 +753,11 @@ class MrpWorkorder(models.Model):
         action['res_id'] = self.id
         return action
 
-    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.product_uom_id')
+    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.uom_id')
     def _compute_qty_remaining(self):
         for wo in self:
-            if wo.production_id.product_uom_id:
-                wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
+            if wo.production_id.uom_id:
+                wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced, precision_rounding=wo.production_id.uom_id.rounding), 0)
             else:
                 wo.qty_remaining = 0
 
@@ -770,7 +770,7 @@ class MrpWorkorder(models.Model):
             if duration_expected_working < 0:
                 duration_expected_working = 0
             return self.workcenter_id._get_expected_duration(self.product_id) + duration_expected_working * ratio * 100.0 / self.workcenter_id.time_efficiency
-        qty_production = self.production_id.product_uom_id._compute_quantity(self.qty_production, self.production_id.product_id.uom_id)
+        qty_production = self.production_id.uom_id._compute_quantity(self.qty_production, self.production_id.product_id.uom_id)
         capacity = self.workcenter_id._get_capacity(self.product_id)
         cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
@@ -853,20 +853,20 @@ class MrpWorkorder(models.Model):
                 move_line.reserved_uom_qty += self.qty_producing
                 move_line.qty_done += self.qty_producing
             else:
-                quantity = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
+                quantity = self.uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
                 putaway_location = production_move.location_dest_id._get_putaway_strategy(self.product_id, quantity)
                 move_line.create({
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
                     'lot_id': self.finished_lot_id.id,
                     'reserved_uom_qty': self.qty_producing,
-                    'product_uom_id': self.product_uom_id.id,
+                    'uom_id': self.uom_id.id,
                     'qty_done': self.qty_producing,
                     'location_id': production_move.location_id.id,
                     'location_dest_id': putaway_location.id,
                 })
         else:
-            rounding = production_move.product_uom.rounding
+            rounding = production_move.uom_id.rounding
             production_move._set_quantity_done(
                 float_round(self.qty_producing, precision_rounding=rounding)
             )

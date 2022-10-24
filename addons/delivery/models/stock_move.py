@@ -24,7 +24,7 @@ class StockMove(models.Model):
 
     weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    @api.depends('product_id', 'product_uom_qty', 'uom_id')
     def _cal_move_weight(self):
         moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
         for move in moves_with_weight:
@@ -48,15 +48,15 @@ class StockMoveLine(models.Model):
     destination_country_code = fields.Char(related='picking_id.destination_country_code')
     carrier_id = fields.Many2one(related='picking_id.carrier_id', store=True)  # need to be stored for the groupby in `stock_move_line_view_search_delivery`
 
-    @api.depends('qty_done', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom')
+    @api.depends('qty_done', 'uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom')
     def _compute_sale_price(self):
         for move_line in self:
             if move_line.move_id.sale_line_id:
                 unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc
-                qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.move_id.sale_line_id.product_uom)
+                qty = move_line.uom_id._compute_quantity(move_line.qty_done, move_line.move_id.sale_line_id.product_uom)
             else:
                 unit_price = move_line.product_id.list_price
-                qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id)
+                qty = move_line.uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id)
             move_line.sale_price = unit_price * qty
         super(StockMoveLine, self)._compute_sale_price()
 

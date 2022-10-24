@@ -15,7 +15,7 @@ class TestReturnPicking(TestStockCommon):
             'name': self.UnitA.name,
             'product_id': self.UnitA.id,
             'product_uom_qty': 2,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
@@ -23,7 +23,7 @@ class TestReturnPicking(TestStockCommon):
             'name': self.UnitA.name,
             'product_id': self.UnitA.id,
             'product_uom_qty': 1,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})

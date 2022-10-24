@@ -36,12 +36,12 @@ class TestWarehouseMrp(common.TestMrpCommon):
         cls.bom_laptop = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.laptop.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': unit.id,
+            'uom_id': unit.id,
             'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': cls.graphics_card.id,
                 'product_qty': 1,
-                'product_uom_id': unit.id
+                'uom_id': unit.id
             })],
             'operation_ids': [
                 (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
@@ -128,7 +128,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = self.bom_3
         production_form.product_qty = 12
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production_3 = production_form.save()
         production_3.action_confirm()
         production_3.action_assign()
@@ -139,12 +139,12 @@ class TestWarehouseMrp(common.TestMrpCommon):
         location_id = production_3.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) and production_3.location_src_id.id or production_3.location_dest_id.id,
 
         # Scrap Product Wood without lot to check assert raise ?.
-        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'production_id': production_3.id})
+        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'production_id': production_3.id})
         with self.assertRaises(UserError):
             scrap_id.do_scrap()
 
         # Scrap Product Wood with lot.
-        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
+        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
         scrap_id.do_scrap()
         scrap_move = scrap_id.move_id
 
@@ -310,7 +310,7 @@ class TestKitPicking(common.TestMrpCommon):
             'name': self.kit_parent.name,
             'product_id': self.kit_parent.id,
             'quantity_done': 3,
-            'product_uom': self.kit_parent.uom_id.id,
+            'uom_id': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'location_id':  self.test_supplier.id,
@@ -338,7 +338,7 @@ class TestKitPicking(common.TestMrpCommon):
             'name': self.kit_parent.name,
             'product_id': self.kit_parent.id,
             'product_uom_qty': 3,
-            'product_uom': self.kit_parent.uom_id.id,
+            'uom_id': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'location_id':  self.test_supplier.id,
@@ -370,7 +370,7 @@ class TestKitPicking(common.TestMrpCommon):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 1,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'location_id': customer_location.id,
                 'location_dest_id': stock_location.id,
             })]
@@ -381,7 +381,7 @@ class TestKitPicking(common.TestMrpCommon):
         receipt.move_line_ids = [(0, 0, {
             'product_id': kit.id,
             'qty_done': 1,
-            'product_uom_id': kit.uom_id.id,
+            'uom_id': kit.uom_id.id,
             'location_id': customer_location.id,
             'location_dest_id': stock_location.id,
         })]

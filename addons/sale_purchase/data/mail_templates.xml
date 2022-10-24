@@ -58,7 +58,7 @@
             <p>Exception(s):</p>
             <ul t-foreach="purchase_order_lines" t-as="purchase_line">
                 <li>
-                    <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_line.order_id.id"><t t-esc="purchase_line.order_id.name"/></a>: <t t-esc="purchase_line.product_qty"/> <t t-esc="purchase_line.product_uom.name"/> of <t t-esc="purchase_line.product_id.name"/> cancelled
+                    <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_line.order_id.id"><t t-esc="purchase_line.order_id.name"/></a>: <t t-esc="purchase_line.product_qty"/> <t t-esc="purchase_line.uom_id.name"/> of <t t-esc="purchase_line.product_id.name"/> cancelled
                 </li>
             </ul>
         </div>

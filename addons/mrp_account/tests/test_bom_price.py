@@ -19,7 +19,7 @@ class TestBomPriceCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Required for `product_uom_id ` to be visible in the view
+        # Required for `uom_id ` to be visible in the view
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
         cls.Product = cls.env['product.product']
         cls.Bom = cls.env['mrp.bom']
@@ -49,7 +49,7 @@ class TestBomPriceCommon(common.TransactionCase):
         bom_form.product_id = cls.dining_table
         bom_form.product_tmpl_id = cls.dining_table.product_tmpl_id
         bom_form.product_qty = 1.0
-        bom_form.product_uom_id = cls.unit
+        bom_form.uom_id = cls.unit
         bom_form.type = 'normal'
         with bom_form.bom_line_ids.new() as line:
             line.product_id = cls.table_head
@@ -85,7 +85,7 @@ class TestBomPriceCommon(common.TransactionCase):
         bom_form2.product_id = cls.table_head
         bom_form2.product_tmpl_id = cls.table_head.product_tmpl_id
         bom_form2.product_qty = 1.0
-        bom_form2.product_uom_id = cls.dozen
+        bom_form2.uom_id = cls.dozen
         bom_form2.type = 'phantom'
         with bom_form2.bom_line_ids.new() as line:
             line.product_id = cls.plywood_sheet
@@ -215,14 +215,14 @@ class TestBomPrice(TestBomPriceCommon):
             'byproduct_ids': [
                 (0, 0, {
                     'product_id': scrap_wood.id,
-                    'product_uom_id': self.unit.id,
+                    'uom_id': self.unit.id,
                     'product_qty': 8,
                     'bom_id': self.bom_1.id,
                     'cost_share': 25,
                 }),
                 (0, 0, {
                     'product_id': scrap_wood.id,
-                    'product_uom_id': self.dozen.id,
+                    'uom_id': self.dozen.id,
                     'product_qty': 1,
                     'bom_id': self.bom_1.id,
                     'cost_share': 50,

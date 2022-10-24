@@ -223,7 +223,7 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="product_type" invisible="1"/>
-                                    <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
+                                    <field name="uom_id" invisible="1" groups="!uom.group_uom"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="invoice_lines" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
@@ -233,7 +233,7 @@
                                             'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],
                                         }"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':uom_id, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
@@ -246,7 +246,7 @@
                                     <field name="qty_received_method" invisible="1"/>
                                     <field name="qty_received" string="Received" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('qty_received_method', '!=', 'manual')]}" optional="show"/>
                                     <field name="qty_invoiced" string="Billed" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}" optional="show"/>
-                                    <field name="product_uom" string="UoM" groups="uom.group_uom"
+                                    <field name="uom_id" string="UoM" groups="uom.group_uom"
                                         attrs="{
                                             'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
                                             'required': [('display_type', '=', False)]
@@ -275,7 +275,7 @@
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
                                                     <field name="product_qty"/>
-                                                    <field name="product_uom" groups="uom.group_uom" attrs="{'required': [('display_type', '=', False)]}"/>
+                                                    <field name="uom_id" groups="uom.group_uom" attrs="{'required': [('display_type', '=', False)]}"/>
                                                 </div>
                                                 <field name="qty_received_method" invisible="1"/>
                                                 <field name="qty_received" string="Received Quantity" attrs="{'invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('qty_received_method', '!=', 'manual')]}"/>
@@ -309,7 +309,7 @@
                                      <field name="name"/>
                                      <field name="product_id"/>
                                      <field name="product_qty"/>
-                                     <field name="product_uom" groups="uom.group_uom"/>
+                                     <field name="uom_id" groups="uom.group_uom"/>
                                      <field name="price_subtotal"/>
                                      <field name="price_tax" invisible="1"/>
                                      <field name="price_total" invisible="1"/>
@@ -337,7 +337,7 @@
                                                              <span>
                                                                  Quantity:
                                                                  <t t-esc="record.product_qty.value"/>
-                                                                 <t t-esc="record.product_uom.value" groups="uom.group_uom"/>
+                                                                 <t t-esc="record.uom_id.value" groups="uom.group_uom"/>
                                                              </span>
                                                          </div>
                                                      </div>
@@ -700,7 +700,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" groups="uom.group_uom"/>
+                    <field name="uom_id" groups="uom.group_uom"/>
                     <field name="price_subtotal" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="date_planned"  widget="date"/>
@@ -729,7 +729,7 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty" readonly="1"/>
-                                    <field name="product_uom" readonly="1" groups="uom.group_uom"/>
+                                    <field name="uom_id" readonly="1" groups="uom.group_uom"/>
                                 </div>
                                 <field name="price_unit"/>
                             </group>

@@ -24,7 +24,7 @@
                             <label for="min_qty"/>
                             <div class="o_row">
                                 <field name="min_qty"/>
-                                <field name="product_uom" groups="uom.group_uom"/>
+                                <field name="uom_id" groups="uom.group_uom"/>
                             </div>
                             <label for="price" string="Unit Price"/>
                             <div class="o_row">
@@ -111,7 +111,7 @@
                 <field name="date_end" optional="hide"/>
                 <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                 <field name="min_qty" optional="hide"/>
-                <field name="product_uom" groups="uom.group_uom" optional="hide"/>
+                <field name="uom_id" groups="uom.group_uom" optional="hide"/>
                 <field name="price" string="Price"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="delay" optional="hide"/>

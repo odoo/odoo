@@ -75,7 +75,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
             'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
@@ -105,7 +105,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             'product_id': product.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
         })
@@ -124,7 +124,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             self.env['stock.move.line'].create({
                 'move_id': out_move.id,
                 'product_id': out_move.product_id.id,
-                'product_uom_id': out_move.product_uom.id,
+                'uom_id': out_move.uom_id.id,
                 'location_id': out_move.location_id.id,
                 'location_dest_id': out_move.location_dest_id.id,
             })

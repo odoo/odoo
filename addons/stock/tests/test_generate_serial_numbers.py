@@ -39,7 +39,7 @@ class StockGenerate(TransactionCase):
         for i in range(nbre_of_lines):
             move_lines_val.append({
                 'product_id': self.product_serial.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'reserved_uom_qty': 1,
                 'location_id': self.location.id,
                 'location_dest_id': self.location_dest.id
@@ -47,7 +47,7 @@ class StockGenerate(TransactionCase):
         return self.env['stock.move'].create({
             'name': 'Move Test',
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.location.id,
             'location_dest_id': self.location_dest.id,
             'move_line_ids': [(0, 0, line_vals) for line_vals in move_lines_val]
@@ -426,7 +426,7 @@ class StockGenerate(TransactionCase):
         move = self.env['stock.move'].create({
             'name': self.product_serial.name,
             'product_id': self.product_serial.id,
-            'product_uom': self.product_serial.uom_id.id,
+            'uom_id': self.product_serial.uom_id.id,
             'product_uom_qty': 2.0,
             'picking_id': receipt_picking.id,
             'location_id': receipt_picking.location_id.id,

@@ -43,12 +43,12 @@
                         <div class="col-3">
                             <strong>Quantity to Produce:</strong><br/>
                             <span t-field="o.product_qty"/>
-                            <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
+                            <span t-field="o.uom_id.name" groups="uom.group_uom"/>
                         </div>
                          <div class="col-3" t-if="o.qty_producing">
                             <strong>Quantity Producing:</strong><br/>
                             <span t-field="o.qty_producing"/>
-                            <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
+                            <span t-field="o.uom_id.name" groups="uom.group_uom"/>
                         </div>
                     </div>
 
@@ -116,7 +116,7 @@
                 </td>
                 <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">
                     <span t-field="raw_line.product_uom_qty"/>
-                    <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
+                    <span t-field="raw_line.uom_id" groups="uom.group_uom"/>
                 </td>
                 <td t-if="has_product_barcode" width="15%" class="text-center">
                     <t t-if="raw_line.product_id.barcode">
@@ -136,7 +136,7 @@
         <t t-set="move_lines" t-value="docs.move_finished_ids.move_line_ids.filtered(lambda ml: ml.move_id.production_id.state == 'done' and ml.state == 'done' and ml.qty_done)"/>
         <t t-set="move_line_qtys" t-value="[]"/>
         <t t-foreach="move_lines" t-as="move_line">
-            <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
+            <t t-if="move_line.uom_id.category_id == uom_categ_unit">
                 <!-- print 1 label per 1 uom when uom category = units -->
                 <t t-set="move_line_qtys" t-value="move_line_qtys + [int(move_line.qty_done)]"/>
             </t>
@@ -168,9 +168,9 @@
                                     <div class="o_label_name o_label_4x12 fw-bold">
                                         <div t-out="move_line.product_id.display_name"/>
                                         <div><span>Quantity: </span>
-                                            <span t-if="move_line.product_uom_id.category_id == uom_categ_unit">1.0</span>
+                                            <span t-if="move_line.uom_id.category_id == uom_categ_unit">1.0</span>
                                             <span t-else="" t-out="move_line.qty_done"/>
-                                            <span t-field="move_line.product_uom_id" groups="uom.group_uom"/>
+                                            <span t-field="move_line.uom_id" groups="uom.group_uom"/>
                                         </div>
                                     </div>
                                     <t t-if="move_line.product_id.tracking != 'none' and (move_line.lot_name or move_line.lot_id)">

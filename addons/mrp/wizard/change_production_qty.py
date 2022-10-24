@@ -51,7 +51,7 @@ class ChangeProductionQty(models.TransientModel):
 
     @api.model
     def _need_quantity_propagation(self, move, qty):
-        return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.product_uom.rounding)
+        return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.uom_id.rounding)
 
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -68,7 +68,7 @@ class ChangeProductionQty(models.TransientModel):
             old_production_qty = production.product_qty
             new_production_qty = wizard.product_qty
             done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
-            qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
+            qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.uom_id)
 
             factor = (new_production_qty - qty_produced) / (old_production_qty - qty_produced)
             update_info = production._update_raw_moves(factor)

@@ -24,13 +24,13 @@ class ChooseDeliveryPackage(models.TransientModel):
     def _compute_shipping_weight(self):
         for rec in self:
             move_line_ids = rec.picking_id.move_line_ids.filtered(lambda m:
-                float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+                float_compare(m.qty_done, 0.0, precision_rounding=m.uom_id.rounding) > 0
                 and not m.result_package_id
             )
             # Add package weights to shipping weight, package base weight is defined in package.type
             total_weight = rec.delivery_package_type_id.base_weight or 0.0
             for ml in move_line_ids:
-                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                qty = ml.uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
                 total_weight += qty * ml.product_id.weight
             rec.shipping_weight = total_weight
 
@@ -49,13 +49,13 @@ class ChooseDeliveryPackage(models.TransientModel):
             picking_move_lines = self.picking_id.move_line_nosuggest_ids
 
         move_line_ids = picking_move_lines.filtered(lambda ml:
-            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+            float_compare(ml.qty_done, 0.0, precision_rounding=ml.uom_id.rounding) > 0
             and not ml.result_package_id
         )
         if not move_line_ids:
             move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                 precision_rounding=ml.product_uom_id.rounding) == 0)
+                                 precision_rounding=ml.uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                 precision_rounding=ml.uom_id.rounding) == 0)
 
         delivery_package = self.picking_id._put_in_pack(move_line_ids)
         # write shipping weight and package type on 'stock_quant_package' if needed

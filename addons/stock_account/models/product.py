@@ -712,7 +712,7 @@ class ProductProduct(models.Model):
         for sml in stock_moves.move_line_ids:
             if not sml.owner_id or sml.owner_id == sml.company_id.partner_id:
                 continue
-            missing -= sml.product_uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
+            missing -= sml.uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
         if float_compare(missing, 0, precision_rounding=self.uom_id.rounding) > 0:
             valuation += self.standard_price * missing
 

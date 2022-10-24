@@ -16,7 +16,7 @@ class ProductChangeQuantity(models.TransientModel):
         'New Quantity on Hand', default=1,
         digits='Product Unit of Measure', required=True,
         help='This quantity is expressed in the Default Unit of Measure of the product.')
-    product_uom_id = fields.Many2one(related='product_tmpl_id.uom_id')
+    uom_id = fields.Many2one(related='product_tmpl_id.uom_id')
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

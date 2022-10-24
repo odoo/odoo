@@ -16,7 +16,7 @@ class ProductReplenish(models.TransientModel):
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True)
     product_has_variants = fields.Boolean('Has variants', default=False, required=True)
     product_uom_category_id = fields.Many2one('uom.category', related='product_id.uom_id.category_id', readonly=True, required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
+    uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
     quantity = fields.Float('Quantity', default=1, required=True)
     date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
     warehouse_id = fields.Many2one(
@@ -50,8 +50,8 @@ class ProductReplenish(models.TransientModel):
                 if len(product_tmpl_id.product_variant_ids) > 1:
                     res['product_has_variants'] = True
         company = product_tmpl_id.company_id or self.env.company
-        if 'product_uom_id' in fields:
-            res['product_uom_id'] = product_tmpl_id.uom_id.id
+        if 'uom_id' in fields:
+            res['uom_id'] = product_tmpl_id.uom_id.id
         if 'company_id' in fields:
             res['company_id'] = company.id
         if 'warehouse_id' in fields and 'warehouse_id' not in res:
@@ -63,7 +63,7 @@ class ProductReplenish(models.TransientModel):
 
     def launch_replenishment(self):
         uom_reference = self.product_id.uom_id
-        self.quantity = self.product_uom_id._compute_quantity(self.quantity, uom_reference)
+        self.quantity = self.uom_id._compute_quantity(self.quantity, uom_reference)
         try:
             self.env['procurement.group'].with_context(clean_context(self.env.context)).run([
                 self.env['procurement.group'].Procurement(

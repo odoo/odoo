@@ -41,7 +41,7 @@ class StockRule(models.Model):
     def _run_manufacture(self, procurements):
         productions_values_by_company = defaultdict(list)
         for procurement, rule in procurements:
-            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.uom_id.rounding) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
@@ -87,7 +87,7 @@ class StockRule(models.Model):
             if not warehouse_id:
                 warehouse_id = rule.location_dest_id.warehouse_id
             if rule.picking_type_id == warehouse_id.sam_type_id:
-                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.uom_id.rounding) < 0:
                     procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
                         lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
                     continue
@@ -123,8 +123,8 @@ class StockRule(models.Model):
             'origin': origin,
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
-            'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
-            'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
+            'product_qty': product_uom._compute_quantity(product_qty, bom.uom_id) if bom else product_qty,
+            'uom_id': bom.uom_id.id if bom else product_uom.id,
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_dest_id.id,
             'location_dest_id': location_dest_id.id,
             'bom_id': bom.id,
@@ -207,11 +207,11 @@ class ProcurementGroup(models.Model):
         for procurement in procurements:
             bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
             if bom_kit:
-                order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
+                order_qty = procurement.uom_id._compute_quantity(procurement.product_qty, bom_kit.uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
                 boms, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce)
                 for bom_line, bom_line_data in bom_sub_lines:
-                    bom_line_uom = bom_line.product_uom_id
+                    bom_line_uom = bom_line.uom_id
                     quant_uom = bom_line.product_id.uom_id
                     # recreate dict of values since each child has its own bom_line_id
                     values = dict(procurement.values, bom_line_id=bom_line.id)

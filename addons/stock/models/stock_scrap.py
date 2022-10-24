@@ -21,7 +21,7 @@ class StockScrap(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=True, states={'done': [('readonly', True)]}, check_company=True)
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
         required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
@@ -56,7 +56,7 @@ class StockScrap(models.Model):
     @api.depends('product_id')
     def _compute_product_uom_id(self):
         for scrap in self:
-            scrap.product_uom_id = scrap.product_id.uom_id
+            scrap.uom_id = scrap.product_id.uom_id
 
     @api.depends('company_id', 'picking_id')
     def _compute_location_id(self):
@@ -115,14 +115,14 @@ class StockScrap(models.Model):
             'origin': self.origin or self.picking_id.name or self.name,
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'uom_id': self.uom_id.id,
             'state': 'draft',
             'product_uom_qty': self.scrap_qty,
             'location_id': self.location_id.id,
             'scrapped': True,
             'location_dest_id': self.scrap_location_id.id,
             'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
-                                           'product_uom_id': self.product_uom_id.id, 
+                                           'uom_id': self.uom_id.id,
                                            'qty_done': self.scrap_qty,
                                            'location_id': self.location_id.id,
                                            'location_dest_id': self.scrap_location_id.id,
@@ -157,7 +157,7 @@ class StockScrap(models.Model):
     def action_validate(self):
         self.ensure_one()
         if float_is_zero(self.scrap_qty,
-                         precision_rounding=self.product_uom_id.rounding):
+                         precision_rounding=self.uom_id.rounding):
             raise UserError(_('You can only enter positive quantities.'))
         if self.product_id.type != 'product':
             return self.do_scrap()
@@ -168,7 +168,7 @@ class StockScrap(models.Model):
                                                             self.package_id,
                                                             self.owner_id,
                                                             strict=True).mapped('quantity'))
-        scrap_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
+        scrap_qty = self.uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
         if float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0:
             return self.do_scrap()
         else:

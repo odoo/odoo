@@ -59,7 +59,7 @@ class StockQuant(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
     priority = fields.Selection(related='product_tmpl_id.priority')
@@ -198,7 +198,7 @@ class StockQuant(models.Model):
     def _compute_is_outdated(self):
         self.is_outdated = False
         for quant in self:
-            if quant.product_id and float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding) and quant.inventory_quantity_set:
+            if quant.product_id and float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.uom_id.rounding) and quant.inventory_quantity_set:
                 quant.is_outdated = True
 
     @api.depends('quantity')
@@ -393,7 +393,7 @@ class StockQuant(models.Model):
     def action_apply_inventory(self):
         products_tracked_without_lot = []
         for quant in self:
-            rounding = quant.product_uom_id.rounding
+            rounding = quant.uom_id.rounding
             if fields.Float.is_zero(quant.inventory_diff_quantity, precision_rounding=rounding)\
                     and fields.Float.is_zero(quant.inventory_quantity, precision_rounding=rounding)\
                     and fields.Float.is_zero(quant.quantity, precision_rounding=rounding):
@@ -534,7 +534,7 @@ class StockQuant(models.Model):
     def check_quantity(self):
         for quant in self:
             if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
-                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
+                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.uom_id.rounding) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
 
     @api.constrains('location_id')
@@ -693,7 +693,7 @@ class StockQuant(models.Model):
             raise UserError(_('Only a stock manager can validate an inventory adjustment.'))
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
-            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
+            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.uom_id.rounding) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
@@ -738,7 +738,7 @@ class StockQuant(models.Model):
             incoming_dates = []
         else:
             incoming_dates = [quant.in_date for quant in quants if quant.in_date and
-                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
+                              float_compare(quant.quantity, 0, precision_rounding=quant.uom_id.rounding) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -918,7 +918,7 @@ class StockQuant(models.Model):
         :return: dict with all values needed to create a new `stock.move` with its move line.
         """
         self.ensure_one()
-        if fields.Float.is_zero(qty, 0, precision_rounding=self.product_uom_id.rounding):
+        if fields.Float.is_zero(qty, 0, precision_rounding=self.uom_id.rounding):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
@@ -926,7 +926,7 @@ class StockQuant(models.Model):
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'uom_id': self.uom_id.id,
             'product_uom_qty': qty,
             'company_id': self.company_id.id or self.env.company.id,
             'state': 'confirmed',
@@ -935,7 +935,7 @@ class StockQuant(models.Model):
             'is_inventory': True,
             'move_line_ids': [(0, 0, {
                 'product_id': self.product_id.id,
-                'product_uom_id': self.product_uom_id.id,
+                'uom_id': self.uom_id.id,
                 'qty_done': qty,
                 'location_id': location_id.id,
                 'location_dest_id': location_dest_id.id,

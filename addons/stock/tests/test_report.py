@@ -99,7 +99,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 20.0,
         })
         self.env.flush_all()
@@ -126,7 +126,7 @@ class TestReports(TestReportsCommon):
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 10.0,
         })
         move_in._action_confirm()
@@ -149,7 +149,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 30.0,
         })
         move_out._action_confirm()
@@ -210,7 +210,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock.id,
             'location_dest_id': stock_without_wh.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 10.0,
         })
         move._action_confirm()
@@ -228,7 +228,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock_without_wh.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 10.0,
         })
         move._action_confirm()
@@ -268,7 +268,7 @@ class TestReports(TestReportsCommon):
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 20.0,
         })
         move_in._action_confirm()
@@ -287,7 +287,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 10.0,
         })
         move_out._action_confirm()
@@ -1467,7 +1467,7 @@ class TestReports(TestReportsCommon):
             'name': 'The ship move',
             'product_id': self.product.id,
             'product_uom_qty': 5.0,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': warehouse.wh_output_stock_loc_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'warehouse_id': warehouse.id,

@@ -64,7 +64,7 @@ class TestTraceability(TestMrpCommon):
             bom = self.env['mrp.bom'].create({
                 'product_id': finished_product.id,
                 'product_tmpl_id': finished_product.product_tmpl_id.id,
-                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                'uom_id': self.env.ref('uom.product_uom_unit').id,
                 'product_qty': 1.0,
                 'type': 'normal',
                 'bom_line_ids': [
@@ -77,7 +77,7 @@ class TestTraceability(TestMrpCommon):
             mo_form = Form(self.env['mrp.production'])
             mo_form.product_id = finished_product
             mo_form.bom_id = bom
-            mo_form.product_uom_id = self.env.ref('uom.product_uom_unit')
+            mo_form.uom_id = self.env.ref('uom.product_uom_unit')
             mo_form.product_qty = 1
             mo = mo_form.save()
             mo.action_confirm()
@@ -161,7 +161,7 @@ class TestTraceability(TestMrpCommon):
         bom_1 = self.env['mrp.bom'].create({
             'product_id': product_final.id,
             'product_tmpl_id': product_final.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'consumption': 'flexible',
             'type': 'normal',
@@ -170,8 +170,8 @@ class TestTraceability(TestMrpCommon):
                 (0, 0, {'product_id': product_2.id, 'product_qty': 1})
             ],
             'byproduct_ids': [
-                (0, 0, {'product_id': byproduct_1.id, 'product_qty': 1, 'product_uom_id': byproduct_1.uom_id.id}),
-                (0, 0, {'product_id': byproduct_2.id, 'product_qty': 1, 'product_uom_id': byproduct_2.uom_id.id})
+                (0, 0, {'product_id': byproduct_1.id, 'product_qty': 1, 'uom_id': byproduct_1.uom_id.id}),
+                (0, 0, {'product_id': byproduct_2.id, 'product_qty': 1, 'uom_id': byproduct_2.uom_id.id})
             ]})
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product_final
@@ -398,7 +398,7 @@ class TestTraceability(TestMrpCommon):
         self.env['mrp.bom'].create([{
             'product_id': finished.id,
             'product_tmpl_id': finished.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})],
@@ -460,7 +460,7 @@ class TestTraceability(TestMrpCommon):
         self.env['mrp.bom'].create([{
             'product_id': finished.id,
             'product_tmpl_id': finished.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})],
@@ -504,7 +504,7 @@ class TestTraceability(TestMrpCommon):
             'name': 'Picking A move',
             'product_id': endproductA.id,
             'product_uom_qty': 1,
-            'product_uom': endproductA.uom_id.id,
+            'uom_id': endproductA.uom_id.id,
             'picking_id': pickingA_out.id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id})
@@ -567,7 +567,7 @@ class TestTraceability(TestMrpCommon):
         # scrap the component
         scrap = self.env['stock.scrap'].create({
             'product_id': component.id,
-            'product_uom_id': component.uom_id.id,
+            'uom_id': component.uom_id.id,
             'scrap_qty': 1,
             'lot_id': serial_number.id,
         })
@@ -580,13 +580,13 @@ class TestTraceability(TestMrpCommon):
             'location_id': scrap_location.id,
             'location_dest_id': stock_location.id,
             'product_id': component.id,
-            'product_uom': component.uom_id.id,
+            'uom_id': component.uom_id.id,
             'product_uom_qty': 1.0,
             'move_line_ids': [(0, 0, {
                 'product_id': component.id,
                 'location_id': scrap_location.id,
                 'location_dest_id': stock_location.id,
-                'product_uom_id': component.uom_id.id,
+                'uom_id': component.uom_id.id,
                 'qty_done': 1.0,
                 'lot_id': serial_number.id,
             })],

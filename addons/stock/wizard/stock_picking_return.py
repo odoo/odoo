@@ -97,7 +97,7 @@ class ReturnPicking(models.TransientModel):
         vals = {
             'product_id': return_line.product_id.id,
             'product_uom_qty': return_line.quantity,
-            'product_uom': return_line.product_id.uom_id.id,
+            'uom_id': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
             'date': fields.Datetime.now(),

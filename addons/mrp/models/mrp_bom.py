@@ -43,7 +43,7 @@ class MrpBom(models.Model):
         'Quantity', default=1.0,
         digits='Product Unit of Measure', required=True,
         help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
@@ -148,20 +148,20 @@ class MrpBom(models.Model):
                 }
             }
 
-    @api.onchange('product_uom_id')
-    def onchange_product_uom_id(self):
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
         res = {}
-        if not self.product_uom_id or not self.product_tmpl_id:
+        if not self.uom_id or not self.product_tmpl_id:
             return
-        if self.product_uom_id.category_id.id != self.product_tmpl_id.uom_id.category_id.id:
-            self.product_uom_id = self.product_tmpl_id.uom_id.id
+        if self.uom_id.category_id.id != self.product_tmpl_id.uom_id.category_id.id:
+            self.uom_id = self.product_tmpl_id.uom_id.id
             res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
         return res
 
     @api.onchange('product_tmpl_id')
     def onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
-            self.product_uom_id = self.product_tmpl_id.uom_id.id
+            self.uom_id = self.product_tmpl_id.uom_id.id
             if self.product_id.product_tmpl_id != self.product_tmpl_id:
                 self.product_id = False
             self.bom_line_ids.bom_product_template_attribute_value_ids = False
@@ -329,7 +329,7 @@ class MrpBom(models.Model):
                 product_ids.clear()
             bom = product_boms.get(current_line.product_id)
             if bom:
-                converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
+                converted_line_quantity = current_line.uom_id._compute_quantity(line_quantity / bom.product_qty, bom.uom_id)
                 bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
                     graph[current_line.product_id.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
@@ -342,7 +342,7 @@ class MrpBom(models.Model):
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
                 # should be consumed.
-                rounding = current_line.product_uom_id.rounding
+                rounding = current_line.uom_id.rounding
                 line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
                 lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
 
@@ -373,7 +373,7 @@ class MrpBomLine(models.Model):
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Product Unit of Measure', required=True)
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
         required=True,
@@ -443,26 +443,26 @@ class MrpBomLine(models.Model):
         for line in self:
             line.child_line_ids = line.child_bom_id.bom_line_ids.ids or False
 
-    @api.onchange('product_uom_id')
-    def onchange_product_uom_id(self):
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
         res = {}
-        if not self.product_uom_id or not self.product_id:
+        if not self.uom_id or not self.product_id:
             return res
-        if self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            self.product_uom_id = self.product_id.uom_id.id
+        if self.uom_id.category_id != self.product_id.uom_id.category_id:
+            self.uom_id = self.product_id.uom_id.id
             res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
         return res
 
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
-            self.product_uom_id = self.product_id.uom_id.id
+            self.uom_id = self.product_id.uom_id.id
 
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if 'product_id' in values and 'product_uom_id' not in values:
-                values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
+            if 'product_id' in values and 'uom_id' not in values:
+                values['uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         return super(MrpBomLine, self).create(vals_list)
 
     def _skip_bom_line(self, product):
@@ -511,8 +511,8 @@ class MrpByProduct(models.Model):
         'Quantity',
         default=1.0, digits='Product Unit of Measure', required=True)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True,
-                                     compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True,
+                                     compute="_compute_uom_id", store=True, readonly=False, precompute=True,
                                      domain="[('category_id', '=', product_uom_category_id)]")
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', index=True)
     allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
@@ -531,10 +531,10 @@ class MrpByProduct(models.Model):
              "The total of all by-products' cost share must be less than or equal to 100.")
 
     @api.depends('product_id')
-    def _compute_product_uom_id(self):
+    def _compute_uom_id(self):
         """ Changes UoM if product_id changes. """
         for record in self:
-            record.product_uom_id = record.product_id.uom_id.id
+            record.uom_id = record.product_id.uom_id.id
 
     def _skip_byproduct_line(self, product):
         """ Control if a byproduct line should be produced, can be inherited to add

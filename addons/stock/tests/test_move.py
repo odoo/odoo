@@ -63,7 +63,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -100,7 +100,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -141,7 +141,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -195,7 +195,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -244,7 +244,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -293,7 +293,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         move1._action_confirm()
@@ -327,7 +327,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
         })
         move1._action_confirm()
@@ -396,7 +396,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -420,7 +420,7 @@ class StockMove(TransactionCase):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 1,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'lot_id': lot3.id,
@@ -429,7 +429,7 @@ class StockMove(TransactionCase):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 1,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'lot_id': lot4.id
@@ -467,7 +467,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -499,7 +499,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -519,7 +519,7 @@ class StockMove(TransactionCase):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 1,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'lot_id': lot1.id
@@ -540,7 +540,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -596,7 +596,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -640,7 +640,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -697,7 +697,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -734,7 +734,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -784,7 +784,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -836,7 +836,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -875,7 +875,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -930,7 +930,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -966,7 +966,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': warehouse.id,
         })
@@ -1004,7 +1004,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': warehouse.id,
         })
@@ -1066,7 +1066,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': warehouse.id,
         })
@@ -1115,7 +1115,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1162,7 +1162,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1178,7 +1178,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1221,7 +1221,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1241,7 +1241,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1286,7 +1286,7 @@ class StockMove(TransactionCase):
         })
         self.env['stock.quant'].create({
             'product_id': product2.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': shelf1_location.id,
             'quantity': 1,
             'reserved_quantity': 0,
@@ -1297,7 +1297,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1360,7 +1360,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1434,7 +1434,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1462,7 +1462,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1538,7 +1538,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1566,7 +1566,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1641,7 +1641,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1675,7 +1675,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product2.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1725,7 +1725,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1741,7 +1741,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1764,7 +1764,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -1785,7 +1785,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -1811,7 +1811,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -1826,7 +1826,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
         })
         move1._action_confirm()
@@ -1838,7 +1838,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
         })
         move2._action_confirm()
@@ -1872,7 +1872,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
         })
         move._action_confirm()
@@ -1901,7 +1901,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move._action_confirm()
@@ -1963,21 +1963,21 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move._action_confirm()
         move._action_assign()
         self.assertEqual(move.state, 'assigned')
-        self.assertEqual(len(move.move_line_ids.mapped('product_uom_id')), 1)
-        self.assertEqual(move.move_line_ids.mapped('product_uom_id'), self.uom_unit)
+        self.assertEqual(len(move.move_line_ids.mapped('uom_id')), 1)
+        self.assertEqual(move.move_line_ids.mapped('uom_id'), self.uom_unit)
 
         for move_line in move.move_line_ids:
             move_line.qty_done = 1
         move._action_done()
 
         self.assertEqual(move.product_uom_qty, 1)
-        self.assertEqual(move.product_uom.id, self.uom_dozen.id)
+        self.assertEqual(move.uom_id.id, self.uom_dozen.id)
         self.assertEqual(move.state, 'done')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.customer_location), 12.0)
         self.assertEqual(len(self.gather_relevant(self.product_serial, self.customer_location)), 12)
@@ -1995,7 +1995,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
 
@@ -2016,7 +2016,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
         })
 
@@ -2041,7 +2041,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -2079,7 +2079,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -2116,7 +2116,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -2157,7 +2157,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -2203,7 +2203,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -2247,7 +2247,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -2294,7 +2294,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 5.0,
         })
         move1._action_confirm()
@@ -2333,7 +2333,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
@@ -2341,7 +2341,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2376,7 +2376,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
@@ -2384,7 +2384,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2422,7 +2422,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack_2 = self.env['stock.move'].create({
@@ -2430,7 +2430,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
@@ -2438,7 +2438,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2499,7 +2499,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack_2 = self.env['stock.move'].create({
@@ -2507,7 +2507,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
@@ -2515,7 +2515,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2560,7 +2560,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_pack_cust_1 = self.env['stock.move'].create({
@@ -2568,7 +2568,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust_2 = self.env['stock.move'].create({
@@ -2576,7 +2576,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, 0), (4, move_pack_cust_2.id, 0)]})
@@ -2609,7 +2609,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_supp_stock_2 = self.env['stock.move'].create({
@@ -2617,7 +2617,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_stock_1 = self.env['stock.move'].create({
@@ -2625,7 +2625,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_stock_stock_1.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
@@ -2634,7 +2634,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_stock_stock_2.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
@@ -2674,7 +2674,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_stock_pack.id,
         })
@@ -2688,7 +2688,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
@@ -2705,7 +2705,7 @@ class StockMove(TransactionCase):
         # move the 6 units by adding an unreserved move line
         move_stock_pack.write({'move_line_ids': [(0, 0, {
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 6,
             'reserved_uom_qty': 0,
             'lot_id': False,
@@ -2730,13 +2730,13 @@ class StockMove(TransactionCase):
         self.assertEqual(move_pack_cust.state, 'partially_available')
         move_line_pack_cust = move_pack_cust.move_line_ids
         self.assertEqual(move_line_pack_cust.reserved_uom_qty, 6)
-        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move_line_pack_cust.uom_id.id, self.uom_unit.id)
 
         # move a dozen on the backorder to see how we handle the extra move
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_stock_pack.id)])
         backorder.move_ids.write({'move_line_ids': [(0, 0, {
             'product_id': self.product.id,
-            'product_uom_id': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'qty_done': 1,
             'reserved_uom_qty': 0,
             'lot_id': False,
@@ -2751,13 +2751,13 @@ class StockMove(TransactionCase):
         self.assertEqual(backorder_move.state, 'done')
         self.assertEqual(backorder_move.quantity_done, 12.0)
         self.assertEqual(backorder_move.product_uom_qty, 12.0)
-        self.assertEqual(backorder_move.product_uom, self.uom_unit)
+        self.assertEqual(backorder_move.uom_id, self.uom_unit)
 
         # the second move should now be reservable
         move_pack_cust._action_assign()
         self.assertEqual(move_pack_cust.state, 'assigned')
         self.assertEqual(move_line_pack_cust.reserved_uom_qty, 12)
-        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move_line_pack_cust.uom_id.id, self.uom_unit.id)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, move_stock_pack.location_dest_id), 6)
 
     def test_link_assign_8(self):
@@ -2787,7 +2787,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_stock_pack.id,
         })
@@ -2801,7 +2801,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
@@ -2820,7 +2820,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move_pack_cust.state, 'assigned')
         for ml in move_pack_cust.move_line_ids:
             self.assertEqual(ml.reserved_uom_qty, 1)
-            self.assertEqual(ml.product_uom_id.id, self.uom_unit.id)
+            self.assertEqual(ml.uom_id.id, self.uom_unit.id)
             self.assertTrue(bool(ml.lot_id.id))
 
     def test_link_assign_9(self):
@@ -2854,7 +2854,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': uom_3units.id,
+            'uom_id': uom_3units.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_stock_pack.id,
         })
@@ -2868,7 +2868,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': uom_3units.id,
+            'uom_id': uom_3units.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
@@ -2899,7 +2899,7 @@ class StockMove(TransactionCase):
         lot3 = self.env['stock.lot'].search([('name', '=', "lot3")])
         backorder.write({'move_line_ids': [(0, 0, {
             'product_id': self.product_serial.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 1,
             'reserved_uom_qty': 0,
             'lot_id': lot3.id,
@@ -2929,7 +2929,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_out._action_confirm()
@@ -2943,7 +2943,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_pack_cust = self.env['stock.move'].create({
@@ -2951,7 +2951,7 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2976,7 +2976,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         move2 = self.env['stock.move'].create({
@@ -2984,7 +2984,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         move1._action_confirm()
@@ -2996,7 +2996,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 0.0,
             'quantity_done': 1.0,
         })
@@ -3018,7 +3018,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12,
         })
         move1._action_confirm()
@@ -3034,7 +3034,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move2._action_confirm()
@@ -3062,7 +3062,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2 = self.env['stock.move'].create({
@@ -3070,7 +3070,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
 
@@ -3086,7 +3086,7 @@ class StockMove(TransactionCase):
         # use the product from the first one
         move2.write({'move_line_ids': [(0, 0, {
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 1,
             'reserved_uom_qty': 0,
             'lot_id': False,
@@ -3120,7 +3120,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2 = self.env['stock.move'].create({
@@ -3128,7 +3128,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
 
@@ -3144,7 +3144,7 @@ class StockMove(TransactionCase):
         # use the product from the first one
         move2.write({'move_line_ids': [(0, 0, {
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 1,
             'reserved_uom_qty': 0,
             'lot_id': lot1.id,
@@ -3171,7 +3171,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move1._action_confirm()
@@ -3181,7 +3181,7 @@ class StockMove(TransactionCase):
         # add a forced move line in `move1`
         move1.write({'move_line_ids': [(0, 0, {
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 2,
             'reserved_uom_qty': 0,
             'lot_id': False,
@@ -3223,7 +3223,7 @@ class StockMove(TransactionCase):
             'picking_id': picking.id,
             'product_id': product_01.id,
             'product_uom_qty': 1,
-            'product_uom': product_01.uom_id.id,
+            'uom_id': product_01.uom_id.id,
         })
         self.env['stock.move'].create({
             'name': 'SuperMove02',
@@ -3232,7 +3232,7 @@ class StockMove(TransactionCase):
             'picking_id': picking.id,
             'product_id': product_02.id,
             'product_uom_qty': 1,
-            'product_uom': product_02.uom_id.id,
+            'uom_id': product_02.uom_id.id,
         })
 
         picking.action_confirm()
@@ -3269,7 +3269,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3311,7 +3311,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3347,7 +3347,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3382,7 +3382,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3427,7 +3427,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3469,7 +3469,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3509,7 +3509,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -3564,7 +3564,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -3622,7 +3622,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
             'product_uom_qty': 1,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
         })
         out_move._action_confirm()
         out_move._action_assign()
@@ -3660,7 +3660,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3704,7 +3704,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3742,7 +3742,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3778,7 +3778,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3824,7 +3824,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3867,7 +3867,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3913,7 +3913,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3926,7 +3926,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2._action_confirm()
@@ -3964,7 +3964,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4004,7 +4004,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4033,7 +4033,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -4068,7 +4068,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4082,7 +4082,7 @@ class StockMove(TransactionCase):
             'move_id': move1.move_line_ids.move_id.id,
             'product_id': move1.move_line_ids.product_id.id,
             'qty_done': move1.move_line_ids.qty_done,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.move_line_ids.location_id.id,
             'location_dest_id': move1.move_line_ids.location_dest_id.id,
         })
@@ -4112,7 +4112,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4148,7 +4148,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4178,12 +4178,12 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12.0,
         })
         move1._action_confirm()
         move1._action_assign()
-        move1.move_line_ids.product_uom_id = self.uom_dozen
+        move1.move_line_ids.uom_id = self.uom_dozen
         move1.move_line_ids.qty_done = 1
         move1._action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 12.0)
@@ -4193,13 +4193,13 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 24.0)
         self.assertEqual(move1.product_qty, 24.0)
 
-        move1.move_line_ids.product_uom_id = self.uom_unit
+        move1.move_line_ids.uom_id = self.uom_unit
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 2.0)
         self.assertEqual(move1.product_uom_qty, 2.0)
         self.assertEqual(move1.product_qty, 2.0)
 
         with self.assertRaises(UserError):
-            move1.product_uom = self.uom_dozen
+            move1.uom_id = self.uom_dozen
 
     def test_immediate_validate_1(self):
         """ In a picking with a single available move, clicking on validate without filling any
@@ -4218,7 +4218,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4250,7 +4250,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4297,7 +4297,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.pack_location.id,
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100,
         })
         product5_move = self.env['stock.move'].create({
@@ -4306,7 +4306,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.pack_location.id,
             'picking_id': picking.id,
             'product_id': product5.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100,
         })
         picking.action_confirm()
@@ -4355,7 +4355,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         picking.action_confirm()
@@ -4388,7 +4388,7 @@ class StockMove(TransactionCase):
             'picking_id': picking.id,
             'picking_type_id': picking_type_id.id,
             'product_id': product_id.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
 
@@ -4442,7 +4442,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
         })
         product3_move = self.env['stock.move'].create({
@@ -4451,7 +4451,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
         })
         picking.action_confirm()
@@ -4486,7 +4486,7 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4495,7 +4495,7 @@ class StockMove(TransactionCase):
         scrap = self.env['stock.scrap'].create({
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'scrap_qty': 5.0,
         })
         scrap.do_scrap()
@@ -4519,7 +4519,7 @@ class StockMove(TransactionCase):
             'location_dest_id': receipt1.location_dest_id.id,
             'picking_id': receipt1.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         receipt1.action_confirm()
@@ -4535,7 +4535,7 @@ class StockMove(TransactionCase):
             'location_dest_id': receipt2.location_dest_id.id,
             'picking_id': receipt2.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         receipt2.action_confirm()
@@ -4551,7 +4551,7 @@ class StockMove(TransactionCase):
             'location_dest_id': receipt3.location_dest_id.id,
             'picking_id': receipt3.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         receipt3.action_confirm()
@@ -4580,7 +4580,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move2 = self.env['stock.move'].create({
@@ -4588,7 +4588,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         (move1 + move2)._action_confirm()
@@ -4605,7 +4605,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         self.assertEqual(move1.state, 'draft')
         self.assertEqual(move1.product_uom_qty, 1)
@@ -4637,7 +4637,7 @@ class StockMove(TransactionCase):
         """
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product_consu.id,
-            'product_uom_id':self.product_consu.uom_id.id,
+            'uom_id':self.product_consu.uom_id.id,
             'scrap_qty': 1,
         })
         self.assertEqual(scrap.name, 'New', 'Name should be New in draft state')
@@ -4660,7 +4660,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4670,7 +4670,7 @@ class StockMove(TransactionCase):
 
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
-            'product_uom_id':self.product.uom_id.id,
+            'uom_id':self.product.uom_id.id,
             'scrap_qty': 1,
         })
         scrap.do_scrap()
@@ -4696,7 +4696,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
         })
@@ -4705,7 +4705,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'assigned')
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'scrap_qty': 5,
             'picking_id': picking.id,
         })
@@ -4741,7 +4741,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
         })
@@ -4752,7 +4752,7 @@ class StockMove(TransactionCase):
         # scrap a unit
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'scrap_qty': 1,
             'picking_id': picking.id,
         })
@@ -4766,7 +4766,7 @@ class StockMove(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'scrap_qty': 1,
         })
         warning_message = scrap.action_validate()
@@ -4805,7 +4805,7 @@ class StockMove(TransactionCase):
 
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product_serial.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': child_loc2.id,
             'lot_id': lot1.id
         })
@@ -4843,7 +4843,7 @@ class StockMove(TransactionCase):
                 'location_id': self.stock_location.id,
                 'location_dest_id': scrap_location.id,
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': 1.0,
                 'picking_type_id': internal_operation.id,
             }) for product in products],
@@ -4886,7 +4886,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -4908,7 +4908,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2._action_confirm()
@@ -4941,7 +4941,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -4957,7 +4957,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -4990,7 +4990,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move3._action_confirm()
@@ -5050,7 +5050,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -5066,7 +5066,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -5101,7 +5101,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move3._action_confirm()
@@ -5114,7 +5114,7 @@ class StockMove(TransactionCase):
             'move_id': move3.id,
             'product_id': move3.product_id.id,
             'qty_done': 1,
-            'product_uom_id': move3.product_uom.id,
+            'uom_id': move3.uom_id.id,
             'location_id': move3.location_id.id,
             'location_dest_id': move3.location_dest_id.id,
             'lot_id': lot2.id,
@@ -5141,7 +5141,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -5163,7 +5163,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -5190,7 +5190,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity_done': 10.0,
             'picking_id': picking.id,
         })
@@ -5214,7 +5214,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_id': picking.id,
         })
@@ -5238,7 +5238,7 @@ class StockMove(TransactionCase):
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
@@ -5261,7 +5261,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': self.product.qty_available,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
@@ -5279,7 +5279,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
@@ -5308,7 +5308,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_id': picking.id,
         })
@@ -5324,7 +5324,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 2.0,
             'picking_id': picking.id,
         })
@@ -5350,7 +5350,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5393,7 +5393,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
         })
@@ -5402,7 +5402,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
         })
@@ -5440,7 +5440,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5450,7 +5450,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5526,8 +5526,8 @@ class StockMove(TransactionCase):
         self.assertEqual(len(aggregate_values), 2)
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['qty_done'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5548,8 +5548,8 @@ class StockMove(TransactionCase):
         self.assertEqual(len(aggregate_values), 2)
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['qty_done'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5560,9 +5560,9 @@ class StockMove(TransactionCase):
         sml1 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['qty_done'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
@@ -5581,8 +5581,8 @@ class StockMove(TransactionCase):
         self.assertEqual(len(aggregate_values), 2)
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['qty_done'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5593,9 +5593,9 @@ class StockMove(TransactionCase):
         sml1 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['qty_done'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
@@ -5607,8 +5607,8 @@ class StockMove(TransactionCase):
         self.assertEqual(len(aggregate_values), 2)
         sml1 = second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sm2 = second_backorder.move_ids.filtered(lambda ml: ml.product_id == product2)
-        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}__{sml1.product_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sm2.product_uom.id}']
+        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}__{sml1.uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sm2.uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 3)
         self.assertEqual(aggregate_val_1['qty_done'], 3)
         self.assertEqual(aggregate_val_2['qty_ordered'], 2)
@@ -5629,7 +5629,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5639,7 +5639,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5648,7 +5648,7 @@ class StockMove(TransactionCase):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 10,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'picking_id': picking.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
@@ -5657,7 +5657,7 @@ class StockMove(TransactionCase):
             'move_id': move2.id,
             'product_id': move2.product_id.id,
             'qty_done': 5,
-            'product_uom_id': move2.product_uom.id,
+            'uom_id': move2.uom_id.id,
             'picking_id': picking.id,
             'location_id': move2.location_id.id,
             'location_dest_id': move2.location_dest_id.id,
@@ -5684,7 +5684,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5728,7 +5728,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -5783,7 +5783,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
 
@@ -5791,7 +5791,7 @@ class StockMove(TransactionCase):
             'move_id': move.id,
             'product_id': move.product_id.id,
             'qty_done': 1,
-            'product_uom_id': move.product_uom.id,
+            'uom_id': move.uom_id.id,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,
             'lot_name': lot1.name,
@@ -5839,7 +5839,7 @@ class StockMove(TransactionCase):
         move = self.env['stock.move'].create({
             'name': product.name,
             'product_id': product.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 2.0,
             'picking_id': picking_out.id,
             'location_id': self.stock_location.id,
@@ -5874,7 +5874,7 @@ class StockMove(TransactionCase):
         self.env['stock.move'].create({
             'name': self.product_consu.name,
             'product_id': self.product_consu.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
@@ -5901,7 +5901,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': dest_wh.lot_stock_id.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         self.assertEqual(move.forecast_availability, -1)
@@ -5916,8 +5916,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'move_line_ids': [(0, 0, {})]
         })
-        self.assertEqual(move.product_uom, self.product.uom_id)
-        self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
+        self.assertEqual(move.uom_id, self.product.uom_id)
+        self.assertEqual(move.move_line_ids.uom_id, self.product.uom_id)
 
     def test_move_line_compute_locations(self):
         stock_location = self.env['stock.location'].create({
@@ -5964,7 +5964,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move._action_confirm()

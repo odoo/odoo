@@ -36,9 +36,9 @@ class Repair(models.Model):
         'Product Quantity',
         default=1.0, digits='Product Unit of Measure',
         readonly=True, required=True, states={'draft': [('readonly', False)]})
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        compute='_compute_product_uom', store=True, precompute=True,
+        compute='_compute_uom_id', store=True, precompute=True,
         readonly=True, required=True, states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
@@ -207,10 +207,10 @@ class Repair(models.Model):
             }
 
     @api.depends('product_id')
-    def _compute_product_uom(self):
+    def _compute_uom_id(self):
         for repair in self:
             if repair.product_id:
-                repair.product_uom = repair.product_id.uom_id
+                repair.uom_id = repair.product_id.uom_id
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -218,14 +218,14 @@ class Repair(models.Model):
         if (self.product_id and self.lot_id and self.lot_id.product_id != self.product_id) or not self.product_id:
             self.lot_id = False
 
-    @api.onchange('product_uom')
-    def onchange_product_uom(self):
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
         res = {}
-        if not self.product_id or not self.product_uom:
+        if not self.product_id or not self.uom_id:
             return res
-        if self.product_uom.category_id != self.product_id.uom_id.category_id:
+        if self.uom_id.category_id != self.product_id.uom_id.category_id:
             res['warning'] = {'title': _('Warning'), 'message': _('The product unit of measure you chose has a different category than the product unit of measure.')}
-            self.product_uom = self.product_id.uom_id.id
+            self.uom_id = self.product_id.uom_id.id
         return res
 
     @api.onchange('partner_id')
@@ -287,7 +287,7 @@ class Repair(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
         available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
-        repair_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_id)
+        repair_qty = self.uom_id._compute_quantity(self.product_qty, self.product_id.uom_id)
         for available_qty in [available_qty_owner, available_qty_noown]:
             if float_compare(available_qty, repair_qty, precision_digits=precision) >= 0:
                 return self.action_repair_confirm()
@@ -432,7 +432,7 @@ class Repair(models.Model):
                     'account_id': account.id,
                     'quantity': operation.product_uom_qty,
                     'tax_ids': [(6, 0, operation.tax_id.ids)],
-                    'product_uom_id': operation.product_uom.id,
+                    'product_uom_id': operation.uom_id.id,
                     'price_unit': operation.price_unit,
                     'product_id': operation.product_id.id,
                     'repair_line_ids': [(4, operation.id)],
@@ -474,7 +474,7 @@ class Repair(models.Model):
                     'account_id': account.id,
                     'quantity': fee.product_uom_qty,
                     'tax_ids': [(6, 0, fee.tax_id.ids)],
-                    'product_uom_id': fee.product_uom.id,
+                    'product_uom_id': fee.uom_id.id,
                     'price_unit': fee.price_unit,
                     'product_id': fee.product_id.id,
                     'repair_fee_ids': [(4, fee.id)],
@@ -583,7 +583,7 @@ class Repair(models.Model):
                     'name': repair.name,
                     'product_id': operation.product_id.id,
                     'product_uom_qty': operation.product_uom_qty,
-                    'product_uom': operation.product_uom.id,
+                    'uom_id': operation.uom_id.id,
                     'partner_id': repair.address_id.id,
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
@@ -593,7 +593,7 @@ class Repair(models.Model):
                 })
 
                 # Best effort to reserve the product in a (sub)-location where it is available
-                product_qty = move.product_uom._compute_quantity(
+                product_qty = move.uom_id._compute_quantity(
                     operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
                 available_quantity = self.env['stock.quant']._get_available_quantity(
                     move.product_id,
@@ -620,7 +620,7 @@ class Repair(models.Model):
             move = Move.create({
                 'name': repair.name,
                 'product_id': repair.product_id.id,
-                'product_uom': repair.product_uom.id or repair.product_id.uom_id.id,
+                'uom_id': repair.uom_id.id or repair.product_id.uom_id.id,
                 'product_uom_qty': repair.product_qty,
                 'partner_id': repair.address_id.id,
                 'location_id': repair.location_id.id,
@@ -628,7 +628,7 @@ class Repair(models.Model):
                 'move_line_ids': [(0, 0, {'product_id': repair.product_id.id,
                                            'lot_id': repair.lot_id.id,
                                            'reserved_uom_qty': 0,  # bypass reservation here
-                                           'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
+                                           'uom_id': repair.uom_id.id or repair.product_id.uom_id.id,
                                            'qty_done': repair.product_qty,
                                            'package_id': False,
                                            'result_package_id': False,
@@ -686,9 +686,9 @@ class RepairLine(models.Model):
     product_uom_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Product Unit of Measure', required=True)
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        compute='_compute_product_uom', store=True, readonly=False, precompute=True,
+        compute='_compute_uom_id', store=True, readonly=False, precompute=True,
         required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     invoice_line_id = fields.Many2one(
@@ -725,9 +725,9 @@ class RepairLine(models.Model):
             line.price_total = taxes['total_included']
 
     @api.depends('product_id')
-    def _compute_product_uom(self):
+    def _compute_uom_id(self):
         for line in self:
-            line.product_uom = line.product_id.uom_id.id
+            line.uom_id = line.product_id.uom_id.id
 
     @api.depends('type')
     def _compute_location_id(self):
@@ -785,11 +785,11 @@ class RepairLine(models.Model):
                 self.tax_id = fpos.map_tax(taxes)
             self._onchange_product_uom()
 
-    @api.onchange('product_uom')
+    @api.onchange('uom_id')
     def _onchange_product_uom(self):
         if self.product_id and self.type != 'remove':
             price = self.repair_id.pricelist_id._get_product_price(
-                self.product_id, self.product_uom_qty, uom=self.product_uom)
+                self.product_id, self.product_uom_qty, uom=self.uom_id)
             self.price_unit = price
 
 
@@ -810,9 +810,9 @@ class RepairFee(models.Model):
         domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        compute='_compute_product_uom', store=True, readonly=False, precompute=True,
+        compute='_compute_uom_id', store=True, readonly=False, precompute=True,
         required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_total_and_subtotal', store=True, digits=0)
@@ -831,9 +831,9 @@ class RepairFee(models.Model):
             fee.price_total = taxes['total_included']
 
     @api.depends('product_id')
-    def _compute_product_uom(self):
+    def _compute_uom_id(self):
         for fee in self:
-            fee.product_uom = fee.product_id.uom_id
+            fee.uom_id = fee.product_id.uom_id
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):
@@ -855,7 +855,7 @@ class RepairFee(models.Model):
             self.name = self.product_id.with_context(lang=partner.lang).display_name
         else:
             self.name = self.product_id.display_name
-        self.product_uom = self.product_id.uom_id.id
+        self.uom_id = self.product_id.uom_id.id
         if self.product_id.description_sale:
             if partner:
                 self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
@@ -864,11 +864,11 @@ class RepairFee(models.Model):
 
         self._onchange_product_uom()
 
-    @api.onchange('product_uom')
+    @api.onchange('uom_id')
     def _onchange_product_uom(self):
         if self.product_id:
             price = self.repair_id.pricelist_id._get_product_price(
-                self.product_id, self.product_uom_qty, uom=self.product_uom)
+                self.product_id, self.product_uom_qty, uom=self.uom_id)
             self.price_unit = price
 
 

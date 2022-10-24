@@ -38,7 +38,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
                 'name': 'Average Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 60.0,
                 'date_planned': time.strftime('%Y-%m-%d'),
             })]
@@ -66,7 +66,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d'),
             })]
@@ -91,7 +91,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
                 'name': 'outgoing_shipment_avg_move',
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'location_id':  self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id})]
             })
@@ -112,7 +112,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_qty': 500.0,
-                'product_uom': self.ref('uom.product_uom_gram'),
+                'uom_id': self.ref('uom.product_uom_gram'),
                 'price_unit': 0.2,
                 'date_planned': time.strftime('%Y-%m-%d'),
             })]

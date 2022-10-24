@@ -268,7 +268,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'product_id': product.id,
             'location_id': production_location.id,
             'location_dest_id': incoming_picking_type.default_location_dest_id.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 1,
             'price_unit': 100,
             'picking_type_id': incoming_picking_type.id,

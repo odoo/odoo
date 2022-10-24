@@ -28,7 +28,7 @@ class TestMrpStockReports(TestReportsCommon):
         bom_chococake = self.env['mrp.bom'].create({
             'product_id': product_chococake.id,
             'product_tmpl_id': product_chococake.product_tmpl_id.id,
-            'product_uom_id': product_chococake.uom_id.id,
+            'uom_id': product_chococake.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -38,7 +38,7 @@ class TestMrpStockReports(TestReportsCommon):
         bom_double_chococake = self.env['mrp.bom'].create({
             'product_id': product_double_chococake.id,
             'product_tmpl_id': product_double_chococake.product_tmpl_id.id,
-            'product_uom_id': product_double_chococake.uom_id.id,
+            'uom_id': product_double_chococake.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -106,7 +106,7 @@ class TestMrpStockReports(TestReportsCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': product_apple_pie.id,
             'product_tmpl_id': product_apple_pie.product_tmpl_id.id,
-            'product_uom_id': product_apple_pie.uom_id.id,
+            'uom_id': product_apple_pie.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [

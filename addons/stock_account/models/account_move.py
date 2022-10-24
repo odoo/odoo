@@ -339,7 +339,7 @@ class AccountMoveLine(models.Model):
         invoices_qty = 0
         for invoice_line in invoice_lines:
             invoices_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, invoice_line.product_id.uom_id)
-        qty_received = po_line.product_uom._compute_quantity(po_line.qty_received, self.product_id.uom_id)
+        qty_received = po_line.uom_id._compute_quantity(po_line.qty_received, self.product_id.uom_id)
         out_qty = qty_received - sum(layers.mapped('remaining_qty'))
         out_and_not_billed_qty = max(0, out_qty - invoices_qty)
         total_to_correct = max(0, aml_qty - out_and_not_billed_qty)

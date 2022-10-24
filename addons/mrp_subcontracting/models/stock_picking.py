@@ -59,8 +59,8 @@ class StockPicking(models.Model):
             if len(production) > 1:
                 raise UserError(_("There shouldn't be multiple productions to record for the same subcontracted move."))
             # Manage additional quantities
-            quantity_done_move = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
-            if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
+            quantity_done_move = move.uom_id._compute_quantity(move.quantity_done, production.uom_id)
+            if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.uom_id.rounding) == -1:
                 change_qty = self.env['change.production.qty'].create({
                     'mo_id': production.id,
                     'product_qty': quantity_done_move
@@ -133,7 +133,7 @@ class StockPicking(models.Model):
             'subcontractor_id': subcontract_move.picking_id.partner_id.commercial_partner_id.id,
             'picking_ids': [subcontract_move.picking_id.id],
             'product_id': product.id,
-            'product_uom_id': subcontract_move.product_uom.id,
+            'uom_id': subcontract_move.uom_id.id,
             'bom_id': bom.id,
             'location_src_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
@@ -146,7 +146,7 @@ class StockPicking(models.Model):
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
         for move, bom in subcontract_details:
-            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
+            if float_compare(move.product_qty, 0, precision_rounding=move.uom_id.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))

@@ -15,12 +15,12 @@
                         <t t-set="new_qty" t-value="exception[1][0]"/>
                         <t t-set="old_qty" t-value="exception[1][1]"/>
                             <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>:
-                            <t t-esc="new_qty"/> <t t-esc="move_raw_id.product_uom.name"/> of <t t-esc="move_raw_id.product_id.name"/>
+                            <t t-esc="new_qty"/> <t t-esc="move_raw_id.uom_id.name"/> of <t t-esc="move_raw_id.product_id.name"/>
                             <t t-if="cancel">
                                 cancelled
                             </t>
                             <t t-if="not cancel">
-                                ordered instead of <t t-esc="old_qty"/> <t t-esc="move_raw_id.product_uom.name"/>
+                                ordered instead of <t t-esc="old_qty"/> <t t-esc="move_raw_id.uom_id.name"/>
                             </t>
                       </li>
                 </ul>

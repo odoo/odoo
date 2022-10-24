@@ -37,7 +37,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                         'name': product.name,
                         'product_id': product.id,
                         'product_qty': quantity,
-                        'product_uom': product.uom_po_id.id,
+                        'uom_id': product.uom_po_id.id,
                         'price_unit': price_unit,
                         'date_planned': date,
                         'taxes_id': [(6, 0, product.supplier_taxes_id.ids)] if set_tax else False,

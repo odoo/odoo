@@ -226,7 +226,7 @@ class TestPurchaseStockReports(TestReportsCommon):
             'location_id': receipt_move.location_id.id,
             'location_dest_id': receipt_move.location_dest_id.id,
             'product_id': self.product.id,
-            'product_uom_id': uom_12.id,
+            'uom_id': uom_12.id,
             'qty_done': 1,
             'picking_id': receipt.id,
         })]
@@ -266,14 +266,14 @@ class TestPurchaseStockReports(TestReportsCommon):
             'location_id': receipt_move.location_id.id,
             'location_dest_id': child_loc_01.id,
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'qty_done': 6,
             'picking_id': receipt.id,
         }), (0, 0, {
             'location_id': receipt_move.location_id.id,
             'location_dest_id': child_loc_02.id,
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'qty_done': 4,
             'picking_id': receipt.id,
         })]

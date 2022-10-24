@@ -42,7 +42,7 @@ class TestPackingNeg(TransactionCase):
             'move_ids': [(0, 0, {
                 'name': 'NEG',
                 'product_id': product_neg.id,
-                'product_uom': product_neg.uom_id.id,
+                'uom_id': product_neg.uom_id.id,
                 'product_uom_qty': 300.00,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
@@ -68,7 +68,7 @@ class TestPackingNeg(TransactionCase):
         pick_neg.move_line_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
-            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick_neg.id,
             'lot_id': lot_a.id,
             'qty_done': 120,
@@ -78,7 +78,7 @@ class TestPackingNeg(TransactionCase):
         })
         new_pack2 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
-            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick_neg.id,
             'result_package_id': package3.id,
             'qty_done': 60,
@@ -99,7 +99,7 @@ class TestPackingNeg(TransactionCase):
             'move_ids': [(0, 0, {
                 'name': 'NEG',
                 'product_id': product_neg.id,
-                'product_uom': product_neg.uom_id.id,
+                'uom_id': product_neg.uom_id.id,
                 'product_uom_qty': 300.00,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -156,7 +156,7 @@ class TestPackingNeg(TransactionCase):
             'move_ids': [(0, 0, {
                 'name': 'NEG',
                 'product_id': product_neg.id,
-                'product_uom': product_neg.uom_id.id,
+                'uom_id': product_neg.uom_id.id,
                 'product_uom_qty': 20.0,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),

@@ -239,15 +239,15 @@ class StockRule(models.Model):
             forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
 
         # Prepare the move values, adapt the `procure_method` if needed.
-        procurements = sorted(procurements, key=lambda proc: float_compare(proc[0].product_qty, 0.0, precision_rounding=proc[0].product_uom.rounding) > 0)
+        procurements = sorted(procurements, key=lambda proc: float_compare(proc[0].product_qty, 0.0, precision_rounding=proc[0].uom_id.rounding) > 0)
         for procurement, rule in procurements:
             procure_method = rule.procure_method
             if rule.procure_method == 'mts_else_mto':
-                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+                qty_needed = procurement.uom_id._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
                 if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
                     procure_method = 'make_to_order'
                     for move in procurement.values.get('group_id', self.env['procurement.group']).stock_move_ids:
-                        if move.rule_id == rule and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                        if move.rule_id == rule and float_compare(move.product_uom_qty, 0, precision_rounding=move.uom_id.rounding) > 0:
                             procure_method = move.procure_method
                             break
                     forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
@@ -319,7 +319,7 @@ class StockRule(models.Model):
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_dest_id.company_id.id or company_id.id,
             'product_id': product_id.id,
-            'product_uom': product_uom.id,
+            'uom_id': product_uom.id,
             'product_uom_qty': qty_left,
             'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
@@ -399,7 +399,7 @@ class ProcurementGroup(models.Model):
     _order = "id desc"
 
     Procurement = namedtuple('Procurement', ['product_id', 'product_qty',
-        'product_uom', 'location_id', 'name', 'origin', 'company_id', 'values'])
+        'uom_id', 'location_id', 'name', 'origin', 'company_id', 'values'])
     partner_id = fields.Many2one('res.partner', 'Partner')
     name = fields.Char(
         'Reference',
@@ -443,7 +443,7 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             if (
                 procurement.product_id.type not in ('consu', 'product') or
-                float_is_zero(procurement.product_qty, precision_rounding=procurement.product_uom.rounding)
+                float_is_zero(procurement.product_qty, precision_rounding=procurement.uom_id.rounding)
             ):
                 continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)

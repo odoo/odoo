@@ -47,8 +47,8 @@
                         <t t-set="new_qty" t-value="exception[1][0]"/>
                         <t t-set="old_qty" t-value="exception[1][1]"/>
                         <li>
-                        <t t-esc="new_qty"/> <t t-esc="move.product_uom.name"/>
-                        of <t t-esc="move.product_id.display_name"/> processed instead of <t t-esc="old_qty"/> <t t-esc="move.product_uom.name"/></li>
+                        <t t-esc="new_qty"/> <t t-esc="move.uom_id.name"/>
+                        of <t t-esc="move.product_id.display_name"/> processed instead of <t t-esc="old_qty"/> <t t-esc="move.uom_id.name"/></li>
                     </ul>
                 </div>
             </div>

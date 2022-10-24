@@ -206,7 +206,7 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env['mrp.bom'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [

@@ -57,9 +57,9 @@ class StockWarehouseOrderpoint(models.Model):
         domain=lambda self: self._domain_product_id(),
         ondelete='cascade', required=True, check_company=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id', store=True)
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure', related='product_id.uom_id')
-    product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
+    product_uom_name = fields.Char(string='Product unit of measure label', related='uom_id.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Min Quantity', digits='Product Unit of Measure', required=True, default=0.0,
         help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
@@ -145,7 +145,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.constrains('product_id')
     def _check_product_uom(self):
         ''' Check if the UoM has the same category as the product standard UoM '''
-        if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
+        if any(orderpoint.product_id.uom_id.category_id != orderpoint.uom_id.category_id for orderpoint in self):
             raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
 
     @api.depends('location_id', 'company_id')
@@ -172,7 +172,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.product_uom = self.product_id.uom_id.id
+            self.uom_id = self.product_id.uom_id.id
 
     @api.onchange('route_id')
     def _onchange_route_id(self):
@@ -267,7 +267,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_to_order = False
                 continue
             qty_to_order = 0.0
-            rounding = orderpoint.product_uom.rounding
+            rounding = orderpoint.uom_id.rounding
             if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
                 # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
                 product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
@@ -507,14 +507,14 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = '%s - %s' % (orderpoint.display_name, ','.join(origins))
                         else:
                             origin = orderpoint.name
-                        if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
+                        if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.uom_id.rounding) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
                             if global_visibility_days:
                                 date -= relativedelta.relativedelta(days=int(global_visibility_days))
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['procurement.group'].Procurement(
-                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
+                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.uom_id,
                                 orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 

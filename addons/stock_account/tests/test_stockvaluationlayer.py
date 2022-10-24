@@ -42,7 +42,7 @@ class TestStockValuationCommon(TransactionCase):
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': loc_dest.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
             'picking_type_id': pick_type.id,
@@ -74,7 +74,7 @@ class TestStockValuationCommon(TransactionCase):
             'product_id': product.id,
             'location_id': loc_src.id,
             'location_dest_id': self.customer_location.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': quantity,
             'picking_type_id': pick_type.id,
         })
@@ -93,7 +93,7 @@ class TestStockValuationCommon(TransactionCase):
             self.env['stock.move.line'].create({
                 'move_id': out_move.id,
                 'product_id': out_move.product_id.id,
-                'product_uom_id': out_move.product_uom.id,
+                'uom_id': out_move.uom_id.id,
                 'location_id': out_move.location_id.id,
                 'location_dest_id': out_move.location_dest_id.id,
             })
@@ -109,7 +109,7 @@ class TestStockValuationCommon(TransactionCase):
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.customer_location.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': quantity,
             'picking_type_id': self.picking_type_out.id,
         })
@@ -182,7 +182,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 5,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
         })
@@ -233,7 +233,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 10,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
         })
@@ -289,7 +289,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
                 'product_id': product.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'product_uom_qty': 2,
                 'price_unit': 10,
                 'picking_type_id': self.picking_type_in.id,
@@ -379,7 +379,7 @@ class TestStockValuationAVCO(TestStockValuationCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 5,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
         })
@@ -395,7 +395,7 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.env['stock.move.line'].create({
             'product_id': move1.product_id.id,
             'qty_done': 5,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'state': 'done',
@@ -664,7 +664,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
             'move_id': move2.id,
             'product_id': move2.product_id.id,
             'qty_done': 5,
-            'product_uom_id': move2.product_uom.id,
+            'uom_id': move2.uom_id.id,
             'location_id': move2.location_id.id,
             'location_dest_id': move2.location_dest_id.id,
         })
@@ -1103,7 +1103,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': loc_dest.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
             'picking_type_id': pick_type.id,

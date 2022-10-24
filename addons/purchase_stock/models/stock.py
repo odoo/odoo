@@ -181,7 +181,7 @@ class Orderpoint(models.Model):
         qty_by_product_location, dummy = self.product_id._get_quantity_in_progress(self.location_id.ids)
         for orderpoint in self:
             product_qty = qty_by_product_location.get((orderpoint.product_id.id, orderpoint.location_id.id), 0.0)
-            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
             res[orderpoint.id] += product_uom_qty
         return res
 

@@ -43,7 +43,7 @@ class TestWiseOperator(TransactionCase):
             'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
-                'product_uom': product_wise.uom_id.id,
+                'uom_id': product_wise.uom_id.id,
                 'product_uom_qty': 10.00,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
@@ -66,7 +66,7 @@ class TestWiseOperator(TransactionCase):
         })
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_wise.id,
-            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick1_wise.id,
             'qty_done': 6.0,
             'location_id': self.ref('stock.stock_location_suppliers'),
@@ -90,7 +90,7 @@ class TestWiseOperator(TransactionCase):
             'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
-                'product_uom': product_wise.uom_id.id,
+                'uom_id': product_wise.uom_id.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -115,7 +115,7 @@ class TestWiseOperator(TransactionCase):
             'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
-                'product_uom': product_wise.uom_id.id,
+                'uom_id': product_wise.uom_id.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),

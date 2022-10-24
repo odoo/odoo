@@ -308,14 +308,14 @@ class Location(models.Model):
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
-                    ], ['location_dest_id', 'product_id', 'reserved_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:array_agg'], ['location_dest_id'])
+                    ], ['location_dest_id', 'product_id', 'reserved_qty:array_agg', 'qty_done:array_agg', 'uom_id:array_agg'], ['location_dest_id'])
                     quant_data = self.env['stock.quant']._read_group([
                         ('product_id', '=', product.id),
                         ('location_id', 'in', locations.ids),
                     ], ['location_id', 'product_id', 'quantity:sum'], ['location_id'])
 
                     for values in move_line_data:
-                        uoms = self.env['uom.uom'].browse(values['product_uom_id'])
+                        uoms = self.env['uom.uom'].browse(values['uom_id'])
                         qty_done = sum(max(ml_uom._compute_quantity(float(qty), product.uom_id), float(qty_reserved))
                                     for qty_reserved, qty, ml_uom in zip(values['reserved_qty'], values['qty_done'], list(uoms)))
                         qty_by_location[values['location_dest_id'][0]] = qty_done

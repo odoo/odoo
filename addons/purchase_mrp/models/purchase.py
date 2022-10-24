@@ -61,7 +61,7 @@ class PurchaseOrderLine(models.Model):
             kit_bom = kits_by_company[line.company_id].get(line.product_id)
             if kit_bom:
                 moves = line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
-                order_qty = line.product_uom._compute_quantity(line.product_uom_qty, kit_bom.product_uom_id)
+                order_qty = line.uom_id._compute_quantity(line.product_uom_qty, kit_bom.uom_id)
                 filters = {
                     'incoming_moves': lambda m: m.location_id.usage == 'supplier' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
                     'outgoing_moves': lambda m: m.location_id.usage != 'supplier' and m.to_refund

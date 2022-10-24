@@ -291,7 +291,7 @@
                                     <td class="text-end">
                                         <div id="quote_qty">
                                             <span t-field="line.product_qty"/>
-                                            <span t-field="line.product_uom" groups="uom.group_uom"/>
+                                            <span t-field="line.uom_id" groups="uom.group_uom"/>
                                         </div>
                                     </td>
                                     <td t-if="update_dates" class="text-end"><span t-esc="line.date_planned.date()"/></td>

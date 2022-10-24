@@ -458,10 +458,10 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         # the move should be 12 units
         # note: move.product_qty = computed field, always in the uom of the quant
-        #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
+        #       move.product_uom_qty = stored field representing the initial demand in move.uom_id
         move1 = so1.picking_ids.move_ids[0]
         self.assertEqual(move1.product_uom_qty, 12)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
         # edit the so line, sell 2 dozen, the move should now be 24 units
@@ -486,7 +486,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # ```
         move1 = so1.picking_ids.move_ids[0]
         self.assertEqual(move1.product_uom_qty, 24)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
 
         # force the propagation of the uom, sell 3 dozen
@@ -496,9 +496,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 (1, so1.order_line.id, {'product_uom_qty': 3}),
             ]
         })
-        move2 = so1.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        move2 = so1.picking_ids.move_ids.filtered(lambda m: m.uom_id.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 1)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.uom_id.id, uom_dozen.id)
         self.assertEqual(move2.product_qty, 12)
 
         # deliver everything
@@ -556,7 +556,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                     'product_id': item1.id,
                     'reserved_uom_qty': 0,
                     'qty_done': 1,
-                    'product_uom_id': uom_dozen.id,
+                    'uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
                     'location_dest_id': so1.picking_ids.location_dest_id.id,
                 }),
@@ -564,7 +564,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                     'product_id': item1.id,
                     'reserved_uom_qty': 0,
                     'qty_done': 1,
-                    'product_uom_id': uom_dozen.id,
+                    'uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
                     'location_dest_id': so1.picking_ids.location_dest_id.id,
                 }),
@@ -572,7 +572,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                     'product_id': item1.id,
                     'reserved_uom_qty': 0,
                     'qty_done': 1,
-                    'product_uom_id': uom_dozen.id,
+                    'uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
                     'location_dest_id': so1.picking_ids.location_dest_id.id,
                 }),
@@ -1194,7 +1194,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'name': self.product_b.name,
             'product_id': self.product_b.id,
             'product_uom_qty': 1,
-            'product_uom': uom_km_id,
+            'uom_id': uom_km_id,
         })
         action = picking.button_validate()
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()

@@ -96,7 +96,7 @@ class PurchaseOrder(models.Model):
             for order in self:
                 to_log = {}
                 for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
+                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.uom_id.rounding) > 0:
                         to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
@@ -315,7 +315,7 @@ class PurchaseOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
-    @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.uom_id')
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
         super(PurchaseOrderLine, self - from_stock_lines)._compute_qty_received()
@@ -328,7 +328,7 @@ class PurchaseOrderLine(models.Model):
                     if move.state == 'done':
                         if move._is_purchase_return():
                             if move.to_refund:
-                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                                total -= move.uom_id._compute_quantity(move.product_uom_qty, line.uom_id, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
                             # Edge case: the dropship is returned to the stock, no to the supplier.
                             # In this case, the received quantity on the PO is set although we didn't
@@ -336,7 +336,7 @@ class PurchaseOrderLine(models.Model):
                             # quantity twice, we do nothing.
                             pass
                         else:
-                            total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                            total += move.uom_id._compute_quantity(move.product_uom_qty, line.uom_id, rounding_method='HALF-UP')
                 line._track_qty_received(total)
                 line.qty_received = total
 
@@ -422,11 +422,11 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.product_id and line.product_id.type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
+                if float_compare(line.product_qty, line.qty_received, line.uom_id.rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:
+                if float_compare(line.product_qty, line.qty_invoiced, line.uom_id.rounding) == -1:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(
@@ -454,8 +454,8 @@ class PurchaseOrderLine(models.Model):
                 price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id, partner=self.order_id.partner_id
             )['total_void']
             price_unit = price_unit / qty
-        if self.product_uom.id != self.product_id.uom_id.id:
-            price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
+        if self.uom_id.id != self.product_id.uom_id.id:
+            price_unit *= self.uom_id.factor / self.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
@@ -483,15 +483,15 @@ class PurchaseOrderLine(models.Model):
         else:
             move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
                 sum(move_dests.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier').mapped('product_qty')),
-                self.product_uom, rounding_method='HALF-UP')
+                self.uom_id, rounding_method='HALF-UP')
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
-        if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
-            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
+        if float_compare(qty_to_attach, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+            product_uom_qty, product_uom = self.uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
-        if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
-            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
+        if not float_is_zero(qty_to_push, precision_rounding=self.uom_id.rounding):
+            product_uom_qty, product_uom = self.uom_id._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach
             res.append(extra_move_vals)
@@ -502,9 +502,9 @@ class PurchaseOrderLine(models.Model):
         qty = 0.0
         outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
         for move in outgoing_moves:
-            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            qty -= move.uom_id._compute_quantity(move.product_uom_qty, self.uom_id, rounding_method='HALF-UP')
         for move in incoming_moves:
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            qty += move.uom_id._compute_quantity(move.product_uom_qty, self.uom_id, rounding_method='HALF-UP')
         return qty
 
     def _check_orderpoint_picking_type(self):
@@ -542,7 +542,7 @@ class PurchaseOrderLine(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
-            'product_uom': product_uom.id,
+            'uom_id': product_uom.id,
             'product_packaging_id': self.product_packaging_id.id,
             'sequence': self.sequence,
         }

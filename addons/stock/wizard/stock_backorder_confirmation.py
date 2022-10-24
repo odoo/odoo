@@ -51,7 +51,7 @@ class StockBackorderConfirmation(models.TransientModel):
             for move in pick_id.move_ids:
                 if float_compare(move.product_uom_qty,
                                  move.quantity_done,
-                                 precision_rounding=move.product_uom.rounding) > 0:
+                                 precision_rounding=move.uom_id.rounding) > 0:
                     moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
             pick_id._log_less_quantities_than_expected(moves_to_log)
 

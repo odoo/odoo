@@ -97,7 +97,7 @@ class ReportBomStructure(models.AbstractModel):
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
 
         if bom:
-            bom_uom_name = bom.product_uom_id.name
+            bom_uom_name = bom.uom_id.name
 
             # Get variants used for search
             if not bom.product_id:
@@ -143,19 +143,19 @@ class ReportBomStructure(models.AbstractModel):
         company = bom.company_id or self.env.company
         current_quantity = line_qty
         if bom_line:
-            current_quantity = bom_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id) or 0
+            current_quantity = bom_line.uom_id._compute_quantity(line_qty, bom.uom_id) or 0
 
         prod_cost = 0
         attachment_ids = []
         if not is_minimized:
             if product:
-                prod_cost = product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * current_quantity
+                prod_cost = product.uom_id._compute_price(product.with_company(company).standard_price, bom.uom_id) * current_quantity
                 attachment_ids = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
                                                                  ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'),
                                                                  ('res_id', '=', product.product_tmpl_id.id)]).ids
             else:
                 # Use the product template instead of the variant
-                prod_cost = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.product_uom_id) * current_quantity
+                prod_cost = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.uom_id) * current_quantity
                 attachment_ids = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)]).ids
 
         bom_key = bom.id
@@ -165,7 +165,7 @@ class ReportBomStructure(models.AbstractModel):
         quantities_info = {}
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
-            quantities_info = self._get_quantities_info(product, bom.product_uom_id, product_info, parent_bom, parent_product)
+            quantities_info = self._get_quantities_info(product, bom.uom_id, product_info, parent_bom, parent_product)
 
         bom_report_line = {
             'index': index,
@@ -178,8 +178,8 @@ class ReportBomStructure(models.AbstractModel):
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
             'base_bom_line_qty': bom_line.product_qty if bom_line else False,  # bom_line isn't defined only for the top-level product
             'name': product.display_name or bom.product_tmpl_id.display_name,
-            'uom': bom.product_uom_id if bom else product.uom_id,
-            'uom_name': bom.product_uom_id.name if bom else product.uom_id.name,
+            'uom': bom.uom_id if bom else product.uom_id,
+            'uom_name': bom.uom_id.name if bom else product.uom_id.name,
             'route_type': route_info.get('route_type', ''),
             'route_name': route_info.get('route_name', ''),
             'route_detail': route_info.get('route_detail', ''),
@@ -245,7 +245,7 @@ class ReportBomStructure(models.AbstractModel):
         if key not in product_info:
             product_info[key] = {'consumptions': {'in_stock': 0}}
 
-        price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
+        price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
 
         bom_key = parent_bom.id
@@ -256,7 +256,7 @@ class ReportBomStructure(models.AbstractModel):
         quantities_info = {}
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
-            quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.product_uom_id, product_info, parent_bom, parent_product)
+            quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.uom_id, product_info, parent_bom, parent_product)
         availabilities = self._get_availabilities(bom_line.product_id, line_quantity, product_info, bom_key, quantities_info, level, ignore_stock)
 
         attachment_ids = []
@@ -280,8 +280,8 @@ class ReportBomStructure(models.AbstractModel):
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
             'base_bom_line_qty': bom_line.product_qty,
-            'uom': bom_line.product_uom_id,
-            'uom_name': bom_line.product_uom_id.name,
+            'uom': bom_line.uom_id,
+            'uom_name': bom_line.uom_id.name,
             'prod_cost': rounded_price,
             'bom_cost': rounded_price,
             'route_type': route_info.get('route_type', ''),
@@ -318,7 +318,7 @@ class ReportBomStructure(models.AbstractModel):
             line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
             cost_share = byproduct.cost_share / 100
             byproduct_cost_portion += cost_share
-            price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.product_uom_id) * line_quantity
+            price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.uom_id) * line_quantity
             byproducts.append({
                 'id': byproduct.id,
                 'index': f"{index}{byproduct_index}",
@@ -328,7 +328,7 @@ class ReportBomStructure(models.AbstractModel):
                 'currency_id': company.currency_id.id,
                 'name': byproduct.product_id.display_name,
                 'quantity': line_quantity,
-                'uom': byproduct.product_uom_id.name,
+                'uom': byproduct.uom_id.name,
                 'prod_cost': company.currency_id.round(price),
                 'parent_id': bom.id,
                 'level': level or 0,
@@ -342,7 +342,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_operation_line(self, product, bom, qty, level, index):
         operations = []
         total = 0.0
-        qty = bom.product_uom_id._compute_quantity(qty, bom.product_tmpl_id.uom_id)
+        qty = bom.uom_id._compute_quantity(qty, bom.product_tmpl_id.uom_id)
         company = bom.company_id or self.env.company
         operation_index = 0
         for operation in bom.operation_ids:

@@ -127,7 +127,7 @@ class MrpBomLine(models.Model):
             ('bom_id', populate.iterate(boms.ids)),
             ('sequence', populate.randint(1, 1000)),
             ('product_id', populate.compute(get_product_id)),
-            ('product_uom_id', populate.compute(get_product_uom_id)),
+            ('uom_id', populate.compute(get_product_uom_id)),
             ('product_qty', populate.randint(1, 10)),
         ]
 
@@ -257,7 +257,7 @@ class MrpBomByproduct(models.Model):
         return [
             ('bom_id', populate.iterate(boms_ids)),
             ('product_id', populate.randomize(product_no_manu_ids)),
-            ('product_uom_id', populate.compute(get_product_uom_id)),
+            ('uom_id', populate.compute(get_product_uom_id)),
             ('product_qty', populate.randint(1, 10)),
         ]
 
@@ -350,7 +350,7 @@ class MrpProduction(models.Model):
             ('bom_id', populate.compute(get_bom_id)),
             ('consumption', populate.compute(get_consumption)),
             ('product_id', populate.compute(get_product_id)),
-            ('product_uom_id', populate.compute(get_product_uom_id)),
+            ('uom_id', populate.compute(get_product_uom_id)),
             ('product_qty', populate.randint(1, 10)),
             ('picking_type_id', populate.compute(get_picking_type_id)),
             ('date_planned_start', populate.compute(get_date_planned_start)),

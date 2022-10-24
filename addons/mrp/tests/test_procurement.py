@@ -33,7 +33,7 @@ class TestProcurement(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = self.bom_3
         production_form.product_qty = 24
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production_product_6 = production_form.save()
         production_product_6.action_confirm()
         production_product_6.action_assign()
@@ -63,7 +63,7 @@ class TestProcurement(TestMrpCommon):
         }).action_apply_inventory()
         produce_product_4.action_assign()
         self.assertEqual(produce_product_4.product_qty, 96, "Wrong quantity of finish product.")
-        self.assertEqual(produce_product_4.product_uom_id, self.uom_unit, "Wrong quantity of finish product.")
+        self.assertEqual(produce_product_4.uom_id, self.uom_unit, "Wrong quantity of finish product.")
         self.assertEqual(produce_product_4.reservation_state, 'assigned', "Consume material not available")
 
         # produce product4
@@ -123,7 +123,7 @@ class TestProcurement(TestMrpCommon):
         with self.assertRaises(UserError):
             production_form = Form(self.env['mrp.production'])
             production_form.product_id = self.product_4
-            production_form.product_uom_id = self.product_4.uom_id
+            production_form.uom_id = self.product_4.uom_id
             production_form.product_qty = 1
             production_product_4 = production_form.save()
             production_product_4.action_confirm()
@@ -152,7 +152,7 @@ class TestProcurement(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': finished_product.id,
             'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -162,7 +162,7 @@ class TestProcurement(TestMrpCommon):
         mo_form.product_id = finished_product
         mo_form.bom_id = bom
         mo_form.product_qty = 5
-        mo_form.product_uom_id = finished_product.uom_id
+        mo_form.uom_id = finished_product.uom_id
         mo_form.location_src_id = warehouse.lot_stock_id
         mo = mo_form.save()
         mo.action_confirm()
@@ -207,7 +207,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_1.id,
             'product_tmpl_id': product_1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -219,7 +219,7 @@ class TestProcurement(TestMrpCommon):
         move_dest = self.env['stock.move'].create({
             'name': 'move_orig',
             'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -269,7 +269,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_bottle.id,
             'product_tmpl_id': product_bottle.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -279,7 +279,7 @@ class TestProcurement(TestMrpCommon):
         move_dest = self.env['stock.move'].create({
             'name': 'move_bottle',
             'product_id': product_bottle.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -310,14 +310,14 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
         })
         move_dest = self.env['stock.move'].create({
             'name': 'Customer MTO Move',
             'product_id': product.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -375,7 +375,7 @@ class TestProcurement(TestMrpCommon):
         bom1 = self.env['mrp.bom'].create({
             'product_id': product_1.id,
             'product_tmpl_id': product_1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1,
             'consumption': 'flexible',
             'type': 'normal',
@@ -386,7 +386,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_2.id,
             'product_tmpl_id': product_2.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [
@@ -407,7 +407,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_4.id,
             'product_tmpl_id': product_4.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [
@@ -448,7 +448,7 @@ class TestProcurement(TestMrpCommon):
             'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_1.id,
-                'product_uom': product_1.uom_id.id,
+                'uom_id': product_1.uom_id.id,
                 'product_uom_qty': 10.00,
                 'procure_method': 'make_to_stock',
                 'location_id': self.warehouse.lot_stock_id.id,
@@ -513,7 +513,7 @@ class TestProcurement(TestMrpCommon):
         mo_form.product_id = product_1
         mo_form.bom_id = bom1
         mo_form.product_qty = 5
-        mo_form.product_uom_id = product_1.uom_id
+        mo_form.uom_id = product_1.uom_id
         mo_assign_at_confirm = mo_form.save()
         mo_assign_at_confirm.action_confirm()
 
@@ -557,7 +557,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_qty': 1.0,
             'consumption': 'flexible',
             'type': 'normal',
@@ -639,7 +639,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_1.id,
             'product_tmpl_id': product_1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1,
             'consumption': 'flexible',
             'type': 'normal',
@@ -649,7 +649,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_2.id,
             'product_tmpl_id': product_2.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1,
             'consumption': 'flexible',
             'type': 'normal',
@@ -659,7 +659,7 @@ class TestProcurement(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_3.id,
             'product_tmpl_id': product_3.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1,
             'consumption': 'flexible',
             'type': 'normal',
@@ -818,7 +818,7 @@ class TestProcurement(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': super_product.id,
             'product_tmpl_id': super_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',

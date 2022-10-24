@@ -30,7 +30,7 @@ class ProductLabelLayout(models.TransientModel):
             for move_line in self.picking_ids.move_line_ids:
                 if not move_line.lot_id:
                     continue
-                if move_line.product_uom_id.category_id == uom_categ_unit:
+                if move_line.uom_id.category_id == uom_categ_unit:
                     quantity_by_lot[move_line.lot_id.id] += int(move_line.qty_done)
                 else:
                     quantity_by_lot[move_line.lot_id.id] += 1

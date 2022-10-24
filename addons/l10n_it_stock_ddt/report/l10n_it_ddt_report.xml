@@ -112,7 +112,7 @@
                                     </td>
                                     <td>
                                         <span t-field="move.quantity_done"/>
-                                        <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                        <span t-field="move.uom_id" groups="uom.group_uom"/>
                                     </td>
                                     <td>
                                         <t t-set="lst_price" t-value="move.product_id.lst_price * move.quantity_done"/>

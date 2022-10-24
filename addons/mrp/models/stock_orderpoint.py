@@ -84,10 +84,10 @@ class StockWarehouseOrderpoint(models.Model):
             ratios_total = []
             for bom_line, bom_line_data in bom_sub_lines:
                 component = bom_line.product_id
-                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.uom_id.rounding):
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                qty_per_kit = bom_line.uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
                 qty_by_product_location, dummy = component._get_quantity_in_progress(orderpoint.location_id.ids)
@@ -98,19 +98,19 @@ class StockWarehouseOrderpoint(models.Model):
             # For a kit, the quantity in progress is :
             #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
-            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
 
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
         productions_group = self.env['mrp.production'].read_group(
             [('bom_id', 'in', bom_manufacture.ids), ('state', '=', 'draft'), ('orderpoint_id', 'in', orderpoints_without_kit.ids)],
-            ['orderpoint_id', 'product_qty', 'product_uom_id'],
-            ['orderpoint_id', 'product_uom_id'], lazy=False)
+            ['orderpoint_id', 'product_qty', 'uom_id'],
+            ['orderpoint_id', 'uom_id'], lazy=False)
         for p in productions_group:
-            uom = self.env['uom.uom'].browse(p['product_uom_id'][0])
+            uom = self.env['uom.uom'].browse(p['uom_id'][0])
             orderpoint = self.env['stock.warehouse.orderpoint'].browse(p['orderpoint_id'][0])
             res[orderpoint.id] += uom._compute_quantity(
-                p['product_qty'], orderpoint.product_uom, round=False)
+                p['product_qty'], orderpoint.uom_id, round=False)
         return res
 
     def _get_qty_multiple_to_order(self):
@@ -120,7 +120,7 @@ class StockWarehouseOrderpoint(models.Model):
         qty_multiple_to_order = super()._get_qty_multiple_to_order()
         if 'manufacture' in self.rule_ids.mapped('action'):
             bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='normal')[self.product_id]
-            return bom.product_uom_id._compute_quantity(bom.product_qty, self.product_uom)
+            return bom.uom_id._compute_quantity(bom.product_qty, self.uom_id)
         return qty_multiple_to_order
 
     def _set_default_route_id(self):

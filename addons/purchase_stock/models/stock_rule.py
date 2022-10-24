@@ -61,7 +61,7 @@ class StockRule(models.Model):
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
                     date=procurement_date_planned.date(),
-                    uom_id=procurement.product_uom)
+                    uom_id=procurement.uom_id)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
             # blocking the user.
@@ -96,7 +96,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
-                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
+                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.uom_id.rounding) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
                     # the same domain for PO and the _prepare_purchase_order method
@@ -120,7 +120,7 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
+            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.uom_id == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
             for product, po_lines in grouped_po_lines:
                 po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
             po_line_values = []
@@ -132,11 +132,11 @@ class StockRule(models.Model):
                     # If the procurement can be merge in an existing line. Directly
                     # write the new values on it.
                     vals = self._update_purchase_order_line(procurement.product_id,
-                        procurement.product_qty, procurement.product_uom, company_id,
+                        procurement.product_qty, procurement.uom_id, company_id,
                         procurement.values, po_line)
                     po_line.write(vals)
                 else:
-                    if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                    if float_compare(procurement.product_qty, 0, precision_rounding=procurement.uom_id.rounding) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty
                         continue
                     # If it does not exist a PO line for current procurement.
@@ -145,7 +145,7 @@ class StockRule(models.Model):
                     partner = procurement.values['supplier'].partner_id
                     po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
                         procurement.product_id, procurement.product_qty,
-                        procurement.product_uom, procurement.company_id,
+                        procurement.uom_id, procurement.company_id,
                         procurement.values, po))
                     # Check if we need to advance the order date for the new line
                     order_date_planned = procurement.values['date_planned'] - relativedelta(
@@ -184,7 +184,7 @@ class StockRule(models.Model):
         # generated from the order line has the orderpoint's location as
         # destination location. In case of move_dest_ids those two points are not
         # necessary anymore since those values are taken from destination moves.
-        return procurement.product_id, procurement.product_uom, procurement.values['propagate_cancel'],\
+        return procurement.product_id, procurement.uom_id, procurement.values['propagate_cancel'],\
             procurement.values.get('product_description_variants'),\
             (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
@@ -227,7 +227,7 @@ class StockRule(models.Model):
                 'orderpoint_id': orderpoint_id,
             })
             merged_procurement = self.env['procurement.group'].Procurement(
-                procurement.product_id, quantity, procurement.product_uom,
+                procurement.product_id, quantity, procurement.uom_id,
                 procurement.location_id, procurement.name, procurement.origin,
                 procurement.company_id, values
             )

@@ -33,13 +33,13 @@
                                         <td><span t-field="line.product_id"/></td>
                                         <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
-                                        <td class="text-end"><span t-field="line.available_quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
-                                        <td class="text-end"><span t-field="line.quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                        <td class="text-end"><span t-field="line.available_quantity"/> <span t-field="line.uom_id" groups="uom.group_uom"/></td>
+                                        <td class="text-end"><span t-field="line.quantity"/> <span t-field="line.uom_id" groups="uom.group_uom"/></td>
                                         <td class="text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
                                             <t t-if="line.inventory_quantity == 0"><span></span></t>
                                             <t t-else=""><span t-field="line.inventory_quantity"/></t>
-                                            <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                            <span t-field="line.uom_id" groups="uom.group_uom"/>
                                         </td>
                                     </tr>
                                 </t>

@@ -47,7 +47,7 @@ class TestStockLot(TestStockCommon):
         cls.bom_apple_pie = cls.env['mrp.bom'].create({
             'product_id': cls.product_apple_pie.id,
             'product_tmpl_id': cls.product_apple_pie.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
             'consumption': 'flexible',
             'type': 'normal',

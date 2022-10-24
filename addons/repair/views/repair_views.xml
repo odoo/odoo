@@ -14,7 +14,7 @@
                 <field name="description" optional="hide"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="product_qty" optional="hide" string="Quantity"/>
-                <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide"/>
+                <field name="uom_id" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide"/>
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="address_id" optional="show"/>
@@ -83,7 +83,7 @@
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly':[('tracking', '=', 'serial')]}"/>
-                                <field name="product_uom" groups="uom.group_uom"/>
+                                <field name="uom_id" groups="uom.group_uom"/>
                             </div>
                             <field name="partner_id" widget="res_partner_many2one" attrs="{'required':[('invoice_method','!=','none')]}" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
                             <field name="address_id" groups="account.group_delivery_invoice_address"/>
@@ -118,7 +118,7 @@
                                         <label for="product_uom_qty"/>
                                         <div class="o_row">
                                             <field name="product_uom_qty"/>
-                                            <field name="product_uom" groups="uom.group_uom"/>
+                                            <field name="uom_id" groups="uom.group_uom"/>
                                         </div>
                                         <field name="price_unit"/>
                                         <field name="tax_id" widget="many2many_tags"/>
@@ -148,7 +148,7 @@
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
-                                <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
+                                <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -179,7 +179,7 @@
                                     <label for="product_uom_qty"/>
                                     <div class="o_row">
                                         <field name="product_uom_qty" string="Quantity"/>
-                                        <field name="product_uom" groups="uom.group_uom"/>
+                                        <field name="uom_id" groups="uom.group_uom"/>
                                     </div>
                                     <field name="price_unit"/>
                                     <field widget="many2many_tags" name="tax_id"/>
@@ -193,7 +193,7 @@
                                 <field name='name' optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom" string="Unit of Measure" groups="uom.group_uom" optional="show"/>
+                                <field name="uom_id" string="Unit of Measure" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>

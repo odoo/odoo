@@ -79,11 +79,11 @@
                                 </td>
                                 <td>
                                     <span t-field="move.product_uom_qty"/>
-                                    <span t-field="move.product_uom"/>
+                                    <span t-field="move.uom_id"/>
                                 </td>
                                 <td>
                                     <span t-field="move.quantity_done"/>
-                                    <span t-field="move.product_uom"/>
+                                    <span t-field="move.uom_id"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -185,7 +185,7 @@
                                         <td/>
                                         <td class="text-center w-auto">
                                             <span t-field="bo_line.product_uom_qty"/>
-                                            <span t-field="bo_line.product_uom"/>
+                                            <span t-field="bo_line.uom_id"/>
                                         </td>
                                     </tr>
                                 </t>
@@ -229,7 +229,7 @@
         </t>
         <td class="text-center" name="move_line_lot_qty_done">
             <span t-field="move_line.qty_done"/>
-            <span t-field="move_line.product_uom_id"/>
+            <span t-field="move_line.uom_id"/>
         </td>
     </template>
     <template id="stock_report_delivery_aggregated_move_lines">
@@ -243,13 +243,13 @@
             <td class="text-center" name="move_line_aggregated_qty_ordered">
                 <span t-esc="aggregated_lines[line]['qty_ordered']"
                     t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
-                <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                <span t-esc="aggregated_lines[line]['uom_id'].name"/>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_done">
                 <t t-if="aggregated_lines[line]['qty_done']">
                     <span t-esc="aggregated_lines[line]['qty_done']"
                         t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
-                    <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                    <span t-esc="aggregated_lines[line]['uom_id'].name"/>
                 </t>
             </td>
         </tr>

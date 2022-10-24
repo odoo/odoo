@@ -363,7 +363,7 @@ class SaleOrderLine(models.Model):
 
             if not line.product_packaging_id:
                 continue
-            packaging_uom = line.product_packaging_id.product_uom_id
+            packaging_uom = line.product_packaging_id.uom_id
             qty_per_packaging = line.product_packaging_id.qty
             product_uom_qty = packaging_uom._compute_quantity(
                 line.product_packaging_qty * qty_per_packaging, line.product_uom)
@@ -627,7 +627,7 @@ class SaleOrderLine(models.Model):
             if not line.product_packaging_id:
                 line.product_packaging_qty = False
             else:
-                packaging_uom = line.product_packaging_id.product_uom_id
+                packaging_uom = line.product_packaging_id.uom_id
                 packaging_uom_qty = line.product_uom._compute_quantity(line.product_uom_qty, packaging_uom)
                 line.product_packaging_qty = float_round(
                     packaging_uom_qty / line.product_packaging_id.qty,

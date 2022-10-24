@@ -117,13 +117,13 @@ class TestSaleMrpKitBom(TransactionCase):
                 'product_id': self.component_a.id,
                 'product_qty': 1.0,
                 'bom_id': self.bom.id,
-                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'uom_id': self.env.ref('uom.product_uom_dozen').id,
         })
         self.env['mrp.bom.line'].create({
                 'product_id': self.component_b.id,
                 'product_qty': 2.0,
                 'bom_id': self.bom.id,
-                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                'uom_id': self.env.ref('uom.product_uom_unit').id,
         })
 
         # Create a SO with one unit of the kit product

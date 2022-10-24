@@ -456,7 +456,7 @@ class MrpWorkCenterCapacity(models.Model):
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
     product_id = fields.Many2one('product.product', string='Product', required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
     time_start = fields.Float('Setup Time (minutes)', help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', help="Time in minutes for the cleaning.")

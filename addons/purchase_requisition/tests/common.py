@@ -60,7 +60,7 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
             'line_ids': [(0, 0, {
                 'product_id': cls.product_09.id,
                 'product_qty': 10.0,
-                'product_uom_id': cls.product_uom_id.id})]
+                'uom_id': cls.product_uom_id.id})]
         })
 
         cls.res_partner_1 = cls.env['res.partner'].create({

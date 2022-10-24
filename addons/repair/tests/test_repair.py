@@ -43,7 +43,7 @@ class TestRepair(AccountTestInvoicingCommon):
             'invoice_method': 'none',
             'user_id': False,
             'product_id': cls.product_product_3.id,
-            'product_uom': cls.env.ref('uom.product_uom_unit').id,
+            'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'partner_invoice_id': cls.res_partner_address_1.id,
             'location_id': cls.stock_warehouse.lot_stock_id.id,
             'operations': [
@@ -52,7 +52,7 @@ class TestRepair(AccountTestInvoicingCommon):
                     'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_11.get_product_multiline_description_sale(),
                     'product_id': cls.product_product_11.id,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'product_uom_qty': 1.0,
                     'price_unit': 50.0,
                     'state': 'draft',
@@ -65,7 +65,7 @@ class TestRepair(AccountTestInvoicingCommon):
                     'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
                     'product_id': cls.product_service_order_repair.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'price_unit': 50.0,
                     'company_id': cls.env.company.id,
                 })
@@ -75,7 +75,7 @@ class TestRepair(AccountTestInvoicingCommon):
 
         cls.repair0 = cls.env['repair.order'].create({
             'product_id': cls.product_product_5.id,
-            'product_uom': cls.env.ref('uom.product_uom_unit').id,
+            'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'address_id': cls.res_partner_address_1.id,
             'guarantee_limit': '2019-01-01',
             'invoice_method': 'after_repair',
@@ -89,7 +89,7 @@ class TestRepair(AccountTestInvoicingCommon):
                     'name': cls.product_product_12.get_product_multiline_description_sale(),
                     'price_unit': 50.0,
                     'product_id': cls.product_product_12.id,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'product_uom_qty': 1.0,
                     'state': 'draft',
                     'type': 'add',
@@ -101,7 +101,7 @@ class TestRepair(AccountTestInvoicingCommon):
                     'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
                     'product_id': cls.product_service_order_repair.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'price_unit': 50.0,
                     'company_id': cls.env.company.id,
                 })
@@ -111,7 +111,7 @@ class TestRepair(AccountTestInvoicingCommon):
 
         cls.repair2 = cls.env['repair.order'].create({
             'product_id': cls.product_product_6.id,
-            'product_uom': cls.env.ref('uom.product_uom_unit').id,
+            'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'address_id': cls.res_partner_address_1.id,
             'guarantee_limit': '2019-01-01',
             'invoice_method': 'b4repair',
@@ -125,7 +125,7 @@ class TestRepair(AccountTestInvoicingCommon):
                     'name': cls.product_product_13.get_product_multiline_description_sale(),
                     'price_unit': 50.0,
                     'product_id': cls.product_product_13.id,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'product_uom_qty': 1.0,
                     'state': 'draft',
                     'type': 'add',
@@ -137,7 +137,7 @@ class TestRepair(AccountTestInvoicingCommon):
                     'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
                     'product_id': cls.product_service_order_repair.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
+                    'uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'price_unit': 50.0,
                     'company_id': cls.env.company.id,
                 })
@@ -152,7 +152,7 @@ class TestRepair(AccountTestInvoicingCommon):
         partner = self.res_partner_address_1
         return self.env['repair.order'].create({
             'product_id': product_to_repair.id,
-            'product_uom': product_to_repair.uom_id.id,
+            'uom_id': product_to_repair.uom_id.id,
             'address_id': partner.id,
             'guarantee_limit': '2019-01-01',
             'invoice_method': invoice_method,
@@ -168,7 +168,7 @@ class TestRepair(AccountTestInvoicingCommon):
             'type': 'add',
             'product_id': product_to_add.id,
             'product_uom_qty': qty,
-            'product_uom': product_to_add.uom_id.id,
+            'uom_id': product_to_add.uom_id.id,
             'price_unit': price_unit,
             'repair_id': repair_id,
             'location_id': self.stock_warehouse.lot_stock_id.id,
@@ -182,7 +182,7 @@ class TestRepair(AccountTestInvoicingCommon):
             'name': 'PC Assemble + Custom (PC on Demand)',
             'product_id': product_service.id,
             'product_uom_qty': qty,
-            'product_uom': product_service.uom_id.id,
+            'uom_id': product_service.uom_id.id,
             'price_unit': price_unit,
             'repair_id': repair_id,
             'company_id': self.env.company.id,
@@ -354,7 +354,7 @@ class TestRepair(AccountTestInvoicingCommon):
             self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
             self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
 
-    def test_repair_compute_product_uom(self):
+    def test_repair_compute_uom_id(self):
         repair = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
             'operations': [
@@ -365,8 +365,8 @@ class TestRepair(AccountTestInvoicingCommon):
                 })
             ],
         })
-        self.assertEqual(repair.product_uom, self.product_product_3.uom_id)
-        self.assertEqual(repair.operations[0].product_uom, self.product_product_11.uom_id)
+        self.assertEqual(repair.uom_id, self.product_product_3.uom_id)
+        self.assertEqual(repair.operations[0].uom_id, self.product_product_11.uom_id)
 
     def test_repair_compute_location(self):
         repair = self.env['repair.order'].create({

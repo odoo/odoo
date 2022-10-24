@@ -35,7 +35,7 @@ class TestVirtualAvailable(TestStockCommon):
             'name': 'a move',
             'product_id': cls.product_3.id,
             'product_uom_qty': 3.0,
-            'product_uom': cls.product_3.uom_id.id,
+            'uom_id': cls.product_3.uom_id.id,
             'picking_id': cls.picking_out.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
@@ -47,7 +47,7 @@ class TestVirtualAvailable(TestStockCommon):
             'name': 'another move',
             'product_id': cls.product_3.id,
             'product_uom_qty': 5.0,
-            'product_uom': cls.product_3.uom_id.id,
+            'uom_id': cls.product_3.uom_id.id,
             'picking_id': cls.picking_out_2.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
@@ -115,7 +115,7 @@ class TestVirtualAvailable(TestStockCommon):
         # Creates a quant for productA in the first company.
         self.env['stock.quant'].create({
             'product_id': product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.location_1.id,
             'quantity': 7,
             'reserved_quantity': 0,
@@ -143,21 +143,21 @@ class TestVirtualAvailable(TestStockCommon):
         # Creates a quant for company 1.
         self.env['stock.quant'].create({
             'product_id': product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.location_1.id,
             'quantity': 5,
         })
         # Creates a quant for vendor location.
         self.env['stock.quant'].create({
             'product_id': product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': supplier_location.id,
             'quantity': -15,
         })
         # Creates a quant for customer location.
         self.env['stock.quant'].create({
             'product_id': product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': customer_location.id,
             'quantity': 10,
         })

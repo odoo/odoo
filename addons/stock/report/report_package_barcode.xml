@@ -69,10 +69,10 @@
                                 <td class="text-end" t-if="has_ean_barcode">
                                     <t t-if="l.product_id.valid_ean">
                                         <t t-set="product_barcode" t-value="'01' + '0' * (14 - len(l.product_id.barcode)) + l.product_id.barcode"/>
-                                        <t t-set="gs1_pattern" t-value="gs1_uom_patterns.get(l.product_uom_id.id, False)"/>
-                                        <t t-if="(gs1_pattern or l.product_uom_id.id == uom_unit_id) and l.quantity &gt;= 0">
+                                        <t t-set="gs1_pattern" t-value="gs1_uom_patterns.get(l.uom_id.id, False)"/>
+                                        <t t-if="(gs1_pattern or l.uom_id.id == uom_unit_id) and l.quantity &gt;= 0">
                                             <t t-if="gs1_pattern">
-                                                <t t-set="qty_str" t-value="str(int(l.quantity/l.product_uom_id.rounding))"/>
+                                                <t t-set="qty_str" t-value="str(int(l.quantity/l.uom_id.rounding))"/>
                                                 <t t-if="len(qty_str) &lt;= 6" t-set="product_barcode" t-value="product_barcode + gs1_pattern +  '0' * (6 - len(qty_str)) + qty_str"/>
                                             </t>
                                             <t t-else="">

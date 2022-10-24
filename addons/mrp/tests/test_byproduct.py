@@ -30,9 +30,9 @@ class TestMrpByProduct(common.TransactionCase):
             'product_tmpl_id': cls.product_a.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'product_uom_id': cls.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': cls.product_c_id, 'product_uom_id': cls.uom_unit_id, 'product_qty': 2})],
-            'byproduct_ids': [(0, 0, {'product_id': cls.product_b.id, 'product_uom_id': cls.uom_unit_id, 'product_qty': 1})]
+            'uom_id': cls.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': cls.product_c_id, 'uom_id': cls.uom_unit_id, 'product_qty': 2})],
+            'byproduct_ids': [(0, 0, {'product_id': cls.product_b.id, 'uom_id': cls.uom_unit_id, 'product_qty': 1})]
             })
 
     def test_00_mrp_byproduct(self):
@@ -43,8 +43,8 @@ class TestMrpByProduct(common.TransactionCase):
             'product_tmpl_id': self.product_b.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
+            'uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'uom_id': self.uom_unit_id, 'product_qty': 2})]
             })
 
         # Create production order for product A
@@ -93,8 +93,8 @@ class TestMrpByProduct(common.TransactionCase):
             'product_tmpl_id': self.product_a.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
+            'uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'uom_id': self.uom_unit_id, 'product_qty': 2})]
             })
         mnf_product_a_form = Form(self.env['mrp.production'])
         mnf_product_a_form.product_id = self.product_a
@@ -120,16 +120,16 @@ class TestMrpByProduct(common.TransactionCase):
             'product_tmpl_id': self.product_a.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            'uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_b.id, 'uom_id': self.uom_unit_id, 'product_qty': 2})],
             })
 
         bom_product_a_2 = self.MrpBom.create({
             'product_tmpl_id': self.product_b.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            'uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'uom_id': self.uom_unit_id, 'product_qty': 2})],
             })
         # Create production order for product A
         # -------------------------------------
@@ -158,7 +158,7 @@ class TestMrpByProduct(common.TransactionCase):
             'type': 'normal',
             'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_qty': 1})]
         })
-        self.assertEqual(bom.byproduct_ids.product_uom_id, self.env.ref('uom.product_uom_dozen'))
+        self.assertEqual(bom.byproduct_ids.uom_id, self.env.ref('uom.product_uom_dozen'))
 
     def test_finished_and_byproduct_moves(self):
         """
@@ -190,10 +190,10 @@ class TestMrpByProduct(common.TransactionCase):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [(0, 0, {
-                'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2.0
+                'product_id': self.product_c_id, 'uom_id': self.uom_unit_id, 'product_qty': 2.0
             })],
             'byproduct_ids': [(0, 0, {
-                'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1.0
+                'product_id': self.product_b.id, 'uom_id': self.uom_unit_id, 'product_qty': 1.0
             })]
         })
         for expected_finished_qty, expected_byproduct_qty, values in [

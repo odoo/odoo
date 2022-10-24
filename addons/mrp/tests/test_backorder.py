@@ -492,7 +492,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         cls.bom_finished1 = cls.env['mrp.bom'].create({
             'product_id': cls.finished1.id,
             'product_tmpl_id': cls.finished1.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 1,
             'consumption': 'flexible',
             'type': 'normal',

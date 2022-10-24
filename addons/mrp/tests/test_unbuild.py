@@ -519,7 +519,7 @@ class TestUnbuild(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': finshed_product.id,
             'product_tmpl_id': finshed_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -535,7 +535,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finshed_product
         mo_form.bom_id = bom
-        mo_form.product_uom_id = finshed_product.uom_id
+        mo_form.uom_id = finshed_product.uom_id
         mo_form.product_qty = 1.0
         mo = mo_form.save()
         self.assertEqual(len(mo), 1, 'MO should have been created')
@@ -729,11 +729,11 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': p1.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
         ])
 
-    def test_compute_product_uom_id(self):
+    def test_compute_uom_id(self):
         order = self.env['mrp.unbuild'].create({
             'product_id': self.product_4.id,
         })
-        self.assertEqual(order.product_uom_id, self.product_4.uom_id)
+        self.assertEqual(order.uom_id, self.product_4.uom_id)
 
     def test_compute_location_id(self):
         order = self.env['mrp.unbuild'].create({
@@ -765,7 +765,7 @@ class TestUnbuild(TestMrpCommon):
         bom_1 = self.env['mrp.bom'].create({
             'product_id': product_1.id,
             'product_tmpl_id': product_1.product_tmpl_id.id,
-            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -779,7 +779,7 @@ class TestUnbuild(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_id': product_2.id,
             'product_tmpl_id': product_2.product_tmpl_id.id,
-            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [

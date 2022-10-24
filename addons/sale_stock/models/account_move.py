@@ -61,7 +61,7 @@ class AccountMove(models.Model):
                 continue
             product = sml.product_id
             product_uom = product.uom_id
-            qty_done = sml.product_uom_id._compute_quantity(sml.qty_done, product_uom)
+            qty_done = sml.uom_id._compute_quantity(sml.qty_done, product_uom)
 
             # is it a stock return considering the document type (should it be it thought of as positively or negatively?)
             is_stock_return = (
@@ -91,15 +91,15 @@ class AccountMove(models.Model):
             # access the lot as a superuser in order to avoid an error
             # when a user prints an invoice without having the stock access
             lot = lot.sudo()
-            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.product_uom_id.rounding) \
-                    or float_compare(qty, 0, precision_rounding=lot.product_uom_id.rounding) <= 0:
+            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.uom_id.rounding) \
+                    or float_compare(qty, 0, precision_rounding=lot.uom_id.rounding) <= 0:
                 continue
             invoiced_lot_qty = min(qty, invoiced_qties[lot.product_id])
             invoiced_qties[lot.product_id] -= invoiced_lot_qty
             res.append({
                 'product_name': lot.product_id.display_name,
                 'quantity': formatLang(self.env, invoiced_lot_qty, dp='Product Unit of Measure'),
-                'uom_name': lot.product_uom_id.name,
+                'uom_name': lot.uom_id.name,
                 'lot_name': lot.name,
                 # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.
                 'lot_id': lot.id,

@@ -64,7 +64,7 @@ class ReceptionReport(models.AbstractModel):
                     quantity_to_assign = move.product_qty
                     if move.picking_id.immediate_transfer:
                         # if immediate transfer is not Done and quantity_done hasn't been edited, then move.product_qty will incorrectly = 1 (due to default)
-                        quantity_to_assign = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
+                        quantity_to_assign = move.uom_id._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                     product_to_qty_to_assign[move.product_id].append((quantity_to_assign - qty_already_assigned, move))
 
         # only match for non-mto moves in same warehouse
@@ -105,7 +105,7 @@ class ReceptionReport(models.AbstractModel):
                 qty_to_reserve = out.product_qty
                 product_uom = out.product_id.uom_id
                 if 'done' not in doc_states and out.state == 'partially_available':
-                    qty_to_reserve -= out.product_uom._compute_quantity(out.reserved_availability, product_uom)
+                    qty_to_reserve -= out.uom_id._compute_quantity(out.reserved_availability, product_uom)
                 moves_in_ids = []
                 qty_done = 0
                 for move_in_qty, move_in in product_to_qty_to_assign[out.product_id]:
@@ -247,8 +247,8 @@ class ReceptionReport(models.AbstractModel):
                         if assigned_amount + move_line_id.reserved_qty > qty_to_link:
                             new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
                             new_move_line.reserved_uom_qty = move_line_id.reserved_uom_qty
-                            move_line_id.reserved_uom_qty = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
-                            new_move_line.reserved_uom_qty -= out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty, out.product_uom, rounding_method='HALF-UP')
+                            move_line_id.reserved_uom_qty = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.uom_id, rounding_method='HALF-UP')
+                            new_move_line.reserved_uom_qty -= out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty, out.uom_id, rounding_method='HALF-UP')
                         move_line_id.move_id = out
                         assigned_amount += move_line_id.reserved_qty
                         if float_compare(assigned_amount, qty_to_link, precision_rounding=out.product_id.uom_id.rounding) == 0:
@@ -314,7 +314,7 @@ class ReceptionReport(models.AbstractModel):
                             break
                         if move_line_id.reserved_qty > reserved_amount_to_remain:
                             new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
-                            new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
+                            new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.uom_id, rounding_method='HALF-UP')
                             move_line_id.reserved_uom_qty -= new_move_line.reserved_uom_qty
                             new_move_line.move_id = out
                             break

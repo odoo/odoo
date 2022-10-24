@@ -41,14 +41,14 @@ class StockPicking(models.Model):
                         packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
         picking_weights = defaultdict(float)
         # Ordering by qty_done prevents the default ordering by groupby fields that can inject multiple Left Joins in the resulting query.
         res_groups = self.env['stock.move.line'].read_group(
             [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
             ['id:count'],
-            ['picking_id', 'product_id', 'product_uom_id', 'qty_done'],
+            ['picking_id', 'product_id', 'uom_id', 'qty_done'],
             lazy=False, orderby='qty_done asc'
         )
         products_by_id = {
@@ -60,7 +60,7 @@ class StockPicking(models.Model):
         for res_group in res_groups:
             uom_id, weight = products_by_id[res_group['product_id'][0]]
             uom = self.env['uom.uom'].browse(uom_id)
-            product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
+            product_uom_id = self.env['uom.uom'].browse(res_group['uom_id'][0])
             picking_weights[res_group['picking_id'][0]] += (
                 res_group['__count']
                 * product_uom_id._compute_quantity(res_group['qty_done'], uom)

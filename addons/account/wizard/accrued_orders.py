@@ -129,6 +129,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         self.ensure_one()
         move_lines = []
         is_purchase = self.env.context.get('active_model') == 'purchase.order'
+        uom_field = 'uom_id' if is_purchase else 'product_uom'
         orders = self.env[self._context['active_model']].with_company(self.company_id).browse(self._context['active_ids'])
 
         if orders.filtered(lambda o: o.company_id != self.company_id):
@@ -166,7 +167,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                     fields.Float.compare(
                         l.qty_to_invoice,
                         0,
-                        precision_rounding=l.product_uom.rounding,
+                        precision_rounding=l[uom_field].rounding,
                     ) == 1
                 )
                 for order_line in lines:

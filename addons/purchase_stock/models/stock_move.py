@@ -41,8 +41,8 @@ class StockMove(models.Model):
         order = line.order_id
         received_qty = line.qty_received
         if self.state == 'done':
-            received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom)
-        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+            received_qty -= self.uom_id._compute_quantity(self.quantity_done, line.uom_id)
+        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.uom_id.rounding) > 0:
             move_layer = line.move_ids.stock_valuation_layer_ids
             invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
             receipt_value = sum(move_layer.mapped('value')) + sum(invoiced_layer.mapped('value'))
@@ -58,7 +58,7 @@ class StockMove(models.Model):
             # TODO currency check
             remaining_value = invoiced_value - receipt_value
             # TODO qty_received in product uom
-            remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
+            remaining_qty = invoiced_qty - line.uom_id._compute_quantity(received_qty, line.product_id.uom_id)
             price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
         else:
             price_unit = line.price_unit
@@ -66,8 +66,8 @@ class StockMove(models.Model):
                 qty = line.product_qty or 1
                 price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
                 price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
-            if line.product_uom.id != line.product_id.uom_id.id:
-                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+            if line.uom_id.id != line.product_id.uom_id.id:
+                price_unit *= line.uom_id.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
             # The date must be today, and not the date of the move since the move move is still
             # in assigned state. However, the move date is the scheduled date until move is

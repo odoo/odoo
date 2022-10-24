@@ -25,7 +25,7 @@ class ProductLabelLayout(models.TransientModel):
 
         quantities = defaultdict(int)
         uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
-        if self.picking_quantity == 'picking' and self.move_ids and all(float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) for ml in self.move_ids.move_line_ids):
+        if self.picking_quantity == 'picking' and self.move_ids and all(float_is_zero(ml.qty_done, precision_rounding=ml.uom_id.rounding) for ml in self.move_ids.move_line_ids):
             for move in self.move_ids:
                 if move.product_uom.category_id == uom_unit:
                     use_reserved = float_compare(move.reserved_availability, 0, precision_rounding=move.product_uom.rounding) > 0
@@ -36,7 +36,7 @@ class ProductLabelLayout(models.TransientModel):
         elif self.picking_quantity == 'picking' and self.move_ids.move_line_ids:
             custom_barcodes = defaultdict(list)
             for line in self.move_ids.move_line_ids:
-                if line.product_uom_id.category_id == uom_unit:
+                if line.uom_id.category_id == uom_unit:
                     if (line.lot_id or line.lot_name) and int(line.qty_done):
                         custom_barcodes[line.product_id.id].append((line.lot_id.name or line.lot_name, int(line.qty_done)))
                         continue

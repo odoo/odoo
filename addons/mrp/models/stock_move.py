@@ -73,7 +73,7 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         if self.produce_line_ids.lot_id:
             ml_remaining_qty = self.qty_done - self.reserved_uom_qty
-            ml_remaining_qty = self.product_uom_id._compute_quantity(ml_remaining_qty, self.product_id.uom_id, rounding_method="HALF-UP")
+            ml_remaining_qty = self.uom_id._compute_quantity(ml_remaining_qty, self.product_id.uom_id, rounding_method="HALF-UP")
             if float_compare(ml_remaining_qty, quantity, precision_rounding=self.product_id.uom_id.rounding) < 0:
                 return False
         return super(StockMoveLine, self)._reservation_is_updatable(quantity, reserved_quant)
@@ -216,14 +216,14 @@ class StockMove(models.Model):
                 moves_with_reference |= move
         super(StockMove, self - moves_with_reference)._compute_reference()
 
-    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty', 'product_uom')
+    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty', 'uom_id')
     def _compute_should_consume_qty(self):
         for move in self:
             mo = move.raw_material_production_id
-            if not mo or not move.product_uom:
+            if not mo or not move.uom_id:
                 move.should_consume_qty = 0
                 continue
-            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.uom_id.rounding)
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
@@ -326,7 +326,7 @@ class StockMove(models.Model):
                 procurement_qty = new_qty - old_qty
                 values = move._prepare_procurement_values()
                 procurements.append(self.env['procurement.group'].Procurement(
-                    move.product_id, procurement_qty, move.product_uom,
+                    move.product_id, procurement_qty, move.uom_id,
                     move.location_id, move.name, move.origin, move.company_id, values))
 
         to_assign._action_assign()
@@ -363,13 +363,13 @@ class StockMove(models.Model):
             if not bom:
                 moves_ids_to_return.add(move.id)
                 continue
-            if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                factor = move.product_uom._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
+            if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.uom_id.rounding):
+                factor = move.uom_id._compute_quantity(move.quantity_done, bom.uom_id) / bom.product_qty
             else:
-                factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
+                factor = move.uom_id._compute_quantity(move.product_uom_qty, bom.uom_id) / bom.product_qty
             boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
-                if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.uom_id.rounding):
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
                 else:
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
@@ -422,7 +422,7 @@ class StockMove(models.Model):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,
             'product_id': bom_line.product_id.id,
-            'product_uom': bom_line.product_uom_id.id,
+            'uom_id': bom_line.uom_id.id,
             'product_uom_qty': product_qty,
             'quantity_done': quantity_done,
             'state': 'draft',  # will be confirmed below
@@ -477,7 +477,7 @@ class StockMove(models.Model):
         if self.state in ('done', 'cancel'):
             return True
         # Do not update extra product quantities
-        if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
+        if float_is_zero(self.product_uom_qty, precision_rounding=self.uom_id.rounding):
             return True
         if (not self.raw_material_production_id.use_auto_consume_components_lots and self.has_tracking != 'none') or self.manual_consumption or self._origin.manual_consumption:
             return True
@@ -516,7 +516,7 @@ class StockMove(models.Model):
             # skip service since we never deliver them
             if bom_line.product_id.type == 'service':
                 continue
-            if float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+            if float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.uom_id.rounding):
                 # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                 # to avoid a division by zero.
                 continue
@@ -526,7 +526,7 @@ class StockMove(models.Model):
                 # Then, we collect every relevant moves related to a specific component
                 # to know how many are considered delivered.
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
+                qty_per_kit = bom_line.uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
                 incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
@@ -556,7 +556,7 @@ class StockMove(models.Model):
 
     def _update_quantity_done(self, mo):
         self.ensure_one()
-        new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
+        new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.uom_id.rounding)
         if not self.is_quantity_done_editable:
             self.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
             self.move_line_ids = self._set_quantity_done_prepare_vals(new_qty)

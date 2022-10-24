@@ -205,7 +205,7 @@ class TestPurchaseMrpFlow(TransactionCase):
             f.location_id = self.env.ref('stock.stock_location_suppliers')
             f.location_dest_id = warehouse.lot_stock_id
             f.product_id = comp
-            f.product_uom = qty_to_process[comp][1]
+            f.uom_id = qty_to_process[comp][1]
             f.product_uom_qty = qty_to_process[comp][0]
             move = f.save()
             move._action_confirm()
@@ -465,7 +465,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         self.env['mrp.bom'].create({
             'product_id': finished.id,
             'product_tmpl_id': finished.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'consumption': 'flexible',
             'operation_ids': [
@@ -500,7 +500,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         # Create a PO with one unit of the kit product
         self.po = self.env['purchase.order'].create({
             'partner_id': self.partner.id,
-            'order_line': [(0, 0, {'name': self.kit_1.name, 'product_id': self.kit_1.id, 'product_qty': 1, 'product_uom': self.kit_1.uom_id.id, 'price_unit': 60.0, 'date_planned': fields.Datetime.now()})],
+            'order_line': [(0, 0, {'name': self.kit_1.name, 'product_id': self.kit_1.id, 'product_qty': 1, 'uom_id': self.kit_1.uom_id.id, 'price_unit': 60.0, 'date_planned': fields.Datetime.now()})],
         })
         # Validate the PO
         self.po.button_confirm()

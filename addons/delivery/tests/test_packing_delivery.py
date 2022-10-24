@@ -49,7 +49,7 @@ class TestPacking(TestPackingCommon):
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'qty_done': 5,
             'location_id': self.stock_location.id,
@@ -57,7 +57,7 @@ class TestPacking(TestPackingCommon):
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_bw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'qty_done': 5,
             'location_id': self.stock_location.id,
@@ -91,7 +91,7 @@ class TestPacking(TestPackingCommon):
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'qty_done': 5,
             'location_id': self.stock_location.id,

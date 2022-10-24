@@ -67,7 +67,7 @@
                 <field name="company_id" invisible="1"/>
                 <field name="is_produced" invisible="1"/>
                 <field name="is_user_working" invisible="1"/>
-                <field name="product_uom_id" invisible="1" readonly="0"/>
+                <field name="uom_id" invisible="1" readonly="0"/>
                 <field name="production_state" invisible="1"/>
                 <field name="production_bom_id" invisible="1"/>
                 <field name="qty_producing" invisible="1"/>
@@ -413,7 +413,7 @@
                 <field name="qty_production"/>
                 <field name="date_planned_start"/>
                 <field name="production_date"/>
-                <field name="product_uom_id" force_save="1"/>
+                <field name="uom_id" force_save="1"/>
                 <field name="operation_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -437,7 +437,7 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <h5 class="oe_kanban_bottom_left">
-                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.product_uom_id.value"/></span>
+                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.uom_id.value"/></span>
                                 </h5>
                                 <div class="o_kanban_workorder_status">
                                     <div class="o_kanban_record_bottom">

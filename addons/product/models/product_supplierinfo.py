@@ -38,7 +38,7 @@ class SupplierInfo(models.Model):
         help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one.")
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         related='product_tmpl_id.uom_po_id')
     min_qty = fields.Float(

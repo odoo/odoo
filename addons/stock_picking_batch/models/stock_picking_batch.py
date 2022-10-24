@@ -225,7 +225,7 @@ class StockPickingBatch(models.Model):
 
     def action_done(self):
         def has_no_qty_done(picking):
-            return all(float_is_zero(line.qty_done, precision_rounding=line.product_uom_id.rounding) for line in picking.move_line_ids if line.state not in ('done', 'cancel'))
+            return all(float_is_zero(line.qty_done, precision_rounding=line.uom_id.rounding) for line in picking.move_line_ids if line.state not in ('done', 'cancel'))
 
         self.ensure_one()
         self._check_company()
@@ -270,13 +270,13 @@ class StockPickingBatch(models.Model):
             picking_move_lines = self.move_line_ids
 
             move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.uom_id.rounding) > 0
                 and not ml.result_package_id
             )
             if not move_line_ids:
                 move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+                                     precision_rounding=ml.uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                     precision_rounding=ml.uom_id.rounding) == 0)
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:

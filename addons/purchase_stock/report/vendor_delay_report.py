@@ -50,7 +50,7 @@ FROM   stock_move m
        LEFT JOIN stock_move_line ml
          ON ml.move_id = m.id
        LEFT JOIN uom_uom ml_uom
-         ON ml_uom.id = ml.product_uom_id
+         ON ml_uom.id = ml.uom_id
 GROUP  BY m.id
 )""")
 

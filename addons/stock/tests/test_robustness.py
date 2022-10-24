@@ -38,7 +38,7 @@ class TestRobustness(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move1._action_confirm()
@@ -56,7 +56,7 @@ class TestRobustness(TransactionCase):
         # change the factor
         with self.assertRaises(UserError):
             with self.cr.savepoint():
-                move1.product_uom.factor = 0.05
+                move1.uom_id.factor = 0.05
 
         # assert the reservation
         self.assertEqual(quant.reserved_quantity, 12)
@@ -91,7 +91,7 @@ class TestRobustness(TransactionCase):
             'location_id': test_stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
         })
         move1._action_confirm()
@@ -135,7 +135,7 @@ class TestRobustness(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10,
         })
         move1._action_confirm()
@@ -189,7 +189,7 @@ class TestRobustness(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2 = self.env['stock.move'].create({
@@ -197,7 +197,7 @@ class TestRobustness(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product2.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         (move1 + move2)._action_confirm()
@@ -205,7 +205,7 @@ class TestRobustness(TransactionCase):
         with self.assertRaises(ValidationError):
             move1.write({'move_line_ids': [(0, 0, {
                 'product_id': product1.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 1,
                 'lot_id': lot2.id,
                 'location_id': move1.location_id.id,
@@ -215,7 +215,7 @@ class TestRobustness(TransactionCase):
         with self.assertRaises(ValidationError):
             move2.write({'move_line_ids': [(0, 0, {
                 'product_id': product2.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'qty_done': 1,
                 'lot_id': lot1.id,
                 'location_id': move2.location_id.id,
@@ -243,14 +243,14 @@ class TestRobustness(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
 
         moveA._action_confirm()
         moveA.write({'move_line_ids': [(0, 0, {
             'product_id': productA.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'qty_done': 5,
             'lot_id': lotA.id,
             'location_id': moveA.location_id.id,

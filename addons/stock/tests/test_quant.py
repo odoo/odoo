@@ -701,7 +701,7 @@ class StockQuant(TransactionCase):
             'name': 'OUT 1 product',
             'product_id': self.product.id,
             'product_uom_qty': 1,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
         })
@@ -717,7 +717,7 @@ class StockQuant(TransactionCase):
                 'name': 'IN 1 product',
                 'product_id': self.product.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product.uom_id.id,
+                'uom_id': self.product.uom_id.id,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.stock_location.id,
             })
@@ -739,7 +739,7 @@ class StockQuant(TransactionCase):
             'name': 'Move 1 product',
             'product_id': self.product.id,
             'product_uom_qty': 1,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_subloc2.id,
         })
@@ -773,7 +773,7 @@ class StockQuant(TransactionCase):
                 'location_id': supplier_location.id,
                 'location_dest_id': stock_location.id,
                 'product_uom_qty': 10,
-                'product_uom': self.product.uom_id.id,
+                'uom_id': self.product.uom_id.id,
             })],
         })
         picking.action_confirm()
