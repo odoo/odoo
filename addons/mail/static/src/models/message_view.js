@@ -149,7 +149,7 @@ registerModel({
             // This is needed because insertReadMoreLess is working with direct DOM mutations
             // which are not sync with Owl.
             if (this.contentRef.el) {
-                for (const el of [...this.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
+                for (const el of this.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')) {
                     el.remove();
                 }
                 this.update({ lastReadMoreIndex: clear() });
