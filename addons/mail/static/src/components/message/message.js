@@ -5,7 +5,7 @@ import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class Message extends Component {
 
@@ -17,12 +17,8 @@ export class Message extends Component {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'contentRef', refName: 'content' });
         useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
+        useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
-        /**
-         * Reference to element containing the prettyBody. Useful to be able to
-         * replace prettyBody with new value in JS (which is faster than t-raw).
-         */
-        this._prettyBodyRef = useRef('prettyBody');
     }
 
     /**
@@ -30,13 +26,6 @@ export class Message extends Component {
      */
     get messageView() {
         return this.props.record;
-    }
-
-    /**
-     * @private
-     */
-    _update() {
-            this._prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
     }
 
 }
