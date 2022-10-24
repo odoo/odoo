@@ -11,6 +11,7 @@
                 t-if="!props.readonly"
                 class="o_field_property_dropdown_menu o_input_dropdown mt-2">
                 <AutoComplete
+                    id="props.id"
                     value="''"
                     sources="autocompleteSources"
                     onSelect.bind="({value}) => this.onOptionSelected(value)"
