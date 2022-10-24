@@ -1525,7 +1525,11 @@ class Request:
             self.db = None
             self.session.db = None
             root.session_store.save(self.session)
-            return self.redirect('/web/database/selector')
+            if request.httprequest.path == '/web':
+                # Internal Server Error
+                raise
+            else:
+                return self._serve_nodb()
 
         with contextlib.closing(self.registry.cursor()) as cr:
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
