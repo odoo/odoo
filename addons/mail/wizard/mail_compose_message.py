@@ -176,6 +176,7 @@ class MailComposer(models.TransientModel):
         compute='_compute_mail_server_id', readonly=False, store=True)
     scheduled_date = fields.Char(
         'Scheduled Date',
+        compute='_compute_scheduled_date', readonly=False, store=True,
         help="In comment mode: if set, postpone notifications sending. "
              "In mass mail mode: if sent, send emails after that date. "
              "This date is considered as being in UTC timezone.")
@@ -425,6 +426,18 @@ class MailComposer(models.TransientModel):
             if not composer.template_id:
                 composer.mail_server_id = False
 
+    @api.depends('composition_mode', 'model', 'res_ids', 'template_id')
+    def _compute_scheduled_date(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it (in batch mode) or render
+        it (in monorecord comment mode) on the composer. When removing the
+        template, reset it. """
+        for composer in self:
+            if composer.template_id:
+                composer._set_value_from_template('scheduled_date')
+            if not composer.template_id:
+                composer.scheduled_date = False
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
@@ -467,8 +480,7 @@ class MailComposer(models.TransientModel):
             template = self.env['mail.template'].browse(template_id)
             values = dict(
                 (field, template[field])
-                for field in ('scheduled_date',
-                             )
+                for field in ()
                 if template[field]
             )
             if template.attachment_ids:
@@ -485,7 +497,6 @@ class MailComposer(models.TransientModel):
                  'email_to',
                  'partner_ids',
                  'report_template_ids',
-                 'scheduled_date',
                 )
             )[template_res_ids[0]]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -514,13 +525,11 @@ class MailComposer(models.TransientModel):
                            'parent_id',
                            'partner_ids',
                            'res_ids',
-                           'scheduled_date',
                           ])
             values = dict(
                 (key, default_values[key])
                 for key in ('attachment_ids',
                             'partner_ids',
-                            'scheduled_date',
                            ) if key in default_values)
 
         # This onchange should return command instead of ids for x2many field.
