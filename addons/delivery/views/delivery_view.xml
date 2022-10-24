@@ -118,7 +118,7 @@
                                     </group>
                                 </group>
                                 <group name="general" attrs="{'invisible':[('delivery_type', '!=', 'base_on_rule')]}">
-                                    <field name="price_rule_ids" nolabel="1"/>
+                                    <field name="price_rule_ids" nolabel="1" colspan="2"/>
                                 </group>
                             </page>
                             <page string="Destination Availability" name="destination">
@@ -298,9 +298,9 @@
                 <field name="company_id" position="before">
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
-                        <field name="shipping_weight"/>
+                        <field name="shipping_weight" class="oe_inline"/>
                         <span><field name="weight_uom_name"/></span>
-                        <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1"/>)</span>
+                        <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
                     </div>
                 </field>
             </field>
