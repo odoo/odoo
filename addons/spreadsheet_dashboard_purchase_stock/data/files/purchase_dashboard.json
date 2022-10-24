@@ -280,7 +280,7 @@
                 },
                 "B20": {
                     "style": 2,
-                    "content": "=_t(\"Open since\")",
+                    "content": "=_t(\"Opened\")",
                     "border": 2
                 },
                 "B21": {
@@ -339,7 +339,7 @@
                 },
                 "B33": {
                     "style": 2,
-                    "content": "=_t(\"Ordered on\")",
+                    "content": "=_t(\"Ordered\")",
                     "border": 2
                 },
                 "B34": {
@@ -398,7 +398,7 @@
                 },
                 "B46": {
                     "style": 2,
-                    "content": "=_t(\"Ordered on\")",
+                    "content": "=_t(\"Ordered\")",
                     "border": 2
                 },
                 "B47": {
@@ -666,7 +666,7 @@
                 },
                 "C59": {
                     "style": 11,
-                    "content": "=_t(\"Quantity Ordered\")",
+                    "content": "=_t(\"Qty Ordered\")",
                     "border": 2
                 },
                 "C60": {
@@ -1378,7 +1378,7 @@
                 },
                 "H46": {
                     "style": 11,
-                    "content": "=_t(\"Quantity Ordered\")",
+                    "content": "=_t(\"Qty Ordered\")",
                     "border": 2
                 },
                 "H47": {
@@ -1432,7 +1432,7 @@
                 },
                 "H59": {
                     "style": 11,
-                    "content": "=_t(\"Quantity Ordered\")",
+                    "content": "=_t(\"Qty Ordered\")",
                     "border": 2
                 },
                 "H60": {
@@ -1762,7 +1762,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "40aef9ad-8e20-47d1-861c-9e9121a4cdd0",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -2592,7 +2591,20 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": {
                     "field": "country_id",
@@ -2699,7 +2711,20 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "product_id.categ_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "product_id.categ_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "product_id.categ_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": {
                     "field": "category_id",
@@ -2808,15 +2833,15 @@
             },
             "listFields": {
                 "1": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 },
                 "2": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 },
                 "3": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 }
             },
