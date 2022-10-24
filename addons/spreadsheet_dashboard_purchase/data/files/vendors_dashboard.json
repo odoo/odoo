@@ -240,7 +240,7 @@
                 },
                 "B20": {
                     "style": 2,
-                    "content": "=_t(\"Ordered on\")",
+                    "content": "=_t(\"Ordered\")",
                     "border": 2
                 },
                 "B21": {
@@ -1651,7 +1651,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "155096a3-ad7f-4e64-bf38-051fcfc90ee0",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -2254,7 +2253,12 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "155096a3-ad7f-4e64-bf38-051fcfc90ee0": {
                     "field": "country_id",
@@ -2339,7 +2343,7 @@
             },
             "listFields": {
                 "1": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 }
             },
