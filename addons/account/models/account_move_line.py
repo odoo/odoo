@@ -43,6 +43,7 @@ class AccountMoveLine(models.Model):
     )
     company_id = fields.Many2one(
         related='move_id.company_id', store=True, readonly=True, precompute=True,
+        index=True,
     )
     company_currency_id = fields.Many2one(
         string='Company Currency',
