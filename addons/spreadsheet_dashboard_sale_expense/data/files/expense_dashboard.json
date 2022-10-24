@@ -698,7 +698,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "6ce637db-4068-457f-91a4-ce83736932ff",
                         "background": "#FFFFFF",
                         "legendPosition": "right",
                         "metaData": {
@@ -1191,17 +1190,12 @@
         {
             "id": "54e94f8d-739d-4a02-8205-c25be895720e",
             "type": "date",
-            "label": "Year",
-            "defaultValue": {},
-            "rangeType": "year",
+            "label": "Period",
+            "defaultValue": "last_year",
+            "rangeType": "relative",
             "defaultsToCurrentPeriod": true,
             "pivotFields": {
                 "1": {
-                    "field": "date",
-                    "type": "date",
-                    "offset": 0
-                },
-                "3": {
                     "field": "date",
                     "type": "date",
                     "offset": 0
@@ -1261,10 +1255,6 @@
                     "field": "product_id",
                     "type": "many2one"
                 },
-                "3": {
-                    "field": "product_id",
-                    "type": "many2one"
-                },
                 "4": {
                     "field": "product_id",
                     "type": "many2one"
@@ -1282,6 +1272,10 @@
                     "type": "many2one"
                 },
                 "8": {
+                    "field": "product_id",
+                    "type": "many2one"
+                },
+                "9": {
                     "field": "product_id",
                     "type": "many2one"
                 }
@@ -1344,7 +1338,12 @@
                     "type": "many2one"
                 }
             },
-            "graphFields": {}
+            "graphFields": {
+                "6ce637db-4068-457f-91a4-ce83736932ff": {
+                    "field": "sale_order_id",
+                    "type": "many2one"
+                }
+            }
         },
         {
             "id": "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e",
@@ -1357,10 +1356,6 @@
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
                 "1": {
-                    "field": "employee_id",
-                    "type": "many2one"
-                },
-                "3": {
                     "field": "employee_id",
                     "type": "many2one"
                 },
@@ -1381,6 +1376,10 @@
                     "type": "many2one"
                 },
                 "8": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "9": {
                     "field": "employee_id",
                     "type": "many2one"
                 }

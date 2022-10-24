@@ -43,10 +43,10 @@
             },
             "cols": {
                 "0": {
-                    "size": 175
+                    "size": 100
                 },
                 "1": {
-                    "size": 100
+                    "size": 175
                 },
                 "2": {
                     "size": 100
@@ -58,10 +58,10 @@
                     "size": 50
                 },
                 "5": {
-                    "size": 175
+                    "size": 100
                 },
                 "6": {
-                    "size": 100
+                    "size": 175
                 },
                 "7": {
                     "size": 100
@@ -2083,7 +2083,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "a527960b-0812-4291-baba-f6b4b5280a0d",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -2865,7 +2864,7 @@
             "id": "13d30fda-b14d-4a56-b186-25468af3b1e9",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_month",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
@@ -2983,21 +2982,21 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 },
                 "12": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
             "listFields": {
                 "1": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 },
                 "2": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
@@ -3051,22 +3050,22 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 },
                 "12": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 }
             },
             "listFields": {
                 "1": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 },
                 "2": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
@@ -3187,22 +3186,22 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 },
                 "12": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "listFields": {
                 "1": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 },
                 "2": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
