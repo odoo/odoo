@@ -2,10 +2,12 @@
 
 import ListView from 'web.ListView';
 import Controller from './controller';
+import Renderer from './renderer';
 
 export default ListView.extend({
     config: Object.assign({}, ListView.prototype.config, {
         Controller,
+        Renderer,
     }),
 
     init: function (viewInfo, params) {
