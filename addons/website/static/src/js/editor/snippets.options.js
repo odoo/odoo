@@ -1808,10 +1808,17 @@ options.registry.CarouselItem = options.Class.extend({
         const $items = this.$carousel.find('.carousel-item');
         const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
-            const $toDelete = $items.filter('.active');
+            // The active indicator is deleted to ensure that the other
+            // indicators will still work after the deletion.
+            const $toDelete = $items.filter('.active').add(this.$indicators.find('.active'));
             this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
                 $toDelete.remove();
-                this.$indicators.find('li:last').remove();
+                // To ensure the proper functioning of the indicators, their
+                // attributes must reflect the position of the slides.
+                const indicatorsEls = this.$indicators[0].querySelectorAll('li');
+                for (let i = 0; i < indicatorsEls.length; i++) {
+                    indicatorsEls[i].setAttribute('data-slide-to', i);
+                }
                 this.$controls.toggleClass('d-none', newLength === 1);
                 this.$carousel.trigger('content_changed');
                 this.removing = false;
