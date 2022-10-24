@@ -101,7 +101,7 @@ class WebsiteBlog(http.Controller):
         first_post = BlogPost
         if not blog:
             first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1)
-            if use_cover and not fullwidth_cover:
+            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
                 offset += 1
 
         if search:
