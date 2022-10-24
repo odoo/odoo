@@ -444,6 +444,8 @@ class AccountReportExpression(models.Model):
         # with engine 'tax_tags'.
         for vals in vals_list:
             self._strip_formula(vals)
+            if 'formula' in vals and isinstance(vals['formula'], str):
+                vals['formula'] = vals['formula'].replace('\n', '').strip()
 
         result = super().create(vals_list)
 
