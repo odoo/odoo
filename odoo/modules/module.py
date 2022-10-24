@@ -60,9 +60,6 @@ _DEFAULT_MANIFEST = {
 
 _logger = logging.getLogger(__name__)
 
-# Modules already loaded
-loaded = []
-
 
 class UpgradeHook(object):
     """Makes the legacy `migrations` package being `odoo.upgrade`"""
@@ -368,27 +365,24 @@ def load_openerp_module(module_name):
     This is also used to load server-wide module (i.e. it is also used
     when there is no model to register).
     """
-    global loaded
-    if module_name in loaded:
+
+    qualname = f'odoo.addons.{module_name}'
+    if qualname in sys.modules:
         return
 
     try:
-        __import__('odoo.addons.' + module_name)
+        __import__(qualname)
 
         # Call the module's post-load hook. This can done before any model or
         # data has been initialized. This is ok as the post-load hook is for
         # server-wide (instead of registry-specific) functionalities.
         info = get_manifest(module_name)
         if info['post_load']:
-            getattr(sys.modules['odoo.addons.' + module_name], info['post_load'])()
+            getattr(sys.modules[qualname], info['post_load'])()
 
-    except Exception as e:
-        msg = "Couldn't load module %s" % (module_name)
-        _logger.critical(msg)
-        _logger.critical(e)
+    except Exception:
+        _logger.critical("Couldn't load module %s", module_name)
         raise
-    else:
-        loaded.append(module_name)
 
 def get_modules():
     """Returns the list of module names
