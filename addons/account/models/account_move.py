@@ -1257,6 +1257,7 @@ class AccountMove(models.Model):
                 invoice.show_payment_term_details = len(payment_term_lines) > 1 or invoice.show_discount_details
             else:
                 invoice.show_payment_term_details = False
+                invoice.show_discount_details = False
 
     @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
     def _compute_invoice_partner_display_info(self):
