@@ -45,7 +45,7 @@ class PosOrder(models.Model):
             del pack_lot['id']
 
         for order_line_id, pack_lot_ids in groupby(pack_lots, key=lambda x:x['order_line']):
-            next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lots)
+            next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lot_ids)
 
     def _get_fields_for_order_line(self):
         return [
@@ -84,6 +84,8 @@ class PosOrder(models.Model):
             del order_line['id']
             if not 'pack_lot_ids' in order_line:
                 order_line['pack_lot_ids'] = []
+            else:
+                order_line['pack_lot_ids'] = [[0, 0, lot] for lot in order_line['pack_lot_ids']]
             extended_order_lines.append([0, 0, order_line])
 
         for order_id, order_lines in groupby(extended_order_lines, key=lambda x:x[2]['order_id']):
