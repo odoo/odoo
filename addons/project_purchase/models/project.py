@@ -3,7 +3,6 @@
 
 import json
 
-from collections import defaultdict
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 
@@ -20,14 +19,18 @@ class Project(models.Model):
             return
         query = self.env['purchase.order.line']._search([])
         query.add_where('purchase_order_line.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
-        mapped_data = defaultdict(set)
-        query_string, query_param = query.select('analytic_distribution', 'order_id')
+
+        query.order = None
+        query_string, query_param = query.select(
+            'jsonb_object_keys(analytic_distribution) as account_id',
+            'COUNT(DISTINCT(order_id)) as purchase_order_count',
+        )
+        query_string = f"{query_string} GROUP BY jsonb_object_keys(analytic_distribution)"
+
         self._cr.execute(query_string, query_param)
-        for data in self._cr.dictfetchall():
-            for analytic_account_id in data['analytic_distribution']:
-                mapped_data[int(analytic_account_id)].add(data['order_id'])
-        for project in self:
-            project.purchase_orders_count = len(mapped_data.get(project.analytic_account_id.id, []))
+        data = {int(record.get('account_id')): record.get('purchase_order_count') for record in self._cr.dictfetchall()}
+        for account in self:
+            account.purchase_orders_count = data.get(self.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
