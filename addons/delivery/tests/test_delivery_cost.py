@@ -299,3 +299,31 @@ class TestDeliveryCost(common.TransactionCase):
         ])
 
         self.assertRecordValues(line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
+
+    def test_add_carrier_on_picking(self):
+        """
+        A user confirms a SO, then adds a carrier on the picking. The invoicing
+        policy of the carrier is set to "Real Cost". He then confirms the
+        picking: a line with the carrier cost should be added to the SO
+        """
+        self.normal_delivery.invoice_policy = 'real'
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_4
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_2
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.carrier_id = self.normal_delivery
+        picking.move_lines.quantity_done = 1
+        picking.button_validate()
+
+        so.order_line.invalidate_cache(ids=so.order_line.ids)
+
+        self.assertEqual(picking.state, 'done')
+        self.assertRecordValues(so.order_line, [
+            {'product_id': self.product_2.id, 'is_delivery': False, 'product_uom_qty': 1, 'qty_delivered': 1},
+            {'product_id': self.normal_delivery.product_id.id, 'is_delivery': True, 'product_uom_qty': 1, 'qty_delivered': 0},
+        ])

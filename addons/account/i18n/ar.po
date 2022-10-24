@@ -32,7 +32,6 @@
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
 # amrnegm <amrnegm.01@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Walid Baruni <baroni@osoul.ly>, 2020
 # Osoul <baruni@osoul.ly>, 2020
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2020
@@ -46,8 +45,10 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
 # Nabil Jabraouti <nabil@bluechipcd.com>, 2021
 # Amjad Qassas <q_amjad@msn.com>, 2021
-# Talal Albahra <talal.albahra@outlook.com>, 2021
+# ahmed gaafer, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Talal Albahra <talal.albahra@outlook.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -55,7 +56,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Talal Albahra <talal.albahra@outlook.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -854,6 +855,11 @@ msgstr "<strong>المؤسسة:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>تاريخ سند الخصم:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>كود العميل:</strong>"
 
@@ -866,6 +872,11 @@ msgstr "<strong>العميل: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>العميل</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>التاريخ:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -921,6 +932,11 @@ msgstr "<strong>طريقة السداد: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>المنتج</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>تاريخ الإيصال:</strong> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1294,7 +1310,7 @@ msgstr "حساب تقرير الضرائب"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr "سطر حساب التقرير الضريبي"
+msgstr "بند التقرير الضريبي للحساب "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1936,7 +1952,7 @@ msgstr "السماح بالتسوية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
 msgid "Allow check printing and deposits"
-msgstr "السماح بطباعة الشيكات وحافظات الشيكات"
+msgstr "السماح بطباعة الشيكات وعمليات الإيداع "
 
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
@@ -3903,7 +3919,7 @@ msgstr "إنشاء إشعار دائن لمورد"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr "إنشاء وترحيل القيود"
+msgstr "إنشاء وترحيل الحركة "
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -4545,7 +4561,7 @@ msgstr "حساب المديونين الافتراضي لنقاط البيع"
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
 msgid "Default Purchase Tax"
-msgstr "ضريبة المشتريات الافتراضية"
+msgstr "الضريبة الافتراضية للمشتريات "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -6286,7 +6302,7 @@ msgstr "Inbound Payment Methods"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "مشتمل في التكلفة التحليلية"
+msgstr "مشمول في التكلفة التحليلية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -6629,6 +6645,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"يجب أن يكون لتوزيع الإشعارات الدائنة أو الفواتير بند توزيع ضريبي واحد على "
+"الأقل. "
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6755,7 +6773,7 @@ msgstr "الفواتير التي تمت مطابقة عناصر دفتر الي
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "الفواتير الخالية من مدفوعات"
+msgstr "الفواتير غير المدفوعة "
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -6872,7 +6890,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "كان في السابق '%(previous)s' وأصبح الآن '%(now)s'. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7054,7 +7072,7 @@ msgstr "Journal used by default for moving the period of an entry"
 msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
-msgstr "دفتر اليومية الذي تم فيه ترحيل القيد الافتتاحي لحساب هذه المؤسسة."
+msgstr "دفتر اليومية الذي تم فيه ترحيل القيد الافتتاحي لحساب هذه الشركة. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
@@ -9786,6 +9804,12 @@ msgid "Reconciliation Parts"
 msgstr "أجزاء التسوية"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr "لا يمكن حذف السجل . لاستخدامه فى بعض الحسابات"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
 msgstr "تسجيل معاملات بعملات أجنبية"
@@ -11462,7 +11486,7 @@ msgstr "تقرير الضريبة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_report_line_ids
 msgid "Tax Report Lines"
-msgstr "أسطر تقرير الضرائب"
+msgstr "بنود التقرير الضريبي "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_configure_tax_report
@@ -15003,3 +15027,13 @@ msgstr "with a pdf of an invoice as attachment."
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "← عدد"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+"يتطلب الافتراضي التحليلي حساباً تحليلياً أو علامة تصنيف تحليلية تُستخدَم "
+"للتوزيع التحليلي. "

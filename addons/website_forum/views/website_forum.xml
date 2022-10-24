@@ -1426,7 +1426,7 @@
 
     <div t-attf-class="o_wforum_author_box d-inline-flex #{display_info and 'o_show_info'} #{compact and 'o_compact align-items-center'} #{bio_popover_data and 'o_wforum_bio_popover'}"
          t-att-data-content="bio_popover_data">
-        <t t-set="user_profile_url" value="#"/>
+        <t t-set="user_profile_url" t-valuef="#"/>
         <t t-if="object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published">
             <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), object.create_uid.id) + '?forum_origin=' + request.httprequest.path"/>
         </t>

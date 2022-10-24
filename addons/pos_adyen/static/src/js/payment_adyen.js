@@ -16,8 +16,6 @@ var PaymentAdyen = PaymentInterface.extend({
     },
     send_payment_cancel: function (order, cid) {
         this._super.apply(this, arguments);
-        // set only if we are polling
-        this.was_cancelled = !!this.polling;
         return this._adyen_cancel();
     },
     close: function () {
@@ -142,6 +140,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _adyen_cancel: function (ignore_error) {
         var self = this;
+        var config = this.pos.config;
         var previous_service_id = this.most_recent_service_id;
         var header = _.extend(this._adyen_common_message_header(), {
             'MessageCategory': 'Abort',
@@ -154,6 +153,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     'AbortReason': 'MerchantAbort',
                     'MessageReference': {
                         'MessageCategory': 'Payment',
+                        'SaleID': this._adyen_get_sale_id(config),
                         'ServiceID': previous_service_id,
                     }
                 },
@@ -161,11 +161,11 @@ var PaymentAdyen = PaymentInterface.extend({
         };
 
         return this._call_adyen(data).then(function (data) {
-
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
-            if (! ignore_error && data !== "ok") {
+            if (! ignore_error && data !== true) {
                 self._show_error(_t('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
+                self.was_cancelled = !!self.polling;
             }
         });
     },
@@ -214,7 +214,7 @@ var PaymentAdyen = PaymentInterface.extend({
             var order = self.pos.get_order();
             var line = self.pending_adyen_line();
 
-            if (notification && notification.SaleToPOIResponse.MessageHeader.ServiceID == self.most_recent_service_id) {
+            if (notification && notification.SaleToPOIResponse.MessageHeader.ServiceID == line.terminalServiceId) {
                 var response = notification.SaleToPOIResponse.PaymentResponse.Response;
                 var additional_response = new URLSearchParams(response.AdditionalResponse);
 

@@ -68,7 +68,7 @@ class AccountPaymentTerm(models.Model):
         if dist:
             last_date = result and result[-1][0] or fields.Date.context_today(self)
             result.append((last_date, dist))
-        return result
+        return sorted(result, key=lambda k: k[0])
 
     def unlink(self):
         for terms in self:

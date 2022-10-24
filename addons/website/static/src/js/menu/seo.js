@@ -227,11 +227,11 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         return window.location.origin + window.location.pathname;
     },
     title: function () {
-        return $('title').text().trim();
+        return $('head title').text().trim();
     },
     changeTitle: function (title) {
         // TODO create tag if missing
-        $('title').text(title.trim() || this.defaultTitle);
+        $('head title').text(title.trim() || this.defaultTitle);
         this.trigger('title-changed', title);
     },
     description: function () {

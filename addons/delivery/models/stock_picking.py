@@ -206,7 +206,7 @@ class StockPicking(models.Model):
             delivery_line[0].write({
                 'price_unit': carrier_price,
                 # remove the estimated price from the description
-                'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,
+                'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
             })
 
     def open_website_url(self):

@@ -199,7 +199,7 @@ EU_TAG_MAP = {
     },
     # Spain
     'l10n_es.account_chart_template_common': {
-        'invoice_base_tag': None,
+        'invoice_base_tag': "l10n_es.mod_303_124",
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,

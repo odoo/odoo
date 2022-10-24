@@ -682,7 +682,7 @@ class AccountBankStatementLine(models.Model):
             if balance_to_reconcile is None else balance_to_reconcile
 
         if 'currency_id' in counterpart_vals:
-            currency_id = counterpart_vals['currency_id'] or company_currency.id
+            currency_id = counterpart_vals['currency_id'] or foreign_currency.id
         elif move_line:
             currency_id = move_line.currency_id.id or company_currency.id
         else:
@@ -1069,7 +1069,7 @@ class AccountBankStatementLine(models.Model):
         reconciliation_overview = []
 
         total_balance = liquidity_lines.balance
-        total_amount_currency = liquidity_lines.amount_currency
+        total_amount_currency = -self._prepare_move_line_default_vals()[1]['amount_currency']
 
         # Step 1: Split 'lines_vals_list' into two batches:
         # - The existing account.move.lines that need to be reconciled with the statement line.

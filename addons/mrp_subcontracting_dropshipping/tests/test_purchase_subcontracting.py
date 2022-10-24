@@ -192,3 +192,73 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(mo.state, 'done')
         self.assertEqual(po.order_line.qty_received, 1)
+
+    def test_po_to_subcontractor(self):
+        """
+        Create and confirm a PO with a subcontracted move. The bought product is
+        also a component of another subcontracted product. The picking type of
+        the PO is 'Dropship' and the delivery address is the other subcontractor
+        """
+        subcontractor, super_subcontractor = self.env['res.partner'].create([
+            {'name': 'Subcontractor'},
+            {'name': 'SuperSubcontractor'},
+        ])
+        super_subcontractor.property_stock_customer = super_subcontractor.property_stock_subcontractor
+
+        super_product, product, component = self.env['product.product'].create([{
+            'name': 'Super Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': super_subcontractor.id})],
+        }, {
+            'name': 'Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': subcontractor.id})],
+        }, {
+            'name': 'Component',
+            'type': 'consu',
+        }])
+
+        _, bom_product = self.env['mrp.bom'].create([{
+            'product_tmpl_id': super_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'subcontract',
+            'subcontractor_ids': [(6, 0, super_subcontractor.ids)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': product.id, 'product_qty': 1}),
+            ],
+        }, {
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'subcontract',
+            'subcontractor_ids': [(6, 0, subcontractor.ids)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+        }])
+
+        dropship_picking_type = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('default_location_src_id.usage', '=', 'supplier'),
+            ('default_location_dest_id.usage', '=', 'customer'),
+        ], limit=1, order='sequence')
+
+        po = self.env['purchase.order'].create({
+            "partner_id": subcontractor.id,
+            "picking_type_id": dropship_picking_type.id,
+            "dest_address_id": super_subcontractor.id,
+            "order_line": [(0, 0, {
+                'product_id': product.id,
+                'name': product.name,
+                'product_qty': 1.0,
+            })],
+        })
+        po.button_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', bom_product.id)])
+        self.assertEqual(mo.picking_type_id, self.warehouse.subcontracting_type_id)
+
+        delivery = po.picking_ids
+        delivery.move_line_ids.qty_done = 1.0
+        delivery.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 1.0)

@@ -20,13 +20,12 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2020
 # Fabrice Henrion, 2020
 # Fabien Bourgeois <fabien@yaltik.com>, 2020
-# Kévin R., 2020
+# K. R., 2020
 # Loic <loic.richard2@gmail.com>, 2020
 # Clo <clo@odoo.com>, 2020
 # user 2 odoo <user2odoo@gmail.com>, 2020
 # Shark McGnark <peculiarcheese@gmail.com>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
@@ -34,9 +33,10 @@
 # Martin Trigaux, 2020
 # Fred Gilson <fgi@odoo.com>, 2020
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Clément Watthez <cwa@odoo.com>, 2021
 # Corentin POUHET-BRUNERIE <corentin.pb@gmail.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -44,13 +44,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Corentin POUHET-BRUNERIE <corentin.pb@gmail.com>, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web_editor
 #. openerp-web
@@ -825,6 +825,13 @@ msgstr "Taille des caractères"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "For technical reasons, this block cannot be dropped here"
+msgstr "Pour des raisons techniques, ce bloc ne peut pas être déposé ici"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Format"
@@ -1113,6 +1120,12 @@ msgstr "Insérer une video"
 #, python-format
 msgid "Install"
 msgstr "Installer"
+
+#. module: web_editor
+#: code:addons/web_editor/models/ir_ui_view.py:0
+#, python-format
+msgid "Invalid field value for %s: %s"
+msgstr "Valeur non valide pour %s : %s"
 
 #. module: web_editor
 #. openerp-web
