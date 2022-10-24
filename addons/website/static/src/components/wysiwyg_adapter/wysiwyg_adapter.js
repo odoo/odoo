@@ -59,6 +59,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             if (this.websiteService.isDesigner && viewKey) {
                 switchableRelatedViews = this.rpc('/website/get_switchable_related_views', {key: viewKey});
             }
+            // Set utils functions' editable window to the current iframe's window.
+            // This allows those function to access the correct styles definitions,
+            // document element, etc.
+            setEditableWindow(this.websiteService.contentWindow);
             this.switchableRelatedViews = Promise.resolve(switchableRelatedViews);
         });
 
@@ -89,17 +93,12 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 }
                 this.props.wysiwygReady();
                 this.widget.odooEditor.observerActive();
-                // Set utils functions' editable window to the current iframe's window.
-                // This allows those function to access the correct styles definitions,
-                // document element, etc.
-                setEditableWindow(this.websiteService.contentWindow);
             };
 
             initWysiwyg();
 
             return () => {
                 this.$editable.off('click.odoo-website-editor', '*');
-                setEditableWindow(window);
             };
         }, () => []);
 
@@ -132,6 +131,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             if (this.dummyWidgetEl) {
                 this.dummyWidgetEl.remove();
                 document.body.classList.remove('editor_has_dummy_snippets');
+                setEditableWindow(window);
             }
         });
     }
@@ -800,41 +800,14 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
         });
     }
-    /***
-     * Updates the Color Preview elements to reflect
-     * the colors that are inside the iframe.
-     * See the web_editor.color.combination.preview QWeb template.
+    /**
+     * Updates the panel so that color previews reflects the ones used by the
+     * edited content.
      *
-     * @param event
-     * @param event.data.ccPreviewEls {HTMLElement} The color combination preview element.
      * @private
      */
-    _onColorPreviewsUpdate(event) {
+    _onColorPreviewsUpdate() {
         this.widget.setCSSVariables(this.widget.snippetsMenu.el);
-        const stylesToCopy = [
-            'background-color',
-            'border',
-            'color',
-        ];
-        const copyStyles = (from, to) => {
-            const cloneStyle = this.websiteService.contentWindow.getComputedStyle(from);
-            for (const style of stylesToCopy) {
-                to.style.setProperty(style, cloneStyle.getPropertyValue(style));
-            }
-        };
-
-        for (const ccPreviewEl of event.data.ccPreviewEls) {
-            ccPreviewEl.setAttribute('style', '');
-            Object.values(ccPreviewEl.children).forEach(child => child.setAttribute('style', ''));
-            const iframeClone = ccPreviewEl.cloneNode(true);
-            this.websiteService.pageDocument.body.appendChild(iframeClone);
-            copyStyles(iframeClone, ccPreviewEl);
-            copyStyles(iframeClone.querySelector('h1'), ccPreviewEl.querySelector('h1'));
-            copyStyles(iframeClone.querySelector('.btn-primary'), ccPreviewEl.querySelector('.btn-primary'));
-            copyStyles(iframeClone.querySelector('.btn-secondary'), ccPreviewEl.querySelector('.btn-secondary'));
-            copyStyles(iframeClone.querySelector('p'), ccPreviewEl.querySelector('p'));
-            iframeClone.remove();
-        }
     }
     /**
      * Update the context to trigger a mobile view.
