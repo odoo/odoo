@@ -181,6 +181,7 @@ const Wysiwyg = Widget.extend({
             commands: commands,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -987,6 +988,7 @@ const Wysiwyg = Widget.extend({
             subtree: true,
             attributes: true,
             characterData: true,
+            attributeOldValue: true,
         };
         if (this.odooFieldObservers) {
             for (let observerData of this.odooFieldObservers) {
@@ -998,7 +1000,11 @@ const Wysiwyg = Widget.extend({
             this.odooFieldObservers = [];
 
             $odooFields.each((i, field) => {
-                const observer = new MutationObserver(() => {
+                const observer = new MutationObserver((mutations) => {
+                    mutations = this.odooEditor.filterMutationRecords(mutations);
+                    if (!mutations.length) {
+                        return;
+                    }
                     let $node = $(field);
                     let $nodes = $odooFields.filter(function () {
                         return this !== field;
