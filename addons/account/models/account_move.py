@@ -137,6 +137,7 @@ class AccountMove(models.Model):
         comodel_name='res.company',
         string='Company',
         compute='_compute_company_id', inverse='_inverse_company_id', store=True, readonly=False, precompute=True,
+        index=True,
     )
     line_ids = fields.One2many(
         'account.move.line',
