@@ -697,7 +697,7 @@ export class ListRenderer extends Component {
                 this.props.list.editedRecord &&
                 this.props.list.editedRecord.isReadonly(column.name)
             ) {
-                classNames.push("pe-none", "text-muted");
+                classNames.push("text-muted");
             } else {
                 classNames.push("cursor-pointer");
             }
