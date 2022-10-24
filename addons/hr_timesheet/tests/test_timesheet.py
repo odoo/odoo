@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 
 
@@ -69,6 +69,12 @@ class TestCommonTimesheet(TransactionCase):
             'login': 'user_manager',
             'email': 'usermanager@test.com',
             'groups_id': [(6, 0, [self.ref('hr_timesheet.group_timesheet_manager')])],
+        })
+        self.user_with_no_employee = self.env['res.users'].create({
+            'name': 'User With No Employee',
+            'login': 'user_with_no_employee',
+            'email': 'userwithnoemployee@test.com',
+            'groups_id': [(6, 0, [self.ref('hr_timesheet.group_hr_timesheet_user')])],
         })
         # employees
         self.empl_employee = self.env['hr.employee'].create({
@@ -225,6 +231,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
@@ -299,6 +306,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my only timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         self.assertEqual(timesheet_entry.partner_id, self.partner, "The timesheet entry's partner should be equal to the task's partner/customer")
@@ -308,6 +316,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(timesheet_entry.partner_id, partner2, "The timesheet entry's partner should still be equal to the task's partner/customer, after the change")
 
     def test_add_time_from_wizard(self):
+        self.env.user.employee_id = self.env['hr.employee'].create({'user_id': self.env.uid})
         config = self.env["res.config.settings"].create({
                 "timesheet_min_duration": 60,
                 "timesheet_rounding": 15,
@@ -321,8 +330,8 @@ class TestTimesheet(TestCommonTimesheet):
                 'time_spent': 1.15,
                 'task_id': self.task1.id,
             })
-        self.assertEqual(wizard_min.save_timesheet().unit_amount, 1, "The timesheet's duration should be 1h (Minimum Duration = 60').")
-        self.assertEqual(wizard_round.save_timesheet().unit_amount, 1.25, "The timesheet's duration should be 1h15 (Rounding = 15').")
+        self.assertEqual(wizard_min.with_user(self.env.user).save_timesheet().unit_amount, 1, "The timesheet's duration should be 1h (Minimum Duration = 60').")
+        self.assertEqual(wizard_round.with_user(self.env.user).save_timesheet().unit_amount, 1.25, "The timesheet's duration should be 1h15 (Rounding = 15').")
 
     def test_task_with_timesheet_project_change(self):
         '''This test checks that no error is raised when moving a task that contains timesheet to another project.
@@ -372,7 +381,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertFalse(self.project_customer.timesheet_ids, 'No timesheet should be recorded in this project')
         self.assertFalse(self.project_customer.total_timesheet_time, 'The total time recorded should be equal to 0 since no timesheet is recorded.')
 
-        timesheet1, timesheet2 = self.env['account.analytic.line'].create([
+        timesheet1, timesheet2 = self.env['account.analytic.line'].with_user(self.user_employee).create([
             {'unit_amount': 1.0, 'project_id': self.project_customer.id},
             {'unit_amount': 3.0, 'project_id': self.project_customer.id, 'product_uom_id': False},
         ])
@@ -429,15 +438,36 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'Employee 2',
             'user_id': self.user_manager.id,
         })
-        timesheet = Timesheet.create({
-            'name': 'Timesheet',
-            'project_id': project.id,
-            'task_id': task.id,
-            'unit_amount': 2,
-            'user_id': self.user_manager.id,
-            'company_id': company_3.id,
+
+        with self.assertRaises(ValidationError):
+            # As there are several employees for this user, but none of them in this company, none must be found
+            timesheet = Timesheet.create({
+                'name': 'Timesheet',
+                'project_id': project.id,
+                'task_id': task.id,
+                'unit_amount': 2,
+                'user_id': self.user_manager.id,
+                'company_id': company_3.id,
+            })
+
+    def test_create_timesheet_with_multi_company(self):
+        """ Always set the current company in the timesheet, not the employee company """
+        company_4 = self.env['res.company'].create({'name': 'Company 4'})
+        empl_employee = self.env['hr.employee'].with_company(company_4).create({
+            'name': 'Employee 3',
         })
-        self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
+
+        Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_4.id, self.env.company.id])
+
+        timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+            'employee_id': empl_employee.id,
+        })
+
+        self.assertEqual(timesheet.company_id.id, self.env.company.id)
 
     def test_create_timesheet_with_archived_employee(self):
         ''' the timesheet can be created or edited only with an active employee
@@ -476,16 +506,14 @@ class TestTimesheet(TestCommonTimesheet):
 
         Timesheet = self.env['account.analytic.line']
 
-        emp_without_user = self.env['hr.employee'].create({
-            'name': 'Empl Employee',
-        })
-        without_user_timesheet = Timesheet.with_context(default_employee_id=emp_without_user.id).create({
-            'project_id': self.project_customer.id,
-            'unit_amount': 8.0,
-        })
-        self.assertFalse(without_user_timesheet.user_id, 'User is not set in timesheet.')
+        with self.assertRaises(ValidationError):
+            # As there is no employee for this user, a validation error must be raised
+            Timesheet.with_user(self.user_with_no_employee).create({
+                'project_id': self.project_customer.id,
+                'unit_amount': 8.0,
+            })
 
-        with_user_timesheet = Timesheet.with_context(default_employee_id=self.empl_employee.id).create({
+        with_user_timesheet = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
             'unit_amount': 8.0,
         })
