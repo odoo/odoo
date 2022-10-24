@@ -46,7 +46,7 @@
                         <span class="flex-grow-1"/>
                         <t t-if="channelPreviewView.thread.lastMessage and channelPreviewView.thread.lastMessage.date">
                             <small class="o_NotificationListItem_date o_ChannelPreviewView_date flex-shrink-0 text-500" t-att-class="{ 'o-muted': channelPreviewView.channel.localMessageUnreadCounter === 0 }">
-                                <t t-esc="channelPreviewView.thread.lastMessage.date.fromNow()"/>
+                                <t t-esc="channelPreviewView.thread.lastMessage.momentDate.fromNow()"/>
                             </small>
                         </t>
                     </div>

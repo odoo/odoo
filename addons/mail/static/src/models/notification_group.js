@@ -72,8 +72,8 @@ registerModel({
              */
             compute() {
                 const dates = this.notifications
-                    .filter(notification => notification.message && notification.message.date)
-                    .map(notification => notification.message.date);
+                    .filter(notification => notification.message && notification.message.momentDate)
+                    .map(notification => notification.message.momentDate);
                 if (dates.length === 0) {
                     return clear();
                 }
