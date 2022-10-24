@@ -302,7 +302,7 @@ const Wysiwyg = Widget.extend({
 
                 const selection = self.odooEditor.document.getSelection();
                 const anchorNode = selection.anchorNode;
-                if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+                if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
                     return;
                 }
 
@@ -1777,7 +1777,7 @@ const Wysiwyg = Widget.extend({
     _updateEditorUI: function (e) {
         let selection = this.odooEditor.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
