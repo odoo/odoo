@@ -764,8 +764,6 @@ class TestComposerInternals(TestMailComposer):
 
                 # changing template should update its content
                 composer.write({'template_id': self.template.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
@@ -799,8 +797,6 @@ class TestComposerInternals(TestMailComposer):
                 # update with template with void values: void value is not forced in
                 # rendering mode as well as in raw mode
                 composer.write({'template_id': template_void.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name>/></p>')
@@ -817,18 +813,14 @@ class TestComposerInternals(TestMailComposer):
 
                 # reset template should reset values
                 composer.write({'template_id': False})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
-                # values are reset with default_get call / compute field
+                # values are reset with compute field
                 if composition_mode == 'comment' and not batch:
                     self.assertFalse(composer.body)
                     self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.record_name, 'Manual update',
                                      'MailComposer: record name does not depend on template')
-                    # self.assertFalse(composer.scheduled_date)
-                    self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.scheduled_date)
                     self.assertEqual(composer.subject, self.test_record._message_compute_subject())
                     self.assertIn(f'Ticket for {self.test_record.name}', composer.subject,
                                   'Check effective content')
@@ -837,9 +829,7 @@ class TestComposerInternals(TestMailComposer):
                     self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.record_name, 'Manual update',
                                      'MailComposer: record name does not depend on template')
-                    # self.assertFalse(composer.scheduled_date)
-                    self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.scheduled_date)
                     self.assertFalse(composer.subject)
 
                 # 2. check with default
@@ -847,8 +837,6 @@ class TestComposerInternals(TestMailComposer):
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'template_id': self.template.id,
                 })
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
@@ -869,8 +857,6 @@ class TestComposerInternals(TestMailComposer):
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'template_id': self.template.id,
                 })
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
