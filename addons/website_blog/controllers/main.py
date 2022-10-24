@@ -99,7 +99,7 @@ class WebsiteBlog(http.Controller):
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
         if not blog:
-            if use_cover and not fullwidth_cover:
+            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
                 offset += 1
 
         options = {
