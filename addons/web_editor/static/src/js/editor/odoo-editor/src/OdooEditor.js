@@ -240,6 +240,7 @@ export class OdooEditor extends EventTarget {
                 direction: 'ltr',
                 _t: string => string,
                 allowCommandVideo: true,
+                renderingClasses: [],
             },
             options,
         );
@@ -902,6 +903,24 @@ export class OdooEditor extends EventTarget {
                 }
 
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
+                if (record.attributeName === 'class') {
+                    const classBefore = (record.oldValue && record.oldValue.split(' ')) || [];
+                    const classAfter = (record.target.className && record.target.className.split && record.target.className.split(' ')) || [];
+                    const excludedClasses = [];
+                    for (const klass of classBefore) {
+                        if (!classAfter.includes(klass)) {
+                            excludedClasses.push(klass);
+                        }
+                    }
+                    for (const klass of classAfter) {
+                        if (!classBefore.includes(klass)) {
+                            excludedClasses.push(klass);
+                        }
+                    }
+                    if (excludedClasses.every(c => this.options.renderingClasses.includes(c))) {
+                        continue;
+                    }
+                }
                 if (
                     typeof attributeCache.get(record.target)[record.attributeName] === 'undefined'
                 ) {
@@ -1026,10 +1045,14 @@ export class OdooEditor extends EventTarget {
             } else if (record.type === 'attributes') {
                 const node = this.idFind(record.id);
                 if (node) {
+                    let value = record.value;
+                    if (typeof value === 'string' && record.attributeName === 'class') {
+                        value = value.split(' ').filter(c => !this.options.renderingClasses.includes(c)).join(' ');
+                    }
                     if (this._collabClientId) {
-                        this._safeSetAttribute(node, record.attributeName, record.value);
+                        this._safeSetAttribute(node, record.attributeName, value);
                     } else {
-                        node.setAttribute(record.attributeName, record.value);
+                        node.setAttribute(record.attributeName, value);
                     }
                 }
             } else if (record.type === 'remove') {
@@ -1166,10 +1189,14 @@ export class OdooEditor extends EventTarget {
                     const node = this.idFind(mutation.id);
                     if (node) {
                         if (mutation.oldValue) {
+                            let value = mutation.oldValue;
+                            if (typeof value === 'string' && mutation.attributeName === 'class') {
+                                value = value.split(' ').filter(c => !this.options.renderingClasses.includes(c)).join(' ');
+                            }
                             if (this._collabClientId) {
-                                this._safeSetAttribute(node, mutation.attributeName, mutation.oldValue);
+                                this._safeSetAttribute(node, mutation.attributeName, value);
                             } else {
-                                node.setAttribute(mutation.attributeName, mutation.oldValue);
+                                node.setAttribute(mutation.attributeName, value);
                             }
                         } else {
                             node.removeAttribute(mutation.attributeName);
