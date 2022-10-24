@@ -49,6 +49,7 @@ class MailComposer(models.TransientModel):
                 - active_ids: record IDs
                 - default_model or active_model
         """
+        
         # backward compatibility of context before addition of
         # email_layout_xmlid field: to remove in 15.1+
         if self._context.get('custom_layout') and 'default_email_layout_xmlid' not in self._context:
