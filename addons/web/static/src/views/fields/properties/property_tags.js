@@ -287,6 +287,7 @@ PropertyTags.components = {
 };
 
 PropertyTags.props = {
+    id: { type: String, optional: true },
     selectedTags: {}, // Tags value visible in the tags list
     tags: {}, // Tags definition visible in the dropdown
     // Define the behavior of the delete button on the tags, either

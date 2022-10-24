@@ -123,6 +123,15 @@ export class PropertiesField extends Component {
         return false;
     }
 
+    /**
+     * Generate an unique ID to be used in the DOM.
+     *
+     * @returns {string}
+     */
+    generateUniqueDomID() {
+        return `property_${uuid()}`;
+    }
+
     /* --------------------------------------------------------
      * Event handlers
      * -------------------------------------------------------- */
