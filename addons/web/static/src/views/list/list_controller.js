@@ -379,7 +379,7 @@ export class ListController extends Component {
      * @private
      */
     async onDirectExportData() {
-        const fields = await this.getExportedFields(this.model.root.resModel, true);
+        const fields = await this.getExportedFields(this.model.root.resModel, false);
         await this.downloadExport(
             fields.filter((field) => this.model.root.activeFields[field.id]),
             false,
