@@ -560,7 +560,7 @@ class Channel(models.Model):
         # link message to channel
         rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
 
-        message_format_values = message.message_format()[0]
+        message_format_values = message.message_format(legacy=False)[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
         # Last interest and is_pinned are updated for a chat when posting a message.
         # So a notification is needed to update UI, and it should come before the
@@ -720,7 +720,7 @@ class Channel(models.Model):
             :param message : the mail.message to sent
             :returns list of bus notifications (tuple (bus_channe, message_content))
         """
-        message_format = message_format or message.message_format()[0]
+        message_format = message_format or message.message_format(legacy=False)[0]
         notifications = []
         for channel in self:
             payload = {
@@ -1134,7 +1134,7 @@ class Channel(models.Model):
             return []
         channels_last_message_ids = self._channel_last_message_ids()
         channels_preview = dict((r['message_id'], r) for r in channels_last_message_ids)
-        last_messages = self.env['mail.message'].browse(channels_preview).message_format()
+        last_messages = self.env['mail.message'].browse(channels_preview).message_format(legacy=False)
         for message in last_messages:
             channel = channels_preview[message['id']]
             del(channel['message_id'])
@@ -1184,8 +1184,10 @@ class Channel(models.Model):
         """
         self.env['bus.bus']._sendone(partner_to, 'mail.channel/transient_message', {
             'body': "<span class='o_mail_notification'>" + content + "</span>",
-            'model': self._name,
-            'res_id': self.id,
+            'originThread': {
+                'model': self._name,
+                'id': self.id,
+            }
         })
 
     def execute_command_help(self, **kwargs):

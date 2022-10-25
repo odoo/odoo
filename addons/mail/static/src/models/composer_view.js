@@ -573,9 +573,7 @@ Model({
                 if (!messaging.exists()) {
                     return;
                 }
-                const message = messaging.models['Message'].insert(
-                    messaging.models['Message'].convertData(messageData)
-                );
+                const message = messaging.models['Message'].insert(messageData);
                 if (messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
                     messaging.rpc({
                         route: `/mail/link_preview`,

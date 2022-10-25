@@ -37,13 +37,12 @@ patch(MockServer.prototype, 'mail/models/mail_notification', {
     _mockMailNotification_NotificationFormat(ids) {
         const notifications = this.getRecords('mail.notification', [['id', 'in', ids]]);
         return notifications.map(notification => {
-            const partner = this.getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
             return {
                 'id': notification.id,
                 'notification_type': notification.notification_type,
                 'notification_status': notification.notification_status,
                 'failure_type': notification.failure_type,
-                'res_partner_id': partner ? [partner && partner.id, partner && partner.display_name] : undefined,
+                'partner': notification.res_partner_id ? this._mockResPartnerMailPartnerFormat(notification.res_partner_id).get(notification.res_partner_id) : [['clear']],
             };
         });
     },

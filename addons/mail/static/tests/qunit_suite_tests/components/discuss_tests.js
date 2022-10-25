@@ -2845,8 +2845,10 @@ QUnit.test('receive new needaction messages', async function (assert) {
             'body': "not empty",
             'id': 100,
             'needaction_partner_ids': [{ id: pyEnv.currentPartnerId }],
-            'model': 'res.partner',
-            'res_id': 20,
+            'originThread': {
+                'model': 'res.partner',
+                'id': 20,
+            }
         });
     });
     assert.ok(
@@ -2885,8 +2887,10 @@ QUnit.test('receive new needaction messages', async function (assert) {
             'body': "not empty",
             'id': 101,
             'needaction_partner_ids': [{ id: pyEnv.currentPartnerId }],
-            'model': 'res.partner',
-            'res_id': 20,
+            'originThread': {
+                'model': 'res.partner',
+                'id': 20,
+            }
         });
     });
     assert.strictEqual(
@@ -3376,8 +3380,10 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
             'id': mailChannelId1,
             'message': {
                 id: 126,
-                model: 'mail.channel',
-                res_id: mailChannelId1,
+                originThread: {
+                    model: 'mail.channel',
+                    id: mailChannelId1,
+                },
             },
         });
     });
@@ -3408,8 +3414,10 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
             'id': mailChannelId1,
             'message': {
                 id: 126,
-                model: 'mail.channel',
-                res_id: mailChannelId1,
+                originThread: {
+                    model: 'mail.channel',
+                    id: mailChannelId1,
+                },
             },
         });
     });
@@ -3453,8 +3461,10 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             'id': mailChannelId1,
             'message': {
                 id: 126,
-                model: 'mail.channel',
-                res_id: mailChannelId1,
+                originThread: {
+                    model: 'mail.channel',
+                    id: mailChannelId1,
+                },
             },
         });
     });
@@ -3467,8 +3477,10 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             'id': mailChannelId2,
             'message': {
                 id: 127,
-                model: 'mail.channel',
-                res_id: mailChannelId2,
+                originThread: {
+                    model: 'mail.channel',
+                    id: mailChannelId2,
+                },
             },
         });
     });
@@ -3480,8 +3492,10 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             'id': mailChannelId2,
             'message': {
                 id: 128,
-                model: 'mail.channel',
-                res_id: mailChannelId2,
+                originThread: {
+                    model: 'mail.channel',
+                    id: mailChannelId2,
+                },
             },
         });
     });

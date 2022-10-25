@@ -132,3 +132,12 @@ class MailNotification(models.Model):
             'failure_type': notif.failure_type,
             'res_partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name] if notif.res_partner_id else False,
         } for notif in self]
+
+    def model_notification_format(self):
+        return [{
+            'id': notif.id,
+            'notification_type': notif.notification_type,
+            'notification_status': notif.notification_status,
+            'failure_type': notif.failure_type,
+            'partner': notif.res_partner_id.mail_partner_format().get(notif.res_partner_id) if notif.res_partner_id else [('clear',)],
+        } for notif in self]

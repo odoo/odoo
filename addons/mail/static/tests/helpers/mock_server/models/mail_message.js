@@ -162,31 +162,48 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
                 ['id', 'in', message.link_preview_ids],
             ]);
             const linkPreviewsFormatted = linkPreviews.map(linkPreview => this._mockMailLinkPreviewFormat(linkPreview));
-
-            const response = Object.assign({}, message, {
-                attachment_ids: formattedAttachments,
-                author: formattedAuthor,
-                history_partner_ids: historyPartnerIds,
-                linkPreviews: linkPreviewsFormatted,
-                needaction_partner_ids: needactionPartnerIds,
-                notifications,
-                parentMessage: message.parent_id ? this._mockMailMessageMessageFormat([message.parent_id])[0] : false,
-                recipients: partners.map(p => ({ id: p.id, name: p.name })),
-                record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                starred_partner_ids: starredPartnerIds,
-                trackingValues: formattedTrackingValues,
-            });
-            delete response['author_id'];
+            let subtype_description = undefined;
             if (message.subtype_id) {
                 const subtype = this.getRecords('mail.message.subtype', [
                     ['id', '=', message.subtype_id],
                 ])[0];
-                response.subtype_description = subtype.description;
+                subtype_description = subtype.description;
             }
+            let guestAuthor = [['clear']];
             if (message.author_guest_id) {
                 const [guest] = this.pyEnv['mail.guest'].searchRead([['id', '=', message.author_guest_id]]);
-                response['guestAuthor'] = { id: guest.id, name: guest.name };
+                guestAuthor = { id: guest.id, name: guest.name };
             }
+            const response = {
+                'attachments': formattedAttachments,
+                'author': formattedAuthor,
+                'body': message.body,
+                'date': message.date,
+                'email_from': message.email_from,
+                'guestAuthor': guestAuthor,
+                'history_partner_ids': historyPartnerIds,
+                'id': message.id,
+                'is_discussion': message.is_discussion,
+                'is_note': message.is_note,
+                'is_notification': message.message_type == 'user_notification',
+                'linkPreviews': linkPreviewsFormatted,
+                // 'messageReactionGroups': self.reaction_group_format(message_sudo),
+                'message_type': message.message_type,
+                'originThread': {
+                    'id': message.res_id,
+                    'model': message.model,
+                    'name': thread && (thread.name !== undefined ? thread.name : thread.display_name),
+                },
+                'needaction_partner_ids': needactionPartnerIds,
+                'notifications': notifications,
+                'parentMessage': message.parent_id ? this._mockMailMessageMessageFormat([message.parent_id])[0] : [['clear']],
+                recipients: partners.map(p => ({ id: p.id, name: p.name })),
+                'starred_partner_ids': starredPartnerIds,
+                'subject': message.subject,
+                'subtype_description': subtype_description,
+                'subtype_id': message.subtype_id.id,
+                'trackingValues': formattedTrackingValues,
+            };
             return response;
         });
     },
@@ -213,10 +230,12 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
                 'date': message.date,
                 'id': message.id,
                 'message_type': message.message_type,
-                'model': message.model,
                 'notifications': notifications,
-                'res_id': message.res_id,
-                'res_model_name': message.res_model_name,
+                'originThread': {
+                    'id': message.res_id,
+                    'model': message.model,
+                    'model_name': message.res_model_name,
+                }
             };
         });
     },

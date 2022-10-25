@@ -2414,9 +2414,9 @@ class MailThread(models.AbstractModel):
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 
-            message_format_values = message.message_format()[0]
+            message_format_values = message.message_format(legacy=False)[0]
             for partner_id in inbox_pids:
-                bus_notifications.append((self.env['res.partner'].browse(partner_id), 'mail.message/inbox', dict(message_format_values)))
+                bus_notifications.append((self.env['res.partner'].browse(partner_id), 'mail.message/inbox', message_format_values))
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,

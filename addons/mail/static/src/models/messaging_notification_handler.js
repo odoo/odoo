@@ -240,7 +240,6 @@ Model({
             if (!channel && this.messaging.isCurrentUserGuest) {
                 return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
             }
-            const convertedData = this.messaging.models['Message'].convertData(messageData);
 
             // Fetch missing info from channel before going further. Inserting
             // a channel with incomplete info can lead to issues. This is in
@@ -258,7 +257,7 @@ Model({
                 channel.thread.pin();
             }
 
-            const message = this.messaging.models['Message'].insert(convertedData);
+            const message = this.messaging.models['Message'].insert(messageData);
             this._notifyThreadViewsMessageReceived(message);
 
             // If the current partner is author, do nothing else.
@@ -365,9 +364,7 @@ Model({
          * @param {Object} data
          */
         _handleNotificationNeedaction(data) {
-            const message = this.messaging.models['Message'].insert(
-                this.messaging.models['Message'].convertData(data)
-            );
+            const message = this.messaging.models['Message'].insert(data);
             this.messaging.inbox.update({ counter: increment() });
             const originThread = message.originThread;
             if (originThread && message.isNeedaction) {
@@ -463,9 +460,7 @@ Model({
          */
         _handleNotificationPartnerMessageNotificationUpdate({ elements }) {
             for (const messageData of elements) {
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
-                );
+                const message = this.messaging.models['Message'].insert(messageData);
                 // implicit: failures are sent by the server as notification
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
@@ -545,13 +540,12 @@ Model({
          * @param {Object} data
          */
         _handleNotificationPartnerTransientMessage(data) {
-            const convertedData = this.messaging.models['Message'].convertData(data);
             const lastMessageId = this.messaging.models['Message'].all().reduce(
                 (lastMessageId, message) => Math.max(lastMessageId, message.id),
                 0
             );
             const partnerRoot = this.messaging.partnerRoot;
-            const message = this.messaging.models['Message'].insert(Object.assign(convertedData, {
+            const message = this.messaging.models['Message'].insert(Object.assign(data, {
                 author: partnerRoot,
                 id: lastMessageId + 0.01,
                 isTransient: true,

@@ -208,15 +208,15 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/inbox/messages', methods=['POST'], type='json', auth='user')
     def discuss_inbox_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], max_id=max_id, min_id=min_id, limit=limit).message_format(legacy=False)
 
     @http.route('/mail/history/messages', methods=['POST'], type='json', auth='user')
     def discuss_history_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', False)], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', False)], max_id=max_id, min_id=min_id, limit=limit).message_format(legacy=False)
 
     @http.route('/mail/starred/messages', methods=['POST'], type='json', auth='user')
     def discuss_starred_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', 'in', [request.env.user.partner_id.id])], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', 'in', [request.env.user.partner_id.id])], max_id=max_id, min_id=min_id, limit=limit).message_format(legacy=False)
 
     # --------------------------------------------------------------------------
     # Thread API (channel/chatter common)
@@ -232,7 +232,7 @@ class DiscussController(http.Controller):
             thread = channel_member_sudo.channel_id
         else:
             thread = request.env[thread_model].browse(int(thread_id)).exists()
-        return thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
+        return thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format(legacy=False)[0]
 
     @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
     def mail_message_update_content(self, message_id, body, attachment_ids):
@@ -406,7 +406,7 @@ class DiscussController(http.Controller):
         ], max_id=max_id, min_id=min_id, limit=limit)
         if not request.env.user._is_public():
             messages.set_message_done()
-        return messages.message_format()
+        return messages.message_format(legacy=False)
 
     @http.route('/mail/channel/set_last_seen_message', methods=['POST'], type='json', auth='public')
     def mail_channel_mark_as_seen(self, channel_id, last_message_id, **kwargs):
@@ -450,7 +450,7 @@ class DiscussController(http.Controller):
         ], max_id=max_id, min_id=min_id, limit=limit)
         if not request.env.user._is_public():
             messages.set_message_done()
-        return messages.message_format()
+        return messages.message_format(legacy=False)
 
     @http.route('/mail/read_subscription_data', methods=['POST'], type='json', auth='user')
     def read_subscription_data(self, follower_id):

@@ -49,8 +49,8 @@ QUnit.test('marked as read thread notifications are ordered by last message date
 
 QUnit.test('thread notifications are re-ordered on receiving a new message', async function (assert) {
     assert.expect(4);
-
     const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         { name: "Channel 2019" },
         { name: "Channel 2020" },
@@ -81,14 +81,16 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
         pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel/new_message', {
             'id': mailChannelId1,
             'message': {
-                author_id: [7, "Demo User"],
+                author: { id: resPartnerId1 },
                 body: "<p>New message !</p>",
                 date: "2020-03-23 10:00:00",
                 id: 44,
                 message_type: 'comment',
-                model: 'mail.channel',
-                record_name: 'Channel 2019',
-                res_id: mailChannelId1,
+                originThread: {
+                    model: 'mail.channel',
+                    name: 'Channel 2019',
+                    id: mailChannelId1,
+                }
             },
         });
     });

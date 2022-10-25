@@ -568,8 +568,10 @@ patch(MockServer.prototype, 'mail/models/mail_channel', {
             }
             this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.channel/transient_message', {
                 'body': `<span class="o_mail_notification">${message}</span>`,
-                'model': 'mail.channel',
-                'res_id': channel.id,
+                'originThread': {
+                    'model': 'mail.channel',
+                    'id': channel.id,
+                }
             });
         }
     },

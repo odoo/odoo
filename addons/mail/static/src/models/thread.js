@@ -73,20 +73,22 @@ Model({
                 data2.lastInterestDateTime = str_to_datetime(data.last_interest_dt);
             }
             if ('last_message' in data && data.last_message) {
-                const messageData = this.messaging.models['Message'].convertData({
+                data2.serverLastMessage = insert({
                     id: data.last_message.id,
-                    model: data2.model,
-                    res_id: data2.id,
+                    originThread: {
+                        model: data2.model,
+                        id: data2.id,
+                    }
                 });
-                data2.serverLastMessage = insert(messageData);
             }
             if ('last_message_id' in data && data.last_message_id) {
-                const messageData = this.messaging.models['Message'].convertData({
+                data2.serverLastMessage = insert({
                     id: data.last_message_id,
-                    model: data2.model,
-                    res_id: data2.id,
+                    originThread: {
+                        model: data2.model,
+                        id: data2.id,
+                    }
                 });
-                data2.serverLastMessage = insert(messageData);
             }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
@@ -255,9 +257,7 @@ Model({
                 method: 'channel_fetch_preview',
                 args: [channelIds],
             }, { shadow: true });
-            this.messaging.models['Message'].insert(channelPreviews.filter(p => p.last_message).map(
-                channelPreview => this.messaging.models['Message'].convertData(channelPreview.last_message)
-            ));
+            this.messaging.models['Message'].insert(channelPreviews.filter(p => p.last_message).map(channelPreview => channelPreview.last_message));
         },
         /**
          * Performs the `channel_fold` RPC on `mail.channel`.

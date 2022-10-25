@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
@@ -12,102 +12,6 @@ import { markup } from '@odoo/owl';
 Model({
     name: 'Message',
     modelMethods: {
-        /**
-         * @param {Object} data
-         * @return {Object}
-         */
-        convertData(data) {
-            const data2 = {};
-            data2.attachments = data.attachment_ids;
-            if ('author' in data) {
-                data2.author = data.author;
-            }
-            if ('body' in data) {
-                data2.body = data.body;
-            }
-            if ('date' in data && data.date) {
-                data2.date = data.date;
-            }
-            if ('email_from' in data) {
-                data2.email_from = data.email_from;
-            }
-            if ('guestAuthor' in data) {
-                data2.guestAuthor = data.guestAuthor;
-            }
-            if ('history_partner_ids' in data) {
-                data2.history_partner_ids = data.history_partner_ids;
-            }
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-            if ('is_discussion' in data) {
-                data2.is_discussion = data.is_discussion;
-            }
-            if ('is_note' in data) {
-                data2.is_note = data.is_note;
-            }
-            if ('is_notification' in data) {
-                data2.is_notification = data.is_notification;
-            }
-            data2.linkPreviews = data.linkPreviews;
-            if ('messageReactionGroups' in data) {
-                data2.messageReactionGroups = data.messageReactionGroups;
-            }
-            if ('message_type' in data) {
-                data2.message_type = data.message_type;
-            }
-            if ('model' in data && 'res_id' in data && data.model && data.res_id) {
-                const originThreadData = {
-                    id: data.res_id,
-                    model: data.model,
-                };
-                if ('record_name' in data && data.record_name) {
-                    originThreadData.name = data.record_name;
-                }
-                if ('res_model_name' in data && data.res_model_name) {
-                    originThreadData.model_name = data.res_model_name;
-                }
-                if ('module_icon' in data) {
-                    originThreadData.moduleIcon = data.module_icon;
-                }
-                data2.originThread = originThreadData;
-            }
-            if ('needaction_partner_ids' in data) {
-                data2.needaction_partner_ids = data.needaction_partner_ids;
-            }
-            if ('notifications' in data) {
-                data2.notifications = insert(data.notifications.map(notificationData =>
-                    this.messaging.models['Notification'].convertData(notificationData)
-                ));
-            }
-            if ('parentMessage' in data) {
-                if (!data.parentMessage) {
-                    data2.parentMessage = clear();
-                } else {
-                    data2.parentMessage = this.convertData(data.parentMessage);
-                }
-            }
-            if ('recipients' in data) {
-                data2.recipients = data.recipients;
-            }
-            if ('starred_partner_ids' in data) {
-                data2.starred_partner_ids = data.starred_partner_ids;
-            }
-            if ('subject' in data) {
-                data2.subject = data.subject;
-            }
-            if ('subtype_description' in data) {
-                data2.subtype_description = data.subtype_description;
-            }
-            if ('subtype_id' in data) {
-                data2.subtype_id = data.subtype_id;
-            }
-            if ('trackingValues' in data) {
-                data2.trackingValues = data.trackingValues;
-            }
-
-            return data2;
-        },
         /**
          * Mark all messages of current user with given domain as read.
          *
@@ -150,9 +54,7 @@ Model({
             if (!this.messaging) {
                 return;
             }
-            const messages = this.messaging.models['Message'].insert(messagesData.map(
-                messageData => this.messaging.models['Message'].convertData(messageData)
-            ));
+            const messages = this.messaging.models['Message'].insert(messagesData);
             // compute seen indicators (if applicable)
             for (const message of messages) {
                 for (const thread of message.threads) {
@@ -412,9 +314,9 @@ Model({
                 return !this.isTemporary && !this.isTransient;
             },
         }),
+        history_partner_ids: many('Partner'),
         id: attr({ identifying: true }),
         isCurrentUserOrGuestAuthor: attr({ default: false,
-        history_partner_ids: many('Partner'),
             compute() {
                 return !!(
                     this.author &&

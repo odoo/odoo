@@ -32,23 +32,3 @@ class MailMessage(models.Model):
         if operator == '=' and operand:
             return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', 'sms')]
         raise NotImplementedError()
-
-    def message_format(self, format_reply=True):
-        """ Override in order to retrieves data about SMS (recipient name and
-            SMS status)
-
-        TDE FIXME: clean the overall message_format thingy
-        """
-        message_values = super(MailMessage, self).message_format(format_reply=format_reply)
-        all_sms_notifications = self.env['mail.notification'].sudo().search([
-            ('mail_message_id', 'in', [r['id'] for r in message_values]),
-            ('notification_type', '=', 'sms')
-        ])
-        msgid_to_notif = defaultdict(lambda: self.env['mail.notification'].sudo())
-        for notif in all_sms_notifications:
-            msgid_to_notif[notif.mail_message_id.id] += notif
-
-        for message in message_values:
-            customer_sms_data = [(notif.id, notif.res_partner_id.display_name or notif.sms_number, notif.notification_status) for notif in msgid_to_notif.get(message['id'], [])]
-            message['sms_ids'] = customer_sms_data
-        return message_values

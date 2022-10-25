@@ -178,9 +178,7 @@ Model({
                 if (!this.exists()) {
                     return;
                 }
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
-                );
+                const message = this.messaging.models['Message'].insert(messageData);
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {

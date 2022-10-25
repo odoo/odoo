@@ -903,55 +903,66 @@ class Message(models.Model):
             domain = expression.AND([domain, [('id', '>', min_id)]])
         return self.search(domain, limit=limit)
 
-    def message_format(self, format_reply=True):
-        """ Get the message values in the format for web client. Since message values can be broadcasted,
-            computed fields MUST NOT BE READ and broadcasted.
-            :returns list(dict).
-             Example :
-                {
-                    'body': HTML content of the message
-                    'model': u'res.partner',
-                    'record_name': u'Agrolait',
-                    'attachment_ids': [
-                        {
-                            'file_type_icon': u'webimage',
-                            'id': 45,
-                            'name': u'sample.png',
-                            'filename': u'sample.png'
-                        }
-                    ],
-                    'needaction_partner_ids': [], # list of partner ids
-                    'res_id': 7,
-                    'trackingValues': [
-                        {
-                            'changedField': "Customer",
-                            'id': 2965,
-                            'newValue': {
-                                'currencyId': "",
-                                'fieldType': 'char',
-                                'value': "Axelor",
-                            ],
-                            'oldValue': {
-                                'currencyId': "",
-                                'fieldType': 'char',
-                                'value': "",
-                            ],
-                        }
-                    ],
-                    'author_id': (3, u'Administrator'),
-                    'email_from': 'sacha@pokemon.com' # email address or False
-                    'subtype_id': (1, u'Discussions'),
-                    'date': '2015-06-30 08:22:33',
-                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
-                    'message_type': u'comment',
-                    'id': 59,
-                    'subject': False
-                    'is_note': True # only if the message is a note (subtype == note)
-                    'is_discussion': False # only if the message is a discussion (subtype == discussion)
-                    'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
-                    'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
-                }
-        """
+    def reaction_group_format(self, message):
+        reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+        for reaction in message.reaction_ids:
+            reactions_per_content[reaction.content] |= reaction
+        reaction_groups = [{
+            'content': content,
+            'count': len(reactions),
+            'guests': [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id],
+            'message': {'id': message.id},
+            'partners': [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id],
+        } for content, reactions in reactions_per_content.items()]
+        return reaction_groups
+
+
+    def _message_format_for_js_model(self):
+        self.check_access_rule('read')
+        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        messages = []
+        for message in self:
+            message_sudo = self.browse(message.id).sudo().with_prefetch(self.ids)
+            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
+            messages.append({
+                'attachments': message_sudo.attachment_ids._attachment_format(),
+                'author': message_sudo.author_id.mail_partner_format().get(message.author_id) if message_sudo.author_id else [('clear',)],
+                'body': message_sudo.body,
+                'date': message_sudo.date,
+                'email_from': message_sudo.email_from,
+                'guestAuthor': message_sudo.author_guest_id._guest_format().get(message_sudo.author_guest_id) if message_sudo.author_guest_id else [('clear',)],
+                'history_partner_ids': [{'id': p.id} for p in notifs.filtered(lambda n: n.is_read).res_partner_id],
+                'id': message_sudo.id,
+                'is_discussion': message_sudo.subtype_id.id == com_id,
+                'is_note': message_sudo.subtype_id.id == note_id,
+                'is_notification': message_sudo.message_type == 'user_notification',
+                'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
+                'messageReactionGroups': self.reaction_group_format(message_sudo),
+                'message_type': message_sudo.message_type,
+                'originThread': {
+                    'id': message_sudo.res_id,
+                    'model': message_sudo.model,
+                    'name': message_sudo.record_name,
+                    'model_name': self.env['ir.model']._get(message_sudo.model).display_name,
+                    'moduleIcon': modules.module.get_module_icon(self.env[message_sudo.model]._original_module) if message_sudo.model and self.env[message_sudo.model]._original_module else None
+                },
+                'needaction_partner_ids': [{'id': p.id} for p in notifs.filtered(lambda n: not n.is_read).res_partner_id],
+                'notifications': message_sudo.notification_ids.model_notification_format(),
+                'parentMessage': message_sudo.parent_id.message_format(legacy=False)[0] if message_sudo.parent_id else [('clear',)],
+                'recipients': list(message_sudo.partner_ids.mail_partner_format().values()),
+                'starred_partner_ids': [{'id': p.id} for p in message_sudo.starred_partner_ids],
+                'subject': message_sudo.subject,
+                'subtype_description': message_sudo.subtype_id.description,
+                'subtype_id': message_sudo.subtype_id.id,
+                'trackingValues': message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))._tracking_value_format(),
+            })
+        return messages
+
+    def message_format(self, format_reply=True, legacy=True):
+        if not legacy:
+            return self._message_format_for_js_model()
+
         vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
 
         com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
@@ -990,12 +1001,14 @@ class Message(models.Model):
         """
         return [{
             'id': message.id,
-            'res_id': message.res_id,
-            'model': message.model,
-            'res_model_name': message.env['ir.model']._get(message.model).display_name,
             'date': message.date,
             'message_type': message.message_type,
-            'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
+            'notifications': message.notification_ids._filtered_for_web_client().model_notification_format(),
+            'originThread': {
+                'id': message.res_id,
+                'model': message.model,
+                'model_name': self.env['ir.model']._get(message.model).display_name,
+            },
         } for message in self]
 
     def _notify_message_notification_update(self):
