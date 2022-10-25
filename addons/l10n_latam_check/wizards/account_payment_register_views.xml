@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_method_line_id" position="after">
+                <field name="l10n_latam_manual_checks" invisible="1"/>
+                <field name="payment_method_code" invisible="1"/>
+                <field name="l10n_latam_check_number"
+                    attrs="{
+                        'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('l10n_latam_manual_checks', '=', False), ('payment_method_code', '!=', 'check_printing')],
+                        'required': [
+                            '|', '&amp;', ('payment_method_code', '=', 'check_printing'), ('l10n_latam_manual_checks', '!=', False), ('payment_method_code', '=', 'new_third_party_checks'),
+                        ]}"/>
+
+                <div class="o_row"
+                        attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}" colspan="2">
+                    <group>
+                        <field name="l10n_latam_check_id"
+                            attrs="{
+                                'invisible': [('payment_method_code', 'not in', ['in_third_party_checks', 'out_third_party_checks'])],
+                                'required': [('payment_method_code', 'in', ['in_third_party_checks', 'out_third_party_checks'])]}"
+                            domain="
+                                [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted')]
+                                    if payment_type == 'outbound' else
+                                [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted')]"
+                            options="{'no_create': True}"/>
+                        <field name="l10n_latam_check_payment_date"
+                            attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('l10n_latam_manual_checks', '=', False), ('payment_method_code', '!=', 'check_printing')]}"/>
+                        <field name="l10n_latam_check_bank_id" string="Check Bank"
+                            attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                        <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat"
+                            attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                    </group>
+                </div>
+                <div colspan="2" class="o_row"
+                        attrs="{'invisible': ['|', ('payment_method_code', 'not in', ['new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks']), '&amp;', ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', True)]}">
+                    <p class="alert alert-warning" role="alert">You can't use checks when paying invoices of different partners or same partner without grouping</p>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>
