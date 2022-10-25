@@ -1609,7 +1609,7 @@ class MailThread(models.AbstractModel):
     def _message_add_suggested_recipient(self, result, partner=None, email=None, lang=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
-                partner_id, partner_name<partner_email> or partner_name, reason """
+                partner_id, partner_name<partner_email> or partner_name, lang, reason """
         self.ensure_one()
         if email and not partner:
             # get partner info from email
@@ -1792,6 +1792,19 @@ class MailThread(models.AbstractModel):
                     ('author_id', '=', False)
                 ]).write({'author_id': partner.id})
         return result
+
+
+    def _get_customer_information(self):
+        """ Get customer information that can be extracted from the records by
+        normalized email.
+
+        The goal of this method is to offer an extension point to subclasses
+        for retrieving initial values from a record to populate related
+        customers record (res_partner).
+
+        :return dict: normalized email -> dict of initial res_partner values
+        """
+        return {}
 
     # ------------------------------------------------------------
     # MESSAGE POST MAIN

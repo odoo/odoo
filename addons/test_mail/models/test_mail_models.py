@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import email_normalize
+from odoo.tools.translate import _
 
 
 class MailTestSimple(models.Model):
@@ -127,6 +129,8 @@ class MailTestTicket(models.Model):
 
     name = fields.Char()
     email_from = fields.Char(tracking=True)
+    mobile_number = fields.Char()
+    phone_number = fields.Char()
     count = fields.Integer(default=1)
     datetime = fields.Datetime(default=fields.Datetime.now)
     mail_template = fields.Many2one('mail.template', 'Template')
@@ -193,7 +197,39 @@ class MailTestTicket(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         return super(MailTestTicket, self)._track_subtype(init_values)
 
+    def _get_customer_information(self):
+        email_normalized_to_values = super()._get_customer_information()
 
+        for record in self.filtered('email_from'):
+            email_from_normalized = email_normalize(record.email_from)
+            if not email_from_normalized:  # do not fill Falsy with random data
+                continue
+            values = email_normalized_to_values.setdefault(email_from_normalized, {})
+            if not values.get('mobile'):
+                values['mobile'] = record.mobile_number
+            if not values.get('phone'):
+                values['phone'] = record.phone_number
+        return email_normalized_to_values
+
+    def _message_get_suggested_recipients(self):
+        recipients = super()._message_get_suggested_recipients()
+        for ticket in self:
+            if ticket.customer_id:
+                ticket.customer_id._message_add_suggested_recipient(
+                    recipients,
+                    partner=ticket.customer_id,
+                    lang=None,
+                    reason=_('Customer'),
+                )
+            elif ticket.email_from:
+                ticket._message_add_suggested_recipient(
+                    recipients,
+                    partner=None,
+                    email=self.email_from,
+                    lang=None,
+                    reason=_('Customer Email'),
+                )
+        return recipients
 
 class MailTestTicketEL(models.Model):
     """ Just mail.test.ticket, but exclusion-list enabled. Kept as different
