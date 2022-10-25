@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, many } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -58,7 +58,7 @@ registerModel({
                 !isEventHandled(ev, 'Message.ClickAuthorName') &&
                 !isEventHandled(ev, 'Message.ClickFailure') &&
                 !isEventHandled(ev, 'MessageActionList.Click') &&
-                !isEventHandled(ev, 'MessageReactionGroup.Click') &&
+                !isEventHandled(ev, 'MessageReactionGroupView.Click') &&
                 !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo') &&
                 !isEventHandled(ev, 'PersonaImStatusIcon.Click')
             ) {
@@ -528,6 +528,18 @@ registerModel({
             identifying: true,
             inverse: 'messageView',
         }),
+        messageReactionGroupViews: many('MessageReactionGroupView',{
+            compute() {
+                if (this.message.messageReactionGroups.length === 0) {
+                    return clear();
+                }
+                return this.message.messageReactionGroups.map(messageReactionGroup => {
+                     return { messageReactionGroup: messageReactionGroup };
+                });
+            },
+            inverse: 'Owner',
+        }),
+            
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
             compute() {
                 if (
