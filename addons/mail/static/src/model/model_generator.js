@@ -399,16 +399,15 @@ export class ModelGenerator {
          * fields of its parents.
          */
         for (const model of Object.values(this.manager.models)) {
-            model.__combinedFields = {};
             for (const field of Object.values(model.fields)) {
-                model.__combinedFields[field.fieldName] = field;
+                this.manager.modelInfos[model.name].combinedFields[field.fieldName] = field;
             }
             let TargetModel = model.__proto__;
             while (TargetModel && TargetModel.fields) {
                 for (const targetField of Object.values(TargetModel.fields)) {
-                    const field = model.__combinedFields[targetField.fieldName];
+                    const field = this.manager.modelInfos[model.name].combinedFields[targetField.fieldName];
                     if (!field) {
-                        model.__combinedFields[targetField.fieldName] = targetField;
+                        this.manager.modelInfos[model.name].combinedFields[targetField.fieldName] = targetField;
                     }
                 }
                 TargetModel = TargetModel.__proto__;
@@ -421,7 +420,7 @@ export class ModelGenerator {
          */
         for (const model of Object.values(this.manager.models)) {
             // Object with fieldName/field as key/value pair, for quick access.
-            this.manager.modelInfos[model.name].fieldMap = new Map(Object.entries(model.__combinedFields));
+            this.manager.modelInfos[model.name].fieldMap = new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields));
             // List of all fields, for iterating.
             model.__fieldList = [...this.manager.modelInfos[model.name].fieldMap.values()];
             model.__requiredFieldsList = model.__fieldList.filter(
@@ -467,7 +466,7 @@ export class ModelGenerator {
                     },
                 });
             }
-            delete model.__combinedFields;
+            delete this.manager.modelInfos[model.name].combinedFields;
         }
     }
 
