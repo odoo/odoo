@@ -63,14 +63,13 @@ export class ModelGenerator {
             Object.defineProperty(model.prototype, getterName, { get: getter });
         }
         // Make model manager accessible from model.
-        this.manager.modelInfos[model.name] = new ModelInfo({ model });
+        this.manager.modelInfos[model.name] = new ModelInfo({ model, identifyingMode: definition.get('identifyingMode') });
         model.modelManager = this.manager;
         model.fields = {};
-        model.identifyingMode = definition.get('identifyingMode');
         model.__records = new Set();
         model.__recordCount = 0;
         model.__recordsIndex = (() => {
-            switch (model.identifyingMode) {
+            switch (this.manager.modelInfos[model.name].identifyingMode) {
                 case 'and':
                     return new ModelIndexAnd(model);
                 case 'xor':
@@ -149,7 +148,7 @@ export class ModelGenerator {
                     if ('readonly' in field) {
                         throw new Error(`Identifying field ${model}/${fieldName} has unnecessary "readonly" attribute (readonly is implicit for identifying fields).`);
                     }
-                    if ('required' in field && model.identifyingMode === 'and') {
+                    if ('required' in field && this.manager.modelInfos[model.name].identifyingMode === 'and') {
                         throw new Error(`Identifying field ${model}/${fieldName} has unnecessary "required" attribute (required is implicit for AND identifying fields).`);
                     }
                     if ('default' in field) {
@@ -254,8 +253,8 @@ export class ModelGenerator {
      */
     _checkProcessed() {
         for (const model of Object.values(this.manager.models)) {
-            if (!['and', 'xor'].includes(model.identifyingMode)) {
-                throw new Error(`Unsupported identifying mode "${model.identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
+            if (!['and', 'xor'].includes(this.manager.modelInfos[model.name].identifyingMode)) {
+                throw new Error(`Unsupported identifying mode "${this.manager.modelInfos[model.name].identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
             }
             for (const field of model.__fieldList) {
                 const fieldName = field.fieldName;

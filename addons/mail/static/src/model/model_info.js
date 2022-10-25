@@ -2,8 +2,9 @@
 
 export class ModelInfo {
 
-    constructor({ model }) {
+    constructor({ model, identifyingMode }) {
         this.model = model;
+        this.identifyingMode = identifyingMode;
     }
 
 }

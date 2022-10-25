@@ -155,7 +155,7 @@ export class ModelField {
          */
         if (this.identifying) {
             this.readonly = true;
-            if (this.model.identifyingMode === 'and') {
+            if (this.manager.modelInfos[model.name].identifyingMode === 'and') {
                 this.required = true;
             }
         }
