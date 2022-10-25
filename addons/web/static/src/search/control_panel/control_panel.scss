@@ -80,6 +80,7 @@
 
     .breadcrumb {
         font-size: 18px;
+        max-width: 100%;
 
         > li {
             @include o-text-overflow();
@@ -190,6 +191,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
+        align-items: center;
         column-gap: $o-horizontal-padding;
 
         > .o_cp_pager {
