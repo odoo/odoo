@@ -1788,6 +1788,10 @@ class Lead(models.Model):
             res.update(super(Lead, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
+    def _mailing_get_default_domain(self, mailing):
+        return ['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)]
+
+
     def _message_get_default_recipients(self):
         return {r.id: {
             'partner_ids': [],
