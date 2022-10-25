@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { listView } from "@web/views/list/list_view";
@@ -11,6 +12,7 @@ import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 const { Component, useState } = owl;
 
@@ -19,23 +21,28 @@ export class AccountFileUploader extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.attachmentIdsToProcess = [];
+        const rec = this.props.record ? this.props.record.data : false;
+        this.extraContext = rec ? {
+            default_journal_id: rec.id,
+            default_move_type: (rec.type === 'sale' && 'out_invoice') || (rec.type === 'purchase' && 'in_invoice') || 'entry',
+        } : {};
     }
 
     async onFileUploaded(file) {
-        let att_data = {
+        const att_data = {
             name: file.name,
             mimetype: file.type,
             datas: file.data,
         };
         const att_id = await this.orm.create("ir.attachment", [att_data], {
-            context: { ...this.props.extraContext, ...this.env.searchModel.context },
+            context: { ...this.extraContext, ...this.env.searchModel.context },
         });
         this.attachmentIdsToProcess.push(att_id);
     }
 
     async onUploadComplete() {
         const action = await this.orm.call("account.journal", "create_document_from_attachment", ["", this.attachmentIdsToProcess], {
-            context: { ...this.props.extraContext, ...this.env.searchModel.context },
+            context: { ...this.extraContext, ...this.env.searchModel.context },
         });
         this.attachmentIdsToProcess = [];
         this.action.doAction(action);
@@ -45,6 +52,26 @@ AccountFileUploader.components = {
     FileUploader,
 };
 AccountFileUploader.template = "account.AccountFileUploader";
+AccountFileUploader.extractProps = ({ attrs }) => ({
+    togglerTemplate: attrs.template || "account.JournalUploadLink",
+    btnClass: attrs.btnClass || "",
+    linkText: attrs.linkText || _lt("Upload"),
+});
+AccountFileUploader.props = {
+    ...standardWidgetProps,
+    record: { type: Object, optional: true},
+    togglerTemplate: { type: String, optional: true },
+    btnClass: { type: String, optional: true },
+    linkText: { type: String, optional: true },
+    slots: { type: Object, optional: true },
+}
+//when file uploader is used on account.journal (with a record)
+AccountFileUploader.fieldDependencies = {
+    id: { type: "integer" },
+    type: { type: "selection" },
+};
+
+registry.category("view_widgets").add("account_file_uploader", AccountFileUploader);
 
 export class AccountDropZone extends Component {
     setup() {

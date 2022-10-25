@@ -20,8 +20,10 @@
                 onUploaded.bind="onFileUploaded"
                 onUploadComplete.bind="onUploadComplete">
                 <t t-set-slot="toggler">
-                    <t t-slot="default"/>
+                    <t t-if="props.togglerTemplate" t-call="{{ props.togglerTemplate }}"/>
+                    <t t-else="" t-slot="toggler"/>
                 </t>
+                <t t-slot="default"/>
             </FileUploader>
         </div>
     </t>
@@ -61,10 +63,13 @@
     </t>
 
     <t t-name="account.AccountViewUploadButton" owl="1">
-        <AccountFileUploader extraContext="props.context">
-            <button type="button" class="btn btn-secondary o_button_upload_bill">
-                Upload
-            </button>
+        <!-- No record is available so rely on the action context to contain the default_move_type -->
+        <AccountFileUploader>
+            <t t-set-slot="toggler">
+                <button type="button" class="btn btn-secondary o_button_upload_bill">
+                    Upload
+                </button>
+            </t>
         </AccountFileUploader>
     </t>
 
@@ -77,7 +82,20 @@
             t-on-click="onGlobalClick"
             t-on-dragenter.stop.prevent="() => state.dropzoneVisible = true"
             t-ref="root">
-            <t t-call="{{ templates['kanban-box'] }}"/>
+            <AccountFileUploader record="props.record">
+                <t t-set-slot="default">
+                    <AccountDropZone
+                        visible="state.dropzoneVisible"
+                        hideZone="() => state.dropzoneVisible = false"/>
+                    <t t-call="{{ templates['kanban-box'] }}"/>
+                </t>
+            </AccountFileUploader>
+        </div>
+    </t>
+
+    <t t-name="account.JournalUploadLink" owl="1">
+        <div t-att-class="props.btnClass" groups="account.group_account_invoice">
+            <a href="#" t-out="props.linkText"/>
         </div>
     </t>
 
