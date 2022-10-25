@@ -891,7 +891,7 @@ export class ModelField {
             throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
         }
         const otherModel = record.modelManager.models[this.to];
-        if (otherModel.__records.has(record)) {
+        if (this.manager.modelInfos[otherModel.name].records.has(record)) {
             return;
         }
         // support for inherited models (eg. relation targeting `Record`)
@@ -899,7 +899,7 @@ export class ModelField {
             if (!(subModel.prototype instanceof otherModel)) {
                 continue;
             }
-            if (subModel.__records.has(record)) {
+            if (this.manager.modelInfos[subModel.name].records.has(record)) {
                 return;
             }
         }

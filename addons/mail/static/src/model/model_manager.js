@@ -145,7 +145,7 @@ export class ModelManager {
                 entry.set(listener, [info]);
             }
         }
-        const allRecords = [...model.__records];
+        const allRecords = [...this.modelInfos[model.name].records];
         if (filterFunc) {
             return allRecords.filter(filterFunc);
         }
@@ -174,7 +174,7 @@ export class ModelManager {
             delete model.__fieldList;
             delete model.__fieldMap;
             delete model.__identifyingFieldNames;
-            delete model.__records;
+            delete this.modelInfos[model.name].records;
             delete model.__requiredFieldsList;
             delete model.fields;
             delete model.modelManager;
@@ -190,7 +190,7 @@ export class ModelManager {
      * @returns {boolean}
      */
     exists(model, record) {
-        return model.__records.has(record);
+        return this.modelInfos[model.name].records.has(record);
     }
 
     /**
@@ -426,7 +426,7 @@ export class ModelManager {
         /**
          * Register record.
          */
-        model.__records.add(record);
+        this.modelInfos[model.name].records.add(record);
         /**
          * Auto-bind record methods so that `this` always refer to the record.
          */
@@ -502,7 +502,7 @@ export class ModelManager {
         delete this.recordInfos[record.localId].listeners;
         delete this.recordInfos[record.localId].listenersOnRecord;
         delete this.recordInfos[record.localId].listenersOnField;
-        model.__records.delete(record);
+        this.modelInfos[model.name].records.delete(record);
         delete this.recordInfos[record.localId];
         delete record.localId;
     }
