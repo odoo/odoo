@@ -66,7 +66,6 @@ export class ModelGenerator {
         this.manager.modelInfos[model.name] = new ModelInfo({ model, identifyingMode: definition.get('identifyingMode') });
         model.modelManager = this.manager;
         model.fields = {};
-        model.__recordCount = 0;
         model.__recordsIndex = (() => {
             switch (this.manager.modelInfos[model.name].identifyingMode) {
                 case 'and':

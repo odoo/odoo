@@ -387,7 +387,7 @@ export class ModelManager {
      * @returns {Record}
      */
     _create(model) {
-        const localId = `${model.name}_${++model.__recordCount}`;
+        const localId = `${model.name}_${++this.modelInfos[model.name].recordCount}`;
         /**
          * Prepare record state. Assign various keys and values that are
          * expected to be found on every record.

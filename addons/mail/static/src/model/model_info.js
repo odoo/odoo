@@ -6,6 +6,7 @@ export class ModelInfo {
         this.model = model;
         this.identifyingMode = identifyingMode;
         this.records = new Set();
+        this.recordCount = 0;
     }
 
 }
