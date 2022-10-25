@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
             if move_line.state != 'done':
                 continue
             rounding = move.product_id.uom_id.rounding
-            diff = move_line.qty_done
+            diff = move.product_uom._compute_quantity(move_line.qty_done, move.product_id.uom_id)
             if float_is_zero(diff, precision_rounding=rounding):
                 continue
             self._create_correction_svl(move, diff)
@@ -42,7 +42,7 @@ class StockMoveLine(models.Model):
                     continue
                 move = move_line.move_id
                 rounding = move.product_id.uom_id.rounding
-                diff = vals['qty_done'] - move_line.qty_done
+                diff = move.product_uom._compute_quantity(vals['qty_done'] - move_line.qty_done, move.product_id.uom_id)
                 if float_is_zero(diff, precision_rounding=rounding):
                     continue
                 self._create_correction_svl(move, diff)
