@@ -199,5 +199,6 @@ registry
     .add("float", parseFloat)
     .add("float_time", parseFloatTime)
     .add("integer", parseInteger)
+    .add("many2one_reference", parseInteger)
     .add("monetary", parseMonetary)
     .add("percentage", parsePercentage);
