@@ -3,8 +3,6 @@
 import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { ModelInfo } from '@mail/model/model_info';
-import { ModelIndexAnd } from '@mail/model/model_index_and';
-import { ModelIndexXor } from '@mail/model/model_index_xor';
 
 export class ModelGenerator {
 
@@ -66,14 +64,6 @@ export class ModelGenerator {
         this.manager.modelInfos[model.name] = new ModelInfo({ model, identifyingMode: definition.get('identifyingMode') });
         model.modelManager = this.manager;
         model.fields = {};
-        model.__recordsIndex = (() => {
-            switch (this.manager.modelInfos[model.name].identifyingMode) {
-                case 'and':
-                    return new ModelIndexAnd(model);
-                case 'xor':
-                    return new ModelIndexXor(model);
-            }
-        })();
         this.manager.listenersAll.set(model, new Map());
         this.manager.models[model.name] = model;
     }

@@ -203,7 +203,7 @@ export class ModelManager {
      */
     findFromIdentifyingData(model, data = {}) {
         this.preinsert(model, data);
-        const record = model.__recordsIndex.findRecord(data);
+        const record = this.modelInfos[model.name].recordsIndex.findRecord(data);
         if (!record) {
             return;
         }
@@ -479,7 +479,7 @@ export class ModelManager {
                 }
             }
         }
-        model.__recordsIndex.removeRecord(record);
+        this.modelInfos[model.name].recordsIndex.removeRecord(record);
         this.cycle.newCompute.delete(record);
         this.cycle.newCreated.delete(record);
         this.cycle.newOnChange.delete(record);
@@ -695,7 +695,7 @@ export class ModelManager {
                 const data2 = this._addDefaultData(model, data);
                 this.preinsert(model, data2);
                 record = this._create(model);
-                model.__recordsIndex.addRecord(record, data2);
+                this.modelInfos[model.name].recordsIndex.addRecord(record, data2);
                 this._update(record, data2, { ...options, allowWriteReadonly: true });
             } else {
                 this._update(record, data, options);
