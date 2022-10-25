@@ -706,6 +706,7 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.ensure_one()
+        self.order_line._validate_analytic_distribution()
         lang = self.env.context.get('lang')
         mail_template = self._find_mail_template()
         if mail_template and mail_template.lang:
@@ -781,6 +782,8 @@ class SaleOrder(models.Model):
                 "It is not allowed to confirm an order in the following states: %s",
                 ", ".join(self._get_forbidden_state_confirm()),
             ))
+
+        self.order_line._validate_analytic_distribution()
 
         for order in self:
             if order.partner_id in order.message_partner_ids:

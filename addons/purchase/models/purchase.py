@@ -474,6 +474,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state not in ['draft', 'sent']:
                 continue
+            order.order_line._validate_analytic_distribution()
             order._add_supplier_to_product()
             # Deal with double validation process
             if order._approval_allowed():
@@ -1423,3 +1424,11 @@ class PurchaseOrderLine(models.Model):
                 values={'line': self, 'qty_received': new_qty},
                 subtype_id=self.env.ref('mail.mt_note').id
             )
+
+    def _validate_analytic_distribution(self):
+        for line in self.filtered(lambda l: not l.display_type):
+            line._validate_distribution(**{
+                'product': line.product_id.id,
+                'business_domain': 'purchase_order',
+                'company_id': line.company_id.id,
+            })
