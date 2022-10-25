@@ -155,6 +155,7 @@ class Project(models.Model):
         query = self.env['account.move.line']._search([('move_id.move_type', '=', 'out_invoice')])
         query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         query_string, query_param = query.select('DISTINCT move_id')
+        query_string = query_string.split('ORDER BY')[0]
         self._cr.execute(query_string, query_param)
         invoice_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
         action = {
