@@ -898,4 +898,53 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowUp" });
         assert.containsOnce(target, ".focus");
     });
+
+    QUnit.test("many2one_reference fields are supported in search view", async function (assert) {
+        serverData.models.partner.fields.res_id = {
+            string: "Resource ID",
+            type: "many2one_reference",
+        };
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: /*xml*/ `
+                <search>
+                    <field name="foo" />
+                    <field name="res_id" />
+                </search>
+            `,
+        });
+
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await editSearch(target, "12");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_searchview ul li.dropdown-item")].map(
+                (el) => el.innerText
+            ),
+            ["Search Foo for: 12", "Search Resource ID for: 12"]
+        );
+        await triggerEvent(target.querySelector(".o_searchview input"), null, "keydown", {
+            key: "ArrowDown",
+        });
+        await validateSearch(target);
+        assert.deepEqual(getDomain(controlPanel), [["res_id", "=", 12]]);
+
+        await removeFacet(target);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await editSearch(target, "1a");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_searchview ul li.dropdown-item")].map(
+                (el) => el.innerText
+            ),
+            ["Search Foo for: 1a"]
+        );
+        await validateSearch(target);
+        assert.deepEqual(getDomain(controlPanel), [["foo", "ilike", "1a"]]);
+    });
 });
