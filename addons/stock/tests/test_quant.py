@@ -796,3 +796,57 @@ class StockQuant(TransactionCase):
         # cache to ensure that the value will be the newest
         quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)
+
+    def test_quant_reserve(self):
+        """ Tests the reserve stock wizard which allows to choose a specific quant to reserve from
+            also checks if editing the reserved_uom_qty on stock.move.line updates the quants
+        """
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'quantity': 2,
+            'location_id': self.stock_location.id
+        })
+        move_id = self.env['stock.move'].create({
+            'name': 'move out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 2.0,
+        })
+        move_id._action_confirm()
+        move_id._action_assign()
+        self.assertEqual(move_id.state, 'assigned')
+        self.assertEqual(len(move_id.move_line_ids), 1)
+        self.assertEqual(move_id.move_line_ids.reserved_uom_qty, 2)
+        # available should be 0
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product, self.stock_location)
+        self.assertEqual(available_qty, 0)
+        # unreserve, qty available should be 2 and move state back to confirmed
+        move_id.move_line_ids.reserved_uom_qty = 0
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product, self.stock_location)
+        self.assertEqual(available_qty, 2)
+        self.assertEqual(move_id.state, 'confirmed')
+        # reserve qty again, checks to be able to reserve from confirmed state, and only reserve what's available
+        move_id.move_line_ids.reserved_uom_qty = 4
+        self.assertEqual(move_id.state, 'assigned')
+        self.assertEqual(move_id.move_line_ids.reserved_uom_qty, 2)
+        # unreserve and try to reserve from wizard
+        move_id.move_line_ids.unlink()
+        wiz_action = self.env['stock.move.line'].with_context(default_move_id=move_id.id).action_open_reserve_stock()
+        wiz = self.env[wiz_action['res_model']].with_context(wiz_action['context']).create({})
+        self.assertEqual(wiz.move_id.id, move_id.id)
+        self.assertEqual(wiz.demand_qty, move_id.product_qty)
+        self.assertEqual(len(wiz.quant_line_ids), 1)
+        wiz.quant_line_ids.qty_to_reserve = 4
+        with self.assertRaises(UserError):
+            wiz.reserve_stock()
+        wiz.quant_line_ids.qty_to_reserve = 2
+        wiz.reserve_stock()
+        self.assertEqual(len(move_id.move_line_ids), 1)
+        self.assertEqual(move_id.state, 'assigned')
+        self.assertEqual(move_id.move_line_ids.reserved_uom_qty, 2)
+        move_id._set_quantities_to_reservation()
+        move_id._action_done()
+        self.assertEqual(move_id.state, 'done')
