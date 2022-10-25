@@ -211,8 +211,9 @@ function clickOnSave(position = "bottom") {
  * @param {*} position
  */
 function clickOnText(snippet, element, position = "bottom") {
+    const trigger = snippet.id ? `#wrapwrap .${snippet.id} ${element}` : snippet;
     return {
-        trigger: snippet.id ? `iframe #wrapwrap .${snippet.id} ${element}` : snippet,
+        trigger: `iframe ${trigger}`,
         extra_trigger: "iframe body.editor_enable",
         content: Markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
