@@ -86,7 +86,7 @@ export class DatePicker extends Component {
         this.setDateAndFormat(this.props);
 
         useAutofocus();
-        useExternalListener(window, "scroll", this.onWindowScroll);
+        useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
 
         onMounted(this.onMounted);
         onWillUpdateProps(this.onWillUpdateProps);

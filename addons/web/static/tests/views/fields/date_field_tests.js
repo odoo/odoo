@@ -1,19 +1,20 @@
 /** @odoo-module **/
 
-import { strftimeToLuxonFormat } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickCreate,
+    clickSave,
     getFixture,
-    patchWithCleanup,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
     triggerEvents,
-    clickSave,
-    clickCreate,
+    triggerScroll,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { strftimeToLuxonFormat } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -341,7 +342,7 @@ QUnit.module("Fields", (hooks) => {
             "datepicker should be opened"
         );
 
-        await triggerEvent(target, null, "scroll");
+        await triggerScroll(target, { top: 50 });
         assert.containsNone(
             document.body,
             ".bootstrap-datetimepicker-widget",
