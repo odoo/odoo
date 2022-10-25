@@ -662,6 +662,7 @@
                             string="Approve"
                             type="object"
                             data-hotkey="v"
+                            context="{'validate_analytic': True}"
                             attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'submit')]}"
                             class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create"

@@ -100,7 +100,7 @@ class TestAnalyticAccount(TransactionCase):
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
         self.assertEqual(1, len(plans_json), "Plan 1 should be unavailable")
 
-        kwargs = {'business_domain': 'purchase'}
+        kwargs = {'business_domain': 'purchase_order'}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
         self.assertEqual(2, len(plans_json), "Both plans should be available")
 
