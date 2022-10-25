@@ -7,10 +7,13 @@ import {
     getFixture,
     patchDate,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
     triggerScroll,
 } from "@web/../tests/helpers/utils";
+import { localization } from "@web/core/l10n/localization";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 let serverData;
 let target;
@@ -586,6 +589,75 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_daterange[name='datetime_end'] input").value,
             "03/13/2017",
             "the end date should only show date when option formatType is Date"
+        );
+    });
+
+    QUnit.test("when same locales have differences (moment vs luxon)", async function (assert) {
+        patchWithCleanup(localization, { dateTimeFormat: "dd MMM, yyyy HH:mm:ss" });
+
+        // Create a new pseudo locale that will get different from the luxon one
+        const originalLocal = moment.locale();
+        // Moment automatically assigns newly defined locales.
+        moment.defineLocale("nonsenseForTest", {
+            monthsShort: [
+                "JaBon",
+                "FeBob",
+                "MaBor",
+                "ApBor",
+                "MaBoy",
+                "JuBon",
+                "JuBol",
+                "AuBog",
+                "SeBop",
+                "OcBot",
+                "NoBov",
+                "DeBoc",
+            ],
+        });
+
+        registerCleanup(() => {
+            //Delete the previously created local
+            moment.updateLocale("nonsenseForTest", null);
+            // Restore the original locale
+            moment.locale(originalLocal);
+        });
+
+        serverData.models.partner.fields.datetime_end = {
+            string: "Datetime End",
+            type: "datetime",
+        };
+        serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+        });
+
+        // open a datepicker field
+        await click(target, ".o_field_daterange[name=datetime] input");
+
+        const datepicker = document.querySelector(".daterangepicker[data-name=datetime]");
+        assert.isVisible(datepicker, "date range picker should be opened");
+        assert.deepEqual(
+            [...datepicker.querySelectorAll(".month")].map((el) => el.textContent),
+            ["FeBob 2017", "MaBor 2017"]
+        );
+
+        // Select a new range and check that inputs are updated
+        await triggerEvent(datepicker, ".start-date", "mousedown"); // 02/08/2017
+        await triggerEvent(datepicker, ".start-date + .available", "mousedown"); // 02/09/2017
+        await click(datepicker, ".applyBtn");
+        assert.equal(target.querySelector("[name=datetime] input").value, "08 Feb, 2017 15:30:00");
+        assert.equal(
+            target.querySelector("[name=datetime_end] input").value,
+            "09 Feb, 2017 05:30:00"
         );
     });
 });
