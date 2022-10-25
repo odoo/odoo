@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageReactionGroupView" owl="1">
+        <t t-if="messageReactionGroupView">
+            <button class="o_MessageReactionGroupView btn d-flex p-0 border rounded-1" t-att-class="{'o-hasUserReacted border-primary': messageReactionGroupView.messageReactionGroup.hasUserReacted, 'bg-view': !messageReactionGroupView.messageReactionGroup.hasUserReacted}" t-attf-class="{{ className }}" t-att-title="messageReactionGroupView.summary" t-on-click="messageReactionGroupView.onClick" t-ref="root">
+                <span class="o_MessageReactionGroupView_content mx-1">
+                    <t t-esc="messageReactionGroupView.messageReactionGroup.content"/>
+                </span>
+                <span class="o_MessageReactionGroupView_count mx-1" t-att-class="{'o-hasUserReacted text-primary fw-bolder': messageReactionGroupView.messageReactionGroup.hasUserReacted}">
+                    <t t-esc="messageReactionGroupView.messageReactionGroup.count"/>
+                </span>
+            </button>
+        </t>
+    </t>
+
+</templates>
