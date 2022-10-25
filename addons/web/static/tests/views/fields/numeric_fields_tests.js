@@ -5,6 +5,10 @@ import { registry } from "@web/core/registry";
 import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { localization } from "@web/core/l10n/localization";
+import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
+import { makeTestEnv } from "../../helpers/mock_env";
+
+const { Component, mount, useState, xml } = owl;
 
 let serverData;
 let target;
@@ -78,6 +82,7 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+        patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
     });
 
     QUnit.module("Numeric fields");
@@ -193,8 +198,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "Numeric fields: NumpadDecimal key is different from the decimalPoint",
         async function (assert) {
-            patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
-
             await makeView({
                 serverData,
                 type: "form",
@@ -223,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
              * Common assertion steps are extracted in this procedure.
              *
              * @param {object} params
-             * @param {InputElement} params.el
+             * @param {HTMLInputElement} params.el
              * @param {[number, number]} params.selectionRange
              * @param {string} params.expectedValue
              * @param {string} params.msg
@@ -311,6 +314,64 @@ QUnit.module("Fields", (hooks) => {
                 expectedValue: "0,4",
                 msg: "Progressbar field 2 from 0,44 to 0,4",
             });
+        }
+    );
+
+    QUnit.test(
+        "useNumpadDecimal should synchronize handlers on input elements",
+        async function (assert) {
+            /**
+             * Takes an array of input elements and asserts that each has the correct event listener.
+             * @param {HTMLInputElement[]} inputEls
+             */
+            async function testInputElements(inputEls) {
+                for (const inputEl of inputEls) {
+                    inputEl.focus();
+                    const numpadDecimalEvent = new KeyboardEvent("keydown", {
+                        code: "NumpadDecimal",
+                        key: ".",
+                    });
+                    numpadDecimalEvent.preventDefault = () => assert.step("preventDefault");
+                    inputEl.dispatchEvent(numpadDecimalEvent);
+                    await nextTick();
+
+                    // dispatch an extra keydown event and assert that it's not default prevented
+                    const extraEvent = new KeyboardEvent("keydown", { code: "Digit1", key: "1" });
+                    extraEvent.preventDefault = () => {
+                        throw new Error("should not be default prevented");
+                    };
+                    inputEl.dispatchEvent(extraEvent);
+                    await nextTick();
+
+                    assert.verifySteps(["preventDefault"]);
+                }
+            }
+
+            class MyComponent extends Component {
+                setup() {
+                    useNumpadDecimal();
+                    this.state = useState({ showOtherInput: false });
+                }
+            }
+            MyComponent.template = xml`
+                <main t-ref="numpadDecimal">
+                    <input type="text" placeholder="input 1" />
+                    <input t-if="state.showOtherInput" type="text" placeholder="input 2" />
+                </main>
+            `;
+            const comp = await mount(MyComponent, target, { env: await makeTestEnv() });
+
+            // Initially, only one input should be rendered.
+            assert.containsOnce(target, "main > input");
+            await testInputElements(target.querySelectorAll("main > input"));
+
+            // We show the second input by manually updating the state.
+            comp.state.showOtherInput = true;
+            await nextTick();
+
+            // The second input should also be able to handle numpad decimal.
+            assert.containsN(target, "main > input", 2);
+            await testInputElements(target.querySelectorAll("main > input"));
         }
     );
 });
