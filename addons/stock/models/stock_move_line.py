@@ -34,7 +34,7 @@ class StockMoveLine(models.Model):
     product_category_name = fields.Char(related="product_id.categ_id.complete_name", store=True, string="Product Category")
     reserved_qty = fields.Float(
         'Real Reserved Quantity', digits=0, copy=False,
-        compute='_compute_reserved_qty', inverse='_set_product_qty', store=True)
+        compute='_compute_reserved_qty', inverse='_set_reserved_qty', store=True)
     reserved_uom_qty = fields.Float(
         'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
@@ -396,17 +396,20 @@ class StockMoveLine(models.Model):
                 if not ml.move_id._should_bypass_reservation(updates.get('location_id', ml.location_id)):
                     reserved_qty = 0
                     try:
-                        q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), new_reserved_uom_qty, lot_id=updates.get('lot_id', ml.lot_id),
-                                                             package_id=updates.get('package_id', ml.package_id), owner_id=updates.get('owner_id', ml.owner_id), strict=True)
+                        available_qty = Quant._get_available_quantity(ml.product_id, updates.get('location_id', ml.location_id), lot_id=updates.get('lot_id', ml.lot_id),
+                                                                      package_id=updates.get('package_id', ml.package_id), owner_id=updates.get('owner_id', ml.owner_id), strict=True)
+                        to_reserve = min(available_qty, new_reserved_uom_qty)
+                        q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), to_reserve, lot_id=updates.get('lot_id', ml.lot_id),
+                                                            package_id=updates.get('package_id', ml.package_id), owner_id=updates.get('owner_id', ml.owner_id), strict=True)
                         reserved_qty = sum([x[1] for x in q])
                     except UserError:
                         pass
                     if reserved_qty != new_reserved_uom_qty:
                         new_reserved_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
-                        moves_to_recompute_state |= ml.move_id
                         ml.with_context(bypass_reservation_update=True).reserved_uom_qty = new_reserved_uom_qty
                         # we don't want to override the new reserved quantity
                         vals.pop('reserved_uom_qty', None)
+                    moves_to_recompute_state |= ml.move_id
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
