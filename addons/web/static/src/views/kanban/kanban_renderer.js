@@ -41,7 +41,7 @@ export class KanbanRenderer extends Component {
         let dataRecordId;
         let dataGroupId;
         const rootRef = useRef("root");
-        if (!this.env.isSmall) {
+        if (this.canUseSortable) {
             useSortable({
                 enable: () => this.canResequenceRecords,
                 // Params
@@ -150,6 +150,10 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
     // Getters
     // ------------------------------------------------------------------------
+
+    get canUseSortable() {
+        return !this.env.isSmall;
+    }
 
     get canMoveRecords() {
         if (!this.canResequenceRecords) {
