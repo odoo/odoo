@@ -18,11 +18,19 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.attribute.category</field>
         <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new attribute category
+            </p><p>
+                Group attributes by category that will appear in the specification
+                part of a product page.
+            </p>
+        </field>
     </record>
 
     <menuitem action="product_attribute_category_action"
         id="menu_attribute_category_action"
-        parent="website_sale.menu_catalog" groups="product.group_product_variant" sequence="11"/>
+        parent="website_sale.menu_catalog" groups="base.group_no_one" sequence="11"/>
 
     <record id="product_attribute_tree_view_inherit" model="ir.ui.view">
         <field name="name">product.attribute.tree.inherit</field>
