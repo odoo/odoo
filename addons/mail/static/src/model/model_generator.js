@@ -333,7 +333,7 @@ export class ModelGenerator {
      * @returns {ModelField}
      */
     _makeInverse(model, field) {
-        const inverseField = new ModelField(Object.assign(
+        const inverseField = new ModelField(this.manager, Object.assign(
             {},
             ModelField.many(model.name, { inverse: field.fieldName }),
             {
@@ -365,7 +365,7 @@ export class ModelGenerator {
             const sumContributionsByFieldName = new Map();
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of registry.get(model.name).get('fields')) {
-                model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
+                model.fields[fieldName] = new ModelField(this.manager, Object.assign({}, fieldData, {
                     fieldName,
                     model,
                 }));

@@ -14,7 +14,7 @@ export class ModelField {
     // Public
     //--------------------------------------------------------------------------
 
-    constructor({
+    constructor(manager, {
         compute,
         default: def,
         fieldName,
@@ -30,6 +30,7 @@ export class ModelField {
         sort,
         to,
     } = {}) {
+        this.manager = manager;
         /**
          * If set, this field acts as a computed field, and this prop
          * contains the function that computes the value
