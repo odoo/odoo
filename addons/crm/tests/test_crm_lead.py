@@ -10,7 +10,7 @@ from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
 from odoo.tests.common import Form, tagged, users
-from odoo.tools import mute_logger
+from odoo.tools import formataddr, mute_logger
 
 
 @tagged('lead_internals')
@@ -663,7 +663,12 @@ class TestCRMLead(TestCrmCommon):
             'lang_id': lang_fr.id,
         })
         data = lead1._message_get_suggested_recipients()[lead1.id]
-        self.assertEqual(data, [(False, self.test_email, None, 'Customer Email')])
+        self.assertEqual(len(data), 1)
+        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason = data[0]
+        self.assertFalse(suggested_partner_id)
+        self.assertEqual(suggested_partner_email, self.test_email)
+        self.assertEqual(suggested_lang, None)
+        self.assertEqual(suggested_reason, 'Customer Email')
 
         # Create a lead with an active language -> should keep the preset language for recipients
         lang_en = ResLang.search([('code', '=', 'en_US')])
@@ -678,7 +683,57 @@ class TestCRMLead(TestCrmCommon):
             'lang_id': lang_en.id,
         })
         data = lead2._message_get_suggested_recipients()[lead2.id]
-        self.assertEqual(data, [(False, self.test_email, "en_US", 'Customer Email')])
+        self.assertEqual(len(data), 1)
+        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason = data[0]
+        self.assertFalse(suggested_partner_id)
+        self.assertEqual(suggested_partner_email, self.test_email)
+        self.assertEqual(suggested_lang, 'en_US')
+        self.assertEqual(suggested_reason, 'Customer Email')
+
+    @users('user_sales_manager')
+    def test_message_get_suggested_recipients_auto_creation(self):
+        """Check default creates value for auto creation of recipient
+        (customer)."""
+        lead_details_for_contact = {
+            'title': self.env.ref('base.res_partner_title_mister').id,
+            'street': '3rd Floor, Room 3-C',
+            'street2': '123 Arlington Avenue',
+            'zip': '13202',
+            'city': 'New York',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_39').id,
+            'website': 'https://www.arlington123.com/3f3c',
+            'phone': '678-728-0949',
+            'mobile': '661-606-0781',
+            'function': 'Delivery Boy',
+            'team_id': self.sales_team_1.id,
+            'user_id': self.user_sales_manager.id,
+        }
+
+        for partner_name, name, email in [
+            (False, 'Test', 'test_default_create@example.com'),
+            ('Delivery Boy company', 'Test With Company', 'default_create_with_partner@example.com'),
+            ('Delivery Boy company', '', 'default_create_with_partner_no_name@example.com'),
+        ]:
+            formatted_email = formataddr((name, email))
+            with self.subTest(partner_name=partner_name):
+                lang = self.env['res.lang'].sudo().search([], limit=1)[0]
+                description = '<p>Top</p>'
+                lead1 = self.env['crm.lead'].create({
+                    'name': 'TestLead',
+                    'contact_name': name,
+                    'email_from': formatted_email,
+                    'lang_id': lang.id,
+                    'description': description,
+                    'partner_name': partner_name,
+                    **lead_details_for_contact,
+                })
+                data = lead1._message_get_suggested_recipients()[lead1.id]
+                suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason = data[0]
+                self.assertFalse(suggested_partner_id)
+                self.assertEqual(suggested_partner_email, formatted_email)
+                self.assertEqual(suggested_lang, lang.code)
+                self.assertEqual(suggested_reason, 'Customer Email')
 
     @users('user_sales_manager')
     def test_phone_mobile_search(self):
