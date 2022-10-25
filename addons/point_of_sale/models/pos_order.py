@@ -369,6 +369,8 @@ class PosOrder(models.Model):
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
         for order in self:
+            if not order.pricelist_id.currency_id:
+                raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             currency = order.pricelist_id.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
@@ -616,7 +618,7 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         self.write({'to_invoice': True})
         res = self._generate_pos_order_invoice()
-        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
+        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and not self.to_ship:
             self._create_order_picking()
         return res
 
