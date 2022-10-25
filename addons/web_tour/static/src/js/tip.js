@@ -99,6 +99,9 @@ var Tip = Widget.extend({
         this.el.style.removeProperty('transition');
         this.$tooltip_content.html(this.info.content);
         this.$window = $(window);
+        // Fix the content font size as it was used to compute the height and
+        // width of the container.
+        this.$tooltip_content[0].style.fontSize = getComputedStyle(this.$tooltip_content[0])['font-size'];
 
         this.$tooltip_content.css({
             width: "100%",
