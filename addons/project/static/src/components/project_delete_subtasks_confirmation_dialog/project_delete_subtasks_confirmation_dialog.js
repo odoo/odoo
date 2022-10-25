@@ -1,11 +1,6 @@
 /** @odoo-module */
 
-/*import { Dialog } from "../dialog/dialog";*/
-/*import { _lt } from "../l10n/translation";*/
-/*import { useChildRef } from "@web/core/utils/hooks";*/
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
-/*const { Component } = owl;*/
 
 export class ProjectDeleteSubtasksConfirmationDialog extends ConfirmationDialog { /* Custom confirmation dialog when deleting a task with subtasks in project.task form view */
     setup() {

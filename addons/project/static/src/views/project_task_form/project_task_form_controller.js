@@ -57,11 +57,7 @@ export class ProjectTaskFormController extends FormController {
                 	}
             	},
                 confirmWithSubtasks: () => {
-                    /*alert(this.model.root.data.child_ids.length);*/
-                    console.log(JSON.stringify(this.model.root.data, null, 4));
-                    for (let i = 0; i < this.model.root.data.subtask_count; i++) {
-                        alert(typeof this.model.root.data.child_ids[i]);
-                    }
+                    return this.model.orm.call('project.task', 'unlink_subtasks_recursive', [this.model.root.data.id]);
                 },
           		cancel: () => {},
             	};

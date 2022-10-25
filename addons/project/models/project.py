@@ -2124,6 +2124,12 @@ class Task(models.Model):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
 
+    """def unlink(self): # removing reference to the deleted task in its subtasks
+        if (len(self.child_ids) > 0):
+            for subtask in self.child_ids:
+                subtask.parent_id = None
+        return super().unlink()"""
+
     # ---------------------------------------------------
     # Subtasks
     # ---------------------------------------------------
@@ -2181,6 +2187,15 @@ class Task(models.Model):
             domain.insert(0, expression.NOT_OPERATOR)
             domain = expression.distribute_not(domain)
         return domain
+
+    def unlink_subtasks_recursive(self):
+        """
+	Delete a task and all the subtasks attached to it (directly, or inderectly).
+        """
+        for subtask in self.child_ids:
+            subtask.unlink_subtasks_recursive()
+        self.unlink()
+        return True
 
     # ---------------------------------------------------
     # Mail gateway
