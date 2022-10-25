@@ -1874,6 +1874,14 @@ const Wysiwyg = Widget.extend({
         // Some icons are relevant for icons, that aren't for other media.
         this.toolbar.$el.find('#colorInputButtonGroup, #create-link').toggleClass('d-none', isInMedia && !$target.is('.fa'));
         this.toolbar.$el.find('.only_fa').toggleClass('d-none', !$target.is('.fa'));
+        // Hide unsuitable buttons for icon 
+        if ($target.is('.fa')) {
+            this.toolbar.$el.find([
+                '#image-shape',
+                '#image-width',
+                '#image-edit',
+            ].join(',')).toggleClass('d-none', true);
+        }
         // Hide the create-link button if the selection spans several blocks.
         selection = this.odooEditor.document.getSelection();
         const range = selection && selection.rangeCount && selection.getRangeAt(0);
