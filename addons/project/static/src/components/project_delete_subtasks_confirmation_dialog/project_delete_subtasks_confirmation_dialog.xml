@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectDeleteSubtasksConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary" owl="1">
+        <xpath expr="//button[@t-on-click='_confirm']" position="replace">
+            <button class="btn btn-primary" t-on-click="_confirm">
+                Delete this task only
+            </button>
+        </xpath>
+        <xpath expr="//button[@t-on-click='_confirm']" position="after">
+            <button class="btn btn-primary" t-on-click="_confirmWithSubtasks">
+                Delete this task and its subtasks
+            </button>
+        </xpath>
+    </t>
+
+</templates>
