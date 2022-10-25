@@ -67,6 +67,7 @@ export class QuestionPageListRenderer extends ListRenderer {
                 sectionColumns.push(col);
             }
         }
+        sectionColumns.push(columns[columns.length - 1]); // trash button
 
         const colspan = columns.length - sectionColumns.length;
         const titleCol = columns.find(
