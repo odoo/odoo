@@ -394,8 +394,6 @@ export class ModelManager {
         Object.assign(nonProxyRecord, {
             // The unique record identifier.
             localId,
-            // Field values of record.
-            __values: new Map(),
             [IS_RECORD]: true,
         });
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
@@ -419,7 +417,7 @@ export class ModelManager {
         for (const field of model.__fieldList) {
             if (field.fieldType === 'relation') {
                 if (field.relationType === 'many') {
-                    record.__values.set(field.fieldName, new RelationSet(this, record, field));
+                    this.recordInfos[record.localId].values.set(field.fieldName, new RelationSet(this, record, field));
                 }
             }
         }
@@ -498,7 +496,7 @@ export class ModelManager {
                 infoList,
             });
         }
-        delete record.__values;
+        delete this.recordInfos[record.localId].values;
         delete this.recordInfos[record.localId].listeners;
         delete this.recordInfos[record.localId].listenersOnRecord;
         delete this.recordInfos[record.localId].listenersOnField;

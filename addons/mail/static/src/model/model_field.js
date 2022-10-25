@@ -459,7 +459,7 @@ export class ModelField {
      * @returns {any}
      */
     read(record) {
-        return record.__values.get(this.fieldName);
+        return this.manager.recordInfos[record.localId].values.get(this.fieldName);
     }
 
     /**
@@ -550,7 +550,7 @@ export class ModelField {
         if (currentValue === newVal) {
             return false;
         }
-        record.__values.set(this.fieldName, newVal);
+        this.manager.recordInfos[record.localId].values.set(this.fieldName, newVal);
         return true;
     }
 
@@ -684,7 +684,7 @@ export class ModelField {
         // unlink to properly update previous inverse before linking new value
         this._setRelationUnlinkX2One(record, { hasToUpdateInverse: true });
         // link other record to current record
-        record.__values.set(this.fieldName, recordToLink);
+        this.manager.recordInfos[record.localId].values.set(this.fieldName, recordToLink);
         // link current record to other record
         if (hasToUpdateInverse) {
             record.modelManager._update(
@@ -850,7 +850,7 @@ export class ModelField {
             return false;
         }
         // unlink other record from current record
-        record.__values.set(this.fieldName, undefined);
+        this.manager.recordInfos[record.localId].values.set(this.fieldName, undefined);
         // unlink current record from other record
         if (hasToUpdateInverse) {
             if (!otherRecord.exists()) {

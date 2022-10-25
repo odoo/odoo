@@ -19,6 +19,10 @@ export class RecordInfo {
          * the field and array of information about how the field is observed.
          */
         this.listenersOnField = new Map();
+        /**
+         * Field values of record.
+         */
+        this.values = new Map();
     }
 
 }
