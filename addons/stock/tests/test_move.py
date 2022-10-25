@@ -3612,9 +3612,8 @@ class StockMove(TransactionCase):
     def test_edit_reserved_move_line_9(self):
         """
         When writing on the reserved quantity on the SML, a process tries to
-        reserve the quants with that new quantity. If it fails (for instance
-        because the written quantity is more than actually available), this
-        quantity should be reset to 0.
+        reserve the quants with that new quantity. If the written quantity is
+        more than actually available, this quantity should be set to the available quantity.
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
 
@@ -3633,7 +3632,7 @@ class StockMove(TransactionCase):
         out_move.move_line_ids.reserved_uom_qty = 2
 
         self.assertTrue(out_move.move_line_ids)
-        self.assertEqual(out_move.move_line_ids.reserved_uom_qty, 0, "The reserved quantity should be cancelled")
+        self.assertEqual(out_move.move_line_ids.reserved_uom_qty, 1, "The reserved quantity should be what is available")
 
     def test_edit_done_move_line_1(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
