@@ -233,6 +233,9 @@ $o-theme-font-configs: map-merge($o-base-theme-font-configs, $o-theme-font-confi
 
 // Add locally hosted google fonts
 @each $font-name, $font-attach-id in (o-website-value('google-local-fonts') or ()) {
+    // If a font exists both remotely and locally, we remove the remote font to
+    // prioritize the local font.
+    $o-theme-font-configs: map-remove($o-theme-font-configs, $font-name);
     $o-theme-font-configs: map-merge($o-theme-font-configs, (
         $font-name: (
             'family': (quote($font-name), sans-serif),
