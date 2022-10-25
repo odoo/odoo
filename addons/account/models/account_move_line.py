@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date, float_is_zero, float_compare
+from odoo.tools import frozendict, formatLang, format_date, float_is_zero
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -2352,32 +2352,21 @@ class AccountMoveLine(models.Model):
     # ANALYTIC
     # -------------------------------------------------------------------------
 
-    def _validate_distribution(self):
+    def _validate_analytic_distribution(self):
         for line in self.filtered(lambda line: line.display_type == 'product'):
-            mandatory_plans_ids = [plan['id'] for plan in self.env['account.analytic.plan'].sudo().get_relevant_plans(**{
+            line._validate_distribution(**{
                         'product': line.product_id.id,
                         'account': line.account_id.id,
                         'business_domain': line.move_id.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice'
                                            or line.move_id.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill'
                                            or 'general',
-                        'company_id': self.company_id.id,
-                        }) if plan['applicability'] == 'mandatory']
-            if not mandatory_plans_ids:
-                continue
-            distribution_by_root_plan = {}
-            for analytic_account_id, percentage in (line.analytic_distribution or {}).items():
-                root_plan = self.env['account.analytic.account'].browse(int(analytic_account_id)).root_plan_id
-                distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
-
-            for plan_id in mandatory_plans_ids:
-                if float_compare(distribution_by_root_plan.get(plan_id, 0), 100, precision_digits=2) != 0:
-                    raise ValidationError(_("One or more lines require a 100% analytic distribution."))
+                        'company_id': line.company_id.id,
+            })
 
     def _create_analytic_lines(self):
         """ Create analytic items upon validation of an account.move.line having an analytic distribution.
         """
-        if self.env.context.get('validate_analytic', False):
-            self._validate_distribution()
+        self._validate_analytic_distribution()
         analytic_line_vals = []
         for line in self:
             analytic_line_vals.extend(line._prepare_analytic_lines())

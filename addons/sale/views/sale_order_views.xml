@@ -201,18 +201,18 @@
                 <button id="create_invoice_percentage" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                     type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="q"
                     attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary" data-hotkey="g"/>
+                <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary" data-hotkey="g" context="{'validate_analytic': True}"/>
                 <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice"
                     groups="sale.group_proforma_sales" class="btn-primary"
-                    attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
+                    attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
                 <button name="action_confirm" id="action_confirm" data-hotkey="v"
-                    string="Confirm" class="btn-primary" type="object"
+                    string="Confirm" class="btn-primary" type="object" context="{'validate_analytic': True}"
                     attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
                 <button name="action_confirm" data-hotkey="v"
-                    string="Confirm" type="object"
+                    string="Confirm" type="object" context="{'validate_analytic': True}"
                     attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g"/>
+                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
+                <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g" context="{'validate_analytic': True}"/>
                 <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}" data-hotkey="z"/>
                 <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
