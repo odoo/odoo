@@ -17,7 +17,6 @@ const { useRef, useEffect } = owl;
  */
 export function useNumpadDecimal() {
     const decimalPoint = localization.decimalPoint;
-    const listeners = [];
     const ref = useRef("numpadDecimal");
     const handler = (ev) => {
         if (
@@ -35,19 +34,15 @@ export function useNumpadDecimal() {
             "end"
         );
     };
-    useEffect(
-        (el) => {
-            if (el) {
-                const inputs = el.nodeName === "INPUT" ? [el] : el.querySelectorAll("input");
-                inputs.forEach((input) => {
-                    listeners.push(input);
-                    input.addEventListener("keydown", handler);
-                });
-            }
-            return () => {
-                listeners.forEach((input) => input.removeEventListener("keydown", handler));
-            };
-        },
-        () => [ref.el]
-    );
+    useEffect(() => {
+        let inputs = [];
+        const el = ref.el;
+        if (el) {
+            inputs = el.nodeName === "INPUT" ? [el] : el.querySelectorAll("input");
+            inputs.forEach((input) => input.addEventListener("keydown", handler));
+        }
+        return () => {
+            inputs.forEach((input) => input.removeEventListener("keydown", handler));
+        };
+    });
 }
