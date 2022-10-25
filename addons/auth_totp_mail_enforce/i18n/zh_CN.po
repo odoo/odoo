@@ -6,6 +6,7 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-01 12:13+0000\n"
 "PO-Revision-Date: 2022-03-03 13:11+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    亲爱的<t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"   <p>有人试图用一个新的设备登录你的账户。\n"
+"   <p>有人试图用一个新的设备登录您的账户。\n"
 "</p>   <ul>\n"
 "        <t t-set=\"not_available\">不适用</t>\n"
 "        <li>位置。<t t-out=\"ctx.get('location') or not_available\"/></li>\n"
@@ -79,7 +80,7 @@ msgstr ""
 "        <li>浏览器。<t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
 "        <li>IP地址。<t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
 "    </ul>\n"
-"   <p>如果这是你，请输入以下代码以完成登录。\n"
+"   <p>如果这是您，请输入以下代码以完成登录。\n"
 "</p>  <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
 "    <t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
 "    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
@@ -89,8 +90,8 @@ msgstr ""
 "   <small>请注意，该代码在<t t-out=\"expiration\"/>.\n"
 "</small>\n"
 "   <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        如果你没有启动这个登录。\n"
-"        你应该立即更改你的密码，以确保账户安全。\n"
+"        如果您没有启动这个登录。\n"
+"        您应该立即更改您的密码，以确保账户安全。\n"
 "   </p>\n"
 "\n"
 "   <p style=\"margin: 16px 0px 16px 0px;\">\n"
@@ -133,7 +134,7 @@ msgstr "代码检查"
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
 msgid "Config Settings"
-msgstr "参数设置"
+msgstr "配置设置"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_uid
@@ -265,15 +266,15 @@ msgstr ""
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr "你的账户发送的认证邮件达到了上限"
+msgstr "您的账户发送的认证邮件达到了上限"
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr "你的账户达到了代码验证的上限"
+msgstr "您的账户达到了代码验证的上限"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr "你的双因素认证代码"
+msgstr "您的双因素认证代码"

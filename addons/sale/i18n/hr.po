@@ -16,7 +16,6 @@
 # Marko Carević <marko.carevic@live.com>, 2022
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2022
 # Tina Milas, 2022
-# Vladimir Vrgoč, 2022
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
 # Mario Jureša <mario.juresa@uvid.hr>, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
@@ -24,6 +23,7 @@
 # Martin Trigaux, 2022
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2022
 # Bole <bole@dajmi5.com>, 2022
+# Vladimir Vrgoč, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
+"Last-Translator: Vladimir Vrgoč, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1522,6 +1522,12 @@ msgid "Down Payments"
 msgstr "Polog"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr "Polog (fiksni iznos)"
@@ -1924,6 +1930,7 @@ msgstr "Stanje računa"
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
+"Račun nakon isporuke, na temelju isporučenih količina, a ne naručenih."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -3062,7 +3069,7 @@ msgstr "Ponude i prodaje"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Prefakturiraj troškove"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -3384,7 +3391,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
-msgstr ""
+msgstr "Po prodajnoj cijeni"
 
 #. module: sale
 #: code:addons/sale/models/crm_team.py:0
@@ -3977,7 +3984,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "Vrijednost iznosa kapare mora biti pozitivna"
+msgstr "Vrijednost iznosa predujma mora biti pozitivna"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4403,7 +4410,7 @@ msgstr "Napišite naziv tvrtke da biste ga stvorili ili pogledajte prijedloge."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Račun temeljem naručenih količina prije isporuke."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4443,6 +4450,15 @@ msgid ""
 msgstr ""
 "Ovdje možete postaviti vrstu komunikacije koja će se pojaviti na prodajnim "
 "nalozima. Komunikacija će se dati kupcu kada odabere način plaćanja."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

@@ -91,7 +91,7 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
 
         # split lines with the same product if it has untracked attributes
-        if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id:
+        if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id and not kwargs.get('force_search', False):
             return self.env['sale.order.line']
 
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
@@ -143,7 +143,7 @@ class SaleOrder(models.Model):
         else:
             pu = product.price
             if order.pricelist_id and order.partner_id:
-                order_line = order._cart_find_product_line(product.id)
+                order_line = order._cart_find_product_line(product.id, force_search=True)
                 if order_line:
                     pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 

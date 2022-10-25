@@ -4,6 +4,7 @@ odoo.define('web.py_utils_tests', function(require) {
 var Context = require('web.Context');
 var pyUtils = require('web.py_utils');
 var time = require('web.time');
+var testUtils = require('web.test_utils');
 
 const r = String.raw;
 
@@ -498,6 +499,36 @@ QUnit.module('core', function () {
         assert.strictEqual(result.getHours(), 1);
         assert.strictEqual(result.getMinutes(), 7);
         assert.strictEqual(result.getSeconds(), 31);
+    });
+
+
+    QUnit.test('to_utc in october with winter/summer change', function (assert) {
+        assert.expect(7);
+
+        const originalGetTimezoneOffset = Date.prototype.getTimezoneOffset;
+        Date.prototype.getTimezoneOffset = function () {
+            const month = this.getMonth() // starts at 0;
+            if (10 <= month || month <= 2) {
+                //rough approximation
+                return -60;
+            } else {
+                return -120;
+            }
+        }
+
+        var result = py.eval(
+            "datetime.datetime(2022, 10, 17).to_utc()",
+            pyUtils.context());
+
+        assert.ok(result instanceof Date);
+        assert.strictEqual(result.getFullYear(), 2022);
+        assert.strictEqual(result.getMonth(), 9);
+        assert.strictEqual(result.getDate(), 16);
+        assert.strictEqual(result.getHours(), 22);
+        assert.strictEqual(result.getMinutes(), 0);
+        assert.strictEqual(result.getSeconds(), 0);
+
+        Date.prototype.getTimezoneOffset = originalGetTimezoneOffset;
     });
 
     QUnit.test('datetime.combine', function (assert) {

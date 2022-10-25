@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -77,7 +77,7 @@ msgstr ""
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Aucune transaction trouvée correspondant à la référence %s."
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
@@ -139,6 +139,8 @@ msgid ""
 "Received unrecognized authentication check response code: received %s, "
 "expected VERIFIED or INVALID."
 msgstr ""
+"Code de réponse de contrôle d'authentification non reconnu : reçu %s, "
+"attendu VÉRIFIÉ ou NON VALIDE."
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure

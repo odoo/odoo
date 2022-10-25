@@ -7,13 +7,13 @@
 # Kovács Tibor <kovika@gmail.com>, 2021
 # Zsolt Godó <zsolttokio@gmail.com>, 2021
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2021
-# Tamás Dombos, 2021
 # Martin Trigaux, 2021
 # krnkris, 2021
 # gezza <geza.nagy@oregional.hu>, 2021
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2021
 # Tamás Németh <ntomasz81@gmail.com>, 2022
+# Tamás Dombos, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"Last-Translator: Tamás Dombos, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Print Badge - %s' % (object.name).replace('/', '')"
-msgstr "'Jelvény nyomtatás - %s' % (object.name).replace('/', '')"
+msgstr "'Névkártya nyomtatás - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -476,12 +476,12 @@ msgstr "Mellékletek száma"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Attendance"
-msgstr "Részvétel"
+msgstr "Jelenlét"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr ""
+msgstr "Jelenlét/Értékesítési pont"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -572,7 +572,7 @@ msgstr "Alapképzés vagy magasabb"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
-msgstr "Jelvény azonosító"
+msgstr "Névkártya azonosító"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
@@ -2050,6 +2050,9 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
+"A Jelenlét alkalmazásban kioszk módban a be- és kijelentkezéshez (ha be van "
+"kapcsolva a beállításoknál), illetve az Értékesítési pont alkalmazásban a "
+"pénztáros megváltoztatásához használt PIN"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2224,7 +2227,7 @@ msgstr "Jelen, de nem aktív"
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
-msgstr "Jelvény nyomtatás"
+msgstr "Névkártya  nyomtatás"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2635,7 +2638,7 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
-"A jelvény azonosítóknak egyedieknek kell lenniük, ezt már hozzárendelte egy "
+"A névkártya azonosítónak egyedinek kell lennie, ezt már hozzárendelte egy "
 "másik alkalmazotthoz."
 
 #. module: hr
@@ -3049,6 +3052,12 @@ msgstr ""
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "Rekurzív részlegek nem hozhatóak létre."
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr ""
 
 #. module: hr
 #: code:addons/hr/models/res_config_settings.py:0

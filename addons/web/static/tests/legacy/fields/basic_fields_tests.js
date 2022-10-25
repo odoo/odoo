@@ -769,6 +769,44 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('numeric field: field with type `number` and with keydown on numpad decimal key', async function (assert) {
+        assert.expect(2);
+
+        patchWithCleanup(basicFields.NumericField.constructor.prototype, {
+           _onKeydown(ev) {
+                const res = this._super(...arguments);
+
+                // This _onKeydown handler must not prevent default
+                // a keydown event for NumericField with type=number
+                assert.ok(!ev.defaultPrevented);
+                return res;
+            },
+        });
+
+        this.data.partner.fields.float_field = { string: "Float", type: 'float' };
+        this.data.partner.records[0].float_field = 123;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="float_field" options="{'type': 'number'}"/>
+                </form>
+            `,
+            res_id: 1,
+        });
+
+        await testUtilsDom.click(form.el.querySelector('.o_form_button_edit'));
+        const floatField = form.el.querySelector('.o_input[name="float_field"]');
+        assert.strictEqual(floatField.type, 'number')
+
+        floatField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+
+        form.destroy();
+    });
+
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', async function (assert) {

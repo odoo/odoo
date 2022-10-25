@@ -516,7 +516,7 @@ var PosDB = core.Class.extend({
         var saved = this.load('unpaid_orders',[]);
         var orders = [];
         saved.forEach(function(o) {
-            if (ids.includes(o.id)){
+            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length || o.data.statement_ids.length)){
                 orders.push(o);
             }
         });

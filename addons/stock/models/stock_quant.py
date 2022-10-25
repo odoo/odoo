@@ -219,6 +219,14 @@ class StockQuant(models.Model):
                 value['location_id'] = warehouse.lot_stock_id.id
         return super()._load_records_create(values)
 
+    def _load_records_write(self, values):
+        """ Only allowed fields should be modified """
+        allowed_fields = self._get_inventory_fields_write()
+        for field in values.keys():
+            if field not in allowed_fields:
+                raise UserError(_("Changing %s is restricted, you can't do this operation.") % (field))
+        return super()._load_records_write(values)
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """ Override to set the `inventory_quantity` field if we're in "inventory mode" as well

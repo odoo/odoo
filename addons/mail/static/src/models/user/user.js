@@ -50,10 +50,9 @@ function factory(dependencies) {
             const usersData = await this.env.services.rpc({
                 model: 'res.users',
                 method: 'read',
-                args: [ids],
+                args: [ids, fields],
                 kwargs: {
                     context,
-                    fields,
                 },
             }, { shadow: true });
             return this.messaging.models['mail.user'].insert(usersData.map(userData =>

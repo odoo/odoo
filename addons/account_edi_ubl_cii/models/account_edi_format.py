@@ -100,7 +100,7 @@ class AccountEdiFormat(models.Model):
             return super()._is_enabled_by_default_on_journal(journal)
         return self.code == 'facturx_1_0_05'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # EXTENDS account_edi
         self.ensure_one()
 
@@ -174,11 +174,7 @@ class AccountEdiFormat(models.Model):
         # EXTENDS account_edi
         self.ensure_one()
 
-        if not journal:
-            # infer the journal
-            journal = self.env['account.journal'].search([
-                ('company_id', '=', self.env.company.id), ('type', '=', 'purchase')
-            ], limit=1)
+        journal = journal or self.env['account.move']._get_default_journal()
 
         if not self._is_ubl_cii_available(journal.company_id):
             return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)

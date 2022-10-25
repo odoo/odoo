@@ -683,7 +683,7 @@ class AccountBankStatementLine(models.Model):
             if balance_to_reconcile is None else balance_to_reconcile
 
         if 'currency_id' in counterpart_vals:
-            currency_id = counterpart_vals['currency_id'] or company_currency.id
+            currency_id = counterpart_vals['currency_id'] or foreign_currency.id
         elif move_line:
             currency_id = move_line.currency_id.id or company_currency.id
         else:
@@ -1014,7 +1014,7 @@ class AccountBankStatementLine(models.Model):
             company_currency = st_line.journal_id.company_id.currency_id
             journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency else False
 
-            line_vals_list = self._prepare_move_line_default_vals()
+            line_vals_list = st_line._prepare_move_line_default_vals()
             line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
 
             if suspense_lines:

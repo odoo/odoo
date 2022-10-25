@@ -68,7 +68,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
             <CrossIndustryInvoice>
                 <ExchangedDocumentContext>
                     <GuidelineSpecifiedDocumentContextParameter>
-                        <ID>urn:cen.eu:en16931:2017</ID>
+                        <ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended</ID>
                     </GuidelineSpecifiedDocumentContextParameter>
                 </ExchangedDocumentContext>
                 <ExchangedDocument>
@@ -117,10 +117,16 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     <ApplicableHeaderTradeAgreement>
                         <SellerTradeParty>
                             <Name>company_1_data</Name>
+                            <DefinedTradeContact>
+                                <PersonName>company_1_data</PersonName>
+                            </DefinedTradeContact>
                             <PostalTradeAddress/>
                         </SellerTradeParty>
                         <BuyerTradeParty>
                             <Name>partner_b</Name>
+                            <DefinedTradeContact>
+                                <PersonName>partner_b</PersonName>
+                            </DefinedTradeContact>
                             <PostalTradeAddress/>
                         </BuyerTradeParty>
                         <BuyerOrderReferencedDocument>
@@ -130,6 +136,9 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     <ApplicableHeaderTradeDelivery>
                         <ShipToTradeParty>
                             <Name>partner_b</Name>
+                            <DefinedTradeContact>
+                                <PersonName>partner_b</PersonName>
+                            </DefinedTradeContact>
                             <PostalTradeAddress/>
                         </ShipToTradeParty>
                     </ApplicableHeaderTradeDelivery>

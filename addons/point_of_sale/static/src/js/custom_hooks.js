@@ -39,12 +39,23 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                         this.env._t('The server encountered an error while receiving your order.'),
                 });
             } else if (error.code === 700) {
-                // Fiscal module errors
+                // Sweden Fiscal module errors
                 await this.showPopup('ErrorPopup', {
                     title: this.env._t('Fiscal data module error'),
                     body:
                         error.data.error.status ||
                         this.env._t('The fiscal data module encountered an error while receiving your order.'),
+                });
+            } else if (error.code === 701) {
+                // Belgian Fiscal module errors
+                let bodyMessage = "";
+                if(error.error.errorCode)
+                    bodyMessage = "'" + error.error.errorCode + "': " + error.error.errorMessage;
+                else
+                    bodyMessage = "Fiscal data module is not on.";
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('Fiscal data module error'),
+                    body: bodyMessage
                 });
             } else {
                 // ???

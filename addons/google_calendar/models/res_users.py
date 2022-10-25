@@ -63,6 +63,7 @@ class User(models.Model):
         self.google_cal_account_id.calendar_sync_token = next_sync_token
 
         # Google -> Odoo
+        send_updates = not full_sync
         events.clear_type_ambiguity(self.env)
         recurrences = events.filter(lambda e: e.is_recurrence())
         synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
@@ -71,11 +72,11 @@ class User(models.Model):
         # Odoo -> Google
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
-        recurrences._sync_odoo2google(calendar_service)
+        recurrences.with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
         synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
         synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
-        (events - synced_events)._sync_odoo2google(calendar_service)
+        (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 

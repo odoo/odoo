@@ -90,6 +90,10 @@ class StockRule(models.Model):
             if not warehouse_id:
                 warehouse_id = rule.location_id.warehouse_id
             if rule.picking_type_id == warehouse_id.sam_type_id:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                    procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
+                        lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
+                    continue
                 manu_type_id = warehouse_id.manu_type_id
                 if manu_type_id:
                     name = manu_type_id.sequence_id.next_by_id()

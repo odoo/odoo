@@ -139,7 +139,7 @@
                                         Domestic country of your accounting
                                     </div>
                                     <div class="text-muted">
-                                        <field name="account_fiscal_country_id"/>
+                                        <field name="account_fiscal_country_id" options="{'no_create': True, 'no_open': True}"/>
                                     </div>
                                 </div>
                             </div>
@@ -445,7 +445,7 @@
                             </div>
                         </div>
 
-                        <t groups="account.group_account_user" attrs="{'invisible': [('chart_template_id','=',False)]}">
+                        <t groups="account.group_account_user">
                             <h2>Default Accounts</h2>
                             <div class="row mt16 o_settings_container" id="default_accounts">
                                 <div class="col-12 col-lg-6 o_setting_box"

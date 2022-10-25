@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        self.generated_coupon_ids.write({'state': 'new'})
+        self.generated_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
         self.applied_coupon_ids.write({'state': 'used'})
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
@@ -188,14 +188,12 @@ class SaleOrder(models.Model):
 
             discount_amount -= discount_line_amount_price * lines_total / lines_price
 
-            tax_name = ""
-            if len(tax_ids) == 1:
-                tax_name = " - " + _("On product with following tax: ") + ', '.join(tax_ids.mapped('name'))
-            elif len(tax_ids) > 1:
-                tax_name = " - " + _("On product with following taxes: ") + ', '.join(tax_ids.mapped('name'))
-
             reward_lines[tax_ids] = {
-                'name': _("Discount: ") + program.name + tax_name,
+                'name': _(
+                    "Discount: %(program)s - On product with following taxes: %(taxes)s",
+                    program=program.name,
+                    taxes=", ".join(tax_ids.mapped('name')),
+                ),
                 'product_id': program.discount_line_product_id.id,
                 'price_unit': -discount_line_amount_price,
                 'product_uom_qty': 1.0,

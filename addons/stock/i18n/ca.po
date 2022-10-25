@@ -12,14 +12,14 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # Arnau Ros, 2021
 # Quim - eccit <quim@eccit.com>, 2021
-# jabelchi, 2022
-# Harcogourmet, 2022
 # ericrolo, 2022
 # Jonatan Gk, 2022
 # Martin Trigaux, 2022
 # marcescu, 2022
 # eriiikgt, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Harcogourmet, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,17 +177,17 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr "\"Location - %s'% object. name"
+msgstr "'Ubicació - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr "'Let-Serial - %s' % object. nom"
+msgstr "'Lot-Núm.Sèrie - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "'Operació tipus - %s' % object. nom"
+msgstr "'Tipus d'operació - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -1109,7 +1109,7 @@ msgstr "Auto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Ordres d' automatització"
+msgstr "Automatitza comandes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -2975,7 +2975,7 @@ msgstr "Lliure per a usar l' import "
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "From"
-msgstr "De"
+msgstr "Des de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -4788,7 +4788,7 @@ msgstr "No disponible"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Not Snoozed"
-msgstr "No s' ha \" Snexed \""
+msgstr "No ajornat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5019,7 +5019,7 @@ msgstr "Comanda"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
-msgstr "Una vegada l' ordre"
+msgstr "Ordena un cop"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5477,7 +5477,7 @@ msgstr "Operacions pre- preceditesNoun, name of the user action"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr "Camí preferida"
+msgstr "Ruta preferida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -6373,7 +6373,7 @@ msgstr "Informació de registre per a %s en %s"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr "Informe de respostes"
+msgstr "Informe de reabastiment"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -6405,7 +6405,7 @@ msgstr "Requereix una signatura a les vostres ordres d' entrega"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_method
 msgid "Reservation Method"
-msgstr "Mètode de recuperació"
+msgstr "Mètode de reserva"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -7168,12 +7168,12 @@ msgstr "Mida: Longitud × Amplada × Alçada"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, python-format
 msgid "Snooze"
-msgstr "Migdiada "
+msgstr "Ajorna "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
 msgid "Snooze Date"
-msgstr "Data esbiaixada"
+msgstr "Ajornat fins"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
@@ -7183,12 +7183,12 @@ msgstr "Punt d'ordre Sning"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
 msgid "Snooze for"
-msgstr "Snexed for"
+msgstr "Ajornat durant"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Snoozed"
-msgstr "Snexed"
+msgstr "Ajornat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -8196,7 +8196,7 @@ msgstr "Consell: velocitat de les operacions d' inventari amb codis de barres"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
-msgstr "Per"
+msgstr "Fins a"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -8224,7 +8224,7 @@ msgstr "Per fer"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
-msgstr "A l' ordre"
+msgstr "Quantitat a demanar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
@@ -9060,7 +9060,7 @@ msgstr "Escriviu el SN/LN un per un o copieu enganxar una llista."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "Ets bo, no hi ha renovament a actuar!"
+msgstr "No hi ha reaprovisionaments pendents."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -9343,8 +9343,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
-"Encara no heu registrat <i>done </i> quantitats, clicant a <i>apply </i> "
-"Odoo processarà totes les quantitats."
+"Encara no heu enregistrat quantitats <i>fetes </i>, clicant a <i>APLICAR "
+"</i> Odoo processarà totes les quantitats."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -9471,8 +9471,8 @@ msgid ""
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 "Aquí trobareu propostes intel·ligents de replenament basades en projeccions d'inventari.\n"
-"            Seleccioneu la quantitat de comprar o fabricar i llançar ordres en un clic.\n"
-"            Per a estalviar temps en el futur, establiu les regles com a \"automatats.\""
+"            Seleccioneu la quantitat a comprar o fabricar i llanceu ordres amb un clic.\n"
+"            Per a estalviar temps en el futur, establiu les regles com a \"auto.\""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0

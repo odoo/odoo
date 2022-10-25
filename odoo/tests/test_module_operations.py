@@ -163,9 +163,12 @@ if __name__ == '__main__':
     logging.getLogger('odoo.modules.loading').setLevel(logging.CRITICAL)
     logging.getLogger('odoo.sql_db').setLevel(logging.CRITICAL)
 
-    if args.uninstall:
-        test_uninstall(args)
-    elif args.standalone:
-        test_scripts(args)
-    else:
-        test_full(args)
+    try:
+        if args.uninstall:
+            test_uninstall(args)
+        elif args.standalone:
+            test_scripts(args)
+        else:
+            test_full(args)
+    except Exception as e:
+        _logger.exception("An error occured during standalone tests: %s", e)

@@ -335,6 +335,7 @@ class Meeting(models.Model):
         recurrence_fields = self._get_recurrent_fields()
         false_values = {field: False for field in recurrence_fields}  # computes need to set a value
         defaults = self.env['calendar.recurrence'].default_get(recurrence_fields)
+        default_rrule_values = self.recurrence_id.default_get(recurrence_fields)
         for event in self:
             if event.recurrency:
                 event.update(defaults)  # default recurrence values are needed to correctly compute the recurrence params
@@ -344,6 +345,7 @@ class Meeting(models.Model):
                     for field in recurrence_fields
                     if event.recurrence_id[field]
                 }
+                rrule_values = rrule_values or default_rrule_values
                 event.update({**false_values, **event_values, **rrule_values})
             else:
                 event.update(false_values)
@@ -359,6 +361,9 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Prevent sending update notification when _inverse_dates is called
+        self = self.with_context(is_calendar_event_new=True)
+
         vals_list = [  # Else bug with quick_create when we are filter on an other user
             dict(vals, user_id=self.env.user.id) if not 'user_id' in vals else vals
             for vals in vals_list
@@ -424,7 +429,7 @@ class Meeting(models.Model):
         if not self.env.context.get('dont_notify'):
             events._setup_alarms()
 
-        return events
+        return events.with_context(is_calendar_event_new=False)
 
     def _read(self, fields):
         if self.env.is_system():
@@ -521,7 +526,7 @@ class Meeting(models.Model):
             (current_attendees - previous_attendees)._send_mail_to_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
             )
-        if 'start' in values:
+        if not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
             if start_date and start_date >= fields.Datetime.now():

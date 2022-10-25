@@ -619,9 +619,11 @@ var FileWidget = SearchableMediaWidget.extend({
                         'is_image': this.widgetType === 'image',
                         'width': 0,
                         'quality': 0,
+                        'generate_access_token': true,
                     }
                 }, index);
                 if (!attachment.error) {
+                    this.trigger_up('wysiwyg_attachment', attachment);
                     this._handleNewAttachment(attachment);
                 }
             });
