@@ -307,7 +307,7 @@ export class ModelManager {
                 continue;
             }
             this.recordInfos[record.localId].listenersOnRecord.delete(listener);
-            const listenersOnField = record.__listenersOnField;
+            const listenersOnField = this.recordInfos[record.localId].listenersOnField;
             for (const field of listener.fields.get(record) || []) {
                 listenersOnField.get(field).delete(listener);
             }
@@ -394,11 +394,6 @@ export class ModelManager {
         Object.assign(nonProxyRecord, {
             // The unique record identifier.
             localId,
-            /**
-             * Map between fields and a Map between listeners that are observing
-             * the field and array of information about how the field is observed.
-             */
-            __listenersOnField: new Map(),
             // Field values of record.
             __values: new Map(),
             [IS_RECORD]: true,
@@ -506,7 +501,7 @@ export class ModelManager {
         delete record.__values;
         delete this.recordInfos[record.localId].listeners;
         delete this.recordInfos[record.localId].listenersOnRecord;
-        delete record.__listenersOnField;
+        delete this.recordInfos[record.localId].listenersOnField;
         model.__records.delete(record);
         delete this.recordInfos[record.localId];
         delete record.localId;
@@ -748,7 +743,7 @@ export class ModelManager {
      * @param {ModelField} field
      */
     markAsChanged(record, field) {
-        for (const [listener, infoList] of record.__listenersOnField.get(field) || []) {
+        for (const [listener, infoList] of this.recordInfos[record.localId].listenersOnField.get(field) || []) {
             this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_update: ${field} of ${record}`,

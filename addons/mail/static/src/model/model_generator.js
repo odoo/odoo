@@ -450,10 +450,10 @@ export class ModelGenerator {
                         if (this.modelManager._listeners.size) {
                             let entryRecord = this.modelManager.recordInfos[record.localId].listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
-                            let entryField = record.__listenersOnField.get(field);
+                            let entryField = this.modelManager.recordInfos[record.localId].listenersOnField.get(field);
                             if (!entryField) {
                                 entryField = new Map();
-                                record.__listenersOnField.set(field, entryField);
+                                this.modelManager.recordInfos[record.localId].listenersOnField.set(field, entryField);
                             }
                             for (const listener of record.modelManager._listeners) {
                                 listener.records.add(record);

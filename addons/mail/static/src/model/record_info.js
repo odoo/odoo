@@ -14,6 +14,11 @@ export class RecordInfo {
          * information about how the record is observed.
          */
         this.listenersOnRecord = new Map();
+        /**
+         * Map between fields and a Map between listeners that are observing
+         * the field and array of information about how the field is observed.
+         */
+        this.listenersOnField = new Map();
     }
 
 }
