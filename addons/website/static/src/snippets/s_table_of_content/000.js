@@ -13,6 +13,8 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     async start() {
         await this._super(...arguments);
+        this.$scrollingElement = $().getScrollingElement();
+        this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
         this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
         extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPositionBound);
@@ -38,7 +40,7 @@ const TableOfContent = publicWidget.Widget.extend({
      * @private
      */
     _updateTableOfContentNavbarPosition() {
-        if (!this.$target[0].querySelector('a.table_of_content_link')) {
+        if (!this.el.querySelector('a.table_of_content_link')) {
             // Do not start the scrollspy if the TOC is empty.
             return;
         }
@@ -48,16 +50,16 @@ const TableOfContent = publicWidget.Widget.extend({
         const isHorizontalNavbar = this.$el.hasClass('s_table_of_content_horizontal_navbar');
         this.$el.css('top', isHorizontalNavbar ? position : '');
         this.$el.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
-        const $mainNavBar = $('#oe_main_menu_navbar');
-        position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$el.outerHeight() : 0;
-        this._scrollingElement = $().getScrollingElement();
-        new ScrollSpy(this._scrollingElement, {
-            target: this.$el.find('.s_table_of_content_navbar'),
-            method: 'offset',
-            offset: position + 100,
-            alwaysKeepFirstActive: true
-        });
+        if (this.previousPosition !== position) {
+            new ScrollSpy(this.$scrollingElement, {
+                target: this.$el.find('.s_table_of_content_navbar'),
+                method: 'offset',
+                offset: position + 100,
+                alwaysKeepFirstActive: true
+            });
+            this.previousPosition = position;
+        }
     },
 });
 
