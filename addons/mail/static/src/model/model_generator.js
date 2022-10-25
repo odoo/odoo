@@ -2,6 +2,7 @@
 
 import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
+import { ModelInfo } from '@mail/model/model_info';
 import { ModelIndexAnd } from '@mail/model/model_index_and';
 import { ModelIndexXor } from '@mail/model/model_index_xor';
 
@@ -62,6 +63,7 @@ export class ModelGenerator {
             Object.defineProperty(model.prototype, getterName, { get: getter });
         }
         // Make model manager accessible from model.
+        this.manager.modelInfos[model.name] = new ModelInfo({ model });
         model.modelManager = this.manager;
         model.fields = {};
         model.identifyingMode = definition.get('identifyingMode');

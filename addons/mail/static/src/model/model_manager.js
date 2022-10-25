@@ -79,6 +79,7 @@ export class ModelManager {
             check: new Set(),
         };
         this.recordInfos = {};
+        this.modelInfos = {};
         /**
          * Set of active listeners. Useful to be able to register which records
          * or fields they accessed to be able to notify them when those change.
@@ -177,6 +178,7 @@ export class ModelManager {
             delete model.__requiredFieldsList;
             delete model.fields;
             delete model.modelManager;
+            delete this.modelInfos[model.name];
         }
     }
 
