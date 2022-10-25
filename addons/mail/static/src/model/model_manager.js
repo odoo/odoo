@@ -394,9 +394,6 @@ export class ModelManager {
         Object.assign(nonProxyRecord, {
             // The unique record identifier.
             localId,
-            // Listeners that are bound to this record, to be notified of
-            // change in dependencies of compute, related and "on change".
-            __listeners: [],
             /**
              * Map between listeners that are observing this record and array of
              * information about how the record is observed.
@@ -480,7 +477,7 @@ export class ModelManager {
         if (lifecycleHooks.has('_willDelete')) {
             lifecycleHooks.get('_willDelete').call(record);
         }
-        for (const listener of record.__listeners) {
+        for (const listener of this.recordInfos[record.localId].listeners) {
             this.removeListener(listener);
         }
         for (const field of model.__fieldList) {
@@ -512,7 +509,7 @@ export class ModelManager {
             });
         }
         delete record.__values;
-        delete record.__listeners;
+        delete this.recordInfos[record.localId].listeners;
         delete record.__listenersOnRecord;
         delete record.__listenersOnField;
         model.__records.delete(record);
@@ -575,7 +572,7 @@ export class ModelManager {
                     listeners.push(listener);
                 }
             }
-            record.__listeners.push(...listeners);
+            this.recordInfos[record.localId].listeners.push(...listeners);
             for (const listener of listeners) {
                 listener.onChange({
                     listener,
@@ -630,7 +627,7 @@ export class ModelManager {
                         record[onChange.methodName]();
                     },
                 });
-                record.__listeners.push(listener);
+                this.recordInfos[record.localId].listeners.push(listener);
                 listener.onChange({
                     listener,
                     reason: this.isDebug && `first call on ${record}`,
