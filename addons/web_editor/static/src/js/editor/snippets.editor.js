@@ -1355,6 +1355,9 @@ var SnippetsMenu = Widget.extend({
         // Active snippet editor on click in the page
         var lastElement;
         const onClick = ev => {
+            if (!this.getEditableArea().length) {
+                return;
+            }
             var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
             if (!srcElement || lastElement === srcElement) {
                 return;
@@ -2671,6 +2674,10 @@ var SnippetsMenu = Widget.extend({
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
+                    if (!$dropZones) {
+                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                        return;
+                    }
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         const point = {x: ui.position.left, y: ui.position.top};
                         const container = {container: doc.body};
