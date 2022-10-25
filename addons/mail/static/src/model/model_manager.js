@@ -207,7 +207,7 @@ export class ModelManager {
         }
         for (const listener of this._listeners) {
             listener.records.add(record);
-            const entry = record.__listenersOnRecord;
+            const entry = this.recordInfos[record.localId].listenersOnRecord;
             const info = {
                 listener,
                 reason: this.isDebug && `findFromIdentifyingData record - ${record}`,
@@ -306,7 +306,7 @@ export class ModelManager {
             if (!record.exists()) {
                 continue;
             }
-            record.__listenersOnRecord.delete(listener);
+            this.recordInfos[record.localId].listenersOnRecord.delete(listener);
             const listenersOnField = record.__listenersOnField;
             for (const field of listener.fields.get(record) || []) {
                 listenersOnField.get(field).delete(listener);
@@ -394,11 +394,6 @@ export class ModelManager {
         Object.assign(nonProxyRecord, {
             // The unique record identifier.
             localId,
-            /**
-             * Map between listeners that are observing this record and array of
-             * information about how the record is observed.
-             */
-            __listenersOnRecord: new Map(),
             /**
              * Map between fields and a Map between listeners that are observing
              * the field and array of information about how the field is observed.
@@ -494,7 +489,7 @@ export class ModelManager {
         this.cycle.newCreated.delete(record);
         this.cycle.newOnChange.delete(record);
         this.cycle.check.delete(record);
-        for (const [listener, infoList] of record.__listenersOnRecord) {
+        for (const [listener, infoList] of this.recordInfos[record.localId].listenersOnRecord) {
             this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: record - ${record}`,
@@ -510,7 +505,7 @@ export class ModelManager {
         }
         delete record.__values;
         delete this.recordInfos[record.localId].listeners;
-        delete record.__listenersOnRecord;
+        delete this.recordInfos[record.localId].listenersOnRecord;
         delete record.__listenersOnField;
         model.__records.delete(record);
         delete this.recordInfos[record.localId];

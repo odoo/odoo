@@ -448,7 +448,7 @@ export class ModelGenerator {
                     get: function getFieldValue() { // this is bound to record
                         const record = this.modelManager.isDebug ? this.__proxifiedRecord : this;
                         if (this.modelManager._listeners.size) {
-                            let entryRecord = record.__listenersOnRecord;
+                            let entryRecord = this.modelManager.recordInfos[record.localId].listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
                             let entryField = record.__listenersOnField.get(field);
                             if (!entryField) {

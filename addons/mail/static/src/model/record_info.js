@@ -9,6 +9,11 @@ export class RecordInfo {
          * change in dependencies of compute, related and "on change".
          */
         this.listeners = [];
+        /**
+         * Map between listeners that are observing this record and array of
+         * information about how the record is observed.
+         */
+        this.listenersOnRecord = new Map();
     }
 
 }
