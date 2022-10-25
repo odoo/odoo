@@ -53,6 +53,11 @@ class TestEventNotifications(SavepointCase, MailCase):
         with self.assertNoNotifications():
             self.event.partner_ids = self.partner
 
+    def test_not_notify_partner_achived(self):
+        partner_achived = self.env['res.partner'].create({'name': "orga", 'email_normalized': 'em@il.com', "active": "false"})
+        with self.assertNoNotifications():
+            self.event.partner_ids = partner_achived
+
     def test_message_set_inactive_invite(self):
         self.event.active = False
         with self.assertNoNotifications():
