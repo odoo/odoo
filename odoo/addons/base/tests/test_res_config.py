@@ -168,7 +168,12 @@ class TestResConfigExecute(TransactionCase):
         settings_view_arch = etree.fromstring(settings.get_view(view_id=self.settings_view.id)['arch'])
         seen_fields = set()
         for node in settings_view_arch.iterdescendants(tag='field'):
-            seen_fields.add(node.get('name'))
+            fname = node.get('name')
+            if fname not in settings._fields:
+                # fname isn't a settings fields, but the field of a model
+                # linked to settings through a relational field
+                continue
+            seen_fields.add(fname)
 
         models_to_check = defaultdict(set)
         for field_name in seen_fields:
