@@ -172,7 +172,7 @@ export class ModelManager {
         this.messaging.delete();
         for (const model of Object.values(this.models)) {
             delete model.__fieldList;
-            delete model.__fieldMap;
+            delete this.modelInfos[model.name].fieldMap;
             delete model.__identifyingFieldNames;
             delete this.modelInfos[model.name].records;
             delete model.__requiredFieldsList;
@@ -398,10 +398,11 @@ export class ModelManager {
             localId,
             [IS_RECORD]: true,
         });
+        const self = this;
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
-                    (model.__fieldMap && !model.__fieldMap.has(prop)) &&
+                    (self.modelInfos[model.name] && self.modelInfos[model.name].fieldMap && !self.modelInfos[model.name].fieldMap.has(prop)) &&
                     !['_super', 'then', 'localId'].includes(prop) &&
                     typeof prop !== 'symbol' &&
                     !(prop in record)
@@ -805,7 +806,7 @@ export class ModelManager {
             if (data[fieldName] === undefined) {
                 continue;
             }
-            const field = model.__fieldMap.get(fieldName);
+            const field = this.modelInfos[model.name].fieldMap.get(fieldName);
             if (!field.to) {
                 continue;
             }
@@ -857,7 +858,7 @@ export class ModelManager {
                 // `undefined` should have the same effect as not passing the field
                 continue;
             }
-            const field = model.__fieldMap.get(fieldName);
+            const field = this.modelInfos[model.name].fieldMap.get(fieldName);
             if (!field) {
                 console.warn(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
                 continue;

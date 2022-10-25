@@ -18,6 +18,10 @@ export class ModelInfo {
                     return new ModelIndexXor(model);
             }
         })();
+        /**
+         * Object with fieldName/field as key/value pair, for quick access.
+         */
+        this.fieldMap = new Map();
     }
 
 }

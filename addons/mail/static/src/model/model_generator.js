@@ -220,7 +220,7 @@ export class ModelGenerator {
                         if (!currentModel) {
                             throw new Error(`OnChange '${methodName}' defines a dependency with path '${dependency.join('.')}', but this dependency does not resolve: ${currentField} is not a relational field, therefore there is no relation to follow.`);
                         }
-                        currentField = currentModel.__fieldMap.get(fieldName);
+                        currentField = this.manager.modelInfos[currentModel.name].fieldMap.get(fieldName);
                         if (!currentField) {
                             throw new Error(`OnChange '${methodName}' defines a dependency with path '${dependency.join('.')}', but this path does not resolve: ${currentModel}/${fieldName} does not exist.`);
                         }
@@ -271,7 +271,7 @@ export class ModelGenerator {
                 if (!relatedModel) {
                     throw new Error(`${field} defines a relation to model ${field.to}, but there is no model registered with this name.`);
                 }
-                const inverseField = relatedModel.__fieldMap.get(field.inverse);
+                const inverseField = this.manager.modelInfos[relatedModel.name].fieldMap.get(field.inverse);
                 if (!inverseField) {
                     throw new Error(`${field} defines its inverse as field ${relatedModel}/${field.inverse}, but it does not exist.`);
                 }
@@ -288,16 +288,16 @@ export class ModelGenerator {
                             if (!currentField.to) {
                                 throw new Error(`Field ${field} defines a sort with path '${path.join('.')}', but this path does not resolve: ${currentField} is not a relational field, therefore there is no relation to follow.`);
                             }
-                            if (!this.manager.models[currentField.to].__fieldMap.has(fieldName)) {
+                            if (!this.manager.modelInfos[currentField.to].fieldMap.has(fieldName)) {
                                 throw new Error(`Field ${field} defines a sort with path '${path.join('.')}', but this path does not resolve: ${this.manager.models[currentField.to]}/${fieldName} does not exist.`);
                             }
-                            currentField = this.manager.models[currentField.to].__fieldMap.get(fieldName);
+                            currentField = this.manager.modelInfos[currentField.to].fieldMap.get(fieldName);
                         }
                     }
                 }
             }
             for (const identifyingField of model.__identifyingFieldNames) {
-                const field = model.__fieldMap.get(identifyingField);
+                const field = this.manager.modelInfos[model.name].fieldMap.get(identifyingField);
                 if (!field) {
                     throw new Error(`Identifying field "${model}/${identifyingField}" is not a field on ${model}.`);
                 }
@@ -306,7 +306,7 @@ export class ModelGenerator {
                         throw new Error(`Identifying field "${model}/${identifyingField}" has a relation of type "${field.relationType}" but identifying field is only supported for "one".`);
                     }
                     const relatedModel = this.manager.models[field.to];
-                    const inverseField = relatedModel.__fieldMap.get(field.inverse);
+                    const inverseField = this.manager.modelInfos[relatedModel.name].fieldMap.get(field.inverse);
                     if (!inverseField.isCausal) {
                         throw new Error(`Identifying field "${model}/${identifyingField}" has an inverse "${inverseField}" not declared as "isCausal".`);
                     }
@@ -421,14 +421,14 @@ export class ModelGenerator {
          */
         for (const model of Object.values(this.manager.models)) {
             // Object with fieldName/field as key/value pair, for quick access.
-            model.__fieldMap = new Map(Object.entries(model.__combinedFields));
+            this.manager.modelInfos[model.name].fieldMap = new Map(Object.entries(model.__combinedFields));
             // List of all fields, for iterating.
-            model.__fieldList = [...model.__fieldMap.values()];
+            model.__fieldList = [...this.manager.modelInfos[model.name].fieldMap.values()];
             model.__requiredFieldsList = model.__fieldList.filter(
                 field => field.required
             );
             model.__identifyingFieldNames = new Set();
-            for (const [fieldName, field] of model.__fieldMap) {
+            for (const [fieldName, field] of this.manager.modelInfos[model.name].fieldMap) {
                 if (field.identifying) {
                     model.__identifyingFieldNames.add(fieldName);
                 }

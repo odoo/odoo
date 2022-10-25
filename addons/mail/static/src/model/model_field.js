@@ -247,7 +247,7 @@ export class ModelField {
      */
     computeRelated(record) {
         const [relationName, relatedFieldName] = this.related.split('.');
-        const relationField = this.model.__fieldMap.get(relationName);
+        const relationField = this.manager.modelInfos[this.model.name].fieldMap.get(relationName);
         if (relationField.relationType === 'many') {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
@@ -523,7 +523,7 @@ export class ModelField {
      */
     _insertOtherRecord(record, data, options) {
         const otherModel = record.models[this.to];
-        const otherField = otherModel.__fieldMap.get(this.inverse);
+        const otherField = this.manager.modelInfos[otherModel.name].fieldMap.get(this.inverse);
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const dataList = isMulti ? data : [data];
         for (const recordData of dataList) {
