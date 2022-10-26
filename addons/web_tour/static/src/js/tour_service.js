@@ -163,6 +163,13 @@ return session.is_bound.then(function () {
                         if (observe) {
                             observer.observe(document.body, observerOptions);
 
+                            const observeIframe = (iframeEl) => {
+                                observer.observe(iframeEl.contentDocument, observerOptions);
+                                iframeEl.addEventListener('load', () => {
+                                    observer.observe(iframeEl.contentDocument, observerOptions);
+                                });
+                            };
+
                             // If an iframe is added during the tour, its DOM
                             // mutations should also be observed to update the
                             // tour manager.
@@ -184,25 +191,17 @@ return session.is_bound.then(function () {
                             const iframeObserver = new MutationObserver(mutations => {
                                 const iframeEl = findIframe(mutations);
                                 if (iframeEl) {
-                                    iframeEl.addEventListener('load', () => {
-                                        observer.observe(iframeEl.contentDocument, observerOptions);
-                                    });
-                                    // If the iframe was added without a src,
-                                    // its load event was immediately fired and
-                                    // will not fire again unless another src is
-                                    // set. Unfortunately, the case of this
-                                    // happening and the iframe content being
-                                    // altered programmaticaly may happen.
-                                    // (E.g. at the moment this was written,
-                                    // the mass mailing editor iframe is added
-                                    // without src and its content rewritten
-                                    // immediately afterwards).
-                                    if (!iframeEl.src) {
-                                        observer.observe(iframeEl.contentDocument, observerOptions);
-                                    }
+                                    observeIframe(iframeEl);
                                 }
                             });
                             iframeObserver.observe(document.body, { childList: true, subtree: true });
+
+                            // If an iframe is already there when starting the
+                            // tour, it should be observed as well.
+                            const iframeEl = document.body.querySelector('iframe.o_iframe');
+                            if (iframeEl) {
+                                observeIframe(iframeEl);
+                            }
                         }
                         resolve();
                     });

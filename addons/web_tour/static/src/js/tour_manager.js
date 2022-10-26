@@ -213,7 +213,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this._to_next_step(tour_name, 0);
         local_storage.setItem(get_step_key(tour_name), tour.current_step);
 
-        if (tour.url) {
+        if (tour.url && this._shouldRedirect(tour.url)) {
             this.pause();
             do_before_unload(null, (function () {
                 this.play();
@@ -281,6 +281,20 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this.update(tour_name);
             }
         }
+    },
+    /**
+     * The browser should not reload the window if already located at the
+     * tour's url.
+     *
+     * @param {String} tourUrl
+     * @returns {boolean}
+     */
+    _shouldRedirect(tourUrl) {
+        const windowUrl = new URL(window.location.href);
+        // 'watch' is a technical parameter added by the python test suite that
+        // should not be taken into account for the comparison.
+        windowUrl.searchParams.delete('watch');
+        return windowUrl.href !== `${window.location.origin}${tourUrl}`;
     },
     /**
      *  Check (and activate or update) a help tooltip for a tour.

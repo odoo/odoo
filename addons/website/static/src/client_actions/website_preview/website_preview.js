@@ -291,6 +291,7 @@ export class WebsitePreview extends Component {
         this.currentTitle = this.iframe.el.contentDocument.title;
         history.replaceState({}, this.currentTitle, currentUrl.href);
         this.title.setParts({ action: this.currentTitle });
+        core.bus.trigger('WEBSITE-FRONTEND-URL-SET');
     }
 
     _onPageLoaded() {
