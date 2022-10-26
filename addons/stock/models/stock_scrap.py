@@ -123,6 +123,20 @@ class StockScrap(models.Model):
         if 'done' in self.mapped('state'):
             raise UserError(_('You cannot delete a scrap which is done.'))
 
+    # TODO: replace with computes in master
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('product_uom_id'):
+                vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().create(vals_list)
+
+    # TODO: replace with computes in master
+    def write(self, vals):
+        if vals.get('product_id') and not vals.get('product_uom_id'):
+            vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().write(vals)
+
     def _prepare_move_values(self):
         self.ensure_one()
         return {
