@@ -1235,14 +1235,14 @@ class AccountMove(models.Model):
             if invoice.show_payment_term_details:
                 sign = 1 if invoice.is_inbound(include_receipts=True) else -1
                 payment_term_details = []
-                for line in invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term'):
+                for line in invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('date_maturity'):
                     payment_term_details.append({
                         'date': format_date(self.env, line.date_maturity),
                         'amount': sign * line.amount_currency,
                         'discount_date': format_date(self.env, line.discount_date),
                         'discount_amount_currency': sign * line.discount_amount_currency,
                     })
-                invoice.payment_term_details = sorted(payment_term_details, key=lambda t: t.get('date'))
+                invoice.payment_term_details = payment_term_details
 
     @api.depends('move_type', 'payment_state', 'invoice_payment_term_id')
     def _compute_show_payment_term_details(self):
