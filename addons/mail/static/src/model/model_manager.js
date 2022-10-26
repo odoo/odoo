@@ -171,7 +171,7 @@ export class ModelManager {
     destroy() {
         this.messaging.delete();
         for (const model of Object.values(this.models)) {
-            delete model.__fieldList;
+            delete this.modelInfos[model.name].fieldList;
             delete this.modelInfos[model.name].fieldMap;
             delete model.__identifyingFieldNames;
             delete this.modelInfos[model.name].records;
@@ -373,7 +373,7 @@ export class ModelManager {
      */
     _addDefaultData(model, data = {}) {
         const data2 = { ...data };
-        for (const field of model.__fieldList) {
+        for (const field of this.modelInfos[model.name].fieldList) {
             if (data2[field.fieldName] === undefined && field.default !== undefined) {
                 data2[field.fieldName] = field.default;
             }
@@ -417,7 +417,7 @@ export class ModelManager {
             record.__proxifiedRecord = record;
         }
         // Ensure X2many relations are Set initially (other fields can stay undefined).
-        for (const field of model.__fieldList) {
+        for (const field of this.modelInfos[model.name].fieldList) {
             if (field.fieldType === 'relation') {
                 if (field.relationType === 'many') {
                     this.recordInfos[record.localId].values.set(field.fieldName, new RelationSet(this, record, field));
@@ -471,7 +471,7 @@ export class ModelManager {
         for (const listener of this.recordInfos[record.localId].listeners) {
             this.removeListener(listener);
         }
-        for (const field of model.__fieldList) {
+        for (const field of this.modelInfos[model.name].fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
                 field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
@@ -535,7 +535,7 @@ export class ModelManager {
                 throw Error(`Cannot start compute/related for already deleted ${record}.`);
             }
             const listeners = [];
-            for (const field of record.constructor.__fieldList) {
+            for (const field of this.modelInfos[record.constructor.name].fieldList) {
                 if (field.compute) {
                     const listener = new Listener({
                         name: `compute ${field} of ${record}`,

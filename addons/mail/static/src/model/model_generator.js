@@ -244,7 +244,7 @@ export class ModelGenerator {
             if (!['and', 'xor'].includes(this.manager.modelInfos[model.name].identifyingMode)) {
                 throw new Error(`Unsupported identifying mode "${this.manager.modelInfos[model.name].identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
             }
-            for (const field of model.__fieldList) {
+            for (const field of this.manager.modelInfos[model.name].fieldList) {
                 const fieldName = field.fieldName;
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
                     throw new Error(`${field} has unsupported type "${field.fieldType}".`);
@@ -422,8 +422,8 @@ export class ModelGenerator {
             // Object with fieldName/field as key/value pair, for quick access.
             this.manager.modelInfos[model.name].fieldMap = new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields));
             // List of all fields, for iterating.
-            model.__fieldList = [...this.manager.modelInfos[model.name].fieldMap.values()];
-            model.__requiredFieldsList = model.__fieldList.filter(
+            this.manager.modelInfos[model.name].fieldList = [...this.manager.modelInfos[model.name].fieldMap.values()];
+            model.__requiredFieldsList =this.manager.modelInfos[model.name].fieldList.filter(
                 field => field.required
             );
             model.__identifyingFieldNames = new Set();

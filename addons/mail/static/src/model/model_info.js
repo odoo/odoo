@@ -22,6 +22,10 @@ export class ModelInfo {
          * Object with fieldName/field as key/value pair, for quick access.
          */
         this.fieldMap = new Map();
+        /**
+         * List of all fields, for iterating.
+         */
+        this.fieldList = [];
         this.combinedFields = {};
     }
 
