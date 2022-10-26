@@ -463,10 +463,7 @@ export class ModelManager {
                 infoList,
             });
         }
-        delete this.recordInfos[record.localId].values;
-        delete this.recordInfos[record.localId].listeners;
-        delete this.recordInfos[record.localId].listenersOnRecord;
-        delete this.recordInfos[record.localId].listenersOnField;
+        this.recordInfos[record.localId].destroy();
         this.modelInfos[model.name].records.delete(record);
         delete this.recordInfos[record.localId];
         delete record.localId;

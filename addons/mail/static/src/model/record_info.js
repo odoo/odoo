@@ -28,4 +28,11 @@ export class RecordInfo {
         this.nonProxifiedRecord = undefined;
     }
 
+    destroy() {
+        delete this.values;
+        delete this.listeners;
+        delete this.listenersOnRecord;
+        delete this.listenersOnField;
+    }
+
 }
