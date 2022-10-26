@@ -431,7 +431,7 @@ class SnailmailLetter(models.Model):
         return all(record[key] for key in required_keys)
 
     def _append_cover_page(self, invoice_bin: bytes):
-        address = self.partner_id.contact_address.replace('\n', '<br/>')
+        address = self.partner_id.with_context(show_address=True)._get_name().replace('\n', '<br/>')
         address_x = 118 * mm
         address_y = 60 * mm
         frame_width = 85.5 * mm
