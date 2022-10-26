@@ -12,7 +12,7 @@
             <li t-attf-class="o_wsale_my_cart align-self-md-start #{not show_cart and 'd-none'} #{_item_class}">
                 <a href="/shop/cart" t-attf-class="#{_link_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart"/>
-                    <span t-if="_text">My Cart</span>
+                    <span t-if="_text">My Cart</span> 
                     <sup class="my_cart_quantity badge text-bg-primary" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
                 </a>
             </li>
@@ -28,6 +28,7 @@
     <template id="template_header_default" inherit_id="website.template_header_default">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item mx-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -38,7 +39,8 @@
     <template id="template_header_hamburger" inherit_id="website.template_header_hamburger">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
-                <t t-set="_text" t-value="True"/>
+                <t t-set="_text" t-value="False"/>
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
@@ -48,6 +50,7 @@
     <template id="template_header_vertical" inherit_id="website.template_header_vertical">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -58,8 +61,8 @@
     <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
-                <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
@@ -69,6 +72,7 @@
     <template id="template_header_slogan" inherit_id="website.template_header_slogan">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -79,7 +83,8 @@
     <template id="template_header_contact" inherit_id="website.template_header_contact">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
-                <t t-set="_text" t-value="True"/>
+                <t t-set="_text" t-value="False"/>
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
@@ -89,7 +94,8 @@
     <template id="template_header_boxed" inherit_id="website.template_header_boxed">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
-                <t t-set="_text" t-value="True"/>
+                <t t-set="_text" t-value="False"/>
+                <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
@@ -99,6 +105,7 @@
     <template id="template_header_centered_logo" inherit_id="website.template_header_centered_logo">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -109,6 +116,7 @@
     <template id="template_header_image" inherit_id="website.template_header_image">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -119,6 +127,7 @@
     <template id="template_header_hamburger_full" inherit_id="website.template_header_hamburger_full">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="False"/>
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
@@ -129,6 +138,7 @@
     <template id="template_header_magazine" inherit_id="website.template_header_magazine">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="False"/>
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item ms-md-auto'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
