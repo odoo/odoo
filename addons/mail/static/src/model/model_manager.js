@@ -139,12 +139,7 @@ export class ModelManager {
     destroy() {
         this.messaging.delete();
         for (const model of Object.values(this.models)) {
-            delete this.modelInfos[model.name].fieldList;
-            delete this.modelInfos[model.name].fieldMap;
-            delete this.modelInfos[model.name].identifyingFieldNames;
-            delete this.modelInfos[model.name].records;
-            delete this.modelInfos[model.name].requiredFieldsList;
-            delete this.modelInfos[model.name].fields;
+            this.modelInfos[model.name].destroy();
             delete model.modelManager;
             delete this.modelInfos[model.name];
         }

@@ -38,6 +38,15 @@ export class ModelInfo {
         this.fieldList = [...this.fieldMap.values()];
     }
 
+    destroy() {
+        delete this.fieldList;
+        delete this.fieldMap;
+        delete this.identifyingFieldNames;
+        delete this.records;
+        delete this.requiredFieldsList;
+        delete this.fields;
+    }
+
     update({ fieldMap }) {
         this.fieldMap = fieldMap;
         this.compute();
