@@ -10,11 +10,9 @@ registerModel({
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
-            document.addEventListener('contextmenu', this._onClickCaptureGlobal, true);
         },
         _willDelete() {
             document.removeEventListener('click', this._onClickCaptureGlobal, true);
-            document.removeEventListener('contextmenu', this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -90,9 +88,6 @@ registerModel({
                 }
                 if (this.composerViewOwnerAsEmoji) {
                     return this.composerViewOwnerAsEmoji.buttonEmojisRef;
-                }
-                if (this.messageViewOwnerAsContextMenu) {
-                    return this.messageViewOwnerAsContextMenu.contextMenuRef;
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return this.activityButtonViewOwnerAsActivityList.buttonRef;
@@ -176,9 +171,6 @@ registerModel({
                 if (this.emojiPickerView) {
                     return this.emojiPickerView;
                 }
-                if (this.messageContextMenuView) {
-                    return this.messageContextMenuView;
-                }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return this.activityListView;
                 }
@@ -200,9 +192,6 @@ registerModel({
                 }
                 if (this.emojiPickerView) {
                     return 'o_PopoverView_emojiPickerView';
-                }
-                if (this.messageContextMenuView) {
-                    return 'o_PopoverView_messageContextMenuView';
                 }
                 return clear();
             },
@@ -227,9 +216,6 @@ registerModel({
                 }
                 if (this.emojiPickerView) {
                     return 'EmojiPickerView';
-                }
-                if (this.messageContextMenuView) {
-                    return 'MessageContextMenu';
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
                     return 'ActivityListView';
@@ -266,20 +252,6 @@ registerModel({
             },
             inverse: 'popoverViews',
         }),
-        messageContextMenuView: one('MessageContextMenu', {
-            compute() {
-                if (this.messageViewOwnerAsContextMenu) {
-                    return {};
-                }
-                return clear();
-            },
-            inverse: 'messageContextPopoverView',
-        }),
-        messageViewOwnerAsContextMenu: one('MessageView', {
-            identifying: true,
-            inverse: 'messageContextPopoverView',
-         }),
-
         /**
          * If set, this popover view is owned by a message action view.
          */
@@ -326,9 +298,6 @@ registerModel({
                 }
                 if (this.messageActionViewOwnerAsReaction) {
                     return 'top';
-                }
-                if (this.messageContextMenuView) {
-                    return 'bottom';
                 }
                 return clear();
             },

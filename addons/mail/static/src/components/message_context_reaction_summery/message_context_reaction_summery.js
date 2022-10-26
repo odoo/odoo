@@ -4,20 +4,20 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class MessageContextReactionSummery extends Component {
+export class MessageContextReactionSummary extends Component {
 
     /**
-     * @returns {MessageContextReactionSummery}
+     * @returns {MessageContextReactionSummary}
      */
-    get messageContextReactionSummery() {
+    get messageContextReactionSummary() {
         return this.props.record;
     }
 
 }
 
-Object.assign(MessageContextReactionSummery, {
+Object.assign(MessageContextReactionSummary, {
     props: { record: Object },
-    template: 'mail.MessageContextReactionSummery',
+    template: 'mail.MessageContextReactionSummary',
 });
 
-registerMessagingComponent(MessageContextReactionSummery);
+registerMessagingComponent(MessageContextReactionSummary);
