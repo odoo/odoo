@@ -29,6 +29,7 @@ FILETYPE_BASE64_MAGICWORD = {
     b'R': 'gif',
     b'i': 'png',
     b'P': 'svg+xml',
+    b'U': 'webp',
 }
 
 EXIF_TAG_ORIENTATION = 0x112
