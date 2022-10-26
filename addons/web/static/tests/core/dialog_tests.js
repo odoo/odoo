@@ -104,7 +104,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test("click twice on 'Ok' button of a confirm dialog", async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         var testPromise = testUtils.makeTestPromise();
         var parent = await createEmptyParent();
@@ -121,7 +121,12 @@ QUnit.module('core', {}, function () {
 
         await testUtils.dom.click($('.modal[role="dialog"] .btn-primary'));
         await testUtils.dom.click($('.modal[role="dialog"] .btn-primary'));
+        await testUtils.nextTick();
         assert.verifySteps(['confirm']);
+        assert.ok($('.modal[role="dialog"]').hasClass('show'), "Should still be opened");
+        testPromise.resolve();
+        await testUtils.nextTick();
+        assert.notOk($('.modal[role="dialog"]').hasClass('show'), "Should now be closed");
 
         parent.destroy();
     });
@@ -146,6 +151,107 @@ QUnit.module('core', {}, function () {
         testUtils.dom.click($('.modal[role="dialog"] footer button:not(.btn-primary)'));
         testUtils.dom.click($('.modal[role="dialog"] footer .btn-primary'));
         assert.verifySteps(['cancel']);
+
+        parent.destroy();
+    });
+
+    QUnit.test("click on 'Cancel' and then 'Ok' in a confirm dialog (no cancel callback)", async function (assert) {
+        assert.expect(2);
+
+        var parent = await createEmptyParent();
+        var options = {
+            confirm_callback: () => {
+                throw new Error("should not be called");
+            },
+            // Cannot add a step in cancel_callback, that's the point of this
+            // test, we'll rely on checking the Dialog is opened then closed
+            // without a crash.
+        };
+        Dialog.confirm(parent, "", options);
+        await testUtils.nextTick();
+
+        assert.ok($('.modal[role="dialog"]').hasClass('show'));
+        testUtils.dom.click($('.modal[role="dialog"] footer button:not(.btn-primary)'));
+        testUtils.dom.click($('.modal[role="dialog"] footer .btn-primary'));
+        await testUtils.nextTick();
+        assert.notOk($('.modal[role="dialog"]').hasClass('show'));
+
+        parent.destroy();
+    });
+
+    QUnit.test("Confirm dialog callbacks properly handle rejections", async function (assert) {
+        assert.expect(5);
+
+        var parent = await createEmptyParent();
+        var options = {
+            confirm_callback: () => {
+                assert.step("confirm");
+                return Promise.reject();
+            },
+            cancel_callback: () => {
+                assert.step("cancel");
+                return $.Deferred().reject(); // Test jquery deferred too
+            }
+        };
+        Dialog.confirm(parent, "", options);
+        await testUtils.nextTick();
+
+        assert.verifySteps([]);
+        testUtils.dom.click($('.modal[role="dialog"] footer button:not(.btn-primary)'));
+        await testUtils.nextTick();
+        testUtils.dom.click($('.modal[role="dialog"] footer .btn-primary'));
+        await testUtils.nextTick();
+        testUtils.dom.click($('.modal[role="dialog"] footer button:not(.btn-primary)'));
+        assert.verifySteps(['cancel', 'confirm', 'cancel']);
+
+        parent.destroy();
+    });
+
+    QUnit.test("Properly can rely on the this in confirm and cancel callbacks of confirm dialog", async function (assert) {
+        assert.expect(2);
+
+        let dialogInstance = null;
+        var parent = await createEmptyParent();
+        var options = {
+            confirm_callback: function () {
+                assert.equal(this, dialogInstance, "'this' is properly a reference to the dialog instance");
+                return Promise.reject();
+            },
+            cancel_callback: function () {
+                assert.equal(this, dialogInstance, "'this' is properly a reference to the dialog instance");
+                return Promise.reject();
+            }
+        };
+        dialogInstance = Dialog.confirm(parent, "", options);
+        await testUtils.nextTick();
+
+        testUtils.dom.click($('.modal[role="dialog"] footer button:not(.btn-primary)'));
+        await testUtils.nextTick();
+        testUtils.dom.click($('.modal[role="dialog"] footer .btn-primary'));
+
+        parent.destroy();
+    });
+
+    QUnit.test("Confirm dialog callbacks can return anything without crash", async function (assert) {
+        assert.expect(3);
+        // Note that this test could be removed in master if the related code
+        // is reworked. This only prevents a stable fix to break this again by
+        // relying on the fact what is returned by those callbacks are undefined
+        // or promises.
+
+        var parent = await createEmptyParent();
+        var options = {
+            confirm_callback: () => {
+                assert.step("confirm");
+                return 5;
+            },
+        };
+        Dialog.confirm(parent, "", options);
+        await testUtils.nextTick();
+
+        assert.verifySteps([]);
+        testUtils.dom.click($('.modal[role="dialog"] footer .btn-primary'));
+        assert.verifySteps(['confirm']);
 
         parent.destroy();
     });
