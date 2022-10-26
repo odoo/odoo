@@ -51,13 +51,11 @@ export class ProjectTaskFormController extends FormController {
             const dialogProps = {
         		body: this.env._t("This task have sub-tasks linked to it. Do you want to delete them as well?"),
             	confirm: () => {
-                	this.model.root.delete();
-                	if (!this.model.root.resId) {
-                    	this.env.config.historyBack();
-                	}
+                	this.proceedDeleteRecord();
             	},
                 confirmWithSubtasks: () => {
-                    return this.model.orm.call('project.task', 'unlink_subtasks_recursive', [this.model.root.data.id]);
+                    this.model.orm.call('project.task', 'delete_subtasks_recursive', [this.model.root.data.id]);
+                    return this.proceedDeleteRecord();
                 },
           		cancel: () => {},
             	};
