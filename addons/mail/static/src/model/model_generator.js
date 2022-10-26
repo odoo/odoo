@@ -61,7 +61,7 @@ export class ModelGenerator {
             Object.defineProperty(model.prototype, getterName, { get: getter });
         }
         // Make model manager accessible from model.
-        this.manager.modelInfos[model.name] = new ModelInfo({ model, identifyingMode: definition.get('identifyingMode') });
+        this.manager.modelInfos[model.name] = new ModelInfo(this.manager, { model, identifyingMode: definition.get('identifyingMode') });
         model.modelManager = this.manager;
         model.fields = {};
         this.manager.listenersAll.set(model, new Map());

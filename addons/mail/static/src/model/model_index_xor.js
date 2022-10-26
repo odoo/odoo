@@ -2,7 +2,8 @@
 
 export class ModelIndexXor {
 
-    constructor(model) {
+    constructor(manager, model) {
+        this.manager = manager;
         this.model = model;
         this.recordsByValuesByFields = new Map();
         this.fieldNameAndValueByRecords = new Map();

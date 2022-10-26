@@ -2,7 +2,8 @@
 
 export class ModelIndexAnd {
 
-    constructor(model) {
+    constructor(manager, model) {
+        this.manager = manager;
         this.model = model;
         this.recordsByValuesTree = new Map();
         this.valuesByRecords = new Map();

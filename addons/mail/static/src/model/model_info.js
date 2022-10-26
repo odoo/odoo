@@ -5,7 +5,8 @@ import { ModelIndexXor } from '@mail/model/model_index_xor';
 
 export class ModelInfo {
 
-    constructor({ model, identifyingMode }) {
+    constructor(manager, { model, identifyingMode }) {
+        this.manager = manager;
         this.model = model;
         this.identifyingMode = identifyingMode;
         this.records = new Set();
@@ -13,9 +14,9 @@ export class ModelInfo {
         this.recordsIndex = (() => {
             switch (this.identifyingMode) {
                 case 'and':
-                    return new ModelIndexAnd(model);
+                    return new ModelIndexAnd(manager, model);
                 case 'xor':
-                    return new ModelIndexXor(model);
+                    return new ModelIndexXor(manager, model);
             }
         })();
         /**
