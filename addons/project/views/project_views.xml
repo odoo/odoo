@@ -53,7 +53,7 @@
                     <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
                     <filter name="no_rating" string="No Rating" domain="[('rating_last_value', '=', 0)]" groups="project.group_project_rating"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>

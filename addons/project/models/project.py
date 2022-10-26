@@ -1357,14 +1357,6 @@ class Task(models.Model):
         else:
             return [('project_id', '!=', False)]
 
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'search' and  self.env.user.notification_type == 'email':
-            for node in arch.xpath("//filter[@name='message_needaction']"):
-                node.set('invisible', '1')
-        return arch, view
-
     @api.depends('stage_id', 'project_id')
     def _compute_kanban_state(self):
         self.kanban_state = 'normal'
