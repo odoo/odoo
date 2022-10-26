@@ -430,16 +430,16 @@ export class ModelGenerator {
                     get: function getFieldValue() { // this is bound to record
                         const record = (
                             this.modelManager.isDebug
-                            ? this.modelManager.recordInfos[this.localId].proxifiedRecord
-                            : this.modelManager.recordInfos[this.localId].nonProxifiedRecord
+                            ? this.__info.proxifiedRecord
+                            : this.__info.nonProxifiedRecord
                         );
                         if (this.modelManager.listeners.size) {
-                            let entryRecord = this.modelManager.recordInfos[record.localId].listenersOnRecord;
+                            let entryRecord = record.__info.listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
-                            let entryField = this.modelManager.recordInfos[record.localId].listenersOnField.get(field);
+                            let entryField = record.__info.listenersOnField.get(field);
                             if (!entryField) {
                                 entryField = new Map();
-                                this.modelManager.recordInfos[record.localId].listenersOnField.set(field, entryField);
+                                record.__info.listenersOnField.set(field, entryField);
                             }
                             for (const listener of record.modelManager.listeners) {
                                 listener.records.add(record);

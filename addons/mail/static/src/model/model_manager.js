@@ -172,7 +172,7 @@ export class ModelManager {
         }
         for (const listener of this.listeners) {
             listener.records.add(record);
-            const entry = this.recordInfos[record.localId].listenersOnRecord;
+            const entry = record.__info.listenersOnRecord;
             const info = {
                 listener,
                 reason: this.isDebug && `findFromIdentifyingData record - ${record}`,
@@ -271,8 +271,8 @@ export class ModelManager {
             if (!record.exists()) {
                 continue;
             }
-            this.recordInfos[record.localId].listenersOnRecord.delete(listener);
-            const listenersOnField = this.recordInfos[record.localId].listenersOnField;
+            record.__info.listenersOnRecord.delete(listener);
+            const listenersOnField = record.__info.listenersOnField;
             for (const field of listener.fields.get(record) || []) {
                 listenersOnField.get(field).delete(listener);
             }
@@ -376,15 +376,15 @@ export class ModelManager {
             },
         }));
         this.recordInfos[localId] = new RecordInfo({ record });
-        this.recordInfos[record.localId].nonProxifiedRecord = nonProxyRecord;
+        record.__info.nonProxifiedRecord = nonProxyRecord;
         if (this.isDebug) {
-            this.recordInfos[record.localId].proxifiedRecord = record;
+            record.__info.proxifiedRecord = record;
         }
         // Ensure X2many relations are Set initially (other fields can stay undefined).
         for (const field of this.modelInfos[model.name].fieldList) {
             if (field.fieldType === 'relation') {
                 if (field.relationType === 'many') {
-                    this.recordInfos[record.localId].values.set(field.fieldName, new RelationSet(this, record, field));
+                    record.__info.values.set(field.fieldName, new RelationSet(this, record, field));
                 }
             }
         }
@@ -424,7 +424,7 @@ export class ModelManager {
         if (this.isDebug) {
             this._ensureNoLockingListener();
         }
-        const model = this.recordInfos[record.localId].model;
+        const model = record.__info.model;
         if (!record.exists()) {
             throw Error(`Cannot delete already deleted record ${record}.`);
         }
@@ -432,7 +432,7 @@ export class ModelManager {
         if (lifecycleHooks.has('_willDelete')) {
             lifecycleHooks.get('_willDelete').call(record);
         }
-        for (const listener of this.recordInfos[record.localId].listeners) {
+        for (const listener of record.__info.listeners) {
             this.removeListener(listener);
         }
         for (const field of this.modelInfos[model.name].fieldList) {
@@ -449,7 +449,7 @@ export class ModelManager {
         this.cycleInfo.newCreated.delete(record);
         this.cycleInfo.newOnChange.delete(record);
         this.cycleInfo.check.delete(record);
-        for (const [listener, infoList] of this.recordInfos[record.localId].listenersOnRecord) {
+        for (const [listener, infoList] of record.__info.listenersOnRecord) {
             this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: record - ${record}`,
@@ -463,7 +463,7 @@ export class ModelManager {
                 infoList,
             });
         }
-        this.recordInfos[record.localId].destroy();
+        record.__info.destroy();
         this.modelInfos[model.name].records.delete(record);
         delete this.recordInfos[record.localId];
         delete record.localId;
@@ -496,7 +496,7 @@ export class ModelManager {
                 throw Error(`Cannot start compute/related for already deleted ${record}.`);
             }
             const listeners = [];
-            for (const field of this.modelInfos[this.recordInfos[record.localId].model.name].fieldList) {
+            for (const field of this.modelInfos[record.__info.model.name].fieldList) {
                 if (field.compute) {
                     const listener = new Listener({
                         name: `compute ${field} of ${record}`,
@@ -524,7 +524,7 @@ export class ModelManager {
                     listeners.push(listener);
                 }
             }
-            this.recordInfos[record.localId].listeners.push(...listeners);
+            record.__info.listeners.push(...listeners);
             for (const listener of listeners) {
                 listener.onChange({
                     listener,
@@ -548,7 +548,7 @@ export class ModelManager {
             if (!record.exists()) {
                 throw Error(`Cannot call _created for already deleted ${record}.`);
             }
-            const lifecycleHooks = registry.get(this.recordInfos[record.localId].model.name).get('lifecycleHooks');
+            const lifecycleHooks = registry.get(record.__info.model.name).get('lifecycleHooks');
             if (lifecycleHooks.has('_created')) {
                 lifecycleHooks.get('_created').call(record);
             }
@@ -566,7 +566,7 @@ export class ModelManager {
             if (!record.exists()) {
                 throw Error(`Cannot call onChange for already deleted ${record}.`);
             }
-            for (const onChange of registry.get(this.recordInfos[record.localId].model.name).get('onChanges')) {
+            for (const onChange of registry.get(record.__info.model.name).get('onChanges')) {
                 const listener = new Listener({
                     name: `${onChange} of ${record}`,
                     type: 'onChange',
@@ -579,7 +579,7 @@ export class ModelManager {
                         record[onChange.methodName]();
                     },
                 });
-                this.recordInfos[record.localId].listeners.push(listener);
+                record.__info.listeners.push(listener);
                 listener.onChange({
                     listener,
                     reason: this.isDebug && `first call on ${record}`,
@@ -597,7 +597,7 @@ export class ModelManager {
      */
     doCheck() {
         for (const record of this.cycleInfo.check) {
-            for (const required of this.modelInfos[this.recordInfos[record.localId].model.name].requiredFieldsList) {
+            for (const required of this.modelInfos[record.__info.model.name].requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
                     throw Error(`required ${required} of ${record} is missing`);
                 }
@@ -705,7 +705,7 @@ export class ModelManager {
      * @param {ModelField} field
      */
     markAsChanged(record, field) {
-        for (const [listener, infoList] of this.recordInfos[record.localId].listenersOnField.get(field) || []) {
+        for (const [listener, infoList] of record.__info.listenersOnField.get(field) || []) {
             this.markToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_update: ${field} of ${record}`,
@@ -812,7 +812,7 @@ export class ModelManager {
             throw Error(`Cannot update already deleted record ${record}.`);
         }
         const { allowWriteReadonly = false } = options;
-        const model = this.recordInfos[record.localId].model;
+        const model = record.__info.model;
         let hasChanged = false;
         for (const fieldName of Object.keys(data)) {
             if (data[fieldName] === undefined) {

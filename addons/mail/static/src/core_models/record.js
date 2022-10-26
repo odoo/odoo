@@ -164,6 +164,9 @@ registerModel({
         models() {
             return this.modelManager.models;
         },
+        __info() {
+            return this.modelManager.recordInfos[this.localId];
+        },
     },
     /**
      * Models should define fields in static prop or getter `fields`.
