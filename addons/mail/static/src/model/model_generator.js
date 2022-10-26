@@ -418,8 +418,9 @@ export class ModelGenerator {
          * without calling update (which is necessary to process update cycle).
          */
         for (const model of Object.values(this.manager.models)) {
-            // Object with fieldName/field as key/value pair, for quick access.
-            this.manager.modelInfos[model.name].fieldMap = new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields));
+            this.manager.modelInfos[model.name].update({
+                fieldMap: new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields)),
+            });
             // List of all fields, for iterating.
             this.manager.modelInfos[model.name].fieldList = [...this.manager.modelInfos[model.name].fieldMap.values()];
             this.manager.modelInfos[model.name].requiredFieldList = this.manager.modelInfos[model.name].fieldList.filter(

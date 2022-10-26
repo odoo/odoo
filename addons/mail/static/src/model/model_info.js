@@ -33,4 +33,8 @@ export class ModelInfo {
         this.fields = {};
     }
 
+    update({ fieldMap }) {
+        this.fieldMap = fieldMap;
+    }
+
 }
