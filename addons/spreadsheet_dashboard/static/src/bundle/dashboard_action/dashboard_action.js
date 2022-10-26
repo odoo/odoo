@@ -129,8 +129,12 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {Promise<{ data: string, revisions: object[] }>}
      */
     async _fetchDashboardData(dashboardId) {
-        const [record] = await this.orm.read("spreadsheet.dashboard", [dashboardId], ["raw"]);
-        return { data: JSON.parse(record.raw), revisions: [] };
+        const [record] = await this.orm.read(
+            "spreadsheet.dashboard",
+            [dashboardId],
+            ["spreadsheet_data"]
+        );
+        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
     }
 }
 SpreadsheetDashboardAction.template = "spreadsheet_dashboard.DashboardAction";

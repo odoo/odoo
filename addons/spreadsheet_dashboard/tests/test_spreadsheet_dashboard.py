@@ -14,6 +14,6 @@ class TestSpreadsheetDashboard(TransactionCase):
         )
         self.assertEqual(dashboard.group_ids, self.env.ref("base.group_user"))
         self.assertEqual(
-            dashboard.raw,
-            b'{"version": 1, "sheets": [{"id": "sheet1", "name": "Sheet1"}]}',
+            dashboard.spreadsheet_data,
+            '{"version": 1, "sheets": [{"id": "sheet1", "name": "Sheet1"}]}',
         )
