@@ -54,7 +54,7 @@ class StockScrap(models.Model):
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
     scrap_qty = fields.Float(
         'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
-        compute='_compute_scrap_qty', precompute=True, store=True)
+        compute='_compute_scrap_qty', precompute=True, readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
