@@ -433,7 +433,11 @@ export class ModelGenerator {
                 // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
-                        const record = this.modelManager.isDebug ? this.__proxifiedRecord : this;
+                        const record = (
+                            this.modelManager.isDebug
+                            ? this.modelManager.recordInfos[this.localId].proxifiedRecord
+                            : this.modelManager.recordInfos[this.localId].nonProxifiedRecord
+                        );
                         if (this.modelManager._listeners.size) {
                             let entryRecord = this.modelManager.recordInfos[record.localId].listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;

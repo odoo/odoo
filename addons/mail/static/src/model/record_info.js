@@ -24,6 +24,8 @@ export class RecordInfo {
          * Field values of record.
          */
         this.values = new Map();
+        this.proxifiedRecord = undefined;
+        this.nonProxifiedRecord = undefined;
     }
 
 }

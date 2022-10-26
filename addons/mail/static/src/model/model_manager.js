@@ -413,8 +413,9 @@ export class ModelManager {
             },
         }));
         this.recordInfos[localId] = new RecordInfo({ record });
+        this.recordInfos[record.localId].nonProxifiedRecord = nonProxyRecord;
         if (this.isDebug) {
-            record.__proxifiedRecord = record;
+            this.recordInfos[record.localId].proxifiedRecord = record;
         }
         // Ensure X2many relations are Set initially (other fields can stay undefined).
         for (const field of this.modelInfos[model.name].fieldList) {
