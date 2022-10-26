@@ -63,7 +63,6 @@ export class ModelGenerator {
         // Make model manager accessible from model.
         this.manager.modelInfos[model.name] = new ModelInfo(this.manager, { model, identifyingMode: definition.get('identifyingMode') });
         model.modelManager = this.manager;
-        model.fields = {};
         this.manager.listenersAll.set(model, new Map());
         this.manager.models[model.name] = model;
     }
@@ -354,7 +353,7 @@ export class ModelGenerator {
             const sumContributionsByFieldName = new Map();
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of registry.get(model.name).get('fields')) {
-                model.fields[fieldName] = new ModelField(this.manager, Object.assign({}, fieldData, {
+                this.manager.modelInfos[model.name].fields[fieldName] = new ModelField(this.manager, Object.assign({}, fieldData, {
                     fieldName,
                     model,
                 }));
@@ -370,28 +369,28 @@ export class ModelGenerator {
                 }
             }
             for (const [fieldName, sumContributions] of sumContributionsByFieldName) {
-                model.fields[fieldName].sumContributions = sumContributions;
+                this.manager.modelInfos[model.name].fields[fieldName].sumContributions = sumContributions;
             }
         }
         /**
          * 2. Auto-generate definitions of undeclared inverse relations.
          */
         for (const model of Object.values(this.manager.models)) {
-            for (const field of Object.values(model.fields)) {
+            for (const field of Object.values(this.manager.modelInfos[model.name].fields)) {
                 if (field.fieldType !== 'relation') {
                     continue;
                 }
                 if (field.inverse) {
                     // Automatically make causal the inverse of an identifying.
                     if (field.identifying) {
-                        this.manager.models[field.to].fields[field.inverse].isCausal = true;
+                        this.manager.modelInfos[field.to].fields[field.inverse].isCausal = true;
                     }
                     continue;
                 }
                 const relatedModel = this.manager.models[field.to];
                 const inverseField = this._makeInverse(model, field);
                 field.inverse = inverseField.fieldName;
-                relatedModel.fields[inverseField.fieldName] = inverseField;
+                this.manager.modelInfos[relatedModel.name].fields[inverseField.fieldName] = inverseField;
             }
         }
         /**
@@ -399,12 +398,12 @@ export class ModelGenerator {
          * fields of its parents.
          */
         for (const model of Object.values(this.manager.models)) {
-            for (const field of Object.values(model.fields)) {
+            for (const field of Object.values(this.manager.modelInfos[model.name].fields)) {
                 this.manager.modelInfos[model.name].combinedFields[field.fieldName] = field;
             }
             let TargetModel = model.__proto__;
-            while (TargetModel && TargetModel.fields) {
-                for (const targetField of Object.values(TargetModel.fields)) {
+            while (TargetModel && this.manager.modelInfos[TargetModel.name] && this.manager.modelInfos[TargetModel.name].fields) {
+                for (const targetField of Object.values(this.manager.modelInfos[TargetModel.name].fields)) {
                     const field = this.manager.modelInfos[model.name].combinedFields[targetField.fieldName];
                     if (!field) {
                         this.manager.modelInfos[model.name].combinedFields[targetField.fieldName] = targetField;

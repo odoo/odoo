@@ -176,7 +176,7 @@ export class ModelManager {
             delete this.modelInfos[model.name].identifyingFieldNames;
             delete this.modelInfos[model.name].records;
             delete this.modelInfos[model.name].requiredFieldsList;
-            delete model.fields;
+            delete this.modelInfos[model.name].fields;
             delete model.modelManager;
             delete this.modelInfos[model.name];
         }
