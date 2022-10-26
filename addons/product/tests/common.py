@@ -5,8 +5,28 @@ from unittest.mock import patch
 
 from odoo.fields import Command
 
-from odoo.addons.base.tests.common import BaseCommon
-from odoo.addons.uom.tests.common import UomCommon
+from odoo.addons.base.tests.common import BaseCommon, BaseCommon2
+from odoo.addons.uom.tests.common import UomCommon, UomCommon2
+
+
+class ProductCommon2(BaseCommon2, UomCommon2):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.product_a = cls.env['product.product'].create({
+            'name': 'product_a',
+            'uom_id': cls.env.ref('uom.product_uom_unit').id,
+            'lst_price': 1000.0,
+            'standard_price': 800.0,
+        })
+        cls.product_b = cls.env['product.product'].create({
+            'name': 'product_b',
+            'uom_id': cls.env.ref('uom.product_uom_dozen').id,
+            'lst_price': 200.0,
+            'standard_price': 160.0,
+        })
 
 
 class ProductCommon(

@@ -16,6 +16,93 @@ DISABLED_MAIL_CONTEXT = {
 }
 
 
+class BaseCommon2(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Create user.
+        user = cls.env['res.users'].create({
+            'name': "Test User",
+            'login': 'test_user',
+            'password': 'test_user',
+            'groups_id': [Command.set(cls.env.user.groups_id.ids)],
+        })
+        user.partner_id.email = 'test_user@test.com'
+
+        # Shadow the current environment/cursor with one having the report user.
+        # This is mandatory to test access rights.
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env(user=user)
+        cls.cr = cls.env.cr
+
+        cls.company_data = cls.setup_company_data('company_1_data')
+
+        # Remove access to others companies.
+        user.write({
+            'company_ids': [Command.set(cls.company_data['company'].ids)],
+            'company_id': cls.company_data['company'].id,
+        })
+
+    @classmethod
+    def setup_company_data(cls, company_name, **kwargs):
+        company = cls.env['res.company'].create({
+            'name': company_name,
+            **kwargs,
+        })
+        cls.env.user.company_ids |= company
+
+        return {
+            'company': company,
+            'currency': company.currency_id,
+        }
+
+    @classmethod
+    def setup_multi_currency_data(cls, rates, **kwargs):
+        currency = cls.env['res.currency'].create({
+            'rounding': 0.01,
+            'position': 'after',
+            **kwargs,
+        })
+        rates = cls.env['res.currency.rate'].create([
+            {
+                'name': rate_date,
+                'rate': rate,
+                'currency_id': currency.id,
+                'company_id': cls.env.company.id,
+            }
+            for rate_date, rate in rates
+        ])
+        return {
+            'currency': currency,
+            'rates': rates,
+        }
+
+    @classmethod
+    def setup_gold_currency(cls):
+        return cls.setup_multi_currency_data(
+            [('2016-01-01', 3.0), ('2017-01-01', 2.0)],
+            name="Gold Coin",
+            symbol='☺',
+            currency_unit_label='Gold',
+            currency_subunit_label='Silver',
+        )
+
+    @classmethod
+    def setup_partner_a(cls):
+        return cls.env['res.partner'].create({
+            'name': 'partner_a',
+            'company_id': False,
+        })
+
+    @classmethod
+    def setup_partner_b(cls):
+        return cls.env['res.partner'].create({
+            'name': 'partner_b',
+            'company_id': False,
+        })
+
+
 class BaseCommon(TransactionCase):
 
     @classmethod
