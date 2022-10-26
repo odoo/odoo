@@ -3,6 +3,7 @@
     <template id="header_cart_link" name="Header Cart Link">
         <t t-nocache="The number of products is dynamic, this rendering cannot be cached."
            t-nocache-_icon="_icon"
+           t-nocache-_text="_text"
            t-nocache-_item_class="_item_class"
            t-nocache-_link_class="_link_class">
             <t t-set="website_sale_cart_quantity" t-value="request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else website.sale_get_order().cart_quantity or 0"/>
