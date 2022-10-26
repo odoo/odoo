@@ -114,7 +114,7 @@
                 <separator/>
                 <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                 <separator/>
                 <filter string="Always Wishlisted" name="filter_wishlisted_by_default" domain="[('wishlisted_by_default', '=', True)]"/>
                 <separator/>
