@@ -17,6 +17,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     // Create order that is synced when draft.
     // order 1
     FloorScreen.do.clickTable('T2');
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.exec.addOrderline('Minute Maid', '1', '2');
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.do.backToFloor();
@@ -55,7 +56,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     Chrome.do.backToFloor();
     FloorScreen.check.orderCountSyncedInTableIs('T5', '1');
     Chrome.do.clickTicketButton();
-    TicketScreen.check.nthRowContains('4', 'Tipping');
+    TicketScreen.check.nthRowContains('3', 'Tipping');
 
     // Tip 20% on order1
     TicketScreen.do.selectOrder('-0001');
@@ -85,6 +86,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
 
     // finalize order 4 then tip custom amount
     TicketScreen.do.selectOrder('-0004');
+    ProductScreen.check.isShown();
     ProductScreen.check.totalAmountIs('8.0');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
@@ -102,13 +104,15 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     // settle tips here
     Chrome.do.clickTicketButton();
     TicketScreen.do.selectFilter('Tipping');
+    TicketScreen.check.tipContains('1.00');
     TicketScreen.do.settleTips();
-    TicketScreen.do.selectFilter('All Tickets');
+    TicketScreen.do.selectFilter('All active orders');
     TicketScreen.check.nthRowContains(2, 'Ongoing');
 
     // tip order2 during payment
     // tip screen should not show after validating payment screen
     TicketScreen.do.selectOrder('-0002');
+    ProductScreen.check.isShown();
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickTipButton();
     NumberPopup.check.isShown();

@@ -107,7 +107,7 @@ class SerialDriver(Driver):
                 self._actions[data['action']](data)
                 time.sleep(self._protocol.commandDelay)
         except Exception:
-            msg = _('An error occured while performing action %s on %s') % (data, self.device_name)
+            msg = _('An error occurred while performing action %s on %s') % (data, self.device_name)
             _logger.exception(msg)
             self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
             self._push_status()

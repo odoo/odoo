@@ -24,7 +24,7 @@
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_ae.demo_company_ae'))]}"/>
+        <value eval="{'company_ids': [(4, ref('demo_company_ae'))]}"/>
     </function>
 
     <function model="account.chart.template" name="try_loading">

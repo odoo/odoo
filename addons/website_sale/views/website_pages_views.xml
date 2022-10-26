@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="product_pages_tree_view" model="ir.ui.view">
+    <field name="name">Product Pages Tree</field>
+    <field name="model">product.template</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="product_template_view_tree_website_sale"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree" position="attributes">
+            <attribute name="js_class">website_pages_list</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </xpath>
+
+        <field name="is_published" position="replace"/>
+
+        <field name="default_code" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="product_tag_ids" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="standard_price" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+
+        <field name="name" position="after">
+            <field name="website_url"/>
+        </field>
+        <xpath expr="//tree">
+            <field name="is_seo_optimized"/>
+            <field name="is_published"/>
+
+            <field name="website_id" position="move"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="product_pages_kanban_view" model="ir.ui.view">
+    <field name="name">Product Pages Kanban</field>
+    <field name="model">product.template</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="product_template_view_kanban_website_sale"/>
+    <field name="arch" type="xml">
+        <xpath expr="//kanban" position="attributes">
+            <attribute name="js_class">website_pages_kanban</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </xpath>
+        <xpath expr="//kanban" position="inside">
+            <field name="website_url"/>
+        </xpath>
+        <xpath expr="//field[@name='name']" position="after">
+            <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
+                <i class="fa fa-globe me-1" title="Website"/>
+                <field name="website_id"/>
+            </div>
+            <div class="text-primary" t-esc="record.website_url.value"/>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
+            <div class="o_kanban_footer">
+                <div class="position-absolute bottom-0 end-0 m-1">
+                    <t t-if="record.is_published.raw_value">Published </t>
+                    <t t-else="">Not Published </t>
+                    <field name="is_published" widget="boolean_toggle"/>
+                </div>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+<record id="action_product_pages_list" model="ir.actions.act_window">
+    <field name="name">Product Pages</field>
+    <field name="res_model">product.template</field>
+    <field name="view_mode">tree,kanban</field>
+    <field name="view_id" ref="product_pages_tree_view"/>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'sequence': 2, 'view_id': ref('product_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'sequence': 1, 'view_id': ref('product_pages_kanban_view')}),
+    ]"/>
+    <field name="context">{'create_action': 'website_sale.product_product_action_add'}</field>
+</record>
+
+<menuitem id="menu_product_pages"
+    parent="website.menu_content"
+    sequence="30"
+    name="Products"
+    action="action_product_pages_list"/>
+
+</odoo>

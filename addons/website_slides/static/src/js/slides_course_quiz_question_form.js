@@ -1,8 +1,7 @@
-odoo.define('website_slides.quiz.question.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
+import publicWidget from 'web.public.widget';
+import core from 'web.core';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -14,7 +13,6 @@ var _t = core._t;
  */
 var QuestionFormWidget = publicWidget.Widget.extend({
     template: 'slide.quiz.question.input',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_quiz_create.xml'],
     events: {
         'click .o_wslides_js_quiz_validate_question': '_validateQuestion',
         'click .o_wslides_js_quiz_cancel_question': '_cancelValidation',
@@ -149,34 +147,40 @@ var QuestionFormWidget = publicWidget.Widget.extend({
      * @param options
      * @private
      */
-    _createOrUpdateQuestion: function (options) {
-        var self = this;
+    _createOrUpdateQuestion: async function (options) {
         var $form = this.$('form');
+
         if (this._isValidForm($form)) {
             var values = this._serializeForm($form);
-            this._rpc({
+            var renderedQuestion = await this._rpc({
                 route: '/slides/slide/quiz/question_add_or_update',
                 params: values
-            }).then(function (renderedQuestion) {
-                if (options.update) {
-                    self.trigger_up('display_updated_question', {
-                        newQuestionRenderedTemplate: renderedQuestion,
-                        $editedQuestion: self.$editedQuestion,
-                        questionFormWidget: self,
-                    });
-                } else {
-                    self.trigger_up('display_created_question', {
-                        newQuestionRenderedTemplate: renderedQuestion,
-                        questionFormWidget: self
-                    });
-                }
             });
+
+            if (typeof renderedQuestion === 'object' && renderedQuestion.error) {
+                this.$('.o_wslides_js_quiz_validation_error')
+                    .removeClass('d-none')
+                    .find('.o_wslides_js_quiz_validation_error_text')
+                    .text(renderedQuestion.error);
+            } else if (options.update) {
+                this.$('.o_wslides_js_quiz_validation_error').addClass('d-none');
+                this.trigger_up('display_updated_question', {
+                    newQuestionRenderedTemplate: renderedQuestion,
+                    $editedQuestion: this.$editedQuestion,
+                    questionFormWidget: this,
+                });
+            } else {
+                this.$('.o_wslides_js_quiz_validation_error').addClass('d-none');
+                this.trigger_up('display_created_question', {
+                    newQuestionRenderedTemplate: renderedQuestion,
+                    questionFormWidget: this
+                });
+            }
         } else {
-            this.displayNotification({
-                type: 'warning',
-                message: _t('Please fill in the question'),
-                sticky: true
-            });
+            this.$('.o_wslides_js_quiz_validation_error')
+                .removeClass('d-none')
+                .find('.o_wslides_js_quiz_validation_error_text')
+                .text(_t('Please fill in the question'));
             this.$('.o_wslides_quiz_question input').focus();
         }
     },
@@ -224,5 +228,4 @@ var QuestionFormWidget = publicWidget.Widget.extend({
 
 });
 
-return QuestionFormWidget;
-});
+export default QuestionFormWidget;

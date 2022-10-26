@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:29+0000\n"
-"PO-Revision-Date: 2020-12-11 07:29+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,10 +35,8 @@ msgid ""
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Live Chat</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "<small>%</small>"
 msgstr ""
 
 #. module: website_livechat
@@ -74,9 +72,24 @@ msgid "Channel"
 msgstr ""
 
 #. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.im_livechat_channel_view_form_add
+msgid "Channel Name"
+msgstr ""
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Chat"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
 msgstr ""
 
 #. module: website_livechat
@@ -98,16 +111,6 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_mail_channel
 msgid "Discussion Channel"
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
-#: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
-#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__display_name
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:website_livechat.field_website__display_name
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
-msgid "Display Name"
 msgstr ""
 
 #. module: website_livechat
@@ -133,16 +136,6 @@ msgid "History"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
-#: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
-#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
-#: model:ir.model.fields,field_description:website_livechat.field_website__id
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
-msgid "ID"
-msgstr ""
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
 msgid "In Conversation"
 msgstr ""
@@ -160,24 +153,9 @@ msgid "Lang"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel____last_update
-#: model:ir.model.fields,field_description:website_livechat.field_ir_http____last_update
-#: model:ir.model.fields,field_description:website_livechat.field_mail_channel____last_update
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:website_livechat.field_website____last_update
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: website_livechat
 #: code:addons/website_livechat/models/website.py:0
 #, python-format
 msgid "Live Support"
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live chat channel of your website"
 msgstr ""
 
 #. module: website_livechat
@@ -191,21 +169,12 @@ msgid "Livechat Support Channels"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
-#, python-format
-msgid "Name"
-msgstr ""
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Neutral face"
 msgstr ""
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
-#, python-format
+#: model:ir.actions.act_window,name:website_livechat.im_livechat_channel_action_add
 msgid "New Channel"
 msgstr ""
 
@@ -278,6 +247,11 @@ msgstr ""
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Statistics"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.chatbot_script_view_form
+msgid "Test"
 msgstr ""
 
 #. module: website_livechat

@@ -60,7 +60,7 @@ class TestViews(TransactionCase):
         self.assertEqual(base.inherit_children_ids.mode, 'extension')
         self.assertIn(
             '<p>Hello World!</p>',
-            base.inherit_children_ids.read_combined(['arch'])['arch'],
+            base.inherit_children_ids.get_combined_arch(),
         )
 
     def test_find_available_name(self):

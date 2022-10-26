@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="hr_holidays.RadioImageField" owl="1">
+        <div role="radiogroup" class="d-flex flex-wrap" t-att-aria-label="string">
+            <t t-if="props.readonly">
+                <t t-if="value !== false">
+                    <div>
+                        <img t-attf-src="/hr_holidays/static/src/img/icons/{{items.find((item) => item[0] === value)[1]}}" width="48" height="48" />
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-foreach="items" t-as="item" t-key="item[0]">
+                    <div class="form-check o_radio_item" aria-atomic="true">
+                        <input
+                            type="radio"
+                            class="form-check-input o_radio_input"
+                            t-att-checked="item[0] === value"
+                            t-att-disabled="props.readonly"
+                            t-att-name="id"
+                            t-att-data-value="item[0]"
+                            t-att-data-index="item_index"
+                            t-att-id="`${id}_${item[0]}`"
+                            t-on-change="() => this.onChange(item)"
+                        />
+                        <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`">
+                            <img t-attf-src="/hr_holidays/static/src/img/icons/{{item[1]}}" width="48" height="48" />
+                        </label>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

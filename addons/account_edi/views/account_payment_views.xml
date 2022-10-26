@@ -19,10 +19,10 @@
                     <field name="edi_error_count" invisible="1" />
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', ('edi_web_services_to_process', 'in', ['', False]), ('state', '=', 'draft')]}">
-                         <div>The payment will be sent asynchronously to :
+                         <div>The payment will be processed asynchronously by the following E-invoicing service :
                             <field name="edi_web_services_to_process" class="oe_inline"/>
                          </div>
-                         <button name="action_process_edi_web_services" type="object" class="oe_link" string="Send now"/>
+                         <button name="action_process_edi_web_services" type="object" class="oe_link" string="Process now"/>
                     </div>
                     <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
                         attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'error')]}">
@@ -48,17 +48,27 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='journal_id']" position="after">
-                    <field name="edi_document_ids" invisible="1" />
                     <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//group[@name='group2']" position="after">
                     <group groups="base.group_no_one">
-                        <field name="edi_document_ids" string="EDI Documents" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
+                        <field name="edi_document_ids"
+                               string="EDI Documents"
+                               groups="base.group_no_one"
+                               options="{'no_open': '1'}"
+                               attrs="{'invisible': [('edi_document_ids', '=', [])]}">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
                                 <field name="state"/>
                                 <field name="error" invisible="1"/>
+                                <field name="blocking_level" invisible="1"/>
+                                <button name="action_export_xml"
+                                        type="object"
+                                        class="oe_link oe_inline"
+                                        string="Download"
+                                        groups="base.group_no_one"
+                                        attrs="{'invisible': ['|', ('error', '=', False), ('blocking_level', '=', 'info')]}"/>
                             </tree>
                         </field>
                     </group>

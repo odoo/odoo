@@ -17,15 +17,19 @@ It adds a button on the product itself but also an action in the list view of th
 If the automated inventory valuation is active, the necessary accounting entries will be created.
 
 """,
-    'website': 'https://www.odoo.com/page/manufacturing',
+    'website': 'https://www.odoo.com/app/manufacturing',
     'depends': ['mrp', 'stock_account'],
-    "init_xml" : [],
-    "demo_xml" : [],
     "data": [
         'security/ir.model.access.csv',
         "views/product_views.xml",
+        "views/mrp_bom_views.xml",
         "views/mrp_production_views.xml",
+        "views/analytic_account_views.xml",
+    ],
+    'demo': [
+        'data/mrp_account_demo.xml',
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

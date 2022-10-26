@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentImage" owl="1">
+        <t t-if="attachmentImage">
+            <div t-attf-class="{{ className }}" role="menu" t-att-aria-label="attachmentImage.attachment.displayName" t-ref="root">
+                <div class="o_AttachmentImage d-flex position-relative flex-shrink-0"
+                    t-att-class="{
+                        'o-isUploading': attachmentImage.attachment.isUploading,
+                    }"
+                    t-att-title="attachmentImage.attachment.displayName ? attachmentImage.attachment.displayName : undefined"
+                    t-att-data-id="attachmentImage.attachment.localId"
+                    tabindex="0"
+                    aria-label="View image"
+                    role="menuitem"
+                    t-on-click="attachmentImage.onClickImage"
+                    t-att-data-mimetype="attachmentImage.attachment.mimetype"
+                >
+                    <t t-if="!attachmentImage.attachment.isUploading">
+                        <img class="img img-fluid my-0 mx-auto" t-att-src="attachmentImage.imageUrl" t-att-alt="attachmentImage.attachment.name" t-attf-style="max-width: min(100%, {{ attachmentImage.width }}px); max-height: {{ attachmentImage.height }}px;"/>
+                    </t>
+                    <t t-if="attachmentImage.attachment.isUploading">
+                        <div class="o_AttachmentImageUploading position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
+                            <i class="fa fa-spin fa-spinner"/>
+                        </div>
+                    </t>
+                    <div class="o_AttachmentImage_imageOverlay position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flax-wrap flex-column">
+                        <div t-if="attachmentImage.attachment.isDeletable" class="o_AttachmentImage_action o_AttachmentImage_actionUnlink btn btn-sm btn-dark rounded opacity-75 opacity-100-hover" t-att-class="{'o-pretty': attachmentImage.attachmentList.composerViewOwner}" tabindex="0" aria-label="Remove" role="menuitem" t-on-click="attachmentImage.onClickUnlink" title="Remove">
+                            <i class="fa fa-trash"/>
+                        </div>
+                        <div t-if="attachmentImage.hasDownloadButton" class="o_AttachmentImage_action o_AttachmentImage_actionDownload btn btn-sm btn-dark rounded opacity-75 opacity-100-hover mt-auto" t-on-click="attachmentImage.onClickDownload" title="Download">
+                            <i class="fa fa-download"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

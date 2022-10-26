@@ -2,23 +2,23 @@
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-        <xpath expr="//span[@t-field='o.partner_id.vat']" position="attributes">
+        <xpath expr="//address[@t-field='o.partner_id']" position="attributes">
             <attribute name="t-if">o.company_id.account_fiscal_country_id.code != 'IN'</attribute>
         </xpath>
-        <xpath expr="//span[@t-field='o.partner_id.vat']" position="after">
+        <xpath expr="//address[@t-field='o.partner_id']" position="after">
             <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
         </xpath>
         <xpath expr="//t[@t-set='address']" position="inside">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.l10n_in_state_id" class="mt16">
                 <t t-if="o.move_type in ('in_invoice', 'in_refund')">
-                    Destination of supply: <span t-esc="o.l10n_in_state_id.name"/>
+                    Destination of supply: <span t-out="o.l10n_in_state_id.name"/>
                 </t>
                 <t t-if="o.move_type in ('out_invoice', 'out_refund')">
-                    Place of supply: <span t-esc="o.l10n_in_state_id.name"/>
+                    Place of supply: <span t-out="o.l10n_in_state_id.name"/>
                 </t>
             </t>
         </xpath>
-        <xpath expr="//p[@t-if='o.narration']" position="before">
+        <xpath expr="//div[@t-if='not is_html_empty(o.narration)']" position="before">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
                 <p id="total_in_words" class="mb16">
                     <strong>Total (In Words): </strong>
@@ -41,7 +41,7 @@
 
         <xpath expr="//h2" position="replace">
             <h2>
-                <span t-if="o.move_type == 'out_invoice' and o.state == 'open'" t-field="o.journal_id.name"/>
+                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" t-field="o.journal_id.name"/>
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft <span t-field="o.journal_id.name"/></span>
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled <span t-field="o.journal_id.name"/></span>
                 <span t-if="o.move_type == 'out_refund'">Credit Note</span>

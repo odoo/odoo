@@ -11,13 +11,14 @@
         'views/barcodes_view.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
+            'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
         ],
         'web.qunit_suite_tests': [
             'barcodes_gs1_nomenclature/static/src/js/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

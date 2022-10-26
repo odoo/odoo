@@ -32,7 +32,7 @@ class Authenticate(http.Controller):
     def auth_confirm(self, scope, friendlyname, redirect, info=None, do=None, **kw):
         """
         Called by the `app_auth` template. If the user decided to allow the app to access Odoo, a temporary auth code
-        is generated and he is redirected to `redirect` with this code in the URL. It should redirect to the app, and
+        is generated and they are redirected to `redirect` with this code in the URL. It should redirect to the app, and
         the app should then exchange this auth code for an access token by calling
         `/mail_client/auth/access_token`.
 
@@ -50,12 +50,12 @@ class Authenticate(http.Controller):
         else:
             params.update({'success': 0, 'state': kw.get('state', '')})
         updated_redirect = parsed_redirect.replace(query=werkzeug.urls.url_encode(params))
-        return werkzeug.utils.redirect(updated_redirect.to_url())
+        return request.redirect(updated_redirect.to_url(), local=False)
 
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
     @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='json', auth="none", cors="*",
                 methods=['POST', 'OPTIONS'])
-    def auth_access_token(self, auth_code, **kw):
+    def auth_access_token(self, auth_code='', **kw):
         """
         Called by the external app to exchange an auth code, which is temporary and was passed in a URL, for an
         access token, which is permanent, and can be used in the `Authorization` header to authorize subsequent requests
@@ -63,10 +63,12 @@ class Authenticate(http.Controller):
         old route name "/mail_client_extension/auth/access_token is deprecated as of saas-14.3,it is not needed for newer
         versions of the mail plugin but necessary for supporting older versions
         """
+        if not auth_code:
+            return {"error": "Invalid code"}
         auth_message = self._get_auth_code_data(auth_code)
         if not auth_message:
             return {"error": "Invalid code"}
-        request.uid = auth_message['uid']
+        request.update_env(user=auth_message['uid'])
         scope = 'odoo.plugin.' + auth_message.get('scope', '')
         api_key = request.env['res.users.apikeys']._generate(scope, auth_message['name'])
         return {'access_token': api_key}

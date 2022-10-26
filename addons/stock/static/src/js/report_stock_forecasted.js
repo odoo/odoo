@@ -1,24 +1,16 @@
 odoo.define('stock.ReplenishReport', function (require) {
 "use strict";
 
+const { loadLegacyViews } = require("@web/legacy/legacy_views");
+
 const clientAction = require('report.client_action');
 const core = require('web.core');
 const dom = require('web.dom');
-const GraphRenderer = require("web/static/src/js/views/graph/graph_renderer");
-const GraphView = require('web.GraphView');
 
 const qweb = core.qweb;
 const _t = core._t;
 
-class StockReportGraphRenderer extends GraphRenderer {}
-
-StockReportGraphRenderer.template = "stock.GraphRenderer";
-
-const StockReportGraphView = GraphView.extend({
-    config: Object.assign({}, GraphView.prototype.config, {
-        Renderer: StockReportGraphRenderer,
-    }),
-});
+const viewRegistry = require("web.view_registry");
 
 const ReplenishReport = clientAction.extend({
     /**
@@ -43,6 +35,7 @@ const ReplenishReport = clientAction.extend({
         var loadWarehouses = this._rpc({
             model: 'report.stock.report_product_product_replenishment',
             method: 'get_warehouses',
+            context: this.context,
         }).then((res) => {
             this.warehouses = res;
             if (this.context.warehouse) {
@@ -56,7 +49,8 @@ const ReplenishReport = clientAction.extend({
         });
         return Promise.all([
             this._super.apply(this, arguments),
-            loadWarehouses
+            loadWarehouses,
+            loadLegacyViews(),
         ]);
     },
 
@@ -97,6 +91,9 @@ const ReplenishReport = clientAction.extend({
         const graphController = await graphPromise;
         const iframeDoc = this.iframe.contentDocument;
         const reportGraphDiv = iframeDoc.querySelector(".o_report_graph");
+        if (!reportGraphDiv) {
+            return;
+        }
         dom.append(reportGraphDiv, graphController.el, {
             in_DOM: true,
             callbacks: [{ widget: graphController }],
@@ -104,7 +101,7 @@ const ReplenishReport = clientAction.extend({
         // Hack to put the res_model on the url. This way, the report always know on with res_model it refers.
         if (location.href.indexOf('active_model') === -1) {
             const url = window.location.href + `&active_model=${this.resModel}`;
-            window.history.pushState({}, "", url);
+            window.history.replaceState({}, "", url);
         }
     },
 
@@ -114,20 +111,41 @@ const ReplenishReport = clientAction.extend({
      */
     async _createGraphController() {
         const model = "report.stock.quantity";
-        const viewInfo = await this._rpc({
+        const viewsInfo = await this._rpc({
             model,
-            method: "fields_view_get",
-            kwargs: { view_type: "graph" }
+            method: "get_views",
+            args: [[[false, "graph"]]],
         });
+        const viewInfo = viewsInfo.views.graph;
+        viewInfo.fields = viewsInfo.models["report.stock.quantity"];
         const params = {
             domain: this._getReportDomain(),
             modelName: model,
             noContentHelp: _t("Try to add some incoming or outgoing transfers."),
             withControlPanel: false,
+            context: {fill_temporal: false},
         };
-        const graphView = new StockReportGraphView(viewInfo, params);
+        const viewArch = new DOMParser().parseFromString(viewInfo.arch, "text/xml");
+        const viewArchJSClass = viewArch.documentElement.getAttribute("js_class");
+        const viewRegistryKey = viewArchJSClass && viewRegistry.contains(viewArchJSClass) ? viewArchJSClass : "graph";
+        const GraphView = viewRegistry.get(viewRegistryKey);
+        const graphView = new GraphView(viewInfo, params);
         const graphController = await graphView.getController(this);
         await graphController.appendTo(document.createDocumentFragment());
+
+        // Since we render the container in a fragment, we may endup in this case:
+        // https://github.com/chartjs/Chart.js/issues/2210#issuecomment-204984449
+        // so, the canvas won't be resizing when it is relocated in the iframe.
+        // Also, since the iframe's position is absolute, chartJS reiszing may not work
+        //  (https://www.chartjs.org/docs/2.9.4/general/responsive.html -- #Important Note)
+        // Finally, we do want to set a height for the canvas rendering in chartJS.
+        // We do this via the chartJS API, that is legacy/graph_renderer.js:@_prepareOptions
+        //  (maintainAspectRatio = false) and with the *attribute* height (not the style).
+        //  (https://www.chartjs.org/docs/2.9.4/general/responsive.html -- #Responsive Charts)
+        // Luckily, the chartJS is not fully rendered, so changing the height here is relevant.
+        // It wouldn't be if we were after GraphRenderer@mounted.
+        graphController.el.querySelector(".o_graph_canvas_container canvas").height = "300";
+
         return graphController;
     },
 
@@ -186,7 +204,7 @@ const ReplenishReport = clientAction.extend({
                 active_id: this.productId,
                 active_model: this.resModel,
             }, this.context, additionnalContext);
-            return this.do_action(action, {replace_last_action: true});
+            return this.do_action(action, { stackPosition: 'replaceCurrentAction' });
         });
     },
 
@@ -222,12 +240,17 @@ const ReplenishReport = clientAction.extend({
      * @returns {Promise}
      */
     _bindAdditionalActionHandlers: function () {
+        // table actions
         let rr = this.$el.find('iframe').contents().find('.o_report_replenishment');
         rr.on('click', '.o_report_replenish_change_priority', this._onClickChangePriority.bind(this));
         rr.on('mouseenter', '.o_report_replenish_change_priority', this._onMouseEnterPriority.bind(this));
         rr.on('mouseleave', '.o_report_replenish_change_priority', this._onMouseLeavePriority.bind(this));
         rr.on('click', '.o_report_replenish_unreserve', this._onClickUnreserve.bind(this));
         rr.on('click', '.o_report_replenish_reserve', this._onClickReserve.bind(this));
+
+        // header actions
+        rr = this.$el.find('iframe').contents().find('.o_report_replenishment_header');
+        rr.on('click', '.o_report_open_inventory_report', this._onClickInventory.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -337,6 +360,30 @@ const ReplenishReport = clientAction.extend({
             args: [[modelId]],
             method: 'action_assign'
         }).then(() => this._reloadReport());
+    },
+
+    /**
+     * Open the inventory (quant) report filtered to the products/product variants currently open
+     * in forecast report
+     *
+     * @returns {Promise}
+     */
+     _onClickInventory: function (ev) {
+        const templates = JSON.parse(ev.target.getAttribute('product-templates-ids'));
+        const variants = JSON.parse(ev.target.getAttribute('product-variants-ids'));
+        const context = Object.assign({}, this.context);
+        if (templates) {
+            context.search_default_product_tmpl_id = templates;
+        } else {
+            context.search_default_product_id = variants;
+        }
+        return this._rpc({
+            model: 'stock.quant',
+            method: 'action_view_quants',
+            context: context,
+        }).then(action => {
+            this.do_action(action)
+        });
     }
 
 });

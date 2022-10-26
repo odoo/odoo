@@ -11,8 +11,8 @@
                     <field name="snoozed_until" attrs="{'readonly': [('predefined_date', '!=', 'custom')]}" force_save="1"/>
                 </group>
                 <footer>
-                    <button string="Snooze" name="action_snooze" type="object" class="btn-primary"/>
-                    <button string="Discard" name="cancel_button" class="btn-secondary" special="cancel"/>
+                    <button string="Snooze" name="action_snooze" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" name="cancel_button" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

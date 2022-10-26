@@ -12,8 +12,10 @@ class TestEventCrm(TestEventFullCommon):
         super(TestEventCrm, cls).setUpClass()
 
         cls.TICKET1_COUNT, cls.TICKET2_COUNT = 3, 1
-        ticket1 = cls.event_0.event_ticket_ids[0]
-        ticket2 = cls.event_0.event_ticket_ids[1]
+        ticket1 = cls.test_event.event_ticket_ids[0]
+        ticket2 = cls.test_event.event_ticket_ids[1]
+
+        (cls.test_rule_attendee + cls.test_rule_order).write({'event_id': cls.test_event.id})
 
         # PREPARE SO DATA
         # ------------------------------------------------------------
@@ -22,12 +24,12 @@ class TestEventCrm(TestEventFullCommon):
         cls.customer_so.write({
             'order_line': [
                 (0, 0, {
-                    'event_id': cls.event_0.id,
+                    'event_id': cls.test_event.id,
                     'event_ticket_id': ticket1.id,
                     'product_id': ticket1.product_id.id,
                     'product_uom_qty': cls.TICKET1_COUNT,
                 }), (0, 0, {
-                    'event_id': cls.event_0.id,
+                    'event_id': cls.test_event.id,
                     'event_ticket_id': ticket2.id,
                     'product_id': ticket2.product_id.id,
                     'product_uom_qty': cls.TICKET2_COUNT,
@@ -52,7 +54,7 @@ class TestEventCrm(TestEventFullCommon):
         t1_registrations = self.env['event.registration'].create(t1_reg_vals)
 
         # check effect: registrations, leads
-        self.assertEqual(self.event_0.registration_ids, t1_registrations)
+        self.assertEqual(self.test_event.registration_ids, t1_registrations)
         self.assertEqual(len(self.test_rule_order.lead_ids), 1)
         self.assertEqual(self.test_rule_order_done.lead_ids, self.env['crm.lead'])
         # check lead converted based on registrations
@@ -62,17 +64,17 @@ class TestEventCrm(TestEventFullCommon):
         # and added to the lead as part of the same group
         customer_so.action_confirm()
         self.assertEqual(customer_so.state, 'sale')
-        self.assertEqual(len(self.event_0.registration_ids), self.TICKET1_COUNT + self.TICKET2_COUNT)
+        self.assertEqual(len(self.test_event.registration_ids), self.TICKET1_COUNT + self.TICKET2_COUNT)
         self.assertEqual(len(self.test_rule_order.lead_ids), 1)  # no new lead created
         self.assertEqual(self.test_rule_order_done.lead_ids, self.env['crm.lead'])  # this one still not triggered
 
         # check existing lead has been updated with new registrations
-        self.assertLeadConvertion(self.test_rule_order, self.event_0.registration_ids, partner=customer_so.partner_id)
+        self.assertLeadConvertion(self.test_rule_order, self.test_event.registration_ids, partner=customer_so.partner_id)
 
         # Confirm registrations -> trigger the "DONE" rule, one new lead linked to all
         # event registrations created in this test as all belong to the same SO
-        self.event_0.registration_ids.write({'state': 'done'})
-        self.assertLeadConvertion(self.test_rule_order_done, self.event_0.registration_ids, partner=customer_so.partner_id)
+        self.test_event.registration_ids.write({'state': 'done'})
+        self.assertLeadConvertion(self.test_rule_order_done, self.test_event.registration_ids, partner=customer_so.partner_id)
 
     @users('user_sales_salesman')
     def test_event_crm_sale_mixed_group(self):
@@ -83,9 +85,9 @@ class TestEventCrm(TestEventFullCommon):
             'partner_id': public_partner.id,
             'order_line': [
                 (0, 0, {
-                    'event_id': self.event_0.id,
-                    'event_ticket_id': self.event_0.event_ticket_ids[0].id,
-                    'product_id': self.event_0.event_ticket_ids[0].product_id.id,
+                    'event_id': self.test_event.id,
+                    'event_ticket_id': self.test_event.event_ticket_ids[0].id,
+                    'product_id': self.test_event.event_ticket_ids[0].product_id.id,
                     'product_uom_qty': 2,
                 })
             ]
@@ -109,9 +111,9 @@ class TestEventCrm(TestEventFullCommon):
         ]
         self.env['event.registration'].create(mixed_reg_vals)
 
-        public_regs = self.event_0.registration_ids.filtered(lambda reg: reg.sale_order_id == public_so)
+        public_regs = self.test_event.registration_ids.filtered(lambda reg: reg.sale_order_id == public_so)
         self.assertEqual(len(public_regs), 2)
-        customer_regs = self.event_0.registration_ids.filtered(lambda reg: reg.sale_order_id == customer_so)
+        customer_regs = self.test_event.registration_ids.filtered(lambda reg: reg.sale_order_id == customer_so)
         self.assertEqual(len(customer_regs), 2)
         self.assertLeadConvertion(self.test_rule_order, public_regs, partner=None)
         self.assertLeadConvertion(self.test_rule_order, customer_regs, partner=customer_so.partner_id)
@@ -122,7 +124,9 @@ class TestEventCrm(TestEventFullCommon):
         This somehow simulates a simplified website_event_sale flow. """
         public_partner = self.env.ref('base.public_partner')
         customer_so = self.env['sale.order'].browse(self.customer_so.id)
-        customer_so.write({'partner_id': public_partner.id})
+        customer_so.write({
+            'partner_id': public_partner.id,
+        })
 
         # adding some tickets to SO
         t1_reg_vals = [
@@ -132,7 +136,7 @@ class TestEventCrm(TestEventFullCommon):
             for customer_data in self.website_customer_data[:self.TICKET1_COUNT]
         ]
         t1_registrations = self.env['event.registration'].create(t1_reg_vals)
-        self.assertEqual(self.event_0.registration_ids, t1_registrations)
+        self.assertEqual(self.test_event.registration_ids, t1_registrations)
 
         # check lead converted based on registrations
         self.assertLeadConvertion(self.test_rule_order, t1_registrations, partner=None)
@@ -141,7 +145,7 @@ class TestEventCrm(TestEventFullCommon):
         # BUT as public user -> no email -> not taken into account by rule
         customer_so.action_confirm()
         self.assertEqual(customer_so.state, 'sale')
-        self.assertEqual(len(self.event_0.registration_ids), self.TICKET1_COUNT + self.TICKET2_COUNT)
+        self.assertEqual(len(self.test_event.registration_ids), self.TICKET1_COUNT + self.TICKET2_COUNT)
         self.assertLeadConvertion(self.test_rule_order, t1_registrations, partner=None)
 
         # SO has a customer set -> main contact of lead is updated accordingly

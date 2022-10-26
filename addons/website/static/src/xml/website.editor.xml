@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
-        <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
-        <p class="lead d-none d-md-block">Click on <b>Edit</b> in the top right corner to start designing.</p>
-    </div>
 
-    <!-- Custom checkbox (material-design-like toggle) -->
-    <t t-name="website.components.switch">
-        <label class="o_switch" t-att-for="id">
-            <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
-            <span/>
-            <div t-if="label"><t t-esc="label"/></div>
-        </label>
+    <t t-extend="wysiwyg.widgets.link">
+        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+        </t>
     </t>
 
     <t t-extend="wysiwyg.widgets.linkTools">
@@ -23,13 +16,13 @@
                 </small>
             </div>
             <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
-                <we-select class="o_we_user_value_widget">
-                    <we-title>⌙ Page Anchor</we-title>
+                <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                    <we-title>Page Anchor</we-title>
                     <div>
                         <div class="dropdown">
                             <button class="dropdown-toggle"
-                                data-toggle="dropdown" title="" tabindex="-1"
-                                data-original-title="Link Size" aria-expanded="false">
+                                data-bs-toggle="dropdown" title="" tabindex="-1"
+                                data-bs-original-title="Link Size" aria-expanded="false">
                                 <we-toggler>
                                     Loading...
                                 </we-toggler>
@@ -46,7 +39,7 @@
     </t>
     <!-- Anchor Name option dialog -->
     <div t-name="website.dialog.anchorName">
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
             <div class="col-md-9">
                 <input type="text" class="form-control o_input_anchor_name" id="anchorName" t-attf-value="#{currentAnchor}" placeholder="Anchor name"/>
@@ -59,24 +52,30 @@
 
     <!-- Add a Google Font option dialog -->
     <div t-name="website.dialog.addGoogleFont">
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label class="col-form-label col-md-3" for="google_font_html">Google Font address</label>
             <div class="col-md-9">
                 <textarea id="google_font_html" class="form-control o_input_google_font"
                     placeholder="https://fonts.google.com/specimen/Roboto" style="height: 100px;"/>
-                <span class="float-right text-muted">
+                <span class="float-end text-muted">
                     Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the address of the font page here.
                 </span>
             </div>
+            <label class="col-form-label col-md-3" for="google_font_serve">Serve font from Google servers</label>
+            <label class="o_switch col-form-label col-md-9" for="google_font_serve">
+                <input type="checkbox" checked="checked" id="google_font_serve"/>
+                <span/>
+            </label>
         </div>
-        <p>Adding a font requires a reload of the page. This will save all your changes.</p>
     </div>
     <t t-name="website.delete_google_font_btn">
+        <i t-if="!local" role="button" class="text-info ms-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"/>
         <t t-set="delete_font_title">Delete this font</t>
         <i role="button"
-           class="text-danger ml-2 fa fa-trash-o o_we_delete_google_font_btn"
+           class="text-danger ms-2 fa fa-trash-o o_we_delete_google_font_btn"
            t-att-aria-label="delete_font_title"
            t-att-title="delete_font_title"
+           t-att-data-local-font="local"
            t-att-data-font-index="index"/>
     </t>
     <t t-name="website.add_google_font_btn">
@@ -109,17 +108,17 @@
     </t>
     <div t-name="website.s_google_map_modal">
         <p>Use Google Map on your website (Contact Us page, snippets, etc).</p>
-        <div class="form-group row mb-0">
+        <div class="row mb-0">
             <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
             <div class="col">
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa fa-key"/></div>
-                    </div>
+                    <div class="input-group-text"><i class="fa fa-key"/></div>
                     <input type="text" class="form-control" id="api_key_input"
                            t-att-value="apiKey or ''"
                            placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
                 </div>
+                <small id="api_key_help" class="text-danger">
+                </small>
                 <div class="small form-text text-muted">
                     Hint: How to use Google Map on your website (Contact Us page and as a snippet)
                     <br/>
@@ -143,11 +142,11 @@
         <div class="o_ace_editor_container"/>
     </div>
 
-    <t t-name="website.new_content_loader">
-        <div class="o_new_content_loader_container position-fixed fixed-top fixed-left
-            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
-            <p id="new_content_loader_text"/>
-            <div class="o_new_content_loader"/>
-        </div>
+    <!-- Editor Toolbar -->
+    <t t-extend="web_editor.toolbar">
+        <t t-jquery="#list .oe-toggle-checklist" t-operation="replace"/>
+        <t t-jquery="#list" t-operation="append">
+            <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
+        </t>
     </t>
 </templates>

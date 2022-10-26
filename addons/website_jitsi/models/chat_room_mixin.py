@@ -38,7 +38,7 @@ class ChatRoomMixin(models.AbstractModel):
             if any(values.get(fmatch[0]) for fmatch in self.ROOM_CONFIG_FIELDS) and not values.get('chat_room_id'):
                 if values.get('room_name'):
                     values['room_name'] = self._jitsi_sanitize_name(values['room_name'])
-                room_values = dict((fmatch[1], values.pop(fmatch[0])) for fmatch in self.ROOM_CONFIG_FIELDS if values.get(fmatch[0]))
+                room_values = dict((fmatch[1], values[fmatch[0]]) for fmatch in self.ROOM_CONFIG_FIELDS if values.get(fmatch[0]))
                 values['chat_room_id'] = self.env['chat.room'].create(room_values).id
         return super(ChatRoomMixin, self).create(values_list)
 

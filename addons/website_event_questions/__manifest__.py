@@ -4,7 +4,7 @@
     'name': 'Questions on Events',
     'description': 'Questions on Events',
     'category': 'Marketing',
-    'version': '1.1',
+    'version': '1.2',
     'depends': ['website_event'],
     'data': [
         'views/event_views.xml',
@@ -25,5 +25,6 @@
         'web.assets_tests': [
             'website_event_questions/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

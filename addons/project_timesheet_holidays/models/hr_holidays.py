@@ -10,7 +10,7 @@ class HolidaysType(models.Model):
 
     def _default_project_id(self):
         company = self.company_id if self.company_id else self.env.company
-        return company.leave_timesheet_project_id.id
+        return company.internal_project_id.id
 
     def _default_task_id(self):
         company = self.company_id if self.company_id else self.env.company
@@ -19,11 +19,12 @@ class HolidaysType(models.Model):
     timesheet_generate = fields.Boolean(
         'Generate Timesheet', compute='_compute_timesheet_generate', store=True, readonly=False,
         help="If checked, when validating a time off, timesheet will be generated in the Vacation Project of the company.")
-    timesheet_project_id = fields.Many2one('project.project', string="Project", default=_default_project_id, domain="[('company_id', '=', company_id)]", help="The project will contain the timesheet generated when a time off is validated.")
+    timesheet_project_id = fields.Many2one('project.project', string="Project", default=_default_project_id, domain="[('company_id', '=', company_id)]")
     timesheet_task_id = fields.Many2one(
-        'project.task', string="Task for timesheet", compute='_compute_timesheet_task_id',
+        'project.task', string="Task", compute='_compute_timesheet_task_id',
         store=True, readonly=False, default=_default_task_id,
         domain="[('project_id', '=', timesheet_project_id),"
+                "('project_id', '!=', False),"
                 "('company_id', '=', company_id)]")
 
     @api.depends('timesheet_task_id', 'timesheet_project_id')
@@ -62,31 +63,39 @@ class Holidays(models.Model):
             timesheet_task_id are set on the corresponding leave type. The generated timesheet will
             be attached to this project/task.
         """
-        # create the timesheet on the vacation project
-        for holiday in self.filtered(
-                lambda request: request.holiday_type == 'employee' and
-                                request.holiday_status_id.timesheet_project_id and
-                                request.holiday_status_id.timesheet_task_id):
-            holiday._timesheet_create_lines()
+        holidays = self.filtered(
+            lambda l: l.holiday_type == 'employee' and
+            l.holiday_status_id.timesheet_project_id and
+            l.holiday_status_id.timesheet_task_id and
+            l.holiday_status_id.timesheet_project_id.sudo().company_id == (l.holiday_status_id.company_id or self.env.company))
 
-        return super(Holidays, self)._validate_leave_request()
+        # Unlink previous timesheets do avoid doublon (shouldn't happen on the interface but meh)
+        old_timesheets = holidays.sudo().timesheet_ids
+        if old_timesheets:
+            old_timesheets.holiday_id = False
+            old_timesheets.unlink()
+
+        # create the timesheet on the vacation project
+        holidays._timesheet_create_lines()
+
+        return super()._validate_leave_request()
 
     def _timesheet_create_lines(self):
-        self.ensure_one()
         vals_list = []
-        work_hours_data = self.employee_id.list_work_time_per_day(
-            self.date_from,
-            self.date_to,
-        )
-        for index, (day_date, work_hours_count) in enumerate(work_hours_data):
-            vals_list.append(self._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count))
-        timesheets = self.env['account.analytic.line'].sudo().create(vals_list)
-        return timesheets
+        for leave in self:
+            if not leave.employee_id:
+                continue
+            work_hours_data = leave.employee_id.list_work_time_per_day(
+                leave.date_from,
+                leave.date_to)
+            for index, (day_date, work_hours_count) in enumerate(work_hours_data):
+                vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count))
+        return self.env['account.analytic.line'].sudo().create(vals_list)
 
     def _timesheet_prepare_line_values(self, index, work_hours_data, day_date, work_hours_count):
         self.ensure_one()
         return {
-            'name': "%s (%s/%s)" % (self.holiday_status_id.name or '', index + 1, len(work_hours_data)),
+            'name': _("Time Off (%s/%s)", index + 1, len(work_hours_data)),
             'project_id': self.holiday_status_id.timesheet_project_id.id,
             'task_id': self.holiday_status_id.timesheet_task_id.id,
             'account_id': self.holiday_status_id.timesheet_project_id.analytic_account_id.id,
@@ -105,3 +114,10 @@ class Holidays(models.Model):
         timesheets.write({'holiday_id': False})
         timesheets.unlink()
         return result
+
+    def _action_user_cancel(self, reason):
+        res = super()._action_user_cancel(reason)
+        timesheets = self.sudo().timesheet_ids
+        timesheets.write({'holiday_id': False})
+        timesheets.unlink()
+        return res

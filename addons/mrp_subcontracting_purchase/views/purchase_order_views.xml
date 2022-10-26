@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_mrp_subcontracting_purchase" model="ir.ui.view">
+        <field name="name">purchase.order.inherited.form.mrp.subcontracting.purchase</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]/button[@name='action_view_picking']" position="before">
+                <button 
+                    class="oe_stat_button" name="action_view_subcontracting_resupply" 
+                    type="object" icon="fa-truck" attrs="{'invisible': [('subcontracting_resupply_picking_count', '=', 0)]}" groups="stock.group_stock_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="subcontracting_resupply_picking_count"/></span>
+                        <span class="o_stat_text">Resupply</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

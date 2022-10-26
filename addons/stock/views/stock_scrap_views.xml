@@ -15,6 +15,7 @@
                         <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}"/>
                         <filter string="Scrap Location" name="scrap_location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
+                        <filter string="Transfer" name="transfer" domain="[]" context="{'group_by':'picking_id'}"/>
                     </group>
                 </search>
             </field>
@@ -26,7 +27,7 @@
             <field name="arch" type="xml">
                 <form string="Scrap">
                     <header>
-                        <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight" context="{'not_unlink_on_discard': True}"/>
+                        <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight" context="{'not_unlink_on_discard': True}" data-hotkey="v"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done" />
                     </header>
                     <sheet>
@@ -45,7 +46,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" context="{'default_type': 'product'}"/>
+                                <field name="product_id" context="{'default_detailed_type': 'product'}"/>
                                 <label for="scrap_qty"/>
                                 <div class="o_row">
                                     <field name="scrap_qty"/>
@@ -54,7 +55,8 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="lot_id" attrs="{'invisible': ['|',('product_id', '=', False),('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': ['|',('product_id', '=', False),('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                                 <field name="tracking" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -92,7 +94,7 @@
                                     <strong class="col-6">
                                         <span t-esc="record.name.value"/>
                                     </strong>
-                                    <strong t-if="record.date_done.value" class="col-6 text-right">
+                                    <strong t-if="record.date_done.value" class="col-6 text-end">
                                         <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><span t-esc="record.date_done.value"/>
                                     </strong>
                                     <div class="col-12">
@@ -102,7 +104,7 @@
                                         <span t-esc="record.scrap_qty.value"/>
                                     </div>
                                     <div class="col-6">
-                                        <span class="float-right badge badge-secondary">
+                                        <span class="float-end badge text-bg-secondary">
                                             <field name="state"/>
                                         </span>
                                     </div>
@@ -118,7 +120,9 @@
             <field name="name">stock.scrap.tree</field>
             <field name="model">stock.scrap</field>
             <field name="arch" type="xml">
-                <tree multi_edit="1" sample="1">
+                <tree multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="date_done"/>
                     <field name="product_id" readonly="1"/>
@@ -127,7 +131,7 @@
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company"/>
-                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-muted="state == 'draft'"/>
                 </tree>
             </field>
         </record>
@@ -136,7 +140,7 @@
             <field name="name">Scrap Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.scrap</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">tree,form,kanban,pivot,graph</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Scrap products
@@ -178,8 +182,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="action_validate" string="Done" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button name="action_validate" string="Done" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                 </form>
             </field>

@@ -32,7 +32,7 @@ class AccountMove(models.Model):
                 'name': l.product_id.name,
                 'account_id': l.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id,
                 'price_unit': l.currency_id._convert(l.price_subtotal, l.company_currency_id, l.company_id, l.move_id.date),
-                'split_method': 'equal',
+                'split_method': l.product_id.split_method_landed_cost or 'equal',
             }) for l in landed_costs_lines],
         })
         action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
@@ -50,26 +50,28 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    product_type = fields.Selection(related='product_id.type', readonly=True)
+    product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     is_landed_costs_line = fields.Boolean()
 
-    @api.onchange('is_landed_costs_line')
-    def _onchange_is_landed_costs_line(self):
-        """Mark an invoice line as a landed cost line and adapt `self.account_id`. The default
-        value can be set according to `self.product_id.landed_cost_ok`."""
-        if self.product_id:
-            accounts = self.product_id.product_tmpl_id._get_product_accounts()
-            if self.product_type != 'service':
-                self.account_id = accounts['expense']
-                self.is_landed_costs_line = False
-            elif self.is_landed_costs_line and self.move_id.company_id.anglo_saxon_accounting:
-                self.account_id = accounts['stock_input']
-            else:
-                self.account_id = accounts['expense']
+    @api.depends('is_landed_costs_line')
+    def _compute_account_id(self):
+        landed_costs_lines = self.filtered(lambda l: l.is_landed_costs_line and l.move_id.company_id.anglo_saxon_accounting)
+        for line in landed_costs_lines:
+            line.account_id = line.product_id.product_tmpl_id._get_product_accounts()['stock_input']
+        super(AccountMoveLine, self - landed_costs_lines)._compute_account_id()
 
     @api.onchange('product_id')
-    def _onchange_is_landed_costs_line_product(self):
+    def _onchange_product_id_landed_costs(self):
         if self.product_id.landed_cost_ok:
             self.is_landed_costs_line = True
         else:
             self.is_landed_costs_line = False
+
+    @api.onchange('is_landed_costs_line')
+    def _onchange_is_landed_costs_line(self):
+        if self.is_landed_costs_line and self.product_id and self.product_type != 'service':
+            self.is_landed_costs_line = False
+
+    def _get_stock_valuation_layers(self, move):
+        layers = super()._get_stock_valuation_layers(move)
+        return layers.filtered(lambda svl: not svl.stock_landed_cost_id)

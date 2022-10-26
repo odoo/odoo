@@ -43,3 +43,10 @@ class MrpProduction(models.Model):
         if not iterate_key and move_raw_id.created_purchase_line_id:
             iterate_key = 'created_purchase_line_id'
         return iterate_key
+
+    def _prepare_merge_orig_links(self):
+        origs = super()._prepare_merge_orig_links()
+        for move in self.move_raw_ids:
+            if move.created_purchase_line_id:
+                origs[move.bom_line_id.id]['created_purchase_line_id'] = move.created_purchase_line_id
+        return origs

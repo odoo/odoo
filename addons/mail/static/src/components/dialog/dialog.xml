@@ -2,21 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Dialog" owl="1">
-        <div class="o_Dialog">
-            <t t-if="dialog">
-                <t t-if="dialog.record">
-                    <t
-                        t-component="{{ dialog.record['constructor'].name }}"
-                        class="o_Dialog_component"
-                        t-props="{ localId: dialog.record.localId }"
-                        t-ref="component"
-                    />
-                </t>
-                <t t-else="">
-                    <span>Only dialog linked to a record is currently supported!</span>
-                </t>
-            </t>
-        </div>
+        <t t-if="dialog">
+            <div class="o_Dialog modal fixed-top bottom-0 d-flex justify-content-center" t-attf-class="{{ className }}" t-att-style="dialog.style" t-ref="root">
+                <t
+                    t-component="constructor.components[dialog.componentName]"
+                    t-props="{
+                        className: `o_Dialog_component ${dialog.componentClassName}`,
+                        record: dialog.record,
+                    }"
+                />
+            </div>
+        </t>
     </t>
 
 </templates>

@@ -10,6 +10,8 @@ from odoo.tests import tagged, common, Form
 class TestLifoPrice(ValuationReconciliationTestCommon):
 
     def test_lifoprice(self):
+        # Required for `uom_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
 
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
@@ -25,8 +27,19 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         product_form = Form(self.env['product.product'])
         product_form.default_code = 'LIFO'
         product_form.name = 'LIFO Ice Cream'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.categ_id = product_category_001
+        # <field name="list_price" position="attributes">
+        #     <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+        #     <attribute name="invisible">1</attribute>
+        # </field>
+        # <field name="list_price" position="after">
+        #     <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+        # </field>
+        # @api.onchange('lst_price')
+        # def _set_product_lst_price(self):
+        #     ...
+        #         product.write({'list_price': value})
         product_form.lst_price = 100.0
         product_form.uom_id = self.env.ref('uom.product_uom_kgm')
         product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
@@ -66,21 +79,29 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order_lifo1.state, 'purchase')
 
         # Process the receipt of purchase order 1
-        purchase_order_lifo1.picking_ids[0].move_lines.quantity_done = purchase_order_lifo1.picking_ids[0].move_lines.product_qty
+        purchase_order_lifo1.picking_ids[0].move_ids.quantity_done = purchase_order_lifo1.picking_ids[0].move_ids.product_qty
         purchase_order_lifo1.picking_ids[0].button_validate()
 
         # I confirm the second purchase order
         purchase_order_lifo2.button_confirm()
 
         # Process the receipt of purchase order 2
-        purchase_order_lifo2.picking_ids[0].move_lines.quantity_done = purchase_order_lifo2.picking_ids[0].move_lines.product_qty
+        purchase_order_lifo2.picking_ids[0].move_ids.quantity_done = purchase_order_lifo2.picking_ids[0].move_ids.product_qty
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
         self.company_data['default_warehouse'].out_type_id.show_operations = False
-        out_form = Form(self.env['stock.picking'])
+        # <field name="immediate_transfer" invisible="1"/>
+        # def _get_action(self, action_xmlid):
+        #     ...
+        #     context = {
+        #         ...
+        #         'default_immediate_transfer': default_immediate_tranfer,
+        #         ...
+        #     }
+        #     ...
+        out_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
         out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
-        out_form.immediate_transfer = True
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
@@ -94,4 +115,4 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         outgoing_lifo_shipment.button_validate()
 
         # Check if the move value correctly reflects the fifo costing method
-        self.assertEqual(outgoing_lifo_shipment.move_lines.stock_valuation_layer_ids.value, -1400.0, 'Stock move value should have been 1400 euro')
+        self.assertEqual(outgoing_lifo_shipment.move_ids.stock_valuation_layer_ids.value, -1400.0, 'Stock move value should have been 1400 euro')

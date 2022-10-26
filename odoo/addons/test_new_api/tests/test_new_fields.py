@@ -30,7 +30,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.env.ref('test_new_api.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
         # self.env.ref('test_new_api.discussion_0').participants -> 1 user
-        # self.env.ref('test_new_api.discussion_0').invalidate_cache()
+        # self.env.ref('test_new_api.discussion_0').invalidate()
         # self.env.ref('test_new_api.discussion_0').with_context(active_test=False).participants -> 2 users
         self.env.ref('test_new_api.message_0_1').write({'author': self.user_demo.id})
 
@@ -149,7 +149,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ check definition of custom computed fields """
         # Flush demo user before creating a new ir.model.fields to avoid
         # a deadlock
-        self.user_demo.flush()
+        self.env.flush_all()
         self.env['ir.model.fields'].create({
             'name': 'x_bool_false_computed',
             'model_id': self.env.ref('test_new_api.model_test_new_api_message').id,
@@ -159,7 +159,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'ttype': 'boolean'
         })
         field = self.env['test_new_api.message']._fields['x_bool_false_computed']
-        self.assertFalse(field.depends)
+        self.assertFalse(self.registry.field_depends[field])
 
     def test_10_computed_custom_invalid_transitive_depends(self):
         self.patch(type(self.env["ir.model.fields"]), "_check_depends", lambda self: True)
@@ -244,6 +244,7 @@ class TestFields(TransactionCaseWithUserDemo):
                 (0, 0, {'name': 'x_stuff_id', 'ttype': 'many2one', 'relation': 'ir.model'}),
             ],
         })
+        self.env.invalidate_all()
         # set 'x_stuff_id' refer to a model not loaded yet
         self.cr.execute("""
             UPDATE ir_model_fields
@@ -264,7 +265,7 @@ class TestFields(TransactionCaseWithUserDemo):
         field = type(self.env['test_new_api.discussion']).display_name
         self.assertTrue(field.automatic)
         self.assertTrue(field.compute)
-        self.assertEqual(field.depends, ('name',))
+        self.assertEqual(self.registry.field_depends[field], ('name',))
 
     def test_10_non_stored(self):
         """ test non-stored fields """
@@ -315,10 +316,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
-        discussion1.invalidate_cache()
-        
+        self.env.invalidate_all()
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -405,7 +406,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # to test the below access error. Otherwise the above create calls set in the cache the information needed
         # to compute `company_type` ('is_company'), and doesn't need to trigger a read.
         # We need to force the read in order to test the security access
-        User.invalidate_cache()
+        self.env.invalidate_all()
         # group users as a recordset, and read them as user demo
         users = (user1 + user2 + user3).with_user(self.user_demo)
         user1, user2, user3 = users
@@ -506,7 +507,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
-        message.invalidate_cache()
+        self.env.invalidate_all()
         double_size = message.double_size
         self.assertEqual(double_size, message.size)
 
@@ -517,15 +518,15 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_12_dynamic_depends(self):
         Model = self.registry['test_new_api.compute.dynamic.depends']
-        self.assertEqual(Model.full_name.depends, ())
+        self.assertEqual(self.registry.field_depends[Model.full_name], ())
 
         # the dependencies of full_name are stored in a config parameter
         self.env['ir.config_parameter'].set_param('test_new_api.full_name', 'name1,name2')
 
         # this must re-evaluate the field's dependencies
-        self.env['base'].flush()
+        self.env.flush_all()
         self.registry.setup_models(self.cr)
-        self.assertEqual(Model.full_name.depends, ('name1', 'name2'))
+        self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
     def test_13_inverse(self):
         """ test inverse computation of fields """
@@ -621,6 +622,33 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.bar3, 'C')
         self.assertCountEqual(log, ['compute'])
 
+        # corner case: write on a field that is marked to compute
+        log.clear()
+        # writing on 'foo' marks 'bar1', 'bar2', 'bar3' to compute
+        record.write({'foo': '1/2/3'})
+        self.assertCountEqual(log, [])
+        # writing on 'bar3' must force the computation before updating
+        record.write({'bar3': 'X'})
+        self.assertCountEqual(log, ['compute', 'inverse23'])
+        self.assertEqual(record.foo, '1/2/X')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '2')
+        self.assertEqual(record.bar3, 'X')
+        self.assertCountEqual(log, ['compute', 'inverse23'])
+
+        log.clear()
+        # writing on 'foo' marks 'bar1', 'bar2', 'bar3' to compute
+        record.write({'foo': 'A/B/C'})
+        self.assertCountEqual(log, [])
+        # writing on 'bar1', 'bar2', 'bar3' discards the computation
+        record.write({'bar1': 'X', 'bar2': 'Y', 'bar3': 'Z'})
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+        self.assertEqual(record.foo, 'X/Y/Z')
+        self.assertEqual(record.bar1, 'X')
+        self.assertEqual(record.bar2, 'Y')
+        self.assertEqual(record.bar3, 'Z')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
     def test_13_inverse_access(self):
         """ test access rights on inverse fields """
         foo = self.env['test_new_api.category'].create({'name': 'Foo'})
@@ -680,7 +708,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_15_constraint(self):
         """ test new-style Python constraints """
         discussion = self.env.ref('test_new_api.discussion_0')
-        discussion.flush()
+        self.env.flush_all()
 
         # remove oneself from discussion participants: we can no longer create
         # messages in discussion
@@ -700,7 +728,6 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertTrue(discussion.messages)
         with self.assertRaises(ValidationError):
             discussion.name = "X"
-            discussion.flush()
 
     def test_15_constraint_inverse(self):
         """ test constraint method on normal field and field with inverse """
@@ -756,16 +783,15 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_16_compute_unassigned_access_error(self):
         # create two records
         records = self.env['test_new_api.compute.unassigned'].create([{}, {}])
-        records.flush()
+        self.env.flush_all()
 
         # alter access rights: regular users cannot read 'records'
         access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
         access.perm_read = False
-        access.flush()
+        self.env.flush_all()
 
         # switch to environment with user demo
         records = records.with_user(self.user_demo)
-        records.env.cache.invalidate()
 
         # check that records are not accessible
         with self.assertRaises(AccessError):
@@ -786,13 +812,13 @@ class TestFields(TransactionCaseWithUserDemo):
         #     - fetch records[1].bars -> access error
         records[0].foo = "assign"
         records[1].foo = "x"
-        records.flush()
+        self.env.flush_all()
 
         # try the other way around, too
-        records.env.cache.invalidate()
+        self.env.invalidate_all()
         records[0].foo = "x"
         records[1].foo = "assign"
-        records.flush()
+        self.env.flush_all()
 
     def test_20_float(self):
         """ test rounding of float fields """
@@ -801,14 +827,14 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # 2.49609375 (exact float) must be rounded to 2.5
         record.write({'number': 2.49609375})
-        record.flush()
+        self.env.flush_all()
         self.cr.execute(query, [record.id, '2.5'])
         self.assertTrue(self.cr.rowcount)
         self.assertEqual(record.number, 2.5)
 
         # 1.1 (1.1000000000000000888178420 in float) must be 1.1 in database
         record.write({'number': 1.1})
-        record.flush()
+        self.env.flush_all()
         self.cr.execute(query, [record.id, '1.1'])
         self.assertTrue(self.cr.rowcount)
         self.assertEqual(record.number, 1.1)
@@ -834,7 +860,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertIn(record.amount, [ramount, samount], msg)
 
         # check the value in the database
-        record.flush()
+        self.env.flush_all()
         self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
         self.assertEqual(value, samount, msg)
@@ -887,7 +913,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
         def check(value):
             self.assertEqual(record.total, value)
-            record.flush()
+            self.env.flush_all()
             self.cr.execute('SELECT total FROM test_new_api_monetary_order WHERE id=%s', [record.id])
             [total] = self.cr.fetchone()
             self.assertEqual(total, value)
@@ -1127,7 +1153,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(demo_message.discussion.env, demo_env)
 
         # See YTI FIXME
-        message.discussion.invalidate_cache()
+        self.env.invalidate_all()
 
         # assign record's parent to a record in demo_env
         message.discussion = message.discussion.copy({'name': 'Copy'})
@@ -1198,6 +1224,23 @@ class TestFields(TransactionCaseWithUserDemo):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_attributes(self):
+        """ test the attributes of related fields """
+        text = self.registry['test_new_api.foo'].text
+        self.assertFalse(text.trim, "The target field is defined with trim=False")
+
+        # trim=True is the default on the field's class
+        self.assertTrue(type(text).trim, "By default, a Char field has trim=True")
+
+        # the parameter 'trim' is not set in text1's definition, so the field
+        # retrieves its value from text.trim
+        text1 = self.registry['test_new_api.bar'].text1
+        self.assertFalse(text1.trim, "The related field retrieves trim=False from target")
+
+        # text2 is defined with trim=True, so it should get that value
+        text2 = self.registry['test_new_api.bar'].text2
+        self.assertTrue(text2.trim, "The related field was defined with trim=True")
+
     def test_25_related_single(self):
         """ test related fields with a single field in the path. """
         record = self.env['test_new_api.related'].create({'name': 'A'})
@@ -1227,7 +1270,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(bar.value1, 1)
         self.assertEqual(bar.value2, 2)
 
-        foo.invalidate_cache()
+        self.env.invalidate_all()
         bar.write({'value1': 3, 'value2': 4})
         self.assertEqual(foo.value1, 3)
         self.assertEqual(foo.value2, 4)
@@ -1345,7 +1388,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # regression: duplicated records caused values to be browse(browse(id))
         recs = record.create({}) + record + record
-        recs.invalidate_cache()
+        self.env.invalidate_all()
         for rec in recs.with_user(user0):
             self.assertIsInstance(rec.tag_id.id, int)
 
@@ -1361,7 +1404,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.with_user(user2).foo, 'default')
 
         record.with_user(user0).with_company(company1).foo = 'beta'
-        record.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(record.with_user(user0).foo, 'main')
         self.assertEqual(record.with_user(user1).foo, 'beta')
         self.assertEqual(record.with_user(user2).foo, 'default')
@@ -1371,13 +1414,12 @@ class TestFields(TransactionCaseWithUserDemo):
         self.patch(type(record).foo, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
-            record.flush()
 
         user0.write({'groups_id': [Command.link(self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
 
         # add ir.rule to prevent access on record
-        self.assertTrue(user0.has_group('base.group_user'))
+        self.assertTrue(user0._is_internal())
         rule = self.env['ir.rule'].create({
             'model_id': self.env['ir.model']._get_id(record._name),
             'groups': [self.env.ref('base.group_user').id],
@@ -1385,7 +1427,6 @@ class TestFields(TransactionCaseWithUserDemo):
         })
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
-            record.flush()
 
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
@@ -1409,6 +1450,131 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertFalse(company_record.env.user.has_group('base.group_system'))
         company_records = self.env['test_new_api.company'].search([('foo', '=', 'DEF')])
         self.assertEqual(len(company_records), 1)
+
+    def test_28_company_dependent_search(self):
+        """ Test the search on company-dependent fields in all corner cases.
+            This assumes that filtered_domain() correctly filters records when
+            its domain refers to company-dependent fields.
+        """
+        Property = self.env['ir.property']
+        Model = self.env['test_new_api.company']
+
+        # create 4 records for all cases: two with explicit truthy values, one
+        # with an explicit falsy value, and one without an explicit value
+        records = Model.create([{}] * 4)
+
+        # For each field, we assign values to the records, and test a number of
+        # searches.  The search cases are given by comparison operators, and for
+        # each operator, we test a number of possible operands.  Every search()
+        # returns a subset of the records, and we compare it to an equivalent
+        # search performed by filtered_domain().
+
+        def test_field(field_name, truthy_values, operations):
+            # set ir.properties to all records except the last one
+            Property._set_multi(
+                field_name, Model._name,
+                {rec.id: val for rec, val in zip(records, truthy_values + [False])},
+                # Using this sentinel for 'default_value' forces the method to
+                # create 'ir.property' records for the value False. Without it,
+                # no property would be created because False is the default
+                # value.
+                default_value=object(),
+            )
+
+            # test without default value
+            test_cases(field_name, operations)
+
+            # set default value to False
+            Property._set_default(field_name, Model._name, False)
+            self.env.flush_all()
+            self.env.invalidate_all()
+            test_cases(field_name, operations, False)
+
+            # set default value to truthy_values[0]
+            Property._set_default(field_name, Model._name, truthy_values[0])
+            self.env.flush_all()
+            self.env.invalidate_all()
+            test_cases(field_name, operations, truthy_values[0])
+
+        def test_cases(field_name, operations, default=None):
+            for operator, values in operations.items():
+                for value in values:
+                    domain = [(field_name, operator, value)]
+                    with self.subTest(domain=domain, default=default):
+                        search_result = Model.search([('id', 'in', records.ids)] + domain)
+                        filter_result = records.filtered_domain(domain)
+                        self.assertEqual(
+                            search_result, filter_result,
+                            f"Got values {[r[field_name] for r in search_result]} "
+                            f"instead of {[r[field_name] for r in filter_result]}",
+                        )
+
+        # boolean fields
+        test_field('truth', [True, True], {
+            '=': (True, False),
+            '!=': (True, False),
+        })
+        # integer fields
+        test_field('count', [10, -2], {
+            '=': (10, -2, 0, False),
+            '!=': (10, -2, 0, False),
+            '<': (10, -2, 0),
+            '>=': (10, -2, 0),
+            '<=': (10, -2, 0),
+            '>': (10, -2, 0),
+        })
+        # float fields
+        test_field('phi', [1.61803, -1], {
+            '=': (1.61803, -1, 0, False),
+            '!=': (1.61803, -1, 0, False),
+            '<': (1.61803, -1, 0),
+            '>=': (1.61803, -1, 0),
+            '<=': (1.61803, -1, 0),
+            '>': (1.61803, -1, 0),
+        })
+        # char fields
+        test_field('foo', ['qwer', 'azer'], {
+            'like': ('qwer', 'azer'),
+            'ilike': ('qwer', 'azer'),
+            'not like': ('qwer', 'azer'),
+            'not ilike': ('qwer', 'azer'),
+            '=': ('qwer', 'azer', False),
+            '!=': ('qwer', 'azer', False),
+            'not in': (['qwer', 'azer'], ['qwer', False], [False], []),
+            'in': (['qwer', 'azer'], ['qwer', False], [False], []),
+        })
+        # date fields
+        date1, date2 = date(2021, 11, 22), date(2021, 11, 23)
+        test_field('date', [date1, date2], {
+            '=': (date1, date2, False),
+            '!=': (date1, date2, False),
+            '<': (date1, date2),
+            '>=': (date1, date2),
+            '<=': (date1, date2),
+            '>': (date1, date2),
+        })
+        # datetime fields
+        moment1, moment2 = datetime(2021, 11, 22), datetime(2021, 11, 23)
+        test_field('moment', [moment1, moment2], {
+            '=': (moment1, moment2, False),
+            '!=': (moment1, moment2, False),
+            '<': (moment1, moment2),
+            '>=': (moment1, moment2),
+            '<=': (moment1, moment2),
+            '>': (moment1, moment2),
+        })
+        # many2one fields
+        tag1, tag2 = self.env['test_new_api.multi.tag'].create([{'name': 'one'}, {'name': 'two'}])
+        test_field('tag_id', [tag1.id, tag2.id], {
+            'like': (tag1.name, tag2.name),
+            'ilike': (tag1.name, tag2.name),
+            'not like': (tag1.name, tag2.name),
+            'not ilike': (tag1.name, tag2.name),
+            '=': (tag1.id, tag2.id, False),
+            '!=': (tag1.id, tag2.id, False),
+            'in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+            'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+        })
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -1445,7 +1611,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ test field access on new records vs real records. """
         Model = self.env['test_new_api.category']
         real_record = Model.create({'name': 'Foo'})
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
         new_origin = Model.new({'name': 'Bar'}, origin=real_record)
         new_record = Model.new({'name': 'Baz'})
 
@@ -1613,6 +1779,26 @@ class TestFields(TransactionCaseWithUserDemo):
         # check that this does not generate an infinite recursion
         new_disc._convert_to_write(new_disc._cache)
 
+    def test_40_new_convert_to_write(self):
+        new_disc = self.env['test_new_api.discussion'].new({
+            'name': "Stuff",
+            'moderator': self.env.uid,
+            'participants': [(6, 0, self.env.user.ids)],
+        })
+        # Put the user groups in the cache of the new record
+        new_disc.participants.groups_id
+
+        # Check that the groups in the cache are not returned by convert_to_write
+        # because no real change happened, the values are identical except that
+        # self.env.user.groups_id._ids = (Id1, Id2, ...) whereas
+        # new_disc.participants.groups_id._ids = (NewId(origin=Id1), NewId(origin=Id2), ...)
+        field = new_disc._fields.get("participants")
+        # make sure that there is no inverse field for discussions on res_users,
+        # as the test depends on it
+        self.assertFalse(new_disc.pool.field_inverses[field])
+        convert = field.convert_to_write(new_disc["participants"], new_disc)
+        self.assertEqual(convert, [(6, 0, self.env.user.ids)])
+
     def test_40_new_inherited_fields(self):
         """ Test the behavior of new records with inherited fields. """
         email = self.env['test_new_api.emailmessage'].new({'body': 'XXX'})
@@ -1681,6 +1867,22 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertNotEqual(new_disc.participants, disc.participants)
         self.assertEqual(new_disc.participants._origin, disc.participants)
 
+        # provide many2one field as a dict of values; the value is a new record
+        # with the given 'id' as origin (if given, of course)
+        new_msg = disc.messages.new({
+            'discussion': {'name': disc.name},
+        })
+        self.assertTrue(new_msg.discussion)
+        self.assertFalse(new_msg.discussion.id)
+        self.assertFalse(new_msg.discussion._origin)
+
+        new_msg = disc.messages.new({
+            'discussion': {'name': disc.name, 'id': disc.id},
+        })
+        self.assertTrue(new_msg.discussion)
+        self.assertFalse(new_msg.discussion.id)
+        self.assertEqual(new_msg.discussion._origin, disc)
+
         # check convert_to_write
         tag = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
         rec = self.env['test_new_api.multi'].create({
@@ -1696,7 +1898,7 @@ class TestFields(TransactionCaseWithUserDemo):
         move = self.env['test_new_api.move'].create({
             'line_ids': [Command.create({'quantity': 1}), Command.create({'quantity': 1})],
         })
-        move.flush()
+        self.env.flush_all()
         line = move.line_ids[0]
 
         new_move = move.new(origin=move)
@@ -1718,7 +1920,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ Check command on one2many field on new record. """
         move = self.env['test_new_api.move'].create({})
         line = self.env['test_new_api.move_line'].create({'move_id': move.id, 'quantity': 1})
-        move.flush()
+        self.env.flush_all()
 
         new_move = move.new(origin=move)
         new_line = line.new(origin=line)
@@ -1824,33 +2026,28 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_60_many2many_domain(self):
         """ test the cache consistency of a many2many field with a domain """
-        discussion = self.env.ref('test_new_api.discussion_0')
-        category = self.env['test_new_api.category'].create({'name': "Foo"})
-        discussion.categories = category
-        discussion.flush()
-        discussion.invalidate_cache()
+        tag = self.env['test_new_api.multi.tag'].create({'name': 'bar'})
+        record = self.env['test_new_api.multi'].create({'tags': tag.ids})
+        self.env.flush_all()
+        self.env.invalidate_all()
 
-        # patch the many2many field to give it a domain (this simply avoids
-        # adding yet another test model)
-        field = discussion._fields['categories']
-        self.patch(field, 'domain', [('color', '!=', 42)])
-        self.registry.setup_models(self.cr)
+        self.assertEqual(type(record).tags.domain, [('name', 'ilike', 'a')])
 
-        # the category is in the many2many
-        self.assertIn(category, discussion.categories)
+        # the tag is in the many2many
+        self.assertIn(tag, record.tags)
 
-        # modify the category; it should not longer be in the many2many
-        category.color = 42
-        self.assertNotIn(category, discussion.categories)
+        # modify the tag; it should not longer be in the many2many
+        tag.name = 'foo'
+        self.assertNotIn(tag, record.tags)
 
-        # modify again the category; it should be back in the many2many
-        category.color = 69
-        self.assertIn(category, discussion.categories)
+        # modify again the tag; it should be back in the many2many
+        tag.name = 'baz'
+        self.assertIn(tag, record.tags)
 
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_new_api.discussion_0')
         # See YTI FIXME
-        discussion.invalidate_cache()
+        self.env.invalidate_all()
 
         Message = self.env['test_new_api.message']
         # There must be 3 messages, 0 important
@@ -1883,8 +2080,8 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(demo_discussion.messages, discussion.messages)
 
         # See YTI FIXME
-        discussion.invalidate_cache()
-        demo_discussion.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         # add a message as user demo
         messages = demo_discussion.messages
@@ -1903,9 +2100,9 @@ class TestFields(TransactionCaseWithUserDemo):
         move1 = self.env['test_new_api.move'].create({})
         move2 = self.env['test_new_api.move'].create({})
         line = self.env['test_new_api.move_line'].create({'move_id': move1.id})
-        line.flush()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
-        self.env.cache.invalidate()
         line.with_context(prefetch_fields=False).move_id
 
         # Setting 'move_id' updates the one2many field that is based on it,
@@ -1929,8 +2126,35 @@ class TestFields(TransactionCaseWithUserDemo):
         moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
         self.assertEqual(moves, move2)
 
+    def test_73_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        discussion1, discussion2 = self.env['test_new_api.discussion'].create([
+            {'name': "discussion1"}, {'name': "discussion2"},
+        ])
+        category1, category2 = self.env['test_new_api.category'].create([
+            {'name': "category1"}, {'name': "category2"},
+        ])
+
+        # assumption: category12 and category21 are in different order, but are
+        # in the same order when put in a set()
+        category12 = category1 + category2
+        category21 = category2 + category1
+        self.assertNotEqual(category12.ids, category21.ids)
+        self.assertEqual(list(set(category12.ids)), list(set(category21.ids)))
+
+        # make sure discussion1.categories is in cache; the write() below should
+        # update the cache of discussion1.categories by appending category12.ids
+        discussion1.categories
+        category12.write({'discussions': [Command.link(discussion1.id)]})
+        self.assertEqual(discussion1.categories.ids, category12.ids)
+
+        # make sure discussion2.categories is in cache; the write() below should
+        # update the cache of discussion2.categories by appending category21.ids
+        discussion2.categories
+        category21.write({'discussions': [Command.link(discussion2.id)]})
+        self.assertEqual(discussion2.categories.ids, category21.ids)
+
     def test_80_copy(self):
-        Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
         message = self.env.ref('test_new_api.message_0_0')
         message1 = self.env.ref('test_new_api.message_0_1')
@@ -1940,27 +2164,20 @@ class TestFields(TransactionCaseWithUserDemo):
 
         self.env['res.lang']._activate_lang('fr_FR')
 
-        def count(msg):
-            # return the number of translations of msg.label
-            return Translations.search_count([
-                ('name', '=', 'test_new_api.message,label'),
-                ('res_id', '=', msg.id),
-            ])
-
         # set a translation for message.label
         email.with_context(lang='fr_FR').label = "bonjour"
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
         # setting the parent record should not copy its translations
         email.copy({'message': message1.id})
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
         # setting a one2many should not copy translations on the lines
         discussion.copy({'messages': [Command.set(message1.ids)]})
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
     def test_85_binary_guess_zip(self):
         from odoo.addons.base.tests.test_mimetypes import ZIP
@@ -2042,22 +2259,26 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_93_monetary_related(self):
         """ Check the currency field on related monetary fields. """
         # check base field
-        field = self.env['test_new_api.monetary_base']._fields['amount']
-        self.assertEqual(field.currency_field, 'base_currency_id')
+        model = self.env['test_new_api.monetary_base']
+        field = model._fields['amount']
+        self.assertEqual(field.get_currency_field(model), 'base_currency_id')
 
         # related fields must use the field 'currency_id' or 'x_currency_id'
-        field = self.env['test_new_api.monetary_related']._fields['amount']
-        self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'currency_id')
+        model = self.env['test_new_api.monetary_related']
+        field = model._fields['amount']
+        self.assertEqual(field.related, 'monetary_id.amount')
+        self.assertEqual(field.get_currency_field(model), 'currency_id')
 
-        field = self.env['test_new_api.monetary_custom']._fields['x_amount']
-        self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'x_currency_id')
+        model = self.env['test_new_api.monetary_custom']
+        field = model._fields['x_amount']
+        self.assertEqual(field.related, 'monetary_id.amount')
+        self.assertEqual(field.get_currency_field(model), 'x_currency_id')
 
         # inherited field must use the same field as its parent field
-        field = self.env['test_new_api.monetary_inherits']._fields['amount']
-        self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'base_currency_id')
+        model = self.env['test_new_api.monetary_inherits']
+        field = model._fields['amount']
+        self.assertEqual(field.related, 'monetary_id.amount')
+        self.assertEqual(field.get_currency_field(model), 'base_currency_id')
 
     def test_94_image(self):
         f = io.BytesIO()
@@ -2133,7 +2354,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'name': 'image',
             'image_512': image_w,
         })
-        record.invalidate_cache(fnames=['image_512'], ids=record.ids)
+        record.invalidate_recordset(['image_512'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
@@ -2141,17 +2362,17 @@ class TestFields(TransactionCaseWithUserDemo):
         record.write({
             'image_512': image_h,
         })
-        record.invalidate_cache(fnames=['image_512'], ids=record.ids)
+        record.invalidate_recordset(['image_512'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
 
         # test create inverse no store
-        record = self.env['test_new_api.model_image'].create({
+        record = self.env['test_new_api.model_image'].with_context(image_no_postprocess=True).create({
             'name': 'image',
             'image_256': image_w,
         })
-        record.invalidate_cache(fnames=['image_256'], ids=record.ids)
+        record.invalidate_recordset(['image_256'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
@@ -2159,7 +2380,7 @@ class TestFields(TransactionCaseWithUserDemo):
         record.write({
             'image_256': image_h,
         })
-        record.invalidate_cache(fnames=['image_256'], ids=record.ids)
+        record.invalidate_recordset(['image_256'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
@@ -2201,8 +2422,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # created, flushed, and first read without context
         record = self.env['test_new_api.model_binary'].create({'binary': binary_value})
-        record.flush()
-        record.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2212,8 +2433,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # created, flushed, and first read with bin_size=False
         record_no_bin_size = self.env['test_new_api.model_binary'].with_context(bin_size=False).create({'binary': binary_value})
-        record_no_bin_size.flush()
-        record_no_bin_size.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record = self.env['test_new_api.model_binary'].browse(record.id)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2223,8 +2444,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # created, flushed, and first read with bin_size=True
         record_bin_size = self.env['test_new_api.model_binary'].with_context(bin_size=True).create({'binary': binary_value})
-        record_bin_size.flush()
-        record_bin_size.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record = self.env['test_new_api.model_binary'].browse(record.id)
         record_no_bin_size = record.with_context(bin_size=False)
 
@@ -2236,8 +2457,8 @@ class TestFields(TransactionCaseWithUserDemo):
         record = self.env['test_new_api.model_binary'].create({'binary': binary_value})
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
-        record_bin_size.flush()
-        record_bin_size.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         assertBinaryValue(record, binary_value)
         assertBinaryValue(record_no_bin_size, binary_value)
@@ -2245,8 +2466,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # check computed binary field with arbitrary Python value
         record = self.env['test_new_api.model_binary'].create({})
-        record.flush()
-        record.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2317,6 +2538,90 @@ class TestFields(TransactionCaseWithUserDemo):
         # ensure ir.rule is applied even when reading m2m
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
+
+    def test_98_prefetch_translate(self):
+        Model = self.registry['test_new_api.prefetch']
+
+        # translated '_rec_name' field should be prefetched
+        self.assertTrue(Model.name.prefetch)
+
+        # translated fields should be prefetch=True by default
+        self.assertTrue(Model.description.prefetch)
+        self.assertTrue(Model.html_description.prefetch)
+
+        # parameter 'prefetch' can be always overridden
+        self.assertFalse(Model.rare_description.prefetch)
+        self.assertFalse(Model.rare_html_description.prefetch)
+
+    def test_98_unlink_recompute(self):
+        move = self.env['test_new_api.move'].create({
+            'line_ids': [(0, 0, {'quantity': 42})],
+        })
+        line = move.line_ids
+        self.assertEqual(move.quantity, 42)
+
+        # create an ir.rule for lines that uses move.quantity
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(line._name).id,
+            'domain_force': "[('move_id.quantity', '>=', 0)]",
+        })
+
+        # unlink the line, and check the recomputation of move.quantity
+        user = self.env.ref('base.user_demo')
+        line.with_user(user).unlink()
+        self.assertEqual(move.quantity, 0)
+
+    def test_99_prefetch_group(self):
+        records = self.env['test_new_api.prefetch'].create([{} for _ in range(10)])
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        with self.assertQueries(["""
+            SELECT
+                "test_new_api_prefetch"."id" AS "id",
+                "test_new_api_prefetch"."name"->>'en_US' AS "name",
+                "test_new_api_prefetch"."description"->>'en_US' AS "description",
+                "test_new_api_prefetch"."html_description"->>'en_US' AS "html_description",
+                "test_new_api_prefetch"."create_uid" AS "create_uid",
+                "test_new_api_prefetch"."create_date" AS "create_date",
+                "test_new_api_prefetch"."write_uid" AS "write_uid",
+                "test_new_api_prefetch"."write_date" AS "write_date"
+            FROM "test_new_api_prefetch"
+            WHERE "test_new_api_prefetch".id IN %s
+        """]):
+            records.mapped('name')  # fetch all fields with prefetch=True
+
+        with self.assertQueries(["""
+            SELECT
+                "test_new_api_prefetch"."id" AS "id",
+                "test_new_api_prefetch"."harry" AS "harry",
+                "test_new_api_prefetch"."hermione" AS "hermione",
+                "test_new_api_prefetch"."ron" AS "ron"
+            FROM "test_new_api_prefetch"
+            WHERE "test_new_api_prefetch".id IN %s
+        """]):
+            records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
+            records.mapped('hermione')  # fetched already
+            records.mapped('ron')  # fetched already
+
+        with self.assertQueries(["""
+            SELECT
+                "test_new_api_prefetch"."id" AS "id",
+                "test_new_api_prefetch"."hansel" AS "hansel",
+                "test_new_api_prefetch"."gretel" AS "gretel"
+            FROM "test_new_api_prefetch"
+            WHERE "test_new_api_prefetch".id IN %s
+        """]):
+            records.mapped('hansel')  # fetch all fields with prefetch='Hansel and Gretel'
+            records.mapped('gretel')  # fetched already
+
+        self.env.invalidate_all()
+
+        with self.assertQueryCount(4):
+            records.mapped('name')  # fetch all fields with prefetch=True
+            records.mapped('hansel')  # fetch all fields with prefetch='Hansel and Gretel'
+            records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
+            records.mapped('rare_description')  # fetch that field only
 
 
 class TestX2many(common.TransactionCase):
@@ -2432,12 +2737,12 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
 
         # check read()
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
         self.assertEqual(parent.children_ids, act_children)
         self.assertEqual(parent.all_children_ids, all_children)
         self.assertEqual(parent.active_children_ids, act_children)
 
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
         self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
         self.assertEqual(parent.with_context(active_test=False).all_children_ids, all_children)
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
@@ -2556,12 +2861,12 @@ class TestX2many(common.TransactionCase):
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', [])])
         self.assertEqual(result, recs)
 
-        # these cases are weird
+        # test 'not in' where the lines contain NULL values
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line0).ids)])
-        self.assertEqual(result, recs.browse())
+        self.assertEqual(result, recs - recX)
 
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line0.ids)])
-        self.assertEqual(result, recs.browse())
+        self.assertEqual(result, recs)
 
         # special case: compare with False
         result = recs.search([('id', 'in', recs.ids), ('lines', '=', False)])
@@ -2587,6 +2892,21 @@ class TestX2many(common.TransactionCase):
             'ttype': 'many2many',
             'relation': 'res.country',
             'store': False,
+        })
+        self.assertTrue(field.unlink())
+
+    def test_custom_m2m_related(self):
+        # this checks the ondelete of a related many2many field
+        model_id = self.env['ir.model']._get_id('res.partner')
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'field_description': 'Foo',
+            'model_id': model_id,
+            'ttype': 'many2many',
+            'relation': 'res.partner.category',
+            'related': 'category_id',
+            'readonly': True,
+            'store': True,
         })
         self.assertTrue(field.unlink())
 
@@ -2641,6 +2961,55 @@ class TestHtmlField(common.TransactionCase):
 
         self.assertNotIn('<tr style="', record.comment4, 'Style attr should have been stripped')
 
+    def test_01_sanitize_groups(self):
+        self.assertEqual(self.model._fields['comment5'].sanitize, True)
+        self.assertEqual(self.model._fields['comment5'].sanitize_overridable, True)
+
+        internal_user = self.env['res.users'].create({
+            'name': 'test internal user',
+            'login': 'test_sanitize',
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+        })
+        bypass_user = self.env['res.users'].create({
+            'name': 'test bypass user',
+            'login': 'test_sanitize2',
+            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_sanitize_override')])],
+        })
+        record = self.env['test_new_api.mixed'].create({})
+
+        # 1. Test main use case: prevent restricted user to wipe non restricted
+        #    user previous change
+        val = '<script></script>'
+        write_vals = {'comment5': val}
+
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, '',
+                         "should be sanitized (not in groups)")
+        record.with_user(bypass_user).write(write_vals)
+        self.assertEqual(record.comment5, val,
+                         "should not be sanitized (has group)")
+        with self.assertRaises(UserError):
+            # should crash (not in groups and sanitize would break content of
+            # other user that bypassed the sanitize)
+            record.with_user(internal_user).write(write_vals)
+
+        # 2. Make sure field compare in `_convert` is working as expected with
+        #    special content / format
+        val = '<span  attr1 ="att1"   attr2=\'attr2\'>é@&nbsp;</span><p><span/></p>'
+        write_vals = {'comment5': val}
+        # Once sent through `html_sanitize()` this is becoming:
+        # `<span attr1="att1" attr2="attr2">é@\xa0</span><p><span></span></p>`
+        # Notice those change:
+        # -     `attr1 =` -> `attr1=`    (space before `=`)
+        # -    `   attr2` -> ` attr2`    (multi space -> single space)
+        # -  `=\'attr2\'` -> `="attr2"`  (escaped single quote -> double quote)
+        # -      `&nbsp;` -> `\xa0`
+        # Still, those 2 archs should be considered equals and not raise
+
+        record.with_user(bypass_user).write(write_vals)
+        # Next write shouldn't raise a sanitize right error
+        record.with_user(internal_user).write(write_vals)
+
 
 class TestMagicFields(common.TransactionCase):
 
@@ -2672,7 +3041,6 @@ class TestMagicFields(common.TransactionCase):
 
         # check setup of models in alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items())))
-        registry.model_cache.clear()
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertFalse(field.automatic)
@@ -2680,7 +3048,6 @@ class TestMagicFields(common.TransactionCase):
 
         # check setup of models in reverse alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items(), reverse=True)))
-        registry.model_cache.clear()
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertFalse(field.automatic)
@@ -2847,6 +3214,24 @@ class TestParentStore(common.TransactionCase):
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
 
+    def test_compute_depend_parent_path(self):
+        self.assertEqual(self.cats(7).depth, 3)
+        self.assertEqual(self.cats(8).depth, 3)
+        self.assertEqual(self.cats(9).depth, 3)
+
+        # change parent of node to have 2 parents
+        self.cats(7).parent = self.cats(2)
+        self.assertEqual(self.cats(7).depth, 2)
+
+        # change parent of node to root
+        self.cats(7).parent = False
+        self.assertEqual(self.cats(7).depth, 0)
+
+        # change grand-parent of nodes
+        self.cats(6).parent = self.cats(0)
+        self.assertEqual(self.cats(8).depth, 2)
+        self.assertEqual(self.cats(9).depth, 2)
+
 
 class TestRequiredMany2one(common.TransactionCase):
 
@@ -2862,12 +3247,12 @@ class TestRequiredMany2one(common.TransactionCase):
         Model = self.env['test_new_api.req_m2o']
         field = Model._fields['foo']
 
-        # invalidate registry to redo the setup afterwards
-        self.registry.registry_invalidated = True
+        # clean up registry after this test
+        self.addCleanup(self.registry.reset_changes)
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field._setup_regular_base(Model)
+            field.setup_nonrelated(Model)
 
 
 class TestRequiredMany2oneTransient(common.TransactionCase):
@@ -2884,12 +3269,12 @@ class TestRequiredMany2oneTransient(common.TransactionCase):
         Model = self.env['test_new_api.req_m2o_transient']
         field = Model._fields['foo']
 
-        # invalidate registry to redo the setup afterwards
-        self.registry.registry_invalidated = True
+        # clean up registry after this test
+        self.addCleanup(self.registry.reset_changes)
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field._setup_regular_base(Model)
+            field.setup_nonrelated(Model)
 
 
 @common.tagged('m2oref')
@@ -2902,6 +3287,23 @@ class TestMany2oneReference(common.TransactionCase):
         # fake record to emulate the unlink of a non-existant record
         foo = m.browse(1 if not ids[0] else (ids[0] + 1))
         self.assertTrue(foo.unlink())
+
+    def test_search_inverse_one2many_autojoin(self):
+        record = self.env['test_new_api.inverse_m2o_ref'].create({})
+
+        # the one2many field 'model_ids' should be auto_join=True
+        self.patch(type(record).model_ids, 'auto_join', True)
+
+        # create a reference to record
+        reference = self.env['test_new_api.model_many2one_reference'].create({'res_id': record.id})
+        reference.res_model = record._name
+
+        # the model field 'res_model' is not in database yet
+        self.assertTrue(self.env.cache.has_dirty_fields(reference, [type(reference).res_model]))
+
+        # searching on the one2many should flush the field 'res_model'
+        records = record.search([('model_ids.create_date', '!=', False)])
+        self.assertIn(record, records)
 
 
 @common.tagged('selection_abstract')
@@ -2920,6 +3322,43 @@ class TestSelectionDeleteUpdate(common.TransactionCase):
             ('field_id.name', '=', 'state'),
             ('value', '=', 'confirmed'),
         ], limit=1).unlink()
+
+
+@common.tagged('selection_update_base')
+class TestSelectionUpdates(common.TransactionCase):
+    MODEL_BASE = 'test_new_api.model_selection_base'
+    MODEL_RELATED = 'test_new_api.model_selection_related'
+    MODEL_RELATED_UPDATE = 'test_new_api.model_selection_related_updatable'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Specifying a lang in env/context should not increase query counts
+        # of CRUD operations
+        cls.env = cls.env(context={'lang': 'en-US'})
+
+    def test_selection(self):
+        self.env[self.MODEL_BASE].create({})   # warming up
+        with self.assertQueryCount(1):
+            self.env[self.MODEL_BASE].create({})
+        with self.assertQueryCount(1):
+            record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
+        with self.assertQueryCount(3):  # SELECT, SELECT (related field), UPDATE
+            record.my_selection = 'bar'
+
+    def test_selection_related_readonly(self):
+        related_record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
+        with self.assertQueryCount(2):  # defaults (readonly related field), INSERT
+            record = self.env[self.MODEL_RELATED].create({'selection_id': related_record.id})
+        with self.assertQueryCount(0):
+            record.related_selection = 'bar'
+
+    def test_selection_related(self):
+        related_record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
+        with self.assertQueryCount(2):  # defaults (related field), INSERT
+            record = self.env[self.MODEL_RELATED_UPDATE].create({'selection_id': related_record.id})
+        with self.assertQueryCount(3):
+            record.related_selection = 'bar'
 
 
 @common.tagged('selection_ondelete_base')
@@ -3089,8 +3528,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
         # necessary cleanup for resetting changes in the registry
         for model_name in (self.MODEL_BASE, self.MODEL_REQUIRED):
             Model = self.registry[model_name]
-            self.addCleanup(setattr, Model, '__bases__', Model.__bases__)
-        self.addCleanup(self.registry.model_cache.clear)
+            self.addCleanup(setattr, Model, '_BaseModel__base_classes', Model._BaseModel__base_classes)
 
     def test_ondelete_unexisting_policy(self):
         class Foo(models.Model):
@@ -3114,6 +3552,20 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
             my_selection = fields.Selection(selection_add=[
                 ('corona', "Corona beers suck"),
             ], ondelete={'corona': 'set default'})
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(AssertionError):
+            self.registry.setup_models(self.env.cr)
+
+    def test_ondelete_value_no_valid(self):
+        class Foo(models.Model):
+            _module = None
+            _inherit = self.MODEL_BASE
+
+            my_selection = fields.Selection(selection_add=[
+                ('westvleteren', "Westvleteren beers is overrated"),
+            ], ondelete={'westvleteren': 'set foooo'})
 
         Foo._build_model(self.registry, self.env.cr)
 
@@ -3151,7 +3603,6 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
 class TestFieldParametersValidation(common.TransactionCase):
     def test_invalid_parameter(self):
-        self.addCleanup(self.registry.model_cache.clear)
 
         class Foo(models.Model):
             _module = None
@@ -3171,14 +3622,22 @@ class TestFieldParametersValidation(common.TransactionCase):
         ))
 
 
-def insert(model, *fnames):
+def select(model, *fnames):
+    """ Return the expected query string to SELECT the given columns. """
+    table = model._table
+    terms = ", ".join(
+        f'"{table}"."{fname}" AS "{fname}"'
+        for fname in ['id'] + list(fnames)
+    )
+    return f'SELECT {terms} FROM "{table}" WHERE "{table}".id IN %s'
+
+
+def insert(model, *fnames, rowcount=1):
     """ Return the expected query string to INSERT the given columns. """
     columns = sorted(fnames + ('create_uid', 'create_date', 'write_uid', 'write_date'))
-    return 'INSERT INTO "{}" ("id", {}) VALUES (nextval(%s), {}) RETURNING id'.format(
-        model._table,
-        ", ".join('"{}"'.format(column) for column in columns),
-        ", ".join('%s' for column in columns),
-    )
+    header = ", ".join(f'"{column}"' for column in columns)
+    template = ", ".join("%s" for _index in range(rowcount))
+    return f'INSERT INTO "{model._table}" ({header}) VALUES {template} RETURNING "id"'
 
 
 def update(model, *fnames):
@@ -3275,6 +3734,23 @@ class TestComputeQueries(common.TransactionCase):
         self.assertEqual(record.foo, 'Bar')
         self.assertEqual(record.bar, 'Bar')
 
+    def test_multi_create(self):
+        model = self.env['test_new_api.foo']
+        model.create({})
+
+        with self.assertQueries([insert(model, 'name', 'value1', 'value2', rowcount=4)]):
+            create_values = [
+                {'name': 'Foo1', 'value1': 10},
+                {'name': 'Foo2', 'value2': 12},
+                {'name': 'Foo3'},
+                {},
+            ]
+            records = model.create(create_values)
+        self.assertEqual(records.mapped('name'), ['Foo1', 'Foo2', 'Foo3', False])
+        self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
+        self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
+
+
 class test_shared_cache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
         # Test case: Check that the shared cache is not used if a compute_sudo stored field
@@ -3296,8 +3772,8 @@ class test_shared_cache(TransactionCaseWithUserDemo):
         })
         self.assertEqual(task.total_amount, 1)
 
-        self.env['base'].flush()
-        task.invalidate_cache()  # Start fresh, as it would be the case on 2 different sessions.
+        self.env.flush_all()
+        self.env.invalidate_all()  # Start fresh, as it would be the case on 2 different sessions.
 
         task = task.with_user(self.user_demo)
         with common.Form(task) as task_form:
@@ -3349,3 +3825,343 @@ class TestUnlinkConstraints(common.TransactionCase):
         # should fail since it's at_uninstall=True
         with self.assertRaises(ValueError, msg="You didn't say if you wanted it crudo or cotto..."):
             self.undeletable_foo_uninstall.unlink()
+
+
+@common.tagged('wrong_related_path')
+class TestWrongRelatedError(common.TransactionCase):
+    def test_wrong_related_path(self):
+        class Foo(models.Model):
+            _module = None
+            _name = _description = 'test_new_api.wrong_related_path'
+
+            foo_id = fields.Many2one('test_new_api.foo')
+            foo_non_existing = fields.Char(related='foo_id.non_existing_field')
+        Foo._build_model(self.registry, self.env.cr)
+        self.addCleanup(self.registry.__delitem__, Foo._name)
+
+        errMsg = (
+            "Field non_existing_field referenced in related field definition "
+            "test_new_api.wrong_related_path.foo_non_existing does not exist."
+        )
+        with self.assertRaisesRegex(KeyError, errMsg):
+            self.registry.setup_models(self.env.cr)
+
+
+class TestPrecomputeModel(common.TransactionCase):
+
+    def test_precompute_consistency(self):
+        Model = self.registry['test_new_api.precompute']
+        self.assertEqual(Model.lower.compute, Model.upper.compute)
+        self.assertTrue(Model.lower.precompute)
+        self.assertTrue(Model.upper.precompute)
+
+        # see what happens if not both are precompute
+        self.addCleanup(self.registry.reset_changes)
+        self.patch(Model.upper, 'precompute', False)
+        with self.assertLogs('odoo.modules.registry', level='WARNING'):
+            self.registry.setup_models(self.cr)
+            self.registry.field_computed
+
+    def test_precompute_dependencies_base(self):
+        Model = self.registry['test_new_api.precompute']
+        self.assertTrue(Model.lower.precompute)
+        self.assertTrue(Model.upper.precompute)
+        self.assertTrue(Model.lowup.precompute)
+
+        # see what happens if precompute depends on non-precompute
+        self.addCleanup(self.registry.reset_changes)
+        self.patch(Model.lower, 'precompute', False)
+        self.patch(Model.upper, 'precompute', False)
+        with self.assertWarns(UserWarning):
+            self.registry.setup_models(self.cr)
+            self.registry.field_triggers
+
+    def test_precompute_dependencies_many2one(self):
+        Model = self.registry['test_new_api.precompute']
+        Partner = self.registry['res.partner']
+
+        # Model.commercial_id depends on partner_id.commercial_partner_id, and
+        # precomputation is valid when traversing many2one fields
+        self.assertTrue(Model.commercial_id.precompute)
+        self.assertFalse(Partner.commercial_partner_id.precompute)
+
+    def test_precompute_dependencies_one2many(self):
+        Model = self.registry['test_new_api.precompute']
+        Line = self.registry['test_new_api.precompute.line']
+        self.assertTrue(Model.size.precompute)
+        self.assertTrue(Line.size.precompute)
+
+        # see what happens if precompute depends on non-precompute
+        self.addCleanup(self.registry.reset_changes)
+        # ensure that Model.size.precompute is restored after setup_models()
+        self.patch(Model.size, 'precompute', True)
+        self.patch(Line.size, 'precompute', False)
+        with self.assertWarns(UserWarning):
+            self.registry.setup_models(self.cr)
+            self.registry.field_triggers
+
+
+class TestPrecompute(common.TransactionCase):
+
+    def test_precompute(self):
+        model = self.env['test_new_api.precompute']
+
+        # warmup
+        model.create({'name': 'Foo', 'line_ids': [Command.create({'name': 'bar'})]})
+
+        # the creation makes one insert query for the main record, and one for the line
+        with self.assertQueries([
+            insert(model, 'name', 'lower', 'upper', 'lowup', 'commercial_id', 'size'),
+            insert(model.line_ids, 'parent_id', 'name', 'size'),
+        ]):
+            record = model.create({'name': 'Foo', 'line_ids': [Command.create({'name': 'bar'})]})
+
+        # check the values in the database
+        self.cr.execute(f'SELECT * FROM "{model._table}" WHERE id=%s', [record.id])
+        [row] = self.cr.dictfetchall()
+
+        self.assertEqual(row['name'], 'Foo')
+        self.assertEqual(row['lower'], 'foo')
+        self.assertEqual(row['upper'], 'FOO')
+        self.assertEqual(row['lowup'], 'fooFOO')
+        self.assertEqual(row['size'], 3)
+
+    def test_precompute_combo(self):
+        model = self.env['test_new_api.precompute.combo']
+
+        # warmup
+        model.create({})
+        QUERIES = [insert(model, 'name', 'reader', 'editer', 'setter')]
+
+        # no value at all
+        with self.assertQueries(QUERIES):
+            record = model.create({'name': 'A'})
+
+        self.assertEqual(record.reader, 'A')
+        self.assertEqual(record.editer, 'A')
+        self.assertEqual(record.setter, 'A')
+
+        # default value
+        with self.assertQueries(QUERIES), self.assertLogs('precompute_setter', level='WARNING'):
+            defaults = dict(default_reader='X', default_editer='Y', default_setter='Z')
+            record = model.with_context(**defaults).create({'name': 'A'})
+
+        self.assertEqual(record.reader, 'A')
+        self.assertEqual(record.editer, 'Y')
+        self.assertEqual(record.setter, 'Z')
+
+        # explicit value
+        with self.assertQueries(QUERIES), self.assertLogs('precompute_setter', level='WARNING'):
+            record = model.create({'name': 'A', 'reader': 'X', 'editer': 'Y', 'setter': 'Z'})
+
+        self.assertEqual(record.reader, 'A')
+        self.assertEqual(record.editer, 'Y')
+        self.assertEqual(record.setter, 'Z')
+
+    def test_precompute_editable(self):
+        model = self.env['test_new_api.precompute.editable']
+
+        # no value for bar, no value for baz
+        record = model.create({'foo': 'foo'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'COMPUTED')
+        self.assertEqual(record.baz2, 'COMPUTED')
+
+        # value for bar, no value for baz
+        record = model.create({'foo': 'foo', 'bar': 'bar'})
+        self.assertEqual(record.bar, 'bar')
+        self.assertEqual(record.baz, 'COMPUTED')
+        self.assertEqual(record.baz2, 'COMPUTED')
+
+        # no value for bar, value for baz: the computation of bar should not
+        # recompute baz in memory, in case a third field depends on it
+        record = model.create({'foo': 'foo', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'baz')
+        self.assertEqual(record.baz2, 'baz')
+
+        # value for bar, value for baz
+        record = model.create({'foo': 'foo', 'bar': 'bar', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'bar')
+        self.assertEqual(record.baz, 'baz')
+        self.assertEqual(record.baz2, 'baz')
+
+    def test_precompute_readonly(self):
+        """
+        Ensures
+        - a stored, precomputed, readonly field cannot be altered by the user,
+        - a stored, precomputed, readonly field,
+          but with a states attributes changing the readonly of the field according to the state of the record,
+          can be altered by the user.
+        The `bar` field is store=True, precompute=True, readonly=True
+        The `baz` field is store=True, precompute=True, readonly=True, states={'draft': [('readonly', False)]}
+        """
+        model = self.env['test_new_api.precompute.readonly']
+
+        # no value for bar, no value for baz
+        record = model.create({'foo': 'foo'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'COMPUTED')
+
+        # value for bar, no value for baz
+        # bar is readonly, it must ignore the value for bar in the create values
+        record = model.create({'foo': 'foo', 'bar': 'bar'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'COMPUTED')
+
+        # no value for bar, value for baz
+        # baz is readonly=True but states={'draft': [('readonly', False)]}
+        # the value for baz must be taken into account
+        record = model.create({'foo': 'foo', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'baz')
+
+        # value for bar, value for baz
+        # bar must be ignored
+        # baz must be taken into account
+        record = model.create({'foo': 'foo', 'bar': 'bar', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'baz')
+
+    def test_precompute_required(self):
+        model = self.env['test_new_api.precompute.required']
+
+        field = type(model).name
+        self.assertTrue(field.related)
+        self.assertTrue(field.store)
+        self.assertTrue(field.required)
+
+        partner = self.env['res.partner'].create({'name': 'Foo'})
+
+        # this will crash if field is not precomputed
+        record = model.create({'partner_id': partner.id})
+        self.assertEqual(record.name, 'Foo')
+
+        # check the queries being made
+        QUERIES = [insert(model, 'partner_id', 'name')]
+        with self.assertQueries(QUERIES):
+            record = model.create({'partner_id': partner.id})
+
+    def test_precompute_batch(self):
+        model = self.env['test_new_api.precompute.required']
+
+        partners = self.env['res.partner'].create([
+            {'name': name}
+            for name in "Foo Bar Baz".split()
+        ])
+
+        # warmup
+        model.create({'partner_id': partners[0].id})
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        # check the number of queries: 1 SELECT + 1 INSERT
+        with self.assertQueryCount(2):
+            model.create([{'partner_id': pid} for pid in partners.ids])
+
+    def test_precompute_monetary(self):
+        """Make sure the rounding of monetaries correctly prefetches currency fields"""
+        model = self.env['test_new_api.precompute.monetary']
+        currency = self.env['res.currency']
+
+        # warmup
+        model.create({})
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        fnames = [fname for fname, field in currency._fields.items() if field.prefetch]
+        QUERIES = [
+            select(currency, *fnames),
+            insert(model, 'amount', 'currency_id'),
+            select(model, 'currency_id'),
+        ]
+        with self.assertQueries(QUERIES):
+            model.create({})
+
+
+class TestModifiedPerformance(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Modified = cls.env['test_new_api.modified']
+        cls.ModifiedLine = cls.env['test_new_api.modified.line']
+        cls.modified_a = cls.Modified.create({
+            'name': 'Test',
+        })
+        cls.modified_line_a = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 1,
+        })
+        cls.modified_line_a_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 2,
+            'parent_id': cls.modified_line_a.id,
+        })
+        cls.modified_line_a_child_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 3,
+            'parent_id': cls.modified_line_a_child.id,
+        })
+        cls.env.invalidate_all()  # Clean the cache
+
+    def test_modified_trigger_related(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `modified_name` has a empty cache
+            self.modified_a.name = "Other"
+
+        self.assertEqual(self.modified_line_a.modified_name, 'Other')  # check
+
+    def test_modified_trigger_no_store_compute(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_quantity` has a empty cache
+            self.modified_line_a.quantity = 8
+
+        self.assertEqual(self.modified_a.total_quantity, 18)
+
+    def test_modified_trigger_recursive_empty_cache(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_price` has a empty cache
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price, 7)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a_child.total_price, 6)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+
+    def test_modified_trigger_recursive_fill_cache(self):
+        self.assertEqual(self.modified_line_a.total_price, 6)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 30)
+        with self.assertQueryCount(0, flush=False):
+            # No query because the `modified_line_a.total_price` has fetch every data needed
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)
+
+    def test_modified_trigger_recursive_partial_invalidate(self):
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 25)
+        self.modified_line_a_child_child.invalidate_recordset()
+
+        self.modified_line_a_child.price
+        with self.assertQueries(["""
+        SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
+               "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
+               "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
+               "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
+               "test_new_api_modified_line"."write_date" AS "write_date"
+         FROM "test_new_api_modified_line"
+        WHERE "test_new_api_modified_line".id IN %s
+        """] * 2, flush=False):
+            # Two requests:
+            # - one for fetch modified_line_a_child_child data (invalidate just before)
+            # - one because modified_line_a_child.parent_id (invalidate just before because we invalidate inverse in `_invalidate_cache`,
+            # see TODO) -> We should change that
+            self.modified_line_a_child_child.price = 4
+        self.assertEqual(self.modified_line_a_child_child.total_price_quantity, 20)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)

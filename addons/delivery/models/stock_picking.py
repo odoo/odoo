@@ -11,10 +11,11 @@ from odoo.exceptions import UserError
 class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
-    @api.depends('quant_ids')
+    @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):
         for package in self:
-            weight = 0.0
+            # set initial weight to package type base weight
+            weight = package.package_type_id.base_weight or 0.0
             if self.env.context.get('picking_id'):
                 # TODO: potential bottleneck: N packages = N queries, use groupby ?
                 current_picking_move_line_ids = self.env['stock.move.line'].search([
@@ -36,8 +37,17 @@ class StockQuantPackage(models.Model):
         for package in self:
             package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
-    weight = fields.Float(compute='_compute_weight', help="Total weight of all the products contained in the package.")
+    def _compute_weight_is_kg(self):
+        self.weight_is_kg = False
+        uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        if uom_id == self.env.ref('uom.product_uom_kgm'):
+            self.weight_is_kg = True
+        self.weight_uom_rounding = uom_id.rounding
+
+    weight = fields.Float(compute='_compute_weight', digits='Stock Weight', help="Total weight of all the products contained in the package.")
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    weight_is_kg = fields.Boolean("Technical field indicating whether weight uom is kg or not (i.e. lb)", compute="_compute_weight_is_kg")
+    weight_uom_rounding = fields.Float("Technical field indicating weight's number of decimal places", compute="_compute_weight_is_kg")
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
 
 
@@ -118,15 +128,16 @@ class StockPicking(models.Model):
         except (ValueError, TypeError):
             return False
 
-    @api.depends('move_lines')
+    @api.depends('move_ids')
     def _cal_weight(self):
         for picking in self:
-            picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
+            picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
     def _send_confirmation_email(self):
         for pick in self:
             if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
-                pick.send_to_shipper()
+                pick.sudo().send_to_shipper()
+            pick._check_carrier_details_compliance()
         return super(StockPicking, self)._send_confirmation_email()
 
     def _pre_put_in_pack_hook(self, move_line_ids):
@@ -172,8 +183,15 @@ class StockPicking(models.Model):
             res['exact_price'] = 0.0
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
-            pickings = self.sale_id.picking_ids or self
-            pickings.carrier_tracking_ref = res['tracking_number']
+            previous_pickings = self.env['stock.picking']
+            previous_moves = self.move_ids.move_orig_ids
+            while previous_moves:
+                previous_pickings |= previous_moves.picking_id
+                previous_moves = previous_moves.move_orig_ids
+            without_tracking = previous_pickings.filtered(lambda p: not p.carrier_tracking_ref)
+            (self + without_tracking).carrier_tracking_ref = res['tracking_number']
+            for p in previous_pickings - without_tracking:
+                p.carrier_tracking_ref += "," + res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _(
             "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s",
@@ -184,6 +202,11 @@ class StockPicking(models.Model):
         )
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
+
+    def _check_carrier_details_compliance(self):
+        """Hook to check if a delivery is compliant in regard of the carrier.
+        """
+        return
 
     def print_return_label(self):
         self.ensure_one()
@@ -202,7 +225,7 @@ class StockPicking(models.Model):
                 delivery_line[0].write({
                     'price_unit': carrier_price,
                     # remove the estimated price from the description
-                    'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,
+                    'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
                 })
 
     def open_website_url(self):
@@ -240,9 +263,13 @@ class StockPicking(models.Model):
     def _get_estimated_weight(self):
         self.ensure_one()
         weight = 0.0
-        for move in self.move_lines:
+        for move in self.move_ids:
             weight += move.product_qty * move.product_id.weight
         return weight
+
+    def _should_generate_commercial_invoice(self):
+        self.ensure_one()
+        return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
 
 
 class StockReturnPicking(models.TransientModel):

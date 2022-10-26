@@ -10,10 +10,13 @@
     'depends': ['website_slides', 'website_sale'],
     'installable': True,
     'data': [
+        'data/product_data.xml',
         'report/sale_report_views.xml',
         'views/website_slides_menu_views.xml',
         'views/slide_channel_views.xml',
+        'views/website_sale_templates.xml',
         'views/website_slides_templates.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/product_demo.xml',
@@ -23,6 +26,8 @@
     'assets': {
         'web.assets_frontend': [
             'website_sale_slides/static/src/js/**/*',
-        ],
-    }
+            'website_sale_slides/static/src/xml/**/*',
+        ]
+    },
+    'license': 'LGPL-3',
 }

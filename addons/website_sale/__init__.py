@@ -6,7 +6,7 @@ from . import models
 from . import wizard
 from . import report
 
-def pre_init_hook(cr):
+def _post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     terms_conditions = env['ir.config_parameter'].get_param('account.use_invoice_terms')
     if not terms_conditions:
@@ -14,7 +14,7 @@ def pre_init_hook(cr):
     companies = env['res.company'].search([])
     for company in companies:
         company.terms_type = 'html'
-
+    env['website'].search([]).auth_signup_uninvited = 'b2c'
 
 def uninstall_hook(cr, registry):
     ''' Need to reenable the `product` pricelist multi-company rule that were

@@ -9,13 +9,13 @@ class CrmTeamMember(models.Model):
     _inherit = ['mail.thread']
     _description = 'Sales Team Member'
     _rec_name = 'user_id'
-    _order = 'create_date ASC'
+    _order = 'create_date ASC, id'
     _check_company_auto = True
 
     crm_team_id = fields.Many2one(
-        'crm.team', string='Sales Team',
+        'crm.team', string='Sales Team', group_expand='_read_group_crm_team_id',
         default=False,  # TDE: temporary fix to activate depending computed fields
-        check_company=True, index=True, required=True)
+        check_company=True, index=True, ondelete="cascade", required=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson',  # TDE FIXME check responsible field
         check_company=True, index=True, ondelete='cascade', required=True,
@@ -137,6 +137,9 @@ class CrmTeamMember(models.Model):
                 else:
                     member.member_warning = False
 
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, values_list):
@@ -146,11 +149,17 @@ class CrmTeamMember(models.Model):
             archived (a warning already told it in form view);
           * creating a membership already existing as archived: do nothing as
             people can manage them from specific menu "Members";
+
+        Also remove autofollow on create. No need to follow team members
+        when creating them as chatter is mainly used for information purpose
+        (tracked fields).
         """
         is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
         if not is_membership_multi:
             self._synchronize_memberships(values_list)
-        return super(CrmTeamMember, self).create(values_list)
+        return super(CrmTeamMember, self.with_context(
+            mail_create_nosubscribe=True
+        )).create(values_list)
 
     def write(self, values):
         """ Specific behavior about active. If you change user_id / team_id user
@@ -169,6 +178,13 @@ class CrmTeamMember(models.Model):
                 for membership in self
             ])
         return super(CrmTeamMember, self).write(values)
+
+    @api.model
+    def _read_group_crm_team_id(self, teams, domain, order):
+        """Read group customization in order to display all the teams in
+        Kanban view, even if they are empty.
+        """
+        return self.env['crm.team'].search([], order=order)
 
     def _synchronize_memberships(self, user_team_ids):
         """ Synchronize memberships: archive other memberships.

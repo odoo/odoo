@@ -8,13 +8,13 @@ var _t = core._t;
 
 var Tip = Widget.extend({
     template: "Tip",
-    xmlDependencies: ['/web_tour/static/src/xml/tip.xml'],
     events: {
         click: '_onTipClicked',
         mouseenter: '_onMouseEnter',
         mouseleave: '_onMouseLeave',
         transitionend: '_onTransitionEnd',
     },
+    CENTER_ON_TEXT_TAGS: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
 
     /**
      * @param {Widget} parent
@@ -43,6 +43,7 @@ var Tip = Widget.extend({
                 x: 50,
                 y: 50,
             },
+            content: _t("Click here to go to the next step."),
             scrollContent: _t("Scroll to reach the next step."),
         });
         this.position = {
@@ -57,7 +58,7 @@ var Tip = Widget.extend({
      * Attaches the tip to the provided $anchor and $altAnchor.
      * $altAnchor is an alternative trigger that can consume the step. The tip is
      * however only displayed on the $anchor.
-     * 
+     *
      * Note that the returned promise stays pending if the Tip widget was
      * destroyed in the meantime.
      *
@@ -114,6 +115,10 @@ var Tip = Widget.extend({
         this.$el.toggleClass('d-none', !!this.info.hidden);
         this.el.classList.add('o_tooltip_visible');
         core.bus.on("resize", this, _.debounce(function () {
+            if (this.isDestroyed()) {
+                // Because of the debounce, destroy() might have been called in the meantime.
+                return;
+            }
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             } else {
@@ -170,7 +175,19 @@ var Tip = Widget.extend({
             // The `start` method is calling _updatePosition too anyway.
             return;
         }
+        this._delegateEvents();
         this._updatePosition(true);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean} true if tip is visible
+     */
+    isShown() {
+        return this.el && !this.info.hidden;
     },
 
     //--------------------------------------------------------------------------
@@ -201,6 +218,11 @@ var Tip = Widget.extend({
      */
     _updatePosition: function (forceReposition = false) {
         if (this.info.hidden) {
+            return;
+        }
+        if (this.isDestroyed()) {
+            // TODO This should not be needed if the chain of events leading
+            // here was fully cancelled by destroy().
             return;
         }
         let halfHeight = 0;
@@ -281,6 +303,7 @@ var Tip = Widget.extend({
         } while (
             $location.hasClass('dropdown-menu') ||
             $location.hasClass('o_notebook_headers') ||
+            $location.hasClass('o_forbidden_tooltip_parent') ||
             (
                 (o === "visible" || o.includes("hidden")) && // Possible case where the overflow = "hidden auto"
                 p !== "fixed" &&
@@ -315,8 +338,40 @@ var Tip = Widget.extend({
                 of: this.$anchor,
                 collision: "none",
                 using: props => {
-                    this.el.style.setProperty('top', `${props.top}px`, 'important');
-                    this.el.style.setProperty('left', `${props.left}px`, 'important');
+                    const {top} = props;
+                    let {left} = props;
+                    const anchorEl = this.$anchor[0];
+                    if (this.CENTER_ON_TEXT_TAGS.includes(anchorEl.nodeName) && anchorEl.hasChildNodes()) {
+                        const textContainerWidth = anchorEl.getBoundingClientRect().width;
+                        const textNode = anchorEl.firstChild;
+                        const range = document.createRange();
+                        range.selectNodeContents(textNode);
+                        const textWidth = range.getBoundingClientRect().width;
+
+                        const alignment = window.getComputedStyle(anchorEl).getPropertyValue('text-align');
+                        const posVertical = (this.info.position === 'top' || this.info.position === 'bottom');
+                        if (alignment === 'left') {
+                            if (posVertical) {
+                                left = left - textContainerWidth / 2 + textWidth / 2;
+                            } else if (this.info.position === 'right') {
+                                left = left - textContainerWidth + textWidth;
+                            }
+                        } else if (alignment === 'right') {
+                            if (posVertical) {
+                                left = left + textContainerWidth / 2 - textWidth / 2;
+                            } else if (this.info.position === 'left') {
+                                left = left + textContainerWidth - textWidth;
+                            }
+                        } else if (alignment === 'center') {
+                            if (this.info.position === 'left') {
+                                left = left + textContainerWidth / 2 - textWidth / 2;
+                            } else if (this.info.position === 'right') {
+                                left = left - textContainerWidth / 2 + textWidth / 2;
+                            }
+                        }
+                    }
+                    this.el.style.setProperty('top', `${top}px`, 'important');
+                    this.el.style.setProperty('left', `${left}px`, 'important');
                 },
             });
         } else {
@@ -395,6 +450,10 @@ var Tip = Widget.extend({
         }
         $consumeEventAnchors.on(consumeEvent + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
+                if (this.info.consumeVisibleOnly && !this.isShown()) {
+                    // Do not consume non-displayed tips.
+                    return;
+                }
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
             }
@@ -599,6 +658,9 @@ Tip.getConsumeEventType = function ($element, run) {
         // ui-sortable parent, and if so, we conclude that its event type is 'sort'
         if ($element.closest('.ui-sortable').length) {
             return 'sort';
+        }
+        if (run.indexOf("drag_and_drop_native") === 0 && $element.hasClass('o_record_draggable') || $element.closest('.o_record_draggable').length) {
+            return 'mousedown';
         }
     }
     return "click";

@@ -34,7 +34,13 @@
             <field name="res_model">res.partner.title</field>
             <field name="domain">[]</field>
             <field name="context">{}</field>
-            <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Title
+                </p><p>
+                    Manage Contact Titles as well as their abbreviations (e.g. "Mr.", "Mrs.", etc).
+                </p>
+            </field>
         </record>
 
         <!-- PARTNER TREE VIEW + MUTI_EDIT: VISIBLE FIELDS WITH ONCHANGE ON BASE/PARTNER
@@ -77,17 +83,19 @@
                 <form string="Contact">
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
-                            <field name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact'),('is_company','=', True)], 'invisible': [('is_company','=', False)]}"/>
+                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'),('is_company','=', False)], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
-                            placeholder="e.g. Lumber Inc"
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
+                            placeholder="Company Name..."
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
                             attrs="{'invisible': [('is_company','=', True)]}"/>
                     </div>
                     <group>
@@ -108,7 +116,8 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Partner">
-                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}' readonly="1"/>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -130,7 +139,7 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
-                            <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                            <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                         </group>
                         <group>
                         </group>
@@ -148,25 +157,30 @@
                 <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_vat_partner_id', '=', False)]}">
                   A partner with the same <span><span class="o_vat_label">Tax ID</span></span> already exists (<field name="same_vat_partner_id"/>), are you sure to create a new one?
                 </div>
+                <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_company_registry_partner_id', '=', False)]}">
+                  A partner with the same <span><span class="o_vat_label">Company Registry</span></span> already exists (<field name="same_company_registry_partner_id"/>), are you sure to create a new one?
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
-                    <div class="oe_title">
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
+                    <div class="oe_title mb24">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="active" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="country_code" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
-                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
-                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
+                            <field id="individual" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'), ('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
                                 widget="res_partner_many2one"
-                                placeholder="e.g. Lumber Inc"
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
+                                placeholder="Company Name..."
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
                                 <button name="create_company" icon="fa-plus-square" string="Create company"
@@ -177,14 +191,9 @@
 
                     <group>
                         <group>
-                            <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'other')]}">Other Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'private')]}">Private Address</b>
-                                <b attrs="{'invisible': [('type', '!=', False)]}">Address</b>
+                                <field name="type" attrs="{'invisible': [('is_company','=', True)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="fw-bold"/>
+                                <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"
@@ -197,8 +206,10 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <div name="partner_address_country" class="d-flex justify-content-between">
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                        attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                </div>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
                         </group>
@@ -209,29 +220,19 @@
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                            <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="active_lang_count" invisible="1"/>
-                            <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
-                                <field name="lang"/>
-                                <button
-                                    type="action"
-                                    name="%(base.res_lang_act_window)d"
-                                    class="btn-sm btn-link mb4 fa fa-globe"
-                                    aria-label="More languages"
-                                    groups="base.group_system"
-                                    title="More languages"
-                                />
-                            </div>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                            <field name="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"
+                                   placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" name="contact_addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': None, 'default_user_id': user_id, 'default_type': 'other'}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
                                 <kanban>
                                     <field name="id"/>
                                     <field name="color"/>
@@ -251,6 +252,7 @@
                                     <field name="mobile"/>
                                     <field name="state_id"/>
                                     <field name="image_128"/>
+                                    <field name="avatar_128"/>
                                     <field name="lang"/>
                                     <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment"/>
@@ -260,15 +262,7 @@
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <div class="o_kanban_image">
-                                                    <img alt="Contact image" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)"/>
-                                                    <t t-if="!record.image_128.raw_value">
-                                                        <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
-                                                        <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
-                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
-                                                            <img alt="Logo" t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
-                                                            <img alt="Avatar" t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar_grey.png"'/>
-                                                        </t>
-                                                    </t>
+                                                    <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                                                 </div>
                                                 <div class="oe_kanban_details">
                                                     <field name="name"/>
@@ -291,14 +285,28 @@
                                 </kanban>
                                 <form string="Contact / Address">
                                     <sheet>
-                                        <!-- parent_id and type fields needed in attrs in base_address_city module which overwrites
-                                        _fields_view_get() of partner. It would be better to put those fields there but the web client
-                                        dosen't support when a field is displayed several times in the same view.-->
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
+                                        <div class="text-muted oe_edit_only">
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'contact')]}">
+                                                <span>Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'invoice')]}">
+                                                <span>Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'delivery')]}">
+                                                <span>Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'private')]}">
+                                                <span>Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'other')]}">
+                                                <span>Other address for the company (e.g. subsidiary, ...)</span>
+                                            </p>
+                                        </div>
                                         <hr/>
-                                        <group col="12">
-                                            <group colspan="5">
+                                        <group>
+                                            <group>
                                                 <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                                                 <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
                                                     attrs="{'invisible': [('type','!=', 'contact')]}"/>
@@ -315,17 +323,16 @@
                                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                                     </div>
                                                 </div>
-                                                <field name="comment" placeholder="Internal notes..."/>
                                             </group>
-                                            <group colspan="5">
+                                            <group>
                                                 <field name="email" widget="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
                                                 <field name="company_id" invisible="1"/>
                                             </group>
-                                            <group colspan="1">
-                                                <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'image_preview': 'image_128'}"/>
-                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="comment" placeholder="Internal notes..." nolabel="1" colspan="2"/>
                                         </group>
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
@@ -336,11 +343,12 @@
                         <page name='sales_purchases' string="Sales &amp; Purchase">
                             <group name="container_row_2">
                                 <group string="Sales" name="sale" priority="1">
-                                    <field name="user_id" domain="[('share', '=', False)]"/>
+                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                 </group>
                                 <group string="Purchase" name="purchase" priority="2">
                                 </group>
                                 <group name="misc" string="Misc">
+                                    <field name="company_registry" attrs="{'invisible': [('parent_id','!=',False)]}"/>
                                     <field name="ref" string="Reference"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" force_save="1"/>
                                     <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>
@@ -348,7 +356,7 @@
                             </group>
                         </page>
                         <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
+                            <field name="comment" placeholder="Internal notes..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -367,7 +375,7 @@
                     <sheet>
                         <field name="type" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
-                        <label for="name" class="oe_editonly"/>
+                        <label for="name" class="oe_edit_only"/>
                         <field name="name" required="0"/>
                         <group>
                             <group>
@@ -393,6 +401,7 @@
                         <group string="Bank Accounts">
                             <field name="bank_ids">
                                 <tree editable="bottom">
+                                    <field name="bank_id"/>
                                     <field name="acc_number"/>
                                     <field name="acc_holder_name" invisible="1"/>
                                 </tree>
@@ -409,7 +418,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                     <field name="name"
-                        filter_domain="['|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self)]"/>
+                       filter_domain="['|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
                     <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
                     <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]"/>
@@ -453,41 +462,45 @@
                     <field name="mobile"/>
                     <field name="state_id"/>
                     <field name="category_id"/>
-                    <field name="image_128"/>
+                    <field name="avatar_128"/>
                     <field name="type"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
                                 <t t-if="!record.is_company.raw_value">
-                                    <t t-if="record.type.raw_value === 'delivery'" t-set="placeholder" t-value="'/base/static/img/truck.png'"/>
-                                    <t t-elif="record.type.raw_value === 'invoice'" t-set="placeholder" t-value="'/base/static/img/money.png'"/>
-                                    <t t-else="" t-set="placeholder" t-value="'/base/static/img/avatar_grey.png'"/>
-                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_128', record.id.raw_value,  placeholder)}')">
-                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_128', record.parent_id.raw_value)"/>
+                                    <t t-set="background_image" t-value="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{background_image}')">
+                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
                                     </div>
-                                    <div class="o_kanban_image d-md-none" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_128', record.id.raw_value,  placeholder)}')">
-                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_128', record.parent_id.raw_value)"/>
+                                    <div class="o_kanban_image d-md-none" t-attf-style="background-image: url(#{background_image})">
+                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'avatar_128', record.parent_id.raw_value)"/>
                                     </div>
                                 </t>
                                 <t t-else="">
-                                    <t t-set="placeholder" t-value="'/base/static/img/company_image.png'"/>
-                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'image_128', record.id.raw_value, placeholder)})" role="img"/>
+                                    <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)})" role="img"/>
                                 </t>
-                                <div class="oe_kanban_details d-flex flex-column">
-                                    <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
-                                    <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
-                                    <ul>
-                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
-                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
-                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                        <li t-if="record.city.raw_value or record.country_id.raw_value">
-                                            <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
-                                            <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
-                                        </li>
-                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
-                                    </ul>
-                                    <div class="o_row">
-                                        <span class="oe_kanban_partner_links"/>
+                                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                                    <span class="bg-danger">Archived</span>
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column justify-content-between">
+                                    <div>
+                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                                        <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                        <ul>
+                                            <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                            <li t-elif="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                            <li t-elif="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                            <li t-if="record.city.raw_value or record.country_id.raw_value">
+                                                <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
+                                                <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
+                                            </li>
+                                            <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                        </ul>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left"/>
+                                        <div class="oe_kanban_bottom_right"/>
                                     </div>
                                 </div>
                             </div>
@@ -506,9 +519,9 @@
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new customer in your address book
+                Create a Contact in your address book
               </p><p>
-                Odoo helps you easily track all activities related to a customer.
+                Odoo helps you track all activities related to your contacts.
               </p>
             </field>
         </record>
@@ -609,9 +622,10 @@
                 <form string="Contact Tag">
                     <sheet>
                         <group col="4">
-                            <field name="name"/>
-                            <field name="active" widget="boolean_toggle"/>
+                            <field name="name" placeholder='e.g. "Consulting Services"'/>
+                            <field name="color" widget="color_picker"/>
                             <field name="parent_id"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
                     </sheet>
                 </form>
@@ -625,6 +639,7 @@
             <field name="arch" type="xml">
                 <tree string="Contact Tags">
                     <field name="display_name"/>
+                    <field name="color" widget="color_picker"/>
                 </tree>
             </field>
         </record>
@@ -649,9 +664,9 @@
             <field name="search_view_id" ref="res_partner_category_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new contact tag
+                Create a Contact Tag
               </p><p>
-                Manage contact tags to better classify them for tracking and analysis purposes.
+                Assign tags to your contacts to organize, filter and track them.
               </p>
             </field>
         </record>
@@ -707,9 +722,9 @@
             <field name="search_view_id" ref="res_partner_industry_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new industry
+                Create an Industry
               </p><p>
-                Manage industries to better classify partners for tracking and analysis purposes.
+                Specify industries to classify your contacts and draw up reports.
               </p>
             </field>
         </record>

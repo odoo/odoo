@@ -145,8 +145,8 @@ class TestTrackSuggestions(TestEventOnlineCommon):
         }])
 
         emp_visitor = self.env['website.visitor'].create({
-            'name': 'Visitor',
-            'partner_id': self.user_employee.partner_id.id
+            'partner_id': self.user_employee.partner_id.id,
+            'access_token': self.user_employee.partner_id.id,
         })
         visitor_track = self.env['event.track.visitor'].create({
             'visitor_id': emp_visitor.id,
@@ -188,7 +188,7 @@ class TestTrackSuggestions(TestEventOnlineCommon):
 
             # remove keynote default, now based on tags
             track_5.write({'wishlisted_by_default': False})
-            # all_suggestions.invalidate_cache(fnames=['is_reminder_on'])
+            # all_suggestions.invalidate_model(['is_reminder_on'])
             track_suggestion = current_track._get_track_suggestions(limit=1)
             self.assertEqual(
                 track_suggestion, track_4,

@@ -18,12 +18,14 @@ class PurchaseOrder(models.Model):
     @api.depends('order_line.move_dest_ids.group_id.mrp_production_ids')
     def _compute_mrp_production_count(self):
         for purchase in self:
-            purchase.mrp_production_count = len(purchase.order_line.move_dest_ids.group_id.mrp_production_ids |
-                                                purchase.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids)
+            purchase.mrp_production_count = len(purchase._get_mrp_productions())
+
+    def _get_mrp_productions(self, **kwargs):
+        return self.order_line.move_dest_ids.group_id.mrp_production_ids | self.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids
 
     def action_view_mrp_productions(self):
         self.ensure_one()
-        mrp_production_ids = (self.order_line.move_dest_ids.group_id.mrp_production_ids | self.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids).ids 
+        mrp_production_ids = self._get_mrp_productions().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -70,3 +72,14 @@ class PurchaseOrderLine(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]
+
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        # Specific case when we change the qty on a PO for a kit product.
+        # We don't try to be too smart and keep a simple approach: we compare the quantity before
+        # and after update, and return the difference. We don't take into account what was already
+        # sent, or any other exceptional case.
+        bom = self.env['mrp.bom'].sudo()._bom_find(self.product_id, bom_type='phantom')[self.product_id]
+        if bom and 'previous_product_qty' in self.env.context:
+            return self.env.context['previous_product_qty'].get(self.id, 0.0)
+        return super()._get_qty_procurement()

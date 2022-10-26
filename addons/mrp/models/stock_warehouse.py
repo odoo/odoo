@@ -36,7 +36,7 @@ class StockWarehouse(models.Model):
         the components from the Stock to Input location first, and then\
         transfer it to the Production location.")
 
-    pbm_route_id = fields.Many2one('stock.location.route', 'Picking Before Manufacturing Route', ondelete='restrict')
+    pbm_route_id = fields.Many2one('stock.route', 'Picking Before Manufacturing Route', ondelete='restrict')
 
     pbm_loc_id = fields.Many2one('stock.location', 'Picking before Manufacturing Location', check_company=True)
     sam_loc_id = fields.Many2one('stock.location', 'Stock after Manufacturing Location', check_company=True)
@@ -107,7 +107,7 @@ class StockWarehouse(models.Model):
         rules = super(StockWarehouse, self)._get_global_route_rules_values()
         location_src = self.manufacture_steps == 'mrp_one_step' and self.lot_stock_id or self.pbm_loc_id
         production_location = self._get_production_location()
-        location_id = self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id
+        location_dest_id = self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id
         rules.update({
             'manufacture_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
@@ -120,8 +120,8 @@ class StockWarehouse(models.Model):
                 },
                 'update_values': {
                     'active': self.manufacture_to_resupply,
-                    'name': self._format_rulename(location_id, False, 'Production'),
-                    'location_id': location_id.id,
+                    'name': self._format_rulename(location_dest_id, False, 'Production'),
+                    'location_dest_id': location_dest_id.id,
                     'propagate_cancel': self.manufacture_steps == 'pbm_sam'
                 },
             },
@@ -133,7 +133,7 @@ class StockWarehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
-                    'location_id': production_location.id,
+                    'location_dest_id': production_location.id,
                     'location_src_id': location_src.id,
                     'picking_type_id': self.manu_type_id.id
                 },
@@ -151,7 +151,7 @@ class StockWarehouse(models.Model):
                     'auto': 'manual',
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
                     'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
-                    'location_id': self.pbm_loc_id.id,
+                    'location_dest_id': self.pbm_loc_id.id,
                     'location_src_id': self.lot_stock_id.id,
                     'picking_type_id': self.pbm_type_id.id
                 },
@@ -174,7 +174,7 @@ class StockWarehouse(models.Model):
                     'auto': 'manual',
                     'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id,
                     'name': self._format_rulename(self.sam_loc_id, self.lot_stock_id, False),
-                    'location_id': self.lot_stock_id.id,
+                    'location_dest_id': self.lot_stock_id.id,
                     'location_src_id': self.sam_loc_id.id,
                     'picking_type_id': self.sam_type_id.id
                 },
@@ -209,8 +209,8 @@ class StockWarehouse(models.Model):
         })
         return values
 
-    def _get_sequence_values(self):
-        values = super(StockWarehouse, self)._get_sequence_values()
+    def _get_sequence_values(self, name=False, code=False):
+        values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
             'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
             'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
@@ -259,15 +259,15 @@ class StockWarehouse(models.Model):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
         data.update({
             'pbm_type_id': {
-                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam'),
+                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam') and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-PC",
             },
             'sam_type_id': {
-                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam',
+                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam' and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-SFP",
             },
             'manu_type_id': {
-                'active': self.manufacture_to_resupply,
+                'active': self.manufacture_to_resupply and self.active,
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
                 'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id.id or self.lot_stock_id.id,
             },

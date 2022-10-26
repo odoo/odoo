@@ -1,11 +1,8 @@
-odoo.define('website_slides.channel_tag.add', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var publicWidget = require('web.public.widget');
-
-var _t = core._t;
+import { _t } from 'web.core';
+import Dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
 
 var TagCourseDialog = Dialog.extend({
     template: 'website.slides.tag.add',
@@ -28,7 +25,7 @@ var TagCourseDialog = Dialog.extend({
                 classes: 'btn-primary',
                 click: this._onClickFormSubmit.bind(this)
             }, {
-                text: _t("Discard"),
+                text: _t("Back"),
                 click: this._onClickClose.bind(this)
             }]
         });
@@ -204,7 +201,7 @@ var TagCourseDialog = Dialog.extend({
         var $tagInput = this.$('#tag_id');
         if ($tagInput.length !== 0){
             var $tagSelect2Container = $tagInput
-                .closest('.form-group')
+                .parent()
                 .find('.select2-container');
             $tagSelect2Container.removeClass('is-invalid is-valid');
             if ($tagInput.is(':invalid')) {
@@ -214,7 +211,7 @@ var TagCourseDialog = Dialog.extend({
                 var $tagGroupInput = this.$('#tag_group_id');
                 if ($tagGroupInput.length !== 0){
                     var $tagGroupSelect2Container = $tagGroupInput
-                        .closest('.form-group')
+                        .parent()
                         .find('.select2-container');
                     if ($tagGroupInput.is(':invalid')) {
                         $tagGroupSelect2Container.addClass('is-invalid');
@@ -247,7 +244,7 @@ var TagCourseDialog = Dialog.extend({
      */
     _hideTagGroup: function () {
         var $tag_group_id = this.$('#tag_group_id');
-        var $tagGroupSelect2Container = $tag_group_id.closest('.form-group');
+        var $tagGroupSelect2Container = $tag_group_id.parent();
         $tagGroupSelect2Container.hide();
         $tag_group_id.removeAttr("required");
         $tag_group_id.select2("val", "");
@@ -262,7 +259,7 @@ var TagCourseDialog = Dialog.extend({
      */
     _showTagGroup: function () {
         var $tag_group_id = this.$('#tag_group_id');
-        var $tagGroupSelect2Container = $tag_group_id.closest('.form-group');
+        var $tagGroupSelect2Container = $tag_group_id.parent();
         $tagGroupSelect2Container.show();
         $tag_group_id.attr("required", "required");
     },
@@ -340,7 +337,6 @@ var TagCourseDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
     selector: '.o_wslides_js_channel_tag_add',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_channel_tag.xml'],
     events: {
         'click': '_onAddTagClick',
     },
@@ -369,9 +365,7 @@ publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     TagCourseDialog: TagCourseDialog,
     websiteSlidesTag: publicWidget.registry.websiteSlidesTag
 };
-
-});

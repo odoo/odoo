@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=bad-whitespace
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 from odoo.exceptions import UserError
 
+from collections import defaultdict
 from unittest.mock import patch
 from datetime import timedelta
 from freezegun import freeze_time
+
 
 
 @tagged('post_install', '-at_install')
@@ -37,7 +40,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 1000.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.product_line_vals_2 = {
             'name': cls.product_b.name,
@@ -57,7 +59,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 200.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.tax_line_vals_1 = {
             'name': cls.tax_sale_a.name,
@@ -65,11 +66,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'account_id': cls.company_data['default_account_tax_sale'].id,
             'partner_id': cls.partner_a.id,
             'product_uom_id': False,
-            'quantity': 1.0,
+            'quantity': False,
             'discount': 0.0,
-            'price_unit': 180.0,
-            'price_subtotal': 180.0,
-            'price_total': 180.0,
+            'price_unit': 0.0,
+            'price_subtotal': 0.0,
+            'price_total': 0.0,
             'tax_ids': [],
             'tax_line_id': cls.tax_sale_a.id,
             'currency_id': cls.company_data['currency'].id,
@@ -77,7 +78,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 180.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.tax_line_vals_2 = {
             'name': cls.tax_sale_b.name,
@@ -85,11 +85,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'account_id': cls.company_data['default_account_tax_sale'].id,
             'partner_id': cls.partner_a.id,
             'product_uom_id': False,
-            'quantity': 1.0,
+            'quantity': False,
             'discount': 0.0,
-            'price_unit': 30.0,
-            'price_subtotal': 30.0,
-            'price_total': 30.0,
+            'price_unit': 0.0,
+            'price_subtotal': 0.0,
+            'price_total': 0.0,
             'tax_ids': [],
             'tax_line_id': cls.tax_sale_b.id,
             'currency_id': cls.company_data['currency'].id,
@@ -97,7 +97,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 30.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.term_line_vals_1 = {
             'name': '',
@@ -105,11 +104,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'account_id': cls.company_data['default_account_receivable'].id,
             'partner_id': cls.partner_a.id,
             'product_uom_id': False,
-            'quantity': 1.0,
+            'quantity': False,
             'discount': 0.0,
-            'price_unit': -1410.0,
-            'price_subtotal': -1410.0,
-            'price_total': -1410.0,
+            'price_unit': 0.0,
+            'price_subtotal': 0.0,
+            'price_total': 0.0,
             'tax_ids': [],
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
@@ -117,7 +116,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 1410.0,
             'credit': 0.0,
             'date_maturity': fields.Date.from_string('2019-01-01'),
-            'tax_exigible': True,
         }
         cls.move_vals = {
             'partner_id': cls.partner_a.id,
@@ -131,6 +129,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 210.0,
             'amount_total': 1410.0,
         }
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
     def setUp(self):
         super(TestAccountMoveOutInvoiceOnchanges, self).setUp()
@@ -141,6 +140,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.tax_line_vals_2,
             self.term_line_vals_1,
         ], self.move_vals)
+
+    @freeze_time('2020-01-15')
+    def test_out_invoice_onchange_invoice_date(self):
+        for tax_date, invoice_date, accounting_date in [
+            ('2019-03-31', '2019-05-12', '2019-05-12'),
+            ('2019-03-31', '2019-02-10', '2019-12-31'),
+            ('2019-05-31', '2019-06-15', '2019-06-15'),
+        ]:
+            self.invoice.company_id.tax_lock_date = tax_date
+            invoice = self.invoice.copy()
+            with Form(invoice) as move_form:
+                move_form.invoice_date = invoice_date
+            invoice.action_post()
+            self.assertEqual(invoice.date, fields.Date.to_date(accounting_date))
 
     def test_out_invoice_line_onchange_product_1(self):
         move_form = Form(self.invoice)
@@ -165,25 +178,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.product_line_vals_2,
             {
                 **self.tax_line_vals_1,
-                'price_unit': 60.0,
-                'price_subtotal': 60.0,
-                'price_total': 60.0,
                 'amount_currency': -60.0,
                 'credit': 60.0,
             },
             {
                 **self.tax_line_vals_2,
-                'price_unit': 60.0,
-                'price_subtotal': 60.0,
-                'price_total': 60.0,
                 'amount_currency': -60.0,
                 'credit': 60.0,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': -520.0,
-                'price_subtotal': -520.0,
-                'price_total': -520.0,
                 'amount_currency': 520.0,
                 'debit': 520.0,
             },
@@ -254,9 +258,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'price_unit': 30.0,
-                'price_subtotal': 30.0,
-                'price_total': 30.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_exclude.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -266,9 +270,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'price_unit': -230.0,
-                'price_subtotal': -230.0,
-                'price_total': -230.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.currency_data['currency'].id,
@@ -306,9 +310,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 'product_id': False,
                 'product_uom_id': False,
-                'price_unit': 360.0,
-                'price_subtotal': 360.0,
-                'price_total': 360.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_exclude.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -319,9 +323,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 'product_id': False,
                 'product_uom_id': False,
-                'price_unit': -2760.0,
-                'price_subtotal': -2760.0,
-                'price_total': -2760.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.currency_data['currency'].id,
@@ -399,9 +403,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'price_unit': 40.0,
-                'price_subtotal': 40.0,
-                'price_total': 40.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_include_2.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -411,9 +415,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 'product_id': False,
-                'price_unit': -240.0,
-                'price_subtotal': -240.0,
-                'price_total': -240.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.currency_data['currency'].id,
@@ -451,9 +455,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 'product_id': False,
                 'product_uom_id': False,
-                'price_unit': 480.0,
-                'price_subtotal': 480.0,
-                'price_total': 480.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_include_2.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -464,9 +468,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 'product_id': False,
                 'product_uom_id': False,
-                'price_unit': -2880.0,
-                'price_subtotal': -2880.0,
-                'price_total': -2880.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.currency_data['currency'].id,
@@ -506,9 +510,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], self.move_vals)
 
         move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
+        with move_form.invoice_line_ids.edit(0) as line_form:
             # Reset field except the discount that becomes 100%.
-            # /!\ The modification is made on the accounting tab.
             line_form.quantity = 1
             line_form.discount = 100
             line_form.price_unit = 1000
@@ -526,18 +529,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.product_line_vals_2,
             {
                 **self.tax_line_vals_1,
-                'price_unit': 30.0,
-                'price_subtotal': 30.0,
-                'price_total': 30.0,
                 'amount_currency': -30.0,
                 'credit': 30.0,
             },
             self.tax_line_vals_2,
             {
                 **self.term_line_vals_1,
-                'price_unit': -260.0,
-                'price_subtotal': -260.0,
-                'price_total': -260.0,
                 'amount_currency': 260.0,
                 'debit': 260.0,
             },
@@ -546,72 +543,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_untaxed': 200.0,
             'amount_tax': 60.0,
             'amount_total': 260.0,
-        })
-
-    def test_out_invoice_line_onchange_accounting_fields_1(self):
-        move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
-            # Custom credit on the first product line.
-            line_form.credit = 3000
-        with move_form.line_ids.edit(3) as line_form:
-            # Custom debit on the second product line. Credit should be reset by onchange.
-            # /!\ It's a negative line.
-            line_form.debit = 500
-        with move_form.line_ids.edit(0) as line_form:
-            # Custom credit on the first tax line.
-            line_form.credit = 800
-        with move_form.line_ids.edit(4) as line_form:
-            # Custom credit on the second tax line.
-            line_form.credit = 250
-        move_form.save()
-
-        self.assertInvoiceValues(self.invoice, [
-            {
-                **self.product_line_vals_1,
-                'price_unit': 3000.0,
-                'price_subtotal': 3000.0,
-                'price_total': 3450.0,
-                'amount_currency': -3000.0,
-                'credit': 3000.0,
-            },
-            {
-                **self.product_line_vals_2,
-                'price_unit': -500.0,
-                'price_subtotal': -500.0,
-                'price_total': -650.0,
-                'amount_currency': 500.0,
-                'debit': 500.0,
-                'credit': 0.0,
-            },
-            {
-                **self.tax_line_vals_1,
-                'price_unit': 800.0,
-                'price_subtotal': 800.0,
-                'price_total': 800.0,
-                'amount_currency': -800.0,
-                'credit': 800.0,
-            },
-            {
-                **self.tax_line_vals_2,
-                'price_unit': 250.0,
-                'price_subtotal': 250.0,
-                'price_total': 250.0,
-                'amount_currency': -250.0,
-                'credit': 250.0,
-            },
-            {
-                **self.term_line_vals_1,
-                'price_unit': -3550.0,
-                'price_subtotal': -3550.0,
-                'price_total': -3550.0,
-                'amount_currency': 3550.0,
-                'debit': 3550.0,
-            },
-        ], {
-            **self.move_vals,
-            'amount_untaxed': 2500.0,
-            'amount_tax': 1050.0,
-            'amount_total': 3550.0,
         })
 
     def test_out_invoice_line_onchange_partner_1(self):
@@ -642,9 +573,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'turlututu',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
-                'price_unit': -423.0,
-                'price_subtotal': -423.0,
-                'price_total': -423.0,
                 'amount_currency': 423.0,
                 'debit': 423.0,
             },
@@ -653,9 +581,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'turlututu',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
-                'price_unit': -987.0,
-                'price_subtotal': -987.0,
-                'price_total': -987.0,
                 'amount_currency': 987.0,
                 'debit': 987.0,
                 'date_maturity': fields.Date.from_string('2019-02-28'),
@@ -705,9 +630,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'turlututu',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
-                'price_unit': -414.0,
-                'price_subtotal': -414.0,
-                'price_total': -414.0,
                 'amount_currency': 414.0,
                 'debit': 414.0,
             },
@@ -716,9 +638,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'turlututu',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
-                'price_unit': -966.0,
-                'price_subtotal': -966.0,
-                'price_total': -966.0,
                 'amount_currency': 966.0,
                 'debit': 966.0,
                 'date_maturity': fields.Date.from_string('2019-02-28'),
@@ -751,7 +670,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_subtotal': 1000.0,
                 'price_total': 1470.0,
                 'tax_ids': (self.tax_sale_a + self.tax_armageddon).ids,
-                'tax_exigible': False,
             },
             self.product_line_vals_2,
             self.tax_line_vals_1,
@@ -762,11 +680,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.company_data['default_account_revenue'].id,
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': 120.0,
-                'price_subtotal': 120.0,
-                'price_total': 132.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': child_tax_2.ids,
                 'tax_line_id': child_tax_1.id,
                 'currency_id': self.company_data['currency'].id,
@@ -774,7 +692,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 120.0,
                 'date_maturity': False,
-                'tax_exigible': False,
             },
             {
                 'name': child_tax_1.name,
@@ -782,11 +699,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.company_data['default_account_tax_sale'].id,
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': 80.0,
-                'price_subtotal': 80.0,
-                'price_total': 88.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': child_tax_2.ids,
                 'tax_line_id': child_tax_1.id,
                 'currency_id': self.company_data['currency'].id,
@@ -794,7 +711,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 80.0,
                 'date_maturity': False,
-                'tax_exigible': False,
             },
             {
                 'name': child_tax_2.name,
@@ -802,11 +718,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': child_tax_2.cash_basis_transition_account_id.id,
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': 120.0,
-                'price_subtotal': 120.0,
-                'price_total': 120.0,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': child_tax_2.id,
                 'currency_id': self.company_data['currency'].id,
@@ -814,13 +730,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 120.0,
                 'date_maturity': False,
-                'tax_exigible': False,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': -1730.0,
-                'price_subtotal': -1730.0,
-                'price_total': -1730.0,
                 'amount_currency': 1730.0,
                 'debit': 1730.0,
             },
@@ -831,7 +743,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1730.0,
         })
 
-    def test_out_invoice_line_onchange_rounding_price_subtotal(self):
+    def test_out_invoice_line_onchange_rounding_price_subtotal_1(self):
         ''' Seek for rounding issue on the price_subtotal when dealing with a price_unit having more digits than the
         foreign currency one.
         '''
@@ -854,9 +766,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     'currency_id': self.currency_data['currency'].id,
                 },
                 {
-                    'quantity': 1.0,
-                    'price_unit': -0.03,
-                    'price_subtotal': -0.03,
+                    'quantity': False,
+                    'price_unit': 0.0,
+                    'price_subtotal': 0.0,
                     'debit': 0.02,
                     'credit': 0.0,
                     'currency_id': self.currency_data['currency'].id,
@@ -905,6 +817,108 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         check_invoice_values(invoice_2)
 
+    def test_out_invoice_line_onchange_rounding_price_subtotal_2(self):
+        """ Ensure the cyclic computations implemented using onchanges are not leading to rounding issues when using
+        price-included taxes.
+        For example:
+        100 / 1.21 ~= 82.64 but 82.64 * 1.21 ~= 99.99 != 100.0.
+        """
+
+        def check_invoice_values(invoice):
+            self.assertInvoiceValues(invoice, [
+                {
+                    'price_unit': 100.0,
+                    'price_subtotal': 82.64,
+                    'debit': 0.0,
+                    'credit': 82.64,
+                },
+                {
+                    'price_unit': 0.0,
+                    'price_subtotal': 0.0,
+                    'debit': 0.0,
+                    'credit': 17.36,
+                },
+                {
+                    'price_unit': 0.0,
+                    'price_subtotal': 0.0,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                },
+            ], {
+                'amount_untaxed': 82.64,
+                'amount_tax': 17.36,
+                'amount_total': 100.0,
+            })
+
+        tax = self.env['account.tax'].create({
+            'name': '21%',
+            'amount': 21.0,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        # == Test assigning tax directly ==
+
+        invoice_create = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 100.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids': [(6, 0, tax.ids)],
+            })],
+        })
+
+        check_invoice_values(invoice_create)
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.name = 'test line'
+            line_form.price_unit = 100.0
+            line_form.account_id = self.company_data['default_account_revenue']
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+        invoice_onchange = move_form.save()
+
+        check_invoice_values(invoice_onchange)
+
+        # == Test when the tax is set on a product ==
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'lst_price': 100.0,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+            'taxes_id': [(6, 0, tax.ids)],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice_onchange = move_form.save()
+
+        check_invoice_values(invoice_onchange)
+
+        # == Test with a fiscal position ==
+
+        fiscal_position = self.env['account.fiscal.position'].create({'name': 'fiscal_position'})
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        move_form.partner_id = self.partner_a
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice_onchange = move_form.save()
+
+        check_invoice_values(invoice_onchange)
+
     def test_out_invoice_line_onchange_taxes_2_price_unit_tax_included(self):
         ''' Seek for rounding issue in the price unit. Suppose a price_unit of 2300 with a 5.5% price-included tax
         applied on it.
@@ -944,9 +958,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': 327.01,
-                'price_subtotal': 327.01,
-                'price_total': 327.01,
                 'amount_currency': -327.01,
                 'credit': 327.01,
             },
@@ -956,11 +967,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.product_line_vals_1['account_id'],
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': 119.91,
-                'price_subtotal': 119.91,
-                'price_total': 119.91,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_include.id,
                 'currency_id': self.company_data['currency'].id,
@@ -968,13 +979,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 119.91,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': -2627.01,
-                'price_subtotal': -2627.01,
-                'price_total': -2627.01,
                 'amount_currency': 2627.01,
                 'debit': 2627.01,
             },
@@ -1003,9 +1010,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': -327.01,
-                'price_subtotal': -327.01,
-                'price_total': -327.01,
                 'amount_currency': 327.01,
                 'debit': 327.01,
                 'credit': 0.0,
@@ -1016,11 +1020,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.product_line_vals_1['account_id'],
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': -119.91,
-                'price_subtotal': -119.91,
-                'price_total': -119.91,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_include.id,
                 'currency_id': self.company_data['currency'].id,
@@ -1028,13 +1032,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 119.91,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': 2627.01,
-                'price_subtotal': 2627.01,
-                'price_total': 2627.01,
                 'amount_currency': -2627.01,
                 'debit': 0.0,
                 'credit': 2627.01,
@@ -1067,9 +1067,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': 327.014,
-                'price_subtotal': 327.014,
-                'price_total': 327.014,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': -327.014,
                 'credit': 163.51,
@@ -1080,11 +1077,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.product_line_vals_1['account_id'],
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': 119.905,
-                'price_subtotal': 119.905,
-                'price_total': 119.905,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_include.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -1092,13 +1089,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 59.95,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': -2627.014,
-                'price_subtotal': -2627.014,
-                'price_total': -2627.014,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': 2627.014,
                 'debit': 1313.51,
@@ -1130,9 +1123,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': -327.014,
-                'price_subtotal': -327.014,
-                'price_total': -327.014,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': 327.014,
                 'debit': 163.51,
@@ -1144,11 +1134,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.product_line_vals_1['account_id'],
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': -119.905,
-                'price_subtotal': -119.905,
-                'price_total': -119.905,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': tax_price_include.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -1156,13 +1146,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 59.95,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': 2627.014,
-                'price_subtotal': 2627.014,
-                'price_total': 2627.014,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': -2627.014,
                 'debit': 0.0,
@@ -1178,57 +1164,49 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
 
-        analytic_tag = self.env['account.analytic.tag'].create({
-            'name': 'test_analytic_tag',
-        })
-
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
             'partner_id': self.invoice.partner_id.id,
+            'plan_id': analytic_plan.id,
             'code': 'TEST'
         })
 
+        analytic_distribution = {str(analytic_account.id): 100.00}
+
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
+            line_form.analytic_distribution = analytic_distribution
         move_form.save()
 
         # The tax is not flagged as an analytic one. It should change nothing on the taxes.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         move_form.save()
 
         # Enable the analytic
@@ -1236,8 +1214,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
+            line_form.analytic_distribution = analytic_distribution
         move_form.save()
 
         # The tax is flagged as an analytic one.
@@ -1245,109 +1222,100 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': 150.0,
-                'price_subtotal': 150.0,
-                'price_total': 150.0,
                 'amount_currency': -150.0,
                 'credit': 150.0,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': 30.0,
-                'price_subtotal': 30.0,
-                'price_total': 30.0,
                 'amount_currency': -30.0,
                 'credit': 30.0,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
+        with move_form.invoice_line_ids.edit(1) as line_form:
+            line_form.analytic_distribution = {}
         move_form.save()
 
         # The tax line has been removed.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
     def test_out_invoice_line_onchange_analytic_2(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account1',
+            'plan_id': analytic_plan.id,
             'code': 'TEST1'
         })
 
+        analytic_distribution = {str(analytic_account.id): 100.00}
+
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
-            'analytic_account_id': analytic_account.id,
+            'analytic_distribution': analytic_distribution,
         })]})
 
         self.assertRecordValues(self.invoice.invoice_line_ids, [
-            {'analytic_account_id': analytic_account.id},
-            {'analytic_account_id': False},
+            {'analytic_distribution': analytic_distribution},
+            {'analytic_distribution': False},
         ])
 
         # We can remove the analytic account, it is not recomputed by an invalidation
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
-            'analytic_account_id': False,
+            'analytic_distribution': False,
         })]})
 
         self.assertRecordValues(self.invoice.invoice_line_ids, [
-            {'analytic_account_id': False},
-            {'analytic_account_id': False},
+            {'analytic_distribution': False},
+            {'analytic_distribution': False},
         ])
 
     def test_out_invoice_line_onchange_cash_rounding_1(self):
+        # Required for `invoice_cash_rounding_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+        # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
         move_form.invoice_cash_rounding_id = self.cash_rounding_a
@@ -1369,16 +1337,27 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         self.assertInvoiceValues(self.invoice, [
             {
+                **self.product_line_vals_1,
+                'price_unit': 999.99,
+                'price_subtotal': 999.99,
+                'price_total': 1149.99,
+                'amount_currency': -999.99,
+                'credit': 999.99,
+            },
+            self.product_line_vals_2,
+            self.tax_line_vals_1,
+            self.tax_line_vals_2,
+            {
                 'name': 'add_invoice_line',
                 'product_id': False,
                 'account_id': self.cash_rounding_a.profit_account_id.id,
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': 0.01,
-                'price_subtotal': 0.01,
-                'price_total': 0.01,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.company_data['currency'].id,
@@ -1386,28 +1365,49 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 0.01,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
-            {
-                **self.product_line_vals_1,
-                'price_unit': 999.99,
-                'price_subtotal': 999.99,
-                'price_total': 1149.99,
-                'amount_currency': -999.99,
-                'credit': 999.99,
-            },
-            self.product_line_vals_2,
-            self.tax_line_vals_1,
-            self.tax_line_vals_2,
             self.term_line_vals_1,
         ], self.move_vals)
 
-        move_form = Form(self.invoice)
-        # Change the cash rounding to one having 'biggest_tax'.
-        move_form.invoice_cash_rounding_id = self.cash_rounding_b
-        move_form.save()
+        # Test 'biggest_tax' rounding
 
-        self.assertInvoiceValues(self.invoice, [
+        self.company_data['company'].country_id = self.env.ref('base.us')
+
+        # Add a tag to product_a's default tax
+        tax_line_tag = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': self.company_data['company'].country_id.id,
+        })
+
+        repartition_line = self.tax_sale_a.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        repartition_line.write({'tag_ids': [(4, tax_line_tag.id, 0)]})
+
+        # Create the invoice
+        biggest_tax_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': self.cash_rounding_b.id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'price_unit': 999.99,
+                    'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+                    'product_uom_id':  self.product_a.uom_id.id,
+                }),
+
+                (0, 0, {
+                    'product_id': self.product_b.id,
+                    'price_unit': self.product_b.lst_price,
+                    'tax_ids': [(6, 0, self.product_b.taxes_id.ids)],
+                    'product_uom_id':  self.product_b.uom_id.id,
+                }),
+            ],
+        })
+
+        self.assertInvoiceValues(biggest_tax_invoice, [
             {
                 **self.product_line_vals_1,
                 'price_unit': 999.99,
@@ -1415,37 +1415,51 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_total': 1149.99,
                 'amount_currency': -999.99,
                 'credit': 999.99,
+                'tax_repartition_line_id': None,
+                'tax_tag_ids': [],
             },
-            self.product_line_vals_2,
-            self.tax_line_vals_1,
-            self.tax_line_vals_2,
+            {
+                **self.product_line_vals_2,
+                'tax_repartition_line_id': None,
+                'tax_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_1,
+                'tax_repartition_line_id': repartition_line.id,
+                'tax_tag_ids': tax_line_tag.ids,
+            },
+            {
+                **self.tax_line_vals_2,
+                'tax_repartition_line_id': self.tax_sale_b.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_tag_ids': [],
+            },
             {
                 'name': '%s (rounding)' % self.tax_sale_a.name,
                 'product_id': False,
                 'account_id': self.company_data['default_account_tax_sale'].id,
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': 1.0,
+                'quantity': False,
                 'discount': 0.0,
-                'price_unit': -0.04,
-                'price_subtotal': -0.04,
-                'price_total': -0.04,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
                 'tax_ids': [],
                 'tax_line_id': self.tax_sale_a.id,
+                'tax_repartition_line_id': repartition_line.id,
+                'tax_tag_ids': tax_line_tag.ids,
                 'currency_id': self.company_data['currency'].id,
                 'amount_currency': 0.04,
                 'debit': 0.04,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.term_line_vals_1,
-                'price_unit': -1409.95,
-                'price_subtotal': -1409.95,
-                'price_total': -1409.95,
                 'amount_currency': 1409.95,
                 'debit': 1409.95,
+                'tax_repartition_line_id': None,
+                'tax_tag_ids': [],
             },
         ], {
             **self.move_vals,
@@ -1495,10 +1509,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
         })
 
-        move_form = Form(self.invoice)
         # Change the date to get another rate: 1/3 instead of 1/2.
-        move_form.date = fields.Date.from_string('2016-01-01')
-        move_form.save()
+        with Form(self.invoice) as move_form:
+            move_form.invoice_date = fields.Date.from_string('2016-01-01')
 
         self.assertInvoiceValues(self.invoice, [
             {
@@ -1530,6 +1543,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': 1410.0,
                 'debit': 470.0,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -1564,9 +1578,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_1,
-                'price_unit': 30.0,
-                'price_subtotal': 30.001,
-                'price_total': 30.001,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': -30.001,
                 'credit': 10.0,
@@ -1580,11 +1591,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.term_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'price_unit': -260.01,
-                'price_subtotal': -260.006,
-                'price_total': -260.006,
                 'amount_currency': 260.006,
                 'debit': 86.67,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -1613,20 +1622,15 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.product_line_vals_2,
             {
                 **self.tax_line_vals_1,
-                'price_unit': 30.0,
-                'price_subtotal': 30.0,
-                'price_total': 30.0,
                 'amount_currency': -30.0,
                 'credit': 30.0,
             },
             self.tax_line_vals_2,
             {
                 **self.term_line_vals_1,
-                'price_unit': -260.01,
-                'price_subtotal': -260.01,
-                'price_total': -260.01,
                 'amount_currency': 260.01,
                 'debit': 260.01,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -1637,6 +1641,91 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 260.01,
         })
 
+    def test_out_invoice_line_tax_fixed_price_include_free_product(self):
+        ''' Check that fixed tax include are correctly computed while the price_unit is 0
+        '''
+        fixed_tax_price_include = self.env['account.tax'].create({
+            'name': 'BEBAT 0.05',
+            'type_tax_use': 'sale',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-03',
+            'date': '2022-03-03',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Free product',
+                'price_unit': 0.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids': [(6, 0, fixed_tax_price_include.ids)],
+            })],
+        })
+        self.assertInvoiceValues(invoice, [
+            {   'display_type': 'product',
+                'balance': 0.05,
+                'price_subtotal': -0.05,
+                'price_total': 0.0,
+            }, {
+                'display_type': 'tax',
+                'balance': -0.05,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+            }, {
+                'display_type': 'payment_term',
+                'balance': 0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+            },
+        ], {
+            'amount_untaxed': -0.05,
+            'amount_tax': 0.05,
+            'amount_total': 0.0,
+        })
+
+    def test_out_invoice_line_taxes_fixed_price_include_free_product(self):
+        ''' Check that fixed tax include are correctly computed while the price_unit is 0
+        '''
+        # please ensure this test remains consistent with
+        # test_free_product_and_price_include_fixed_tax in the sale module
+        fixed_tax_price_include_1 = self.env['account.tax'].create({
+            'name': 'BEBAT 0.05',
+            'type_tax_use': 'sale',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        fixed_tax_price_include_2 = self.env['account.tax'].create({
+            'name': 'Recupel 0.25',
+            'type_tax_use': 'sale',
+            'amount_type': 'fixed',
+            'amount': 0.25,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-03',
+            'date': '2022-03-03',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Free product',
+                'price_unit': 0.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids': [(6, 0, (fixed_tax_price_include_1 + fixed_tax_price_include_2).ids)],
+            })],
+        })
+
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': -0.30,
+            'amount_tax': 0.30,
+            'amount_total': 0.0,
+        }])
+
     def test_out_invoice_create_refund(self):
         self.invoice.action_post()
 
@@ -1644,6 +1733,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
             'refund_method': 'refund',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1685,7 +1775,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'invoice_payment_term_id': None,
-            'name': 'RINV/2019/02/0001',
+            'name': 'RINV/2019/00001',
             'date': move_reversal.date,
             'state': 'draft',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
@@ -1696,6 +1786,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
             'refund_method': 'cancel',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1747,10 +1838,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test the account.move.reversal takes care about the currency rates when setting
         a custom reversal date.
         '''
-        move_form = Form(self.invoice)
-        move_form.date = '2016-01-01'
-        move_form.currency_id = self.currency_data['currency']
-        move_form.save()
+        with Form(self.invoice) as move_form:
+            move_form.invoice_date = '2016-01-01'
+            move_form.currency_id = self.currency_data['currency']
 
         self.invoice.action_post()
 
@@ -1759,6 +1849,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
             'refund_method': 'refund',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1816,6 +1907,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
             'refund_method': 'cancel',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1876,13 +1968,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.today() + timedelta(days=7),
             'reason': 'no reason',
             'refund_method': 'modify',
+            'journal_id': self.invoice.journal_id.id,
         })
         move_reversal.reverse_moves()
         refund = self.env['account.move'].search([('move_type', '=', 'out_refund'), ('company_id', '=', self.invoice.company_id.id)])
 
         self.assertRecordValues(refund, [{
             'state': 'draft',
-            'auto_post': True,
+            'auto_post': 'at_date',
         }])
 
     def test_out_invoice_create_1(self):
@@ -1961,9 +2054,19 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertEqual(partner_a_child.id, move.partner_id.id, 'Keep child partner on the account move record')
@@ -1978,13 +2081,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+            ],
         })
         move.write({
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [
@@ -2037,7 +2150,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ]
         })
 
-        receivable_lines = move.line_ids.filtered(lambda line: line.account_id.user_type_id.type == 'receivable')
+        receivable_lines = move.line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
         not_receivable_lines = move.line_ids - receivable_lines
 
         # Write a receivable account on a not-receivable line.
@@ -2063,9 +2176,19 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'currency_id': self.currency_data['currency'].id,
                 'invoice_payment_term_id': self.pay_terms_a.id,
                 'invoice_line_ids': [
-                    (0, None, self.product_line_vals_1),
-                    (0, None, self.product_line_vals_2),
-                ]
+                    Command.create({
+                        'product_id': self.product_line_vals_1['product_id'],
+                        'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                        'price_unit': self.product_line_vals_1['price_unit'],
+                        'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                    }),
+                    Command.create({
+                        'product_id': self.product_line_vals_2['product_id'],
+                        'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                        'price_unit': self.product_line_vals_2['price_unit'],
+                        'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                    }),
+                ],
             })
 
             # Remove the invoice_date to check:
@@ -2105,11 +2228,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 {
                     **self.tax_line_vals_1,
                     'currency_id': self.currency_data['currency'].id,
-                    'price_unit': 200.0,
-                    'price_subtotal': 200.0,
-                    'price_total': 200.0,
-                    'amount_currency': -200.0,
-                    'credit': 100.0,
+                    'amount_currency': -180.0,
+                    'credit': 90.0,
                 },
                 {
                     **self.tax_line_vals_2,
@@ -2121,12 +2241,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     **self.term_line_vals_1,
                     'name': move.name,
                     'currency_id': self.currency_data['currency'].id,
-                    'price_unit': -1430.0,
-                    'price_subtotal': -1430.0,
-                    'price_total': -1430.0,
-                    'amount_currency': 1430.0,
-                    'debit': 715.0,
+                    'amount_currency': 1410.0,
+                    'debit': 705.0,
                     'date_maturity': frozen_today,
+                    'account_id': self.company_data['default_account_receivable'].id,
                 },
             ], {
                 **self.move_vals,
@@ -2135,8 +2253,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'date': frozen_today,
                 'invoice_date': frozen_today,
                 'invoice_date_due': frozen_today,
-                'amount_tax': 230.0,
-                'amount_total': 1430.0,
+                'amount_tax': 210.0,
+                'amount_total': 1410.0,
             })
 
     @freeze_time('2017-01-15')
@@ -2146,7 +2264,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'invoice_date': fields.Date.from_string('2017-01-15'),
             'date': fields.Date.from_string('2015-01-01'),
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
@@ -2209,12 +2327,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.tax_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'price_unit': 200.0,
-                'price_subtotal': 200.0,
-                'price_total': 200.0,
-                'amount_currency': -200.0,
+                'amount_currency': -180.0,
                 'debit': 0.0,
-                'credit': 100.0,
+                'credit': 90.0,
             },
             {
                 **self.tax_line_vals_2,
@@ -2227,13 +2342,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'name': move.name,
                 'currency_id': self.currency_data['currency'].id,
-                'price_unit': -1430.0,
-                'price_subtotal': -1430.0,
-                'price_total': -1430.0,
-                'amount_currency': 1430.0,
-                'debit': 715.0,
+                'amount_currency': 1410.0,
+                'debit': 705.0,
                 'credit': 0.0,
-                'date_maturity': fields.Date.from_string('2016-01-01'),
+                'date_maturity': fields.Date.from_string('2017-01-15'),
             },
         ], {
             **self.move_vals,
@@ -2241,8 +2353,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'date': fields.Date.from_string('2017-01-15'),
             'amount_untaxed': 1200.0,
-            'amount_tax': 230.0,
-            'amount_total': 1430.0,
+            'amount_tax': 210.0,
+            'amount_total': 1410.0,
         })
 
     def test_out_invoice_switch_out_refund_1(self):
@@ -2254,9 +2366,19 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, self.product_line_vals_1),
-                (0, None, self.product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
         move.action_switch_invoice_into_refund_credit_note()
 
@@ -2304,10 +2426,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_switch_out_refund_2(self):
         # Test creating an account_move with an out_invoice_type and switch it in an out_refund and a negative quantity.
-        modified_product_line_vals_1 = self.product_line_vals_1.copy()
-        modified_product_line_vals_1.update({'quantity': -modified_product_line_vals_1['quantity']})
-        modified_product_line_vals_2 = self.product_line_vals_2.copy()
-        modified_product_line_vals_2.update({'quantity': -modified_product_line_vals_2['quantity']})
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -2315,9 +2433,21 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
             'invoice_line_ids': [
-                (0, None, modified_product_line_vals_1),
-                (0, None, modified_product_line_vals_2),
-            ]
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'quantity': -self.product_line_vals_1['quantity'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'quantity': -self.product_line_vals_2['quantity'],
+                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
+                }),
+            ],
         })
 
         self.assertInvoiceValues(move, [
@@ -2345,9 +2475,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.tax_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': 180.0,
-                'price_subtotal': -180.0,
-                'price_total': -180.0,
-                'price_unit': -180.0,
                 'debit': 90.0,
                 'credit': 0,
             },
@@ -2355,9 +2482,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.tax_line_vals_2,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': 30.0,
-                'price_subtotal': -30.0,
-                'price_total': -30.0,
-                'price_unit': -30.0,
                 'debit': 15.0,
                 'credit': 0,
             },
@@ -2365,9 +2489,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': -1410.0,
-                'price_subtotal': 1410.0,
-                'price_total': 1410.0,
-                'price_unit': 1410.0,
                 'credit': 705.0,
                 'debit': 0,
             },
@@ -2426,6 +2547,77 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_untaxed' : self.move_vals['amount_untaxed'],
         })
 
+    def test_out_invoice_reverse_move_tags(self):
+        country = self.env.ref('base.us')
+        tags = self.env['account.account.tag'].create([{
+            'name': "Test tag %s" % i,
+            'applicability': 'taxes',
+            'country_id': country.id,
+        } for i in range(8)])
+
+        taxes = self.env['account.tax'].create([{
+            'name': "Test tax include_base_amount = %s" % include_base_amount,
+            'amount': 10.0,
+            'include_base_amount': include_base_amount,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tags[(i * 4)].ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, tags[(i * 4) + 1].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tags[(i * 4) + 2].ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, tags[(i * 4) + 3].ids)],
+                }),
+            ],
+        } for i, include_base_amount in enumerate((True, False))])
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, taxes.ids)],
+                }),
+            ]
+        })
+        invoice.action_post()
+
+        self.assertRecordValues(invoice.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tax_tag_ids': (tags[0] + tags[4]).ids},
+            # Receivable line
+            {'tax_line_id': False,          'tax_ids': [],              'tax_tag_ids': []},
+            # Tax lines
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tax_tag_ids': (tags[1] + tags[4]).ids},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tax_tag_ids': tags[5].ids},
+        ])
+
+        refund = invoice._reverse_moves(cancel=True)
+
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tax_tag_ids': (tags[2] + tags[6]).ids},
+            # Receivable line
+            {'tax_line_id': False,          'tax_ids': [],              'tax_tag_ids': []},
+            # Tax lines
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tax_tag_ids': (tags[3] + tags[6]).ids},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tax_tag_ids': tags[7].ids},
+        ])
+
     def test_out_invoice_change_period_accrual_1(self):
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -2464,13 +2656,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'expense_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Expense Account',
                 'code': '234567',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'reconcile': True,
             }).id,
         })
@@ -2508,7 +2700,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.term_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'name': 'INV/2017/01/0001',
+                'name': 'INV/2017/00001',
                 'amount_currency': 1410.0,
                 'debit': 705.0,
                 'credit': 0.0,
@@ -2518,7 +2710,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'currency_id': self.currency_data['currency'].id,
             'date': fields.Date.from_string('2017-01-01'),
-            'payment_reference': 'INV/2017/01/0001',
+            'payment_reference': 'INV/2017/00001',
         })
 
         accrual_lines = self.env['account.move'].browse(wizard_res['domain'][0][2]).line_ids.sorted('date')
@@ -2533,6 +2725,140 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
         ])
 
+    def test_out_invoice_multi_date_change_period_accrual(self):
+        dates = ['2017-01-01', '2017-01-01', '2017-02-01']
+        values = []
+        for date in dates:
+            values.append({
+                'move_type': 'out_invoice',
+                'date': date,
+                'partner_id': self.partner_a.id,
+                'invoice_date': fields.Date.from_string(date),
+                'currency_id': self.currency_data['currency'].id,
+                'invoice_payment_term_id': self.pay_terms_a.id,
+                'invoice_line_ids': [
+                    (0, None, {
+                        'name': self.product_line_vals_1['name'],
+                        'product_id': self.product_line_vals_1['product_id'],
+                        'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                        'quantity': self.product_line_vals_1['quantity'],
+                        'price_unit': self.product_line_vals_1['price_unit'],
+                        'tax_ids': self.product_line_vals_1['tax_ids'],
+                    }),
+                    (0, None, {
+                        'name': self.product_line_vals_2['name'],
+                        'product_id': self.product_line_vals_2['product_id'],
+                        'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                        'quantity': self.product_line_vals_2['quantity'],
+                        'price_unit': self.product_line_vals_2['price_unit'],
+                        'tax_ids': self.product_line_vals_2['tax_ids'],
+                    }),
+                ]
+            })
+
+        moves = self.env['account.move'].create(values)
+        moves.action_post()
+
+        wizard = self.env['account.automatic.entry.wizard'].with_context(
+            active_model='account.move.line',
+            active_ids=moves.invoice_line_ids.ids,
+        ).create({
+            'action': 'change_period',
+            'date': '2018-01-01',
+            'percentage': 60,
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'expense_accrual_account': self.env['account.account'].create({
+                'name': 'Accrual Expense Account',
+                'code': '234567',
+                'account_type': 'expense',
+                'reconcile': True,
+            }).id,
+            'revenue_accrual_account': self.env['account.account'].create({
+                'name': 'Accrual Revenue Account',
+                'code': '765432',
+                'account_type': 'expense',
+                'reconcile': True,
+            }).id,
+        })
+        wizard_res = wizard.do_action()
+
+        for date, move, ref in zip(dates, moves, ['INV/2017/00001', 'INV/2017/00002', 'INV/2017/00003']):
+            self.assertInvoiceValues(move, [
+                {
+                    **self.product_line_vals_1,
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1000.0,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                },
+                {
+                    **self.product_line_vals_2,
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -200.0,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                },
+                {
+                    **self.tax_line_vals_1,
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -180.0,
+                    'debit': 0.0,
+                    'credit': 90.0,
+                },
+                {
+                    **self.tax_line_vals_2,
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -30.0,
+                    'debit': 0.0,
+                    'credit': 15.0,
+                },
+                {
+                    **self.term_line_vals_1,
+                    'currency_id': self.currency_data['currency'].id,
+                    'name': ref,
+                    'amount_currency': 1410.0,
+                    'debit': 705.0,
+                    'credit': 0.0,
+                    'date_maturity': fields.Date.from_string(date),
+                },
+            ], {
+                **self.move_vals,
+                'currency_id': self.currency_data['currency'].id,
+                'date': fields.Date.from_string(date),
+                'payment_reference': ref,
+            })
+
+        moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+
+        accrual_lines = moves.line_ids.sorted('date')
+        self.assertRecordValues(accrual_lines, [
+            {'amount_currency': 600.0,  'debit': 300.0, 'credit': 0.0,      'account_id': self.product_line_vals_1['account_id'],   'reconciled': False},
+            {'amount_currency': -600.0, 'debit': 0.0,   'credit': 300.0,    'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
+            {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': 600.0,  'debit': 300.0, 'credit': 0.0,      'account_id': self.product_line_vals_1['account_id'],   'reconciled': False},
+            {'amount_currency': -600.0, 'debit': 0.0,   'credit': 300.0,    'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
+            {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': 600.0,  'debit': 300.0, 'credit': 0.0,      'account_id': self.product_line_vals_1['account_id'],   'reconciled': False},
+            {'amount_currency': -600.0, 'debit': 0.0,   'credit': 300.0,    'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
+            {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+
+            {'amount_currency': -600.0, 'debit': 0.0,   'credit': 300.0,    'account_id': self.product_line_vals_1['account_id'],   'reconciled': False},
+            {'amount_currency': 600.0,  'debit': 300.0, 'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
+            {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': -600.0, 'debit': 0.0,   'credit': 300.0,    'account_id': self.product_line_vals_1['account_id'],   'reconciled': False},
+            {'amount_currency': 600.0,  'debit': 300.0, 'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
+            {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': -600.0, 'debit': 0.0,   'credit': 300.0,    'account_id': self.product_line_vals_1['account_id'],   'reconciled': False},
+            {'amount_currency': 600.0,  'debit': 300.0, 'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+            {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
+            {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
+        ])
+
     def test_out_invoice_filter_zero_balance_lines(self):
         zero_balance_payment_term = self.env['account.payment.term'].create({
             'name': 'zero_balance_payment_term',
@@ -2540,16 +2866,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 (0, 0, {
                     'value': 'percent',
                     'value_amount': 100.0,
-                    'sequence': 10,
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
                 (0, 0, {
                     'value': 'balance',
                     'value_amount': 0.0,
-                    'sequence': 20,
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
             ],
         })
@@ -2614,10 +2936,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.env.ref('account.account_payment_term_immediate').id,
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 38.73553, 'quantity': 38.0}),
-                (0, 0, {'name': 'line2', 'price_unit': 4083.19000, 'quantity': 222.0}),
-                (0, 0, {'name': 'line3', 'price_unit': 49.45257, 'quantity': 35.0}),
-                (0, 0, {'name': 'line4', 'price_unit': 17.99000, 'quantity': 1.0}),
+                Command.create({'name': 'line1', 'price_unit': 38.73553, 'quantity': 38.0, 'tax_ids': []}),
+                Command.create({'name': 'line2', 'price_unit': 4083.19000, 'quantity': 222.0, 'tax_ids': []}),
+                Command.create({'name': 'line3', 'price_unit': 49.45257, 'quantity': 35.0, 'tax_ids': []}),
+                Command.create({'name': 'line4', 'price_unit': 17.99000, 'quantity': 1.0, 'tax_ids': []}),
             ],
         })
 
@@ -2720,6 +3042,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_line_ids': [(0, 0, {
                 'product_id': product.id,
                 'price_unit': 1000.0,
+                'tax_ids': [],
             })],
         })
 
@@ -2745,3 +3068,268 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with Form(self.invoice) as move_form:
             move_form.invoice_payment_term_id = self.pay_terms_b    # Switch to 30% in advance payment terms
             move_form.invoice_payment_term_id = self.pay_terms_a    # Back to immediate payment term
+
+    def test_out_invoice_copy_custom_date(self):
+        """ When creating a refund for a given invoice, the invoice is copied first. This test ensures the payment
+        terms are well recomputed in order to take the new date into account.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'invoice_date_due': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'product_id': self.product_a.id,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+                }),
+            ]
+        })
+
+        copy_invoice = invoice.copy(default={
+            'invoice_date_due': '2018-01-01',
+            'invoice_payment_term_id': False,
+        })
+        self.assertRecordValues(copy_invoice, [
+            {'invoice_date_due': fields.Date.from_string('2018-01-01')},
+        ])
+        self.assertRecordValues(copy_invoice.line_ids.filtered('date_maturity'), [
+            {'date_maturity': fields.Date.from_string('2018-01-01')},
+        ])
+
+    def test_out_invoice_note_and_tax_partner_is_set(self):
+        # Make sure that, when creating an invoice by giving a list of lines with the last one being a note,
+        # the partner_id of the tax line is properly set.
+        invoice_vals_list = [{
+            'move_type': 'out_invoice',
+            'currency_id': self.currency_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+                }),
+                (0, 0, {
+                    'display_type': 'line_note',
+                    'name': 'This is a note',
+                    'account_id': False,
+                }),
+            ],
+        }]
+        moves = self.env['account.move'].create(invoice_vals_list)
+        tax_line = moves.line_ids.filtered('tax_line_id')
+        self.assertEqual(tax_line.partner_id.id, self.partner_a.id)
+
+    def test_out_invoice_reverse_caba(self):
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'account_type': 'asset_current',
+            'company_id': self.company_data['company'].id,
+        })
+        tax_base_amount_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'account_type': 'asset_current',
+            'company_id': self.company_data['company'].id,
+        })
+        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
+        tax_tags = defaultdict(dict)
+        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                'name': '%s %s tag' % (line_type, repartition_type),
+                'applicability': 'taxes',
+                'country_id': self.env.ref('base.us').id,
+            })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],
+                }),
+            ],
+        })
+        # create invoice
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+        invoice = move_form.save()
+        invoice.action_post()
+        # make payment
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': invoice.date,
+        })._create_payments()
+        # check caba move
+        partial_rec = invoice.mapped('line_ids.matched_credit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_base_amount_account.id,
+                'debit': 1000.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': tax_base_amount_account.id,
+                'debit': 0.0,
+                'credit': 1000.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_waiting_account.id,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': tax.id,
+                'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_ids': [],
+                'tax_tag_ids': tax_tags['invoice']['tax'].ids,
+                'account_id': tax_final_account.id,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
+        # unreconcile
+        debit_aml = invoice.line_ids.filtered('debit')
+        debit_aml.remove_move_reconcile()
+        # check caba move reverse is same as caba move with only debit/credit inverted
+        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
+        for value in expected_values:
+            value.update({
+                'debit': value['credit'],
+                'credit': value['debit'],
+            })
+        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_tax_grid_remove_tax(self):
+        # Add a tag to tax_sale_a
+        tax_line_tag = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': self.company_data['company'].country_id.id,
+        })
+
+        repartition_line = self.tax_sale_a.invoice_repartition_line_ids\
+            .filtered(lambda x: x.repartition_type == 'tax')
+        repartition_line.tag_ids |= tax_line_tag
+
+        # Create the invoice
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2022-02-20'),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 999.99,
+                    'tax_ids': [Command.set(self.product_a.taxes_id.ids)],
+                }),
+            ],
+        })
+
+        with Form(invoice) as form:
+            with form.invoice_line_ids.edit(0) as line_form:
+                line_form.tax_ids.clear()
+
+        # Tags should be empty since the tax has been removed from the invoice line
+        self.assertRecordValues(invoice.line_ids, [{'tax_tag_ids': []}, {'tax_tag_ids': []}])
+
+    def test_quick_edit_total_amount(self):
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2022-01-01')
+        move_form.partner_id = self.partner_a
+
+        # Quick edit total amount not activated yet
+        # As quick edit total is not yet activated, it's invisible by default in the view
+        move_form._view['modifiers']['quick_edit_total_amount']['invisible'] = False
+        move_form.quick_edit_total_amount = 100.0
+        invoice = move_form.save()
+        self.assertEqual(invoice.amount_total, 0.0)
+        self.assertEqual(len(invoice.invoice_line_ids), 0)
+
+        # Quick edit total amount activated
+        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_sale_tax_id = self.env['account.tax'].create({
+            'name': '21%',
+            'amount': 21,
+            'type_tax_use': 'sale',
+        })  # 21% tax of a total amount may create a rounding error (99.99 or 100.01)
+
+        # Let's make sure it does not (the rounding cent should be on the tax)
+        with Form(invoice) as move_form:
+            move_form.quick_edit_total_amount = 100.0
+        self.assertEqual(invoice.amount_total, 100)
+        self.assertEqual(invoice.amount_untaxed, 82.64)
+        self.assertEqual(invoice.amount_tax, 17.36)
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+
+        # Modify one invoice line
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.price_unit = 50
+        self.assertEqual(invoice.amount_total, 60.5)
+        self.assertEqual(invoice.amount_untaxed, 50)
+        self.assertEqual(invoice.amount_tax, 10.5)
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+
+        # Suggest the new amount such that the total is equal to the quick amount
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.new() as line_form:
+                self.assertEqual(line_form.price_unit, 32.64)
+        self.assertEqual(invoice.amount_total, 100)
+        self.assertEqual(invoice.amount_untaxed, 82.64)
+        self.assertEqual(invoice.amount_tax, 17.36)
+        self.assertEqual(len(invoice.invoice_line_ids), 2)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import Command, models, fields
 
 
 class FleetVehicle(models.Model):
@@ -16,15 +16,25 @@ class FleetVehicle(models.Model):
             self.bill_count = 0
             return
 
+        moves = self.env['account.move.line']._read_group(
+            domain=[
+                ('vehicle_id', 'in', self.ids),
+                ('move_id.state', '!=', 'cancel'),
+                ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())
+            ],
+            fields=['vehicle_id', 'move_id:array_agg'],
+            groupby=['vehicle_id'],
+        )
+        vehicle_move_mapping = {move['vehicle_id'][0]: set(move['move_id']) for move in moves}
         for vehicle in self:
-            vehicle.account_move_ids = self.env['account.move.line'].search([('vehicle_id', '=', self.id), ('move_id.state', '!=', 'cancel')]).move_id
+            vehicle.account_move_ids = [Command.set(vehicle_move_mapping.get(vehicle.id, []))]
             vehicle.bill_count = len(vehicle.account_move_ids)
 
     def action_view_bills(self):
         self.ensure_one()
 
         form_view_ref = self.env.ref('account.view_move_form', False)
-        tree_view_ref = self.env.ref('account.view_move_tree', False)
+        tree_view_ref = self.env.ref('account_fleet.account_move_view_tree', False)
 
         result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         result.update({

@@ -23,6 +23,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
                 'name': 'product test 1',
                 'discount': 10.00,
                 'price_unit': 2.27,
+                'tax_ids': [],
             })]
         })
         refund = self.env['account.move'].create({
@@ -36,6 +37,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
                 'quantity': 1.0,
                 'name': 'product test 1',
                 'price_unit': 13.3,
+                'tax_ids': [],
             })]
         })
 
@@ -69,7 +71,6 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertIn('68.42', dashboard_data['sum_waiting'])
 
         # Check partial
-        receivable_account = refund.line_ids.mapped('account_id').filtered(lambda a: a.internal_type == 'receivable')
         payment = self.env['account.payment'].create({
             'amount': 10.0,
             'payment_type': 'outbound',
@@ -79,7 +80,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         payment.action_post()
 
         (refund + payment.move_id).line_ids\
-            .filtered(lambda line: line.account_internal_type == 'receivable')\
+            .filtered(lambda line: line.account_type == 'asset_receivable')\
             .reconcile()
 
         dashboard_data = journal.get_journal_dashboard_datas()

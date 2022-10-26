@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import fields
 from odoo.tests import Form
@@ -135,7 +135,7 @@ class TestProcurement(TestMrpCommon):
         self.env['stock.location']._parent_store_compute()
         warehouse.reception_route_id.rule_ids.filtered(
             lambda p: p.location_src_id == warehouse.wh_input_stock_loc_id and
-            p.location_id == warehouse.wh_qc_stock_loc_id).write({
+            p.location_dest_id == warehouse.wh_qc_stock_loc_id).write({
                 'procure_method': 'make_to_stock'
             })
 
@@ -250,9 +250,7 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
 
         new_sheduled_date = fields.Datetime.to_datetime(mo.date_planned_start) + timedelta(days=5)
-        mo_form = Form(mo)
-        mo_form.date_planned_start = new_sheduled_date
-        mo = mo_form.save()
+        mo.date_planned_start = new_sheduled_date
 
         self.assertAlmostEqual(mo.move_raw_ids.date, mo.date_planned_start, delta=timedelta(seconds=1))
         self.assertAlmostEqual(mo.move_finished_ids.date, mo.date_planned_finished, delta=timedelta(seconds=1))
@@ -300,7 +298,7 @@ class TestProcurement(TestMrpCommon):
 
     def test_procurement_with_empty_bom(self):
         """Ensure that a procurement request using a product with an empty BoM
-        will create a MO in draft state that could be completed afterwards.
+        will create an empty MO in draft state that can be completed afterwards.
         """
         self.warehouse = self.env.ref('stock.warehouse0')
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
@@ -447,7 +445,7 @@ class TestProcurement(TestMrpCommon):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_1.id,
                 'product_uom': product_1.uom_id.id,
@@ -467,6 +465,7 @@ class TestProcurement(TestMrpCommon):
 
         self.assertEqual(len(mo), 1, "Manufacture order was not automatically created")
         mo.action_assign()
+        mo.is_locked = False
         self.assertEqual(mo.move_raw_ids.reserved_availability, 0, "No components should be reserved yet")
         self.assertEqual(mo.product_qty, 15, "Quantity to produce should be picking demand + reordering rule max qty")
 
@@ -519,3 +518,236 @@ class TestProcurement(TestMrpCommon):
         mo_assign_at_confirm.action_confirm()
 
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.reserved_availability, 5, "Components should have been auto-reserved")
+
+    def test_check_update_qty_mto_chain(self):
+        """ Simulate a mto chain with a manufacturing order. Updating the
+        initial demand should also impact the initial move but not the
+        linked manufacturing order.
+        """
+        def create_run_procurement(product, product_qty, values=None):
+            if not values:
+                values = {
+                    'warehouse_id': picking_type_out.warehouse_id,
+                    'action': 'pull_push',
+                    'group_id': procurement_group,
+                }
+            return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+                product, product_qty, self.uom_unit, vendor.property_stock_customer,
+                product.name, '/', self.env.company, values)
+            ])
+
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        vendor = self.env['res.partner'].create({
+            'name': 'Roger'
+        })
+        # This needs to be tried with MTO route activated
+        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        # Define products requested for this BoM.
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'categ_id': self.env.ref('product.product_category_all').id
+        })
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id
+        })
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ]
+        })
+
+        procurement_group = self.env['procurement.group'].create({
+            'move_type': 'direct',
+            'partner_id': vendor.id
+        })
+        # Create initial procurement that will generate the initial move and its picking.
+        create_run_procurement(product, 10, {
+            'group_id': procurement_group,
+            'warehouse_id': picking_type_out.warehouse_id,
+            'partner_id': vendor
+        })
+        customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertTrue(manufacturing_order, 'No manufacturing order created.')
+
+        # Check manufacturing order data.
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The manufacturing order qty should be the same as the move.')
+
+        # Create procurement to decrease quantity in the initial move but not in the related MO.
+        create_run_procurement(product, -5.00)
+        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
+
+        # Create procurement to increase quantity on the initial move and should create a new MO for the missing qty.
+        create_run_procurement(product, 2.00)
+        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have been increased since it should be a new move.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
+        manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
+
+    def test_rr_with_dependance_between_bom(self):
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        product_1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id, route_mto.id])]
+        })
+        product_3 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_4 = self.env['product.product'].create({
+            'name': 'Product C',
+            'type': 'consu',
+        })
+
+        op1 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product A',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 20,
+        })
+
+        op2 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product B',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_3.id,
+            'product_min_qty': 5,
+            'product_max_qty': 50,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_2.id, 'product_qty': 1})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_3.id, 'product_qty': 1})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_3.id,
+            'product_tmpl_id': product_3.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_4.id, 'product_qty': 1})]
+        })
+
+        (op1 | op2)._procure_orderpoint_confirm()
+        mo1 = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+        mo3 = self.env['mrp.production'].search([('product_id', '=', product_3.id)])
+
+        self.assertEqual(len(mo1), 1)
+        self.assertEqual(len(mo3), 1)
+        self.assertEqual(mo1.product_qty, 20)
+        self.assertEqual(mo3.product_qty, 50)
+
+    def test_several_boms_same_finished_product(self):
+        """
+        Suppose a product with two BoMs, each one based on a different operation type
+        This test ensures that, when running the scheduler, the generated MOs are based
+        on the correct BoMs
+        """
+        # Required for `picking_type_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.env.ref('stock.warehouse0')
+
+        stock_location01 = warehouse.lot_stock_id
+        stock_location02 = stock_location01.copy()
+
+        manu_operation01 = warehouse.manu_type_id
+        manu_operation02 = manu_operation01.copy()
+        with Form(manu_operation02) as form:
+            form.name = 'Manufacturing 02'
+            form.sequence_code = 'MO2'
+            form.default_location_dest_id = stock_location02
+
+        manu_rule01 = warehouse.manufacture_pull_id
+        manu_route = manu_rule01.route_id
+        manu_rule02 = manu_rule01.copy()
+        with Form(manu_rule02) as form:
+            form.picking_type_id = manu_operation02
+        manu_route.rule_ids = [(6, 0, (manu_rule01 + manu_rule02).ids)]
+
+        compo01, compo02, finished = self.env['product.product'].create([{
+            'name': 'compo 01',
+            'type': 'consu',
+        }, {
+            'name': 'compo 02',
+            'type': 'consu',
+        }, {
+            'name': 'finished',
+            'type': 'product',
+            'route_ids': [(6, 0, manu_route.ids)],
+        }])
+
+        bom01_form = Form(self.env['mrp.bom'])
+        bom01_form.product_tmpl_id = finished.product_tmpl_id
+        bom01_form.code = '01'
+        bom01_form.picking_type_id = manu_operation01
+        with bom01_form.bom_line_ids.new() as line:
+            line.product_id = compo01
+        bom01 = bom01_form.save()
+
+        bom02_form = Form(self.env['mrp.bom'])
+        bom02_form.product_tmpl_id = finished.product_tmpl_id
+        bom02_form.code = '02'
+        bom02_form.picking_type_id = manu_operation02
+        with bom02_form.bom_line_ids.new() as line:
+            line.product_id = compo02
+        bom02 = bom02_form.save()
+
+        self.env['stock.warehouse.orderpoint'].create([{
+            'warehouse_id': warehouse.id,
+            'location_id': stock_location01.id,
+            'product_id': finished.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+        }, {
+            'warehouse_id': warehouse.id,
+            'location_id': stock_location02.id,
+            'product_id': finished.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        }])
+
+        self.env['procurement.group'].run_scheduler()
+
+        mos = self.env['mrp.production'].search([('product_id', '=', finished.id)], order='origin')
+        self.assertRecordValues(mos, [
+            {'product_qty': 1, 'bom_id': bom01.id, 'picking_type_id': manu_operation01.id, 'location_dest_id': stock_location01.id},
+            {'product_qty': 2, 'bom_id': bom02.id, 'picking_type_id': manu_operation02.id, 'location_dest_id': stock_location02.id},
+        ])

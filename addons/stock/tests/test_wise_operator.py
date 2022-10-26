@@ -40,7 +40,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -51,7 +51,7 @@ class TestWiseOperator(TransactionCase):
         }
         pick1_wise = self.env['stock.picking'].create(vals)
         pick1_wise._onchange_picking_type()
-        pick1_wise.move_lines._onchange_product_id()
+        pick1_wise.move_ids._onchange_product_id()
 
         # Confirm and assign picking and prepare partial
         pick1_wise.action_confirm()
@@ -87,7 +87,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -98,7 +98,7 @@ class TestWiseOperator(TransactionCase):
         }
         delivery_order_wise1 = self.env['stock.picking'].create(vals)
         delivery_order_wise1._onchange_picking_type()
-        delivery_order_wise1.move_lines._onchange_product_id()
+        delivery_order_wise1.move_ids._onchange_product_id()
 
         # Assign and confirm
         delivery_order_wise1.action_confirm()
@@ -112,7 +112,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -123,7 +123,7 @@ class TestWiseOperator(TransactionCase):
         }
         delivery_order_wise2 = self.env['stock.picking'].create(vals)
         delivery_order_wise2._onchange_picking_type()
-        delivery_order_wise2.move_lines._onchange_product_id()
+        delivery_order_wise2.move_ids._onchange_product_id()
 
         # Assign and confirm
         delivery_order_wise2.action_confirm()
@@ -132,8 +132,8 @@ class TestWiseOperator(TransactionCase):
 
         # The operator is a wise guy and decides to do the opposite of what Odoo proposes.
         # He uses the products reserved on picking 1 on picking 2 and vice versa
-        move1 = delivery_order_wise1.move_lines[0]
-        move2 = delivery_order_wise2.move_lines[0]
+        move1 = delivery_order_wise1.move_ids[0]
+        move2 = delivery_order_wise2.move_ids[0]
         pack_ids1 = delivery_order_wise1.move_line_ids
         pack_ids2 = delivery_order_wise2.move_line_ids
 
@@ -145,11 +145,10 @@ class TestWiseOperator(TransactionCase):
         # put the move lines from delivery_order_wise2 into delivery_order_wise1
         for pack_id2 in pack_ids2:
             new_pack_id1 = pack_id2.copy(default={'picking_id': delivery_order_wise1.id, 'move_id': move1.id})
-            new_pack_id1.qty_done = new_pack_id1.product_qty
-            new_pack_id1.with_context(bypass_reservation_update=True).product_uom_qty = 0
+            new_pack_id1.qty_done = pack_id2.reserved_qty
 
         new_move_lines = delivery_order_wise1.move_line_ids.filtered(lambda p: p.qty_done)
-        self.assertEqual(sum(new_move_lines.mapped('product_qty')), 0)
+        self.assertEqual(sum(new_move_lines.mapped('reserved_qty')), 0)
         self.assertEqual(sum(new_move_lines.mapped('qty_done')), 5)
         self.assertEqual(set(new_move_lines.mapped('location_id.id')), set([
             self.shelf1.id,
@@ -157,12 +156,11 @@ class TestWiseOperator(TransactionCase):
 
         # put the move line from delivery_order_wise1 into delivery_order_wise2
         new_pack_id2 = pack_ids1.copy(default={'picking_id': delivery_order_wise2.id, 'move_id': move2.id})
-        new_pack_id2.qty_done = new_pack_id2.product_qty
-        new_pack_id2.with_context(bypass_reservation_update=True).product_uom_qty = 0
+        new_pack_id2.qty_done = pack_ids1.reserved_qty
 
         new_move_lines = delivery_order_wise2.move_line_ids.filtered(lambda p: p.qty_done)
         self.assertEqual(len(new_move_lines), 1)
-        self.assertEqual(sum(new_move_lines.mapped('product_qty')), 0)
+        self.assertEqual(sum(new_move_lines.mapped('reserved_qty')), 0)
         self.assertEqual(sum(new_move_lines.mapped('qty_done')), 5)
         self.assertEqual(new_move_lines.location_id.id, self.shelf2.id)
 
@@ -174,7 +172,7 @@ class TestWiseOperator(TransactionCase):
         records = self.env['stock.quant'].search([
             ('product_id', '=', product_wise.id),
             ('quantity', '<', 0.0),
-            ('location_id.id', '=', self.ref('stock.stock_location_stock'))])
+            ('location_id', '=', self.ref('stock.stock_location_stock'))])
         self.assertEqual(len(records.ids), 0, 'This should not have created a negative quant')
 
         # Check the other delivery order has changed its state back to ready

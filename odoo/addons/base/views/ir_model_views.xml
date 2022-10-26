@@ -12,8 +12,8 @@
                         <field name="menu_id"/>
                     </group>
                     <footer>
-                        <button name="menu_create" string="Create _Menu" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button name="menu_create" string="Create Menu" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                 </form>
             </field>
@@ -31,6 +31,7 @@
             <field name="model">ir.model</field>
             <field name="arch" type="xml">
                 <form string="Model Description">
+                  <header><!-- used for override --></header>
                   <sheet>
                     <group>
                         <group>
@@ -247,6 +248,7 @@
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
                 <form string="Fields" duplicate="false">
+                    <field name="state" invisible="1"/>
                     <sheet>
                         <group>
                             <group>
@@ -281,8 +283,8 @@
                                                     'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                         <field name="group_expand" groups="base.group_no_one"
-                                            attrs="{'readonly': [('ttype','!=','many2one')],
-                                                    'invisible': [('ttype','!=','many2one')]}"/>
+                                            attrs="{'readonly': [('ttype','not in', ['many2one', 'selection'])],
+                                                    'invisible': [('ttype','not in', ['many2one', 'selection'])]}"/>
                                         <field name="on_delete" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','!=','many2one')],
                                                     'invisible': [('ttype','!=','many2one')]}"/>

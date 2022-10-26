@@ -3,19 +3,19 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const ProductScreen = require('point_of_sale.ProductScreen');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
 
     class TableGuestsButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         get currentOrder() {
             return this.env.pos.get_order();
         }
         get nGuests() {
-            return this.currentOrder ? this.currentOrder.get_customer_count() : 0;
+            return this.currentOrder ? this.currentOrder.getCustomerCount() : 0;
         }
         async onClick() {
             const { confirmed, payload: inputNumber } = await this.showPopup('NumberPopup', {
@@ -26,7 +26,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
             });
 
             if (confirmed) {
-                this.env.pos.get_order().set_customer_count(parseInt(inputNumber, 10) || 1);
+                this.env.pos.get_order().setCustomerCount(parseInt(inputNumber, 10) || 1);
             }
         }
     }

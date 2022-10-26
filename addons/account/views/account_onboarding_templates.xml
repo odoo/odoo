@@ -30,13 +30,9 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Bank Account</t>
             <t t-set="description">
-                <t t-if="env.user.has_group('account.group_account_user')">
-                    Setup your bank account to sync bank feeds.
-                </t>
-                <t t-else="">
-                    Setup your bank account to receive payments.
-                </t>
+                Connect your financial accounts in seconds.
             </t>
+            <t t-set="btn_text">Add a bank account</t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'setting_init_bank_account_action'" />
             <t t-set="model" t-value="'res.company'" />
@@ -59,21 +55,21 @@
             <t t-set="title">Chart of Accounts</t>
             <t t-set="description">Setup your chart of accounts and record initial balances.</t>
             <t t-set="btn_text">Review</t>
-            <t t-set="done_text">Chart of account set.</t>
+            <t t-set="done_text">Chart of accounts set.</t>
             <t t-set="method" t-value="'setting_chart_of_accounts_action'" />
             <t t-set="model" t-value="'res.company'" />
             <t t-set="state" t-value="state.get('account_setup_coa_state')" />
         </t>
     </template>
-    <template id="dashboard_onboarding_bill_step">
+    <template id="onboarding_taxes_step">
         <t t-call="base.onboarding_step">
-            <t t-set="title">First Bill</t>
-            <t t-set="description">Digitalize your vendor bills with OCR and Artificial Intelligence.</t>
-            <t t-set="btn_text">Let's start!</t>
-            <t t-set="done_text">All done!</t>
-            <t t-set="method" t-value="'setting_upload_bill_wizard'"/>
-            <t t-set="model" t-value="'account.move'"/>
-            <t t-set="state" t-value="state.get('account_setup_bill_state')"/>
+            <t t-set="title">Taxes</t>
+            <t t-set="description">Set default Taxes for sales and purchase transactions.</t>
+            <t t-set="btn_text">Review</t>
+            <t t-set="done_text">Taxes set.</t>
+            <t t-set="method" t-value="'action_open_taxes_onboarding'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_setup_taxes_state')" />
         </t>
     </template>
     <!-- ONBOARDING PANELS -->
@@ -98,9 +94,9 @@
             <t t-set="close_method" t-value="'action_close_account_dashboard_onboarding'"/>
             <t t-set="close_model" t-value="'res.company'"/>
 
-            <t t-call="account.dashboard_onboarding_bill_step" name="company_step" />
-            <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
             <t t-call="account.onboarding_fiscal_year_step" name="fiscal_year_step" />
+            <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
+            <t t-call="account.onboarding_taxes_step" name="taxes_step" />
             <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
         </t>
     </template>
@@ -136,8 +132,8 @@
                 <label for="account_sale_tax_id" string="Sales Tax"/>
                 <field name="account_sale_tax_id" />
                 <footer>
-                    <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax" />
-                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                    <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax" data-hotkey="q" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

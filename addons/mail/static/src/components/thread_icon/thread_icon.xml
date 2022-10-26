@@ -2,57 +2,55 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadIcon" owl="1">
-        <div class="o_ThreadIcon">
-            <t t-if="thread" name="rootCondition">
-                <t t-if="thread.channel_type === 'channel'">
-                    <t t-if="thread.public === 'private'">
-                        <!-- AKU TODO: channel of type 'groups' should maybe also have lock icon -->
-                        <div class="o_ThreadIcon_channelPrivate fa fa-lock" title="Private channel"/>
+        <t t-if="threadIconView">
+            <div class="o_ThreadIcon d-flex justify-content-center flex-shrink-0" t-attf-class="{{ className }}" t-ref="root" name="root">
+                <t t-if="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'channel'">
+                    <t t-if="threadIconView.thread.authorizedGroupFullName">
+                        <div class="o_ThreadIcon_groupRestrictedChannel fa fa-fw fa-hashtag" t-att-title="threadIconView.thread.accessRestrictedToGroupText"/>
                     </t>
-                    <t t-else="">
-                        <div class="o_ThreadIcon_channelPublic fa fa-hashtag" title="Public channel"/>
+                    <t t-if="!threadIconView.thread.authorizedGroupFullName">
+                        <div class="o_ThreadIcon_publicChannel fa fa-fw fa-globe" title="Public Channel"/>
                     </t>
                 </t>
-                <t t-elif="thread.channel_type === 'chat' and thread.correspondent">
-                    <t t-if="thread.orderedOtherTypingMembers.length > 0">
+                <t t-elif="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'chat' and threadIconView.thread.channel.correspondent">
+                    <t t-if="threadIconView.threadTypingIconView">
                         <ThreadTypingIcon
-                            class="o_ThreadIcon_typing"
-                            animation="'pulse'"
-                            title="thread.typingStatusText"
+                            className="'o_ThreadIcon_typing flex-grow-1'"
+                            record="threadIconView.threadTypingIconView"
                         />
                     </t>
-                    <t t-elif="thread.correspondent.im_status === 'online'">
-                        <div class="o_ThreadIcon_online fa fa-circle" title="Online"/>
+                    <t t-elif="threadIconView.thread.channel.correspondent.im_status === 'online'">
+                        <div class="o_ThreadIcon_online fa fa-fw fa-circle" title="Online"/>
                     </t>
-                    <t t-elif="thread.correspondent.im_status === 'offline'">
-                        <div class="o_ThreadIcon_offline fa fa-circle-o" title="Offline"/>
+                    <t t-elif="threadIconView.thread.channel.correspondent.im_status === 'offline'">
+                        <div class="o_ThreadIcon_offline fa fa-fw fa-circle-o" title="Offline"/>
                     </t>
-                    <t t-elif="thread.correspondent.im_status === 'away'">
-                        <div class="o_ThreadIcon_away fa fa-circle" title="Away"/>
+                    <t t-elif="threadIconView.thread.channel.correspondent.im_status === 'away'">
+                        <div class="o_ThreadIcon_away fa fa-fw fa-circle text-warning" title="Away"/>
                     </t>
-                    <t t-elif="thread.correspondent === env.messaging.partnerRoot">
-                        <div class="o_ThreadIcon_online fa fa-heart" title="Bot"/>
+                    <t t-elif="threadIconView.thread.channel.correspondent === messaging.partnerRoot">
+                        <div class="o_ThreadIcon_online fa fa-fw fa-heart" title="Bot"/>
                     </t>
                     <t t-else="" name="noImStatusCondition">
-                        <div class="o_ThreadIcon_noImStatus fa fa-question-circle" title="No IM status available"/>
+                        <div class="o_ThreadIcon_noImStatus fa fa-fw fa-question-circle" title="No IM status available"/>
                     </t>
                 </t>
-                <t t-elif="thread.model === 'mail.box'">
-                    <t t-if="thread === env.messaging.inbox">
-                        <div class="o_ThreadIcon_mailboxInbox fa fa-inbox"/>
+                <t t-elif="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'group'">
+                    <div class="o_ThreadIcon fa fa-fw fa-users" title="Grouped Chat"/>
+                </t>
+                <t t-elif="threadIconView.thread.mailbox">
+                    <t t-if="threadIconView.thread.mailbox === messaging.inbox">
+                        <div class="o_ThreadIcon_mailboxInbox fa fa-fw fa-inbox"/>
                     </t>
-                    <t t-elif="thread === env.messaging.starred">
-                        <div class="o_ThreadIcon_mailboxStarred fa fa-star-o"/>
+                    <t t-elif="threadIconView.thread.mailbox === messaging.starred">
+                        <div class="o_ThreadIcon_mailboxStarred fa fa-fw fa-star-o"/>
                     </t>
-                    <t t-elif="thread === env.messaging.history">
-                        <div class="o_ThreadIcon_mailboxHistory fa fa-history"/>
-                    </t>
-                    <t t-elif="thread === env.messaging.moderation">
-                        <div class="o_ThreadIcon_mailboxModeration fa fa-envelope"/>
+                    <t t-elif="threadIconView.thread.mailbox === messaging.history">
+                        <div class="o_ThreadIcon_mailboxHistory fa fa-fw fa-history"/>
                     </t>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>

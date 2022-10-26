@@ -4,18 +4,19 @@
 import base64
 import collections
 import logging
-from lxml.html import clean
 import random
 import re
 import socket
 import threading
 import time
-
 from email.utils import getaddresses
-from lxml import etree
 from urllib.parse import urlparse
-from werkzeug import urls
+
 import idna
+import markupsafe
+from lxml import etree
+from lxml.html import clean
+from werkzeug import urls
 
 import odoo
 from odoo.loglevels import ustr
@@ -27,20 +28,22 @@ _logger = logging.getLogger(__name__)
 # HTML Sanitizer
 #----------------------------------------------------------
 
-tags_to_kill = ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
-                'noscript', 'object', 'script', 'style', 'title']
-
-tags_to_remove = ['html', 'body']
-
-# allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment])
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
-     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
+     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-initial-sha', 'data-oe-nodeid',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
-     'data-class',
+     'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
+     'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-behavior-props', 'data-prop-name',  # knowledge commands
      ])
+SANITIZE_TAGS = {
+    # allow new semantic HTML5 tags
+    'allow_tags': clean.defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment]),
+    'kill_tags': ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
+                  'noscript', 'object', 'script', 'style', 'title'],
+    'remove_tags': ['html', 'body'],
+}
 
 
 class _Cleaner(clean.Cleaner):
@@ -48,8 +51,8 @@ class _Cleaner(clean.Cleaner):
     _style_re = re.compile(r'''([\w-]+)\s*:\s*((?:[^;"']|"[^";]*"|'[^';]*')+)''')
 
     _style_whitelist = [
-        'font-size', 'font-family', 'font-weight', 'background-color', 'color', 'text-align',
-        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'opacity',
+        'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
+        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
         'float', 'vertical-align', 'display',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
@@ -121,12 +124,19 @@ class _Cleaner(clean.Cleaner):
         el_id = el.get('id', '') or ''
 
         # gmail or yahoo // # outlook, html // # msoffice
-        if ('gmail_extra' in el_class or 'yahoo_quoted' in el_class) or \
-                (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
+        if 'gmail_extra' in el_class or \
+                'divRplyFwdMsg' in el_id or \
                 ('SkyDrivePlaceholder' in el_class or 'SkyDrivePlaceholder' in el_class):
             el.set('data-o-mail-quote', '1')
             if el.getparent() is not None:
                 el.getparent().set('data-o-mail-quote-container', '1')
+
+        if (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
+           'yahoo_quoted' in el_class:
+            # Quote all elements after this one
+            el.set('data-o-mail-quote', '1')
+            for sibling in el.itersiblings(preceding=False):
+                sibling.set('data-o-mail-quote', '1')
 
         # html signature (-- <br />blah)
         signature_begin = re.compile(r"((?:(?:^|\n)[-]{2}[\s]?$))")
@@ -190,17 +200,9 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         'processing_instructions': False
     }
     if sanitize_tags:
-        kwargs['allow_tags'] = allowed_tags
-        if etree.LXML_VERSION >= (2, 3, 1):
-            # kill_tags attribute has been added in version 2.3.1
-            kwargs.update({
-                'kill_tags': tags_to_kill,
-                'remove_tags': tags_to_remove,
-            })
-        else:
-            kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+        kwargs.update(SANITIZE_TAGS)
 
-    if sanitize_attributes and etree.LXML_VERSION >= (3, 1, 0):  # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+    if sanitize_attributes:  # We keep all attributes in order to keep "style"
         if strip_classes:
             current_safe_attrs = safe_attrs - frozenset(['class'])
         else:
@@ -249,16 +251,18 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
         cleaned = cleaned[5:-6]
 
-    return cleaned
+    return markupsafe.Markup(cleaned)
 
 # ----------------------------------------------------------
 # HTML/Text management
 # ----------------------------------------------------------
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
-TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
+TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
 # retrieve inner content of the link
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
+HTML_TAGS_REGEX = re.compile('<.*?>')
+HTML_NEWLINES_REGEX = re.compile('<(div|p|br|tr)[^>]*>|\n')
 
 
 def validate_url(url):
@@ -269,18 +273,17 @@ def validate_url(url):
 
 
 def is_html_empty(html_content):
-    """Check if a html content is empty. If there are only formatting tags or
-    a void content return True. Famous use case if a '<p><br></p>' added by
-    some web editor.
+    """Check if a html content is empty. If there are only formatting tags with style
+    attributes or a void content  return True. Famous use case if a
+    '<p style="..."><br></p>' added by some web editor.
 
     :param str html_content: html content, coming from example from an HTML field
     :returns: bool, True if no content found or if containing only void formatting tags
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*/?\s*\>')
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
-
 
 def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
@@ -293,6 +296,21 @@ def html_keep_url(text):
         idx = item.end()
     final += text[idx:]
     return final
+
+
+def html_to_inner_content(html):
+    """Returns unformatted text after removing html tags and excessive whitespace from a
+    string/Markup. Passed strings will first be sanitized.
+    """
+    if is_html_empty(html):
+        return ''
+    if not isinstance(html, markupsafe.Markup):
+        html = html_sanitize(html)
+    processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
+    processed = re.sub(HTML_TAGS_REGEX, '', processed)
+    processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = processed.strip()
+    return processed
 
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
@@ -358,22 +376,24 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html.strip()
 
-def plaintext2html(text, container_tag=False):
-    """ Convert plaintext into html. Content of the text is escaped to manage
-        html entities, using misc.html_escape().
-        - all \n,\r are replaced by <br />
-        - enclose content into <p>
-        - convert url into clickable link
-        - 2 or more consecutive <br /> are considered as paragraph breaks
+def plaintext2html(text, container_tag=None):
+    r"""Convert plaintext into html. Content of the text is escaped to manage
+    html entities, using :func:`~odoo.tools.misc.html_escape`.
 
-        :param string container_tag: container of the html; by default the
-            content is embedded into a <div>
+    - all ``\n``, ``\r`` are replaced by ``<br/>``
+    - enclose content into ``<p>``
+    - convert url into clickable link
+    - 2 or more consecutive ``<br/>`` are considered as paragraph breaks
+
+    :param str text: plaintext to convert
+    :param str container_tag: container of the html; by default the content is
+        embedded into a ``<div>``
+    :rtype: markupsafe.Markup
     """
     text = misc.html_escape(ustr(text))
 
     # 1. replace \n and \r
-    text = text.replace('\n', '<br/>')
-    text = text.replace('\r', '<br/>')
+    text = re.sub(r'(\r\n|\r|\n)', '<br/>', text)
 
     # 2. clickable links
     text = html_keep_url(text)
@@ -381,26 +401,29 @@ def plaintext2html(text, container_tag=False):
     # 3-4: form paragraphs
     idx = 0
     final = '<p>'
-    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
+    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*/?[>]\s*){2,})')
     for item in re.finditer(br_tags, text):
         final += text[idx:item.start()] + '</p><p>'
         idx = item.end()
     final += text[idx:] + '</p>'
 
     # 5. container
-    if container_tag:
+    if container_tag: # FIXME: validate that container_tag is just a simple tag?
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
-    return ustr(final)
+    return markupsafe.Markup(final)
 
-def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=False):
+def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):
     """ Append extra content at the end of an HTML snippet, trying
         to locate the end of the HTML document (</body>, </html>, or
         EOF), and converting the provided content in html unless ``plaintext``
         is False.
+
         Content conversion can be done in two ways:
-        - wrapping it into a pre (preserve=True)
-        - use plaintext2html (preserve=False, using container_tag to wrap the
-            whole content)
+
+        - wrapping it into a pre (``preserve=True``)
+        - use plaintext2html (``preserve=False``, using ``container_tag`` to
+          wrap the whole content)
+
         A side-effect of this method is to coerce all HTML tags to
         lowercase in ``html``, and strip enclosing <html> or <body> tags in
         content if ``plaintext`` is False.
@@ -411,6 +434,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
             be wrapped in a <pre/> tag.
         :param bool preserve: if content is plaintext, wrap it into a <pre>
             instead of converting it into html
+        :param str container_tag: tag to wrap the content into, defaults to `div`.
+        :rtype: markupsafe.Markup
     """
     html = ustr(html)
     if plaintext and preserve:
@@ -427,20 +452,17 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     if insert_location == -1:
         insert_location = html.find('</html>')
     if insert_location == -1:
-        return '%s%s' % (html, content)
-    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
+        return markupsafe.Markup('%s%s' % (html, content))
+    return markupsafe.Markup('%s%s%s' % (html[:insert_location], content, html[insert_location:]))
 
 
 def prepend_html_content(html_body, html_content):
     """Prepend some HTML content at the beginning of an other HTML content."""
-    html_content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content)
+    html_content = type(html_content)(re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content))
     html_content = html_content.strip()
 
-    insert_index = next(re.finditer(r'<body[^>]*>', html_body), None)
-    if insert_index is None:
-        insert_index = next(re.finditer(r'<html[^>]*>', html_body), None)
-
-    insert_index = insert_index.end() if insert_index else 0
+    body_match = re.search(r'<body[^>]*>', html_body) or re.search(r'<html[^>]*>', html_body)
+    insert_index = body_match.end() if body_match else 0
 
     return html_body[:insert_index] + html_content + html_body[insert_index:]
 
@@ -472,48 +494,10 @@ def generate_tracking_message_id(res_id):
     rndstr = ("%.15f" % rnd)[2:]
     return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
-               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
-    """Low-level function for sending an email (deprecated).
-
-    :deprecate: since OpenERP 6.1, please use ir.mail_server.send_email() instead.
-    :param email_from: A string used to fill the `From` header, if falsy,
-                       config['email_from'] is used instead.  Also used for
-                       the `Reply-To` header if `reply_to` is not provided
-    :param email_to: a sequence of addresses to send the mail to.
-    """
-
-    # If not cr, get cr from current thread database
-    local_cr = None
-    if not cr:
-        db_name = getattr(threading.currentThread(), 'dbname', None)
-        if db_name:
-            local_cr = cr = odoo.registry(db_name).cursor()
-        else:
-            raise Exception("No database cursor found, please pass one explicitly")
-
-    # Send Email
-    try:
-        mail_server_pool = odoo.registry(cr.dbname)['ir.mail_server']
-        res = False
-        # Pack Message into MIME Object
-        email_msg = mail_server_pool.build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
-                   attachments, message_id, references, openobject_id, subtype, headers=headers)
-
-        res = mail_server_pool.send_email(cr, uid or 1, email_msg, mail_server_id=None,
-                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
-                       smtp_encryption=('ssl' if ssl else None), smtp_debug=debug)
-    except Exception:
-        _logger.exception("tools.email_send failed to deliver email")
-        return False
-    finally:
-        if local_cr:
-            cr.close()
-    return res
-
 def email_split_tuples(text):
-    """ Return a list of (name, email) address tuples found in ``text``"""
+    """ Return a list of (name, email) address tuples found in ``text`` . Note
+    that text should be an email header or a stringified email list as it may
+    give broader results than expected on actual text. """
     if not text:
         return []
     return [(addr[0], addr[1]) for addr in getaddresses([text])
@@ -536,7 +520,7 @@ def email_split_and_format(text):
         return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
-def email_normalize(text):
+def email_normalize(text, strict=True):
     """ Sanitize and standardize email address entries.
         A normalized email is considered as :
         - having a left part + @ + a right part (the domain can be without '.something')
@@ -545,27 +529,41 @@ def email_normalize(text):
         Ex:
         - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
         - Normalized Output Email : 'name@domain.com'
+
+    :param bool strict: text should contain exactly one email (default behavior
+      and unique behavior before Odoo16);
+
+    :return: False if no email found (or if more than 1 email found when being
+      in strict mode); normalized email otherwise;
     """
     emails = email_split(text)
-    if not emails or len(emails) != 1:
+    if not emails or (strict and len(emails) != 1):
         return False
     return emails[0].lower()
-
 
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from email information e.g:
-        - info@proximus.be -> proximus.be
+
+    - info@proximus.be -> proximus.be
     """
     normalized_email = email_normalize(email)
     if normalized_email:
         return normalized_email.split('@')[1]
     return False
 
+def email_domain_normalize(domain):
+    """Return the domain normalized or False if the domain is invalid."""
+    if not domain or '@' in domain:
+        return False
+
+    return domain.lower()
+
 def url_domain_extract(url):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from an URL e.g:
-        - www.info.proximus.be -> proximus.be
+
+    - www.info.proximus.be -> proximus.be
     """
     parser_results = urlparse(url)
     company_hostname = parser_results.hostname
@@ -623,3 +621,31 @@ def formataddr(pair, charset='utf-8'):
             name = email_addr_escapes_re.sub(r'\\\g<0>', name)
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
+
+
+def encapsulate_email(old_email, new_email):
+    """Change the FROM of the message and use the old one as name.
+
+    e.g.
+    * Old From: "Admin" <admin@gmail.com>
+    * New From: notifications@odoo.com
+    * Output: "Admin" <notifications@odoo.com>
+    """
+    old_email_split = getaddresses([old_email])
+    if not old_email_split or not old_email_split[0]:
+        return old_email
+
+    new_email_split = getaddresses([new_email])
+    if not new_email_split or not new_email_split[0]:
+        return
+
+    old_name, old_email = old_email_split[0]
+    if old_name:
+        name_part = old_name
+    else:
+        name_part = old_email.split("@")[0]
+
+    return formataddr((
+        name_part,
+        new_email_split[0][1],
+    ))

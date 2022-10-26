@@ -4,7 +4,7 @@ odoo.define('website_sale_comparison.comparison', function (require) {
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+const {getCookie, setCookie} = require('web.utils.cookies');
 var VariantMixin = require('sale.VariantMixin');
 var website_sale_utils = require('website_sale.utils');
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
@@ -16,8 +16,6 @@ var _t = core._t;
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
 var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
-    xmlDependencies: ['/website_sale_comparison/static/src/xml/comparison.xml'],
-
     template: 'product_comparison_template',
     events: {
         'click .o_product_panel_header': '_onClickPanelHeader',
@@ -30,7 +28,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this._super.apply(this, arguments);
 
         this.product_data = {};
-        this.comparelist_product_ids = JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]');
+        this.comparelist_product_ids = JSON.parse(getCookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
         this.guard = new concurrency.Mutex();
     },
@@ -59,6 +57,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 return $('#comparelist .o_product_panel_content').html();
             }
         });
+        // We trigger a resize to launch the event that checks if this element hides
+        // a button when the page is loaded.
+        $(window).trigger('resize');
 
         $(document.body).on('click.product_comparaison_widget', '.comparator-popover .o_comparelist_products .o_remove', function (ev) {
             ev.preventDefault();
@@ -67,7 +68,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         $(document.body).on('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
             self._removeFromComparelist(ev);
             self.guard.exec(function() {
-                var new_link = '/shop/compare/?products=' + self.comparelist_product_ids.toString();
+                var new_link = '/shop/compare?products=' + self.comparelist_product_ids.toString();
                 window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
             });
         });
@@ -140,7 +141,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             route: '/shop/get_product_data',
             params: {
                 product_ids: product_ids,
-                cookies: JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]'),
+                cookies: JSON.parse(getCookie('comparelist_product_ids') || '[]'),
             },
         }).then(function (data) {
             self.comparelist_product_ids = JSON.parse(data.cookies);
@@ -192,8 +193,12 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         var self = this;
         this.$('.o_comparelist_products .o_product_row').remove();
         _.each(this.comparelist_product_ids, function (res) {
-            var $template = self.product_data[res].render;
-            self.$('.o_comparelist_products').append($template);
+            if (self.product_data.hasOwnProperty(res)) {
+                // It is possible that we do not have the required product_data for all IDs in
+                // comparelist_product_ids
+                var $template = self.product_data[res].render;
+                self.$('.o_comparelist_products').append($template);
+            }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
             $('#comparelist .o_product_panel_header').popover('show');
@@ -220,7 +225,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateCookie: function () {
-        document.cookie = 'comparelist_product_ids=' + JSON.stringify(this.comparelist_product_ids) + '; path=/';
+        setCookie('comparelist_product_ids', JSON.stringify(this.comparelist_product_ids), 24 * 60 * 60 * 365, 'required');
         this._updateComparelistView();
     },
     /**
@@ -236,7 +241,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             this.$('.o_comparelist_products').addClass('d-md-block');
             if (this.comparelist_product_ids.length >=2) {
                 this.$('.o_comparelist_button').addClass('d-md-block');
-                this.$('.o_comparelist_button a').attr('href', '/shop/compare/?products='+this.comparelist_product_ids.toString());
+                this.$('.o_comparelist_button a').attr('href', '/shop/compare?products='+this.comparelist_product_ids.toString());
             }
         }
     },
@@ -258,7 +263,7 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
     events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
-        'submit form[action="/shop/cart/update"]': '_onFormSubmit',
+        'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
 
     /**
@@ -302,10 +307,30 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         this.getCartHandlerOptions(ev);
         // Override product image container for animation. 
         this.$itemImgContainer = this.$('#o_comparelist_table tr').first().find('td').eq(cellIndex);
-        const productId = parseInt($form.find('input[type="hidden"][name="product_id"]').first().val());
+        const $inputProduct = $form.find('input[type="hidden"][name="product_id"]').first();
+        const productId = parseInt($inputProduct.val());
         if (productId) {
-            return this.addToCart({product_id: productId, add_qty: 1});
+            const productTrackingInfo = $inputProduct.data('product-tracking-info');
+            if (productTrackingInfo) {
+                productTrackingInfo.quantity = 1;
+                $inputProduct.trigger('add_to_cart_event', [productTrackingInfo]);
+            }
+            return this.addToCart(this._getAddToCartParams(productId, $form));
         }
     },
+    /**
+     * Get the addToCart Params
+     *
+     * @param {number} productId
+     * @param {JQuery} $form
+     * @override
+     */
+    _getAddToCartParams(productId, $form) {
+        return {
+            product_id: productId,
+            add_qty: 1,
+        };
+    }
 });
+return ProductComparison;
 });

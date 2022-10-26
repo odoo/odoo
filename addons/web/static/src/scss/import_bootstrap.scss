@@ -1,3 +1,9 @@
+/*!
+ * Copied from Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
 
 // This file is importing bootstrap. While a simple "import "bootstrap";"
 // should be enough, this does not allow overridding mixins/functions.
@@ -6,14 +12,19 @@
 // content of the "bootstrap.scss" files but do not import functions, variables
 // and mixins which will be handled "by hand" in _assets_helpers.
 
+// scss-docs-start import-stack
+// Configuration
 // @import "functions";
 // @import "variables";
 // @import "mixins";
+@import "utilities";
+
+// Layout & components
 @import "root";
 @import "reboot";
 @import "type";
 @import "images";
-@import "code";
+@import "containers";
 @import "grid";
 @import "tables";
 @import "forms";
@@ -29,18 +40,15 @@ $theme-colors: $-tmp;
 @import "transitions";
 @import "dropdown";
 @import "button-group";
-@import "input-group";
-@import "custom-forms";
 @import "nav";
 @import "navbar";
 @import "card";
+@import "accordion";
 @import "breadcrumb";
 @import "pagination";
 @import "badge";
-@import "jumbotron";
 @import "alert";
 @import "progress";
-@import "media";
 @import "list-group";
 @import "close";
 @import "toasts";
@@ -49,5 +57,14 @@ $theme-colors: $-tmp;
 @import "popover";
 @import "carousel";
 @import "spinners";
-@import "utilities";
-@import "print";
+@import "offcanvas";
+@import "placeholders";
+
+// Helpers
+@import "helpers";
+
+// Utilities
+// Moved into bundle after bs_utilities_custom.scss file to allow to extend
+// the utilities
+// @import "utilities/api";
+// scss-docs-end import-stack

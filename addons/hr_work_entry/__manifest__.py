@@ -6,7 +6,6 @@
     'category': 'Human Resources/Employees',
     'sequence': 39,
     'summary': 'Manage work entries',
-    'description': "",
     'installable': True,
     'depends': [
         'hr',
@@ -20,8 +19,9 @@
         'views/resource_calendar_views.xml',
     ],
     'assets': {
-        'web.assets_qweb': [
+        'web.assets_backend': [
             'hr_work_entry/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

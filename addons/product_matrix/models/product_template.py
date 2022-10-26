@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 
-from odoo import models
+from odoo import models, fields
 
 
 class ProductTemplate(models.Model):
@@ -79,14 +79,7 @@ class ProductTemplateAttributeValue(models.Model):
         }  # The " " is to avoid having 'Not available' if the template has only one attribute line.
         extra_price = sum(self.mapped('price_extra')) if display_extra else 0
         if extra_price:
-            sign = '+ ' if extra_price > 0 else '- '
-            header_cell.update({
-                "price": sign + self.env['ir.qweb.field.monetary'].value_to_html(
-                    extra_price, {
-                        'from_currency': fro_currency,
-                        'display_currency': to_currency,
-                        'company_id': company.id,
-                        }
-                    )
-            })
+            header_cell['currency_id'] = to_currency.id
+            header_cell['price'] = fro_currency._convert(
+                extra_price, to_currency, company, fields.Date.today())
         return header_cell

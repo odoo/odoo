@@ -2,19 +2,27 @@
 <template id="template" xml:space="preserve">
 
     <!-- LAYOUT TEMPLATES -->
-    <div t-name="iap.redirect_to_odoo_credit">
-        <t t-if="data.body">
-            <div t-raw="data.body"/>
-        </t>
-        <t t-if="!data.body">
-            <t t-if="data.message">
-                <span t-esc="data.message"/>
-            </t>
-            <t t-if="!data.message">
-                <span>Insufficient credit to perform this service.</span>
-            </t>
-        </t>
-    </div>
+    <t t-name="iap.InsufficientCreditDialog" owl="1">
+        <Dialog>
+            <div t-att-style="style">
+                <t t-if="props.errorData.body">
+                    <div t-raw="props.errorData.body"/>
+                </t>
+                <t t-if="!props.errorData.body">
+                    <t t-if="props.errorData.message">
+                        <span t-esc="props.errorData.message"/>
+                    </t>
+                    <t t-if="!props.errorData.message">
+                        <span>Insufficient credit to perform this service.</span>
+                    </t>
+                </t>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="buyCredits" t-esc="buttonMessage"/>
+                    <button class="btn" t-on-click="close">Cancel</button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
 
     <t t-extend="DashboardMain">
         <t t-jquery=".o_web_settings_apps" t-operation="after">
@@ -24,8 +32,8 @@
     
     <div t-name="iap.buy_more_credits" class="mt-2 row">
         <div class="col-sm">
-            <button class="btn btn-link buy_credits px-0"><i class="fa fa-arrow-right"/> Buy credits</button><br/>
-            <button t-if="!hideService" class="btn btn-link o_iap_view_my_services px-0"><i class="fa fa-arrow-right mr-1"/>View My Services</button>
+            <button class="btn btn-link buy_credits px-0 o-hidden-ios"><i class="fa fa-arrow-right"/> Buy credits</button><br/>
+            <button t-if="!hideService" class="btn btn-link o_iap_view_my_services px-0 o-hidden-ios"><i class="fa fa-arrow-right me-1"/>View My Services</button>
         </div>
     </div>
 </template>

@@ -1,31 +1,107 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
+from unittest.mock import patch
+
 from odoo.tests.common import TransactionCase, HttpCase
 from odoo import Command
+
+DISABLED_MAIL_CONTEXT = {
+    'tracking_disable': True,
+    'mail_create_nolog': True,
+    'mail_create_nosubscribe': True,
+    'mail_notrack': True,
+    'no_reset_password': True,
+}
+
+
+class BaseCommon(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Enforce the use of USD as main currency unless modified in inherited class(es)
+        cls._use_currency('USD')
+
+        # Mail logic won't be tested by default in other modules.
+        # Mail API overrides should be tested with dedicated tests on purpose
+        # Hack to use with_context and avoid manual context dict modification
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Test Partner',
+        })
+
+    @classmethod
+    def _use_currency(cls, currency_code):
+        # Enforce constant currency
+        currency = cls._enable_currency(currency_code)
+        if not cls.env.company.currency_id == currency:
+            cls.env.transaction.cache.set(cls.env.company, type(cls.env.company).currency_id, currency.id, dirty=True)
+            # this is equivalent to cls.env.company.currency_id = currency but without triggering buisness code checks.
+            # The value is added in cache, and the cache value is set as dirty so that that
+            # the value will be written to the database on next flush.
+            # this was needed because some journal entries may exist when running tests, especially l10n demo data.
+
+    @classmethod
+    def _enable_currency(cls, currency_code):
+        currency = cls.env['res.currency'].with_context(active_test=False).search(
+            [('name', '=', currency_code.upper())]
+        )
+        currency.action_unarchive()
+        return currency
+
+
+class BaseUsersCommon(BaseCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.group_portal = cls.env.ref('base.group_portal')
+        cls.group_user = cls.env.ref('base.group_user')
+
+        cls.user_portal = cls.env['res.users'].create({
+            'name': 'Test Portal User',
+            'login': 'portal_user',
+            'password': 'portal_user',
+            'email': 'portal_user@gladys.portal',
+            'groups_id': [Command.set([cls.group_portal.id])],
+        })
+
+        cls.user_internal = cls.env['res.users'].create({
+            'name': 'Test Internal User',
+            'login': 'internal_user',
+            'password': 'internal_user',
+            'email': 'mark.brown23@example.com',
+            'groups_id': [Command.set([cls.group_user.id])],
+        })
 
 
 class TransactionCaseWithUserDemo(TransactionCase):
 
-    def setUp(self):
-        super(TransactionCaseWithUserDemo, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
+        cls.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
+        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
+        cls.partner_demo = cls.user_demo.partner_id
 
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+        if not cls.user_demo:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
             # YTI TODO: This could be factorized between the different classes
-            self.partner_demo = self.env['res.partner'].create({
+            cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            self.user_demo = self.env['res.users'].create({
+            cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',
                 'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'partner_id': cls.partner_demo.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -197,3 +273,144 @@ class HttpCaseWithUserPortal(HttpCase):
                 'partner_id': self.partner_portal.id,
                 'groups_id': [Command.set([self.env.ref('base.group_portal').id])],
             })
+
+
+class MockSmtplibCase:
+    """Class which allows you to mock the smtplib feature, to be able to test in depth the
+    sending of emails. Unlike "MockEmail" which mocks mainly the <ir.mail_server> methods,
+    here we mainly mock the smtplib to be able to test the <ir.mail_server> model.
+    """
+    @contextmanager
+    def mock_smtplib_connection(self):
+        self.emails = []
+
+        origin = self
+
+        class TestingSMTPSession:
+            """SMTP session object returned during the testing.
+
+            So we do not connect to real SMTP server. Store the mail
+            server id used for the SMTP connection and other information.
+
+            Can be mocked for testing to know which with arguments the email was sent.
+            """
+            def quit(self):
+                pass
+
+            def send_message(self, message, smtp_from, smtp_to_list):
+                origin.emails.append({
+                    'smtp_from': smtp_from,
+                    'smtp_to_list': smtp_to_list,
+                    'message': message.as_string(),
+                    'from_filter': self.from_filter,
+                })
+
+            def sendmail(self, smtp_from, smtp_to_list, message_str, mail_options):
+                origin.emails.append({
+                    'smtp_from': smtp_from,
+                    'smtp_to_list': smtp_to_list,
+                    'message': message_str,
+                    'from_filter': self.from_filter,
+                })
+
+            def set_debuglevel(self, smtp_debug):
+                pass
+
+            def ehlo_or_helo_if_needed(self):
+                pass
+
+            def login(self, user, password):
+                pass
+
+            def starttls(self, keyfile=None, certfile=None, context=None):
+                pass
+
+        self.testing_smtp_session = TestingSMTPSession()
+
+        IrMailServer = self.env['ir.mail_server']
+        connect_origin = IrMailServer.connect
+        find_mail_server_origin = IrMailServer._find_mail_server
+
+        with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
+             patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
+             patch.object(type(IrMailServer), '_is_test_mode', lambda self: False), \
+             patch.object(type(IrMailServer), 'connect', wraps=IrMailServer, side_effect=connect_origin) as connect_mocked, \
+             patch.object(type(IrMailServer), '_find_mail_server', side_effect=find_mail_server_origin) as find_mail_server_mocked:
+            self.connect_mocked = connect_mocked
+            self.find_mail_server_mocked = find_mail_server_mocked
+            yield
+
+    def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
+        """Check that the given email has been sent.
+
+        If one of the parameter is None, it's just ignored and not used to retrieve the email.
+
+        :param smtp_from: FROM used for the authentication to the mail server
+        :param smtp_to_list: List of destination email address
+        :param message_from: FROM used in the SMTP headers
+        :param from_filter: from_filter of the <ir.mail_server> used to send the email
+            Can use a lambda to check the value
+        :param emails_count: the number of emails which should match the condition
+        :return: True if at least one email has been found with those parameters
+        """
+        matching_emails = filter(
+            lambda email:
+                (smtp_from is None or (
+                    smtp_from(email['smtp_from'])
+                    if callable(smtp_from)
+                    else smtp_from == email['smtp_from'])
+                 )
+                and (smtp_to_list is None or smtp_to_list == email['smtp_to_list'])
+                and (message_from is None or 'From: %s' % message_from in email['message'])
+                and (from_filter is None or from_filter == email['from_filter']),
+            self.emails,
+        )
+
+        matching_emails_count = len(list(matching_emails))
+
+        self.assertTrue(
+            matching_emails_count == emails_count,
+            msg='Emails not sent, %i emails match the condition but %i are expected' % (matching_emails_count, emails_count),
+        )
+
+    @classmethod
+    def _init_mail_config(cls):
+        cls.alias_bounce = 'bounce.test'
+        cls.alias_domain = 'test.com'
+        cls.default_from = 'notifications'
+        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', cls.alias_bounce)
+
+    @classmethod
+    def _init_mail_servers(cls):
+        cls.env['ir.mail_server'].search([]).unlink()
+
+        ir_mail_server_values = {
+            'smtp_host': 'smtp_host',
+            'smtp_encryption': 'none',
+        }
+        (
+            cls.server_domain,
+            cls.server_user,
+            cls.server_notification,
+            cls.server_default,
+        ) = cls.env['ir.mail_server'].create([
+            {
+                'name': 'Domain based server',
+                'from_filter': 'test.com',
+                ** ir_mail_server_values,
+            }, {
+                'name': 'User specific server',
+                'from_filter': 'specific_user@test.com',
+                ** ir_mail_server_values,
+            }, {
+                'name': 'Server Notifications',
+                'from_filter': 'notifications@test.com',
+                ** ir_mail_server_values,
+            }, {
+                'name': 'Server No From Filter',
+                'from_filter': False,
+                ** ir_mail_server_values,
+            },
+        ])

@@ -7,8 +7,8 @@ odoo.define('pos_mercury.ProductScreen', function (require) {
 
     const PosMercuryProductScreen = (ProductScreen) =>
         class extends ProductScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 useBarcodeReader({
                     credit: this.credit_error_action,
                 });

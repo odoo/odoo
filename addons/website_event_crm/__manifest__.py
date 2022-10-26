@@ -5,7 +5,7 @@
     'name': 'Website Events CRM',
     'version': '1.0',
     'category': 'Website/Website',
-    'website': 'https://www.odoo.com/page/events',
+    'website': 'https://www.odoo.com/app/events',
     'description': "Allow per-order lead creation mode",
     'depends': ['event_crm', 'website_event'],
     'data': [
@@ -16,4 +16,5 @@
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

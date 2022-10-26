@@ -4,6 +4,7 @@ import calendar
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import get_barcode_check_digit
 
 FNC1_CHAR = '\x1D'
 
@@ -15,8 +16,8 @@ class BarcodeNomenclature(models.Model):
         string="Is GS1 Nomenclature",
         help="This Nomenclature use the GS1 specification, only GS1-128 encoding rules is accepted is this kind of nomenclature.")
     gs1_separator_fnc1 = fields.Char(
-        string="FNC1 Seperator", trim=False,
-        help="Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS> ASCII 29 char). The seperator must not match the begin/end of any related rules pattern.")
+        string="FNC1 Separator", trim=False, default=r'(Alt029|#|\x1D)',
+        help="Alternative regex delimiter for the FNC1. The separator must not match the begin/end of any related rules pattern.")
 
     @api.constrains('gs1_separator_fnc1')
     def _check_pattern(self):
@@ -25,7 +26,7 @@ class BarcodeNomenclature(models.Model):
                 try:
                     re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
                 except re.error as error:
-                    raise ValidationError(_("The FNC1 Seperator Alternative is not a valid Regex: ") + str(error))
+                    raise ValidationError(_("The FNC1 Separator Alternative is not a valid Regex: ") + str(error))
 
     @api.model
     def gs1_date_to_date(self, gs1_date):
@@ -76,7 +77,7 @@ class BarcodeNomenclature(models.Model):
                     rule.name))
         elif rule.gs1_content_type == 'identifier':
             # Check digit and remove it of the value
-            if match.group(2)[-1] != str(self.get_barcode_check_digit("0" * (18 - len(match.group(2))) + match.group(2))):
+            if match.group(2)[-1] != str(get_barcode_check_digit("0" * (18 - len(match.group(2))) + match.group(2))):
                 return None
             result['value'] = match.group(2)
         elif rule.gs1_content_type == 'date':
@@ -124,3 +125,43 @@ class BarcodeNomenclature(models.Model):
         if self.is_gs1_nomenclature:
             return self.gs1_decompose_extanded(barcode)
         return super().parse_barcode(barcode)
+
+    @api.model
+    def _preprocess_gs1_search_args(self, args, barcode_types, field='barcode'):
+        """Helper method to preprocess 'args' in _search method to add support to
+        search with GS1 barcode result.
+        Cut off the padding if using GS1 and searching on barcode. If the barcode
+        is only digits to keep the original barcode part only.
+        """
+        nomenclature = self.env.company.nomenclature_id
+        if nomenclature.is_gs1_nomenclature:
+            for i, arg in enumerate(args):
+                if not isinstance(arg, (list, tuple)) or len(arg) != 3:
+                    continue
+                field_name, operator, value = arg
+                if field_name != field or operator not in ['ilike', 'not ilike', '=', '!='] or value is False:
+                    continue
+
+                parsed_data = []
+                try:
+                    parsed_data += nomenclature.parse_barcode(value) or []
+                except (ValidationError, ValueError):
+                    pass
+
+                replacing_operator = 'ilike' if operator in ['ilike', '='] else 'not ilike'
+                for data in parsed_data:
+                    data_type = data['rule'].type
+                    value = data['value']
+                    if data_type in barcode_types:
+                        match = re.match('0*([0-9]+)$', value)
+                        if match:
+                            unpadded_barcode = match.groups()[0]
+                            args[i] = (field_name, replacing_operator, unpadded_barcode)
+                        break
+
+                # The barcode isn't a valid GS1 barcode, checks if it can be unpadded.
+                if not parsed_data:
+                    match = re.match('0+([0-9]+)$', value)
+                    if match:
+                        args[i] = (field_name, replacing_operator, match.groups()[0])
+        return args

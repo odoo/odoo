@@ -9,7 +9,6 @@ var qweb = core.qweb;
 const GalleryWidget = publicWidget.Widget.extend({
 
     selector: '.s_image_gallery:not(.o_slideshow)',
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     events: {
         'click img': '_onClickImg',
     },
@@ -26,6 +25,9 @@ const GalleryWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
+        if (this.$modal) {
+            return;
+        }
         var self = this;
         var $cur = $(ev.currentTarget);
 
@@ -43,37 +45,33 @@ const GalleryWidget = publicWidget.Widget.extend({
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
 
         const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
-        var $modal = $(qweb.render('website.gallery.slideshow.lightbox', {
+        this.$modal = $(qweb.render('website.gallery.slideshow.lightbox', {
             images: $images.get(),
             index: $images.index($img),
             dim: dimensions,
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
-        $modal.modal({
-            keyboard: true,
-            backdrop: true,
-        });
-        $modal.on('hidden.bs.modal', function () {
+        this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             $(this).remove();
+            self.$modal = undefined;
         });
-        $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
-        $modal.appendTo(document.body);
-
-        $modal.one('shown.bs.modal', function () {
+        this.$modal.one('shown.bs.modal', function () {
             self.trigger_up('widgets_start_request', {
                 editableMode: false,
-                $target: $modal.find('.modal-body.o_slideshow'),
+                $target: self.$modal.find('.modal-body.o_slideshow'),
             });
         });
+        this.$modal.appendTo(document.body);
+        const modalBS = new Modal(this.$modal[0], {keyboard: true, backdrop: true});
+        modalBS.show();
     },
 });
 
 const GallerySliderWidget = publicWidget.Widget.extend({
     selector: '.o_slideshow',
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     disabledInEditableMode: false,
 
     /**
@@ -85,7 +83,7 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$indicator = this.$carousel.find('.carousel-indicators');
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
-        var $lis = this.$indicator.find('li[data-slide-to]');
+        var $lis = this.$indicator.find('li[data-bs-slide-to]');
         let indicatorWidth = this.$indicator.width();
         if (indicatorWidth === 0) {
             // An ancestor may be hidden so we try to find it and make it
@@ -135,11 +133,11 @@ const GallerySliderWidget = publicWidget.Widget.extend({
                 var $item = self.$carousel.find('.carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next');
                 var index = $item.index();
                 $lis.removeClass('active')
-                    .filter('[data-slide-to="' + index + '"]')
+                    .filter('[data-bs-slide-to="' + index + '"]')
                     .addClass('active');
             }, 0);
         });
-        this.$indicator.on('click.gallery_slider', '> li:not([data-slide-to])', function () {
+        this.$indicator.on('click.gallery_slider', '> li:not([data-bs-slide-to])', function () {
             page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
             page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
             self.$carousel.carousel(page * realNbPerPage);

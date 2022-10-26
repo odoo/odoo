@@ -29,12 +29,12 @@
                         <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                         <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
                         <filter invisible="1" string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all records which has next action date is before today"/>
                         <filter invisible="1" string="Today Activities" name="activities_today"
-                            domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                            domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                            domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                            domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                         <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
@@ -71,7 +71,7 @@
                                         <span><t t-esc="record.product_id.value"/></span>
                                     </div>
                                     <div class="col-4">
-                                        <span class="float-right text-right">
+                                        <span class="float-end text-end">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}" readonly="1"/>
                                         </span>
                                     </div>
@@ -88,8 +88,9 @@
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
                 <form string="Unbuild Orders">
+                    <field name="company_id" invisible="1"/>
                     <header>
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
+                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="v"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>
@@ -116,7 +117,6 @@
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="allowed_mo_ids" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -141,6 +141,7 @@
                     <sheet>
                         <group>
                             <group>
+                                <field name="company_id" invisible="1"/>
                                 <field name="state" invisible="1"/>
                                 <field name="product_id" invisible="1"/>
                                 <field name="bom_id" invisible="1"/>
@@ -155,15 +156,14 @@
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="allowed_mo_ids" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                                 <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             </group>
                         </group>
                     </sheet>
                     <footer class="oe_edit_only">
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
-                        <button string="Discard" special="cancel"/>
+                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

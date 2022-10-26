@@ -1,0 +1,12 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CallView {
+    min-height: 50%;
+    background: var(--CallView-background-color, #{$dark});
+
+    &.o-isMinimized {
+        min-height: #{"max(20%, 130px)"};
+    }
+}

@@ -2,7 +2,7 @@ odoo.define('website_blog.wysiwyg', function (require) {
 'use strict';
 
 
-const Wysiwyg = require('web_editor.wysiwyg');
+const Wysiwyg = require('website.wysiwyg');
 require('website.editor.snippets.options');
 
 Wysiwyg.include({
@@ -20,7 +20,7 @@ Wysiwyg.include({
     /**
      * @override
      */
-    async start() {
+    async startEdition() {
         await this._super(...arguments);
         $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
     },

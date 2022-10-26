@@ -47,6 +47,8 @@ class TestExpensesAccessRights(TestExpenseCommon):
                 }),
             ],
         })
+        self.env.flush_all()
+
         self.assertRecordValues(expense_sheet, [{'state': 'draft'}])
 
         # The expense employee is able to submit the expense sheet.
@@ -67,7 +69,7 @@ class TestExpensesAccessRights(TestExpenseCommon):
 
         # An expense manager is not able to create the journal entry.
 
-        with self.assertRaises(UserError):
+        with self.assertRaises(AccessError):
             expense_sheet.with_user(self.expense_user_manager).action_sheet_move_create()
         self.assertRecordValues(expense_sheet, [{'state': 'approve'}])
 

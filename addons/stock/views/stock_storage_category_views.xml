@@ -5,7 +5,11 @@
         <field name="model">stock.storage.category</field>
         <field name="arch" type="xml">
             <form string="Storage Category">
+                <field name="company_id" invisible="1"/>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_storage_category_locations)d" string="Locations" type="action" class="oe_stat_button" icon="fa-arrows-v"/>
+                    </div>
                     <group>
                         <group>
                             <field name="name"/>
@@ -17,22 +21,12 @@
                                 <field name="max_weight"/>
                                 <span>kg</span>
                             </div>
-                            <field name="company_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Product Capacity" name="product_capacity">
-                            <field name="product_capacity_ids" context="{'default_storage_category_id': id}">
-                                <tree editable="bottom">
-                                    <field name="product_id" required="1"/>
-                                    <field name="quantity"/>
-                                    <field name="product_uom_id" options="{'no_create': True, 'no_open': True}"/>
-                                    <field name="company_id" invisible="1"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Package Capacity" name="package_capacity" groups="stock.group_tracking_lot">
-                            <field name="package_capacity_ids" context="{'default_storage_category_id': id}">
+                        <page string="Capacity by Package" name="package_capacity" groups="stock.group_tracking_lot">
+                            <field name="package_capacity_ids" context="{'default_storage_category_id': id, 'default_company_id': company_id}">
                                 <tree editable="bottom">
                                     <field name="package_type_id" required="1"/>
                                     <field name="quantity"/>
@@ -40,10 +34,13 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Locations" name="locations">
-                            <field name="location_ids">
-                                <tree create="false" delete="false">
-                                    <field name="complete_name" string="Location"/>
+                        <page string="Capacity by Product" name="product_capacity">
+                            <field name="product_capacity_ids" context="{'default_storage_category_id': id, 'default_company_id': company_id}">
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" context="{'default_detailed_type': 'product'}"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="company_id" invisible="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -90,6 +87,7 @@
                 <field name="quantity"/>
                 <field name="product_uom_id" options="{'no_create': True, 'no_open': True}"/>
                 <field name="company_id" invisible="1"/>
+                <field name="package_type_id" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -102,6 +100,5 @@
     </record>
 
     <menuitem id="menu_storage_categoty_config" action="action_storage_category" name="Storage Categories" parent="menu_warehouse_config" sequence="6" groups="stock.group_stock_storage_categories"/>
-    <menuitem id="menu_storage_categoty_capacity_config" action="action_storage_category_capacity" name="Storage Category Capacity" parent="menu_warehouse_config" sequence="7" groups="base.group_no_one"/>
 
 </odoo>

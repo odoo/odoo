@@ -7,6 +7,7 @@ import werkzeug.exceptions
 
 from odoo import _
 from odoo import http
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
@@ -27,7 +28,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         certification_url = slide._generate_certification_url().get(slide.id)
         if not certification_url:
             raise werkzeug.exceptions.NotFound()
-        return werkzeug.utils.redirect(certification_url)
+        return request.redirect(certification_url)
 
     @http.route(['/slides_survey/certification/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slides_certification_search_read(self, fields):
@@ -43,7 +44,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
-        create_new_survey = post['slide_type'] == "certification" and post.get('survey') and not post['survey']['id']
+        create_new_survey = post['slide_category'] == "certification" and post.get('survey') and not post['survey']['id']
         linked_survey_id = int(post.get('survey', {}).get('id') or 0)
 
         if create_new_survey:
@@ -74,22 +75,18 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         # Then create the slide
         result = super(WebsiteSlidesSurvey, self).create_slide(*args, **post)
 
-        if create_new_survey:
-            # Set the redirect_url used in toaster
-            action_id = request.env.ref('survey.action_survey_form').id
-            result.update({
-                'redirect_url': '/web#id=%s&action=%s&model=survey.survey&view_type=form' % (post['survey_id'], action_id),
-                'redirect_to_certification': True
-            })
+        if post['slide_category'] == "certification":
+            # Set the url to redirect the user to the survey
+            result['url'] = '/slides/slide/%s?fullscreen=1' % (slug(request.env['slide.slide'].browse(result['slide_id']))),
 
         return result
 
     # Utils
     # ---------------------------------------------------
-    def _set_completed_slide(self, slide):
-        if slide.slide_type == 'certification':
+    def _slide_mark_completed(self, slide):
+        if slide.slide_category == 'certification':
             raise werkzeug.exceptions.Forbidden(_("Certification slides are completed when the survey is succeeded."))
-        return super(WebsiteSlidesSurvey, self)._set_completed_slide(slide)
+        return super(WebsiteSlidesSurvey, self)._slide_mark_completed(slide)
 
     def _get_valid_slide_post_values(self):
         result = super(WebsiteSlidesSurvey, self)._get_valid_slide_post_values()

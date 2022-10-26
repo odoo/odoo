@@ -106,19 +106,18 @@ class Shell(Command):
             'openerp': odoo,
             'odoo': odoo,
         }
-        with odoo.api.Environment.manage():
-            if dbname:
-                registry = odoo.registry(dbname)
-                with registry.cursor() as cr:
-                    uid = odoo.SUPERUSER_ID
-                    ctx = odoo.api.Environment(cr, uid, {})['res.users'].context_get()
-                    env = odoo.api.Environment(cr, uid, ctx)
-                    local_vars['env'] = env
-                    local_vars['self'] = env.user
-                    self.console(local_vars)
-                    cr.rollback()
-            else:
+        if dbname:
+            registry = odoo.registry(dbname)
+            with registry.cursor() as cr:
+                uid = odoo.SUPERUSER_ID
+                ctx = odoo.api.Environment(cr, uid, {})['res.users'].context_get()
+                env = odoo.api.Environment(cr, uid, ctx)
+                local_vars['env'] = env
+                local_vars['self'] = env.user
                 self.console(local_vars)
+                cr.rollback()
+        else:
+            self.console(local_vars)
 
     def run(self, args):
         self.init(args)

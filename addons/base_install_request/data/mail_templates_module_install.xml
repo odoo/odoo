@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="base_install_request.base_module_install_review_description">
+        <p>The following apps will be installed:</p>
+        <div class="container-fluid">
+            <ul class="list-unstyled row">
+                <t t-foreach="apps" t-as="app">
+                    <li class="mt8 col-lg-6" t-if="app.application">
+                        <div>
+                            <img width="24px" height="24px" class="img-fluid" t-att-src="app.icon"/>
+                            <t t-esc="app.shortdesc"/>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </template>
+</odoo>

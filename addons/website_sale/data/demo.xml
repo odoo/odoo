@@ -5,6 +5,10 @@
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
+        <record id="product.product_attribute_2" model="product.attribute">
+            <field name="visibility">hidden</field>
+        </record>
+
         <record id="product.product_product_24" model="product.product">
             <field name="is_published" eval="True"/>
         </record>
@@ -56,9 +60,38 @@
 
         <record id="product.product_product_4" model="product.product">
             <field name="is_published" eval="True"/>
-            <field name="website_size_x">2</field>
-            <field name="website_size_y">2</field>
             <field name="website_sequence">9950</field>
+            <field name="website_description" type="html">
+                <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_text_image" data-name="Text - Image">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="pt16 pb16 col-lg-6">
+                                <h2>Ergonomic</h2>
+                                <p>Press a button and watch your desk glide effortlessly from sitting to standing height in seconds.</p>
+                                <p>The minimum height is 65 cm, and for standing work the maximum height position is 125 cm.</p>
+                            </div>
+                            <div class="pt16 pb16 col-lg-6">
+                                <img src="/website/static/src/img/snippets_demo/s_text_image.jpg" class="img img-fluid mx-auto" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_image_text" data-name="Image - Text">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="pt16 pb16 col-lg-6">
+                                <img src="/website_sale/static/src/img/carpentry.jpg" class="img img-fluid mx-auto" alt=""/>
+                            </div>
+                            <div class="pt16 pb16 col-lg-6">
+                                <h2>Locally handmade</h2>
+                                <p>We pay special attention to detail, which is why our desks are of a superior quality.</p>
+                                <p>Looking for a custom bamboo stain to match existing furniture? Contact us for a quote.</p>
+                                <p><a href="/contactus" class="mb-2 btn btn-primary">Contact Us</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
         </record>
 
         <record id="product.product_product_6" model="product.product">
@@ -98,38 +131,47 @@
         <record id="public_category_desks" model="product.public.category">
           <field name="name">Desks</field>
           <field name="sequence">15</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desks.jpg"/>
         </record>
         <record id="public_category_furnitures" model="product.public.category">
           <field name="name">Furnitures</field>
           <field name="sequence">17</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/furnitures.jpg"/>
         </record>
         <record id="public_category_boxes" model="product.public.category">
             <field name="name">Boxes</field>
             <field name="sequence">20</field>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/boxes.jpg"/>
         </record>
         <record id="public_category_drawers" model="product.public.category">
           <field name="name">Drawers</field>
           <field name="sequence">21</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/drawers.jpg"/>
         </record>
         <record id="public_category_cabinets" model="product.public.category">
           <field name="name">Cabinets</field>
           <field name="sequence">22</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/cabinets.jpg"/>
         </record>
         <record id="public_category_bins" model="product.public.category">
           <field name="name">Bins</field>
           <field name="sequence">23</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/bins.jpg"/>
         </record>
         <record id="public_category_lamps" model="product.public.category">
           <field name="name">Lamps</field>
           <field name="sequence">24</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/lamps.jpg"/>
         </record>
         <record id="services" model="product.public.category">
           <field name="name">Services</field>
           <field name="sequence">25</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
           <field name="sequence">26</field>
+          <field name="image_1920" type="base64" file="product/static/img/product_product_43-image.jpg"/>
         </record>
 
         <!-- subcategories -->
@@ -137,6 +179,7 @@
           <field name="parent_id" eval="ref('public_category_desks')"/>
           <field name="name">Components</field>
           <field name="sequence">16</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desk_components.jpg"/>
         </record>
         <record id="public_category_furnitures_chairs" model="product.public.category">
           <field name="parent_id" eval="ref('public_category_furnitures')"/>
@@ -476,7 +519,7 @@
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">2950.00</field>
+            <field name="price_unit">295.00</field>
         </record>
 
         <record id="website_sale_order_line_10" model="sale.order.line">
@@ -485,7 +528,7 @@
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">12.50</field>
+            <field name="price_unit">120.50</field>
         </record>
 
         <!-- Active Carts -->
@@ -507,7 +550,7 @@
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_uom_qty">2</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">16.50</field>
+            <field name="price_unit">33</field>
         </record>
 
         <!-- Abandoned Carts -->
@@ -656,6 +699,7 @@
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="invoice_policy">delivery</field>
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>
 
         <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">

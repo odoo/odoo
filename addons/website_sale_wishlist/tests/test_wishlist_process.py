@@ -61,3 +61,32 @@ class TestUi(odoo.tests.HttpCase):
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
         self.start_tour("/", 'shop_wishlist')
+
+    def test_02_wishlist_admin_tour(self):
+        attribute = self.env['product.attribute'].create({
+            'name': 'color',
+            'display_type': 'color',
+            'create_variant': 'always',
+        })
+        self.env['product.template'].create({
+            'name': 'Rock',
+            'is_published': True,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [
+                    (0, 0, {
+                        'name': 'red',
+                        'attribute_id': attribute.id,
+                    }),
+                    (0, 0, {
+                        'name': 'blue',
+                        'attribute_id': attribute.id,
+                    }),
+                    (0, 0, {
+                        'name': 'black',
+                        'attribute_id': attribute.id,
+                    }),
+                ],
+            })],
+        })
+        self.start_tour("/", 'shop_wishlist_admin', login="admin")

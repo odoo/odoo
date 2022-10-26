@@ -2,7 +2,6 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="EditListPopup" owl="1">
-        <div role="dialog" class="modal-dialog">
             <div class="popup popup-text">
                 <header class="title">
                     <t t-esc="props.title" />
@@ -14,7 +13,7 @@
                     </t>
                 </main>
                 <footer class="footer">
-                    <div class="button confirm" t-on-click="confirm">
+                    <div class="button confirm highlight" t-on-click="confirm">
                         Ok
                     </div>
                     <div class="button cancel" t-on-click="cancel">
@@ -22,7 +21,6 @@
                     </div>
                 </footer>
             </div>
-        </div>
     </t>
 
 </templates>

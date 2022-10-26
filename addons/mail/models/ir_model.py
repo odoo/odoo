@@ -5,37 +5,26 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class Base(models.AbstractModel):
-    _inherit = 'base'
-
-    def _valid_field_parameter(self, field, name):
-        # allow tracking on abstract models; see also 'mail.thread'
-        return (
-            name == 'tracking' and self._abstract
-            or super()._valid_field_parameter(field, name)
-        )
-
-
 class IrModel(models.Model):
     _inherit = 'ir.model'
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(
-        string="Mail Thread", default=False,
-        help="Whether this model supports messages and notifications.",
+        string="Has Mail Thread", default=False,
     )
     is_mail_activity = fields.Boolean(
-        string="Mail Activity", default=False,
-        help="Whether this model supports activities.",
+        string="Has Mail Activity", default=False,
     )
     is_mail_blacklist = fields.Boolean(
-        string="Mail Blacklist", default=False,
-        help="Whether this model supports blacklist.",
+        string="Has Mail Blacklist", default=False,
     )
 
     def unlink(self):
         # Delete followers, messages and attachments for models that will be unlinked.
         models = tuple(self.mapped('model'))
+
+        query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
+        self.env.cr.execute(query, [models])
 
         query = "DELETE FROM mail_followers WHERE res_model IN %s"
         self.env.cr.execute(query, [models])
@@ -75,7 +64,7 @@ class IrModel(models.Model):
             if 'is_mail_blacklist' in vals and any(rec.is_mail_blacklist > vals['is_mail_blacklist'] for rec in self):
                 raise UserError(_('Field "Mail Blacklist" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
-            self.flush()
+            self.env.flush_all()
             # setup models; this reloads custom models in registry
             self.pool.setup_models(self._cr)
             # update database schema of models
@@ -108,3 +97,13 @@ class IrModel(models.Model):
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.thread.blacklist']
         return model_class
+
+    def _get_model_definitions(self, model_names_to_fetch):
+        fields_by_model_names = super()._get_model_definitions(model_names_to_fetch)
+        for model_name, field_by_fname in fields_by_model_names.items():
+            model = self.env[model_name]
+            tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
+            for fname, field in field_by_fname.items():
+                if fname in tracked_field_names:
+                    field['tracking'] = True
+        return fields_by_model_names

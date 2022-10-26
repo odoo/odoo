@@ -1,13 +1,10 @@
 odoo.define('website_sale_slides.course.join.widget', function (require) {
 "use strict";
 
-var CourseJoinWidget = require('website_slides.course.join.widget').courseJoinWidget;
+var CourseJoinWidget = require('@website_slides/js/slides_course_join')[Symbol.for("default")].courseJoinWidget;
 const wUtils = require('website.utils');
 
 CourseJoinWidget.include({
-    xmlDependencies: (CourseJoinWidget.prototype.xmlDependencies || []).concat(
-        ["/website_sale_slides/static/src/xml/slide_course_join.xml"]
-    ),
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.productId = options.channel.productId || false;
@@ -29,9 +26,10 @@ CourseJoinWidget.include({
         ev.preventDefault();
 
         if (this.channel.channelEnroll === 'payment' && !this.publicUser) {
+            const self = this;
             this.beforeJoin().then(function () {
                 wUtils.sendRequest('/shop/cart/update', {
-                    product_id: this.productId,
+                    product_id: self.productId,
                     express: 1,
                 });
             });

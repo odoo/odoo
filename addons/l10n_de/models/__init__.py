@@ -3,4 +3,5 @@
 
 from . import datev
 from . import chart_template
+from . import ir_actions_report
 from . import res_company

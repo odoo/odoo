@@ -5,8 +5,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, Command
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_open, formatLang
 
 _logger = logging.getLogger(__name__)
 
@@ -21,6 +20,7 @@ class AccountChartTemplate(models.Model):
         # created later but defined in this same function.
         yield self._get_demo_data_move()
         yield self._get_demo_data_statement()
+        yield self._get_demo_data_transactions()
         yield self._get_demo_data_reconcile_model()
         yield self._get_demo_data_attachment()
         yield self._get_demo_data_mail_message()
@@ -80,8 +80,8 @@ class AccountChartTemplate(models.Model):
                 'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.product_delivery_01'), 'price_unit': 10.0, 'quantity': 1}),
-                    Command.create({'product_id': ref('product.product_order_01'), 'price_unit': 4.0, 'quantity': 5}),
+                    Command.create({'product_id': ref('product.product_delivery_01').id, 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': ref('product.product_order_01').id, 'price_unit': 4.0, 'quantity': 5}),
                 ],
             },
             f'{cid}_demo_invoice_extract': {
@@ -104,57 +104,80 @@ class AccountChartTemplate(models.Model):
     def _get_demo_data_statement(self):
         cid = self.env.company.id
         ref = self.env.ref
+        bnk_journal = self.env['account.journal'].search(
+            domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
+            limit=1,
+        )
         return ('account.bank.statement', {
-            f'{cid}_demo_bank_statement_1': {
-                'journal_id': self.env['account.journal'].search([
-                    ('type', '=', 'bank'),
-                    ('company_id', '=', cid),
-                ], limit=1).id,
-                'date': time.strftime('%Y')+'-01-01',
-                'balance_end_real': 9944.87,
-                'balance_start': 5103.0,
+            f'{cid}_demo_bank_statement_0': {
+                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
+                'balance_end_real': 6378.0,
+                'balance_start': 0.0,
                 'line_ids': [
                     Command.create({
+                        'journal_id': bnk_journal.id,
+                        'payment_ref': 'Initial balance',
+                        'amount': 5103.0,
+                        'date': time.strftime('%Y-01-01'),
+                    }),
+                    Command.create({
+                        'journal_id': bnk_journal.id,
                         'payment_ref': time.strftime('INV/%Y/00002 and INV/%Y/00003'),
                         'amount': 1275.0,
                         'date': time.strftime('%Y-01-01'),
                         'partner_id': ref('base.res_partner_12').id
                     }),
-                    Command.create({
-                        'payment_ref': 'Bank Fees',
-                        'amount': -32.58,
-                        'date': time.strftime('%Y-01-01'),
-                    }),
-                    Command.create({
-                        'payment_ref': 'Prepayment',
-                        'amount': 650,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
-                    }),
-                    Command.create({
-                        'payment_ref': time.strftime('First 2000 $ of invoice %Y/00001'),
-                        'amount': 2000,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
-                    }),
-                    Command.create({
-                        'payment_ref': 'Last Year Interests',
-                        'amount': 102.78,
-                        'date': time.strftime('%Y-01-01'),
-                    }),
-                    Command.create({
-                        'payment_ref': time.strftime('INV/%Y/00002'),
-                        'amount': 750,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_2').id
-                    }),
-                    Command.create({
-                        'payment_ref': 'R:9772938  10/07 AX 9415116318 T:5 BRT: 100,00€ C/ croip',
-                        'amount': 96.67,
-                        'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_2').id
-                    }),
                 ]
+            },
+        })
+
+    @api.model
+    def _get_demo_data_transactions(self):
+        cid = self.env.company.id
+        ref = self.env.ref
+        bnk_journal = self.env['account.journal'].search(
+            domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
+            limit=1,
+        )
+        return ('account.bank.statement.line', {
+            f'{cid}_demo_bank_statement_line_0': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': 'Bank Fees',
+                'amount': -32.58,
+                'date': time.strftime('%Y-01-01'),
+            },
+            f'{cid}_demo_bank_statement_line_1': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': 'Prepayment',
+                'amount': 650,
+                'date': time.strftime('%Y-01-01'),
+                'partner_id': ref('base.res_partner_12').id
+            },
+            f'{cid}_demo_bank_statement_line_2': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
+                'amount': 2000,
+                'date': time.strftime('%Y-01-01'),
+                'partner_id': ref('base.res_partner_12').id
+            },
+            f'{cid}_demo_bank_statement_line_3': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': 'Last Year Interests',
+                'amount': 102.78,
+                'date': time.strftime('%Y-01-01'),
+            },
+            f'{cid}_demo_bank_statement_line_4': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': time.strftime('INV/%Y/00002'),
+                'amount': 750,
+                'date': time.strftime('%Y-01-01'),
+                'partner_id': ref('base.res_partner_2').id
+            },
+            f'{cid}_demo_bank_statement_line_5': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
+                'amount': 96.67,
+                'date': time.strftime('%Y-01-01'),
             },
         })
 
@@ -167,23 +190,22 @@ class AccountChartTemplate(models.Model):
                 'rule_type': 'writeoff_suggestion',
                 'match_label': 'contains',
                 'match_label_param': 'BRT',
-                'decimal_separator': ',',
                 'line_ids': [
                     Command.create({
                         'label': 'Due amount',
                         'account_id': self._get_demo_account(
                             'income',
-                            'account.data_account_type_revenue',
+                            'income',
                             self.env.company,
                         ).id,
                         'amount_type': 'regex',
-                        'amount_string': r'BRT: ([\d,]+)',
+                        'amount_string': r'BRT: ([\d,.]+)',
                     }),
                     Command.create({
                         'label': 'Bank Fees',
                         'account_id': self._get_demo_account(
                             'cost_of_goods_sold',
-                            'account.data_account_type_direct_costs',
+                            'expense_direct_cost',
                             self.env.company,
                         ).id,
                         'amount_type': 'percentage',
@@ -198,15 +220,6 @@ class AccountChartTemplate(models.Model):
         cid = self.env.company.id
         ref = self.env.ref
         return ('ir.attachment', {
-            f'{cid}_ir_attachment_bank_statement_1': {
-                'type': 'binary',
-                'name': 'bank_statement_yourcompany_demo.pdf',
-                'res_model': 'account.bank.statement',
-                'res_id': ref(f'account.{cid}_demo_bank_statement_1').id,
-                'raw': file_open(
-                    'account/static/demo/bank_statement_yourcompany_1.pdf', 'rb'
-                ).read()
-            },
             f'{cid}_ir_attachment_in_invoice_1': {
                 'type': 'binary',
                 'name': 'in_invoice_yourcompany_demo.pdf',
@@ -232,16 +245,6 @@ class AccountChartTemplate(models.Model):
         cid = self.env.company.id
         ref = self.env.ref
         return ('mail.message', {
-            f'{cid}_mail_message_bank_statement_1': {
-                'model': 'account.bank.statement',
-                'res_id': ref(f'account.{cid}_demo_bank_statement_1').id,
-                'body': 'Bank statement attachment',
-                'message_type': 'comment',
-                'author_id': ref('base.partner_demo').id,
-                'attachment_ids': [Command.set([
-                    ref(f'account.{cid}_ir_attachment_bank_statement_1').id
-                ])]
-            },
             f'{cid}_mail_message_in_invoice_1': {
                 'model': 'account.move',
                 'res_id': ref(f'account.{cid}_demo_invoice_extract').id,
@@ -310,47 +313,31 @@ class AccountChartTemplate(models.Model):
     def _post_create_demo_data(self, created):
         cid = self.env.company.id
         if created._name == 'account.move':
-            created = created.with_context(check_move_validity=False)
-            # We need to recompute some onchanges. Invoice lines VS journal items are already
-            # synchronized in the create, but the onchange were not applied on the invoice lines.
-            for move in created:
-                move._onchange_partner_id()
-
-            created.line_ids._onchange_product_id()
-            created.line_ids._onchange_account_id()
-
-            created._recompute_dynamic_lines(
-                recompute_all_taxes=True,
-                recompute_tax_base_amount=True,
-            )
-
             # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
             # any lines yet
             for move in created - self.env.ref(f'account.{cid}_demo_invoice_extract'):
                 try:
                     move.action_post()
-                except (UserError, ValidationError):
+                except Exception:
                     _logger.exception('Error while posting demo data')
-        elif created._name == 'account.bank.statement':
-            created.button_post()
 
     @api.model
-    def _get_demo_account(self, xml_id, user_type_id, company):
+    def _get_demo_account(self, xml_id, account_type, company):
         """Find the most appropriate account possible for demo data creation.
 
         :param xml_id (str): the xml_id of the account template in the generic coa
-        :param user_type_id (str): the full xml_id of the account type wanted
+        :param account_type (str): the full xml_id of the account type wanted
         :param company (Model<res.company>): the company for which we search the account
         :return (Model<account.account>): the most appropriate record found
         """
         return (
-            self.env['account.account'].browse(self.env['ir.model.data'].search([
+            self.env['account.account'].browse(self.env['ir.model.data'].sudo().search([
                 ('name', '=', '%d_%s' % (company.id, xml_id)),
                 ('model', '=', 'account.account'),
                 ('module', '=like', 'l10n%')
             ], limit=1).res_id)
             or self.env['account.account'].search([
-                ('user_type_id', '=', self.env.ref(user_type_id).id),
+                ('account_type', '=', account_type),
                 ('company_id', '=', company.id)
             ], limit=1)
             or self.env['account.account'].search([('company_id', '=', company.id)], limit=1)

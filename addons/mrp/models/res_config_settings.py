@@ -19,7 +19,15 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_subcontracting = fields.Boolean("Subcontracting")
     group_mrp_routings = fields.Boolean("MRP Work Orders",
         implied_group='mrp.group_mrp_routings')
-    group_locked_by_default = fields.Boolean("Lock Quantities To Consume", implied_group='mrp.group_locked_by_default')
+    group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
+    group_mrp_reception_report = fields.Boolean("Allocation Report for Manufacturing Orders", implied_group='mrp.group_mrp_reception_report')
+    group_mrp_workorder_dependencies = fields.Boolean("Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies")
+
+    def set_values(self):
+        super().set_values()
+        if not self.group_mrp_workorder_dependencies:
+            # Disabling this option should not interfere with currently planned productions
+            self.env['mrp.bom'].sudo().search([('allow_operation_dependencies', '=', True)]).allow_operation_dependencies = False
 
     @api.onchange('use_manufacturing_lead')
     def _onchange_use_manufacturing_lead(self):
@@ -36,5 +44,13 @@ class ResConfigSettings(models.TransientModel):
         # group_mrp_routings
         if self.group_mrp_routings:
             self.module_mrp_workorder = True
-        elif not self.env['ir.module.module'].search([('name', '=', 'mrp_workorder'), ('state', '=', 'installed')]):
+        else:
             self.module_mrp_workorder = False
+
+    @api.onchange('group_unlocked_by_default')
+    def _onchange_group_unlocked_by_default(self):
+        """ When changing this setting, we want existing MOs to automatically update to match setting. """
+        if self.group_unlocked_by_default:
+            self.env['mrp.production'].search([('state', 'not in', ('cancel', 'done')), ('is_locked', '=', True)]).is_locked = False
+        else:
+            self.env['mrp.production'].search([('state', 'not in', ('cancel', 'done')), ('is_locked', '=', False)]).is_locked = True

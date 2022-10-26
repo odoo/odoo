@@ -9,14 +9,23 @@ class GamificationBadgeUser(models.Model):
     """User having received a badge"""
     _inherit = 'gamification.badge.user'
 
-    employee_id = fields.Many2one('hr.employee', string='Employee')
+    employee_id = fields.Many2one('hr.employee', string='Employee', index=True)
 
     @api.constrains('employee_id')
     def _check_employee_related_user(self):
         for badge_user in self:
-            if badge_user.employee_id not in badge_user.user_id.employee_ids:
+            if badge_user.employee_id not in badge_user.user_id.\
+                with_context(allowed_company_ids=self.env.user.company_ids.ids).employee_ids:
                 raise ValidationError(_('The selected employee does not correspond to the selected user.'))
 
+    def action_open_badge(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'gamification.badge',
+            'view_mode': 'form',
+            'res_id': self.id,
+        }
 
 class GamificationBadge(models.Model):
     _inherit = 'gamification.badge'

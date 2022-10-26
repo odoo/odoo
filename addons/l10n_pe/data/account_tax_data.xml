@@ -1,46 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--    Detraction can be understood here:-->
-<!--    http://orientacion.sunat.gob.pe/index.php/empresas-menu/regimen-de-detracciones-del-igv-empresas/como-funcionan-las-detracciones/3141-02-en-la-venta-de-bienes-empresas-->
-    <!-- ACCOUNT TAX GROUP -->
+    <!--    Detraction can be understood here:-->
+    <!--    http://orientacion.sunat.gob.pe/index.php/empresas-menu/regimen-de-detracciones-del-igv-empresas/como-funcionan-las-detracciones/3141-02-en-la-venta-de-bienes-empresas-->
     <!-- TODO AFFECT SUBSEQUENT -->
-    <record id="tax_group_igv" model="account.tax.group">
-        <field name="name">IGV</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_ivap" model="account.tax.group">
-        <field name="name">IVAP</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_isc" model="account.tax.group">
-        <field name="name">ISC</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_exp" model="account.tax.group">
-        <field name="name">EXP</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_gra" model="account.tax.group">
-        <field name="name">GRA</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_exo" model="account.tax.group">
-        <field name="name">EXO</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_ina" model="account.tax.group">
-        <field name="name">INA</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_other" model="account.tax.group">
-        <field name="name">OTROS</field>
-        <field name="sequence">0</field>
-    </record>
-    <record id="tax_group_det" model="account.tax.group">
-        <field name="name">DET</field>
-        <field name="sequence">100</field>
-    </record>
-    
     <!-- VAT for sales -->
     <record id="sale_tax_igv_18" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
@@ -54,26 +16,15 @@
         <field name="include_base_amount">1</field>
         <field name="tax_group_id" ref="tax_group_igv"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -92,26 +43,15 @@
         <field name="include_base_amount">1</field>
         <field name="tax_group_id" ref="tax_group_igv"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -128,26 +68,15 @@
         <field name="sequence">1</field>
         <field name="tax_group_id" ref="tax_group_exo"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -164,26 +93,15 @@
         <field name="sequence">1</field>
         <field name="tax_group_id" ref="tax_group_ina"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -200,6 +118,32 @@
         <field name="sequence">1</field>
         <field name="tax_group_id" ref="tax_group_gra"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('chart40111'),
+            }),
+         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('chart40111'),
+            }),
+        ]"/>
+    </record>
+    <record id="sale_tax_ics_0" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">0% ISC</field>
+        <field name="description">ISC</field>
+        <field name="l10n_pe_edi_tax_code">2000</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">0.0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_isc"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
@@ -208,7 +152,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('chart40111'),
+                'account_id': ref('chart4012'),
             }),
 
         ]"/>
@@ -221,7 +165,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('chart40111'),
+                'account_id': ref('chart4012'),
             }),
         ]"/>
     </record>
@@ -238,26 +182,15 @@
         <field name="include_base_amount">1</field>
         <field name="tax_group_id" ref="tax_group_igv"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -276,26 +209,15 @@
         <field name="include_base_amount">1</field>
         <field name="tax_group_id" ref="tax_group_igv"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -312,26 +234,15 @@
         <field name="sequence">1</field>
         <field name="tax_group_id" ref="tax_group_exo"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -348,26 +259,15 @@
         <field name="sequence">1</field>
         <field name="tax_group_id" ref="tax_group_ina"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -384,26 +284,15 @@
         <field name="sequence">1</field>
         <field name="tax_group_id" ref="tax_group_gra"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
@@ -425,20 +314,17 @@
                 'factor_percent': 0,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 0,
                 'repartition_type': 'tax',
                 'account_id': ref('chart40111'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 0,
                 'repartition_type': 'base',
             }),
-
             (0,0, {
                 'factor_percent': 0,
                 'repartition_type': 'tax',

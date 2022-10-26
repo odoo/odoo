@@ -3,8 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
+from odoo.tools import frozendict
 
 import re
+from collections import defaultdict
 from psycopg2 import sql
 
 
@@ -21,8 +23,8 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
-    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
 
     sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
@@ -45,10 +47,10 @@ class SequenceMixin(models.AbstractModel):
                     field=sql.Identifier(self._sequence_field),
                 ))
 
-    def __init__(self, pool, cr):
-        api.constrains(self._sequence_field, self._sequence_date_field)(type(self)._constrains_date_sequence)
-        return super().__init__(pool, cr)
+    def _must_check_constrains_date_sequence(self):
+        return True
 
+    @api.constrains(lambda self: (self._sequence_field, self._sequence_date_field))
     def _constrains_date_sequence(self):
         # Make it possible to bypass the constraint to allow edition of already messed up documents.
         # /!\ Do not use this to completely disable the constraint as it will make this mixin unreliable.
@@ -57,6 +59,8 @@ class SequenceMixin(models.AbstractModel):
             '1970-01-01'
         ))
         for record in self:
+            if not record._must_check_constrains_date_sequence():
+                continue
             date = fields.Date.to_date(record[record._sequence_date_field])
             sequence = record[record._sequence_field]
             if sequence and date and date > constraint_date:
@@ -66,12 +70,14 @@ class SequenceMixin(models.AbstractModel):
                     or format_values['month'] and format_values['month'] != date.month
                 ):
                     raise ValidationError(_(
-                        "The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-                        "You might want to clear the field %(sequence_field)s before proceeding with the change of the date.",
+                        "The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
+                        "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
+                        "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence.",
                         date=format_date(self.env, date),
                         sequence=sequence,
                         date_field=record._fields[record._sequence_date_field]._description_string(self.env),
                         sequence_field=record._fields[record._sequence_field]._description_string(self.env),
+                        model=self.env['ir.model']._get(record._name).display_name,
                     ))
 
     @api.depends(lambda self: [self._sequence_field])
@@ -132,7 +138,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -160,26 +166,28 @@ class SequenceMixin(models.AbstractModel):
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
-        if with_prefix:
+        if with_prefix is not None:
             where_string += " AND sequence_prefix = %(with_prefix)s "
             param['with_prefix'] = with_prefix
 
-        query = """
-            UPDATE {table} SET write_date = write_date WHERE id = (
-                SELECT id FROM {table}
+        query = f"""
+                SELECT {{field}} FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {table} {where_string} ORDER BY id DESC LIMIT 1)
+                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
                 ORDER BY sequence_number DESC
                 LIMIT 1
+        """
+        if lock:
+            query = f"""
+            UPDATE {self._table} SET write_date = write_date WHERE id = (
+                {query.format(field='id')}
             )
-            RETURNING {field};
-        """.format(
-            table=self._table,
-            where_string=where_string,
-            field=self._sequence_field,
-        )
+            RETURNING {self._sequence_field};
+            """
+        else:
+            query = query.format(field=self._sequence_field)
 
-        self.flush([self._sequence_field, 'sequence_number', 'sequence_prefix'])
+        self.flush_model([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)
         return (self.env.cr.fetchone() or [None])[0]
 
@@ -246,6 +254,7 @@ class SequenceMixin(models.AbstractModel):
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.
+
         :return: True if it is the last element of the chain.
         """
         last_sequence = self._get_last_sequence(with_prefix=self.sequence_prefix)
@@ -254,3 +263,29 @@ class SequenceMixin(models.AbstractModel):
         seq_format, seq_format_values = self._get_sequence_format_param(last_sequence)
         seq_format_values['seq'] += 1
         return seq_format.format(**seq_format_values) == self.name
+
+    def _is_end_of_seq_chain(self):
+        """Tells whether or not these elements are the last ones of the sequence chain.
+
+        :return: True if self are the last elements of the chain.
+        """
+        batched = defaultdict(lambda: {'last_rec': self.browse(), 'seq_list': []})
+        for record in self.filtered(lambda x: x[x._sequence_field]):
+            seq_format, format_values = record._get_sequence_format_param(record[record._sequence_field])
+            seq = format_values.pop('seq')
+            batch = batched[(seq_format, frozendict(format_values))]
+            batch['seq_list'].append(seq)
+            if batch['last_rec'].sequence_number <= record.sequence_number:
+                batch['last_rec'] = record
+
+        for values in batched.values():
+            # The sequences we are deleting are not sequential
+            seq_list = values['seq_list']
+            if max(seq_list) - min(seq_list) != len(seq_list) - 1:
+                return False
+
+            # last_rec must have the highest number in the database
+            record = values['last_rec']
+            if not record._is_last_from_seq_chain():
+                return False
+        return True

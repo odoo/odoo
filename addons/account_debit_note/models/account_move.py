@@ -13,7 +13,7 @@ class AccountMove(models.Model):
 
     @api.depends('debit_note_ids')
     def _compute_debit_count(self):
-        debit_data = self.env['account.move'].read_group([('debit_origin_id', 'in', self.ids)],
+        debit_data = self.env['account.move']._read_group([('debit_origin_id', 'in', self.ids)],
                                                         ['debit_origin_id'], ['debit_origin_id'])
         data_map = {datum['debit_origin_id'][0]: datum['debit_origin_id_count'] for datum in debit_data}
         for inv in self:

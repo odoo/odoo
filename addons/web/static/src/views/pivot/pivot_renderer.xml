@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PivotRenderer" owl="1">
+        <div class="o_pivot table-responsive">
+
+            <table
+                class="table-hover table table-sm table-bordered table-borderless bg-view"
+                t-att-class="{ o_enable_linking: !model.metaData.disableLinking }"
+                t-ref="table"
+            >
+                <thead>
+                    <tr t-foreach="table.headers" t-as="row" t-key="'header_' + row_index" class="border-top-0">
+                        <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
+                            <t t-if="cell.measure" t-call="web.PivotMeasure"/>
+                            <t t-elif="cell.isLeaf !== undefined" t-call="web.PivotHeader">
+                                <t t-set="isXAxis" t-value="true"/>
+                            </t>
+                            <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="fw-normal border-start-0"/>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="table.rows" t-as="row" t-key="'row_' + row_index">
+                        <t t-call="web.PivotHeader">
+                            <t t-set="isXAxis" t-value="false"/>
+                            <t t-set="cell" t-value="row"/>
+                        </t>
+                        <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
+                            <td class="o_pivot_cell_value text-end bg-100" t-att-class="{
+                                    o_empty: cell.value === undefined,
+                                    'cursor-pointer': cell.value !== undefined,
+                                    'fw-bold': cell.isBold,
+                                }" t-on-click="() => this.onCellClicked(cell)"
+                                   t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
+                                <t t-if="cell.value !== undefined">
+                                    <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{
+                                             'o_positive text-success': cell.value &gt; 0,
+                                             'o_negative text-danger': cell.value &lt; 0,
+                                             o_null: cell.value === 0,
+                                        }" t-esc="getFormattedVariation(cell)"/>
+                                    <div t-elif="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
+                                        <CheckBox disabled="true" value="cell.value" />
+                                    </div>
+                                    <div t-else="1" class="o_value" t-esc="getFormattedValue(cell)"/>
+                                </t>
+                            </td>
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="web.PivotHeader" owl="1">
+        <th
+            class="text-nowrap cursor-pointer fw-normal user-select-none border-start-0"
+            t-att-colspan="isXAxis ? cell.width : undefined"
+            t-att-rowspan="isXAxis ? cell.height : undefined"
+            t-att-class="{
+                o_pivot_header_cell_closed: cell.isLeaf,
+                o_pivot_header_cell_opened: !cell.isLeaf,
+            }"
+            t-attf-style="{{
+                isXAxis
+                    ? undefined
+                    : l10n.direction === 'ltr'
+                        ? 'padding-left: ' + getPadding(cell) + 'px;'
+                        : 'padding-right: ' + getPadding(cell) + 'px;'
+            }}"
+            t-att-data-tooltip="cell.label"
+            t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
+            t-on-click.prevent="() => this.onHeaderClick(cell, isXAxis ? 'col' : 'row')"
+        >
+            <t t-if="cell.isLeaf and !cell.isFolded">
+                <PivotGroupByMenu
+                    toggler="'parent'"
+                    position="isXAxis ? 'bottom-start' : 'bottom-end'"
+                    cell="cell"
+                    customGroupBys="model.metaData.customGroupBys"
+                    showActiveItems="false"
+                    onItemSelected="(payload) => this.onGroupBySelected(isXAxis ? 'col' : 'row', payload)"
+                    onAddCustomGroupBy="fieldName => this.onAddCustomGroupBy(isXAxis ? 'col' : 'row', cell.groupId, fieldName)"
+                />
+            </t>
+            <span t-if="l10n.direction === 'rtl'" t-esc="cell.title"/>
+            <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
+            <span t-if="l10n.direction === 'ltr'" t-esc="cell.title"/>
+        </th>
+    </t>
+
+    <t t-name="web.PivotMeasure" owl="1">
+        <th class="text-muted text-center text-nowrap fw-normal" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
+                'o_pivot_origin_row cursor-pointer user-select-none': cell.originIndexes,
+                'o_pivot_measure_row cursor-pointer user-select-none': !cell.originIndexes,
+                o_pivot_sort_order_asc: cell.order === 'asc',
+                o_pivot_sort_order_desc: cell.order === 'desc',
+            }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
+            <t t-esc="cell.title"/>
+            <i t-if="cell.order === 'asc' || cell.order ==='desc'" t-attf-class="fa fa-caret-{{ cell.order === 'asc' ? 'up' : 'down' }} ms-1"/>
+        </th>
+    </t>
+
+</templates>

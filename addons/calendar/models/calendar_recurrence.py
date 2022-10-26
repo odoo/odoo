@@ -120,14 +120,20 @@ class RecurrenceRule(models.Model):
     until = fields.Date('Repeat Until')
 
     _sql_constraints = [
-        ('month_day', "CHECK (rrule_type != 'monthly' OR month_by != 'day' OR day >= 1 AND day <= 31)", "The day must be between 1 and 31"),
+        ('month_day',
+         "CHECK (rrule_type != 'monthly' "
+                "OR month_by != 'day' "
+                "OR day >= 1 AND day <= 31 "
+                "OR weekday in %s AND byday in %s)"
+                % (tuple(wd[0] for wd in WEEKDAY_SELECTION), tuple(bd[0] for bd in BYDAY_SELECTION)),
+         "The day must be between 1 and 31"),
     ]
 
     @api.depends('rrule')
     def _compute_name(self):
         for recurrence in self:
             period = dict(RRULE_TYPE_SELECTION)[recurrence.rrule_type]
-            every = _("Every %(count)s %(period)s, ", count=recurrence.interval, period=period)
+            every = _("Every %(count)s %(period)s", count=recurrence.interval, period=period)
 
             if recurrence.end_type == 'count':
                 end = _("for %s events", recurrence.count)
@@ -136,19 +142,25 @@ class RecurrenceRule(models.Model):
             else:
                 end = ''
 
-            if recurrence.rrule_type == 'weeky':
+            if recurrence.rrule_type == 'weekly':
                 weekdays = recurrence._get_week_days()
-                weekday_fields = (self._fields[weekday_to_field(w)] for w in weekdays)
-                on = _("on %s,") % ", ".join([field.string for field in weekday_fields])
+                # Convert Weekday object
+                weekdays = [str(w) for w in weekdays]
+                # We need to get the day full name from its three first letters.
+                week_map = {v: k for k, v in RRULE_WEEKDAYS.items()}
+                weekday_short = [week_map[w] for w in weekdays]
+                day_strings = [d[1] for d in WEEKDAY_SELECTION if d[0] in weekday_short]
+                on = _("on %s") % ", ".join([day_name for day_name in day_strings])
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
-                    weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
-                    on = _("on the %(position)s %(weekday)s, ", position=recurrence.byday, weekday=weekday_label)
+                    position_label = dict(BYDAY_SELECTION)[recurrence.byday]
+                    weekday_label = dict(WEEKDAY_SELECTION)[recurrence.weekday]
+                    on = _("on the %(position)s %(weekday)s", position=position_label, weekday=weekday_label)
                 else:
-                    on = _("day %s, ", recurrence.day)
+                    on = _("day %s", recurrence.day)
             else:
                 on = ''
-            recurrence.name = every + on + end
+            recurrence.name = ' '.join(filter(lambda s: s, [every, on, end]))
 
     @api.depends('calendar_event_ids.start')
     def _compute_dtstart(self):
@@ -187,7 +199,14 @@ class RecurrenceRule(models.Model):
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
-    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
+    def _select_new_base_event(self):
+        """
+        when the base event is no more available (archived, deleted, etc.), a new one should be selected
+        """
+        for recurrence in self:
+            recurrence.base_event_id = recurrence._get_first_event()
+
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         """Create missing events in the recurrence and detach events which no longer
         follow the recurrence rules.
         :return: detached events
@@ -204,7 +223,7 @@ class RecurrenceRule(models.Model):
             if specific_values_creation:
                 ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
             else:
-                ranges = set(recurrence._get_ranges(event.start, duration))
+                ranges = recurrence._range_calculation(event, duration)
 
             events_to_keep, ranges = recurrence._reconcile_events(ranges)
             keep |= events_to_keep
@@ -214,6 +233,8 @@ class RecurrenceRule(models.Model):
                 value = dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id, follow_recurrence=True)
                 if (recurrence.id, start, stop) in specific_values_creation:
                     value.update(specific_values_creation[(recurrence.id, start, stop)])
+                if generic_values_creation and recurrence.id in generic_values_creation:
+                    value.update(generic_values_creation[recurrence.id])
                 values += [value]
             event_vals += values
 
@@ -286,7 +307,7 @@ class RecurrenceRule(models.Model):
         :param dstart: if provided, only write events starting from this point in time
         """
         events = self._get_events_from(dtstart) if dtstart else self.calendar_event_ids
-        return events.with_context(no_mail_to_attendees=True).write(dict(values, recurrence_update='self_only'))
+        return events.with_context(no_mail_to_attendees=True, dont_notify=True).write(dict(values, recurrence_update='self_only'))
 
     def _rrule_serialize(self):
         """
@@ -306,7 +327,7 @@ class RecurrenceRule(models.Model):
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
-        if 'Z' in rule_str and not date_start.tzinfo:
+        if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
 
@@ -378,6 +399,28 @@ class RecurrenceRule(models.Model):
                 starts = set(recurrence._get_occurrences(start))
                 synced_events |= recurrence.calendar_event_ids.filtered(lambda e: e.start in starts)
         return self.calendar_event_ids - synced_events
+
+    def _range_calculation(self, event, duration):
+        """ Calculate the range of recurrence when applying the recurrence
+        The following issues are taken into account:
+            start of period is sometimes in the past (weekly or monthly rule).
+            We can easily filter these range values but then the count value may be wrong...
+            In that case, we just increase the count value, recompute the ranges and dismiss the useless values
+        """
+        self.ensure_one()
+        original_count = self.end_type == 'count' and self.count
+        ranges = set(self._get_ranges(event.start, duration))
+        future_events = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        if original_count and len(future_events) < original_count:
+            # Rise count number because some past values will be dismissed.
+            self.count = (2*original_count) - len(future_events)
+            ranges = set(self._get_ranges(event.start, duration))
+            # We set back the occurrence number to its original value
+            self.count = original_count
+        # Remove ranges of events occurring in the past
+        ranges = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        return ranges
+
 
     def _get_ranges(self, start, event_duration):
         starts = self._get_occurrences(start)

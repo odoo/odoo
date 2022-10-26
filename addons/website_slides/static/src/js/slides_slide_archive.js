@@ -1,10 +1,8 @@
-odoo.define('website_slides.slide.archive', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var Dialog = require('web.Dialog');
-var core = require('web.core');
-var _t = core._t;
+import publicWidget from 'web.public.widget';
+import Dialog from 'web.Dialog';
+import { _t } from 'web.core';
 
 var SlideArchiveDialog = Dialog.extend({
     template: 'slides.slide.archive',
@@ -14,7 +12,7 @@ var SlideArchiveDialog = Dialog.extend({
      */
     init: function (parent, options) {
         options = _.defaults(options || {}, {
-            title: _t('Archive Slide'),
+            title: _t('Archive Content'),
             size: 'medium',
             buttons: [{
                 text: _t('Archive'),
@@ -38,7 +36,7 @@ var SlideArchiveDialog = Dialog.extend({
             var $emptyFlag = $emptyFlagContainer.find('small');
             if (categorySlideCount === 0 && $emptyFlag.length === 0){
                 $emptyFlagContainer.append($('<small>', {
-                    'class': "ml-1 text-muted font-weight-bold",
+                    'class': "ms-1 text-muted fw-bold",
                     text: _t("(empty)")
                 }));
             }
@@ -72,7 +70,6 @@ var SlideArchiveDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_archive',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onArchiveSlideClick',
     },
@@ -100,9 +97,7 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     slideArchiveDialog: SlideArchiveDialog,
     websiteSlidesSlideArchive: publicWidget.registry.websiteSlidesSlideArchive
 };
-
-});

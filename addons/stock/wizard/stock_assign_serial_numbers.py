@@ -16,8 +16,8 @@ class StockAssignSerialNumbers(models.TransientModel):
             return len(filtered_move_lines)
 
     product_id = fields.Many2one('product.product', 'Product',
-        related='move_id.product_id', required=True)
-    move_id = fields.Many2one('stock.move', required=True)
+        related='move_id.product_id')
+    move_id = fields.Many2one('stock.move')
     next_serial_number = fields.Char('First SN', required=True)
     next_serial_count = fields.Integer('Number of SN',
         default=_default_next_serial_count, required=True)
@@ -26,7 +26,7 @@ class StockAssignSerialNumbers(models.TransientModel):
     def _check_next_serial_count(self):
         for wizard in self:
             if wizard.next_serial_count < 1:
-                raise ValidationError(_("The number of Serial Numbers to generate must greater than zero."))
+                raise ValidationError(_("The number of Serial Numbers to generate must be greater than zero."))
 
     def generate_serial_numbers(self):
         self.ensure_one()

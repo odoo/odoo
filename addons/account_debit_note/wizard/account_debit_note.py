@@ -25,6 +25,7 @@ class AccountDebitNote(models.TransientModel):
     # computed fields
     move_type = fields.Char(compute="_compute_from_moves")
     journal_type = fields.Char(compute="_compute_from_moves")
+    country_code = fields.Char(related='move_ids.company_id.country_id.code')
 
     @api.model
     def default_get(self, fields):
@@ -67,8 +68,9 @@ class AccountDebitNote(models.TransientModel):
             default_values = self._prepare_default_values(move)
             new_move = move.copy(default=default_values)
             move_msg = _(
-                "This debit note was created from:") + " <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>" % (
-                       move.id, move.name)
+                "This debit note was created from: %s",
+                move._get_html_link(),
+            )
             new_move.message_post(body=move_msg)
             new_moves |= new_move
 
@@ -76,7 +78,8 @@ class AccountDebitNote(models.TransientModel):
             'name': _('Debit Notes'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            }
+            'context': {'default_move_type': default_values['move_type']},
+        }
         if len(new_moves) == 1:
             action.update({
                 'view_mode': 'form',

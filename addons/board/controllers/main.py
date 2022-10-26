@@ -16,11 +16,15 @@ class Board(Controller):
         if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form' and action_id:
             # Maybe should check the content instead of model board.board ?
             view_id = action['views'][0][0]
-            board = request.env['board.board'].fields_view_get(view_id, 'form')
-            if board and 'arch' in board:
-                xml = ElementTree.fromstring(board['arch'])
-                column = xml.find('./board/column')
+            board_view = request.env['board.board'].get_view(view_id, 'form')
+            if board_view and 'arch' in board_view:
+                board_arch = ElementTree.fromstring(board_view['arch'])
+                column = board_arch.find('./board/column')
                 if column is not None:
+                    # We don't want to save allowed_company_ids
+                    # Otherwise on dashboard, the multi-company widget does not filter the records
+                    if 'allowed_company_ids' in context_to_save:
+                        context_to_save.pop('allowed_company_ids')
                     new_action = ElementTree.Element('action', {
                         'name': str(action_id),
                         'string': name,
@@ -29,7 +33,7 @@ class Board(Controller):
                         'domain': str(domain)
                     })
                     column.insert(0, new_action)
-                    arch = ElementTree.tostring(xml, encoding='unicode')
+                    arch = ElementTree.tostring(board_arch, encoding='unicode')
                     request.env['ir.ui.view.custom'].create({
                         'user_id': request.session.uid,
                         'ref_id': view_id,

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import collections
+import contextlib
 import json
 import itertools
 import operator
@@ -45,18 +46,14 @@ class SurveyQuestion(models.Model):
     _rec_name = 'title'
     _order = 'sequence,id'
 
-    @api.model
-    def default_get(self, fields):
-        defaults = super(SurveyQuestion, self).default_get(fields)
-        if (not fields or 'question_type' in fields):
-            defaults['question_type'] = False if defaults.get('is_page') == True else 'text_box'
-        return defaults
-
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
     description = fields.Html(
         'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
         help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
+    question_placeholder = fields.Char("Placeholder", translate=True, compute="_compute_question_placeholder", store=True, readonly=False)
+    background_image = fields.Image("Background Image", compute="_compute_background_image", store=True, readonly=False)
+    background_image_url = fields.Char("Background Url", compute="_compute_background_image_url")
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -67,18 +64,18 @@ class SurveyQuestion(models.Model):
         related='survey_id.questions_selection', readonly=True,
         help="If randomized is selected, add the number of random questions next to the section.")
     random_questions_count = fields.Integer(
-        'Random questions count', default=1,
+        '# Questions Randomly Picked', default=1,
         help="Used on randomized sections to take X random questions from all the questions of that section.")
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
+        ('simple_choice', 'Multiple choice: only one answer'),
+        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('text_box', 'Multiple Lines Text Box'),
         ('char_box', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('simple_choice', 'Multiple choice: only one answer'),
-        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Question Type',
         compute='_compute_question_type', readonly=False, store=True)
     is_scored_question = fields.Boolean(
@@ -101,7 +98,6 @@ class SurveyQuestion(models.Model):
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
-    allow_value_image = fields.Boolean('Images on answers', help='Display images in addition to answer label. Valid only for simple / multiple choice questions.')
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
@@ -110,19 +106,15 @@ class SurveyQuestion(models.Model):
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
     # -- display & timing options
-    column_nb = fields.Selection([
-        ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
-        string='Number of columns', default='12',
-        help='These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for dropdown-based simple and multiple choice questions.')
     is_time_limited = fields.Boolean("The question is limited in time",
         help="Currently only supported for live sessions.")
     time_limit = fields.Integer("Time limit (seconds)")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
-    comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
+    comments_message = fields.Char('Comment Message', translate=True)
     comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
     # question validation
-    validation_required = fields.Boolean('Validate entry')
+    validation_required = fields.Boolean('Validate entry', compute='_compute_validation_required', readonly=False, store=True)
     validation_email = fields.Boolean('Input must be an email')
     validation_length_min = fields.Integer('Minimum Text Length', default=0)
     validation_length_max = fields.Integer('Maximum Text Length', default=0)
@@ -132,9 +124,9 @@ class SurveyQuestion(models.Model):
     validation_max_date = fields.Date('Maximum Date')
     validation_min_datetime = fields.Datetime('Minimum Datetime')
     validation_max_datetime = fields.Datetime('Maximum Datetime')
-    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered is not valid."))
+    validation_error_msg = fields.Char('Validation Error message', translate=True)
     constr_mandatory = fields.Boolean('Mandatory Answer')
-    constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
+    constr_error_msg = fields.Char('Error message', translate=True)
     # answers
     user_input_line_ids = fields.One2many(
         'survey.user_input.line', 'question_id', string='Answers',
@@ -142,16 +134,16 @@ class SurveyQuestion(models.Model):
 
     # Conditional display
     is_conditional = fields.Boolean(
-        string='Conditional Display', copy=False, help="""If checked, this question will be displayed only 
+        string='Conditional Display', copy=True, help="""If checked, this question will be displayed only
         if the specified conditional answer have been selected in a previous question""")
     triggering_question_id = fields.Many2one(
         'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",
         store=True, readonly=False, help="Question containing the triggering answer to display the current question.",
-        domain="""[('survey_id', '=', survey_id),
-                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']),
-                 '|',
-                     ('sequence', '<', sequence),
-                     '&', ('sequence', '=', sequence), ('id', '<', id)]""")
+        domain="[('survey_id', '=', survey_id), \
+                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']), \
+                 '|', \
+                     ('sequence', '<', sequence), \
+                     '&', ('sequence', '=', sequence), ('id', '<', id)]")
     triggering_answer_id = fields.Many2one(
         'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
         store=True, readonly=False, help="Answer that will trigger the display of the current question.",
@@ -171,11 +163,60 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
 
+    # -------------------------------------------------------------------------
+    # CONSTRAINT METHODS
+    # -------------------------------------------------------------------------
+
+    @api.constrains("is_page")
+    def _check_question_type_for_pages(self):
+        invalid_pages = self.filtered(lambda question: question.is_page and question.question_type)
+        if invalid_pages:
+            raise ValidationError(_("Question type should be empty for these pages: %s", ', '.join(invalid_pages.mapped('title'))))
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.depends('question_type')
+    def _compute_question_placeholder(self):
+        for question in self:
+            if question.question_type in ('simple_choice', 'multiple_choice', 'matrix') \
+                    or not question.question_placeholder:  # avoid CacheMiss errors
+                question.question_placeholder = False
+
+    @api.depends('is_page')
+    def _compute_background_image(self):
+        """ Background image is only available on sections. """
+        for question in self.filtered(lambda q: not q.is_page):
+            question.background_image = False
+
+    @api.depends('survey_id.access_token', 'background_image', 'page_id', 'survey_id.background_image_url')
+    def _compute_background_image_url(self):
+        """ How the background url is computed:
+        - For a question: it depends on the related section (see below)
+        - For a section:
+            - if a section has a background, then we create the background URL using this section's ID
+            - if not, then we fallback on the survey background url """
+        base_bg_url = "/survey/%s/%s/get_background_image"
+        for question in self:
+            if question.is_page:
+                background_section_id = question.id if question.background_image else False
+            else:
+                background_section_id = question.page_id.id if question.page_id.background_image else False
+
+            if background_section_id:
+                question.background_image_url = base_bg_url % (
+                    question.survey_id.access_token,
+                    background_section_id
+                )
+            else:
+                question.background_image_url = question.survey_id.background_image_url
+
     @api.depends('is_page')
     def _compute_question_type(self):
-        for question in self:
-            if not question.question_type or question.is_page:
-                question.question_type = False
+        pages = self.filtered(lambda question: question.is_page)
+        pages.question_type = False
+        (self - pages).filtered(lambda question: not question.question_type).question_type = 'simple_choice'
 
     @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
     def _compute_question_ids(self):
@@ -221,6 +262,12 @@ class SurveyQuestion(models.Model):
         for question in self:
             if question.question_type != 'char_box':
                 question.save_as_nickname = False
+
+    @api.depends('question_type')
+    def _compute_validation_required(self):
+        for question in self:
+            if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
+                question.validation_required = False
 
     @api.depends('is_conditional')
     def _compute_triggering_question_id(self):
@@ -285,7 +332,7 @@ class SurveyQuestion(models.Model):
             answer = answer.strip()
         # Empty answer to mandatory question
         if self.constr_mandatory and not answer and self.question_type not in ['simple_choice', 'multiple_choice']:
-            return {self.id: self.constr_error_msg}
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
 
         # because in choices question types, comment can count as answer
         if answer or self.question_type in ['simple_choice', 'multiple_choice']:
@@ -312,7 +359,7 @@ class SurveyQuestion(models.Model):
         # Length of the answer must be in a range
         if self.validation_required:
             if not (self.validation_length_min <= len(answer) <= self.validation_length_max):
-                return {self.id: self.validation_error_msg}
+                return {self.id: self.validation_error_msg or _('The answer you entered is not valid.')}
         return {}
 
     def _validate_numerical_box(self, answer):
@@ -323,9 +370,9 @@ class SurveyQuestion(models.Model):
 
         if self.validation_required:
             # Answer is not in the right range
-            with tools.ignore(Exception):
+            with contextlib.suppress(Exception):
                 if not (self.validation_min_float_value <= floatanswer <= self.validation_max_float_value):
-                    return {self.id: self.validation_error_msg}
+                    return {self.id: self.validation_error_msg  or _('The answer you entered is not valid.')}
         return {}
 
     def _validate_date(self, answer):
@@ -349,7 +396,7 @@ class SurveyQuestion(models.Model):
             if (min_date and max_date and not (min_date <= dateanswer <= max_date))\
                     or (min_date and not min_date <= dateanswer)\
                     or (max_date and not dateanswer <= max_date):
-                return {self.id: self.validation_error_msg}
+                return {self.id: self.validation_error_msg or _('The answer you entered is not valid.')}
         return {}
 
     def _validate_choice(self, answer, comment):
@@ -357,13 +404,13 @@ class SurveyQuestion(models.Model):
         if self.constr_mandatory \
                 and not answer \
                 and not (self.comments_allowed and self.comment_count_as_answer and comment):
-            return {self.id: self.constr_error_msg}
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
         return {}
 
     def _validate_matrix(self, answers):
         # Validate that each line has been answered
         if self.constr_mandatory and len(self.matrix_row_ids) != len(answers):
-            return {self.id: self.constr_error_msg}
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
         return {}
 
     def _index(self):
@@ -393,6 +440,7 @@ class SurveyQuestion(models.Model):
             if question.question_type in ['simple_choice', 'multiple_choice', 'matrix']:
                 answer_lines = all_lines.filtered(
                     lambda line: line.answer_type == 'suggestion' or (
+                        line.skipped and not line.answer_type) or (
                         line.answer_type == 'char_box' and question.comment_count_as_answer)
                     )
                 comment_line_ids = all_lines.filtered(lambda line: line.answer_type == 'char_box')
@@ -438,7 +486,8 @@ class SurveyQuestion(models.Model):
 
         count_data = dict.fromkeys(suggested_answers, 0)
         for line in user_input_lines:
-            if line.suggested_answer_id or (line.value_char_box and self.comment_count_as_answer):
+            if line.suggested_answer_id in count_data\
+               or (line.value_char_box and self.comment_count_as_answer):
                 count_data[line.suggested_answer_id] += 1
 
         table_data = [{
@@ -525,7 +574,7 @@ class SurveyQuestion(models.Model):
         return {
             'common_lines': collections.Counter(
                 user_input_lines.filtered(lambda line: not line.skipped).mapped('value_%s' % self.question_type)
-            ).most_common(5) if self.question_type != 'datetime' else [],
+            ).most_common(5),
             'right_inputs_count': len(user_input_lines.filtered(lambda line: line.answer_is_correct).mapped('user_input_id'))
         }
 
@@ -544,13 +593,18 @@ class SurveyQuestionAnswer(models.Model):
     _order = 'sequence, id'
     _description = 'Survey Label'
 
+    # question and question related fields
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
     matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
+    question_type = fields.Selection(related='question_id.question_type')
     sequence = fields.Integer('Label Sequence order', default=10)
+    scoring_type = fields.Selection(related='question_id.scoring_type')
+    # answer related fields
     value = fields.Char('Suggested value', translate=True, required=True)
-    value_image = fields.Image('Image', max_width=256, max_height=256)
-    is_correct = fields.Boolean('Is a correct answer')
-    answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    value_image = fields.Image('Image', max_width=1024, max_height=1024)
+    value_image_filename = fields.Char('Image Filename')
+    is_correct = fields.Boolean('Correct')
+    answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
     @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):

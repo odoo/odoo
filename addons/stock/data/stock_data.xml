@@ -9,6 +9,10 @@
             <field name="name">Last In First Out (LIFO)</field>
             <field name="method">lifo</field>
         </record>
+        <record id="removal_closest" model="product.removal">
+            <field name="name">Closest Location</field>
+            <field name="method">closest</field>
+        </record>
     </data>
     <data noupdate="1">
         <!-- Resource: stock.location -->
@@ -18,7 +22,7 @@
             <field name="company_id"></field>
         </record>
         <record id="stock_location_locations_partner" model="stock.location">
-            <field name="name">Partner Locations</field>
+            <field name="name">Partners</field>
             <field name="usage">view</field>
             <field name="posz">1</field>
             <field name="company_id"></field>
@@ -52,7 +56,7 @@
         </record>
 
         <!-- set a lower sequence on the mto route than on the resupply routes -->
-        <record id="route_warehouse0_mto" model='stock.location.route'>
+        <record id="route_warehouse0_mto" model='stock.route'>
             <field name="name">Replenish on Order (MTO)</field>
             <field name="company_id"></field>
             <field name="active">False</field>
@@ -74,7 +78,6 @@
         <!-- Resource: stock.warehouse -->
         <record id="warehouse0" model="stock.warehouse">
             <field name="partner_id" ref="base.main_partner"/>
-            <field name="name">San Francisco</field>
             <field name="code">WH</field>
         </record>
 

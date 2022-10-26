@@ -44,9 +44,11 @@ Notes:
         # configuration wizard, views, reports...
         'data/account.chart.template.csv',
         'data/account_chart_template_data.xml',
+        'data/l10n_lu_chart_template_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
     ],
     'post_init_hook': '_post_init_hook',
+    'license': 'LGPL-3',
 }

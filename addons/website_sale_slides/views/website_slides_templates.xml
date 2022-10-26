@@ -14,19 +14,27 @@
 </template>
 
 <template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
-            <i class="fa fa-download mr-1"/>
+            <i class="fa fa-download me-1"/>
             <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
                 <t t-set="slide" t-value="aside_slide"/>
             </t>
         </li>
     </xpath>
 </template>
 
-<template name="Buy Course To Download Resource Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
-        <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted mr-auto border-left pl-3">
+<template name="Buy Course To Access Resources or Interact Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
+        <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted me-auto border-start ps-3">
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+            </t>
+        </span>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access_comments')]" position="inside">
+        <span t-elif="slide.channel_id.enroll == 'payment'">
             <t t-call="website_sale_slides.course_buy_course_link"/>
         </span>
     </xpath>
@@ -59,16 +67,30 @@
 </template>
 
 <template name="Buy Course To Download Resource Fullscreen" id="slide_fullscreen_sidebar_category_buy_course" inherit_id="website_slides.slide_fullscreen_sidebar_category">
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
-            <i class="fa fa-download mr-1"/>
-            <t t-call="website_sale_slides.course_buy_course_link"/>
+            <i class="fa fa-download me-1"/>
+            <t t-call="website_sale_slides.course_buy_course_link">
+                <t t-set="for_resources" t-value="1"/>
+            </t>
         </li>
     </xpath>
 </template>
 
 <!-- COURSE -->
-<template name="Course Sidebar (infos, CTA)" id='course_sidebar' inherit_id="website_slides.course_sidebar">
+<template name="Course Main" id="course_main" inherit_id="website_slides.course_main">
+    <xpath expr="//div[@id='home']" position="before">
+        <div t-if="channel.enroll == 'payment' and not channel.product_id.is_published"
+            class="alert alert-info" role="alert" groups="website_slides.group_website_slides_officer">
+            This course cannot be bought because its linked product
+            <a t-attf-href="/web#id=#{channel.product_id.product_tmpl_id.id}&amp;view_type=form&amp;model=#{channel.product_id.product_tmpl_id._name}&amp;action=website_sale.product_template_action_website"
+                class="alert-link" t-out="channel.product_id.name"/>
+            is not published.
+        </div>
+    </xpath>
+</template>
+
+<template name="Course Sidebar (infos, CTA)" id="course_join" inherit_id="website_slides.course_join">
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
         <t t-if="(not channel.is_member or channel.can_publish) and channel.enroll == 'payment'">
@@ -79,18 +101,16 @@
 
 <!-- TOOLS -->
 <template name="Buy Course Link" id="course_buy_course_link">
-    <a t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
-        Buy Course
-    </a>
-     to download resources
+    <a class="post_link" t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
+        Join this Course</a><t t-if="for_resources"> to access resources</t>
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
-    <t t-if="channel.product_id.website_published">
+    <t t-if="product_info and channel.product_id.website_published and not channel.is_member">
         <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
             <div class="css_editable_mode_hidden">
                 <!-- real price -->
-                <div class="oe_price font-weight-bold text-nowrap h2 my-2"
+                <div class="oe_price fw-bold text-nowrap h2 my-2"
                      t-esc="product_info['price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
                 <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
@@ -100,7 +120,7 @@
                      t-esc="product_info['list_price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
             </div>
-            <div class="css_non_editable_mode_hidden decimal_precision oe_price font-weight-bold text-nowrap h2 my-2"
+            <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
                  t-att-data-precision="str(product_info['currency_id'].decimal_places)">
                 <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
             </div>
@@ -110,32 +130,33 @@
                 <form action="/shop/cart/update" method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
-                    <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="channel.product_id.id"/>
                     <a id="add_to_cart" role="button" href="#"
-                       class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit"
+                       class="btn btn-primary d-block js_check_product o_js_add_to_cart a-submit"
                        data-animation-selector=".o_wslides_course_pict">
                         <i class="fa fa-shopping-cart"></i> Add to Cart
                     </a>
                     <div id="product_option_block"/>
                 </form>
             </div>
-            <div class="buy_now_button"/>
         </div>
     </t>
-    <t t-else="">
+    <t t-elif="not channel.is_member">
         <div class="alert my-0 bg-200 text-center">
-            Course Not Buyable
+            Course Unavailable
         </div>
     </t>
 </template>
 
-<template name="Allow Buy Now" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False" customize_show="True">
-    <xpath expr="//div[hasclass('buy_now_button')]" position="inside">
-        <div style="margin-top:5px;">
-            <a role="button" class="btn btn-outline-primary btn-block post_link" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
+<template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
+    <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
+        <div class="mb-1">
+            <a role="button" class="post_link btn btn-primary btn-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
         </div>
+    </xpath>
+    <xpath expr="//div[hasclass('add_to_cart_button')]//a[@id='add_to_cart']" position="attributes">
+        <attribute name="class">btn btn-outline-primary btn-block js_check_product o_js_add_to_cart a-submit</attribute>
     </xpath>
 </template>
 

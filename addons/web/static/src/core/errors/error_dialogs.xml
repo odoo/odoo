@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.WarningDialog" owl="1">
+      <Dialog title="title">
+        <div role="alert" class="o_dialog_warning">
+          <p t-esc="message" style="white-space: pre-wrap;"/>
+        </div>
+      </Dialog>
+    </t>
+
+    <t t-name="web.RedirectWarningDialog" owl="1">
+      <Dialog title="title">
+        <div role="alert">
+          <p t-esc="message" style="white-space: pre-wrap;"/>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary" t-on-click="onClick" t-esc="buttonText"/>
+          <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+        </t>
+      </Dialog>
+    </t>
+
+    <t t-name="web.Error504Dialog" owl="1">
+      <Dialog title="this.constructor.title">
+        <div role="alert">
+            <p style="white-space: pre-wrap;">
+            The operation was interrupted. This usually means that the current operation is taking too much time.
+            </p>
+        </div>
+      </Dialog>
+    </t>
+
+    <t t-name="web.SessionExpiredDialog" owl="1">
+      <Dialog title="this.constructor.title">
+        <div role="alert">
+          <p style="white-space: pre-wrap;">
+            Your Odoo session expired. The current page is about to be refreshed.
+          </p>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary" t-on-click="onClick">Ok</button>
+        </t>
+      </Dialog>
+    </t>
+
+    <t t-name="web.ErrorDialog" owl="1">
+      <Dialog contentClass="'o_dialog_error'" title="this.constructor.title">
+        <div class="alert alert-warning clearfix" role="alert">
+            <div class="float-end ml8 btn-group-vertical">
+                <button class="btn btn-primary" t-on-click="onClickClipboard">
+                    <i class="fa fa-clipboard mr8"/><t>Copy the full error to clipboard</t>
+                </button>
+            </div>
+            <p><b>An error occurred</b></p>
+            <p>Please use the copy button to report the error to your support service.</p>
+        </div>
+
+
+        <button class="btn btn-link" t-on-click="() => { state.showTraceback = !state.showTraceback }">See details</button>
+        <div t-if="state.showTraceback and (props.name or props.message)" class="alert alert-info bg-100 clearfix" role="alert">
+          <code t-if="props.name" t-esc="props.name"></code>
+          <p t-if="props.message" t-esc="props.message"></p>
+        </div>
+        <div t-if="state.showTraceback" class="alert alert-danger o_error_detail" role="alert">
+            <pre t-esc="traceback or props.traceback"/>
+        </div>
+      </Dialog>
+    </t>
+
+</templates>

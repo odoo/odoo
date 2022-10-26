@@ -21,10 +21,8 @@ This module adds certification to resumé for employees.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'hr_skills_survey/static/src/scss/**/*',
-        ],
-        'web.assets_qweb': [
             'hr_skills_survey/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

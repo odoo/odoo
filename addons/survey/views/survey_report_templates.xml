@@ -15,9 +15,18 @@
                     <div class="certification-content">
                         <div t-if="user_input.scoring_success">
                             <p>This certificate is presented to
-                                <br/><span class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
+                                <br/>
+                                <t t-set="certif_style" t-value="''"/>
+                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email"/>
+                                <t t-if="certified_name.isupper()">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-family: certification-serif;'"/>
+                                </t>
+                                <t t-if="len(certified_name) > 20">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-size: 40px; line-height: 4;'"/>
+                                </t>
+                                <span t-att-style="certif_style" class="user-name" t-esc="certified_name"/>
 
-                                <br/>by <span class="certification-company" t-field="user_input.survey_id.create_uid.company_id.display_name"/> for successfully completing
+                                <br/>by <span class="certification-company" t-field="user_input.env.company.display_name"/> for successfully completing
                                 <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name"/></b>
                              </p>
                         </div>
@@ -32,7 +41,7 @@
                             <span>Date</span>
                         </div>
                         <div class="certification-company">
-                            <span class="certification-company-logo" t-field="user_input.survey_id.create_uid.company_id.logo" t-options="{'widget': 'image'}" role="img"/>
+                            <span class="certification-company-logo" t-field="user_input.env.company.logo" t-options="{'widget': 'image'}" role="img"/>
                         </div>
 
                     </div>
@@ -58,9 +67,21 @@
                     <div class="certification-content">
                         <div t-if="user_input.scoring_success">
                             <p>This certificate is presented to
-                                <br/><span class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
+                                 <t t-set="certif_style" t-value="''"/>
+                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email"/>
+                                <t t-if="certified_name.isupper()">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-family: certification-serif;'"/>
+                                </t>
+                                <t t-if="len(certified_name) > 35">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-size: 20px; line-height: 4; font-family: certification-serif; '"/>
+                                </t>
+                                <t t-elif="len(certified_name) > 20">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-size: 30px; line-height: 4;'"/>
+                                </t>
+                                <br/>
+                                <span t-att-style="certif_style" class="user-name" t-esc="certified_name"/>
 
-                                <br/>by <span class="certification-company" t-field="user_input.survey_id.create_uid.company_id.display_name"/>
+                                <br/>by <span class="certification-company" t-field="user_input.env.company.display_name"/>
                                 for successfully completing
                                 <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name"/></b>
                              </p>
@@ -77,7 +98,7 @@
                             </div>
                             <div class="certification-seal"/>
                             <div class="certification-company">
-                                <span class="certification-company-logo" t-field="user_input.survey_id.create_uid.company_id.logo" t-options="{'widget': 'image'}" role="img"/>
+                                <span class="certification-company-logo" t-field="user_input.env.company.logo" t-options="{'widget': 'image'}" role="img"/>
                             </div>
                         <div class="certification-number" t-if="user_input.scoring_success">
                             Certification n°<t t-esc="str(user_input.id).rjust(10, '0')"/>

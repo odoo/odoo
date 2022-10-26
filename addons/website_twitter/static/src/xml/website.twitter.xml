@@ -16,7 +16,7 @@
                     <a class="date" target="_blank" t-attf-href="http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id_str}"><t t-esc="tweet.created_at"/></a>
                 </div>
                 <div class="bottom">
-                    <p><t t-raw="tweet.text"/></p>
+                    <p><t t-out="tweet.text"/></p>
                 </div>
             </div>
         </div>

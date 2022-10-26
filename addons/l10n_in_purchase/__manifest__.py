@@ -16,6 +16,6 @@
         'views/purchase_order_views.xml',
     ],
     'installable': True,
-    'application': False,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

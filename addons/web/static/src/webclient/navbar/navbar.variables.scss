@@ -1,0 +1,55 @@
+// = Main Navbar Variables
+// ============================================================================
+$o-navbar-height-xs: 46px !default;
+$o-navbar-height-lg: 40px !default;
+$o-navbar-height: $o-navbar-height-lg !default;
+
+$o-navbar-background: $o-brand-odoo !default;
+
+$o-navbar-border-bottom: 1px solid darken($o-brand-odoo, 10%) !default;
+
+$o-navbar-entry-color: $o-white !default;
+$o-navbar-entry-font-size: $o-font-size-base !default;
+$o-navbar-entry-bg--hover: rgba($o-black, .08) !default;
+
+$o-navbar-brand-font-size: $o-navbar-entry-font-size * 1.3 !default;
+
+$o-navbar-badge-size: 11px !default;
+$o-navbar-badge-size-adjust: 1px !default;
+$o-navbar-badge-padding: 4px !default;
+$o-navbar-badge-bg: $o-success !default;
+
+// = % PseudoClasses
+//
+// Regroup and expose rules shared across components
+// --------------------------------------------------------------------------
+%-main-navbar-entry-base {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: var(--o-navbar-height, #{$o-navbar-height});
+    user-select: none;
+    background: transparent;
+    font-size: $o-navbar-entry-font-size;
+
+    @include o-hover-text-color(rgba($o-navbar-entry-color, .9), $o-navbar-entry-color);
+}
+
+%-main-navbar-entry-spacing {
+    padding: 0 $o-horizontal-padding * .75;
+    line-height: var(--o-navbar-height);
+}
+
+%-main-navbar-entry-bg-hover {
+    &:hover {
+        background-color: $o-navbar-entry-bg--hover;
+    }
+}
+
+%-main-navbar-entry-active {
+    &, &:hover, &:focus {
+        background: $o-navbar-entry-bg--hover;
+        color: $o-navbar-entry-color;
+    }
+}

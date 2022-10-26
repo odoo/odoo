@@ -5,7 +5,7 @@ odoo.define('website_event.ticket_details', function (require) {
         selector: '.o_wevent_js_ticket_details',
         events: {
             'click .o_wevent_registration_btn': '_onTicketDetailsClick',
-            'change .custom-select': '_onTicketQuantityChange'
+            'change .form-select': '_onTicketQuantityChange'
         },
         start: function (){
             this.foldedByDefault = this.$el.data('foldedByDefault') === 1;
@@ -21,7 +21,7 @@ odoo.define('website_event.ticket_details', function (require) {
          */
         _getTotalTicketCount: function (){
             var ticketCount = 0;
-            this.$('.custom-select').each(function (){
+            this.$('.form-select').each(function (){
                 ticketCount += parseInt($(this).val());
             });
             return ticketCount;
@@ -32,15 +32,20 @@ odoo.define('website_event.ticket_details', function (require) {
         //--------------------------------------------------------------------------
 
         /**
+         * When the "Fold Tickets Details" option is active, this will be called each
+         * time the user expand or fold the tickets (o_wevent_registration_btn). This
+         * allows to show/hide elements depending on the folding state.
+         *
          * @private
          * @param {*} ev
          */
         _onTicketDetailsClick: function (ev){
             ev.preventDefault();
             if (this.foldedByDefault){
-                $(ev.currentTarget).toggleClass('btn-primary text-left pl-0');
-                $(ev.currentTarget).siblings().toggleClass('d-none');
-                this.$('.close').toggleClass('d-none');
+                let $target = $(ev.currentTarget);
+                $target.toggleClass('btn-primary');
+                $target.children().toggleClass('d-none');
+                $target.siblings('.o_wevent_registration_title, .o_wevent_price_range').toggleClass('d-none');
             }
         },
         /**

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="crm.CrmKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_kanban_counter_progress')]" position="attributes">
+            <attribute name="class" remove="w-75" add="w-50" separator=" "/>
+        </xpath>
+        <KanbanAnimatedNumber position="after">
+            <t t-if="showRecurringRevenue">
+                <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(group)"/>
+                <KanbanAnimatedNumber
+                    value="rrmAggregate.value"
+                    title="rrmAggregate.title"
+                    duration="1000"
+                    currency="aggregate.currency"
+                    animationClass="'o_kanban_grow_huge'"
+                >
+                    <t t-set-slot="prefix">
+                        <strong>+</strong>
+                    </t>
+                </KanbanAnimatedNumber>
+            </t>
+        </KanbanAnimatedNumber>
+    </t>
+</templates>

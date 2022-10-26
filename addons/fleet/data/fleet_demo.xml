@@ -46,66 +46,61 @@
       </record>
 
       <record id="type_service_service_7" model="fleet.service.type">
-          <field name="name">Summer tires</field>
-          <field name="category">service</field>
-      </record>
-
-      <record id="type_service_service_8" model="fleet.service.type">
           <field name="name">Repair and maintenance</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_9" model="fleet.service.type">
+      <record id="type_service_service_8" model="fleet.service.type">
           <field name="name">Assistance</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_10" model="fleet.service.type">
+      <record id="type_service_service_9" model="fleet.service.type">
           <field name="name">Replacement Vehicle</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_11" model="fleet.service.type">
+      <record id="type_service_service_10" model="fleet.service.type">
           <field name="name">Management Fee</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_12" model="fleet.service.type">
+      <record id="type_service_service_11" model="fleet.service.type">
           <field name="name">Rent (Excluding VAT)</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_13" model="fleet.service.type">
+      <record id="type_service_service_12" model="fleet.service.type">
           <field name="name">Entry into service tax</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_14" model="fleet.service.type">
+      <record id="type_service_service_13" model="fleet.service.type">
           <field name="name">Total expenses (Excluding VAT)</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_15" model="fleet.service.type">
+      <record id="type_service_service_14" model="fleet.service.type">
           <field name="name">Residual value (Excluding VAT)</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_16" model="fleet.service.type">
+      <record id="type_service_service_15" model="fleet.service.type">
           <field name="name">Options</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_17" model="fleet.service.type">
+      <record id="type_service_service_16" model="fleet.service.type">
           <field name="name">Emissions</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_18" model="fleet.service.type">
+      <record id="type_service_service_17" model="fleet.service.type">
           <field name="name">Touring Assistance</field>
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_service_19" model="fleet.service.type">
+      <record id="type_service_service_18" model="fleet.service.type">
           <field name="name">Residual value in %</field>
           <field name="category">service</field>
       </record>
@@ -145,7 +140,7 @@
           <field name="category">service</field>
       </record>
 
-      <record id="type_service_8" model="fleet.service.type">
+      <record id="type_service_7" model="fleet.service.type">
           <field name="name">Ball Joint Replacement</field>
           <field name="category">service</field>
       </record>
@@ -416,24 +411,20 @@
         <field name="color" eval="4"/>
       </record>
 
-      <record id="vehicle_tag_compact" model="fleet.vehicle.tag" >
-        <field name="name">Compact</field>
-        <field name="color" eval="5"/>
-      </record>
-
-      <record id="vehicle_tag_sedan" model="fleet.vehicle.tag" >
-        <field name="name">Sedan</field>
-        <field name="color" eval="6"/>
-      </record>
-
-      <record id="vehicle_tag_convertible" model="fleet.vehicle.tag" >
-        <field name="name">Convertible</field>
-        <field name="color" eval="7"/>
-      </record>
-
-      <record id="vehicle_tag_break" model="fleet.vehicle.tag" >
+      <record id="model_category_1" model="fleet.vehicle.model.category">
         <field name="name">Break</field>
-        <field name="color" eval="8"/>
+      </record>
+
+      <record id="model_category_2" model="fleet.vehicle.model.category">
+        <field name="name">SUV</field>
+      </record>
+
+      <record id="model_category_3" model="fleet.vehicle.model.category">
+        <field name="name">Sport Car</field>
+      </record>
+
+      <record id="model_category_4" model="fleet.vehicle.model.category">
+        <field name="name">Compact</field>
       </record>
 
       <record id="vehicle_1" model="fleet.vehicle">
@@ -448,7 +439,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_2" model="fleet.vehicle">
@@ -463,7 +454,7 @@
           <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_3" model="fleet.vehicle">
@@ -478,7 +469,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
        <record id="vehicle_4" model="fleet.vehicle">
@@ -493,7 +484,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_5" model="fleet.vehicle">
@@ -508,7 +499,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="log_odometer_1" model="fleet.vehicle.odometer">
@@ -683,7 +674,7 @@
       <record id="log_service_1" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">650</field>
-        <field name="service_type_id" ref="type_service_service_8"/>
+        <field name="service_type_id" ref="type_service_service_7"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=60)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">4586</field>
@@ -695,7 +686,7 @@
       <record id="log_service_2" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">350</field>
-        <field name="service_type_id" ref="type_service_service_8"/>
+        <field name="service_type_id" ref="type_service_service_7"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">4814</field>
@@ -707,7 +698,7 @@
       <record id="log_service_3" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">513</field>
-        <field name="service_type_id" ref="type_service_service_8"/>
+        <field name="service_type_id" ref="type_service_service_7"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">124</field>
@@ -719,7 +710,7 @@
       <record id="log_service_4" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_3" />
         <field name="amount">412</field>
-        <field name="service_type_id" ref="type_service_service_8"/>
+        <field name="service_type_id" ref="type_service_service_7"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=120)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">20984</field>
@@ -731,7 +722,7 @@
       <record id="log_service_5" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">275</field>
-        <field name="service_type_id" ref="type_service_service_8"/>
+        <field name="service_type_id" ref="type_service_service_7"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=100)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">241</field>
@@ -743,7 +734,7 @@
       <record id="log_service_6" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_5" />
         <field name="amount">302</field>
-        <field name="service_type_id" ref="type_service_service_8"/>
+        <field name="service_type_id" ref="type_service_service_7"/>
         <field name="date" eval="(DateTime.now() - timedelta(days=65)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">22513</field>

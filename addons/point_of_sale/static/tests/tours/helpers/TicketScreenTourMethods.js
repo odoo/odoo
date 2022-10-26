@@ -46,14 +46,14 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
                 },
                 {
                     /**
-                     * Manually trigger keydown event to show the search field list
-                     * because the previous step do not trigger keydown event.
+                     * Manually trigger keyup event to show the search field list
+                     * because the previous step do not trigger keyup event.
                      */
                     trigger: '.pos-search-bar input',
                     run: function () {
                         document
                             .querySelector('.pos-search-bar input')
-                            .dispatchEvent(new KeyboardEvent('keydown', { key: '' }));
+                            .dispatchEvent(new KeyboardEvent('keyup', { key: '' }));
                     },
                 },
                 {
@@ -65,6 +65,46 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
             return [
                 {
                     trigger: '.ticket-screen .buttons .settle-tips',
+                },
+            ];
+        }
+        clickControlButton(name) {
+            return [
+                {
+                    trigger: `.ticket-screen .control-button:contains("${name}")`,
+                },
+            ];
+        }
+        clickOrderline(name) {
+            return [
+                {
+                    trigger: `.ticket-screen .orderline:not(:has(.selected)) .product-name:contains("${name}")`,
+                },
+                {
+                    trigger: `.ticket-screen .orderline.selected .product-name:contains("${name}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        pressNumpad(key) {
+            let trigger;
+            if ('.0123456789'.includes(key)) {
+                trigger = `.numpad .number-char:contains("${key}")`;
+            } else if (key === 'Backspace') {
+                trigger = `.numpad .numpad-backspace`;
+            } else if (key === '+/-') {
+                trigger = `.numpad .numpad-minus`;
+            }
+            return [
+                {
+                    trigger,
+                },
+            ];
+        }
+        confirmRefund() {
+            return [
+                {
+                    trigger: '.ticket-screen .button.pay',
                 },
             ];
         }
@@ -95,6 +135,54 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
             return [
                 {
                     trigger: '.ticket-screen .controls .buttons:nth-child(1):has(.discard)',
+                    run: () => {},
+                },
+            ];
+        }
+        orderWidgetIsNotEmpty() {
+            return [
+                {
+                    trigger: '.ticket-screen:not(:has(.order-empty))',
+                    run: () => {},
+                },
+            ];
+        }
+        filterIs(name) {
+            return [
+                {
+                    trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        partnerIs(name) {
+            return [
+                {
+                    trigger: `.ticket-screen .set-partner:contains("${name}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        toRefundTextContains(text) {
+            return [
+                {
+                    trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
+                    run: () => {},
+               },
+            ];
+        }
+        refundedNoteContains(text) {
+            return [
+                {
+                    trigger: `.ticket-screen .refund-note:contains("${text}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        tipContains(amount) {
+            return [
+                {
+                    trigger: `.ticket-screen .tip-cell:contains("${amount}")`,
                     run: () => {},
                 },
             ];

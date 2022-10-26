@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo import tools
 
 
 class AccountJournal(models.Model):
@@ -30,6 +31,9 @@ class AccountJournal(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
+    def init(self):
+        tools.create_index(self._cr, 'account_move_line_move_product_index', self._table, ['move_id', 'product_id'])
+
     @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
     def _compute_tax_base_amount(self):
         aml = self.filtered(lambda l: l.company_id.account_fiscal_country_id.code == 'IN' and l.tax_line_id  and l.product_id)
@@ -46,10 +50,28 @@ class AccountTax(models.Model):
 
     l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
 
-    def get_grouping_key(self, invoice_tax_val):
-        """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
-        key = super(AccountTax, self).get_grouping_key(invoice_tax_val)
-        if self.company_id.account_fiscal_country_id.code == 'IN':
-            key += "-%s-%s"% (invoice_tax_val.get('l10n_in_product_id', False),
-                invoice_tax_val.get('l10n_in_uom_id', False))
-        return key
+    @api.model
+    def _get_generation_dict_from_base_line(self, line_vals, tax_vals):
+        # EXTENDS account
+        # Group taxes also by product.
+        res = super()._get_generation_dict_from_base_line(line_vals, tax_vals)
+        record = line_vals['record']
+        if isinstance(record, models.Model)\
+                and record._name == 'account.move.line'\
+                and record.company_id.account_fiscal_country_id.code == 'IN':
+            res['product_id'] = record.product_id.id
+            res['product_uom_id'] = record.product_uom_id.id
+        return res
+
+    @api.model
+    def _get_generation_dict_from_tax_line(self, line_vals):
+        # EXTENDS account
+        # Group taxes also by product.
+        res = super()._get_generation_dict_from_tax_line(line_vals)
+        record = line_vals['record']
+        if isinstance(record, models.Model)\
+                and record._name == 'account.move.line'\
+                and record.company_id.account_fiscal_country_id.code == 'IN':
+            res['product_id'] = record.product_id.id
+            res['product_uom_id'] = record.product_uom_id.id
+        return res

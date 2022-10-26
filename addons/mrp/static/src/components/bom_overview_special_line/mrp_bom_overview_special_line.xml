@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <tr t-name="mrp.BomOverviewSpecialLine" owl="1">
+        <td name="td_mrp_bom">
+            <span t-attf-style="margin-left: {{ data.level * 20 }}px"/>
+            <button t-if="hasFoldButton" t-on-click="onToggleFolded" t-attf-class="o_mrp_bom_{{ props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}">
+                <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
+                <t t-if="props.type == 'operations'">Operations</t>
+                <t t-elif="props.type == 'byproducts'">By-Products</t>
+            </button>
+        </td>
+        <td name="quantity" class="text-end">
+            <span t-if="props.type == 'operations'" t-esc="formatFloatTime(data.operations_time)"/>
+            <span t-elif="props.type == 'byproducts'" t-esc="formatFloat(data.byproducts_total)"/>
+        </td>
+        <td name="uom" t-if="showUom" class="text-start">
+            <span t-if="props.type == 'operations'">Minutes</span>
+        </td>
+        <td t-if="showAvailabilities"/>
+        <td t-if="showAvailabilities"/>
+        <td t-if="showAvailabilities"/>
+        <td t-if="showLeadTimes"/>
+        <td/>
+        <td name="bom_cost" t-if="showCosts" class="text-end">
+            <span t-if="props.type == 'operations'" t-esc="formatMonetary(data.operations_cost)"/>
+            <span t-elif="props.type == 'byproducts'" t-esc="formatMonetary(data.byproducts_cost)"/>
+        </td>
+        <td name="prod_cost" t-if="showCosts" class="text-end"/>
+        <td t-if="showAttachments"/>
+    </tr>
+
+</templates>

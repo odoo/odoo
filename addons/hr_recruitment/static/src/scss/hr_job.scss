@@ -1,12 +1,9 @@
-.o_kanban_view.o_kanban_dashboard {
+.o_kanban_renderer.o_kanban_dashboard {
     &.o_hr_recruitment_kanban {
         &.o_kanban_ungrouped .o_kanban_record {
-            width: 350px;
+            width: 450px;
             &:not(.o_kanban_ghost) {
-                height: 180px;
-                @include media-breakpoint-down(sm) {
-                    height: 150px;
-                }
+                min-height: 220px;
             }
         }
 
@@ -16,7 +13,6 @@
             }
 
             span {
-                background-color: $o-brand-odoo;
                 padding: 5px;
                 font-size: small;
                 z-index: unset;
@@ -31,69 +27,77 @@
                 right: 30px;
             }
         }
-    }
 
-    .o_kanban_record_subtitle {
-        height: 1em;
-    }
+        .text_top_padding{
+            padding-top: 0.375rem;
+        }
 
-    .o_recruitment_kanban_boxes {
-        display: flex;
-        flex-flow: row nowrap;
+        .o_primary {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 24px !important;
 
-        .o_recruitment_kanban_box {
-            position: relative;
-            padding: 0 0 0 0;
-            flex: 1 1 auto;
-            display: flex;
-            flex-flow: row nowrap;
-            justify-content: center;
-
-            &:first-child {
-                justify-content: flex-start;
-                padding-left: 16px;
+            .fa {
+                margin-left: 0;
             }
-            div:last-child {
-                justify-content: flex-end;
-                text-align: right;
+        }
+
+        .o_job_activities {
+            list-style-type: none;
+
+            .to-recruit {
+                color: $o-enterprise-color;
+                font-weight: bold;
             }
-            .o_link_trackers{
-                .fa{
-                    color: $o-brand-primary;
-                } 
-            }
-            .o_value {
-                font-weight: 800;
-            }
+        }
 
-            > a {
-                font-weight: 500;
+        .o_kanban_card_header_title {
+            min-height: 3rem;
 
-                &.o_needaction{
-                    font-size: small;
-                    font-weight: 400;
-                    margin-left: 4px;
-                    @include o-hover-opacity(0.5, 1);
-
-                    &:before {
-                        content: "/ ";
-                    }
-
-                    &:after {
-                        content: "\f086";
-                        font: normal normal normal 14px/1 FontAwesome;
-                    }
-                }
+            .o_field_boolean_favorite {
+                display: inline;
             }
         }
     }
 }
 
-.o_kanban_view .oe_kanban_card {
-    .o_kanban_state_with_padding {
-        padding-left:7%;
-        padding-bottom:5%;
-        width: 12px;
+.o_kanban_renderer {
+    &.o_kanban_applicant {
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+
+            span {
+                padding: 5px;
+                font-size: x-small;
+                z-index: unset;
+                height: auto;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+
+            span {
+                top: 10px;
+                left: 20px;
+            }
+        }
+    }
+}
+
+.o_kanban_view {
+    .oe_kanban_card {
+        .o_kanban_state_with_padding {
+            padding-left:7%;
+            padding-bottom:5%;
+            width: 12px;
+        }
+    }
+
+    .o_view_sample_data .ribbon {
+        display: none;
     }
 }
 

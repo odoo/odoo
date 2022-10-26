@@ -1,0 +1,22 @@
+.o_field_CopyClipboardText, .o_field_CopyClipboardURL, .o_field_CopyClipboardChar {
+    > div {
+        grid-template-columns: auto min-content;
+        border: 1px solid $primary;
+        font-size: $font-size-sm;
+        color: $o-brand-primary;
+        font-weight: $badge-font-weight;
+
+        > span:first-child, a {
+            margin-left: 4px;
+            margin-right: 4px;
+            align-self: center;
+            text-align: center;
+
+            &:not(.o_field_CopyClipboardText) {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
+}

@@ -13,6 +13,11 @@ This gives the profitability by calculating the difference between the Unit
 Price and Cost Price.
     """,
     'depends':['sale_management'],
-    'demo':['data/sale_margin_demo.xml'],
-    'data':['security/ir.model.access.csv','views/sale_margin_view.xml'],
+    'demo':[
+        'data/sale_margin_demo.xml',
+    ],
+    'data':[
+        'views/sale_order_views.xml',
+    ],
+    'license': 'LGPL-3',
 }

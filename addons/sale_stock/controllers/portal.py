@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions
+from odoo import exceptions, SUPERUSER_ID
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.http import request, route
 from odoo.tools import consteq
@@ -29,8 +29,8 @@ class SaleStockPortal(CustomerPortal):
         except exceptions.AccessError:
             return request.redirect('/my')
 
-        # print report as sudo, since it require access to product, taxes, payment term etc.. and portal does not have those access rights.
-        pdf = request.env.ref('stock.action_report_delivery').sudo()._render_qweb_pdf([picking_sudo.id])[0]
+        # print report with sudo, since it require access to product, taxes, payment term etc.. and portal does not have those access rights.
+        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('stock.action_report_delivery', [picking_sudo.id])[0]
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),
             ('Content-Length', len(pdf)),

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormView" owl="1">
+        <div t-att-class="className" t-ref="root">
+            <div class="o_form_view_container">
+                <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                    <t t-set-slot="layout-buttons">
+                        <t t-if="footerArchInfo and env.inDialog">
+                            <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="{{ props.buttonTemplate }}"/>
+                        </t>
+                    </t>
+                    <t t-set-slot="control-panel-action-menu">
+                        <t t-if="props.info.actionMenus">
+                            <ActionMenus
+                                getActiveIds="() => model.root.isVirtual ? [] : [model.root.resId]"
+                                context="props.context"
+                                items="getActionMenuItems()"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                domain="props.domain"
+                                onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
+                                shouldExecuteAction.bind="shouldExecuteAction"
+                            />
+                            <span class="border-start d-none d-md-inline-block"/>
+                        </t>
+                    </t>
+                    <t t-set-slot="control-panel-status-indicator">
+                        <t t-if="canEdit">
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" isDisabled="state.isDisabled" />
+                        </t>
+                    </t>
+                    <t t-set-slot="control-panel-create-button">
+                        <t t-if="canCreate">
+                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">Create</button>
+                        </t>
+                    </t>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                </Layout>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.FormView.Buttons" owl="1">
+        <div class="o_cp_buttons" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
+            <div t-if="model.root.isInEdition" class="o_form_buttons_edit">
+                <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
+                    Save
+                </button>
+                <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
+                    Discard
+                </button>
+                <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+                    Remove
+                </button>
+            </div>
+            <div t-elif="canCreate" class="o_form_buttons_view">
+                <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+                    Create
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <!-- Used in FormRenderer -->
+    <t t-name="web.TranslateAlert" owl="1">
+        <div class="alert alert-info alert-dismissible" role="alertdialog">
+            Please update translations of :
+            <t t-foreach="Array.from(props.translateAlert.fields)" t-as="field" t-key="field.name">
+                <strong><a class="o_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
+            </t>
+            <button t-on-click="props.translateAlert.close" type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+    </t>
+</templates>

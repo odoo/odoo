@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
-from odoo.osv import expression
+from odoo import api, fields, models, tools, _, Command
+from odoo.exceptions import MissingError, ValidationError, AccessError
+from odoo.tools import frozendict
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
+from odoo.http import request
 
 import base64
 from collections import defaultdict
@@ -24,7 +25,7 @@ class IrActions(models.Model):
     _table = 'ir_actions'
     _order = 'name'
 
-    name = fields.Char(required=True)
+    name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)
     xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
     help = fields.Html(string='Action Description',
@@ -65,6 +66,10 @@ class IrActions(models.Model):
         self.clear_caches()
         return res
 
+    @api.ondelete(at_uninstall=True)
+    def _unlink_check_home_action(self):
+        self.env['res.users'].with_context(active_test=False).search([('action_id', 'in', self.ids)]).sudo().write({'action_id': None})
+
     @api.model
     def _get_eval_context(self, action=None):
         """ evaluation context to pass to safe_eval """
@@ -82,7 +87,6 @@ class IrActions(models.Model):
         }
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name')
     def get_bindings(self, model_name):
         """ Retrieve the list of actions bound to the given model.
 
@@ -90,39 +94,62 @@ class IrActions(models.Model):
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
-        # DLE P19: Need to flush before doing the SELECT, which act as a search.
-        # Test `test_bindings`
-        self.flush()
+        result = {}
+        for action_type, all_actions in self._get_bindings(model_name).items():
+            actions = []
+            for action in all_actions:
+                action = dict(action)
+                groups = action.pop('groups_id', None)
+                if groups and not self.user_has_groups(groups):
+                    # the user may not perform this action
+                    continue
+                res_model = action.pop('res_model', None)
+                if res_model and not self.env['ir.model.access'].check(
+                    res_model,
+                    mode='read',
+                    raise_exception=False
+                ):
+                    # the user won't be able to read records
+                    continue
+                actions.append(action)
+            if actions:
+                result[action_type] = actions
+        return result
+
+    @tools.ormcache('model_name', 'self.env.lang')
+    def _get_bindings(self, model_name):
         cr = self.env.cr
-        query = """ SELECT a.id, a.type, a.binding_type
-                    FROM ir_actions a, ir_model m
-                    WHERE a.binding_model_id=m.id AND m.model=%s
-                    ORDER BY a.id """
-        cr.execute(query, [model_name])
-        IrModelAccess = self.env['ir.model.access']
 
         # discard unauthorized actions, and read action definitions
         result = defaultdict(list)
-        user_groups = self.env.user.groups_id
+
+        self.env.flush_all()
+        cr.execute("""
+            SELECT a.id, a.type, a.binding_type
+              FROM ir_actions a
+              JOIN ir_model m ON a.binding_model_id = m.id
+             WHERE m.model = %s
+          ORDER BY a.id
+        """, [model_name])
         for action_id, action_model, binding_type in cr.fetchall():
             try:
                 action = self.env[action_model].sudo().browse(action_id)
-                action_groups = getattr(action, 'groups_id', ())
-                action_model = getattr(action, 'res_model', False)
-                if action_groups and not action_groups & user_groups:
-                    # the user may not perform this action
-                    continue
-                if action_model and not IrModelAccess.check(action_model, mode='read', raise_exception=False):
-                    # the user won't be able to read records
-                    continue
-                result[binding_type].append(action.read()[0])
-            except (AccessError, MissingError):
+                fields = ['name', 'binding_view_types']
+                for field in ('groups_id', 'res_model', 'sequence'):
+                    if field in action._fields:
+                        fields.append(field)
+                action = action.read(fields)[0]
+                if action.get('groups_id'):
+                    groups = self.env['res.groups'].browse(action['groups_id'])
+                    action['groups_id'] = ','.join(ext_id for ext_id in groups._ensure_xml_id().values())
+                result[binding_type].append(frozendict(action))
+            except (MissingError):
                 continue
 
         # sort actions by their sequence if sequence available
         if result.get('action'):
-            result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
-        return result
+            result['action'] = tuple(sorted(result['action'], key=lambda vals: vals.get('sequence', 0)))
+        return frozendict(result)
 
     @api.model
     def _for_xml_id(self, full_xml_id):
@@ -134,11 +161,17 @@ class IrActions(models.Model):
         """
         record = self.env.ref(full_xml_id)
         assert isinstance(self.env[record._name], type(self))
-        action = record.sudo().read()[0]
+        return record._get_action_dict()
+
+    def _get_action_dict(self):
+        """ Returns the action content for the provided action record.
+        """
+        self.ensure_one()
+        readable_fields = self._get_readable_fields()
         return {
             field: value
-            for field, value in action.items()
-            if field in record._get_readable_fields()
+            for field, value in self.sudo().read()[0].items()
+            if field in readable_fields
         }
 
     def _get_readable_fields(self):
@@ -160,7 +193,6 @@ class IrActionsActWindow(models.Model):
     _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
-    _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
     @api.constrains('res_model', 'binding_model_id')
@@ -205,10 +237,9 @@ class IrActionsActWindow(models.Model):
     @api.depends('res_model', 'search_view_id')
     def _compute_search_view(self):
         for act in self:
-            fvg = self.env[act.res_model].fields_view_get(act.search_view_id.id, 'search')
+            fvg = self.env[act.res_model].get_view(act.search_view_id.id, 'search')
             act.search_view = str(fvg)
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one('ir.ui.view', string='View Ref.', ondelete='set null')
     domain = fields.Char(string='Domain Value',
@@ -296,6 +327,7 @@ VIEW_TYPES = [
     ('kanban', 'Kanban'),
 ]
 
+
 class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
     _description = 'Action Window View'
@@ -326,9 +358,9 @@ class IrActionsActWindowclose(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            # 'effect' is not a real field of ir.actions.act_window_close but is
-            # used to display the rainbowman
-            "effect"
+            # 'effect' and 'infos' are not real fields of `ir.actions.act_window_close` but they are
+            # used to display the rainbowman ('effect') and waited by the action_service ('infos').
+            "effect", "infos"
         }
 
 
@@ -337,10 +369,8 @@ class IrActionsActUrl(models.Model):
     _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
-    _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.act_url')
     url = fields.Text(string='Action URL', required=True)
     target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
@@ -375,7 +405,6 @@ class IrActionsServer(models.Model):
     _description = 'Server Actions'
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
-    _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
 
     DEFAULT_PYTHON_CODE = """# Available variables:
@@ -390,12 +419,6 @@ class IrActionsServer(models.Model):
 #  - Command: x2Many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
-    @api.model
-    def _select_objects(self):
-        records = self.env['ir.model'].search([])
-        return [(record.model, record.name) for record in records] + [('', '')]
-
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
         ('ir_actions_server', 'Server Action'),
@@ -409,12 +432,13 @@ class IrActionsServer(models.Model):
         default='object_write', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Execute Python Code': a block of python code that will be executed\n"
-             "- 'Create': create a new record with new values\n"
+             "- 'Create a new Record': create a new record with new values\n"
              "- 'Update a Record': update the values of a record\n"
              "- 'Execute several actions': define an action that triggers several other server actions\n"
-             "- 'Send Email': automatically send an email (Discuss)\n"
+             "- 'Send Email': post a message, a note or send an email (Discuss)\n"
              "- 'Add Followers': add followers to a record (Discuss)\n"
-             "- 'Create Next Activity': create an activity (Discuss)")
+             "- 'Create Next Activity': create an activity (Discuss)\n"
+             "- 'Send SMS Text Message': send SMS, log them on documents (SMS)")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -431,15 +455,30 @@ class IrActionsServer(models.Model):
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
-    crud_model_id = fields.Many2one('ir.model', string='Target Model',
-                                    help="Model for record creation / update. Set this field only to specify a different model than the base model.")
+    crud_model_id = fields.Many2one(
+        'ir.model', string='Target Model',
+        compute='_compute_crud_model_id', readonly=False, store=True,
+        help="Model for record creation / update. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
-    link_field_id = fields.Many2one('ir.model.fields', string='Link Field',
-                                    help="Provide the field used to link the newly created record "
-                                         "on the record used by the server action.")
+    link_field_id = fields.Many2one(
+        'ir.model.fields', string='Link Field',
+        compute='_compute_link_field_id', readonly=False, store=True,
+        help="Provide the field used to link the newly created record on the record used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Groups')
+
+    @api.onchange('model_id')
+    def _compute_crud_model_id(self):
+        invalid = self.filtered(lambda act: act.crud_model_id != act.model_id)
+        if invalid:
+            invalid.crud_model_id = False
+
+    @api.depends('model_id')
+    def _compute_link_field_id(self):
+        invalid = self.filtered(lambda act: act.link_field_id.model_id != act.model_id)
+        if invalid:
+            invalid.link_field_id = False
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -482,10 +521,6 @@ class IrActionsServer(models.Model):
                         symbol, cls.__module__, cls.__name__
                     )
 
-    @api.onchange('crud_model_id')
-    def _onchange_crud_model_id(self):
-        self.link_field_id = False
-
     def create_action(self):
         """ Create a contextual action for each server action. """
         for action in self:
@@ -500,7 +535,7 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
@@ -583,22 +618,21 @@ class IrActionsServer(models.Model):
         :samp:`_run_action_{TYPE}[_multi]` method is called. This allows easy
         overriding of the server actions.
 
-        The `_multi` suffix means the runner can operate on multiple records,
+        The ``_multi`` suffix means the runner can operate on multiple records,
         otherwise if there are multiple records the runner will be called once
-        for each
+        for each.
 
-        :param dict context: context should contain following keys
+        The call context should contain the following keys:
 
-                             - active_id: id of the current object (single mode)
-                             - active_model: current model that should equal the action's model
-
-                             The following keys are optional:
-
-                             - active_ids: ids of the current records (mass mode). If active_ids
-                               and active_id are present, active_ids is given precedence.
-
-        :return: an action_id to be executed, or False is finished correctly without
-                 return action
+        active_id
+            id of the current object (single mode)
+        active_model
+            current model that should equal the action's model
+        active_ids (optional)
+           ids of the current records (mass mode). If ``active_ids`` and
+           ``active_id`` are present, ``active_ids`` is given precedence.
+        :return: an ``action_id`` to be executed, or ``False`` is finished
+                 correctly without return action
         """
         res = False
         for action in self.sudo():
@@ -657,7 +691,6 @@ class IrActionsServer(models.Model):
 class IrServerObjectLines(models.Model):
     _name = 'ir.server.object.lines'
     _description = 'Server Action value mapping'
-    _sequence = 'ir_actions_id_seq'
 
     server_id = fields.Many2one('ir.actions.server', string='Related Server Action', ondelete='cascade')
     col1 = fields.Many2one('ir.model.fields', string='Field', required=True, ondelete='cascade')
@@ -676,8 +709,7 @@ class IrServerObjectLines(models.Model):
 
     @api.model
     def _selection_target_model(self):
-        models = self.env['ir.model'].search([])
-        return [(model.model, model.name) for model in models]
+        return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
     @api.depends('col1.relation', 'value', 'evaluation_type')
     def _compute_resource_ref(self):
@@ -695,6 +727,11 @@ class IrServerObjectLines(models.Model):
                 line.resource_ref = '%s,%s' % (line.col1.relation, value)
             else:
                 line.resource_ref = False
+
+    @api.constrains('col1', 'evaluation_type')
+    def _raise_many2many_error(self):
+        if self.filtered(lambda line: line.col1.ttype == 'many2many' and line.evaluation_type == 'reference'):
+            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
@@ -723,6 +760,7 @@ class IrActionsTodo(models.Model):
     """
     _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
+    _rec_name = 'action_id'
     _order = "sequence, id"
 
     action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
@@ -750,9 +788,6 @@ class IrActionsTodo(models.Model):
         if open_todo:
             open_todo.write({'state': 'done'})
 
-    def name_get(self):
-        return [(record.id, record.action_id.name) for record in self]
-
     def unlink(self):
         if self:
             try:
@@ -764,13 +799,6 @@ class IrActionsTodo(models.Model):
             except ValueError:
                 pass
         return super(IrActionsTodo, self).unlink()
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        if name:
-            return self._search(expression.AND([[('action_id', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
-        return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def action_launch(self):
         """ Launch Action of Wizard"""
@@ -809,10 +837,8 @@ class IrActionsActClient(models.Model):
     _description = 'Client Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
-    _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.client')
 
     tag = fields.Char(string='Client action tag', required=True,

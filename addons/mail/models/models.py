@@ -2,12 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml.builder import E
+from markupsafe import Markup
 
 from odoo import api, models, tools, _
 
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
+
+    def _valid_field_parameter(self, field, name):
+        # allow tracking on abstract models; see also 'mail.thread'
+        return (
+            name == 'tracking' and self._abstract
+            or super()._valid_field_parameter(field, name)
+        )
 
     # ------------------------------------------------------------
     # GENERIC MAIL FEATURES
@@ -47,7 +55,7 @@ class BaseModel(models.AbstractModel):
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
                     if tracking['field_type'] == 'monetary':
-                        tracking['currency_id'] = getattr(self, col_info.get('currency_field', ''), self.company_id.currency_id).id
+                        tracking['currency_id'] = self[col_info['currency_field']].id
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 
@@ -77,7 +85,7 @@ class BaseModel(models.AbstractModel):
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+    def _notify_get_reply_to(self, default=None):
         """ Returns the preferred reply-to email address when replying to a thread
         on documents. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
@@ -97,19 +105,9 @@ class BaseModel(models.AbstractModel):
         An example would be tasks taking their reply-to alias from their project.
 
         :param default: default email if no alias or catchall is found;
-        :param records: DEPRECATED, self should be a valid record set or an
-          empty recordset if a generic reply-to is required;
-        :param company: used to compute company name part of the from name; provide
-          it if already known, otherwise fall back on user company;
-        :param doc_names: dict(res_id, doc_name) used to compute doc name part of
-          the from name; provide it if already known to avoid queries, otherwise
-          name_get on document will be performed;
         :return result: dictionary. Keys are record IDs and value is formatted
           like an email "Company_name Document_name <reply_to@email>"/
         """
-        if records:
-            raise ValueError('Use of records is deprecated as this method is available on BaseModel.')
-
         _records = self
         model = _records._name if _records and _records._name != 'mail.thread' else False
         res_ids = _records.ids if _records and model else []
@@ -118,7 +116,7 @@ class BaseModel(models.AbstractModel):
         alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         result = dict.fromkeys(_res_ids, False)
         result_email = dict()
-        doc_names = doc_names if doc_names else dict()
+        doc_names = dict()
 
         if alias_domain:
             if model and res_ids:
@@ -140,17 +138,46 @@ class BaseModel(models.AbstractModel):
                 if catchall:
                     result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
 
-            # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.company.name
             for res_id in result_email:
-                name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = tools.formataddr((name, result_email[res_id]))
+                result[res_id] = self._notify_get_reply_to_formatted_email(
+                    result_email[res_id],
+                    doc_names.get(res_id) or '',
+                )
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:
             result.update(dict((res_id, default) for res_id in left_ids))
 
         return result
+
+    def _notify_get_reply_to_formatted_email(self, record_email, record_name):
+        """ Compute formatted email for reply_to and try to avoid refold issue
+        with python that splits the reply-to over multiple lines. It is due to
+        a bad management of quotes (missing quotes after refold). This appears
+        therefore only when having quotes (aka not simple names, and not when
+        being unicode encoded).
+
+        To avoid that issue when formataddr would return more than 78 chars we
+        return a simplified name/email to try to stay under 78 chars. If not
+        possible we return only the email and skip the formataddr which causes
+        the issue in python. We do not use hacks like crop the name part as
+        encoding and quoting would be error prone.
+        """
+        # address itself is too long for 78 chars limit: return only email
+        if len(record_email) >= 78:
+            return record_email
+
+        company_name = self.env.company.name
+
+        # try company_name + record_name, or record_name alone (or company_name alone)
+        name = f"{company_name} {record_name}" if record_name else company_name
+
+        formatted_email = tools.formataddr((name, record_email))
+        if len(formatted_email) > 78:
+            formatted_email = tools.formataddr((record_name or company_name, record_email))
+        if len(formatted_email) > 78:
+            formatted_email = record_email
+        return formatted_email
 
     # ------------------------------------------------------------
     # ALIAS MANAGEMENT
@@ -191,16 +218,33 @@ class BaseModel(models.AbstractModel):
     # GATEWAY: NOTIFICATION
     # ------------------------------------------------------------
 
-    def _notify_email_headers(self):
-        """
-            Generate the email headers based on record
-        """
+    def _mail_get_message_subtypes(self):
+        return self.env['mail.message.subtype'].search([
+            '&', ('hidden', '=', False),
+            '|', ('res_model', '=', self._name), ('res_model', '=', False)])
+
+    def _notify_by_email_get_headers(self):
+        """ Generate the email headers based on record """
         if not self:
             return {}
         self.ensure_one()
-        return repr(self._notify_email_header_dict())
-
-    def _notify_email_header_dict(self):
         return {
             'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
         }
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def _get_html_link(self, title=None):
+        """Generate the record html reference for chatter use.
+
+        :param str title: optional reference title, the record display_name
+            is used if not provided. The title/display_name will be escaped.
+        :returns: generated html reference,
+            in the format <a href data-oe-model="..." data-oe-id="...">title</a>
+        :rtype: str
+        """
+        self.ensure_one()
+        return Markup("<a href=# data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
+            self._name, self.id, title or self.display_name)

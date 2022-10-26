@@ -1,7 +1,6 @@
-odoo.define('crm.tour_crm_rainbowman', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    var tour = require('web_tour.tour');
+    import tour from 'web_tour.tour';
 
     tour.register('crm_rainbowman', {
         test: true,
@@ -15,11 +14,11 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
             trigger: ".o-kanban-button-new",
             content: "click create",
         }, {
-            trigger: "input[name=name]",
+            trigger: ".o_field_widget[name=name] input",
             content: "complete name",
             run: "text Test Lead 1",
         }, {
-            trigger: "div[name=expected_revenue] > input",
+            trigger: ".o_field_widget[name=expected_revenue] input",
             content: "complete expected revenue",
             run: "text 999999997",
         }, {
@@ -28,7 +27,7 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
             content: "move to won stage",
-            run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(3) "
+            run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(3) "
         }, {
             trigger: ".o_reward_rainbow",
             extra_trigger: ".o_reward_rainbow",
@@ -37,11 +36,11 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
             trigger: ".o-kanban-button-new",
             content: "create second lead",
         }, {
-            trigger: "input[name=name]",
+            trigger: ".o_field_widget[name=name] input",
             content: "complete name",
             run: "text Test Lead 2",
         }, {
-            trigger: "div[name=expected_revenue] > input",
+            trigger: ".o_field_widget[name=expected_revenue] input",
             content: "complete expected revenue",
             run: "text 999999998",
         }, {
@@ -61,17 +60,20 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
         }, {
             trigger: ".o_statusbar_status button[data-value='4']",
             content: "move lead to won stage",
-        }, {
+        },
+        ...tour.stepUtils.saveForm(),
+        {
             trigger: ".o_statusbar_status button[data-value='1']",
             extra_trigger: ".o_reward_rainbow",
             content: "move lead to previous stage & rainbowman appears",
         }, {
             trigger: "button[name=action_set_won_rainbowman]",
             content: "click button mark won",
-        }, {
+        },
+        ...tour.stepUtils.saveForm(),
+        {
             trigger: ".o_menu_brand",
             extra_trigger: ".o_reward_rainbow",
             content: "last rainbowman appears",
         }
     ]);
-});

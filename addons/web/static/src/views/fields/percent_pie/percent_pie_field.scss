@@ -1,0 +1,19 @@
+.o_field_percent_pie .o_pie {
+    $pie-dimension: $o-statbutton-height - 2 * $o-statbutton-vpadding;
+    $pie-ring-width: 4px;
+
+    width: $pie-dimension;
+    height: $pie-dimension;
+
+    &:after { // Outside pie border to go over border-radius irregularities
+        border: 1px solid $o-brand-secondary;
+    }
+
+    .o_pie_value {
+        @include o-position-absolute($pie-ring-width, $pie-ring-width);
+        width: $pie-dimension - 2 * $pie-ring-width;
+        height: $pie-dimension - 2 * $pie-ring-width;
+        border: 1px solid $o-brand-secondary;
+        background-color: $o-brand-lightsecondary;
+    }
+}

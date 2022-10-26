@@ -19,7 +19,7 @@ class ResPartnerIap(models.Model):
     _name = 'res.partner.iap'
     _description = 'Partner IAP'
 
-    partner_id = fields.Many2one('res.partner', string='Partner', help='Corresponding partner',
+    partner_id = fields.Many2one('res.partner', string='Partner',
                                  ondelete='cascade', required=True)
     iap_search_domain = fields.Char('Search Domain / Email', help='Domain used to find the company')
     iap_enrich_info = fields.Text('IAP Enrich Info', help='IAP response stored as a JSON string', readonly=True)

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- VAT domestic sale-->
     <record id="vyc_tuz_21" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
@@ -12,29 +11,22 @@
         <field name="sequence" eval="0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-              'factor_percent': 100,
               'repartition_type': 'base',
             }),
             (0,0, {
-              'factor_percent': 100,
               'repartition_type': 'tax',
               'account_id': ref('chart_cz_343221'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343221'),
             }),
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_21"/>
     </record>
-
     <record id="vyc_tuz_15" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
         <field name="name">DPH na výstupu 15%</field>
@@ -44,30 +36,21 @@
         <field name="type_tax_use">sale</field>
         <field name="sequence" eval="0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343215'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343215'),
             }),
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_15"/>
     </record>
-
     <record id="vyc_tuz_0" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
         <field name="name">DPH na výstupu 0%</field>
@@ -76,30 +59,16 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
-
     <!-- VAT domestic purchase -->
-
     <record id="vsc_tuz_21" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
         <field name="name">DPH na vstupu 21%</field>
@@ -110,29 +79,20 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_vat_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343121'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343121'),
             }),
         ]"/>
     </record>
-
     <record id="vsc_tuz_15" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
         <field name="name">DPH na vstupu 15%</field>
@@ -143,33 +103,22 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_vat_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343115'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343115'),
             }),
         ]"/>
     </record>
-
-
     <!-- European Union -->
     <!-- =========================================================== -->
-
     <record id="vyc_dod_eu" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
         <field name="name">Dodání do EU</field>
@@ -178,28 +127,15 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
-
     <record id="vsc_nad_eu" model="account.tax.template">
         <field name="chart_template_id" ref="cz_chart_template"/>
         <field name="name">Pořízení z EU</field>
@@ -208,12 +144,8 @@
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343121'),
             }),
@@ -224,12 +156,8 @@
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart_cz_343121'),
             }),

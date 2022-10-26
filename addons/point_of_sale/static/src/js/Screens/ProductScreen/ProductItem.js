@@ -18,7 +18,7 @@ odoo.define('point_of_sale.ProductItem', function(require) {
         }
         get imageUrl() {
             const product = this.props.product;
-            return `/web/image?model=product.product&field=image_128&id=${product.id}&write_date=${product.write_date}&unique=1`;
+            return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
         }
         get pricelist() {
             const current_order = this.env.pos.get_order();
@@ -29,7 +29,7 @@ odoo.define('point_of_sale.ProductItem', function(require) {
         }
         get price() {
             const formattedUnitPrice = this.env.pos.format_currency(
-                this.props.product.get_price(this.pricelist, 1),
+                this.props.product.get_display_price(this.pricelist, 1),
                 'Product Price'
             );
             if (this.props.product.to_weight) {
@@ -39,6 +39,10 @@ odoo.define('point_of_sale.ProductItem', function(require) {
             } else {
                 return formattedUnitPrice;
             }
+        }
+        async onProductInfoClick() {
+            const info = await this.env.pos.getProductInfo(this.props.product, 1);
+            this.showPopup('ProductInfoPopup', { info: info , product: this.props.product });
         }
     }
     ProductItem.template = 'ProductItem';

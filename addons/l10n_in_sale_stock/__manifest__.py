@@ -25,5 +25,6 @@
     'data': [
         'views/stock_warehouse_views.xml',
     ],
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

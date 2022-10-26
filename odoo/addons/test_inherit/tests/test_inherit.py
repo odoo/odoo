@@ -64,7 +64,7 @@ class test_inherits(common.TransactionCase):
         field = mother._fields['surname']
 
         # the field dependencies are added
-        self.assertItemsEqual(field.depends, ['name', 'field_in_mother'])
+        self.assertItemsEqual(self.registry.field_depends[field], ['name', 'field_in_mother'])
 
     def test_40_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
@@ -173,4 +173,3 @@ class TestXMLIDS(common.TransactionCase):
         self.assertCountEqual(xml_ids.get(baz.id), [
             'test_inherit.selection__test_new_api_selection__state__baz',
         ])
-

@@ -12,8 +12,7 @@ class ResConfigSettings(models.TransientModel):
     po_order_approval = fields.Boolean("Purchase Order Approval", default=lambda self: self.env.company.po_double_validation == 'two_step')
     po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *", readonly=False)
     po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id', readonly=False)
-    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True,
-        help='Utility field to express amount currency')
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True)
     default_purchase_method = fields.Selection([
         ('purchase', 'Ordered quantities'),
         ('receive', 'Received quantities'),
@@ -39,6 +38,10 @@ class ResConfigSettings(models.TransientModel):
             self.po_lead = 0.0
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        self.po_lock = 'lock' if self.lock_confirmed_po else 'edit'
-        self.po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
+        super().set_values()
+        po_lock = 'lock' if self.lock_confirmed_po else 'edit'
+        po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
+        if self.po_lock != po_lock:
+            self.po_lock = po_lock
+        if self.po_double_validation != po_double_validation:
+            self.po_double_validation = po_double_validation

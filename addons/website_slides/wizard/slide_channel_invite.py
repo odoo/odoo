@@ -6,7 +6,6 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import formataddr
 
 _logger = logging.getLogger(__name__)
 
@@ -15,35 +14,20 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 class SlideChannelInvite(models.TransientModel):
     _name = 'slide.channel.invite'
+    _inherit = 'mail.composer.mixin'
     _description = 'Channel Invitation Wizard'
 
     # composer content
-    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
-    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', readonly=False, store=True)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
-    template_id = fields.Many2one(
-        'mail.template', 'Use template',
-        domain="[('model', '=', 'slide.channel.partner')]")
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     # slide channel
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
 
-    @api.depends('template_id')
-    def _compute_subject(self):
-        for invite in self:
-            if invite.template_id:
-                invite.subject = invite.template_id.subject
-            elif not invite.subject:
-                invite.subject = False
-
-    @api.depends('template_id')
-    def _compute_body(self):
-        for invite in self:
-            if invite.template_id:
-                invite.body = invite.template_id.body_html
-            elif not invite.body:
-                invite.body = False
+    # Overrides of mail.composer.mixin
+    @api.depends('channel_id')  # fake trigger otherwise not computed in new mode
+    def _compute_render_model(self):
+        self.render_model = 'slide.channel.partner'
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
@@ -60,16 +44,6 @@ class SlideChannelInvite(models.TransientModel):
                         ', '.join(invalid_partners.mapped('name'))
                     ))
 
-    @api.model
-    def create(self, values):
-        if values.get('template_id') and not (values.get('body') or values.get('subject')):
-            template = self.env['mail.template'].browse(values['template_id'])
-            if not values.get('subject'):
-                values['subject'] = template.subject
-            if not values.get('body'):
-                values['body'] = template.body_html
-        return super(SlideChannelInvite, self).create(values)
-
     def action_invite(self):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """
@@ -77,6 +51,8 @@ class SlideChannelInvite(models.TransientModel):
 
         if not self.env.user.email:
             raise UserError(_("Unable to post message, please configure the sender's email address."))
+        if not self.partner_ids:
+            raise UserError(_("Please select at least one recipient."))
 
         mail_values = []
         for partner_id in self.partner_ids:
@@ -84,16 +60,14 @@ class SlideChannelInvite(models.TransientModel):
             if slide_channel_partner:
                 mail_values.append(self._prepare_mail_values(slide_channel_partner))
 
-        # TODO awa: change me to create multi when mail.mail supports it
-        for mail_value in mail_values:
-            self.env['mail.mail'].sudo().create(mail_value)
+        self.env['mail.mail'].sudo().create(mail_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
-        subject = self.env['mail.render.mixin']._render_template(self.subject, 'slide.channel.partner', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
-        body = self.env['mail.render.mixin']._render_template(self.body, 'slide.channel.partner', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
+        subject = self._render_field('subject', slide_channel_partner.ids)[slide_channel_partner.id]
+        body = self._render_field('body', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
         # post the message
         mail_values = {
             'email_from': self.env.user.email_formatted,
@@ -107,23 +81,21 @@ class SlideChannelInvite(models.TransientModel):
             'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 
-        # optional support of notif_layout in context
-        notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
-        if notif_layout:
-            try:
-                template = self.env.ref(notif_layout, raise_if_not_found=True)
-            except ValueError:
-                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layouting.' % (notif_layout))
-            else:
-                # could be great to use _notify_prepare_template_context someday
-                template_ctx = {
-                    'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.channel_id.name)),
-                    'model_description': self.env['ir.model']._get('slide.channel').display_name,
-                    'record': slide_channel_partner,
-                    'company': self.env.company,
-                    'signature': self.channel_id.user_id.signature,
-                }
-                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+        # optional support of default_email_layout_xmlid in context
+        email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
+        if email_layout_xmlid:
+            # could be great to use ``_notify_by_email_prepare_rendering_context`` someday
+            template_ctx = {
+                'message': self.env['mail.message'].sudo().new({'body': mail_values['body_html'], 'record_name': self.channel_id.name}),
+                'model_description': self.env['ir.model']._get('slide.channel').display_name,
+                'record': slide_channel_partner,
+                'company': self.env.company,
+                'signature': self.channel_id.user_id.signature,
+            }
+            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, engine='ir.qweb', minimal_qcontext=True, raise_if_not_found=False)
+            if body:
                 mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+            else:
+                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layout.', email_layout_xmlid)
 
         return mail_values

@@ -5,8 +5,7 @@ from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, MissingError
 from odoo.osv import expression
-from odoo.tools import html_escape as escape
-from lxml import etree as ET
+from lxml import etree, html
 import logging
 from random import randint
 
@@ -19,7 +18,7 @@ class WebsiteSnippetFilter(models.Model):
     _description = 'Website Snippet Filter'
     _order = 'name ASC'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     action_server_id = fields.Many2one('ir.actions.server', 'Server Action', ondelete='cascade')
     field_names = fields.Char(help="A list of comma-separated field names", required=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
@@ -55,7 +54,7 @@ class WebsiteSnippetFilter(models.Model):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in %r") % (record.field_names))
 
-    def render(self, template_key, limit, search_domain=None, with_sample=False):
+    def _render(self, template_key, limit, search_domain=None, with_sample=False):
         """Renders the website dynamic snippet items"""
         self.ensure_one()
         assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
@@ -72,12 +71,11 @@ class WebsiteSnippetFilter(models.Model):
         is_sample = with_sample and not records
         if is_sample:
             records = self._prepare_sample(limit)
-        View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
-        content = View._render_template(template_key, dict(
+        content = self.env['ir.qweb'].with_context(inherit_branding=False)._render(template_key, dict(
             records=records,
             is_sample=is_sample,
-        )).decode('utf-8')
-        return [ET.tostring(el, encoding='utf-8') for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
+        ))
+        return [etree.tostring(el, encoding='unicode') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
@@ -89,12 +87,15 @@ class WebsiteSnippetFilter(models.Model):
             domain = filter_sudo._get_eval_domain()
             if 'website_id' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, self.env['website'].get_current_website().website_domain()])
+            if 'company_id' in self.env[filter_sudo.model_id]:
+                website = self.env['website'].get_current_website()
+                domain = expression.AND([domain, [('company_id', 'in', [False, website.company_id.id])]])
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
                 domain = expression.AND([domain, search_domain])
             try:
-                records = self.env[filter_sudo.model_id].search(
+                records = self.env[filter_sudo.model_id].with_context(**literal_eval(filter_sudo.context)).search(
                     domain,
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit
@@ -241,7 +242,7 @@ class WebsiteSnippetFilter(models.Model):
                 elif field_widget == 'monetary':
                     model_currency = None
                     if field and field.type == 'monetary':
-                        model_currency = record[record[field_name].currency_field]
+                        model_currency = record[field.get_currency_field(record)]
                     elif 'currency_id' in model._fields:
                         model_currency = record['currency_id']
                     if model_currency:

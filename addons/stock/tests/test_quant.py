@@ -3,7 +3,9 @@
 
 from contextlib import closing
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -52,6 +54,11 @@ class StockQuant(TransactionCase):
         cls.stock_location = cls.env['stock.location'].create({
             'name': 'stock_location',
             'usage': 'internal',
+        })
+        cls.stock_subloc3 = cls.env['stock.location'].create({
+            'name': 'subloc3',
+            'usage': 'internal',
+            'location_id': cls.stock_location.id
         })
         cls.stock_subloc2 = cls.env['stock.location'].create({
             'name': 'subloc2',
@@ -143,7 +150,7 @@ class StockQuant(TransactionCase):
     def test_get_available_quantity_7(self):
         """ Quantity availability with only one tracked quant in a location.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -452,7 +459,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, pack_location), 2.0)
 
     def test_mix_tracked_untracked_1(self):
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -464,30 +471,30 @@ class StockQuant(TransactionCase):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
         self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot1, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
 
         self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, -1.0, lot_id=lot1, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
         with self.assertRaises(UserError):
             self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, -1.0, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
     def test_access_rights_1(self):
-        """ Directly update the quant with a user with or without stock access rights sould raise
-        an AccessError.
+        """ Directly update the quant with a user with or without stock access rights should not raise
+        an AccessError only deletion will.
         """
         quant = self.env['stock.quant'].create({
             'product_id': self.product.id,
@@ -507,16 +514,14 @@ class StockQuant(TransactionCase):
             quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'quantity': 1.0,
+        })
+        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'quantity': 3.0})
         with self.assertRaises(AccessError):
-            self.env['stock.quant'].create({
-                'product_id': self.product.id,
-                'location_id': self.stock_location.id,
-                'quantity': 1.0,
-            })
-        with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).write({'quantity': 2.0})
-        with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).unlink()
+            quant.with_user(self.stock_user).unlink()
 
     def test_in_date_1(self):
         """ Check that no incoming date is set when updating the quantity of an untracked quant.
@@ -539,7 +544,7 @@ class StockQuant(TransactionCase):
         """ Check that an incoming date is correctly set when updating the quantity of a tracked
         quant.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -552,12 +557,12 @@ class StockQuant(TransactionCase):
         """ Check that the FIFO strategies correctly applies when you have multiple lot received
         at different times for a tracked product.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -578,12 +583,12 @@ class StockQuant(TransactionCase):
         """
         lifo_strategy = self.env['product.removal'].search([('method', '=', 'lifo')])
         self.stock_location.removal_strategy_id = lifo_strategy
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -602,7 +607,7 @@ class StockQuant(TransactionCase):
         """ Receive the same lot at different times, once they're in the same location, the quants
         are merged and only the earliest incoming date is kept.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -632,3 +637,162 @@ class StockQuant(TransactionCase):
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
         self.assertEqual(quant.in_date, in_date2)
+
+    def test_closest_removal_strategy_tracked(self):
+        """ Check that the Closest location strategy correctly applies when you have multiple lot received
+        at different locations for a tracked product.
+        """
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        self.stock_location.removal_strategy_id = closest_strategy
+        lot1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        in_date = datetime.now()
+        # Add a product from lot1 in stock_location/subloc2
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc2, 1.0, lot_id=lot1, in_date=in_date)
+        # Add a product from lot2 in stock_location/subloc3
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc3, 1.0, lot_id=lot2, in_date=in_date)
+        # Require one unit of the product
+        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
+
+        # Default removal strategy is 'Closest location', so lot1 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
+        self.assertEqual(quants[0][0].lot_id.id, lot1.id)
+
+    def test_closest_removal_strategy_untracked(self):
+        """ Check that the Closest location strategy correctly applies when you have multiple products received
+        at different locations for untracked products."""
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        self.stock_location.removal_strategy_id = closest_strategy
+        # Add 2 units of product into stock_location/subloc2
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_subloc2.id,
+            'quantity': 2.0,
+        })
+        # Add 3 units of product into stock_location/subloc3
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_subloc3.id,
+            'quantity': 3.0
+        })
+        # Request 3 units of product, with 'Closest location' as removal strategy
+        quants = self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 3)
+
+        # The 2 in stock_location/subloc2 should be taken first, as the location name is smaller alphabetically
+        self.assertEqual(quants[0][0].reserved_quantity, 2)
+        # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
+        self.assertEqual(quants[1][0].reserved_quantity, 1)
+
+    def test_in_date_6(self):
+        """
+        One P in stock, P is delivered. Later on, a stock adjustement adds one P. This test checks
+        the date value of the related quant
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+
+        move = self.env['stock.move'].create({
+            'name': 'OUT 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+
+
+        tomorrow = fields.Datetime.now() + timedelta(days=1)
+        with patch.object(fields.Datetime, 'now', lambda: tomorrow):
+            move = self.env['stock.move'].create({
+                'name': 'IN 1 product',
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product.uom_id.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.stock_location.id,
+            })
+            move._action_confirm()
+            move._action_assign()
+            move.quantity_done = 1
+            move._action_done()
+
+            quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('location_id', '=', self.stock_location.id), ('quantity', '>', 0)])
+            self.assertEqual(quant.in_date, tomorrow)
+
+    def test_quant_creation(self):
+        """
+        This test ensures that, after an internal transfer, the values of the created quand are correct
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10.0)
+
+        move = self.env['stock.move'].create({
+            'name': 'Move 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_subloc2.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+
+        quant = self.gather_relevant(self.product, self.stock_subloc2)
+        self.assertFalse(quant.inventory_quantity_set)
+
+    def test_unpack_and_quants_merging(self):
+        """
+        When unpacking a package, if there are already some quantities of the
+        packed product in the stock, the quant of the on hand quantity and the
+        one of the package should be merged
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        self.env['stock.quant']._update_available_quantity(self.product, stock_location, 1.0)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': 'In 10 x %s' % self.product.name,
+                'product_id': self.product.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+
+        package = self.env['stock.quant.package'].create({
+            'name': 'Super Package',
+        })
+        picking.move_ids.move_line_ids.write({
+            'qty_done': 10,
+            'result_package_id': package.id,
+        })
+        picking.button_validate()
+
+        package.unpack()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('on_hand', '=', True)])
+        self.assertEqual(len(quant), 1)
+        # The quants merging is processed thanks to a SQL query (see StockQuant._merge_quants).
+        # At that point, the ORM is not aware of the new value. So we need to invalidate the
+        # cache to ensure that the value will be the newest
+        quant.invalidate_recordset(['quantity'])
+        self.assertEqual(quant.quantity, 11)

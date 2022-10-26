@@ -17,5 +17,5 @@ This is the base module for managing Units of measure.
         'views/uom_uom_views.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

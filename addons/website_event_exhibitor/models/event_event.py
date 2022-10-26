@@ -20,7 +20,7 @@ class EventEvent(models.Model):
         domain=[('menu_type', '=', 'exhibitor')])
 
     def _compute_sponsor_count(self):
-        data = self.env['event.sponsor'].read_group([], ['event_id'], ['event_id'])
+        data = self.env['event.sponsor']._read_group([], ['event_id'], ['event_id'])
         result = dict((data['event_id'][0], data['event_id_count']) for data in data)
         for event in self:
             event.sponsor_count = result.get(event.id, 0)
@@ -49,13 +49,15 @@ class EventEvent(models.Model):
         super(EventEvent, self)._update_website_menus(menus_update_by_field=menus_update_by_field)
         for event in self:
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('exhibitor_menu')):
-                event._update_website_menu_entry('exhibitor_menu', 'exhibitor_menu_ids', '_get_exhibitor_menu_entries')
+                event._update_website_menu_entry('exhibitor_menu', 'exhibitor_menu_ids', 'exhibitor')
 
     def _get_menu_type_field_matching(self):
         res = super(EventEvent, self)._get_menu_type_field_matching()
         res['exhibitor'] = 'exhibitor_menu'
         return res
 
-    def _get_exhibitor_menu_entries(self):
+    def _get_website_menu_entries(self):
         self.ensure_one()
-        return [(_('Exhibitors'), '/event/%s/exhibitors' % slug(self), False, 60, 'exhibitor')]
+        return super(EventEvent, self)._get_website_menu_entries() + [
+            (_('Exhibitors'), '/event/%s/exhibitors' % slug(self), False, 60, 'exhibitor')
+        ]

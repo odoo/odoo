@@ -10,5 +10,5 @@
         'demo_data.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

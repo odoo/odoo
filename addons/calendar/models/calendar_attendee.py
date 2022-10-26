@@ -4,6 +4,7 @@ import uuid
 import base64
 import logging
 
+from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
@@ -33,14 +34,13 @@ class Attendee(models.Model):
     recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
     # attendee
     partner_id = fields.Many2one('res.partner', 'Attendee', required=True, readonly=True)
-    email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
-    phone = fields.Char('Phone', related='partner_id.phone', help="Phone number of Invited Person")
+    email = fields.Char('Email', related='partner_id.email')
+    phone = fields.Char('Phone', related='partner_id.phone')
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     mail_tz = fields.Selection(_tz_get, compute='_compute_mail_tz', help='Timezone used for displaying time in the mail template')
     # state
-    state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
-                             help="Status of the attendee's participation")
+    state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction')
     availability = fields.Selection(
         [('free', 'Available'), ('busy', 'Busy')], 'Available/Busy', readonly=True)
 
@@ -56,7 +56,9 @@ class Attendee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('partner_id') == self.env.user.partner_id.id:
+            # by default, if no state is given for the attendee corresponding to the current user
+            # that means he's the event organizer so we can set his state to "accepted"
+            if 'state' not in values and values.get('partner_id') == self.env.user.partner_id.id:
                 values['state'] = 'accepted'
             if not values.get("email") and values.get("common_name"):
                 common_nameval = values.get("common_name").split(':')
@@ -76,11 +78,14 @@ class Attendee(models.Model):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
     def _subscribe_partner(self):
+        mapped_followers = defaultdict(lambda: self.env['calendar.event'])
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
             # current user is automatically added as followers, don't add it twice.
             partners -= self.env.user.partner_id
-            event.message_subscribe(partner_ids=partners.ids)
+            mapped_followers[partners] |= event
+        for partners, events in mapped_followers.items():
+            events.message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
         for event in self.event_id:
@@ -142,14 +147,18 @@ class Attendee(models.Model):
         """ Marks event invitation as Accepted. """
         for attendee in self:
             attendee.event_id.message_post(
-                body=_("%s has accepted invitation") % (attendee.common_name),
-                subtype_xmlid="calendar.subtype_invitation")
+                author_id=attendee.partner_id.id,
+                body=_("%s has accepted the invitation") % (attendee.common_name),
+                subtype_xmlid="calendar.subtype_invitation",
+            )
         return self.write({'state': 'accepted'})
 
     def do_decline(self):
         """ Marks event invitation as Declined. """
         for attendee in self:
             attendee.event_id.message_post(
-                body=_("%s has declined invitation") % (attendee.common_name),
-                subtype_xmlid="calendar.subtype_invitation")
+                author_id=attendee.partner_id.id,
+                body=_("%s has declined the invitation") % (attendee.common_name),
+                subtype_xmlid="calendar.subtype_invitation",
+            )
         return self.write({'state': 'declined'})

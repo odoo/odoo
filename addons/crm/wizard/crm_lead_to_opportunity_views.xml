@@ -10,9 +10,10 @@
                 </group>
                 <group string="Assign this opportunity to">
                     <field name="user_id" domain="[('share', '=', False)]"/>
-                    <field name="team_id" widget="selection"/>
+                    <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
                 </group>
                 <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
+                    <field name="lead_id" invisible="1"/>
                     <field name="duplicated_lead_ids" nolabel="1">
                         <tree>
                             <field name="create_date" widget="date"/>
@@ -34,8 +35,8 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="action_apply" string="Create Opportunity" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button name="action_apply" string="Create Opportunity" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

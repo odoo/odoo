@@ -16,23 +16,6 @@ _logger = logging.getLogger(__name__)
 COMPANY_NB_WITH_STOCK = 3  # Need to be smaller than 5 (_populate_sizes['small'] of company)
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    def _populate_factories(self):
-
-        def get_tracking(values, counter, random):
-            if values['type'] == 'product':
-                return random.choices(['none', 'lot', 'serial'], [0.7, 0.2, 0.1])[0]
-            else:
-                return 'none'
-
-        res = super()._populate_factories()
-        res.append(('type', populate.iterate(['consu', 'service', 'product'], [0.3, 0.2, 0.5])))
-        res.append(('tracking', populate.compute(get_tracking)))
-        return res
-
-
 class Warehouse(models.Model):
     _inherit = 'stock.warehouse'
 
@@ -303,15 +286,50 @@ class StockWarehouseOrderpoint(models.Model):
         ]
 
 
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+    _populate_sizes = {'small': 100, 'medium': 5000, 'large': 20000}
+    _populate_dependencies = ['stock.location', 'product.product']
+
+    def _populate_factories(self):
+
+        product_ids = self.env['product.product'].search([
+            ('id', 'in', self.env.registry.populated_models['product.product']),
+            ('type', '=', 'product'),
+            ('tracking', '=', 'none')
+        ]).ids
+        locations = self.env['stock.location'].search([
+            ('id', 'in', self.env.registry.populated_models['stock.location']),
+            ('usage', '=', 'internal'),
+        ])
+
+        return [
+            ('location_id', populate.randomize(locations.ids)),
+            ('product_id', populate.randomize(product_ids)),
+            ('inventory_quantity', populate.randint(0, 100)),
+        ]
+
+    def _populate(self, size):
+        res = super(StockQuant, self.with_context(inventory_move=True))._populate(size)
+
+        _logger.info("Apply %d inventories line", len(res))
+        res.action_apply_inventory()
+
+        return res
+
 class PickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    _populate_sizes = {'small': 10, 'medium': 30, 'large': 200}
+    _populate_sizes = {'small': 9, 'medium': 30, 'large': 200}
     _populate_dependencies = ['stock.location']
 
     def _populate_factories(self):
         company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
+        warehouses = self.env['stock.warehouse'].browse(self.env.registry.populated_models['stock.warehouse'])
         internal_locations = self.env['stock.location'].search([('company_id', 'in', company_ids), ('usage', '=', 'internal')])
+        in_warehouse_locations = self.env['stock.location'].search([('id', 'child_of', warehouses.lot_stock_id.ids)])
+        internal_locations &= in_warehouse_locations
 
         def get_name(values, counter, random):
             return "%d-%s-%d" % (values['company_id'], values['code'], counter)
@@ -324,7 +342,6 @@ class PickingType(models.Model):
             for values in iterator:
 
                 locations_company = locations_by_company[values['company_id']]
-                # TODO : choice only location child of warehouse.lot_stock_id
                 inter_location = random.choice(locations_company)
                 values['warehouse_id'] = inter_location.warehouse_id.id
                 if values['code'] == 'internal':
@@ -475,10 +492,10 @@ class StockMove(models.Model):
                 package_for_picking = None
                 if random.random() < 0.20:  # 20 % of chance to use package
                     package_for_picking = {'name': picking.name}
-                for move in picking.move_lines:
+                for move in picking.move_ids:
                     # For assigned moves
                     for move_line in move._get_move_lines():
-                        move_line.qty_done = move_line.product_uom_qty
+                        move_line.qty_done = move_line.reserved_uom_qty
                     # Create move line for remaining qty
                     missing_to_do = move.product_qty - move.quantity_done
                     missing_to_do = move.product_uom._compute_quantity(missing_to_do, move.product_uom, rounding_method='HALF-UP')
@@ -517,7 +534,7 @@ class StockMove(models.Model):
                     package_values.append(package_for_picking)
 
             _logger.info("Create lots (%d) for pickings to validate" % len(lot_values))
-            lots = self.env["stock.production.lot"].create(lot_values)
+            lots = self.env["stock.lot"].create(lot_values)
             _logger.info("Create packages (%d) for pickings to validate" % len(package_values))
             packages = self.env["stock.quant.package"].create(package_values)
 

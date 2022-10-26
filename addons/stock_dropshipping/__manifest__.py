@@ -21,7 +21,11 @@ internal transfer document is needed.
 
 """,
     'depends': ['sale_purchase_stock'],
-    'data': ['data/stock_data.xml', 'views/sale_order_views.xml'],
+    'data': [
+        'data/stock_data.xml',
+        'views/sale_order_views.xml',
+        'views/purchase_order_views.xml'
+    ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

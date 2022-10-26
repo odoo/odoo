@@ -12,6 +12,7 @@
             <field name="type">purchase</field>
             <!-- avoid being selected as default journal -->
             <field name="sequence">99</field>
+            <field name="alias_name">purchase_expense</field>
         </record>
 
         <record id="res_partner_address_fp" model="res.partner">
@@ -32,62 +33,42 @@
             <field name="address_home_id" ref="res_partner_address_fp"/>
         </record>
 
-        <record id="car_travel" model="product.product">
-            <field name="list_price">0.50</field>
-            <field name="standard_price">0.32</field>
-            <field name="type">service</field>
-            <field name="name">Car Travel Expenses</field>
-            <field name="uom_id" ref="uom.product_uom_km"/>
-            <field name="uom_po_id" ref="uom.product_uom_km"/>
-            <field name="categ_id" ref="product.cat_expense"/>
-            <field name="can_be_expensed" eval="True" />
-            <field name="image_1920" type="base64" file="hr_expense/static/img/car_travel-image.jpg"/>
-        </record>
-
-        <record id="air_ticket" model="product.product">
-            <field name="list_price">700.0</field>
-            <field name="standard_price">700.0</field>
-            <field name="type">service</field>
-            <field name="name">Air Flight</field>
-            <field name="categ_id" ref="product.cat_expense"/>
-            <field name="can_be_expensed" eval="True" />
-            <field name="image_1920" type="base64" file="hr_expense/static/img/air_ticket-image.jpg"/>
-        </record>
-
-        <record id="product.expense_hotel" model="product.product">
-            <field name="can_be_expensed" eval="True" />
-        </record>
-
-        <record id="product.product_delivery_01" model="product.product">
-            <field name="can_be_expensed" eval="True" />
-        </record>
-
-        <record id="product.product_delivery_02" model="product.product">
-            <field name="can_be_expensed" eval="True" />
-        </record>
-
         <!-- ++++++++++++++ Expense sheet for Admin ++++++++++++++-->
-
         <record id="screen_expense" model="hr.expense">
             <field name="name">Screen</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
-            <field eval="289.0" name="unit_amount"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field eval="1.0" name="quantity"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="289.0" name="total_amount"/>
             <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
         </record>
 
         <record id="laptop_expense" model="hr.expense">
             <field name="name">Laptop</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
-            <field eval="889.0" name="unit_amount"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field eval="1.0" name="quantity"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="889.0" name="total_amount"/>
             <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
+        </record>
+
+        <record id="travel_admin_by_car_expense" model="hr.expense">
+            <field name="name">Travel by car</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="product_id" ref="expense_product_mileage"/>
+            <field eval="0.52" name="unit_amount"/>
+            <field name="product_uom_id" ref="uom.product_uom_km"/>
+            <field eval="320.0" name="quantity"/>
+        </record>
+
+        <record id="breakfast_admin_expense" model="hr.expense">
+            <field name="name">BreakFast</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="product_id" ref="expense_product_meal"/>
+            <field eval="20" name="unit_amount"/>
+            <field eval="1.0" name="quantity"/>
         </record>
 
         <record id="travel_ny_sheet" model="hr.expense.sheet">
@@ -99,8 +80,8 @@
         <record id="travel_by_air_expense" model="hr.expense">
             <field name="name">Travel by Air</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
-            <field name="product_id" ref="air_ticket"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
+            <field name="product_id" ref="expense_product_travel_accommodation"/>
             <field eval="700.0" name="unit_amount"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field eval="1.0" name="quantity"/>
@@ -111,10 +92,10 @@
         <record id="hotel_bill_expense" model="hr.expense">
             <field name="name">Hotel Expenses</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="expense_product_travel_accommodation"/>
             <field eval="400.0" name="unit_amount"/>
-            <field name="product_uom_id" ref="uom.product_uom_day"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field eval="5.0" name="quantity"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-17'"/>
             <field name="sheet_id" ref="travel_ny_sheet"/>
@@ -123,8 +104,8 @@
         <record id="lunch_customer_bill_expense" model="hr.expense">
             <field name="name">Lunch with Customer</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="expense_product_meal"/>
             <field eval="152.8" name="unit_amount"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-13'"/>
             <field eval="1.0" name="quantity"/>
@@ -134,8 +115,8 @@
         <record id="lunch_bill_expense" model="hr.expense">
             <field name="name">Lunch</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-15'"/>
             <field eval="56.8" name="unit_amount"/>
             <field eval="1.0" name="quantity"/>
@@ -152,8 +133,8 @@
         <record id="travel_demo_by_car_expense" model="hr.expense">
             <field name="name">Travel by Car</field>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
-            <field name="product_id" ref="car_travel"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
+            <field name="product_id" ref="expense_product_mileage"/>
             <field eval="0.52" name="unit_amount"/>
             <field name="product_uom_id" ref="uom.product_uom_km"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
@@ -164,11 +145,11 @@
         <record id="lunch_demo_customer_bill_expense" model="hr.expense">
             <field name="name">Lunch with Customer</field>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
-            <field eval="152.8" name="unit_amount"/>
-            <field eval="1.0" name="quantity"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="152.8" name="total_amount"/>
             <field name="sheet_id" ref="customer_meeting_sheet"/>
         </record>
 
@@ -182,8 +163,8 @@
         <record id="pizzas_bill_expense" model="hr.expense">
             <field name="name">Pizzas</field>
             <field name="employee_id" ref="hr.employee_fme"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="12.5" name="unit_amount"/>
             <field eval="12.0" name="quantity"/>
@@ -193,8 +174,8 @@
         <record id="drinks_bill_expense" model="hr.expense">
             <field name="name">Drinks</field>
             <field name="employee_id" ref="hr.employee_fme"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="2.5" name="unit_amount"/>
             <field eval="17.0" name="quantity"/>
@@ -204,11 +185,11 @@
         <record id="paintball_bill_expense" model="hr.expense">
             <field name="name">Paintball</field>
             <field name="employee_id" ref="hr.employee_fme"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
-            <field eval="25" name="unit_amount"/>
-            <field eval="12.0" name="quantity"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="25" name="total_amount"/>
             <field name="sheet_id" ref="team_building_sheet"/>
         </record>
 
@@ -222,22 +203,22 @@
         <record id="chair_bill_expense" model="hr.expense">
             <field name="name">Chairs</field>
             <field name="employee_id" ref="hr.employee_al"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
-            <field eval="55.75" name="unit_amount"/>
-            <field eval="6.0" name="quantity"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="55.75" name="total_amount"/>
             <field name="sheet_id" ref="office_furniture_sheet"/>
         </record>
 
         <record id="lamp_bill_expense" model="hr.expense">
             <field name="name">Lamp</field>
             <field name="employee_id" ref="hr.employee_al"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
-            <field eval="28.99" name="unit_amount"/>
-            <field eval="1.0" name="quantity"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="28.99" name="total_amount"/>
             <field name="sheet_id" ref="office_furniture_sheet"/>
         </record>
 
@@ -245,11 +226,11 @@
         <record id="afterwork_bill_expense" model="hr.expense">
             <field name="name">Car tyres</field>
             <field name="employee_id" ref="hr.employee_stw"/>
-            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="product_product_fixed_cost"/>
+            <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
+            <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-03-15'"/>
-            <field eval="112.58" name="unit_amount"/>
-            <field eval="4.0" name="quantity"/>
+            <field eval="0.0" name="unit_amount"/>
+            <field eval="450.58" name="total_amount"/>
         </record>
 
     </data>

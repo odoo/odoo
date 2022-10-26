@@ -182,7 +182,7 @@
                                 </group>
                             </group>
                             <group name="help" string="Help">
-                                <field colspan="2" name="help" nolabel="1"/>
+                                <field colspan="2" name="help" nolabel="1" class="oe-bordered-editor"/>
                             </group>
                             <group name="views_tree" string="Views">
                                 <field colspan="2" name="view_ids" nolabel="1">
@@ -279,6 +279,7 @@
                                 <field name="link_field_id"
                                     domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                     ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
+                                    options="{'no_create': True}"
                                     attrs="{'invisible': [('state', '!=', 'object_create')]}"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                             </group>
@@ -326,29 +327,27 @@
 
                             <page string="Help" name="help_info" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
-                                <group>
-                                    <div style="margin-top: 4px;">
-                                        <h3>Help with Python expressions</h3>
-                                        <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
-                                        <ul>
-                                            <li><code>env</code>: Odoo Environment on which the action is triggered</li>
-                                            <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
-                                            <li><code>record</code>: record on which the action is triggered; may be be void</li>
-                                            <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
-                                            <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
-                                            <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
-                                            <li><code>UserError</code>: Warning Exception to use with <code>raise</code></li>
-                                            <li>To return an action, assign: <code>action = {...}</code></li>
-                                        </ul>
-                                        <div attrs="{'invisible': [('state', '!=', 'code')]}">
-                                            <p>Example of Python code</p>
+                                <div style="margin-top: 4px;">
+                                    <h3>Help with Python expressions</h3>
+                                    <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
+                                    <ul>
+                                        <li><code>env</code>: Odoo Environment on which the action is triggered</li>
+                                        <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                        <li><code>record</code>: record on which the action is triggered; may be be void</li>
+                                        <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
+                                        <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
+                                        <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
+                                        <li><code>UserError</code>: Warning Exception to use with <code>raise</code></li>
+                                        <li>To return an action, assign: <code>action = {...}</code></li>
+                                    </ul>
+                                    <div attrs="{'invisible': [('state', '!=', 'code')]}">
+                                        <p>Example of Python code</p>
 <code style='white-space: pre-wrap'>
 partner_name = record.name + '_code'
 env['res.partner'].create({'name': partner_name})
 </code>
-                                        </div>
                                     </div>
-                                </group>
+                                </div>
                             </page>
                         </notebook>
                     </sheet>

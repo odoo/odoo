@@ -17,7 +17,6 @@ class TestProjectBillingMulticompany(TestCommonSaleTimesheet):
             'name': "Non Billable Project",
             'allow_timesheets': True,
             'allow_billable': True,
-            'pricing_type': 'fixed_rate',
             'company_id': cls.env.company.id,
         })
 

@@ -2,12 +2,11 @@
 <odoo>
 
     <record id="base.module_category_human_resources_employees" model="ir.module.category">
-        <field name="description">Helps you manage your employees.</field>
         <field name="sequence">9</field>
     </record>
 
     <record id="group_hr_user" model="res.groups">
-        <field name="name">Officer</field>
+        <field name="name">Officer : Manage all employees</field>
         <field name="category_id" ref="base.module_category_human_resources_employees"/>
         <field name="implied_ids" eval="[(6, 0, [ref('base.group_private_addresses'), ref('base.group_user')])]"/>
         <field name="comment">The user will be able to approve document created by employees.</field>
@@ -41,7 +40,7 @@
     <record id="hr_employee_public_comp_rule" model="ir.rule">
         <field name="name">Employee multi company rule</field>
         <field name="model_id" ref="model_hr_employee_public"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">['|',('company_id', '=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="hr_job_comp_rule" model="ir.rule">
@@ -50,5 +49,16 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="hr_plan_company_rule" model="ir.rule">
+        <field name="name">Plan multi-company rule</field>
+        <field name="model_id" ref="model_hr_plan"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="hr_plan_activity_type_company_rule" model="ir.rule">
+        <field name="name">Plan Activity Type multi-company rule</field>
+        <field name="model_id" ref="model_hr_plan_activity_type"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
 </data>
 </odoo>

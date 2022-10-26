@@ -43,12 +43,18 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         cls.env.user.groups_id |= group_expense_manager
 
         # Create analytic account
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         cls.analytic_account_1 = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_1',
+            'plan_id': cls.analytic_plan.id,
         })
         cls.analytic_account_2 = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_2',
+            'plan_id': cls.analytic_plan.id,
         })
 
         # Ensure products can be expensed.
         (cls.product_a + cls.product_b).write({'can_be_expensed': True})
+        # Taxes on the products are included in price
+        (cls.product_a.supplier_taxes_id + cls.product_b.supplier_taxes_id).write({'price_include': True})
+        cls.company_data['default_tax_purchase'].write({'price_include': True})

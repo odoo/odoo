@@ -15,6 +15,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
+    purchase_order_count = fields.Integer(compute="_compute_origin_po_count", string='Purchase Order Count')
 
     def _get_invoice_reference(self):
         self.ensure_one()
@@ -45,18 +46,17 @@ class AccountMove(models.Model):
 
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
+        invoice_vals['currency_id'] = self.invoice_line_ids and self.currency_id or invoice_vals.get('currency_id')
         del invoice_vals['ref']
+        del invoice_vals['company_id']  # avoid recomputing the currency
         self.update(invoice_vals)
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
-        new_lines = self.env['account.move.line']
         for line in po_lines.filtered(lambda l: not l.display_type):
-            new_line = new_lines.new(line._prepare_account_move_line(self))
-            new_line.account_id = new_line._get_computed_account()
-            new_line._onchange_price_subtotal()
-            new_lines += new_line
-        new_lines._onchange_mark_recompute_taxes()
+            self.invoice_line_ids += self.env['account.move.line'].new(
+                line._prepare_account_move_line(self)
+            )
 
         # Compute invoice_origin.
         origins = set(self.line_ids.mapped('purchase_line_id.order_id.name'))
@@ -71,8 +71,6 @@ class AccountMove(models.Model):
             self.payment_reference = refs[0]
 
         self.purchase_id = False
-        self._onchange_currency()
-        self.partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
@@ -96,6 +94,24 @@ class AccountMove(models.Model):
                 self.currency_id = self.partner_id.property_purchase_currency_id
         return res
 
+    @api.depends('line_ids.purchase_line_id')
+    def _compute_origin_po_count(self):
+        for move in self:
+            move.purchase_order_count = len(move.line_ids.purchase_line_id.order_id)
+
+    def action_view_source_purchase_orders(self):
+        self.ensure_one()
+        source_orders = self.line_ids.purchase_line_id.order_id
+        result = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_form_action')
+        if len(source_orders) > 1:
+            result['domain'] = [('id', 'in', source_orders.ids)]
+        elif len(source_orders) == 1:
+            result['views'] = [(self.env.ref('purchase.purchase_order_form', False).id, 'form')]
+            result['res_id'] = source_orders.id
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
     @api.model_create_multi
     def create(self, vals_list):
         # OVERRIDE
@@ -103,10 +119,10 @@ class AccountMove(models.Model):
         for move in moves:
             if move.reversed_entry_id:
                 continue
-            purchase = move.line_ids.mapped('purchase_line_id.order_id')
-            if not purchase:
+            purchases = move.line_ids.purchase_line_id.order_id
+            if not purchases:
                 continue
-            refs = ["<a href=# data-oe-model=purchase.order data-oe-id=%s>%s</a>" % tuple(name_get) for name_get in purchase.name_get()]
+            refs = [purchase._get_html_link() for purchase in purchases]
             message = _("This vendor bill has been created from: %s") % ','.join(refs)
             move.message_post(body=message)
         return moves
@@ -121,7 +137,7 @@ class AccountMove(models.Model):
                 continue
             diff_purchases = new_purchases - old_purchases[i]
             if diff_purchases:
-                refs = ["<a href=# data-oe-model=purchase.order data-oe-id=%s>%s</a>" % tuple(name_get) for name_get in diff_purchases.name_get()]
+                refs = [purchase._get_html_link() for purchase in diff_purchases]
                 message = _("This vendor bill has been modified from: %s") % ','.join(refs)
                 move.message_post(body=message)
         return res
@@ -131,7 +147,7 @@ class AccountMoveLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.move.line'
 
-    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True)
+    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null')
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
 
     def _copy_data_extend_business_fields(self, values):

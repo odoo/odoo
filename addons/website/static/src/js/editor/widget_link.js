@@ -5,11 +5,7 @@ var weWidgets = require('wysiwyg.widgets');
 var wUtils = require('website.utils');
 
 weWidgets.LinkTools.include({
-    xmlDependencies: (weWidgets.LinkTools.prototype.xmlDependencies || []).concat(
-        ['/website/static/src/xml/website.editor.xml']
-    ),
     events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
-        'click we-selection-items[name="link_anchor"] we-button': '_onAnchorChange',
         'input input[name="url"]': '_onURLInput',
     }),
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
@@ -31,7 +27,16 @@ weWidgets.LinkTools.include({
      */
     start: async function () {
         var def = await this._super.apply(this, arguments);
-        wUtils.autocompleteWithPages(this, this.$('input[name="url"]'));
+        const options = {
+            position: {
+                collision: 'flip flipfit',
+            },
+            classes: {
+                "ui-autocomplete": 'o_website_ui_autocomplete'
+            },
+            body: this.$editable[0].ownerDocument.body,
+        };
+        wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
         this._adaptPageAnchor();
         return def;
     },
@@ -49,20 +54,21 @@ weWidgets.LinkTools.include({
         const isFromWebsite = urlInputValue[0] === '/';
         const $selectMenu = this.$('we-selection-items[name="link_anchor"]');
 
-        $pageAnchor.toggleClass('d-none', !isFromWebsite);
-        $selectMenu.empty();
-
-        const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
-        wUtils.loadAnchors(urlInputValue).then(anchors => {
-            for (const anchor of anchors) {
-                const $option = $('<we-button class="dropdown-item">');
-                $option.text(anchor);
-                $option.data('value', anchor);
-                $selectMenu.append($option);
-            }
-            always();
-        }).guardedCatch(always);
-
+        if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
+            $pageAnchor.toggleClass('d-none', !isFromWebsite);
+            $selectMenu.empty();
+            const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
+            wUtils.loadAnchors(urlInputValue, this.$editable[0].ownerDocument.body).then(anchors => {
+                for (const anchor of anchors) {
+                    const $option = $('<we-button class="dropdown-item">');
+                    $option.text(anchor);
+                    $option.data('value', anchor);
+                    $selectMenu.append($option);
+                }
+                always();
+            }).guardedCatch(always);
+        }
+        $selectMenu.data("anchor-for", urlInputValue);
     },
 
     //--------------------------------------------------------------------------
@@ -76,23 +82,27 @@ weWidgets.LinkTools.include({
         this._onURLInput();
     },
     /**
-     * @private
-     */
-    _onAnchorChange: function () {
-        const anchorValue = this.$('[name="link_anchor"] we-button.active').data('value');
-        const $urlInput = this.$('[name="url"]');
-        let urlInputValue = $urlInput.val();
-        if (urlInputValue.indexOf('#') > -1) {
-            urlInputValue = urlInputValue.substr(0, urlInputValue.indexOf('#'));
-        }
-        $urlInput.val(urlInputValue + anchorValue);
-    },
-    /**
      * @override
      */
     _onURLInput: function () {
         this._super.apply(this, arguments);
         this._adaptPageAnchor();
+    },
+    /**
+     * @override
+     * @param {Event} ev
+     */
+    _onPickSelectOption(ev) {
+        if (ev.currentTarget.closest('[name="link_anchor"]')) {
+            const anchorValue = $(ev.currentTarget).data('value');
+            const $urlInput = this.$('[name="url"]');
+            let urlInputValue = $urlInput.val();
+            if (urlInputValue.indexOf('#') > -1) {
+                urlInputValue = urlInputValue.substr(0, urlInputValue.indexOf('#'));
+            }
+            $urlInput.val(urlInputValue + anchorValue);
+        }
+        this._super(...arguments);
     },
 });
 });

@@ -5,7 +5,7 @@
          <field name="name">account.invoice.report.pivot</field>
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
-             <pivot string="Invoices Analysis" disable_linking="True" sample="1">
+             <pivot string="Invoices Analysis" sample="1">
                  <field name="product_categ_id" type="col"/>
                  <field name="invoice_date" type="row"/>
                  <field name="price_subtotal" type="measure"/>
@@ -17,12 +17,38 @@
          <field name="name">account.invoice.report.graph</field>
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
-             <graph string="Invoices Analysis" type="line" sample="1" disable_linking="1">
+             <graph string="Invoices Analysis" type="line" sample="1">
                  <field name="product_categ_id"/>
                  <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
     </record>
+
+     <record id="account_invoice_report_view_tree" model="ir.ui.view">
+         <field name="name">account.invoice.report.view.tree</field>
+         <field name="model">account.invoice.report</field>
+         <field name="arch" type="xml">
+             <tree string="Invoices Analysis">
+                <field name="move_id" string="Invoice Number"/>
+                <field name="journal_id" optional="hide"/>
+                <field name="partner_id" optional="show"/>
+                <field name="country_id" optional="hide"/>
+                <field name="invoice_date" optional="show"/>
+                <field name="invoice_date_due" optional="show"/>
+                <field name="invoice_user_id" optional="hide" widget="many2one_avatar_user"/>
+                <field name="product_categ_id" optional="hide"/>
+                <field name="product_id" optional="show"/>
+                <field name="company_id"  groups="base.group_multi_company"/>
+                <field name="price_average" optional="hide" sum="Total"/>
+                <field name="quantity" optional="hide" sum="Total"/>
+                <field name="price_subtotal" optional="show" sum="Total"/>
+                <field name="price_total" optional="show" sum="Total"/>
+                <field name="state" optional="hide"/>
+                <field name="payment_state" optional="hide"/>
+                <field name="move_type" optional="hide"/>
+             </tree>
+         </field>
+     </record>
 
     <!-- Custom reports (aka filters) -->
     <record id="filter_invoice_report_salespersons" model="ir.filters">
@@ -92,22 +118,13 @@
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
-                    <filter string="Date" name="invoice_date" context="{'group_by':'invoice_date'}"/>
+                    <filter string="Date" name="invoice_date" context="{'group_by':'invoice_date'}"
+                            invisible="context.get('invoice_report_view_hide_invoice_date')"/>
+                    <filter string="Date" name="group_by_invoice_date_week" context="{'group_by':'invoice_date:week'}"
+                            invisible="not context.get('invoice_report_view_hide_invoice_date')"/>
                     <filter string="Due Date" name="duemonth" context="{'group_by':'invoice_date_due:month'}"/>
                 </group>
             </search>
-        </field>
-    </record>
-
-    <record id="view_account_invoice_report_search_analytic_accounting" model="ir.ui.view">
-        <field name="name">account.invoice.report.search_analytic_accounting</field>
-        <field name="model">account.invoice.report</field>
-        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
-        <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
-        <field name="arch" type="xml">
-            <filter name="status" position="after">
-                <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}"/>
-            </filter>
         </field>
     </record>
 

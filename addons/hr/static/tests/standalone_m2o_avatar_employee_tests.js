@@ -1,15 +1,15 @@
-odoo.define('hr.StandaloneM2OEmployeeTests', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    const { xml } = owl.tags;
 
-    const AbstractRendererOwl = require('web.AbstractRendererOwl');
-    const BasicView = require("web.BasicView");
-    const BasicRenderer = require("web.BasicRenderer");
-    const RendererWrapper = require('web.RendererWrapper');
-    const { createView } = require('web.test_utils');
+    import AbstractRendererOwl from 'web.AbstractRendererOwl';
+    import BasicView from "web.BasicView";
+    import BasicRenderer from "web.BasicRenderer";
+    import RendererWrapper from 'web.RendererWrapper';
+    import { createView } from 'web.test_utils';
 
-    const StandaloneM2OAvatarEmployee = require('hr.StandaloneM2OAvatarEmployee');
+    import StandaloneM2OAvatarEmployee from '@hr/js/standalone_m2o_avatar_employee';
+
+    const { xml } = owl;
 
     function getHtmlRenderer(html) {
         return BasicRenderer.extend({
@@ -121,4 +121,3 @@ odoo.define('hr.StandaloneM2OEmployeeTests', function (require) {
             view.destroy();
         });
     });
-});

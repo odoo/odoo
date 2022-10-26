@@ -7,7 +7,7 @@
     'category': 'Human Resources/Time Off',
     'sequence': 85,
     'summary': 'Allocate PTOs and follow leaves requests',
-    'website': 'https://www.odoo.com/page/leaves',
+    'website': 'https://www.odoo.com/app/time-off',
     'description': """
 Manage time off requests and allocations
 =====================================
@@ -27,7 +27,8 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'depends': ['hr', 'calendar', 'resource'],
     'data': [
         'data/report_paperformat.xml',
-        'data/mail_data.xml',
+        'data/mail_activity_type_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/hr_holidays_data.xml',
         'data/ir_cron_data.xml',
 
@@ -38,8 +39,11 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'views/hr_leave_views.xml',
         'views/hr_leave_type_views.xml',
         'views/hr_leave_allocation_views.xml',
+        'views/hr_leave_accrual_views.xml',
+        'views/hr_leave_stress_day_views.xml',
         'views/mail_activity_views.xml',
 
+        'wizard/hr_holidays_cancel_leave_views.xml',
         'wizard/hr_holidays_summary_employees_views.xml',
         'wizard/hr_departure_wizard_views.xml',
 
@@ -47,6 +51,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'report/hr_holidays_reports.xml',
         'report/hr_leave_reports.xml',
         'report/hr_leave_report_calendar.xml',
+        'report/hr_leave_employee_type_report.xml',
 
         'views/hr_views.xml',
         'views/hr_holidays_views.xml',
@@ -56,34 +61,43 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'assets': {
+        'mail.assets_messaging': [
+            'hr_holidays/static/src/models/*.js',
+        ],
+        'mail.assets_discuss_public': [
+            'hr_holidays/static/src/components/*/*',
+        ],
         'web.assets_backend': [
-            'hr_holidays/static/src/js/time_off_calendar.js',
-            'hr_holidays/static/src/js/leave_stats_widget.js',
-            'hr_holidays/static/src/bugfix/bugfix.js',
-            'hr_holidays/static/src/components/thread_view/thread_view.js',
-            'hr_holidays/static/src/models/partner/partner.js',
-            'hr_holidays/static/src/scss/time_off.scss',
-            'hr_holidays/static/src/bugfix/bugfix.scss',
-            'hr_holidays/static/src/components/thread_view/thread_view.scss',
+            'hr_holidays/static/src/views/**/*.js',
+            'hr_holidays/static/src/views/**/*.scss',
+            'hr_holidays/static/src/views/**/*.xml',
+            'hr_holidays/static/src/components/*/*.scss',
+            'hr_holidays/static/src/components/*/*.xml',
+            'hr_holidays/static/src/dashboard/**/*.js',
+            'hr_holidays/static/src/dashboard/**/*.scss',
+            'hr_holidays/static/src/dashboard/**/*.xml',
+            'hr_holidays/static/src/leave_stats/**/*.js',
+            'hr_holidays/static/src/leave_stats/**/*.xml',
+            'hr_holidays/static/src/scss/*.scss',
+            'hr_holidays/static/src/tours/*.js',
+            'hr_holidays/static/src/radio_image_field/*.js',
+            'hr_holidays/static/src/radio_image_field/*.xml',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'hr_holidays/static/src/views/**/*.dark.scss'),
+            ('remove', 'hr_holidays/static/src/dashboard/**/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'hr_holidays/static/src/views/**/*.dark.scss',
+            'hr_holidays/static/src/dashboard/**/*.dark.scss',
         ],
         'web.tests_assets': [
             'hr_holidays/static/tests/helpers/**/*',
         ],
         'web.qunit_suite_tests': [
-            'hr_holidays/static/src/bugfix/bugfix_tests.js',
-            'hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon_tests.js',
-            'hr_holidays/static/src/components/thread_icon/thread_icon_tests.js',
-            'hr_holidays/static/src/components/thread_view/thread_view_tests.js',
-            'hr_holidays/static/tests/test_leave_stats_widget.js',
+            'hr_holidays/static/tests/qunit_suite_tests/**/*.js',
         ],
-        'web.assets_qweb': [
-            'hr_holidays/static/src/bugfix/bugfix.xml',
-            'hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml',
-            'hr_holidays/static/src/components/thread_icon/thread_icon.xml',
-            'hr_holidays/static/src/components/thread_view/thread_view.xml',
-            'hr_holidays/static/src/xml/*.xml',
-        ],
-    }
+    },
+    'license': 'LGPL-3',
 }

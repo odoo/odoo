@@ -34,8 +34,8 @@
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_blacklisted']" position="after">
-                <field name="mobile" class="o_force_ltr"/>
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="mobile" class="o_force_ltr" readonly="1"/>
                 <field name="phone_sanitized" invisible="1"/>
                 <field name="phone_sanitized_blacklisted"/>
             </xpath>
@@ -78,21 +78,17 @@
     </record>
 
     <record id="mailing_contact_action_sms" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
+        <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'mailing_sms': True, 'search_default_filter_not_phone_bl': 1, }</field>
         <field name="view_id" ref="mailing_contact_view_tree"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new contact
+                Create a mailing contact
+            </p><p>
+                Mailing contacts allow you to separate your marketing audience from your contact directory.
             </p>
         </field>
     </record>
-
-    <!-- SMS Marketing / Contacts Lists / Contacts Lists -->
-    <record id="mass_mailing_sms.mailing_contact_menu_sms" model="ir.ui.menu">
-        <field name="action" ref="mailing_contact_action_sms"/>
-    </record>
-
 </odoo>

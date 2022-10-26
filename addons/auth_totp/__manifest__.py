@@ -19,12 +19,19 @@ can setup API keys to replace their main password.
     'auto_install': True,
     'data': [
         'security/security.xml',
-        'views/user_preferences.xml',
+        'security/ir.model.access.csv',
+        'data/ir_action_data.xml',
+        'views/res_users_views.xml',
         'views/templates.xml',
+        'wizard/auth_totp_wizard_views.xml',
     ],
     'assets': {
         'web.assets_tests': [
-            'auth_totp/static/**/*',
+            'auth_totp/static/tests/**/*',
+        ],
+        'web.assets_backend': [
+            'auth_totp/static/src/**/*',
         ],
     },
+    'license': 'LGPL-3',
 }

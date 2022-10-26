@@ -13,7 +13,9 @@ and we don't want to reload the website module every time, including it's possib
 dependencies. Neither we want to add in website module some routes, views and
 models which only purpose is to run tests.""",
     'depends': [
+        'web_unsplash',
         'website',
+        'theme_default',
     ],
     'data': [
         'views/templates.xml',
@@ -21,13 +23,16 @@ models which only purpose is to run tests.""",
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'application': False,
     'assets': {
         'web.assets_frontend': [
-            'test_website/static/src/**/*',
+            'test_website/static/src/js/test_error.js',
         ],
         'web.assets_tests': [
-            'test_website/static/tests/**/*',
+            'test_website/static/tests/tours/*',
         ],
-    }
+        'web.qunit_suite_tests': [
+            'test_website/static/tests/*.js',
+        ],
+    },
+    'license': 'LGPL-3',
 }

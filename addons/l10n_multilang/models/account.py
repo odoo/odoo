@@ -51,14 +51,18 @@ class AccountChartTemplate(models.Model):
     _order = 'name'
 
     name = fields.Char(translate=True)
-    spoken_languages = fields.Char(string='Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'")
+    spoken_languages = fields.Char(string='Spoken Languages')
+    # the languages for which the translations of templates could be loaded at
+    # the time of installation of this localization module and copied in the
+    # final object when generating them from templates. You must provide the
+    # language codes separated by ';'
 
 
 class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
 
     name = fields.Char(translate=True)
-    note = fields.Text(translate=True)
+    note = fields.Html(translate=True)
 
 
 class AccountFiscalPositionTemplate(models.Model):
@@ -76,18 +80,5 @@ class AccountJournal(models.Model):
 
 class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
-
-    name = fields.Char(translate=True)
-
-
-class AccountTaxReportLine(models.Model):
-    _inherit = 'account.tax.report.line'
-
-    name = fields.Char(translate=True)
-    tag_name = fields.Char(translate=True)
-
-
-class ResCountryState(models.Model):
-    _inherit = 'res.country.state'
 
     name = fields.Char(translate=True)

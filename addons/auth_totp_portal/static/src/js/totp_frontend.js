@@ -13,7 +13,7 @@ function fromField(f, record) {
     switch (f.getAttribute('name')) {
     case 'qrcode':
         const qrcode = document.createElement('img');
-        qrcode.setAttribute('class', 'img img-fluid offset-1');
+        qrcode.setAttribute('class', 'img img-fluid');
         qrcode.setAttribute('src', 'data:image/png;base64,' + record['qrcode']);
         return qrcode;
     case 'url':
@@ -30,6 +30,53 @@ function fromField(f, record) {
         code.maxLength = 6;
         code.minLength = 6;
         return code;
+    case 'secret':
+        // As CopyClipboard wizard is backend only, mimic his behaviour to use it in frontend.
+        // Field
+        const secretSpan = document.createElement('span');
+        secretSpan.setAttribute('name', 'secret');
+        secretSpan.setAttribute('class', 'o_field_copy_url');
+        secretSpan.textContent = record['secret'];
+
+        // Copy Button
+        const copySpanIcon = document.createElement('span');
+        copySpanIcon.setAttribute('class', 'fa fa-clipboard');
+        const copySpanText = document.createElement('span');
+        copySpanText.textContent = _t(' Copy');
+
+        const copyButton = document.createElement('button');
+        copyButton.setAttribute('class', 'btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2');
+        copyButton.onclick = function(event) {
+            event.preventDefault();
+            $(copyButton).tooltip({title: _t("Copied !"), trigger: "manual", placement: "bottom"});
+            var clipboard = new ClipboardJS('.o_clipboard_button', {
+                target: function () {
+                    return $(secretSpan)[0];
+                },
+                container: this.el
+            });
+            clipboard.on('success', function () {
+                clipboard.destroy();
+                $(copyButton).tooltip('show');
+                _.delay(function () {
+                    $(copyButton).tooltip("hide");
+                }, 800);
+            });
+            clipboard.on('error', function (e) {
+                clipboard.destroy();
+            });
+        };
+
+        copyButton.appendChild(copySpanIcon);
+        copyButton.appendChild(copySpanText);
+
+        // CopyClipboard Div
+        const secretDiv = document.createElement('div');
+        secretDiv.setAttribute('class', 'o_field_copy d-flex justify-content-center align-items-center');
+        secretDiv.appendChild(secretSpan);
+        secretDiv.appendChild(copyButton);
+
+        return secretDiv;
     default: // just display the field's data
         return document.createTextNode(record[f.getAttribute('name')] || '');
     }
@@ -159,7 +206,7 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
 
         const w = await handleCheckIdentity(this.proxy('_rpc'), this._rpc({
             model: 'res.users',
-            method: 'totp_enable_wizard',
+            method: 'action_totp_enable_wizard',
             args: [this.getSession().user_id]
         }));
 
@@ -213,8 +260,46 @@ publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
         e.preventDefault();
         await handleCheckIdentity(
             this.proxy('_rpc'),
-            this._rpc({model: 'res.users', method: 'totp_disable', args: [this.getSession().user_id]})
+            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [this.getSession().user_id]})
         )
+        window.location = window.location;
+    }
+});
+publicWidget.registry.RevokeTrustedDeviceButton = publicWidget.Widget.extend({
+    selector: '#totp_wizard_view + * .fa.fa-trash.text-danger',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        await handleCheckIdentity(
+            this.proxy('_rpc'),
+            this._rpc({
+                model: 'auth_totp.device',
+                method: 'remove',
+                args: [parseInt(this.target.id)]
+            })
+        );
+        window.location = window.location;
+    }
+});
+publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend({
+    selector: '#auth_totp_portal_revoke_all_devices',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        await handleCheckIdentity(
+            this.proxy('_rpc'),
+            this._rpc({
+                model: 'res.users',
+                method: 'revoke_all_devices',
+                args: [this.getSession().user_id]
+            })
+        );
         window.location = window.location;
     }
 });

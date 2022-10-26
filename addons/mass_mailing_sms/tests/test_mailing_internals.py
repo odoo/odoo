@@ -17,7 +17,7 @@ class TestMassMailValues(MassSMSCommon):
         cls.sms_template_partner = cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get('res.partner').id,
-            'body': 'Dear ${object.display_name} this is an SMS.'
+            'body': 'Dear {{ object.display_name }} this is an SMS.'
         })
 
     @users('user_marketing')
@@ -54,7 +54,7 @@ class TestMassMailValues(MassSMSCommon):
         self.assertEqual(mailing.mailing_model_name, 'mailing.list')
         self.assertEqual(mailing.mailing_model_real, 'mailing.contact')
         # default for mailing list: depends upon contact_list_ids
-        self.assertEqual(literal_eval(mailing.mailing_domain), [])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('list_ids', 'in', [])])
         mailing.write({
             'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)]
         })

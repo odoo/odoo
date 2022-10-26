@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="base_iban.iban" t-inherit="web.CharField" owl="1">
+        <xpath expr="//input" position="attributes">
+            <attribute name="class" add="o_iban_input_with_validator" separator=" "/>
+            <attribute name="t-on-input">validateIbanDebounced</attribute>
+            <attribute name="t-on-focus">validateIbanDebounced</attribute>
+            <attribute name="t-on-blur">(ev) => { this.state.isValidIBAN = null; }</attribute>
+        </xpath>
+        <xpath expr="//input" position="after">
+            <t t-if="this.state.isValidIBAN === true">
+                <i class="fa fa-check o_iban text-success"/>
+            </t>
+            <t t-elif="this.state.isValidIBAN === false">
+                <i class="fa fa-times o_iban text-danger o_iban_fail" title="Account isn't a valid IBAN"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

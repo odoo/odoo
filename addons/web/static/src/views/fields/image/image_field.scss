@@ -1,0 +1,28 @@
+.o_field_image {
+    background-color: var(--ImageField-background-color, transparent);
+
+    button {
+        transition: opacity ease 400ms;
+        width: 26px;
+        height: 26px;
+    }
+
+    .o_mobile_controls {
+        button {
+            width: 30px;
+            height: 30px;
+            padding: 6px !important;
+        }
+    }
+
+    &.o_field_invalid img {
+        border: 1px solid map-get($theme-colors, 'danger');
+    }
+}
+
+.o_image_zoom {
+    img {
+        max-width: 50vw;
+        max-height: 50vh;
+    }
+}

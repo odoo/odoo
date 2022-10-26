@@ -7,7 +7,6 @@ odoo.define('purchase.ToasterButton', function (require) {
 
     const ToasterButton = Widget.extend({
         template: 'purchase.ToasterButton',
-        xmlDependencies: ['/purchase/static/src/xml/purchase_toaster_button.xml'],
         events: Object.assign({}, Widget.prototype.events, {
             'click .fa-info-circle': '_onClickButton',
         }),
@@ -30,7 +29,7 @@ odoo.define('purchase.ToasterButton', function (require) {
                 args: [[this.id]],
             }).then(res => {
                 if (res) {
-                    this.do_notify(false, res.toast_message);
+                    this.displayNotification({ message: res.toast_message });
                 }
             })
         },

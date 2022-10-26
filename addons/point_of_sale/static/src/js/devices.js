@@ -100,27 +100,18 @@ var JobQueue = function(){
 // methods are used both to signal an event, and to fetch information.
 
 var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
-    init: function(parent,options){
+    init: function(options){
         mixins.PropertiesMixin.init.call(this);
         var self = this;
-        this.setParent(parent);
         options = options || {};
 
-        this.pos = parent;
+        this.env = options.env;
 
         this.weighing = false;
         this.debug_weight = 0;
         this.use_debug_weight = false;
 
         this.paying = false;
-        this.default_payment_status = {
-            status: 'waiting',
-            message: '',
-            payment_method: undefined,
-            receipt_client: undefined,
-            receipt_shop:   undefined,
-        };
-        this.custom_payment_status = this.default_payment_status;
 
         this.notifications = {};
         this.bypass_proxy = false;
@@ -143,6 +134,10 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         this.posbox_supports_display = true;
 
         window.hw_proxy = this;
+    },
+    set_pos: function(pos) {
+        this.setParent(pos);
+        this.pos = pos;
     },
     set_connection_status: function(status, drivers, msg=''){
         var oldstatus = this.get('status');
@@ -452,7 +447,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     },
 
     update_customer_facing_display: function(html) {
-        if (this.posbox_supports_display) {
+        if (this.posbox_supports_display && this.get('status').status == 'connected') {
             return this.message('customer_facing_display',
                 { html: html },
                 { timeout: 5000 });
@@ -463,14 +458,14 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
      * @param {string} html
      * @returns {Promise}
      */
-    take_ownership_over_client_screen: function(html) {
+    take_ownership_over_customer_screen: function(html) {
         return this.message("take_control", { html: html });
     },
 
     /**
      * @returns {Promise}
      */
-    test_ownership_of_client_screen: function() {
+    test_ownership_of_customer_screen: function() {
         if (this.connection) {
             return this.message("test_ownership", {});
         }

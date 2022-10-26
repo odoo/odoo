@@ -3,13 +3,13 @@
 <templates xml:space="preserve">
 
     <t t-name="website.slides.tag.add">
-        <div class="form-group">
+        <div class="mb-3">
             <form action="/slides/channel/tag/add" method="POST" id="slides_channel_tag_add_form">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="tag_id" class="col-form-label">Tag</label>
                     <input class="form-control" id="tag_id" required="required"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label id="tag_group_label" for="tag_group_id" class="col-form-label">Tag Group</label>
                     <input class="form-control" id="tag_group_id"/>
                 </div>

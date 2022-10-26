@@ -32,14 +32,6 @@ class IrRule(models.Model):
          'Rule must have at least one checked access right !'),
     ]
 
-    def _eval_context_for_combinations(self):
-        """Returns a dictionary to use as evaluation context for
-           ir.rule domains, when the goal is to obtain python lists
-           that are easier to parse and combine, but not to
-           actually execute them."""
-        return {'user': tools.unquote('user'),
-                'time': tools.unquote('time')}
-
     @api.model
     def _eval_context(self):
         """Returns a dictionary to use as evaluation context for
@@ -169,27 +161,8 @@ class IrRule(models.Model):
 
     @api.model
     def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
+        warnings.warn("Deprecated IrRule.clear_cache(), use IrRule.clear_caches() instead", DeprecationWarning)
         self.clear_caches()
-
-    @api.model
-    def domain_get(self, model_name, mode='read'):
-        # this method is now unsafe, since it returns a list of tables which
-        # does not contain the joins present in the generated Query object
-        warnings.warn(
-            "Unsafe and deprecated IrRule.domain_get(), "
-            "use IrRule._compute_domain() and expression().query instead",
-            DeprecationWarning,
-        )
-        dom = self._compute_domain(model_name, mode)
-        if dom:
-            # _where_calc is called as superuser. This means that rules can
-            # involve objects on which the real uid has no acces rights.
-            # This means also there is no implicit restriction (e.g. an object
-            # references another object the user can't see).
-            query = self.env[model_name].sudo()._where_calc(dom, active_test=False)
-            return query.where_clause, query.where_clause_params, query.tables
-        return [], [], ['"%s"' % self.env[model_name]._table]
 
     def unlink(self):
         res = super(IrRule, self).unlink()
@@ -200,7 +173,7 @@ class IrRule(models.Model):
     def create(self, vals_list):
         res = super(IrRule, self).create(vals_list)
         # DLE P33: tests
-        self.flush()
+        self.env.flush_all()
         self.clear_caches()
         return res
 
@@ -210,7 +183,7 @@ class IrRule(models.Model):
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
-        self.flush()
+        self.env.flush_all()
         self.clear_caches()
         return res
 
@@ -230,12 +203,7 @@ class IrRule(models.Model):
         resolution_info = _("Contact your administrator to request access if necessary.")
 
         if not self.env.user.has_group('base.group_no_one') or not self.env.user.has_group('base.group_user'):
-            msg = """{operation_error}
-
-{resolution_info}""".format(
-                operation_error=operation_error,
-                resolution_info=resolution_info)
-            return AccessError(msg)
+            return AccessError(f"{operation_error}\n\n{resolution_info}")
 
         # This extended AccessError is only displayed in debug mode.
         # Note that by default, public and portal users do not have
@@ -243,35 +211,31 @@ class IrRule(models.Model):
         # so it is relatively safe here to include the list of rules and record names.
         rules = self._get_failing(records, mode=operation).sudo()
 
-        records_description = ', '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()])
+        records_sudo = records[:6].sudo()
+        company_related = any('company_id' in (r.domain_force or '') for r in rules)
+
+        def get_record_description(rec):
+            # If the user has access to the company of the record, add this
+            # information in the description to help them to change company
+            if company_related and 'company_id' in rec and rec.company_id in self.env.user.company_ids:
+                return f'{rec.display_name} (id={rec.id}, company={rec.company_id.display_name})'
+            return f'{rec.display_name} (id={rec.id})'
+
+        records_description = ', '.join(get_record_description(rec) for rec in records_sudo)
         failing_records = _("Records: %s", records_description)
 
-        user_description = '%s (id=%s)' % (self.env.user.name, self.env.user.id)
+        user_description = f'{self.env.user.name} (id={self.env.user.id})'
         failing_user = _("User: %s", user_description)
 
-        rules_description = '\n'.join('- %s' % rule.name for rule in rules)
+        rules_description = '\n'.join(f'- {rule.name}' for rule in rules)
         failing_rules = _("This restriction is due to the following rules:\n%s", rules_description)
-        if any('company_id' in (r.domain_force or []) for r in rules):
+        if company_related:
             failing_rules += "\n\n" + _('Note: this might be a multi-company issue.')
 
-        msg = """{operation_error}
-
-{failing_records}
-{failing_user}
-
-{failing_rules}
-
-{resolution_info}""".format(
-                operation_error=operation_error,
-                failing_records=failing_records,
-                failing_user=failing_user,
-                failing_rules=failing_rules,
-                resolution_info=resolution_info)
-
         # clean up the cache of records prefetched with display_name above
-        for record in records[:6]:
-            record._cache.clear()
+        records_sudo.invalidate_recordset()
 
+        msg = f"{operation_error}\n\n{failing_records}\n{failing_user}\n\n{failing_rules}\n\n{resolution_info}"
         return AccessError(msg)
 
 
@@ -280,6 +244,7 @@ class IrRule(models.Model):
 # 'global' is a Python keyword. Therefore, we add it to the class by assignment.
 # Note that the attribute '_module' is normally added by the class' metaclass.
 #
-setattr(IrRule, 'global',
-        fields.Boolean(compute='_compute_global', store=True, _module=IrRule._module,
-                       help="If no group is specified the rule is global and applied to everyone"))
+global_ = fields.Boolean(compute='_compute_global', store=True,
+                         help="If no group is specified the rule is global and applied to everyone")
+setattr(IrRule, 'global', global_)
+global_.__set_name__(IrRule, 'global')

@@ -36,14 +36,6 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
             ];
         }
 
-        clickTipButton() {
-            return [
-                {
-                    trigger: `.payment-buttons .js_tip`,
-                },
-            ];
-        }
-
         clickInvoiceButton() {
             return [{ content: 'click invoice button', trigger: '.payment-buttons .js_invoice' }];
         }

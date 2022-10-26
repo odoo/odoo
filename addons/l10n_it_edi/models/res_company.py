@@ -34,15 +34,6 @@ class ResCompany(models.Model):
     l10n_it_tax_system = fields.Selection(selection=TAX_SYSTEM, string="Tax System",
         help="Please select the Tax system to which you are subjected.")
 
-    # PEC server
-    l10n_it_mail_pec_server_id = fields.Many2one('ir.mail_server', string="Server PEC",
-        help="Configure your PEC-mail server to send electronic invoices.")
-    l10n_it_address_recipient_fatturapa = fields.Char(string="Government PEC-mail",
-        help="Enter Government PEC-mail address. Ex: sdi01@pec.fatturapa.it")
-    l10n_it_address_send_fatturapa = fields.Char(string="Company PEC-mail",
-        help="Enter your company PEC-mail address. Ex: yourcompany@pec.mail.it")
-
-
     # Economic and Administrative Index
     l10n_it_has_eco_index = fields.Boolean(default=False,
         help="The seller/provider is a company listed on the register of companies and as\

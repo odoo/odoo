@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_onsite" model="payment.provider">
+        <field name="name">Pay in store when picking the product</field>
+        <field name="code">custom</field>
+        <field name="state">enabled</field>
+        <field name="custom_mode">onsite</field>
+        <field name="redirect_form_view_id" ref="payment_custom.redirect_form"/>
+        <field name="pending_msg" type="html">
+            <p>
+                <i>Your order has been saved.</i> Please come to the store to pay for your products
+            </p>
+        </field>
+    </record>
+
+    <record id="onsite_delivery_product" model="product.product">
+        <field name="name">On site picking</field>
+        <field name="description">Pay in store when picking the product</field>
+        <field name="type">service</field>
+        <field name="list_price">0</field>
+        <field name="purchase_ok">false</field>
+        <field name="sale_ok">false</field>
+    </record>
+
+    <record model="delivery.carrier" id="website_sale_picking.default_onsite_carrier">
+        <field name="name">[On Site Pick] My Shop 1</field>
+        <field name="delivery_type">onsite</field>
+        <field name="website_published">true</field>
+        <field name="product_id" ref="website_sale_picking.onsite_delivery_product"/>
+        <field name="website_id" ref="website.default_website"/>
+    </record>
+
+</odoo>

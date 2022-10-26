@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- This is the "validation" screen. Recap the ticket info, warn the user to check/set his address and eventually set localization fields if needed. -->
+    <template id="ticket_validation_screen">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            <div class="row justify-content-md-center">
+                <form method="post" target="_self" t-att-action="'/pos/ticket/validate'">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="access_token" t-att-value="access_token"/>
+                    <div class="col-12 col-md-6 mt-4 offset-md-3">
+                        <div class="row">
+                            <h2>Invoicing confirmation</h2>
+                            <hr class="mt-1 mb-0"/>
+                        </div>
+                        <div class="row">
+                            <h4 class="mt-2"><t t-out="pos_order.pos_reference"/></h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 fw-bold">
+                                Products:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <ul>
+                                    <t t-foreach="pos_order.lines" t-as="order_line">
+                                        <li><t t-out="int(order_line.qty)"/> <t t-out="order_line.full_product_name"/> for <t t-out="format_amount(env, order_line.price_subtotal_incl, order_line.currency_id)"/></li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Amounting to:</strong> <t t-out="format_amount(env, pos_order.amount_total, pos_order.currency_id)"/>
+                            </div>
+                        </div>
+                        <t t-if="user_is_connected">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Billing address:</h4>
+                                </div>
+                            </div>
+                            <div t-if="error_message" class="alert alert-danger" role="alert">
+                                <div class="col-lg-12">
+                                    <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                                </div>
+                            </div>
+                            <t t-if="not partner_address">
+                                Your address is missing or incomplete. <br/>
+                                Please make sure to <a t-att-href="address_url">fill all relevant information</a> before continuing.
+                            </t>
+                            <t t-else="">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <t t-out="partner.name"/>
+                                        <t t-if="partner.company_name">
+                                            , <t t-out="partner.company_name"/>
+                                        </t><br />
+                                        <t t-if="partner.vat">
+                                            <t t-out="partner.vat" /><br />
+                                        </t>
+                                        <t t-out="partner_address"/> <a role="button" t-att-href="address_url" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-if="partner_required_fields">
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <h4>Additional required user information:</h4>
+                                        <t t-set="required_fields" t-value="partner_required_fields"/>
+                                        <t t-set="field_prefix" t-value="'partner_'"/>
+                                        <t t-call="account.portal_invoice_required_fields_form"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-if="invoice_required_fields">
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <h4>Additional required invoicing information:</h4>
+                                        <t t-set="required_fields" t-value="invoice_required_fields"/>
+                                        <t t-set="field_prefix" t-value="'invoice_'"/>
+                                        <t t-call="account.portal_invoice_required_fields_form"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Please enter your billing information <small class="text-muted">or</small> <a role="button" t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token" style="margin-top: -11px"> Sign in</a>:</h4>
+                                </div>
+                            </div>
+                            <div class="row o_portal_details">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <t t-call="portal.portal_my_details_fields" />
+                                        <t t-if="partner_required_fields">
+                                            <t t-set="required_fields" t-value="partner_required_fields"/>
+                                            <t t-set="field_prefix" t-value="'partner_'"/>
+                                            <t t-call="account.portal_invoice_required_fields_form"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-if="invoice_required_fields">
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <h4>Additional required information:</h4>
+                                            <t t-set="required_fields" t-value="invoice_required_fields"/>
+                                            <t t-set="field_prefix" t-value="'invoice_'"/>
+                                            <t t-call="account.portal_invoice_required_fields_form"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-4">
+                                <t t-if="user_is_connected and not partner_address">
+                                    <button class="btn btn-primary w-100" disabled="True">Get my invoice</button>
+                                </t>
+                                <t t-else="">
+                                    <button class="btn btn-primary w-100">Get my invoice</button>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

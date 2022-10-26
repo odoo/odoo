@@ -2,7 +2,7 @@
 import collections
 import threading
 
-from .func import synchronized
+from .func import locked
 
 __all__ = ['LRU']
 
@@ -19,7 +19,7 @@ class LRU(object):
         for key, value in pairs:
             self[key] = value
 
-    @synchronized()
+    @locked
     def __contains__(self, obj):
         return obj in self.d
 
@@ -29,31 +29,31 @@ class LRU(object):
         except KeyError:
             return val
 
-    @synchronized()
+    @locked
     def __getitem__(self, obj):
         a = self.d[obj]
         self.d.move_to_end(obj, last=False)
         return a
 
-    @synchronized()
+    @locked
     def __setitem__(self, obj, val):
         self.d[obj] = val
         self.d.move_to_end(obj, last=False)
         while len(self.d) > self.count:
             self.d.popitem(last=True)
 
-    @synchronized()
+    @locked
     def __delitem__(self, obj):
         del self.d[obj]
 
-    @synchronized()
+    @locked
     def __len__(self):
         return len(self.d)
 
-    @synchronized()
+    @locked
     def pop(self,key):
         return self.d.pop(key)
 
-    @synchronized()
+    @locked
     def clear(self):
         self.d.clear()

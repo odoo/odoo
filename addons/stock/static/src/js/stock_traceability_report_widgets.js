@@ -42,8 +42,8 @@ var ReportWidget = Widget.extend({
             name: $el.data('lot_name') !== undefined && $el.data('lot_name').toString(),
             context: {
                 active_id : $el.data('lot_id'),
-                active_model : 'stock.production.lot',
-                url: '/stock/output_format/stock/active_id'
+                active_model : 'stock.lot',
+                url: '/stock/output_format/stock?active_id=:active_id&active_model=:active_model',
             },
         });
     },

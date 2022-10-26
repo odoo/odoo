@@ -10,9 +10,7 @@
 Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.
 """,
     'depends': ['sale_stock', 'purchase_stock', 'sale_purchase'],
-    'data': [],
-    'demo': [],
-    'qweb': [],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

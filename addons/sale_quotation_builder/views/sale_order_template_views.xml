@@ -7,11 +7,11 @@
         <field name="model">sale.order.template</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position='before'>
+            <sheet position="before">
                 <header>
-                    <button name="open_template" class="oe_highlight" string="Design Template" type="object"/>
+                    <button name="action_open_template" type="object" string="Design Template" class="oe_highlight"/>
                 </header>
-            </xpath>
+            </sheet>
 
             <xpath expr="//notebook[@name='description']" position="inside">
                 <page string="Website Description" name="website_description">

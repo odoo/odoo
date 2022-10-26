@@ -1,28 +1,31 @@
 odoo.define('point_of_sale.ScaleScreen', function(require) {
     'use strict';
 
-    const { useState, useExternalListener } = owl.hooks;
     const PosComponent = require('point_of_sale.PosComponent');
     const { round_precision: round_pr } = require('web.utils');
     const Registries = require('point_of_sale.Registries');
+
+    const { onMounted, onWillUnmount, useExternalListener, useState } = owl;
 
     class ScaleScreen extends PosComponent {
         /**
          * @param {Object} props
          * @param {Object} props.product The product to weight.
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useExternalListener(document, 'keyup', this._onHotkeys);
             this.state = useState({ weight: 0 });
+            onMounted(this.onMounted);
+            onWillUnmount(this.onWillUnmount);
         }
-        mounted() {
+        onMounted() {
             // start the scale reading
             this._readScale();
         }
-        willUnmount() {
+        onWillUnmount() {
             // stop the scale reading
-            this.env.pos.proxy_queue.clear();
+            this.env.proxy_queue.clear();
         }
         back() {
             this.props.resolve({ confirmed: false, payload: null });
@@ -43,13 +46,13 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             }
         }
         _readScale() {
-            this.env.pos.proxy_queue.schedule(this._setWeight.bind(this), {
+            this.env.proxy_queue.schedule(this._setWeight.bind(this), {
                 duration: 500,
                 repeat: true,
             });
         }
         async _setWeight() {
-            const reading = await this.env.pos.proxy.scale_read();
+            const reading = await this.env.proxy.scale_read();
             this.state.weight = reading.weight;
         }
         get _activePricelist() {

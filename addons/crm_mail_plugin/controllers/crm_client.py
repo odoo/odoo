@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -36,7 +34,7 @@ class CrmClient(http.Controller):
             for supporting older versions
         """
         server_action = http.request.env.ref("crm_mail_plugin.lead_creation_prefilled_action")
-        return werkzeug.utils.redirect(
+        return request.redirect(
             '/web#action=%s&model=crm.lead&partner_id=%s' % (server_action.id, int(partner_id)))
 
     @http.route('/mail_plugin/lead/create', type='json', auth='outlook', cors="*")
@@ -45,13 +43,10 @@ class CrmClient(http.Controller):
         if not partner:
             return {'error': 'partner_not_found'}
 
-        # In a multi-company environment, we will not be able to create a lead if the user is connected to a different
-        # company then the one linked to the contact, this is not supported, and users are encouraged to check if they
-        # are connected to the right company before performing such operation.
         record = request.env['crm.lead'].create({
             'name': html2plaintext(email_subject),
             'partner_id': partner_id,
-            'description': html2plaintext(email_body),
+            'description': email_body,
         })
 
         return {'lead_id': record.id}
@@ -64,4 +59,4 @@ class CrmClient(http.Controller):
         """
         action = http.request.env.ref("crm.crm_lead_view_form")
         url = '/web#id=%s&action=%s&model=crm.lead&edit=1&model=crm.lead' % (lead_id, action.id)
-        return werkzeug.utils.redirect(url)
+        return request.redirect(url)

@@ -24,7 +24,7 @@
         <div class="container accordion mb32 mt32" id="debug_infos">
             <div class="card" t-if="error_message">
                 <h4 class="card-header">
-                    <a data-toggle="collapse" href="#error_main">Error</a>
+                    <a data-bs-toggle="collapse" href="#error_main">Error</a>
                 </h4>
                 <div id="error_main" class="collapse show">
                     <div class="card-body">
@@ -34,16 +34,16 @@
             </div>
             <div class="card" t-if="qweb_exception">
                 <h4 class="card-header">
-                    <a data-toggle="collapse" href="#error_qweb">QWeb</a>
+                    <a data-bs-toggle="collapse" href="#error_qweb">QWeb</a>
                 </h4>
                 <div id="error_qweb" class="collapse show">
                     <div class="card-body">
-                        <p t-if="exception.message">
+                        <p>
                             <strong>Error message:</strong>
-                            <pre t-esc="exception.message"/>
+                            <pre t-esc="exception"/>
                         </p>
                         <p>
-                            The error occured while rendering the template <code t-esc="qweb_exception.name"/>
+                            The error occurred while rendering the template <code t-esc="qweb_exception.name"/> 
                             <t t-if="qweb_exception.html">and evaluating the following expression: <code t-esc="qweb_exception.html"/></t>
                         </p>
                     </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="card" t-if="traceback">
                 <h4 class="card-header">
-                    <a data-toggle="collapse" href="#error_traceback">Traceback</a>
+                    <a data-bs-toggle="collapse" href="#error_traceback">Traceback</a>
                 </h4>
                 <div id="error_traceback" t-attf-class="collapse #{not error_message and not qweb_exception and 'show'}">
                     <div class="card-body">
@@ -69,7 +69,7 @@
                     <h1 class="mt-5">Oops! Something went wrong.</h1>
                     <p>Take a look at the error message below.</p>
                 </div>
-                <t t-if="editable or request.session.debug">
+                <t t-if="editable or debug">
                     <t t-call="http_routing.http_error_debug"/>
                 </t>
                 <t t-else="">
@@ -88,7 +88,7 @@
                     <h1 class="mt-5">403: Forbidden</h1>
                     <p>The page you were looking for could not be authorized.</p>
                 </div>
-                    <t t-if="editable or request.session.debug">
+                    <t t-if="editable or debug">
                         <t t-call="http_routing.http_error_debug"/>
                     </t>
                     <t t-else="">
@@ -103,16 +103,16 @@
     <template id="404" name="Page Not Found">
         <t t-call="web.frontend_layout">
             <div id="wrap">
-                <t t-raw="0"/>
+                <t t-out="0"/>
                 <div class="oe_structure oe_empty">
                     <section class="s_text_image pt104 pb104" data-snippet="s_image_text" data-name="Image - Text">
                         <div class="container">
                             <div class="row align-items-center">
                                 <div class="col-lg-4 pb32">
-                                    <img class="img img-fluid mx-auto" src="/http_routing/static/src/img/404.svg"/>
+                                    <img class="img img-fluid mx-auto" src="/web_editor/shape/http_routing/404.svg?c2=o-color-2"/>
                                 </div>
-                                <div class="col-lg-8 text-lg-left text-center my-auto">
-                                    <h1 class="sr-only">Error 404</h1>
+                                <div class="col-lg-8 text-lg-start text-center my-auto">
+                                    <h1 class="visually-hidden">Error 404</h1>
                                     <h2>We couldn't find the page you're looking for!</h2>
                                     <p></p>
                                     <p><b>Don't panic.</b> If you think it's our mistake, please send us a message on <a href="/contactus">this page</a>.</p>
@@ -145,12 +145,15 @@
         <html>
             <head>
                 <title t-esc="status_message">Internal Server Error</title>
-                <t t-set="debug" t-value="True"/>
 
-                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css"/>
                 <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
-                <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"/>
-                <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/data.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/event-handler.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/manipulator.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/selector-engine.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/base-component.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/collapse.js"/>
                 <style>
                     html {
                         font-size: 14px;
@@ -163,7 +166,7 @@
                         <div class="navbar navbar-expand-md navbar-light bg-light">
                             <div class="container">
                                 <div class="collapse navbar-collapse navbar-top-collapse">
-                                    <ul class="navbar-nav ml-auto" id="top_menu">
+                                    <ul class="navbar-nav ms-auto" id="top_menu">
                                         <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
                                         <li class="nav-item"><a href="javascript: window.history.back()" class="nav-link">Back</a></li>
                                     </ul>

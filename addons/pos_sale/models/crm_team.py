@@ -19,7 +19,7 @@ class CrmTeam(models.Model):
             team.pos_sessions_open_count = self.env['pos.session'].search_count([('config_id.crm_team_id', '=', team.id), ('state', '=', 'opened')])
 
     def _compute_pos_order_amount_total(self):
-        data = self.env['report.pos.order'].read_group([
+        data = self.env['report.pos.order']._read_group([
             ('session_id.state', '=', 'opened'),
             ('config_id.crm_team_id', 'in', self.ids),
         ], ['price_total:sum', 'config_id'], ['config_id'])

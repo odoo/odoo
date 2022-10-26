@@ -1,7 +1,6 @@
 odoo.define('web_editor.ace', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
@@ -40,7 +39,35 @@ function checkXML(xml) {
         var xmlDoc = (new window.DOMParser()).parseFromString(xml, 'text/xml');
         var error = xmlDoc.getElementsByTagName('parsererror');
         if (error.length > 0) {
-            return _getCheckReturn(false, parseInt(error[0].innerHTML.match(/[Ll]ine[^\d]+(\d+)/)[1], 10), error[0].innerHTML);
+            const errorEl = error[0];
+            const sourceTextEls = errorEl.querySelectorAll('sourcetext');
+            let codeEls = null;
+            if (sourceTextEls.length) {
+                codeEls = [...sourceTextEls].map(el => {
+                    const codeEl = document.createElement('code');
+                    codeEl.textContent = el.textContent;
+                    const brEl = document.createElement('br');
+                    brEl.classList.add('o_we_source_text_origin');
+                    el.parentElement.insertBefore(brEl, el);
+                    return codeEl;
+                });
+                for (const el of sourceTextEls) {
+                    el.remove();
+                }
+            }
+            for (const el of [...errorEl.querySelectorAll(':not(code):not(pre):not(br)')]) {
+                const pEl = document.createElement('p');
+                for (const cEl of [...el.childNodes]) {
+                    pEl.appendChild(cEl);
+                }
+                el.parentElement.insertBefore(pEl, el);
+                el.remove();
+            }
+            errorEl.innerHTML = errorEl.innerHTML.replace(/\r?\n/g, '<br/>');
+            errorEl.querySelectorAll('.o_we_source_text_origin').forEach((el, i) => {
+                el.after(codeEls[i]);
+            });
+            return _getCheckReturn(false, parseInt(error[0].innerHTML.match(/[Ll]ine[^\d]+(\d+)/)[1], 10), errorEl.innerHTML);
         }
     } else if (typeof window.ActiveXObject != 'undefined' && new window.ActiveXObject('Microsoft.XMLDOM')) {
         var xmlDocIE = new window.ActiveXObject('Microsoft.XMLDOM');
@@ -116,12 +143,12 @@ function formatSCSS(scss) {
  */
 var ViewEditor = Widget.extend({
     template: 'web_editor.ace_view_editor',
-    xmlDependencies: ['/web_editor/static/src/xml/ace.xml'],
     jsLibs: [
         '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/javascript_highlight_rules.js',
             '/web/static/lib/ace/mode-xml.js',
+            '/web/static/lib/ace/mode-qweb.js',
             '/web/static/lib/ace/mode-scss.js',
             '/web/static/lib/ace/mode-js.js',
             '/web/static/lib/ace/theme-monokai.js'
@@ -135,7 +162,7 @@ var ViewEditor = Widget.extend({
         'click button[data-action=reset]': '_onResetClick',
         'click button[data-action=format]': '_onFormatClick',
         'click button[data-action=close]': '_onCloseClick',
-        'click #ace-view-id > .alert-warning .close': '_onCloseWarningClick'
+        'click #ace-view-id > .alert-warning .btn-close': '_onCloseWarningClick'
     },
 
     /**
@@ -295,6 +322,10 @@ var ViewEditor = Widget.extend({
             this.$editor.width(width);
             this.aceEditor.resize();
             this.$el.width(width);
+
+            if (this.$errorLine) {
+                this.$errorLine.popover('update');
+            }
         }
         function storeEditorWidth() {
             localStorage.setItem('ace_editor_width', this.$el.width());
@@ -308,7 +339,14 @@ var ViewEditor = Widget.extend({
             resizing = true;
         }
         function stopResizing() {
-            resizing = false;
+            if (resizing) {
+                resizing = false;
+
+                if (this.errorSession) {
+                    // To trigger an update of the error display
+                    this.errorSession.setScrollTop(this.errorSession.getScrollTop() + 1);
+                }
+            }
         }
         function updateWidth(e) {
             if (!resizing) return;
@@ -349,7 +387,8 @@ var ViewEditor = Widget.extend({
         type = type || this.currentType;
         var editingSession = new window.ace.EditSession(this.resources[type][resID].arch);
         editingSession.setUseWorker(false);
-        editingSession.setMode('ace/mode/' + (type || this.currentType));
+        let mode = (type || this.currentType);
+        editingSession.setMode('ace/mode/' + (mode === 'xml' ? 'qweb' : mode));
         editingSession.setUndoManager(new window.ace.UndoManager());
         editingSession.on('change', function () {
             _.defer(function () {
@@ -371,6 +410,13 @@ var ViewEditor = Widget.extend({
     _displayResource: function (resID, type) {
         if (type) {
             this._switchType(type);
+        }
+
+        if (!this.resources[this.currentType].hasOwnProperty(resID)) {
+            // This could happen if trying to switch to a file which is not
+            // visible with the default filters. In that case, we prefer the
+            // user to have to switch explicitely to the right filters again.
+            return;
         }
 
         var editingSession = this.editingSessions[this.currentType][resID];
@@ -545,11 +591,9 @@ var ViewEditor = Widget.extend({
         } else {
             var resource = type === 'scss' ? this.scss[resID] : this.js[resID];
             return this._rpc({
-                route: '/web_editor/reset_asset',
-                params: {
-                    url: resID,
-                    bundle: resource.bundle,
-                },
+                model: 'web_editor.assets',
+                method: 'reset_asset',
+                args: [resID, resource.bundle],
             });
         }
     },
@@ -568,13 +612,9 @@ var ViewEditor = Widget.extend({
         var bundle = sessionIdEndsWithJS ? this.js[session.id].bundle : this.scss[session.id].bundle;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         return self._rpc({
-            route: '/web_editor/save_asset',
-            params: {
-                url: session.id,
-                bundle,
-                content: session.text,
-                file_type: fileType,
-            },
+            model: 'web_editor.assets',
+            method: 'save_asset',
+            args: [session.id, bundle, session.text, fileType],
         }).then(function () {
             self._toggleDirtyInfo(session.id, fileType, false);
         });
@@ -682,17 +722,13 @@ var ViewEditor = Widget.extend({
      */
     _showErrorLine: function (line, message, resID, type) {
         if (line === undefined || line <= 0) {
-            if (this.$errorLine) {
-                this.$errorLine.removeClass('o_error');
-                this.$errorLine.off('.o_error');
-                this.$errorLine = undefined;
-                this.$errorContent.removeClass('o_error');
-                this.$errorContent = undefined;
-            }
+            __restore.call(this);
             return;
         }
 
-        if (type) this._switchType(type);
+        if (type) {
+            this._switchType(type);
+        }
 
         if (this._getSelectedResource() === resID) {
             __showErrorLine.call(this, line);
@@ -705,17 +741,66 @@ var ViewEditor = Widget.extend({
             this._displayResource(resID, this.currentType);
         }
 
-        function __showErrorLine(line) {
-            this.aceEditor.gotoLine(line);
-            this.$errorLine = this.$viewEditor.find('.ace_gutter-cell').filter(function () {
-                return parseInt($(this).text()) === line;
-            }).addClass('o_error');
-            this.$errorLine.addClass('o_error').on('click.o_error', function () {
-                var $message = $('<div/>').html(message);
-                $message.text($message.text());
-                Dialog.alert(this, "", {$content: $message});
+        function __restore() {
+            if (this.errorSession) {
+                this.errorSession.off('change', this.errorSessionChangeCallback);
+                this.errorSession.off('changeScrollTop', this.errorSessionScrollCallback);
+                this.errorSession = undefined;
+            }
+            __restoreErrorLine.call(this);
+
+            if (this.$errorContent) { // TODO remove in master
+                this.$errorContent.removeClass('o_error');
+                this.$errorContent = undefined;
+            }
+        }
+
+        function __restoreErrorLine() {
+            if (this.$errorLine) {
+                this.$errorLine.removeClass('o_error');
+                this.$errorLine.popover('hide');
+                this.$errorLine.popover('dispose');
+                this.$errorLine = undefined;
+            }
+        }
+
+        function __updateErrorLineDisplay(line) {
+            __restoreErrorLine.call(this);
+
+            const $lines = this.$viewEditor.find('.ace_gutter-cell');
+            this.$errorLine = $lines.filter(function (i, el) {
+                return parseInt($(el).text()) === line;
             });
-            this.$errorContent = this.$viewEditor.find('.ace_scroller').addClass('o_error');
+            if (!this.$errorLine.length) {
+                const $firstLine = $lines.first();
+                const firstLineNumber = parseInt($firstLine.text());
+                this.$errorLine = line < firstLineNumber ? $lines.eq(1) : $lines.eq($lines.length - 2);
+            }
+            this.$errorLine.addClass('o_error');
+            this.$errorLine.popover({
+                animation: false,
+                html: true,
+                content: message,
+                placement: 'left',
+                container: 'body',
+                trigger: 'manual',
+                template: '<div class="popover o_ace_error_popover" role="tooltip"><div class="tooltip-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+            });
+            this.$errorLine.popover('show');
+        }
+
+        function __showErrorLine(line) {
+            this.$errorContent = this.$viewEditor.find('.ace_scroller').addClass('o_error'); // TODO remove in master
+
+            this.errorSession = this.aceEditor.getSession();
+            this.errorSessionChangeCallback = __restore.bind(this);
+            this.errorSession.on('change', this.errorSessionChangeCallback);
+            this.errorSessionScrollCallback = _.debounce(__updateErrorLineDisplay.bind(this, line), 10);
+            this.errorSession.on('changeScrollTop', this.errorSessionScrollCallback);
+
+            __updateErrorLineDisplay.call(this, line);
+
+            setTimeout(() => this.aceEditor.gotoLine(line), 100);
         }
     },
     /**
@@ -860,6 +945,7 @@ var ViewEditor = Widget.extend({
      * @private
      */
     _onCloseClick: function () {
+        this._showErrorLine();
         this.do_hide();
     },
     /**
@@ -917,7 +1003,12 @@ var ViewEditor = Widget.extend({
      * @private
      */
     _onSaveClick: function (ev) {
-        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        const restoreSave = dom.addButtonLoadingEffect(ev.currentTarget);
+        const restore = () => {
+            restoreSave();
+            this.$resetButton[0].disabled = false;
+        };
+        this.$resetButton[0].disabled = true;
         this._saveResources().then(restore).guardedCatch(restore);
     },
     /**

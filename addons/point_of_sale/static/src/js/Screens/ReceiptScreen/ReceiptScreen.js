@@ -3,45 +3,57 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
 
     const { Printer } = require('point_of_sale.Printer');
     const { is_email } = require('web.utils');
-    const { useRef, useContext } = owl.hooks;
-    const { useErrorHandlers, onChangeOrder } = require('point_of_sale.custom_hooks');
+    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const AbstractReceiptScreen = require('point_of_sale.AbstractReceiptScreen');
 
+    const { onMounted, useRef, status } = owl;
+
     const ReceiptScreen = (AbstractReceiptScreen) => {
         class ReceiptScreen extends AbstractReceiptScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 useErrorHandlers();
-                onChangeOrder(null, (newOrder) => newOrder && this.render());
                 this.orderReceipt = useRef('order-receipt');
                 const order = this.currentOrder;
-                const client = order.get_client();
-                this.orderUiState = useContext(order.uiState.ReceiptScreen);
-                this.orderUiState.inputEmail = this.orderUiState.inputEmail || (client && client.email) || '';
+                const partner = order.get_partner();
+                this.orderUiState = order.uiState.ReceiptScreen;
+                this.orderUiState.inputEmail = this.orderUiState.inputEmail || (partner && partner.email) || '';
                 this.is_email = is_email;
+
+                onMounted(() => {
+                    // Here, we send a task to the event loop that handles
+                    // the printing of the receipt when the component is mounted.
+                    // We are doing this because we want the receipt screen to be
+                    // displayed regardless of what happen to the handleAutoPrint
+                    // call.
+                    setTimeout(async () => {
+                        if (status(this) === "mounted") {
+                            let images = this.orderReceipt.el.getElementsByTagName('img');
+                            for (let image of images) {
+                                await image.decode();
+                            }
+                            await this.handleAutoPrint();
+                        }
+                    }, 0);
+                });
             }
-            mounted() {
-                // Here, we send a task to the event loop that handles
-                // the printing of the receipt when the component is mounted.
-                // We are doing this because we want the receipt screen to be
-                // displayed regardless of what happen to the handleAutoPrint
-                // call.
-                setTimeout(async () => await this.handleAutoPrint(), 0);
+            _addNewOrder() {
+                this.env.pos.add_new_order();
             }
             async onSendEmail() {
                 if (!is_email(this.orderUiState.inputEmail)) {
                     this.orderUiState.emailSuccessful = false;
-                    this.orderUiState.emailNotice = 'Invalid email.';
+                    this.orderUiState.emailNotice = this.env._t('Invalid email.');
                     return;
                 }
                 try {
                     await this._sendReceiptToCustomer();
                     this.orderUiState.emailSuccessful = true;
-                    this.orderUiState.emailNotice = 'Email sent.'
-                } catch (error) {
+                    this.orderUiState.emailNotice = this.env._t('Email sent.');
+                } catch (_error) {
                     this.orderUiState.emailSuccessful = false;
-                    this.orderUiState.emailNotice = 'Sending email failed. Please try again.'
+                    this.orderUiState.emailNotice = this.env._t('Sending email failed. Please try again.');
                 }
             }
             get orderAmountPlusTip() {
@@ -63,6 +75,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
             get nextScreen() {
                 return { name: 'ProductScreen' };
             }
+            whenClosing() {
+                this.orderDone();
+            }
             /**
              * This function is called outside the rendering call stack. This way,
              * we don't block the displaying of ReceiptScreen when it is mounted; additionally,
@@ -72,14 +87,18 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 if (this._shouldAutoPrint()) {
                     await this.printReceipt();
                     if (this.currentOrder._printed && this._shouldCloseImmediately()) {
-                        this.orderDone();
+                        this.whenClosing();
                     }
                 }
             }
             orderDone() {
-                this.currentOrder.finalize();
+                this.env.pos.removeOrder(this.currentOrder);
+                this._addNewOrder();
                 const { name, props } = this.nextScreen;
                 this.showScreen(name, props);
+                if (this.env.pos.config.iface_customer_facing_display) {
+                    this.env.pos.send_current_order_to_customer_facing_display();
+                }
             }
             async printReceipt() {
                 const isPrinted = await this._printReceipt();
@@ -92,21 +111,21 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
             }
             _shouldCloseImmediately() {
                 var invoiced_finalized = this.currentOrder.is_to_invoice() ? this.currentOrder.finalized : true;
-                return this.env.pos.proxy.printer && this.env.pos.config.iface_print_skip_screen && invoiced_finalized;
+                return this.env.proxy.printer && this.env.pos.config.iface_print_skip_screen && invoiced_finalized;
             }
             async _sendReceiptToCustomer() {
-                const printer = new Printer();
-                const receiptString = this.orderReceipt.comp.el.outerHTML;
+                const printer = new Printer(null, this.env.pos);
+                const receiptString = this.orderReceipt.el.innerHTML;
                 const ticketImage = await printer.htmlToImg(receiptString);
                 const order = this.currentOrder;
-                const client = order.get_client();
+                const partner = order.get_partner();
                 const orderName = order.get_name();
-                const orderClient = { email: this.orderUiState.inputEmail, name: client ? client.name : this.orderUiState.inputEmail };
+                const orderPartner = { email: this.orderUiState.inputEmail, name: partner ? partner.name : this.orderUiState.inputEmail };
                 const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
                 await this.rpc({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
-                    args: [[order_server_id], orderName, orderClient, ticketImage],
+                    args: [[order_server_id], orderName, orderPartner, ticketImage],
                 });
             }
         }

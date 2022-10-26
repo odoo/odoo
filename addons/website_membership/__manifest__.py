@@ -15,7 +15,9 @@ Publish your members/association directory publicly.
         'views/website_membership_templates.xml',
         'security/ir.model.access.csv',
         'security/website_membership.xml',
+        'views/snippets.xml',
     ],
     'demo': ['data/membership_demo.xml'],
     'installable': True,
+    'license': 'LGPL-3',
 }

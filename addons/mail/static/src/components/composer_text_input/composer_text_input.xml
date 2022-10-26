@@ -2,23 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ComposerTextInput" owl="1">
-        <div class="o_ComposerTextInput">
-            <t t-if="composer">
-                <t t-if="composer.hasSuggestions">
-                    <ComposerSuggestionList
-                        composerLocalId="props.composerLocalId"
-                        isBelow="props.hasMentionSuggestionsBelowPosition"
-                    />
+        <t t-if="composerTextInputView">
+            <div class="o_ComposerTextInput position-relative bg-view" t-attf-class="{{ className }} {{ composerTextInputView.owner.isCompact ? 'border border-end-0' : 'border-0' }}" t-att-class="{ 'border-start-0': composerTextInputView.owner.isInChatWindow }" t-on-paste="composerTextInputView.owner.onPasteTextInput" t-ref="root">
+                <t t-if="composerTextInputView.owner.composerSuggestionListView">
+                    <ComposerSuggestionListView record="composerTextInputView.owner.composerSuggestionListView"/>
                 </t>
-                <textarea class="o_ComposerTextInput_textarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': props.isCompact }" t-esc="composer.textInputContent" t-att-placeholder="textareaPlaceholder" t-on-click="_onClickTextarea" t-on-focusin="_onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
+                <textarea class="o_ComposerTextInput_textarea o_ComposerTextInput_textareaStyle form-control px-3 border-0 shadow-none overflow-auto" t-att-class="{ 'o-composer-is-compact rounded-0 rounded-start-3': composerTextInputView.owner.isCompact, 'rounded-3': !composerTextInputView.owner.isCompact }" t-esc="composerTextInputView.owner.composer.textInputContent" t-att-placeholder="composerTextInputView.owner.composer.placeholder" t-on-click="composerTextInputView.owner.onClickTextarea" t-on-focusin="composerTextInputView.owner.onFocusinTextarea" t-on-focusout="composerTextInputView.owner.onFocusoutTextarea" t-on-keydown="composerTextInputView.owner.onKeydownTextarea" t-on-keyup="composerTextInputView.owner.onKeyupTextarea" t-on-input="composerTextInputView.owner.onInputTextarea" t-ref="textarea"/>
                 <!--
                      This is an invisible textarea used to compute the composer
                      height based on the text content. We need it to downsize
                      the textarea properly without flicker.
                 -->
-                <textarea class="o_ComposerTextInput_mirroredTextarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': props.isCompact }" t-esc="composer.textInputContent" t-ref="mirroredTextarea" disabled="1"/>
-            </t>
-        </div>
+                <textarea class="o_ComposerTextInput_mirroredTextarea o_ComposerTextInput_textareaStyle position-absolute px-3 border-0 overflow-hidden opacity-0" t-att-class="{ 'o-composer-is-compact rounded-0 rounded-start-3': composerTextInputView.owner.isCompact, 'rounded-3': !composerTextInputView.owner.isCompact }" t-esc="composerTextInputView.owner.composer.textInputContent" t-ref="mirroredTextarea" disabled="1"/>
+            </div>
+        </t>
     </t>
 
 </templates>

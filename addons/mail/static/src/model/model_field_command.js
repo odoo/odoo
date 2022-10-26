@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/model/model_field_command.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 /**
  * Allows field update to detect if the value it received is a command to
@@ -95,17 +94,17 @@ function insert(data) {
 }
 
 /**
- * Returns a insert-and-replace command to give to the model manager at create/update.
- * `insertAndReplace` command can be used for relation fields.
+ * Returns a insert-and-unlink command to give to the model manager at create/update.
+ * `insertAndUnlink` command can be used for relation fields.
  * - Create new record(s) from data if the record(s) do not exist;
  * - or update the record(s) if they can be found from identifying data;
- * - and then replace the record(s) for a relation field.
+ * - and then unlink the record(s) from the relation field (if they were present).
  *
- * @param {Object|Object[]} data - data object or data objects array to insert and replace record(s).
+ * @param {Object|Object[]} [data={}] - data object or data objects array to insert and unlink record(s).
  * @returns {FieldCommand}
  */
-function insertAndReplace(data) {
-    return new FieldCommand('insert-and-replace', data);
+export function insertAndUnlink(data = {}) {
+    return new FieldCommand('insert-and-unlink', data);
 }
 
 /**
@@ -115,27 +114,11 @@ function insertAndReplace(data) {
  * - Or add the record(s) given by `newValue` which are not in the currecnt field value
  * to the field value for an x2many field.
  *
- * @param {mail.model|mail.model[]} newValue - record or records array to be linked.
+ * @param {Record|Record[]} newValue - record or records array to be linked.
  * @returns {FieldCommand}
  */
 function link(newValue) {
     return new FieldCommand('link', newValue);
-}
-
-/**
- * Returns a replace command to give to the model manager at create/update.
- * `replace` command can be used for relation fields.
- * - Unlink the current record and then link `newValue`
- * if the current value differs from `newValue` for a x2one field;
- * - Unlink records in the field value if they are not in `newValue`,
- * link the missing values, and then sort field value by the order they are given in `newValue`
- * for a x2many field.
- *
- * @param {mail.model|mail.model[]} newValue - record or records array to be replaced.
- * @returns {FieldCommand}
- */
-function replace(newValue) {
-    return new FieldCommand('replace', newValue);
 }
 
 /**
@@ -156,7 +139,7 @@ function set(newValue) {
  * - or remove the record(s) given by `data` which are in the current field value
  *  for a x2many field.
  *
- * @param {mail.model|mail.model[]} [data] - record or records array to be unlinked.
+ * @param {Record|Record[]} [data] - record or records array to be unlinked.
  * `data` will be ignored if the field is x2one type.
  * @returns {FieldCommand}
  */
@@ -175,21 +158,15 @@ function unlinkAll() {
     return new FieldCommand('unlink-all');
 }
 
-return {
-    // class
+export {
     FieldCommand,
-    // shortcuts
     clear,
     create,
     decrement,
     increment,
     insert,
-    insertAndReplace,
     link,
-    replace,
     set,
     unlink,
     unlinkAll,
 };
-
-});

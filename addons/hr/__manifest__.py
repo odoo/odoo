@@ -7,8 +7,7 @@
     'category': 'Human Resources/Employees',
     'sequence': 95,
     'summary': 'Centralize employee information',
-    'description': "",
-    'website': 'https://www.odoo.com/page/employees',
+    'website': 'https://www.odoo.com/app/employees',
     'images': [
         'images/hr_department.jpeg',
         'images/hr_employee.jpeg',
@@ -27,6 +26,7 @@
         'wizard/hr_plan_wizard_views.xml',
         'wizard/hr_departure_wizard_views.xml',
         'views/hr_departure_reason_views.xml',
+        'views/hr_contract_type_views.xml',
         'views/hr_job_views.xml',
         'views/hr_plan_views.xml',
         'views/hr_employee_category_views.xml',
@@ -39,6 +39,7 @@
         'views/res_config_settings_views.xml',
         'views/mail_channel_views.xml',
         'views/res_users.xml',
+        'views/res_partner_views.xml',
         'data/hr_data.xml',
     ],
     'demo': [
@@ -46,30 +47,30 @@
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
+    'post_init_hook': '_install_hr_localization',
     'assets': {
+        'mail.assets_messaging': [
+            'hr/static/src/models/*.js',
+        ],
         'web.assets_backend': [
+            'hr/static/src/views/**/*.js',
+            'hr/static/src/components/**/*',
+            'hr/static/src/user_menu/*.js',
             'hr/static/src/scss/hr.scss',
-            'hr/static/src/bugfix/bugfix.scss',
-            'hr/static/src/bugfix/bugfix.js',
-            'hr/static/src/js/chat.js',
-            'hr/static/src/js/language.js',
-            'hr/static/src/js/many2one_avatar_employee.js',
+            'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
-            'hr/static/src/models/employee/employee.js',
-            'hr/static/src/models/messaging/messaging.js',
-            'hr/static/src/models/partner/partner.js',
-            'hr/static/src/models/user/user.js',
+            'hr/static/src/js/work_permit_upload.js',
+            'hr/static/src/xml/*.xml',
         ],
         'web.qunit_suite_tests': [
-            'hr/static/src/bugfix/bugfix_tests.js',
-            'hr/static/tests/helpers/mock_models.js',
-            'hr/static/tests/many2one_avatar_employee_tests.js',
+            'hr/static/tests/helpers/*.js',
+            'hr/static/tests/m2x_avatar_employee_tests.js',
+            'hr/static/tests/m2x_avatar_employee_legacy_tests.js',
             'hr/static/tests/standalone_m2o_avatar_employee_tests.js',
         ],
-        'web.assets_qweb': [
-            'hr/static/src/bugfix/bugfix.xml',
-            'hr/static/src/xml/hr_templates.xml',
+        'web.assets_tests': [
+            'hr/static/tests/tours/hr_employee_flow.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

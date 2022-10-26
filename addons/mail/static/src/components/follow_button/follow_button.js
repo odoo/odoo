@@ -1,93 +1,27 @@
-odoo.define('mail/static/src/components/follow_button/follow_button.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useState } = owl.hooks;
 
-class FollowButton extends Component {
-    /**
-     * @override
-     */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        this.state = useState({
-            /**
-             * Determine whether the unfollow button is highlighted or not.
-             */
-            isUnfollowButtonHighlighted: false,
-        });
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                threadIsCurrentPartnerFollowing: thread && thread.isCurrentPartnerFollowing,
-            };
-        });
-    }
+export class FollowButton extends Component {
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
-     * @return {mail.thread}
+     * @return {FollowButtonView}
      */
-    get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickFollow(ev) {
-        this.thread.follow();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickUnfollow(ev) {
-        this.thread.unfollow();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMouseLeaveUnfollow(ev) {
-        this.state.isUnfollowButtonHighlighted = false;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMouseEnterUnfollow(ev) {
-        this.state.isUnfollowButtonHighlighted = true;
+    get followButtonView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(FollowButton, {
-    defaultProps: {
-        isDisabled: false,
-    },
-    props: {
-        isDisabled: Boolean,
-        threadLocalId: String,
-    },
+    props: { record: Object },
     template: 'mail.FollowButton',
 });
 
-return FollowButton;
-
-});
+registerMessagingComponent(FollowButton);

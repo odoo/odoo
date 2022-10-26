@@ -5,12 +5,29 @@
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('group_stock_user'))]" name="groups_id"/>
         </record>
-         <record id="lot_product_27" model="stock.production.lot">
+         <record id="lot_product_27" model="stock.lot">
             <field name="name">0000000000029</field>
             <field name="product_id" ref="product.product_product_27"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
+        <record id="package_type_01" model="stock.package.type">
+            <field name="name">Pallet</field>
+            <field name="barcode">PAL</field>
+            <field name="max_weight">4000</field>
+            <field name="width">800</field>
+            <field name="height">130</field>
+            <field name="packaging_length">1200</field>
+        </record>
+
+        <record id="package_type_02" model="stock.package.type">
+            <field name="name">Box</field>
+            <field name="barcode">BOX</field>
+            <field name="max_weight">30</field>
+            <field name="width">362</field>
+            <field name="height">374</field>
+            <field name="packaging_length">562</field>
+        </record>
 
         <!-- Resource: stock.quant, i.e. initial inventory -->
 
@@ -193,6 +210,9 @@
 
         <!-- Activate Lots options as demo data depends on it -->
         <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>
+        </record>
+        <record id="base.group_portal" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>
         </record>
 

@@ -12,6 +12,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/slide_channel_views.xml',
+        'views/slide_slide_partner_views.xml',
         'views/slide_slide_views.xml',
         'views/survey_survey_views.xml',
         'views/website_slides_menu_views.xml',
@@ -19,10 +20,12 @@
         'views/website_slides_templates_lesson.xml',
         'views/website_slides_templates_lesson_fullscreen.xml',
         'views/website_slides_templates_homepage.xml',
+        'views/website_slides_templates_utils.xml',
         'views/survey_templates.xml',
         'views/website_profile.xml',
         'data/mail_template_data.xml',
         'data/gamification_data.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/survey_demo.xml',
@@ -34,10 +37,12 @@
             'website_slides_survey/static/src/scss/website_slides_survey.scss',
             'website_slides_survey/static/src/js/slides_upload.js',
             'website_slides_survey/static/src/js/slides_course_fullscreen_player.js',
-            'website_slides_survey/static/src/js/slides_certification_upload_toast.js',
+            'website_slides_survey/static/src/xml/website_slide_upload.xml',
+            'website_slides_survey/static/src/xml/website_slides_fullscreen.xml',
         ],
         'survey.survey_assets': [
             'website_slides_survey/static/src/scss/website_slides_survey_result.scss',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

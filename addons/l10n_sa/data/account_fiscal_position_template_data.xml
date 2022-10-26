@@ -1,0 +1,23 @@
+<odoo>
+    <data noupdate="1">
+        <record id="l10n_sa_account_fiscal_position_ksa" model="account.fiscal.position.template">
+            <field name="name">KSA</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="sequence">16</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="chart_template_id" ref="sa_chart_template_standard"/>
+        </record>
+        <record id="l10n_sa_account_fiscal_position_gcc" model="account.fiscal.position.template">
+            <field name="name">GCC</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="sequence">16</field>
+            <field name="country_group_id" ref="base.gulf_cooperation_council"/>
+            <field name="chart_template_id" ref="sa_chart_template_standard"/>
+        </record>
+        <record id="l10n_sa_account_fiscal_position_non_gcc" model="account.fiscal.position.template">
+            <field name="name">Non-GCC</field>
+            <field name="sequence">16</field>
+            <field name="chart_template_id" ref="sa_chart_template_standard"/>
+        </record>
+    </data>
+</odoo>

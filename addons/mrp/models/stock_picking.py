@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class StockPickingType(models.Model):
@@ -21,6 +21,10 @@ class StockPickingType(models.Model):
         help="Allow to create new lot/serial numbers for the components",
         default=False,
     )
+    use_auto_consume_components_lots = fields.Boolean(
+        string="Consume Reserved Lots/Serial Numbers automatically",
+        help="Allow automatic consumption of tracked components that are reserved",
+    )
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
@@ -31,11 +35,11 @@ class StockPickingType(models.Model):
             return
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
-            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress')), ('is_planned', '=', True)],
+            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress', 'to_close')), ('is_planned', '=', True)],
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for field in domains:
-            data = self.env['mrp.production'].read_group(domains[field] +
+            data = self.env['mrp.production']._read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
             count = {x['picking_type_id'] and x['picking_type_id'][0]: x['picking_type_id_count'] for x in data}
@@ -48,19 +52,29 @@ class StockPickingType(models.Model):
             remaining.count_mo_late = False
 
     def get_mrp_stock_picking_action_picking_type(self):
-        return self._get_action('mrp.mrp_production_action_picking_deshboard')
+        action = self.env["ir.actions.actions"]._for_xml_id('mrp.mrp_production_action_picking_deshboard')
+        if self:
+            action['display_name'] = self.display_name
+        return action
+
+    @api.onchange('code')
+    def _onchange_code(self):
+        if self.code == 'mrp_operation':
+            self.use_create_lots = True
+            self.use_existing_lots = True
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    has_kits = fields.Boolean(compute='_compute_has_kits')
+
+    @api.depends('move_ids')
+    def _compute_has_kits(self):
+        for picking in self:
+            picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
+
     def _less_quantities_than_expected_add_documents(self, moves, documents):
         documents = super(StockPicking, self)._less_quantities_than_expected_add_documents(moves, documents)
-
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.raw_material_production_id.id, move.product_id.responsible_id.id)
 
         def _keys_in_groupby(move):
             """ group by picking and the responsible for the product the
@@ -68,5 +82,5 @@ class StockPicking(models.Model):
             """
             return (move.raw_material_production_id, move.product_id.responsible_id)
 
-        production_documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        production_documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_groupby)
         return {**documents, **production_documents}

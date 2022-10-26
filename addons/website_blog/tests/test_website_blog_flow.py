@@ -16,7 +16,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'name': 'Dorian Portal',
             'login': 'portal_user',
             'email': 'portal_user@example.com',
-            'notification_type': 'inbox',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [group_portal.id])]
         })
 
@@ -108,3 +108,11 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
         self.assertFalse(self.env['mail.message'].sudo().search(
             [('model', '=', 'blog.post'), ('attachment_ids', 'in', second_attachment.ids)]))
+
+    def test_website_blog_teaser_content(self):
+        """ Make sure that the content of the post is correctly rendered in
+            proper plain text. """
+
+        self.test_blog_post.content = "<h2>Test Content</h2>"
+
+        self.assertEqual(self.test_blog_post.teaser, "Test Content...")

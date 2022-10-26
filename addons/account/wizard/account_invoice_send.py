@@ -19,17 +19,16 @@ class AccountInvoiceSend(models.TransientModel):
     invoice_ids = fields.Many2many('account.move', 'account_move_account_invoice_send_rel', string='Invoices')
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', index=True,
+        'mail.template', 'Use template',
         domain="[('model', '=', 'account.move')]"
         )
 
-    # View fields
+    # Technical field containing a textual representation of the selected move types,
+    # if multiple. It is used to inform the user in the window in such case.
     move_types = fields.Char(
         string='Move types',
         compute='_compute_move_types',
-        readonly=True,
-        help='Technical field containing a textual representation of the selected move types, '
-             'if multiple. It is used to inform the user in the window in such case.')
+        readonly=True)
 
     @api.model
     def default_get(self, fields):
@@ -78,7 +77,7 @@ class AccountInvoiceSend(models.TransientModel):
             if wizard.composer_id:
                 wizard.composer_id.template_id = wizard.template_id.id
                 wizard._compute_composition_mode()
-                wizard.composer_id.onchange_template_id_wrapper()
+                wizard.composer_id._onchange_template_id_wrapper()
 
     @api.onchange('is_email')
     def onchange_is_email(self):
@@ -93,7 +92,7 @@ class AccountInvoiceSend(models.TransientModel):
                 self.composer_id.composition_mode = 'comment' if len(res_ids) == 1 else 'mass_mail'
                 self.composer_id.template_id = self.template_id.id
                 self._compute_composition_mode()
-            self.composer_id.onchange_template_id_wrapper()
+            self.composer_id._onchange_template_id_wrapper()
 
     @api.onchange('is_email')
     def _compute_invoice_without_email(self):
@@ -116,7 +115,10 @@ class AccountInvoiceSend(models.TransientModel):
     def _send_email(self):
         if self.is_email:
             # with_context : we don't want to reimport the file we just exported.
-            self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
+            self.composer_id.with_context(no_new_invoice=True,
+                                          mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids,
+                                          mailing_document_based=True,
+                                          )._action_send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
                 #Salesman send posted invoice, without the right to write
                 #but they should have the right to change this flag
@@ -153,7 +155,7 @@ class AccountInvoiceSend(models.TransientModel):
 
     def save_as_template(self):
         self.ensure_one()
-        self.composer_id.save_as_template()
+        self.composer_id.action_save_as_template()
         self.template_id = self.composer_id.template_id.id
         action = _reopen(self, self.id, self.model, context=self._context)
         action.update({'name': _('Send Invoice')})

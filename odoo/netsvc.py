@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import contextlib
 import logging
 import logging.handlers
 import os
@@ -9,6 +9,7 @@ import pprint
 import sys
 import threading
 import time
+import traceback
 import warnings
 
 from . import release
@@ -34,7 +35,7 @@ class PostgreSQLHandler(logging.Handler):
         dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
-        with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
+        with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
             # preclude risks of deadlocks
             cr.execute("SET LOCAL statement_timeout = 1000")
             msg = tools.ustr(record.msg)
@@ -124,10 +125,10 @@ def init_logger():
     logging.setLogRecordFactory(record_factory)
 
     # enable deprecation warnings (disabled by default)
-    warnings.filterwarnings('default', category=DeprecationWarning)
+    warnings.simplefilter('default', category=DeprecationWarning)
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
-    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'^invalid escape sequence \'?\\.', category=DeprecationWarning)
     # recordsets are both sequence and set so trigger warning despite no issue
     warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
     # ignore a bunch of warnings we can't really fix ourselves
@@ -137,8 +138,14 @@ def init_logger():
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
         'ofxparse',# ofxparse importing ABC from collections
         'astroid',  # deprecated imp module (fixed in 2.5.1)
+        'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
+
+    # the SVG guesser thing always compares str and bytes, ignore it
+    warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
+    # reportlab does a bunch of bytes/str mixing in a hashmap
+    warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
 
     from .tools.translate import resetlocale
     resetlocale()
@@ -181,7 +188,7 @@ def init_logger():
     def is_a_tty(stream):
         return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
 
-    if os.name == 'posix' and isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
+    if os.name == 'posix' and isinstance(handler, logging.StreamHandler) and (is_a_tty(handler.stream) or os.environ.get("ODOO_PY_COLORS")):
         formatter = ColoredFormatter(format)
         perf_filter = ColoredPerfFilter()
     else:
@@ -239,6 +246,29 @@ PSEUDOCONFIG_MAPPER = {
 logging.RUNBOT = 25
 logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
 logging.captureWarnings(True)
+# must be after `loggin.captureWarnings` so we override *that* instead of the
+# other way around
+showwarning = warnings.showwarning
+IGNORE = {
+    'Comparison between bytes and int', # a.foo != False or some shit, we don't care
+}
+def showwarning_with_traceback(message, category, filename, lineno, file=None, line=None):
+    if category is BytesWarning and message.args[0] in IGNORE:
+        return
+
+    # find the stack frame matching (filename, lineno)
+    filtered = []
+    for frame in traceback.extract_stack():
+        if 'importlib' not in frame.filename:
+            filtered.append(frame)
+        if frame.filename == filename and frame.lineno == lineno:
+            break
+    return showwarning(
+        message, category, filename, lineno,
+        file=file,
+        line=''.join(traceback.format_list(filtered))
+    )
+warnings.showwarning = showwarning_with_traceback
 
 def runbot(self, message, *args, **kws):
     self.log(logging.RUNBOT, message, *args, **kws)

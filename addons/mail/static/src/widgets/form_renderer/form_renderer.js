@@ -1,12 +1,12 @@
-odoo.define('mail/static/src/widgets/form_renderer/form_renderer.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const components = {
-    ChatterContainer: require('mail/static/src/components/chatter_container/chatter_container.js'),
-};
+import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
+import { WebClientViewAttachmentViewContainer } from '@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container';
+import { Listener } from '@mail/model/model_listener';
 
-const FormRenderer = require('web.FormRenderer');
-const { ComponentWrapper } = require('web.OwlCompatibility');
+import dom from 'web.dom';
+import FormRenderer from 'web.FormRenderer';
+import { ComponentWrapper } from 'web.OwlCompatibility';
 
 class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
@@ -15,174 +15,234 @@ class ChatterContainerWrapperComponent extends ComponentWrapper {}
  * subset of) the mail widgets (mail_thread, mail_followers and mail_activity).
  */
 FormRenderer.include({
+    //--------------------------------------------------------------------------
+    // Form Overrides
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
     init(parent, state, params) {
         this._super(...arguments);
+        this.modelsListener = new Listener({
+            name: 'interchangeChatter',
+            onChange: () => this._interchangeChatter(),
+        });
+        this.hasChatter = params.hasChatter && !params.isFromFormViewDialog;
+        this.isChatterInSheet = false;
+        this.hasAttachmentViewerFeature = params.hasAttachmentViewerFeature;
         this.chatterFields = params.chatterFields;
         this.mailFields = params.mailFields;
+        this.messaging = undefined;
+        if (owl.Component.env.services.messaging) {
+            owl.Component.env.services.messaging.get().then(messaging => this.messaging = messaging);
+        }
         this._chatterContainerComponent = undefined;
         /**
          * The target of chatter, if chatter has to be appended to the DOM.
          * This is set when arch contains `div.oe_chatter`.
          */
         this._chatterContainerTarget = undefined;
-        // Do not load chatter in form view dialogs
-        this._isFromFormViewDialog = params.isFromFormViewDialog;
+        if (this.hasChatter) {
+            this._chatterContainerTarget = document.createElement("div");
+            this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
+            this.initChatter();
+        }
+        /**
+         * This element will be set when rendering the form view, and
+         * used as a hook to insert the ChatterContainer in the right place,
+         * when applying the rendering into the DOM.
+         */
+        this.chatterContainerTargetPlaceholder = undefined;
+        this.webClientViewAttachmentViewContainer = undefined;
+        this.attachmentViewerTarget = undefined;
+        if (this.hasAttachmentViewerFeature) {
+            this.attachmentViewerTarget = document.createElement("div");
+            this.attachmentViewerTarget.classList.add("o_attachment_preview");
+            this.webClientViewAttachmentViewContainer = new ComponentWrapper(this, WebClientViewAttachmentViewContainer, this._makeWebClientViewAttachmentViewContainerProps());
+            this.webClientViewAttachmentViewContainer.mount(this.attachmentViewerTarget);
+        }
+        this.attachmentViewerTargetPlaceholder = undefined;
     },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        this._chatterContainerComponent = undefined;
-        this.off('o_attachments_changed', this);
-        this.off('o_chatter_rendered', this);
-        this.off('o_message_posted', this);
-        owl.Component.env.bus.off('mail.thread:promptAddFollower-closed', this);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Returns whether the form renderer has a chatter to display or not.
-     * This is based on arch, which should have `div.oe_chatter`.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _hasChatter() {
-        return !!this._chatterContainerTarget;
-    },
-    /**
-     * @private
-     */
-    _makeChatterContainerComponent() {
-        const props = this._makeChatterContainerProps();
+    async initChatter() {
         this._chatterContainerComponent = new ChatterContainerWrapperComponent(
             this,
-            components.ChatterContainer,
-            props
+            ChatterContainer,
+            this._makeChatterContainerProps(),
         );
-        // Not in custom_events because other modules may remove this listener
-        // while attempting to extend them.
-        this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
-        if (this.chatterFields.hasRecordReloadOnMessagePosted) {
-            this.on('o_message_posted', this, ev => {
-                this.trigger_up('reload', { keepChanges: true });
-            });
-        }
-        if (this.chatterFields.hasRecordReloadOnAttachmentsChanged) {
-            this.on('o_attachments_changed', this, ev => this.trigger_up('reload', { keepChanges: true }));
-        }
-        if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
-            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
-        }
-    },
-    /**
-     * @private
-     * @returns {Object}
-     */
-    _makeChatterContainerProps() {
-        return {
-            hasActivities: this.chatterFields.hasActivityIds,
-            hasFollowers: this.chatterFields.hasMessageFollowerIds,
-            hasMessageList: this.chatterFields.hasMessageIds,
-            isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
-            threadId: this.state.res_id,
-            threadModel: this.state.model,
-        };
-    },
-    /**
-     * Create the DOM element that will contain the chatter. This is made in
-     * a separate method so it can be overridden (like in mail_enterprise for
-     * example).
-     *
-     * @private
-     * @returns {jQuery.Element}
-     */
-    _makeChatterContainerTarget() {
-        const $el = $('<div class="o_FormRenderer_chatterContainer"/>');
-        this._chatterContainerTarget = $el[0];
-        return $el;
-    },
-    /**
-     * Mount the chatter
-     *
-     * Force re-mounting chatter component in DOM. This is necessary
-     * because each time `_renderView` is called, it puts old content
-     * in a fragment.
-     *
-     * @private
-     */
-    async _mountChatterContainerComponent() {
-        try {
-            await this._chatterContainerComponent.mount(this._chatterContainerTarget);
-        } catch (error) {
-            if (error.message !== "Mounting operation cancelled") {
-                throw error;
-            }
-        }
+        await this._chatterContainerComponent.mount(this._chatterContainerTarget);
     },
     /**
      * @override
      */
     _renderNode(node) {
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
-            if (this._isFromFormViewDialog) {
-                return $('<div/>');
+            if (!this.hasChatter) {
+                return document.createElement("div");
             }
-            return this._makeChatterContainerTarget();
+            this.chatterContainerTargetPlaceholder = this._chatterContainerTarget.cloneNode(false);
+            return this.chatterContainerTargetPlaceholder;
+        }
+        if (node.tag === 'div' && node.attrs.class === 'o_attachment_preview') {
+            if (!this.hasAttachmentViewerFeature) {
+                return document.createElement("div");
+            }
+            this._registerModifiers(node, this.state, $(this.attachmentViewerTarget)); // support for groups= on the node
+            this.attachmentViewerTargetPlaceholder = this.attachmentViewerTarget.cloneNode(false);
+            return this.attachmentViewerTargetPlaceholder;
         }
         return this._super(...arguments);
     },
     /**
-     * Overrides the function to render the chatter once the form view is
-     * rendered.
+     * Overrides to re-render the chatter container with potentially new props.
+     * This is done in `__renderView` specifically to wait for this render to
+     * be complete before updating the form view, which prevents flickering.
      *
      * @override
      */
     async __renderView() {
         await this._super(...arguments);
-        if (this._hasChatter()) {
-            if (!this._chatterContainerComponent) {
-                this._makeChatterContainerComponent();
-            } else {
-                await this._updateChatterContainerComponent();
-            }
-            await this._mountChatterContainerComponent();
+        if (this.hasChatter) {
+            await this._updateChatterContainerComponent();
         }
+        if (this.hasAttachmentViewer()) {
+            await this._updateWebClientViewAttachmentViewContainer();
+        }
+    },
+    /**
+     * The last rendering of the form view has just been applied into the DOM,
+     * so we replace our chatter container hook by the actual chatter container.
+     *
+     * @override
+     */
+    _updateView() {
+        /**
+         * The chatter is detached before it's removed on the super._updateView function,
+         * this is done to avoid losing the event handlers.
+         */
+        if (this.hasChatter) {
+            this._chatterContainerTarget.remove();
+        }
+        if (this.hasAttachmentViewerFeature) {
+            this.attachmentViewerTarget.remove();
+        }
+        this._super(...arguments);
+        if (this.hasAttachmentViewerFeature) {
+            this.attachmentViewerTargetPlaceholder.replaceWith(this.attachmentViewerTarget);
+        }
+        if (this.hasChatter) {
+            this.chatterContainerTargetPlaceholder.replaceWith(this._chatterContainerTarget);
+            // isChatterInSheet can only be written from this specific life-cycle method because the
+            // parentNode is not accessible before the target node is actually in DOM. Ideally this
+            // should be determined statically in `_processNode` but the parent is not provided.
+            this.isChatterInSheet = this._chatterContainerTarget.parentNode.classList.contains('o_form_sheet');
+            this._interchangeChatter();
+        }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        if (owl.Component.env.services.messaging) {
+            owl.Component.env.services.messaging.modelManager.removeListener(this.modelsListener);
+        }
+        this._chatterContainerComponent = undefined;
+    },
+
+    //--------------------------------------------------------------------------
+    // Mail Methods
+    //--------------------------------------------------------------------------
+
+    /**
+     * @returns {boolean}
+     */
+    hasAttachmentViewer() {
+        return false;
+    },
+    /**
+     * Interchange the position of the chatter and the attachment preview.
+     *
+     * @private
+     */
+    _interchangeChatter() {
+        const $sheetBg = this.$('.o_form_sheet_bg');
+        this._chatterContainerTarget.classList.remove('o-aside');
+        this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
+        if (this.isChatterInSheet) { // in sheet
+            const $sheet = this.$('.o_form_sheet');
+            dom.append($sheet, $(this._chatterContainerTarget), {
+                callbacks: [],
+                in_DOM: this._isInDom,
+            });
+        } else if (this.hasAttachmentViewer()) { // in sheet-bg
+            this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
+            dom.append($sheetBg, $(this._chatterContainerTarget), {
+                callbacks: [],
+                in_DOM: this._isInDom,
+            });
+        } else { // after sheet-bg
+            if (this._isChatterAside()) {
+                this._chatterContainerTarget.classList.add('o-aside');
+            }
+            $(this._chatterContainerTarget).insertAfter($sheetBg);
+        }
+        if (this.hasAttachmentViewerFeature) {
+            if (this.hasAttachmentViewer()) {
+                $(this.attachmentViewerTarget).insertAfter($sheetBg);
+                this._updateWebClientViewAttachmentViewContainer();
+            } else {
+                this.attachmentViewerTarget.remove();
+            }
+        }
+        this._updateChatterContainerComponent();
+    },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _isChatterAside() {
+        return false;
+    },
+    /**
+     * @private
+     * @returns {Object}
+     */
+    _makeChatterContainerProps() {
+        const isChatterAside = this._isChatterAside();
+        return {
+            hasActivities: this.chatterFields.hasActivityIds,
+            hasExternalBorder: !isChatterAside,
+            hasFollowers: this.chatterFields.hasMessageFollowerIds,
+            hasMessageList: this.chatterFields.hasMessageIds,
+            hasMessageListScrollAdjust: isChatterAside,
+            hasParentReloadOnAttachmentsChanged: this.chatterFields.hasRecordReloadOnAttachmentsChanged,
+            hasParentReloadOnFollowersUpdate: this.chatterFields.hasRecordReloadOnFollowersUpdate,
+            hasParentReloadOnMessagePosted: this.chatterFields.hasRecordReloadOnMessagePosted,
+            isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
+            isInFormSheetBg: this.hasAttachmentViewer(),
+            threadId: this.state.res_id,
+            threadModel: this.state.model,
+        };
+    },
+    _makeWebClientViewAttachmentViewContainerProps() {
+        return {
+            threadId: this.state.res_id,
+            threadModel: this.state.model,
+        };
     },
     /**
      * @private
      */
     async _updateChatterContainerComponent() {
         const props = this._makeChatterContainerProps();
-        try {
-            await this._chatterContainerComponent.update(props);
-        } catch (error) {
-            if (error.message !== "Mounting operation cancelled") {
-                throw error;
-            }
-        }
+        await this._chatterContainerComponent.update(props);
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
-     * @abstract
      * @private
-     * @param {OdooEvent} ev
-     * @param {Object} ev.data
-     * @param {mail.attachment[]} ev.data.attachments
-     * @param {mail.thread} ev.data.thread
      */
-    _onChatterRendered(ev) {},
-});
-
+    async _updateWebClientViewAttachmentViewContainer() {
+        const props = this._makeWebClientViewAttachmentViewContainerProps();
+        await this.webClientViewAttachmentViewContainer.update(props);
+    },
 });

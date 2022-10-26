@@ -7,11 +7,20 @@
     'summary': 'Create lead from livechat conversation',
     'data': [
         'data/utm_data.xml',
+        'data/crm_livechat_chatbot_data.xml',
+        'views/chatbot_script_views.xml',
+        'views/chatbot_script_step_views.xml',
     ],
     'depends': [
         'crm',
         'im_livechat'
     ],
     'description': 'Create new lead with using /lead command in the channel',
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
+    'assets': {
+        'mail.assets_messaging': [
+            'crm_livechat/static/src/models/*.js',
+        ],
+    },
 }

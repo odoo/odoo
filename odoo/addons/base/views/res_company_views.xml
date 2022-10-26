@@ -5,13 +5,13 @@
             <field name="name">res.company.form</field>
             <field name="model">res.company</field>
             <field name="arch" type="xml">
-                <form string="Company">
+                <form string="Company" duplicate="0">
                   <sheet>
-                    <field name="logo" widget="image"  class="oe_avatar"/>
+                    <field name="logo" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="e.g. My Awesome Company"/>
+                            <field name="name" placeholder="e.g. My Company"/>
                         </h1>
                     </div>
                     <notebook colspan="4">
@@ -39,7 +39,7 @@
                                     <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="favicon" widget="image" class="float-left oe_avatar" groups="base.group_no_one"/>
+                                    <field name="favicon" widget="image" class="float-start oe_avatar" groups="base.group_no_one"/>
                                 </group>
                                 <group name="social_media"/>
                             </group>

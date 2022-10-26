@@ -24,9 +24,9 @@ Allows to contact directly the employee in case of unjustified absence.
         'views/hr_employee_views.xml',
         'data/mail_template_data.xml',
         'data/sms_data.xml',
+        'data/ir_cron.xml',
     ],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
-    'post_init_hook': 'post_init_hook'
+    'post_init_hook': 'post_init_hook',
+    'license': 'LGPL-3',
 }

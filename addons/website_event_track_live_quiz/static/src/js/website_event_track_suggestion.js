@@ -4,9 +4,6 @@ odoo.define('website_event_track_live_quiz.website_event_track_suggestion', func
 var WebsiteEventTrackSuggestion = require('website_event_track_live.website_event_track_suggestion');
 
 var WebsiteEventTrackSuggestionLiveQuiz = WebsiteEventTrackSuggestion.include({
-    xmlDependencies: WebsiteEventTrackSuggestion.prototype.xmlDependencies.concat([
-        '/website_event_track_live_quiz/static/src/xml/website_event_track_live_templates.xml',
-    ]),
     events: _.extend({}, WebsiteEventTrackSuggestion.prototype.events, {
         'click .owevent_track_suggestion_quiz': '_onQuizClick'
     }),

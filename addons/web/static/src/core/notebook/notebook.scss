@@ -1,0 +1,81 @@
+.o_notebook {
+    --notebook-margin-x: 0;
+    --notebook-padding-x: 0;
+    --notebook-link-border-color: transparent;
+    --notebook-link-border-color-active: #{$border-color};
+    --notebook-link-border-color-hover: #{$gray-200};
+    --notebook-link-border-color-active-accent: #{$border-color};
+
+    .o_notebook_headers {
+        margin: 0 var(--notebook-margin-x, 0);
+
+        @include media-breakpoint-down(md) {
+            overflow-x: auto;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    .nav {
+        padding: 0 var(--notebook-padding-x, 0);
+        background-color: $o-view-background-color;
+    }
+
+    .nav-item {
+        white-space: nowrap;
+        margin: 0 -1px 0 0;
+    }
+
+    .nav-link {
+        border-color: var(--notebook-link-border-color, transparent);
+
+        &.active {
+            &, &:hover, &:focus, &:active {
+                border-color: var(--notebook-link-border-color-active);
+                border-top-color: var(--notebook-link-border-color-active-accent, var(--notebook-link-border-color-active));
+                border-bottom-color: $o-view-background-color;
+            }
+        }
+
+        &:hover, &:focus, &:active {
+            outline: none;
+        }
+
+        &:hover {
+            border-color: var(--notebook-link-border-color-hover);
+        }
+    }
+
+    &.vertical {
+        .nav {
+            width: max-content;
+            border-bottom-color: transparent; // removing the width has weird side effect due to the negative margin
+        }
+
+        .nav-item {
+            margin: 0 0 -1px 0;
+
+            &:first-child .nav-link {
+                border-top-width: 0;
+            }
+
+            &:last-child .nav-link {
+                border-bottom-width: 0;
+            }
+        }
+
+        .nav-link {
+            margin-bottom: 0;
+
+            &.active {
+                &, &:hover, &:focus, &:active {
+                    border-color: var(--notebook-link-border-color-active);
+                    border-left-color: var(--notebook-link-border-color-active-accent, var(--notebook-link-border-color-active));
+                    border-right-color: $o-view-background-color;
+                }
+            }
+        }
+    }
+}

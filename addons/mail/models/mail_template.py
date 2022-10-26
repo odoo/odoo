@@ -4,9 +4,9 @@
 import base64
 import logging
 
-
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
+from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -14,9 +14,11 @@ _logger = logging.getLogger(__name__)
 class MailTemplate(models.Model):
     "Templates for sending email"
     _name = "mail.template"
-    _inherit = ['mail.render.mixin']
+    _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'Email Templates'
     _order = 'name'
+
+    _unrestricted_rendering = True
 
     @api.model
     def default_get(self, fields):
@@ -26,10 +28,19 @@ class MailTemplate(models.Model):
         return res
 
     # description
-    name = fields.Char('Name')
-    model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
+    name = fields.Char('Name', translate=True)
+    description = fields.Text(
+        'Template description', translate=True,
+        help="This field is used for internal description of the template's usage.")
+    active = fields.Boolean(default=True)
+    template_category = fields.Selection(
+        [('base_template', 'Base Template'),
+         ('hidden_template', 'Hidden Template'),
+         ('custom_template', 'Custom Template')],
+         compute="_compute_template_category", search="_search_template_category")
+    model_id = fields.Many2one('ir.model', 'Applies to')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
-    subject = fields.Char('Subject', translate=True, help="Subject (placeholders may be used here)")
+    subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
@@ -43,14 +54,14 @@ class MailTemplate(models.Model):
     partner_to = fields.Char('To (Partners)',
                              help="Comma-separated ids of recipient partners (placeholders may be used here)")
     email_cc = fields.Char('Cc', help="Carbon copy recipients (placeholders may be used here)")
-    reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")
+    reply_to = fields.Char('Reply To', help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread.")
     # content
-    body_html = fields.Html('Body', translate=True, sanitize=False)
+    body_html = fields.Html('Body', render_engine='qweb', translate=True, prefetch=True, sanitize=False)
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
                                            "emails created from this template")
-    report_name = fields.Char('Report Filename', translate=True,
+    report_name = fields.Char('Report Filename', translate=True, prefetch=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
@@ -58,7 +69,7 @@ class MailTemplate(models.Model):
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
-    scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
+    scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. You can use dynamic expression.")
     auto_delete = fields.Boolean(
         'Auto Delete', default=True,
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
@@ -66,6 +77,77 @@ class MailTemplate(models.Model):
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
+
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write',
+                               help='The current user can edit the template.')
+
+    # Overrides of mail.render.mixin
+    @api.depends('model')
+    def _compute_render_model(self):
+        for template in self:
+            template.render_model = template.model
+
+    @api.depends_context('uid')
+    def _compute_can_write(self):
+        writable_templates = self._filter_access_rules('write')
+        for template in self:
+            template.can_write = template in writable_templates
+
+    @api.depends('active', 'description')
+    def _compute_template_category(self):
+        """ Base templates (or master templates) are active templates having
+        a description and an XML ID. User defined templates (no xml id),
+        templates without description or archived templates are not
+        base templates anymore. """
+        deactivated = self.filtered(lambda template: not template.active)
+        if deactivated:
+            deactivated.template_category = 'hidden_template'
+        remaining = self - deactivated
+        if remaining:
+            template_external_ids = remaining.get_external_id()
+            for template in remaining:
+                if bool(template_external_ids[template.id]) and template.description:
+                    template.template_category = 'base_template'
+                elif bool(template_external_ids[template.id]):
+                    template.template_category = 'hidden_template'
+                else:
+                    template.template_category = 'custom_template'
+
+    @api.model
+    def _search_template_category(self, operator, value):
+        if operator in ['in', 'not in'] and isinstance(value, list):
+            value_templates = self.env['mail.template'].search([]).filtered(
+                lambda t: t.template_category in value
+            )
+            return [('id', operator, value_templates.ids)]
+
+        if operator in ['=', '!='] and isinstance(value, str):
+            value_templates = self.env['mail.template'].search([]).filtered(
+                lambda t: t.template_category == value
+            )
+            return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
+
+        raise NotImplementedError(_('Operation not supported'))
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    def _fix_attachment_ownership(self):
+        for record in self:
+            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+        return self
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super().create(vals_list)\
+            ._fix_attachment_ownership()
+
+    def write(self, vals):
+        super().write(vals)
+        self._fix_attachment_ownership()
+        return True
 
     def unlink(self):
         self.unlink_action()
@@ -163,7 +245,6 @@ class MailTemplate(models.Model):
         results = dict()
         for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
             for field in fields:
-                template = template.with_context(safe=(field == 'subject'))
                 generated_field_values = template._render_field(
                     field, template_res_ids,
                     post_process=(field == 'body_html')
@@ -178,6 +259,12 @@ class MailTemplate(models.Model):
                 values = results[res_id]
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
+                scheduled_date = values.pop('scheduled_date', None)
+                if 'scheduled_date' in fields and scheduled_date:
+                    parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+                    values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+
                 # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
@@ -196,18 +283,18 @@ class MailTemplate(models.Model):
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = report._render_qweb_pdf([res_id])
+                        result, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
                     else:
-                        res = report._render([res_id])
+                        res = self.env['ir.actions.report']._render(report, [res_id])
                         if not res:
                             raise UserError(_('Unsupported report type %s found.', report.report_type))
-                        result, format = res
+                        result, report_format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service
-                    ext = "." + format
+                    ext = "." + report_format
                     if not report_name.endswith(ext):
                         report_name += ext
                     attachments.append((report_name, result))
@@ -224,7 +311,8 @@ class MailTemplate(models.Model):
         records.check_access_rights('read')
         records.check_access_rule('read')
 
-    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
+    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
+                  email_layout_xmlid=False):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
 
@@ -233,7 +321,7 @@ class MailTemplate(models.Model):
             queue (recommended);
         :param dict email_values: update generated mail with those values to further
             customize the mail;
-        :param str notif_layout: optional notification layout to encapsulate the
+        :param str email_layout_xmlid: optional notification layout to encapsulate the
             generated email;
         :returns: id of the mail.mail that was created """
 
@@ -244,7 +332,13 @@ class MailTemplate(models.Model):
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
-        values = self.generate_email(res_id, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
+        values = self.generate_email(
+            res_id,
+            ['subject', 'body_html',
+             'email_from',
+             'email_cc', 'email_to', 'partner_to', 'reply_to',
+             'auto_delete', 'scheduled_date']
+        )
         values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
         values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})
@@ -254,21 +348,41 @@ class MailTemplate(models.Model):
         if 'email_from' in values and not values.get('email_from'):
             values.pop('email_from')
         # encapsulate body
-        if notif_layout and values['body_html']:
-            try:
-                template = self.env.ref(notif_layout, raise_if_not_found=True)
-            except ValueError:
-                _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
-            else:
-                record = self.env[self.model].browse(res_id)
-                template_ctx = {
-                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                    'model_description': self.env['ir.model']._get(record._name).display_name,
-                    'company': 'company_id' in record and record['company_id'] or self.env.company,
-                    'record': record,
-                }
-                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+        if email_layout_xmlid and values['body_html']:
+            record = self.env[self.model].browse(res_id)
+            model = self.env['ir.model']._get(record._name)
+
+            if self.lang:
+                lang = self._render_lang([res_id])[res_id]
+                model = model.with_context(lang=lang)
+
+            template_ctx = {
+                # message
+                'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                'subtype': self.env['mail.message.subtype'].sudo(),
+                # record
+                'model_description': model.display_name,
+                'record': record,
+                'record_name': False,
+                'subtitles': False,
+                # user / environment
+                'company': 'company_id' in record and record['company_id'] or self.env.company,
+                'email_add_signature': False,
+                'signature': '',
+                'website_url': '',
+                # tools
+                'is_html_empty': is_html_empty,
+            }
+            body = model.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
+            if not body:
+                _logger.warning(
+                    'QWeb template %s not found when sending template %s. Sending without layout.',
+                    email_layout_xmlid,
+                    self.name
+                )
+
+            values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+
         mail = self.env['mail.mail'].sudo().create(values)
 
         # manage attachments

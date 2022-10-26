@@ -1,0 +1,21 @@
+@mixin o-avatar-image-hover {
+    cursor: pointer;
+    filter: brightness(0.8);
+}
+
+.o_field_many2one_avatar_user,
+.o_field_many2one_avatar.o_clickable_m2x_avatar {
+    .o_m2o_avatar:hover {
+        @include o-avatar-image-hover;
+    }
+}
+
+.o_field_many2many_avatar_user,
+.o_field_many2manytags.avatar.o_clickable_m2x_avatar {
+    img.o_m2m_avatar {
+        margin-right: 2px;
+        &:hover {
+            @include o-avatar-image-hover;
+        }
+    }
+}

@@ -7,11 +7,11 @@ $o-w-rating-star-color: #FACC2E;
 .o_website_rating_card_container {
 
     .o_message_counter {
-        color: gray('700');
+        color: map-get($grays, '700');
     }
 
     /* progress bars */
-    table.o_website_rating_progress_table {
+    table.o_website_rating_table {
         width: 100%;
         overflow: visible;
 
@@ -19,13 +19,10 @@ $o-w-rating-star-color: #FACC2E;
             min-width: 50px;
             white-space: nowrap;
         }
-        .o_website_rating_select[style*="opacity: 1"] {
-            cursor: pointer;
-        }
         .o_website_rating_table_progress{
             min-width: 120px;
             > .progress {
-                margin-bottom: 5px;
+                margin-bottom: 2px;
                 margin-left: 5px;
                 margin-right: 5px;
             }
@@ -39,25 +36,28 @@ $o-w-rating-star-color: #FACC2E;
             font-size: $font-size-sm;
         }
         .o_website_rating_table_reset {
-            .o_website_rating_select_text {
-                visibility: hidden;
+            .o_website_rating_selection_reset {
+                color: $red;
             }
         }
+        .o_website_rating_table_row:not(o_website_rating_table_row_selected) {
+            cursor: pointer;
+        }
     }
-
 }
 
 /* Star Widget */
 .o_rating_star_card{
     margin-bottom: 5px;
     .stars {
-        display: inline-block;
+        display: inline-flex;
         color: #FACC2E;
         margin-right: 15px;
     }
 
     .stars i {
-        margin-right: -3px;
+        padding-right: 1px;
+        padding-left: 1px;
         text-align: center;
     }
 
@@ -83,5 +83,11 @@ $o-w-rating-star-color: #FACC2E;
 }
 
 .o_rating_popup_composer_label {
-    color: color-yiq(white);
+    color: color-contrast(white);
+}
+
+.o_portal_rating_chatter_messages {
+    /* Goal of min-height: push the footer out of the screen (in most use-case) to avoid seeing it moving when switching
+    the star filter when there are few messages */
+    min-height: 40vh;
 }

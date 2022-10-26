@@ -20,6 +20,7 @@ class TestEmptyDate(common.TransactionCase):
         self.assertEqual(gb, [{
             '__count': 3,
             '__domain': [('date', '=', False)],
+            '__range': {'date': False},
             'date': False,
             'value': 6
         }])
@@ -34,6 +35,7 @@ class TestEmptyDate(common.TransactionCase):
         self.assertEqual(gb, [{
             '__count': 3,
             '__domain': [('date', '=', False)],
+            '__range': {'date:quarter': False},
             'date:quarter': False,
             'value': 6
         }])
@@ -49,11 +51,13 @@ class TestEmptyDate(common.TransactionCase):
         self.assertSequenceEqual(sorted(gb, key=lambda r: r['date'] or ''), [{
             '__count': 2,
             '__domain': [('date', '=', False)],
+            '__range': {'date': False},
             'date': False,
             'value': 3,
         }, {
             '__count': 2,
             '__domain': ['&', ('date', '>=', '1916-12-01'), ('date', '<', '1917-01-01')],
+            '__range': {'date': {'from': '1916-12-01', 'to': '1917-01-01'}},
             'date': 'December 1916',
             'value': 7,
         }])

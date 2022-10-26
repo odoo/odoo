@@ -21,6 +21,13 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._popoverRPC = null;
+        this._onVisibilityChange = this._onVisibilityChange.bind(this);
+    },
+    /**
+     * @override
+     */
+    willStart() {
+        return Promise.all([this._super.apply(this, arguments), this._updateCartQuantityValue()]);
     },
     /**
      * @override
@@ -35,9 +42,18 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             },
             container: 'body',
             placement: 'auto',
-            template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+            template: '<div class="popover mycart-popover" role="tooltip"><div class="tooltip-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
         });
+        window.addEventListener('visibilitychange', this._onVisibilityChange);
+        this._updateCartQuantityText();
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        window.removeEventListener('visibilitychange', this._onVisibilityChange);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -49,21 +65,27 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = true;
         clearTimeout(timeout);
         $(this.selector).not(ev.currentTarget).popover('hide');
         timeout = setTimeout(function () {
-            if (!self.$el.is(':hover') || $('.mycart-popover:visible').length) {
+            if (!self.hovered || $('.mycart-popover:visible').length) {
                 return;
             }
             self._popoverRPC = $.get("/shop/cart", {
                 type: 'popover',
             }).then(function (data) {
-                self.$el.data("bs.popover").config.content = data;
+                const popover = Popover.getInstance(self.$el[0]);
+                popover._config.content = data;
+                popover.setContent(popover.getTipElement());
                 self.$el.popover("show");
                 $('.popover').on('mouseleave', function () {
                     self.$el.trigger('mouseleave');
                 });
+                self.cartQty = +$(data).find('.o_wsale_cart_quantity').text();
+                sessionStorage.setItem('website_sale_cart_quantity', self.cartQty);
+                self._updateCartQuantityText();
             });
         }, 300);
     },
@@ -72,7 +94,8 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = false;
         setTimeout(function () {
             if ($('.popover:hover').length) {
                 return;
@@ -101,19 +124,50 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             });
         }
     },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onVisibilityChange(ev) {
+        if (ev.target.visibilityState === 'visible'){
+            this._updateCartQuantityValue().then(this._updateCartQuantityText.bind(this));
+        }
+    },
+    /**
+     * @private
+     */
+    async _updateCartQuantityValue() {
+        if ('website_sale_cart_quantity' in sessionStorage) {
+            this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
+        }
+        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
+            return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
+                this.cartQty = cartQty;
+                sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
+            });
+        }
+    },
+    /**
+     * @private
+     */
+    _updateCartQuantityText() {
+        if (this.cartQty !== undefined) {
+            this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
+        }
+    }
 });
 });
 
-odoo.define('website_sale.website_sale_category', function (require) {
+odoo.define('website_sale.website_sale_offcanvas', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
 
-publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
-    selector: '#o_shop_collapse_category',
+publicWidget.registry.websiteSaleOffcanvas = publicWidget.Widget.extend({
+    selector: '#o_wsale_offcanvas',
     events: {
-        'click .fa-chevron-right': '_onOpenClick',
-        'click .fa-chevron-down': '_onCloseClick',
+        'show.bs.offcanvas': '_toggleFilters',
+        'hidden.bs.offcanvas': '_toggleFilters',
     },
 
     //--------------------------------------------------------------------------
@@ -121,23 +175,17 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Unfold active filters, fold inactive ones
+     *
      * @private
      * @param {Event} ev
      */
-    _onOpenClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().siblings().find('.fa-chevron-down:first').click();
-        $fa.parents('li').find('ul:first').show('normal');
-        $fa.toggleClass('fa-chevron-down fa-chevron-right');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().find('ul:first').hide('normal');
-        $fa.toggleClass('fa-chevron-down fa-chevron-right');
+    _toggleFilters: function (ev) {
+        for (const btn of this.el.querySelectorAll('button[data-status]')) {
+            if(btn.classList.contains('collapsed') && btn.dataset.status == "active" || ! btn.classList.contains('collapsed') && btn.dataset.status == "inactive" ) {
+                btn.click();
+            }
+        }
     },
 });
 });
@@ -148,13 +196,15 @@ odoo.define('website_sale.website_sale', function (require) {
 var core = require('web.core');
 var config = require('web.config');
 var publicWidget = require('web.public.widget');
-var VariantMixin = require('sale.VariantMixin');
+var VariantMixin = require('website_sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 require("web.zoomodoo");
 const {extraMenuUpdateCallbacks} = require('website.content.menu');
 const dom = require('web.dom');
-
+const { cartesian } = require('@web/core/utils/arrays');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { ProductImageViewerWrapper } = require("@website_sale/js/components/website_sale_image_viewer");
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -177,7 +227,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
-        'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
+        'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
     }),
 
@@ -228,6 +278,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         this.getRedirectOption();
         return def;
     },
+    destroy() {
+        this._super.apply(this, arguments);
+        this._cleanupZoom();
+    },
     /**
      * The selector is different when using list view of variants.
      *
@@ -277,7 +331,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         var attributeIds = _.map($attributes, function (elem) {
             return $(elem).data('value_id');
         });
-        history.replaceState(undefined, undefined, '#attr=' + attributeIds.join(','));
+        window.location.hash = 'attr=' + attributeIds.join(',');
     },
     /**
      * Set the checked values active.
@@ -319,24 +373,17 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 $input.trigger('change');
                 return;
             }
+            sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }
-            wSaleUtils.updateCartNavBar(data);
             $input.val(data.quantity);
-            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
+            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
-            if (data.warning) {
-                var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                if (cart_alert.length === 0) {
-                    $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
-                }
-                else {
-                    cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
-                }
-                $input.val(data.quantity);
-            }
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showWarning(data.warning);
+            // Propagating the change to the express checkout forms
+            core.bus.trigger('cart_amount_changed', data.amount, data.minor_amount);
         });
     },
     /**
@@ -417,38 +464,97 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             return VariantMixin._getProductId.apply(this, arguments);
         }
     },
+    _getProductImageLayout: function () {
+        return document.querySelector("#product_detail_main").dataset.image_layout;
+    },
+    _getProductImageWidth: function () {
+        return document.querySelector("#product_detail_main").dataset.image_width;
+    },
+    _getProductImageContainerSelector: function () {
+        return {
+            'carousel': "#o-carousel-product",
+            'grid': "#o-grid-product",
+        }[this._getProductImageLayout()];
+    },
+    _getProductImageContainer: function () {
+        return document.querySelector(this._getProductImageContainerSelector());
+    },
+    _isEditorEnabled() {
+        return document.body.classList.contains("editor_enable");
+    },
     /**
      * @private
      */
     _startZoom: function () {
-        // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
-        if (!config.device.isMobile) {
-            var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
-            attach = '#o-carousel-product';
-            _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
-                onImageLoaded(el, function () {
-                    var $img = $(el);
-                    $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
-                    $img.attr('data-zoom', 1);
-                });
-            });
+        // Do not activate image zoom on hover for mobile devices
+        const salePage = document.querySelector(".o_wsale_product_page");
+        if (!salePage || config.device.mobile || this._getProductImageWidth() === "none") {
+            return;
         }
-
-        function onImageLoaded(img, callback) {
-            // On Chrome the load event already happened at this point so we
-            // have to rely on complete. On Firefox it seems that the event is
-            // always triggered after this so we can rely on it.
-            //
-            // However on the "complete" case we still want to keep listening to
-            // the event because if the image is changed later (eg. product
-            // configurator) a new load event will be triggered (both browsers).
-            $(img).on('load', function () {
-                callback();
-            });
-            if (img.complete) {
-                callback();
+        this._cleanupZoom();
+        this.zoomCleanup = [];
+        // Zoom on hover
+        if (salePage.dataset.ecomZoomAuto) {
+            const images = salePage.querySelectorAll("img[data-zoom]");
+            for (const image of images) {
+                const $image = $(image);
+                const callback = () => {
+                    $image.zoomOdoo({
+                        event: "mouseenter",
+                        attach: this._getProductImageContainerSelector(),
+                        preventClicks: salePage.dataset.ecomZoomClick,
+                        attachToTarget: this._getProductImageLayout() === "grid",
+                    });
+                    image.dataset.zoom = 1;
+                };
+                image.addEventListener('load', callback);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener('load', callback);
+                    const zoomOdoo = $image.data("zoomOdoo");
+                    if (zoomOdoo) {
+                        zoomOdoo.hide();
+                        $image.unbind();
+                    }
+                });
+                if (image.complete) {
+                    callback();
+                }
             }
         }
+        // Zoom on click
+        if (salePage.dataset.ecomZoomClick) {
+            // In this case we want all the images not just the ones that are "zoomables"
+            const images = salePage.querySelectorAll(".product_detail_img");
+            for (const image of images ) {
+                const handler = () => {
+                    if (salePage.dataset.ecomZoomAuto) {
+                        // Remove any flyout
+                        const flyouts = document.querySelectorAll(".zoomodoo-flyout");
+                        for (const flyout of flyouts) {
+                            flyout.remove();
+                        }
+                    }
+                    const dialog = new ComponentWrapper(this, ProductImageViewerWrapper, {
+                        selectedImageIdx: [...images].indexOf(image),
+                        images,
+                    });
+                    dialog.mount(document.body);
+                };
+                image.addEventListener("click", handler);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener("click", handler);
+                });
+            }
+        }
+    },
+    _cleanupZoom() {
+        if (!this.zoomCleanup || !this.zoomCleanup.length) {
+            return;
+        }
+        for (const cleanup of this.zoomCleanup) {
+            cleanup();
+        }
+        this.zoomCleanup = undefined;
     },
     /**
      * On website, we display a carousel instead of only one image
@@ -456,22 +562,24 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newCarousel, isCombinationPossible) {
-        var $carousel = $productContainer.find('#o-carousel-product');
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
+        let $images = $productContainer.find(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if (window.location.search.indexOf('enable_editor') === -1) {
-            var $newCarousel = $(newCarousel);
-            $carousel.after($newCarousel);
-            $carousel.remove();
-            $carousel = $newCarousel;
-            $carousel.carousel(0);
+        if ($images.length && !this._isEditorEnabled()) {
+            const $newImages = $(newImages);
+            $images.after($newImages);
+            $images.remove();
+            $images = $newImages;
+            if ($images.attr('id') === 'o-carousel-product') {
+                $images.carousel(0);
+            }
             this._startZoom();
             // fix issue with carousel height
-            this.trigger_up('widgets_start_request', {$target: $carousel});
+            this.trigger_up('widgets_start_request', {$target: $images});
         }
-        $carousel.toggleClass('css_not_available', !isCombinationPossible);
+        $images.toggleClass('css_not_available', !isCombinationPossible);
     },
     /**
      * @private
@@ -479,8 +587,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this.getCartHandlerOptions(ev);
-        return this._handleAdd($(ev.currentTarget).closest('form'));
+        var def = () => {
+            this.getCartHandlerOptions(ev);
+            return this._handleAdd($(ev.currentTarget).closest('form'));
+        };
+        if ($('.js_add_cart_variants').children().length) {
+            return this._getCombinationInfo(ev).then(() => {
+                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+            });
+        }
+        return def();
     },
     /**
      * Initializes the optional products modal
@@ -507,15 +623,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
         return productReady.then(function (productId) {
             $form.find(productSelector.join(', ')).val(productId);
-
-            self.rootProduct = {
-                product_id: productId,
-                quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
-                product_custom_attribute_values: self.getCustomVariantValues($form.find('.js_product')),
-                variant_values: self.getSelectedVariantValues($form.find('.js_product')),
-                no_variant_attribute_values: self.getNoVariantAttributeValues($form.find('.js_product'))
-            };
-
+            self._updateRootProduct($form, productId);
             return self._onProductReady();
         });
     },
@@ -533,18 +641,26 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @returns {Promise}
      */
     _submitForm: function () {
-        let params = this.rootProduct;
-        params.add_qty = params.quantity;
+        const params = this.rootProduct;
 
+        const $product = $('#product_detail');
+        const productTrackingInfo = $product.data('product-tracking-info');
+        if (productTrackingInfo) {
+            productTrackingInfo.quantity = params.quantity;
+            $product.trigger('add_to_cart_event', [productTrackingInfo]);
+        }
+
+        params.add_qty = params.quantity;
         params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
         params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
-        this.addToCart(params);
+        delete params.quantity;
+        return this.addToCart(params);
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAddCartJSON: function (ev){
+    _onClickAddCartJSON: function (ev) {
         this.onClickAddCartJSON(ev);
     },
     /**
@@ -601,13 +717,13 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             ev.preventDefault();
             $aSubmit.closest('form').submit();
         }
-        if ($aSubmit.hasClass('a-submit-disable')){
+        if ($aSubmit.hasClass('a-submit-disable')) {
             $aSubmit.addClass("disabled");
         }
-        if ($aSubmit.hasClass('a-submit-loading')){
+        if ($aSubmit.hasClass('a-submit-loading')) {
             var loading = '<span class="fa fa-cog fa-spin"/>';
             var fa_span = $aSubmit.find('span[class*="fa"]');
-            if (fa_span.length){
+            if (fa_span.length) {
                 fa_span.replaceWith(loading);
             } else {
                 $aSubmit.append(loading);
@@ -621,6 +737,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
+            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
             $(ev.currentTarget).closest("form").submit();
         }
     },
@@ -644,7 +761,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @param {Event} ev
      */
     _onClickShowCoupon: function (ev) {
-        $(ev.currentTarget).hide();
+        $(".show_coupon").hide();
         $('.coupon_form').removeClass('d-none');
     },
     /**
@@ -723,20 +840,58 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     /**
      * @private
      */
+    _isValidCombination(combination, attributeExclusions) {
+        if (attributeExclusions.exclusions) {
+            for (const attribute of combination) {
+                if (!attributeExclusions.exclusions.hasOwnProperty(attribute)) {
+                    continue;
+                }
+                for (const excludedAttribute of attributeExclusions.exclusions[attribute]) {
+                    if (combination.includes(excludedAttribute)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        if (attributeExclusions.archived_combination) {
+            for (const archivedCombination of attributeExclusions.archived_combination) {
+                if (archivedCombination.length !== combination.length) {
+                    continue;
+                }
+                if (archivedCombination.filter((attr) => combination.includes(attr)).length === combination.length) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    },
+    /**
+     * @private
+     */
     _applyHashFromSearch() {
         const params = $.deparam(window.location.search.slice(1));
         if (params.attrib) {
-            const dataValueIds = [];
-            for (const attrib of [].concat(params.attrib)) {
-                const attribSplit = attrib.split('-');
-                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
+            const attributeValuesPerAttribute = {};
+            for (const attrib of params.attrib) {
+                const [ptalId, ptavId] = attrib.split('-');
+                const attribValueSelector = `.js_variant_change[name="ptal-${ptalId}"][value="${ptavId}"]`;
                 const attribValue = this.el.querySelector(attribValueSelector);
                 if (attribValue !== null) {
-                    dataValueIds.push(attribValue.dataset.value_id);
+                    if (!attributeValuesPerAttribute[ptalId]) {
+                        attributeValuesPerAttribute[ptalId] = [];
+                    }
+                    attributeValuesPerAttribute[ptalId].push(ptavId);
                 }
             }
-            if (dataValueIds.length) {
-                history.replaceState(undefined, undefined, `#attr=${dataValueIds.join(',')}`);
+            const attributeSelection = this.el.querySelector('.js_add_cart_variants');
+            const attributeExclusions = attributeSelection && JSON.parse(attributeSelection.dataset.attribute_exclusions);
+            if (attributeExclusions && Object.values(attributeValuesPerAttribute).length > 1) {
+                const allCombinations = cartesian(...Object.values(attributeValuesPerAttribute));
+                const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
+
+                if (selectedCombination && selectedCombination.length) {
+                    window.location.hash = `attr=${selectedCombination.join(',')}`;
+                }
             }
         }
         this._applyHash();
@@ -747,13 +902,33 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onClickReviewsLink: function () {
         $('#o_product_page_reviews_content').collapse('show');
     },
+
+    // -------------------------------------
+    // Utils
+    // -------------------------------------
+    /**
+     * Update the root product during an Add process.
+     *
+     * @private
+     * @param {Object} $form
+     * @param {Number} productId
+     */
+    _updateRootProduct($form, productId) {
+        this.rootProduct = {
+            product_id: productId,
+            quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
+            product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
+            variant_values: this.getSelectedVariantValues($form.find('.js_product')),
+            no_variant_attribute_values: this.getNoVariantAttributeValues($form.find('.js_product'))
+        };
+    },
 });
 
 publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     disabledInEditableMode: false,
     events: {
-        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
+        'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
     },
 
     //--------------------------------------------------------------------------
@@ -765,24 +940,38 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onApplyShopLayoutChange: function (ev) {
-        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        const wysiwyg = this.options.wysiwyg;
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
+        }
+        var clickedValue = $(ev.target).val();
+        var isList = clickedValue === 'list';
         if (!this.editableMode) {
             this._rpc({
                 route: '/shop/save_shop_layout_mode',
                 params: {
-                    'layout_mode': switchToList ? 'list' : 'grid',
+                    'layout_mode': isList ? 'list' : 'grid',
                 },
             });
         }
+
+        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
+            activeClasses.map(c => btn.classList.toggle(c));
+        });
+
         var $grid = this.$('#products_grid');
         // Disable transition on all list elements, then switch to the new
         // layout then reenable all transitions after having forced a redraw
         // TODO should probably be improved to allow disabling transitions
         // altogether with a class/option.
         $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        $grid.toggleClass('o_wsale_layout_list', isList);
         void $grid[0].offsetWidth;
         $grid.find('*').css('transition', '');
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
+        }
     },
 });
 
@@ -881,7 +1070,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     /**
      * Center the selected indicator to scroll the indicators list when it
      * overflows.
-     * 
+     *
      * @private
      * @param {Event} ev
      */
@@ -891,7 +1080,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         const $indicatorsDiv = isLeftIndicators ? this.$target.find('.o_carousel_product_indicators') : this.$target.find('.carousel-indicators');
         let indicatorIndex = $(ev.relatedTarget).index();
         indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$target.find('li.active').index();
-        const $indicator = $indicatorsDiv.find('[data-slide-to=' + indicatorIndex + ']');
+        const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
         const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
         const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
         const indicatorPosition = isLeftIndicators && !isReversed ? $indicator.position().top : $indicator.position().left;
@@ -959,6 +1148,51 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      */
     _updateChatterComposerPosition() {
         this.$target.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
+    },
+});
+
+return {
+    WebsiteSale: publicWidget.registry.WebsiteSale,
+    WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
+    websiteSaleCart: publicWidget.registry.websiteSaleCart,
+    WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
+    WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
+};
+
+});
+
+odoo.define('website_sale.price_range_option', function (require) {
+'use strict';
+
+const publicWidget = require('web.public.widget');
+
+publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
+    selector: '.o_wsale_products_page',
+    events: {
+        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
+    },
+
+    //----------------------------------------------------------------------
+    // Handlers
+    //----------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onPriceRangeSelected(ev) {
+        const range = ev.currentTarget;
+        const search = $.deparam(window.location.search.substring(1));
+        delete search.min_price;
+        delete search.max_price;
+        if (parseFloat(range.min) !== range.valueLow) {
+            search['min_price'] = range.valueLow;
+        }
+        if (parseFloat(range.max) !== range.valueHigh) {
+            search['max_price'] = range.valueHigh;
+        }
+        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+        window.location.search = $.param(search);
     },
 });
 });

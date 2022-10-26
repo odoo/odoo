@@ -12,9 +12,9 @@ for customization purpose.
     'category': 'Hidden/Tools',
     'depends': ['web'],
     'installable': True,
-    'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
         'views/base_import_module_view.xml'
     ],
+    'license': 'LGPL-3',
 }

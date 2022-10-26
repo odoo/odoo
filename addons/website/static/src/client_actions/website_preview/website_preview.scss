@@ -1,0 +1,94 @@
+@mixin o-iframe-position($height) {
+    // TODO review this, this should not be needed as we want the iframe to
+    // be centered and potentially respect its aspect ratio whatever the size.
+    $width: $height * (9 / 16);
+    height: $height;
+    width: $width;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.o_website_preview {
+    position: relative;
+    height: 100%;
+    transition: margin-right ease 400ms;
+
+    &.editor_enable.editor_has_snippets {
+        margin-right: $o-we-sidebar-width !important;
+    }
+
+    &.o_is_blocked {
+        pointer-events: none;
+    }
+
+    .o_iframe_container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        iframe {
+            position: absolute;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &.o_is_mobile {
+        .o_we_website_top_actions button[data-action="mobile"] span.fa {
+            color: $o-we-color-success;
+        }
+
+        .o_iframe_container {
+            @extend %o-mobile-phone;
+            @include media-breakpoint-up(md) {
+                @media(max-height: calc(800px + #{$o-navbar-height})) {
+                    // Below this height, we decrease the size of the mobile
+                    // preview (see in website.backend.scss) so we have to make
+                    // the image take the same size as its parent.
+                    div.o_mobile_preview_layout > img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_we_website_top_actions button[data-action="mobile"], .o_mobile_preview {
+    span.fa {
+        font-size: 20px;
+    }
+}
+
+.o_website_fullscreen {
+    .o_website_preview.editor_enable.editor_has_snippets {
+        margin-right: 0 !important;
+    }
+}
+
+.o_website_fullscreen, .editor_has_snippets, .editor_has_dummy_snippets {
+    header {
+        .o_main_navbar {
+            height: 0px;
+            transform: translateY(-$o-navbar-height);
+            border-bottom: 0px;
+        }
+    }
+
+    .o_block_preview {
+        z-index: $zindex-modal-backdrop + 1 !important;
+    }
+}
+
+header {
+    .o_main_navbar {
+        transition: transform 400ms ease, height 400ms ease, border-bottom 400ms ease;
+    }
+}
+
+.o_block_preview {
+    z-index: $zindex-dropdown - 1 !important;
+}

@@ -9,11 +9,11 @@ class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
-    def _dispatch(cls):
-        # add signup token or login to the session if given
-        if 'auth_signup_token' in request.params:
-            request.session['auth_signup_token'] = request.params['auth_signup_token']
-        if 'auth_login' in request.params:
-            request.session['auth_login'] = request.params['auth_login']
+    def _pre_dispatch(cls, rule, args):
+        super()._pre_dispatch(rule, args)
 
-        return super(Http, cls)._dispatch()
+        # add signup token or login to the session if given
+        for key in ('auth_signup_token', 'auth_login'):
+            val = request.httprequest.args.get(key)
+            if val is not None:
+                request.session[key] = val

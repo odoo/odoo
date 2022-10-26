@@ -5,15 +5,17 @@
     <t t-set="no_header" t-value="option_widescreen"/>
     <t t-set="no_footer" t-value="option_widescreen"/>
     <t t-call="website_event.layout">
-        <div class="o_wevent_online o_wevent_online_bg o_wemeet_index">
+        <div class="o_wevent_online o_wemeet_index">
             <!-- Options -->
             <t t-set="option_widescreen" t-value="option_widescreen or False"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
-                <div class="row mb-5 mx-0">
-                    <t t-call="website_event_meet.meeting_room_aside"/>
+                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not meeting_rooms_other else '')">
+                    <t t-if="meeting_rooms_other">
+                        <t t-call="website_event_meet.meeting_room_aside"/>
+                    </t>
                     <t t-call="website_event_meet.meeting_room_main"/>
                 </div>
             </div>
@@ -28,28 +30,31 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_main" name="Meeting Room: Main Content">
-    <div t-att-class="'col-12 o_wevent_online_page_main o_wemeet_room_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+    <div t-att-class="'col-12 o_wemeet_room_main o_wevent_theme_bg_base border mt-3 p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not meeting_room.event_id.is_ongoing">
             <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
-                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/> is over.
+                The event <span t-out="meeting_room.event_id.name" class="fw-bold"/> is over.
                 <br/>
-                <span>Join us next time to chat about <b t-esc="meeting_room.name"/>!</span>
+                <span>Join us next time to chat about <b t-out="meeting_room.name"/>!</span>
             </div>
             <div t-else="" class="alert alert-warning text-center">
-                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
+                The event <span t-out="meeting_room.event_id.name" class="fw-bold"/>
                 <span t-if="meeting_room.event_id.start_today">
                     starts in
-                    <span t-esc="meeting_room.event_id.start_remaining"
-                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
+                    <span t-if="meeting_room.event_id.start_remaining &gt;= 1" t-out="meeting_room.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
+                    <t t-else="">
+                        a few seconds
+                    </t>.
                 </span>
                 <span class="my-0" t-else="meeting_room.event_id.start_today">
                     starts on
                     <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
-                        t-options="{'format': 'medium'}"/> (<t t-esc="meeting_room.event_id.date_tz"/>).
+                        t-options="{'format': 'medium'}"/> (<t t-out="meeting_room.event_id.date_tz"/>).
                 </span>
                 <br/>
-                <span>Join us there to chat about <b t-esc="meeting_room.name"/> !</span>
+                <span>Join us there to chat about <b t-out="meeting_room.name"/> !</span>
             </div>
         </t>
         <!-- ROOM CONTENT -->
@@ -60,7 +65,7 @@
             <div t-else="" class="d-flex flex-column">
                 <div id="o_wemeet_jitsi_iframe">
                     <div class="o_wjitsi_chat_room_loading position-absolute w-100 text-center text-muted">
-                        <i class="fa fa-spin fa-spinner mr-3"/>
+                        <i class="fa fa-spin fa-circle-o-notch me-3"/>
                         <span>Loading your room...</span>
                     </div>
                 </div>
@@ -81,11 +86,12 @@
         </div>
         <!-- ROOM DESCRIPTION -->
         <div class="mx-3">
-            <span class="h5 d-inline-block mt-3 mb-1" t-esc="meeting_room.name"/>
-            <br/>
-            <span class="text-muted">A chat among <span class="font-weight-bold" t-esc="meeting_room.target_audience"/></span>
+            <div class="h5 my-3" t-out="meeting_room.name"/>
+            <div t-if="meeting_room.room_participant_count > 0" class="text-muted mb-3">
+                A chat among <t t-out="meeting_room.room_participant_count"/> <span class="fw-bold" t-out="meeting_room.target_audience"/>
+            </div>
         </div>
-        <hr class="mt-2 mb-0"/>
+        <hr class="my-0"/>
         <div t-field="meeting_room.summary" class="my-2 mx-3 oe_no_empty"/>
      </div>
 </template>
@@ -95,11 +101,11 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_aside" name="Meeting Room: Aside">
-    <div t-att-class="'col-12 pl-0 pr-0 pr-md-3 o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
-        <div class="bg-white o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between mx-2 py-1">
-                <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other Rooms</span>
-                <a href="#collapse_meet_room_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
+    <div t-att-class="'col-12 mt-3 ps-0 pe-0 border o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="o_wevent_online_page_aside_content">
+            <div class="d-flex align-items-center justify-content-between me-2">
+                <span class="h5 m-3">Other Rooms</span>
+                <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
                     <i class="fa fa-chevron-down d-lg-none"/>
                 </a>
             </div>
@@ -108,14 +114,14 @@
                     <a class="d-block w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
                         <div class="flex-grow-1 mw-100">
-                            <div class="text-truncate" t-esc="meeting_room_other.name"/>
-                            <span class="text-muted" t-esc="meeting_room_other.summary"></span>
+                            <div class="text-truncate" t-out="meeting_room_other.name"/>
+                            <span class="text-muted" t-out="meeting_room_other.summary"></span>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="text-muted">
                                     <b>&amp;#9900;&amp;nbsp;</b>
-                                    <small><t t-esc="meeting_room_other.room_participant_count"/> <t t-esc="meeting_room_other.target_audience"/></small>
+                                    <small><t t-out="meeting_room_other.room_participant_count"/> <t t-out="meeting_room_other.target_audience"/></small>
                                 </div>
-                                <small t-if="meeting_room_other.room_lang_id" class="text-muted"><i class="fa fa-globe"/> <t t-esc="meeting_room_other.room_lang_id.name"/></small>
+                                <small t-if="meeting_room_other.room_lang_id" class="text-muted"><i class="fa fa-globe"/> <t t-out="meeting_room_other.room_lang_id.name"/></small>
                             </div>
                         </div>
                     </a>

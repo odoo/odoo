@@ -51,3 +51,10 @@ Yennifer Santiago yennifer@vauxoo.com https://github.com/ysantiago
 Randall Castro randall@vauxoo.com https://github.com/randall-vx
 Alejandro Santillan asantillan@vauxoo.com https://github.com/R4Alex
 Williams Estrada williams@vauxoo.com https://github.com/WR-96
+Fernanda Hernández fernanda@vauxoo.com https://github.com/fernandahf
+Luigys Toro luigys@vauxoo.com https://github.com/desdelinux
+Francisco J. Luna fluna@vauxoo.com https://github.com/frahikLV
+Andrea Arce andrea@vauxoo.com https://github.com/andreaarce
+Francisco Alejandro González Luna aluna@vauxoo.com https://github.com/TheAlekLuna
+Juan Benavente jbenavente@vauxoo.com https://github.com/jjbenavaz
+Alejandro Garza agarza@vauxoo.com https://github.com/agarzaarvizu

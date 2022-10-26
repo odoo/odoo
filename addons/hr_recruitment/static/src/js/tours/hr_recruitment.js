@@ -1,24 +1,25 @@
 odoo.define('hr_recruitment.tour', function(require) {
 "use strict";
 
-var core = require('web.core');
+const {_t} = require('web.core');
+const {Markup} = require('web.utils');
 var tour = require('web_tour.tour');
 
-var _t = core._t;
+const { markup } = owl;
 
 tour.register('hr_recruitment_tour',{
     url: "/web",
-    rainbowManMessage: _t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>"),
+    rainbowManMessage: markup(_t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>")),
     fadeout: 'very_slow',
     sequence: 230,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
-    content: _t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>."),
+    content: Markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     position: 'right',
     edition: 'community'
 }, {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
-    content: _t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>."),
+    content: Markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     position: 'bottom',
     edition: 'enterprise'
 }, {
@@ -62,24 +63,24 @@ tour.register('hr_recruitment_tour',{
 }, {
     trigger: ".oe_kanban_action_button",
     extra_trigger: '.o_hr_recruitment_kanban',
-    content: _t("<b>Did you apply by sending an email?</b> Check incoming applications."),
+    content: Markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
     position: "bottom"
 }, {
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',
-    content: _t("<b>Drag this card</b>, to qualify him for a first interview."),
+    content: Markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
     position: "bottom",
     run: "drag_and_drop .o_kanban_group:eq(1) ",
 }, {
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',
-    content: _t("<b>Click to view</b> the application."),
+    content: Markup(_t("<b>Click to view</b> the application.")),
     position: "bottom",
     width: 195
 }, {
     trigger: ".o_Chatter .o_ChatterTopbar_buttonSendMessage",
     extra_trigger: '.o_applicant_form',
-    content: _t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>"),
+    content: Markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     position: "bottom"
 }, {
     trigger: ".o_Chatter .o_Composer_buttonSend",

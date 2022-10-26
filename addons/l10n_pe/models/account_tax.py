@@ -26,6 +26,12 @@ class AccountTax(models.Model):
         help="Follow the UN/ECE 5305 standard from the United Nations Economic Commission for Europe for more "
              "information http://www.unece.org/trade/untdid/d08a/tred/tred5305.htm"
     )
+    l10n_pe_edi_isc_type = fields.Selection([
+        ('01', 'System to value'),
+        ('02', 'Application of the Fixed Amount'),
+        ('03', 'Retail Price System'),
+    ], 'ISC Type',
+        help='Used in Selective Consumption Tax to indicate the type of calculation for the ISC.')
 
 
 class AccountTaxTemplate(models.Model):
@@ -52,11 +58,18 @@ class AccountTaxTemplate(models.Model):
         help="Follow the UN/ECE 5305 standard from the United Nations Economic Commission for Europe for more "
              "information  http://www.unece.org/trade/untdid/d08a/tred/tred5305.htm"
     )
+    l10n_pe_edi_isc_type = fields.Selection([
+        ('01', 'System to value'),
+        ('02', 'Application of the Fixed Amount'),
+        ('03', 'Retail Price System'),
+    ], 'ISC Type',
+        help='Used in Selective Consumption Tax to indicate the type of calculation for the ISC.')
 
     def _get_tax_vals(self, company, tax_template_to_tax):
         val = super()._get_tax_vals(company, tax_template_to_tax)
         val.update({
             'l10n_pe_edi_tax_code': self.l10n_pe_edi_tax_code,
             'l10n_pe_edi_unece_category': self.l10n_pe_edi_unece_category,
+            'l10n_pe_edi_isc_type': self.l10n_pe_edi_isc_type,
         })
         return val

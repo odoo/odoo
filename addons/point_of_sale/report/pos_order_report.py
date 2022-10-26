@@ -35,6 +35,7 @@ class PosOrderReport(models.Model):
     pos_categ_id = fields.Many2one('pos.category', string='PoS Category', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
+    margin = fields.Float(string='Margin', readonly=True)
 
     def _select(self):
         return """
@@ -64,7 +65,8 @@ class PosOrderReport(models.Model):
                 pt.pos_categ_id,
                 s.pricelist_id,
                 s.session_id,
-                s.account_move IS NOT NULL AS invoiced
+                s.account_move IS NOT NULL AS invoiced,
+                SUM(l.price_subtotal - l.total_cost / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin
         """
 
     def _from(self):

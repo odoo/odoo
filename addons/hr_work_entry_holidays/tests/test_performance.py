@@ -31,7 +31,7 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
         self.richard_emp.generate_work_entries(date(2018, 1, 1), date(2018, 1, 2))
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
 
-        with self.assertQueryCount(__system__=92, admin=99):
+        with self.assertQueryCount(__system__=93, admin=94):
             leave.action_validate()
         leave.action_refuse()
 
@@ -40,14 +40,14 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
     def test_performance_leave_write(self):
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
 
-        with self.assertQueryCount(__system__=24, admin=24):
+        with self.assertQueryCount(__system__=21, admin=30):
             leave.date_to = datetime(2018, 1, 1, 19, 0)
         leave.action_refuse()
 
     @users('__system__', 'admin')
     @warmup
     def test_performance_leave_create(self):
-        with self.assertQueryCount(__system__=28, admin=59):
+        with self.assertQueryCount(__system__=28, admin=29):  # 25/26 com
             leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
         leave.action_refuse()
 
@@ -56,9 +56,9 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
     def test_performance_leave_confirm(self):
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
         leave.action_draft()
-        with self.assertQueryCount(__system__=22, admin=55):
+        with self.assertQueryCount(__system__=25, admin=26):
             leave.action_confirm()
-        leave.state = 'cancel'
+        leave.state = 'refuse'
 
 
 @tagged('work_entry_perf')
@@ -74,6 +74,7 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
             'request_unit': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
+            'requires_allocation': 'no',
         })
 
         cls.employees = cls.env['hr.employee'].create([{
@@ -96,7 +97,9 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
             'name': 'Holiday - %s' % employee.name,
             'employee_id': employee.id,
             'holiday_status_id': cls.paid_time_off.id,
+            'date_from': date(2020, 8, 3),
             'request_date_from': date(2020, 8, 3),
+            'date_to': date(2020, 8, 7),
             'request_date_to': date(2020, 8, 7),
             'number_of_days': 5,
         } for employee in cls.employees])
@@ -108,7 +111,7 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
     def test_work_entries_generation_perf(self):
         # Test Case 7: Try to generate work entries for
         # a hundred employees over a month
-        with self.assertQueryCount(__system__=11522, admin=11522):
+        with self.assertQueryCount(__system__=2607, admin=2807):
             work_entries = self.contracts._generate_work_entries(date(2020, 7, 1), date(2020, 8, 31))
 
         # Original work entries to generate when we don't adapt date_generated_from and

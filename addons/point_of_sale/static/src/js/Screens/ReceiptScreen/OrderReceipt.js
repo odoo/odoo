@@ -4,13 +4,16 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    const { onWillUpdateProps } = owl;
+
     class OrderReceipt extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this._receiptEnv = this.props.order.getOrderReceiptEnv();
-        }
-        willUpdateProps(nextProps) {
-            this._receiptEnv = nextProps.order.getOrderReceiptEnv();
+
+            onWillUpdateProps((nextProps) => {
+                this._receiptEnv = nextProps.order.getOrderReceiptEnv();
+            });
         }
         get receipt() {
             return this.receiptEnv.receipt;
@@ -30,11 +33,11 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
         isSimple(line) {
             return (
                 line.discount === 0 &&
-                line.unit_name === 'Units' &&
+                line.is_in_unit &&
                 line.quantity === 1 &&
                 !(
                     line.display_discount_policy == 'without_discount' &&
-                    line.price != line.price_lst
+                    line.price < line.price_lst
                 )
             );
         }

@@ -3,13 +3,85 @@
 
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
+from odoo.tools.misc import clean_context
+
+
+HR_READABLE_FIELDS = [
+    'active',
+    'child_ids',
+    'employee_id',
+    'address_home_id',
+    'employee_ids',
+    'employee_parent_id',
+    'hr_presence_state',
+    'last_activity',
+    'last_activity_time',
+    'can_edit',
+    'is_system',
+    'employee_resource_calendar_id',
+]
+
+HR_WRITABLE_FIELDS = [
+    'additional_note',
+    'private_street',
+    'private_street2',
+    'private_city',
+    'private_state_id',
+    'private_zip',
+    'private_country_id',
+    'address_id',
+    'barcode',
+    'birthday',
+    'category_ids',
+    'children',
+    'coach_id',
+    'country_of_birth',
+    'department_id',
+    'display_name',
+    'emergency_contact',
+    'emergency_phone',
+    'employee_bank_account_id',
+    'employee_country_id',
+    'gender',
+    'identification_id',
+    'is_address_home_a_company',
+    'job_title',
+    'private_email',
+    'km_home_work',
+    'marital',
+    'mobile_phone',
+    'notes',
+    'employee_parent_id',
+    'passport_id',
+    'permit_no',
+    'employee_phone',
+    'pin',
+    'place_of_birth',
+    'spouse_birthdate',
+    'spouse_complete_name',
+    'visa_expire',
+    'visa_no',
+    'work_email',
+    'work_location_id',
+    'work_phone',
+    'certificate',
+    'study_field',
+    'study_school',
+    'private_lang',
+    'employee_type',
+]
 
 
 class User(models.Model):
     _inherit = ['res.users']
 
+    def _employee_ids_domain(self):
+        # employee_ids is considered a safe field and as such will be fetched as sudo.
+        # So try to enforce the security rules on the field to make sure we do not load employees outside of active companies
+        return [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+
     # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
-    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee')
+    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', store=False)
 
@@ -66,8 +138,17 @@ class User(models.Model):
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
+    employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
+
+    create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
+    create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
+    is_system = fields.Boolean(compute="_compute_is_system")
+
+    @api.depends_context('uid')
+    def _compute_is_system(self):
+        self.is_system = self.env.user._is_system()
 
     def _compute_can_edit(self):
         can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
@@ -79,82 +160,30 @@ class User(models.Model):
         for user in self.with_context(active_test=False):
             user.employee_count = len(user.employee_ids)
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights.
-            Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-        hr_readable_fields = [
-            'active',
-            'child_ids',
-            'employee_id',
-            'address_home_id',
-            'employee_ids',
-            'employee_parent_id',
-            'hr_presence_state',
-            'last_activity',
-            'last_activity_time',
-            'can_edit',
-        ]
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + HR_READABLE_FIELDS + HR_WRITABLE_FIELDS
 
-        hr_writable_fields = [
-            'additional_note',
-            'private_street',
-            'private_street2',
-            'private_city',
-            'private_state_id',
-            'private_zip',
-            'private_country_id',
-            'address_id',
-            'barcode',
-            'birthday',
-            'category_ids',
-            'children',
-            'coach_id',
-            'country_of_birth',
-            'department_id',
-            'display_name',
-            'emergency_contact',
-            'emergency_phone',
-            'employee_bank_account_id',
-            'employee_country_id',
-            'gender',
-            'identification_id',
-            'is_address_home_a_company',
-            'job_title',
-            'private_email',
-            'km_home_work',
-            'marital',
-            'mobile_phone',
-            'notes',
-            'employee_parent_id',
-            'passport_id',
-            'permit_no',
-            'employee_phone',
-            'pin',
-            'place_of_birth',
-            'spouse_birthdate',
-            'spouse_complete_name',
-            'visa_expire',
-            'visa_no',
-            'work_email',
-            'work_location_id',
-            'work_phone',
-            'certificate',
-            'study_field',
-            'study_school',
-            'private_lang',
-            'employee_type',
-        ]
-
-        init_res = super(User, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + hr_readable_fields + hr_writable_fields
-        type(self).SELF_WRITEABLE_FIELDS = type(self).SELF_WRITEABLE_FIELDS + hr_writable_fields
-        return init_res
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def get_views(self, views, options=None):
+        # Requests the My Profile form view as last.
+        # Otherwise the fields of the 'search' view will take precedence
+        # and will omit the fields that are requested as SUPERUSER
+        # in `get_view()`.
+        profile_view = self.env.ref("hr.res_users_view_form_profile")
+        profile_form = profile_view and [profile_view.id, 'form']
+        if profile_form and profile_form in views:
+            views.remove(profile_form)
+            views.append(profile_form)
+        result = super().get_views(views, options)
+        return result
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
         # When the front-end loads the views it gets the list of available fields
         # for the user (according to its access rights). Later, when the front-end wants to
         # populate the view with data, it only asks to read those available fields.
@@ -166,7 +195,32 @@ class User(models.Model):
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
             self = self.with_user(SUPERUSER_ID)
-        return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(User, self).get_view(view_id, view_type, **options)
+        return result
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        employee_create_vals = []
+        for user, vals in zip(res, vals_list):
+            if not vals.get('create_employee') and not vals.get('create_employee_id'):
+                continue
+            if vals.get('create_employee_id'):
+                self.env['hr.employee'].browse(vals.get('create_employee_id')).user_id = user
+            else:
+                employee_create_vals.append(dict(
+                    name=user.name,
+                    company_id=user.env.company.id,
+                    **self.env['hr.employee']._sync_user(user)
+                ))
+        if employee_create_vals:
+            self.env['hr.employee'].with_context(clean_context(self.env.context)).create(employee_create_vals)
+        return res
+
+    def _get_employee_fields_to_sync(self):
+        """Get values to sync to the related employee when the User is changed.
+        """
+        return ['name', 'email', 'image_1920', 'tz']
 
     def write(self, vals):
         """
@@ -187,8 +241,9 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
+        for fname in [f for f in self._get_employee_fields_to_sync() if f in vals]:
             employee_values[fname] = vals[fname]
+
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')
@@ -212,8 +267,12 @@ class User(models.Model):
     @api.depends('employee_ids')
     @api.depends_context('company')
     def _compute_company_employee(self):
+        employee_per_user = {
+            employee.user_id: employee
+            for employee in self.env['hr.employee'].search([('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)])
+        }
         for user in self:
-            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
+            user.employee_id = employee_per_user.get(user)
 
     def _search_company_employee(self, operator, value):
         return [('employee_ids', operator, value)]

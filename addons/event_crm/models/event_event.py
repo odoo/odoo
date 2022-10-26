@@ -12,12 +12,11 @@ class EventEvent(models.Model):
         'crm.lead', 'event_id', string="Leads", groups='sales_team.group_sale_salesman',
         help="Leads generated from this event")
     lead_count = fields.Integer(
-        string="# Leads", compute='_compute_lead_count', groups='sales_team.group_sale_salesman',
-        help="Counter for the leads linked to this event")
+        string="# Leads", compute='_compute_lead_count', groups='sales_team.group_sale_salesman')
 
     @api.depends('lead_ids')
     def _compute_lead_count(self):
-        lead_data = self.env['crm.lead'].read_group(
+        lead_data = self.env['crm.lead']._read_group(
             [('event_id', 'in', self.ids)],
             ['event_id'], ['event_id']
         )

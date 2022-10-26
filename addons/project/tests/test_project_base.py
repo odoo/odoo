@@ -3,6 +3,7 @@
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
+
 class TestProjectCommon(TransactionCase):
 
     @classmethod
@@ -41,7 +42,8 @@ class TestProjectCommon(TransactionCase):
             'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
-            'login': 'Armande',
+            'login': 'armandel',
+            'password': 'armandel',
             'email': 'armande.projectuser@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
         })
@@ -60,11 +62,11 @@ class TestProjectCommon(TransactionCase):
         # Already-existing tasks in Pigs
         cls.task_1 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs UserTask',
-            'user_id': cls.user_projectuser.id,
+            'user_ids': cls.user_projectuser,
             'project_id': cls.project_pigs.id})
         cls.task_2 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs ManagerTask',
-            'user_id': cls.user_projectmanager.id,
+            'user_ids': cls.user_projectmanager,
             'project_id': cls.project_pigs.id})
 
         # Test 'Goats' project, same as 'Pigs', but with 2 stages
@@ -93,14 +95,47 @@ class TestProjectCommon(TransactionCase):
         self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
+
+class TestProjectBase(TestProjectCommon):
+
     def test_delete_project_with_tasks(self):
-        """User should never be able to delete a project with tasks"""
+        """Test all tasks linked to a project are removed when the user removes this project. """
+        task_type = self.env['project.task.type'].create({'name': 'Won', 'sequence': 1, 'fold': True})
+        project_unlink = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'rev',
+            'privacy_visibility': 'employees',
+            'alias_name': 'rev',
+            'partner_id': self.partner_1.id,
+            'type_ids': task_type,
+        })
 
-        with self.assertRaises(UserError):
-            self.project_pigs.unlink()
+        self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Pigs UserTask',
+            'user_ids': self.user_projectuser,
+            'project_id': project_unlink.id,
+            'stage_id': task_type.id})
 
-        # click on the archive button
-        self.project_pigs.write({'active': False})
+        task_count = len(project_unlink.tasks)
+        self.assertEqual(task_count, 1, "The project should have 1 task")
 
-        with self.assertRaises(UserError):
-            self.project_pigs.unlink()
+        project_unlink.unlink()
+        self.assertNotEqual(task_count, 0, "The all tasks linked to project should be deleted when user delete the project")
+
+    def test_auto_assign_stages_when_importing_tasks(self):
+        self.assertFalse(self.project_pigs.type_ids)
+        self.assertEqual(len(self.project_goats.type_ids), 2)
+        first_stage = self.project_goats.type_ids[0]
+        self.env['project.task']._load_records_create([{
+            'name': 'First Task',
+            'project_id': self.project_pigs.id,
+            'stage_id': first_stage.id,
+        }])
+        self.assertEqual(self.project_pigs.type_ids, first_stage)
+        self.env['project.task']._load_records_create([
+            {
+                'name': 'task',
+                'project_id': self.project_pigs.id,
+                'stage_id': stage.id,
+            } for stage in self.project_goats.type_ids
+        ])
+        self.assertEqual(self.project_pigs.type_ids, self.project_goats.type_ids)

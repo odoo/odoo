@@ -2,8 +2,8 @@ odoo.define('website.wysiwyg', function (require) {
 'use strict';
 
 var Wysiwyg = require('web_editor.wysiwyg');
-var snippetsEditor = require('web_editor.snippet.editor');
-const weWidgets = require('wysiwyg.widgets');
+var snippetsEditor = require('website.snippet.editor');
+let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -18,15 +18,14 @@ const weWidgets = require('wysiwyg.widgets');
  */
 function toggleDropdown($toggles, show) {
     return Promise.all(_.map($toggles, toggle => {
-        var $toggle = $(toggle);
-        var $dropdown = $toggle.parent();
-        var shown = $dropdown.hasClass('show');
+        const $toggle = $(toggle);
+        const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
         }
-        var toShow = !shown;
+        const toShow = !shown;
         return new Promise(resolve => {
-            $dropdown.one(
+            $toggle.parent().one(
                 toShow ? 'shown.bs.dropdown' : 'hidden.bs.dropdown',
                 () => resolve()
             );
@@ -44,47 +43,21 @@ function toggleDropdown($toggles, show) {
  * class non editable: o_not_editable
  *
  */
-Wysiwyg.include({
+const WebsiteWysiwyg = Wysiwyg.extend({
     /**
      * @override
      */
     start: function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
+        // Do not insert a paragraph after each column added by the column commands:
+        this.options.insertParagraphAfterColumns = false;
 
-
-        $(document.body).on('mousedown', (ev) => {
-            const $target = $(ev.target);
-            // Keep popover open if clicked inside it, but not on a button
-            if (!($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length)) {
-                $('.o_edit_menu_popover').popover('hide');
-            }
-
-            if ($target.is('a') && $target.closest('#wrap').length) {
-                if (!$target.data('popover-widget-initialized')) {
-                    weWidgets.LinkPopoverWidget.createFor(this, ev.target);
-                    $target.data('popover-widget-initialized', true);
-                }
-            }
-            $(document).on('mousedown.website_link_popup',  (e) => {
-                // Keep popover open if clicked inside it, but not on a button
-                const $currTarget = $(e.target);
-                if (!($currTarget.parents('.o_edit_menu_popover').length && !$currTarget.parent('a').addBack('a').length)) {
-                    $('.o_edit_menu_popover').popover('hide');
-                } else {
-                    return;
-                }
-
-                if ($target.is(e.target)) {
-                    return;
-                }
-                $(document).off('mousedown.website_link_popup');
-            });
-        });
-
+        const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
-        $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
+        var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
+        $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
+            this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -97,10 +70,12 @@ Wysiwyg.include({
             // Then toggle the clicked one
             toggleDropdown($toggle)
                 .then(dispose)
-                .then($el => {
-                    var isShown = $el.parent().hasClass('show');
-                    this.snippetsMenu.toggleMegaMenuSnippets(isShown);
-                });
+                .then(() => {
+                    if (!this.options.enableTranslation) {
+                        this._toggleMegaMenu($toggle[0]);
+                    }
+                })
+                .then(() => this.odooEditor.observerActive());
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -111,12 +86,7 @@ Wysiwyg.include({
             }
         }
 
-        return this._super.apply(this, arguments).then(() => {
-            // Showing Mega Menu snippets if one dropdown is already opened
-            if (this.$('.o_mega_menu').hasClass('show')) {
-                this.snippetsMenu.toggleMegaMenuSnippets(true);
-            }
-        });
+        return this._super.apply(this, arguments);
     },
     /**
      * @override
@@ -132,6 +102,15 @@ Wysiwyg.include({
      * @override
      */
     destroy: function () {
+        // We do not need the cache to live longer than the edition.
+        // Keeping it alive could end up in a corrupt state without the user
+        // even noticing. (If the values were changed in another tab or by
+        // someone else, when edit starts again here, without a clear cache at
+        // destroy, options will have wrong social media values).
+        // It would also survive (multi) website switch, not fetching the values
+        // from the accessed website.
+        socialMediaOptions.clearDbSocialValuesCache();
+
         this._restoreMegaMenus();
         this._super.apply(this, arguments);
     },
@@ -154,6 +133,13 @@ Wysiwyg.include({
         var resID = parseInt(el.dataset.resId);
         if (!resModel || !resID) {
             throw new Error('There should be a model and id associated to the cover');
+        }
+
+        // The cover might be dirty for another reason than cover properties
+        // values only (like an editable text inside). In that case, do not
+        // update the cover properties values.
+        if (!('coverClass' in el.dataset)) {
+            return;
         }
 
         this.__savedCovers = this.__savedCovers || {};
@@ -182,6 +168,37 @@ Wysiwyg.include({
                 {'cover_properties': JSON.stringify(coverProps)}
             ],
         });
+    },
+    /**
+     * @override
+     */
+    _rpc(options) {
+        // Historically, every RPC had their website_id in their context.
+        // Now it's something defined by the wysiwyg_adapter.
+        // So in order to have a full context, we request it from the wysiwyg_adapter.
+        let context;
+        this.trigger_up('context_get', {
+            callback: cxt => context = cxt,
+        });
+        context = Object.assign(context, options.context);
+        options.context = context;
+        return this._super(options);
+    },
+    /**
+     *
+     * @override
+     */
+    _createSnippetsMenuInstance(options = {}) {
+        return new snippetsEditor.SnippetsMenu(this, Object.assign({
+            wysiwyg: this,
+            selectorEditableArea: '.o_editable',
+        }, options));
+    },
+    /**
+     * @override
+     */
+    _insertSnippetMenu() {
+        return this.snippetsMenu.appendTo(this.$el);
     },
     /**
      * @override
@@ -230,36 +247,61 @@ Wysiwyg.include({
     _restoreMegaMenus: function () {
         var $megaMenuToggles = this.$('.o_mega_menu_toggle');
         $megaMenuToggles.off('.wysiwyg_megamenu')
-            .attr('data-toggle', 'dropdown')
+            .attr('data-bs-toggle', 'dropdown')
             .dropdown({});
         return toggleDropdown($megaMenuToggles, false);
+    },
+    /**
+     * Toggles the mega menu.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _toggleMegaMenu: function (toggleEl) {
+        const megaMenuEl = toggleEl.parentElement.querySelector('.o_mega_menu');
+        if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
+            return this.snippetsMenu.activateSnippet(false);
+        }
+        megaMenuEl.classList.add('o_no_parent_editor');
+        return this.snippetsMenu.activateSnippet($(megaMenuEl));
     },
 });
 
 snippetsEditor.SnippetsMenu.include({
     /**
-     * @private
-     * @param {boolean} show
+     * @override
      */
-    toggleMegaMenuSnippets: function (show) {
-        setTimeout(() => this._activateSnippet(false));
-        this._showMegaMenuSnippets = show;
-        this._filterSnippets();
+    init: function () {
+        this._super(...arguments);
+        this._notActivableElementsSelector += ', .o_mega_menu_toggle';
+    },
+    /**
+     * @override
+     */
+    start() {
+        const _super = this._super(...arguments);
+        if (this.options.enableTranslation) {
+            return _super;
+        }
+        if (this.$body[0].ownerDocument !== this.ownerDocument) {
+            this.$body.on('click.snippets_menu', '*', this._onClick);
+        }
+        return _super;
+    },
+    /**
+    * @override
+    */
+    destroy() {
+        if (this.$body[0].ownerDocument !== this.ownerDocument) {
+            this.$body.off('.snippets_menu');
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _filterSnippets(search) {
-        this._super(...arguments);
-        if (!this._showMegaMenuSnippets) {
-            this.el.querySelector('#snippet_mega_menu').classList.add('d-none');
-        }
-    },
     /**
      * @override
      */
@@ -271,4 +313,6 @@ snippetsEditor.SnippetsMenu.include({
         return $dropzone;
     },
 });
+
+return WebsiteWysiwyg;
 });

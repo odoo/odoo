@@ -8,8 +8,7 @@
     'sequence': 1006,
     'version': '1.0',
     'summary': 'Support live tracks: streaming, participation, youtube',
-    'website': 'https://www.odoo.com/page/events',
-    'description': "",
+    'website': 'https://www.odoo.com/app/events',
     'depends': [
         'website_event_track',
     ],
@@ -21,16 +20,15 @@
     'demo': [
         'data/event_track_demo.xml'
     ],
-    'application': False,
     'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live/static/src/scss/website_event_track_live.scss',
+            'website_event_track_live/static/src/js/website_event_track_replay_suggestion.js',
             'website_event_track_live/static/src/js/website_event_track_suggestion.js',
             'website_event_track_live/static/src/js/website_event_track_live.js',
-        ],
-        'web.assets_qweb': [
             'website_event_track_live/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

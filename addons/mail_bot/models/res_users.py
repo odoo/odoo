@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import models, fields, _
 
 class Users(models.Model):
     _inherit = 'res.users'
@@ -10,7 +10,7 @@ class Users(models.Model):
         [
             ('not_initialized', 'Not initialized'),
             ('onboarding_emoji', 'Onboarding emoji'),
-            ('onboarding_attachement', 'Onboarding attachement'),
+            ('onboarding_attachement', 'Onboarding attachment'),
             ('onboarding_command', 'Onboarding command'),
             ('onboarding_ping', 'Onboarding ping'),
             ('idle', 'Idle'),
@@ -18,12 +18,21 @@ class Users(models.Model):
         ], string="OdooBot Status", readonly=True, required=False)  # keep track of the state: correspond to the code of the last message sent
     odoobot_failed = fields.Boolean(readonly=True)
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights.
-            Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-        init_res = super(Users, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['odoobot_state']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['odoobot_state']
+
+    def _init_messaging(self):
+        if self.odoobot_state in [False, 'not_initialized'] and self._is_internal():
+            self._init_odoobot()
+        return super()._init_messaging()
+
+    def _init_odoobot(self):
+        self.ensure_one()
+        odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
+        channel_info = self.env['mail.channel'].channel_get([odoobot_id, self.partner_id.id])
+        channel = self.env['mail.channel'].browse(channel_info['id'])
+        message = _("Hello,<br/>Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features.<br/><b>Try to send me an emoji</b> <span class=\"o_odoobot_command\">:)</span>")
+        channel.sudo().message_post(body=message, author_id=odoobot_id, message_type="comment", subtype_xmlid="mail.mt_comment")
+        self.sudo().odoobot_state = 'onboarding_emoji'
+        return channel

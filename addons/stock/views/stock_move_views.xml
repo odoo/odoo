@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <graph string="Stock Moves Analysis" sample="1">
                     <field name="product_id"/>
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="product_uom_qty" type="measure"/>
                 </graph>
             </field>
@@ -30,17 +30,29 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Moves" create="0">
-                    <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date" />
+                <tree string="Moves" create="0" default_order="date desc">
+                    <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" invisible="1"/>
+                    <field name="location_usage" invisible="1"/>
+                    <field name="location_dest_usage" invisible="1"/>
                     <field name="product_id"/>
-                    <field name="location_id" options="{'no_create': True}" string="From"/>
-                    <field name="location_dest_id" options="{'no_create': True}" string="To"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="location_id" options="{'no_create': True}" string="From"
+                        decoration-muted="location_usage not in ('internal','transit')"/>
+                    <field name="location_dest_id" options="{'no_create': True}" string="To"
+                        decoration-muted="location_dest_usage not in ('internal','transit')"/>
+                    <field name="product_packaging_id" optional="hide" groups="product.group_stock_packaging"/>
+                    <field name="product_uom_qty" string="Quantity" sum="Total Quantity"
+                        decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
+                        decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                    <field name="state" widget='badge' optional="show"
+                           decoration-danger="state=='cancel'"
+                           decoration-info="state== 'assigned'"
+                           decoration-muted="state == 'draft'"
+                           decoration-success="state == 'done'"
+                           decoration-warning="state not in ('draft','cancel','done','assigned')"/>
                 </tree>
             </field>
         </record>
@@ -65,16 +77,16 @@
                     <field name="show_reserved_availability" invisible="1"/>
                     <field name="show_operations" invisible="1" readonly="1"/>
                     <field name="additional" invisible="1"/>
-                    <field name="has_move_lines" invisible="1"/>
+                    <field name="move_lines_count" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="product_uom_category_id" invisible="1"/>
-                    <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
+                    <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('move_lines_count', '&gt;', 0)]}"/>
                     <field name="is_initial_demand_editable" invisible="1"/>
                     <field name="is_quantity_done_editable" invisible="1"/>
                     <field name="product_uom_qty" string="Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                     <field name="reserved_availability" string="Reserved"/>
                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
-                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -88,6 +100,7 @@
                     <field name="product_id"/>
                     <field name="show_details_visible"/>
                     <field name="product_uom_qty"/>
+                    <field name="product_qty" readonly="1"/>
                     <field name="quantity_done"/>
                     <field name="reserved_availability"/>
                     <field name="is_inventory"/>
@@ -139,20 +152,23 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_type_entire_packs" invisible="1"/>
                     <field name="display_assign_serial" invisible="1"/>
+                    <field name="from_immediate_transfer" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
+                    <field name="display_clear_serial" invisible="1"/>
                     <group>
                         <group>
                             <field name="product_id" readonly="1"/>
-                            <label for="product_uom_qty"/>
-                            <div class="o_row">
+                            <label for="product_uom_qty" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}">
                                 <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
                                 <span><field name="product_uom" readonly="1" nolabel="1"/></span>
                             </div>
                             <label for="quantity_done"/>
                             <div class="o_row">
                                 <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
-                                <span attrs="{'invisible': [('state', '=', 'done')]}"> / </span>
-                                <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': [('state', '=', 'done')]}" /></span>
-                                <span><field name="product_uom" readonly="1" nolabel="1"/></span>
+                                <span attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}"> / </span>
+                                <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}" /></span>
+                                <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/></span>
                             </div>
                             <field name="next_serial"
                                 attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
@@ -160,20 +176,26 @@
                             <div class="o_row" attrs="{'invisible': [('display_assign_serial', '=', False)]}">
                                 <span><field name="next_serial_count"/></span>
                                 <button name="action_assign_serial_show_details" type="object"
-                                        class="btn-link"
+                                        class="btn-link" data-hotkey="k"
                                         title="Assign Serial Numbers">
                                     <span>Assign Serial Numbers</span>
+                                </button>
+                                <button name="action_clear_lines_show_details" type="object"
+                                        class="btn-link" data-hotkey="y"
+                                        title="Clear Lines"
+                                        attrs="{'invisible': [('display_clear_serial', '=', False)]}">
+                                    <span>Clear All</span>
                                 </button>
                             </div>
                         </group>
                     </group>
                     <field name="move_line_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                     <footer class="oe_edit_only" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
-                        <button string="Confirm" special="save" class="oe_highlight"/>
-                        <button string="Discard" special="cancel"/>
+                        <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
+                        <button string="Discard" special="cancel" data-hotkey="z"/>
                     </footer>
                     <footer class="oe_edit_only" attrs="{'invisible': ['|', '&amp;', ('state', '!=', 'cancel'), ('state', '!=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '!=', True)]}">
-                        <button string="Close" special="cancel"/>
+                        <button string="Close" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>
@@ -197,15 +219,18 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="product_uom_qty==qty_done" decoration-danger="qty_done &gt; product_uom_qty and state != 'done' and picking_code != 'incoming'">
+                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="reserved_uom_qty==qty_done" decoration-danger="qty_done &gt; reserved_uom_qty and state != 'done' and picking_code != 'incoming'">
                     <field name="company_id" invisible="1" force_save="1"/>
                     <field name="picking_id" invisible="1" force_save="1"/>
                     <field name="move_id" invisible="1" force_save="1" />
                     <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="package_level_id" invisible="1"/>
-                    <field name="location_id" options="{'no_create': True}" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" width="0.75" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="package_id" invisible="1"/>
+                    <field name="location_id" options="{'no_create': True}" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]" groups="stock.group_stock_multi_locations"/>
                     <field name="lot_id" groups="stock.group_production_lot"
                         attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
                         invisible="not context.get('show_lots_m2o')"
@@ -216,19 +241,22 @@
                             'default_product_id': parent.product_id,
                         }"
                     />
-                    <field name="lot_name" widget="text" groups="stock.group_production_lot"
+                    <field name="lot_name" string="Lot/Serial Number" widget="text" groups="stock.group_production_lot"
                         placeholder="Write your SN/LN one by one or copy paste a list."
                         attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
                         invisible="not context.get('show_lots_text')"/>
                     <field name="package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
-                    <field name="result_package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" groups="stock.group_tracking_lot"/>
+                    <field name="result_package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" groups="stock.group_tracking_lot" context="{'picking_id': picking_id}"/>
                     <field name="owner_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_owner')" groups="stock.group_tracking_owner"/>
-                    <field name="product_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
+                    <field name="reserved_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
                     <field name="state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+                        attrs="{'readonly': ['|', '|', ('reserved_uom_qty', '!=', 0.0),
+                                                '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True),
+                                                '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -238,14 +266,18 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;product_uom_qty and state!='done' and parent.picking_type_code != 'incoming'" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
-                    <field name="product_id" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
+                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;reserved_uom_qty and state!='done' and parent.picking_type_code != 'incoming'" decoration-success="qty_done==reserved_uom_qty and state!='done' and not result_package_id">
+                    <field name="product_id" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
                     <field name="move_id" invisible="1"/>
                     <field name="picking_id" invisible="1"/>
                     <field name="product_uom_category_id" invisible="1"/>
-                    <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
-                    <field name="location_dest_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                    <field name="package_id" invisible="1"/>
+                    <field name="result_package_id" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
+                    <field name="location_dest_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
                     <field name="package_id" groups="stock.group_tracking_lot"/>
                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                     <field name="lots_visible" invisible="1"/>
@@ -254,10 +286,10 @@
                     <field name="lot_id" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', True)], 'invisible': [('lots_visible', '=', False)]}" context="{'default_product_id': product_id, 'default_company_id': company_id, 'active_picking_id': picking_id}" optional="show"/>
                     <field name="lot_name" groups="stock.group_production_lot" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)], 'invisible': [('lots_visible', '=', False)]}" context="{'default_product_id': product_id}"/>
                     <field name="is_initial_demand_editable" invisible="1"/>
-                    <field name="product_uom_qty" readonly="1" attrs="{'column_invisible': ['|',('parent.immediate_transfer', '=', True),('parent.picking_type_code','=','incoming')]}" optional="show"/>
+                    <field name="reserved_uom_qty" readonly="1" attrs="{'column_invisible': ['|',('parent.immediate_transfer', '=', True),('parent.picking_type_code','=','incoming')]}" optional="show"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
-                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
+                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -268,6 +300,7 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Stock Moves" create="0" edit="0">
+                <field name="company_id" invisible="1"/>
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                 </header>
@@ -336,9 +369,9 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
+                    <field name="name" string="Location" filter_domain="['|',('location_id', 'ilike', self),('location_dest_id', 'ilike', self)]" groups="stock.group_stock_multi_locations"/>
                     <field name="product_id"/>
-                    <field name="name" string="Location" filter_domain="['|',('location_id', 'ilike', self),('location_dest_id', 'ilike', self)]"/>
+                    <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
                     <field name="partner_id" string="Partner" filter_domain="[('picking_id.partner_id', 'child_of', self)]"/>
                     <filter string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
                     <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
@@ -368,7 +401,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
-            <field name="context">{'search_default_done': 1, 'search_default_groupby_location_id': 1}</field>
+            <field name="context">{'search_default_done': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No stock move found
@@ -442,6 +475,6 @@
             </field>
         </record>
 
-        <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
+    <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="230" groups="base.group_no_one"/>
 
 </odoo>

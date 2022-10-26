@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form.inherit.l10n_eg_edi_eta</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='account']/div" position="after">
+                <h2 attrs="{'invisible':[('country_code', '!=', 'EG')]}">ETA E-Invoicing Settings</h2>
+                <div class="row mt16 o_settings_container" name="egyption_eta_edi" attrs="{'invisible':[('country_code', '!=', 'EG')]}">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">ETA API Integration</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                    Enter your API credentials to enable ETA E-Invoicing.
+                                    <field name="country_code" invisible="1"/>
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_eg_production_env" class="col-lg-6 o_light_label"/>
+                                    <field name="l10n_eg_production_env" help="Check to start sending invoices to your e-invoicing production environment"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_eg_client_identifier" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_eg_client_identifier" help="The client ID retrieved from the ETA e-invoicing portal"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_eg_client_secret" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_eg_client_secret" password="True" help="The secret key provided by the ETA. You can input client secret 1 or 2"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_eg_invoicing_threshold" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_eg_invoicing_threshold" help="Set the threshold amount for invoices that won't require the VAT ID of individuals when invoicing"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

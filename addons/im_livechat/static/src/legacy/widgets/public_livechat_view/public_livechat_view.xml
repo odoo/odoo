@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayEmptyThread]
+        @param {boolean} [options.displayNoMatchFound]
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread">
+        <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.hasMessages()">
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Content"/>
+        </t>
+    </t>
+
+    <!-- Rendering of thread when messaging not yet ready -->
+    <div t-name="im_livechat.legacy.mail.widget.ThreadLoading" class="o_mail_thread_loading">
+        <i class="o_mail_thread_loading_icon fa fa-circle-o-notch fa-spin"/>
+        <span>Please wait...</span>
+    </div>
+    
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
+          the thread messages (from top to bottom)
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
+        @param {Object} ORDER
+        @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
+        @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
+
+                    _____________            _____________
+                   |             |          |             |
+                   |  message 1  |          |  message n  |
+                   |  message 2  |          |  ...        |
+                   |  ...        |          |  message 2  |
+                   |  message n  |          |  message 1  |
+                   |_____________|          |_____________|
+
+        ORDER:           ASC                     DESC
+
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Content">
+        <t t-set="messages" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages({ 'domain': options.domain || [] })"/>
+        <t t-if="options.displayOrder === ORDER.ASC" t-call="im_livechat.legacy.mail.widget.Thread.Content.ASC"/>
+        <t t-else="" t-call="im_livechat.legacy.mail.widget.Thread.Content.DESC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayBottomThreadFreeSpace=false]
+        @param {boolean} [options.displayLoadMore=false]
+
+                     _____________
+                    |             |
+                    |  message 1  |
+                    |  message 2  |
+                    |  ...        |
+                    |  message n  |
+                    |_____________|
+
+                      ASC Order
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Content.ASC">
+        <div class="o_mail_thread_content">
+            <t t-if="options.displayLoadMore" t-call="im_livechat.legacy.mail.widget.Thread.LoadMore"/>
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Messages"/>
+            <t t-if="options.displayBottomThreadFreeSpace">
+                <div class="o_thread_bottom_free_space"/>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayLoadMore=false]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+
+                     _____________
+                    |             |
+                    |  message n  |
+                    |  ...        |
+                    |  message 2  |
+                    |  message 1  |
+                    |_____________|
+
+                      DESC Order
+
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Content.DESC">
+        <div class="o_mail_thread_content">
+            <t t-if="options.messagesSeparatorPosition == 'top'" t-call="im_livechat.legacy.mail.MessagesSeparator"/>
+            <t t-set="messages" t-value="messages.slice().reverse()"/>
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Messages"/>
+            <t t-if="options.displayLoadMore" t-call="im_livechat.legacy.mail.widget.Thread.LoadMore"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractMessage[]} messages messages are ordered based
+          on desired display order
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Messages">
+        <t t-set="current_day" t-value="0"/>
+        <t t-foreach="messages" t-as="message">
+            <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
+                <span class="o_thread_date">
+                    <t t-esc="message.getDateDay()"/>
+                </span>
+                <t t-set="current_day" t-value="message.getDateDay()"/>
+            </div>
+
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Message"/>
+        </t>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {string} dateFormat
+        @param {Object} options
+        @param {mail.model.AbstractMessage} message
+        @param {Object} options
+        @param {boolean} [options.displayAvatars]
+        @param {boolean} [options.displayDocumentLinks]
+        @param {boolean} [options.displayMarkAsRead]
+        @param {boolean} [options.displaySubjectsOnMessages]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+        @param {integer} [options.selectedMessageID]
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Message">
+        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message o_PublicLivechatMessage ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ') + (message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '')">
+            <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
+                <t t-if="message.hasAuthor()">
+                    <div t-if="displayAuthorMessages[message.getID()]" class="o_thread_message_sidebar_image">
+                        <img
+                            alt=""
+                            t-att-src="message.getAvatarSource()"
+                            data-oe-model="res.partner"
+                            t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                            t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        <t t-call="im_livechat.legacy.mail.UserStatus">
+                            <t t-set="partnerID" t-value="message.getAuthorID()"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <img t-if="displayAuthorMessages[message.getID()]"
+                        alt=""
+                        t-att-src="message.getAvatarSource()"
+                        class="o_thread_message_avatar rounded-circle"/>
+                </t>
+                <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
+                    <t t-esc="message.getDate().format('hh:mm')"/>
+                </span>
+            </div>
+            <div class="o_thread_message_core">
+                <p t-if="displayAuthorMessages[message.getID()]" t-attf-class="o_mail_info text-muted o_PublicLivechatMessage_header {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }}">
+                    <t t-if="message.isNote()">
+                        Note by
+                    </t>
+                    <t t-if="!message.isVisitorTheAuthor()">
+                        <strong t-if="message.hasAuthor()"
+                                data-oe-model="res.partner" t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                                t-attf-class="o_thread_author o_PublicLivechatMessage_headerAuthor #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}">
+                            <t t-esc="message.getDisplayedAuthor()"/>
+                        </strong>
+                        <strong t-else="" class="o_thread_author o_PublicLivechatMessage_headerAuthor">
+                            <t t-esc="message.getDisplayedAuthor()"/>
+                        </strong>
+                    </t>
+
+                    <span t-if="!message.isVisitorTheAuthor()" class="o_PublicLivechatMessage_headerDatePrefix">-</span> <small class="o_mail_timestamp o_PublicLivechatMessage_headerDate" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
+                    <span t-attf-class="o_thread_icons">
+                    </span>
+                </p>
+                <div t-att-data-message-id="message.getID()" t-attf-class="o_PublicLivechatMessage_bubbleWrap {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}">
+                    <div t-attf-class="o_PublicLivechatMessage_bubble {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }} {{ !message.isEmpty() ? 'o-isContentNonEmpty' : '' }}">
+                        <div t-attf-class="o_PublicLivechatMessage_background {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}"/>
+                        <div class="o_thread_message_content o_PublicLivechatMessage_content">
+                            <t t-out="message.getBody()"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <t t-if="options.messagesSeparatorPosition == message.getID()">
+            <t t-call="im_livechat.legacy.mail.MessagesSeparator"/>
+        </t>
+    </t>
+    
+    <!--
+        @param {Object} options
+        @param {boolean} [options.loadMoreOnScroll]
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.LoadMore">
+        <div class="o_thread_show_more">
+            <t t-if="options.loadMoreOnScroll">
+                <span><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
+            </t>
+            <t t-else="">
+                <button class="btn btn-link">-------- Show older messages --------</button>
+            </t>
+        </div>
+    </t>
+    
+    <!--
+        @param {string} status
+        @param {integer|undefined} [partnerID]
+    -->
+    <t t-name="im_livechat.legacy.mail.UserStatus">
+        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID"/>
+    </t>
+    
+    <t t-name="im_livechat.legacy.mail.MessagesSeparator">
+        <div class="o_thread_new_messages_separator">
+            <span class="o_thread_separator_label">New messages</span>
+        </div>
+    </t>
+</templates>

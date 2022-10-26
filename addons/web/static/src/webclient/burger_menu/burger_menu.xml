@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Owl Templates -->
+
+<div t-name="web.BurgerMenu" owl="1">
+    <button
+        class="o_mobile_menu_toggle o-no-caret d-md-none border-0"
+        title="Toggle menu" aria-label="Toggle menu"
+        t-on-click="_openBurger">
+        <i class="oi oi-panel-right"/>
+    </button>
+    <t t-portal="'body'">
+      <Transition name="'burgerslide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
+        <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
+          <div class="o_burger_menu_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4"
+              t-on-click.stop='_toggleUserMenu'>
+              <small class="o-no-caret dropdown-toggle d-flex align-items-center justify-content-between" t-att-class="{'active bg-view': isUserMenuUnfolded }">
+                  <img class="o_burger_menu_avatar o_image_24_cover rounded-circle" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
+                  <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
+                  <i t-if="isUserMenuTogglable" class="fa" t-att-class="state.isUserMenuOpened ? 'fa-caret-down' : 'fa-caret-left'"/>
+              </small>
+              <button class="o_burger_menu_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
+          </div>
+          <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto"
+              t-att-class="{o_burger_menu_dark: !isUserMenuUnfolded, 'bg-view': isUserMenuUnfolded}">
+              <!-- -->
+              <t t-if="isUserMenuUnfolded">
+                  <MobileSwitchCompanyMenu t-if="Object.values(company.availableCompanies).length > 1" />
+                  <BurgerUserMenu/>
+              </t>
+              <!-- Current App Sections -->
+                <ul t-if="!isUserMenuUnfolded" class="ps-0 mb-0">
+                    <t t-foreach="currentAppSections" t-as="subMenu" t-key="subMenu_index">
+                        <t t-call="web.BurgerSection">
+                            <t t-set="section" t-value="subMenu" />
+                        </t>
+                    </t>
+                </ul>
+          </nav>
+        </div>
+      </Transition>
+    </t>
+    <t t-portal="'body'">
+        <div t-if="state.isBurgerOpened" class="o_burger_menu_backdrop modal-backdrop show d-block d-md-none" t-on-click.stop="_closeBurger" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd" />
+    </t>
+</div>
+
+<t t-name="web.BurgerSection" owl="1">
+    <li t-if="section.childrenTree.length" class="ps-0">
+        <div class="py-3 bg-transparent" t-att-class="{ 'fs-4': !isNested }"
+            t-att-data-menu-xmlid="section.xmlid" t-esc="section.name"/>
+        <ul class="ps-0">
+            <t t-foreach="section.childrenTree" t-as="subSection" t-key="subSection_index">
+                <t t-call="web.BurgerSection">
+                    <t t-set="section" t-value="subSection"/>
+                    <t t-set="isNested" t-value="true"/>
+                </t>
+            </t>
+        </ul>
+    </li>
+    <li t-else="" t-on-click="() => this._onMenuClicked(section)"  t-att-data-menu-xmlid="section.xmlid"
+        class="py-3" t-att-class="{ 'fs-4': !isNested }">
+        <t t-esc="section.name"/>
+    </li>
+</t>
+
+</templates>

@@ -1,27 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# See https://epayments-support.ingenico.com/en/integration/all-sales-channels/flexcheckout/guide#flexcheckout_integration_guides_sha_out
-FLEXCHECKOUT_KEYS = [
-    'ALIAS.ALIASID',
-    'ALIAS.NCERROR',
-    'ALIAS.NCERRORCARDNO',
-    'ALIAS.NCERRORCN',
-    'ALIAS.NCERRORCVC',
-    'ALIAS.NCERRORED',
-    'ALIAS.ORDERID',
-    'ALIAS.STATUS',
-    'ALIAS.STOREPERMANENTLY',
-    'CARD.BIC',
-    'CARD.BIN',
-    'CARD.BRAND',
-    'CARD.CARDHOLDERNAME',
-    'CARD.CARDNUMBER',
-    'CARD.CVC',
-    'CARD.EXPIRYDATE'
-]
 # See https://epayments-support.ingenico.com/en/integration-solutions/integrations/directlink#directlink_integration_guides_request_a_new_order
 # See https://epayments-support.ingenico.com/en/integration-solutions/integrations/directlink#directlink_integration_guides_order_response
-DIRECTLINK_KEYS = [
+VALID_KEYS = [
     'AAVADDRESS',
     'AAVCHECK',
     'AAVMAIL',
@@ -86,7 +67,6 @@ DIRECTLINK_KEYS = [
     'TRXDATE',
     'VC',
 ]
-VALID_KEYS = DIRECTLINK_KEYS + FLEXCHECKOUT_KEYS
 
 
 # See https://epayments-support.ingenico.com/en/get-started/transaction-status-full/
@@ -94,4 +74,5 @@ PAYMENT_STATUS_MAPPING = {
     'pending': (41, 46, 50, 51, 52, 55, 56, 81, 82, 91, 92, 99),  # 46 = 3DS
     'done': (5, 8, 9),
     'cancel': (1,),
+    'declined': (2,),
 }

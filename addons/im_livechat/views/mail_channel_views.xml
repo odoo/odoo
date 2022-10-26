@@ -25,7 +25,7 @@
                     <field name="create_date" string="Session Date"/>
                     <field name="name" string="Attendees"/>
                     <field name="message_ids" string="# Messages"/>
-                    <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}'/>
+                    <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}' class="bg-view"/>
                 </tree>
             </field>
         </record>
@@ -36,11 +36,11 @@
             <field name="arch" type="xml">
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
-                        <div style="width:50%" class="float-right">
-                            <field name="rating_last_image" widget="image" class="float-right" readonly="1" nolabel="1"/>
+                        <div style="width:50%" class="float-end">
+                            <field name="rating_last_image" widget="image" class="float-end bg-view" readonly="1" nolabel="1"/>
                             <field name="rating_last_feedback" nolabel="1"/>
                         </div>
-                        <div style="width:50%" class="float-left">
+                        <div style="width:50%" class="float-start">
                             <group>
                                 <field name="name" string="Attendees"/>
                                 <field name="create_date" readonly="1" string="Session Date"/>
@@ -69,7 +69,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="oe_module_desc">
-                                                            <div class="float-right"><p><field name="date"/></p></div>
+                                                            <div class="float-end"><p><field name="date"/></p></div>
                                                             <div>
                                                                 <p><strong>
                                                                     <t t-if="record.author_id.raw_value"><field name="author_id"/></t>
@@ -129,7 +129,7 @@
             <field name="name">Sessions</field>
             <field name="res_model">mail.channel</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('livechat_channel_id', 'in', [active_id]), ('message_ids', '!=', False)]</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id]), ('has_message', '=', True)]</field>
             <field name="context">{
                 'search_default_livechat_channel_id': [active_id],
                 'default_livechat_channel_id': active_id,

@@ -27,6 +27,13 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
                 },
             ];
         }
+        clickBack() {
+            return [
+                {
+                    trigger: '.receipt-screen .button.back',
+                },
+            ];
+        }
     }
 
     class Check {
@@ -62,10 +69,18 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
         emailIsSuccessful() {
             return [
                 {
-                    trigger: `.receipt-screen .notice.successful`,
+                    trigger: `.receipt-screen .notice .successful`,
                     run: () => {},
                 },
             ];
+        }
+
+        customerNoteIsThere(note) {
+            return [
+                {
+                    trigger: `.receipt-screen .orderlines .pos-receipt-left-padding:contains("${note}")`
+                }
+            ]
         }
     }
 

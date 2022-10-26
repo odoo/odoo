@@ -1,7 +1,7 @@
-odoo.define('mail.emoji_mixin', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var emojis = require('mail.emojis');
+import { escape } from '@web/core/utils/strings';
+import emojis from '@mail/js/emojis';
 
 /**
  * This mixin gathers a few methods that are used to handle emojis.
@@ -14,7 +14,7 @@ var emojis = require('mail.emojis');
  * Methods are based on the collections of emojis available in mail.emojis
  *
  */
-return {
+export default {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -28,10 +28,10 @@ return {
      *
      * @param {MouseEvent} ev
      */
-    _onEmojiClick: function (ev) {
-        var unicode = ev.currentTarget.textContent.trim();
-        var textInput = this._getTargetTextElement($(ev.currentTarget))[0];
-        var selectionStart = textInput.selectionStart;
+    onEmojiClick(ev) {
+        const unicode = ev.currentTarget.textContent.trim();
+        const textInput = this._getTargetTextElement($(ev.currentTarget));
+        const selectionStart = textInput.selectionStart;
 
         textInput.value = textInput.value.slice(0, selectionStart) + unicode + textInput.value.slice(selectionStart);
         textInput.focus();
@@ -49,25 +49,12 @@ return {
      *
      * @param {String} message a text message to format
      */
-    _formatText: function (message) {
-        message = this._htmlEscape(message);
+    _formatText(message) {
+        message = escape(message);
         message = this._wrapEmojis(message);
         message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
         return message;
-    },
-
-    /**
-     * Adapted from qweb2.js#html_escape to avoid formatting '&'
-     *
-     * @param {String} s
-     * @private
-     */
-    _htmlEscape: function (s) {
-        if (s == null) {
-            return '';
-        }
-        return String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
     },
 
     /**
@@ -76,7 +63,7 @@ return {
      *
      * @param {String} message
      */
-    _wrapEmojis: function (message) {
+    _wrapEmojis(message) {
         emojis.forEach(function (emoji) {
             message = message.replace(
                 new RegExp(emoji.unicode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
@@ -87,5 +74,3 @@ return {
         return message;
     }
 };
-
-});

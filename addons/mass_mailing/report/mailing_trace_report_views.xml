@@ -1,17 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record id="mailing_trace_report_view_tree" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.tree</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <tree string="Mass Mailing Statistics" sample="1">
+                    <field name="name"/>
+                    <field name="campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <field name="mailing_type" invisible="1"/>
+                    <field name="scheduled_date" string="Scheduled On"/>
+                    <field name="state"/>
+                    <field name="scheduled"/>
+                    <field name="sent"/>
+                    <field name="delivered"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                    <field name="clicked"/>
+                    <field name="canceled" optional="hide"/>
+                    <field name="error" optional="hide"/>
+                    <field name="bounced" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="mailing_trace_report_view_pivot" model="ir.ui.view">
             <field name="name">mailing.trace.report.view.pivot</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <pivot string="Mass Mailing Statistics" disable_linking="True" sample="1">
+                <pivot string="Mass Mailing Statistics" disable_linking="1" sample="1">
                     <field name="name" type="row"/>
                     <field name="sent" type="measure"/>
+                    <field name="scheduled" type="measure"/>
                     <field name="delivered" type="measure"/>
                     <field name="opened" type="measure"/>
-                    <field name="bounced" type="measure"/>
-                    <field name="replied" type="measure" invisible="0"/>
+                    <field name="replied" type="measure"/>
                     <field name="clicked" type="measure"/>
+                    <field name="canceled"/>
+                    <field name="error"/>
+                    <field name="bounced"/>
                 </pivot>
             </field>
         </record>
@@ -20,10 +46,11 @@
             <field name="name">mailing.trace.report.view.graph</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <graph string="Mass Mailing Statistics" sample="1" disable_linking="1">
+                <graph string="Mass Mailing Statistics" disable_linking="1" sample="1">
                     <field name="name"/>
                     <field name="sent" type="measure"/>
-                    <field name="replied" invisible="0"/>
+                    <field name="replied"/>
+                    <field name="clicked"/>
                 </graph>
             </field>
         </record>
@@ -59,12 +86,13 @@
            <field name="name">Mass Mailing Analysis</field>
            <field name="res_model">mailing.trace.report</field>
            <field name="domain">[('mailing_type', '=', 'mail')]</field>
-           <field name="view_mode">graph,pivot</field>
-           <field name="help" type="html"><p>Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</p></field>
+           <field name="view_mode">graph,pivot,tree</field>
+           <field name="help" type="html">
+<p class="o_view_nocontent_smiling_face">
+    Mass Mailing Statistics allows you to check different mailing related information
+    like number of bounced mails, opened mails, replied mails. You can sort out
+    your analysis by different groups to get accurate grained analysis.
+</p>
+</field>
        </record>
-
-       <menuitem name="Reporting" id="menu_mass_mailing_report" sequence="99"
-            parent="mass_mailing_menu_root"
-            action="mailing_trace_report_action_mail"
-            groups="mass_mailing.group_mass_mailing_user"/>
 </odoo>

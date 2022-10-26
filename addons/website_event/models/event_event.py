@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 import json
 import werkzeug.urls
 
-from pytz import utc
+from pytz import utc, timezone
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv import expression
+from odoo.tools.misc import get_lang, format_date
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -19,12 +23,17 @@ class Event(models.Model):
         'event.event',
         'website.seo.metadata',
         'website.published.multi.mixin',
-        'website.cover_properties.mixin'
+        'website.cover_properties.mixin',
+        'website.searchable.mixin',
     ]
 
     def _default_cover_properties(self):
         res = super()._default_cover_properties()
-        res['opacity'] = '0.4'
+        res.update({
+            'background-image': "url('/website_event/static/src/img/event_cover_4.jpg')",
+            'opacity': '0.4',
+            'resize_class': 'cover_auto'
+        })
         return res
 
     # description
@@ -35,13 +44,31 @@ class Event(models.Model):
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
         string='Website Menu',
-        compute='_compute_website_menu', readonly=False, store=True,
-        help="Creates menus Introduction, Location and Register on the page "
-             "of the event on the website.")
+        compute='_compute_website_menu', precompute=True, readonly=False, store=True,
+        help="Allows to display and manage event-specific menus on website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
     menu_register_cta = fields.Boolean(
-        'Add Register Button', compute='_compute_menu_register_cta',
+        'Extra Register Button', compute='_compute_menu_register_cta',
         readonly=False, store=True)
+    # sub-menus management
+    introduction_menu = fields.Boolean(
+        "Introduction Menu", compute="_compute_website_menu_data",
+        readonly=False, store=True)
+    introduction_menu_ids = fields.One2many(
+        "website.event.menu", "event_id", string="Introduction Menus",
+        domain=[("menu_type", "=", "introduction")])
+    location_menu = fields.Boolean(
+        "Location Menu", compute="_compute_website_menu_data",
+        readonly=False, store=True)
+    location_menu_ids = fields.One2many(
+        "website.event.menu", "event_id", string="Location Menus",
+        domain=[("menu_type", "=", "location_menu")])
+    register_menu = fields.Boolean(
+        "Register Menu", compute="_compute_website_menu_data",
+        readonly=False, store=True)
+    register_menu_ids = fields.One2many(
+        "website.event.menu", "event_id", string="Register Menus",
+        domain=[("menu_type", "=", "register")])
     community_menu = fields.Boolean(
         "Community Menu", compute="_compute_community_menu",
         readonly=False, store=True,
@@ -54,8 +81,7 @@ class Event(models.Model):
         'Is Ongoing', compute='_compute_time_data', search='_search_is_ongoing',
         help="Whether event has begun")
     is_done = fields.Boolean(
-        'Is Done', compute='_compute_time_data',
-        help="Whether event is finished")
+        'Is Done', compute='_compute_time_data')
     start_today = fields.Boolean(
         'Start Today', compute='_compute_time_data',
         help="Whether event is going to start today if still not ongoing")
@@ -119,6 +145,15 @@ class Event(models.Model):
         (meet or track_quiz). """
         for event in self:
             event.community_menu = False
+
+    @api.depends("website_menu")
+    def _compute_website_menu_data(self):
+        """ Synchronize with website_menu at change and let people update them
+        at will afterwards. """
+        for event in self:
+            event.introduction_menu = event.website_menu
+            event.location_menu = event.website_menu
+            event.register_menu = event.website_menu
 
     @api.depends("event_type_id", "website_menu")
     def _compute_menu_register_cta(self):
@@ -186,10 +221,15 @@ class Event(models.Model):
 
         :return list: list of fields, each of which triggering a menu update
           like website_menu, website_track, ... """
-        return ['website_menu', 'community_menu']
+        return ['community_menu', 'introduction_menu', 'location_menu', 'register_menu']
 
     def _get_menu_type_field_matching(self):
-        return {'community': 'community_menu'}
+        return {
+            'community': 'community_menu',
+            'introduction': 'introduction_menu',
+            'location': 'location_menu',
+            'register': 'register_menu',
+        }
 
     def _split_menus_state_by_field(self):
         """ For each field linked to a menu, get the set of events having this
@@ -248,14 +288,11 @@ class Event(models.Model):
         """
         self.ensure_one()
         return [
-            (_('Introduction'), False, 'website_event.template_intro', 1, False),
-            (_('Location'), False, 'website_event.template_location', 50, False),
-            (_('Register'), '/event/%s/register' % slug(self), False, 100, False),
+            (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
+            (_('Location'), False, 'website_event.template_location', 50, 'location'),
+            (_('Register'), '/event/%s/register' % slug(self), False, 100, 'register'),
+            (_('Community'), '/event/%s/community' % slug(self), False, 80, 'community'),
         ]
-
-    def _get_community_menu_entries(self):
-        self.ensure_one()
-        return [(_('Community'), '/event/%s/community' % slug(self), False, 80, 'community')]
 
     def _update_website_menus(self, menus_update_by_field=None):
         """ Synchronize event configuration and its menu entries for frontend.
@@ -263,17 +300,22 @@ class Event(models.Model):
         :param menus_update_by_field: see ``_get_menus_update_by_field``"""
         for event in self:
             if event.menu_id and not event.website_menu:
-                event.menu_id.sudo().unlink()
+                # do not rely on cascade, as it is done in SQL -> not calling override and
+                # letting some ir.ui.views in DB
+                (event.menu_id + event.menu_id.child_id).sudo().unlink()
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
-            if event.website_menu and (not menus_update_by_field or event in menus_update_by_field.get('website_menu')):
-                for name, url, xml_id, menu_sequence, menu_type in event._get_website_menu_entries():
-                    event._create_menu(menu_sequence, name, url, xml_id, menu_type=menu_type)
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('community_menu')):
-                event._update_website_menu_entry('community_menu', 'community_menu_ids', '_get_community_menu_entries')
+                event._update_website_menu_entry('community_menu', 'community_menu_ids', 'community')
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('introduction_menu')):
+                event._update_website_menu_entry('introduction_menu', 'introduction_menu_ids', 'introduction')
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('location_menu')):
+                event._update_website_menu_entry('location_menu', 'location_menu_ids', 'location')
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('register_menu')):
+                event._update_website_menu_entry('register_menu', 'register_menu_ids', 'register')
 
-    def _update_website_menu_entry(self, fname_bool, fname_o2m, method_name):
+    def _update_website_menu_entry(self, fname_bool, fname_o2m, fmenu_type):
         """ Generic method to create menu entries based on a flag on event. This
         method is a bit obscure, but is due to preparation of adding new menus
         entries and pages for event in a stable version, leading to some constraints
@@ -288,38 +330,44 @@ class Event(models.Model):
         self.ensure_one()
         new_menu = None
 
+        menu_data = [menu_info for menu_info in self._get_website_menu_entries()
+                     if menu_info[4] == fmenu_type]
         if self[fname_bool] and not self[fname_o2m]:
             # menus not found but boolean True: get menus to create
-            for sequence, menu_data in enumerate(getattr(self, method_name)()):
-                # some modules have 4 data: name, url, xml_id, menu_type; however we
-                # plan to support sequence in future modules, so this hackish code is
-                # necessary to avoid crashing. Not nice, but stable target = meh.
-                if len(menu_data) == 4:
-                    (name, url, xml_id, menu_type) = menu_data
-                    menu_sequence = sequence
-                elif len(menu_data) == 5:
-                    (name, url, xml_id, menu_sequence, menu_type) = menu_data
-                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type=menu_type)
+            for name, url, xml_id, menu_sequence, menu_type in menu_data:
+                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type)
         elif not self[fname_bool]:
             # will cascade delete to the website.event.menu
             self[fname_o2m].mapped('menu_id').sudo().unlink()
 
         return new_menu
 
-    def _create_menu(self, sequence, name, url, xml_id, menu_type=False):
-        """ If url: create a website menu. Menu leads directly to the URL that
-        should be a valid route. If xml_id: create a new page, take its url back
-        thanks to new_page of website, then link it to a menu. Template is
-        duplicated and linked to a new url, meaning each menu will have its own
-        copy of the template.
+    def _create_menu(self, sequence, name, url, xml_id, menu_type):
+        """ Create a new menu for the current event.
+
+        If url: create a website menu. Menu leads directly to the URL that
+        should be a valid route.
+
+        If xml_id: create a new page using the qweb template given by its
+        xml_id. Take its url back thanks to new_page of website, then link
+        it to a menu. Template is duplicated and linked to a new url, meaning
+        each menu will have its own copy of the template. This is currently
+        limited to two menus: introduction and location.
 
         :param menu_type: type of menu. Mainly used for inheritance purpose
-          allowing more fine-grain tuning of menus. """
+          allowing more fine-grain tuning of menus.
+        """
         self.check_access_rights('write')
+        view_id = False
         if not url:
-            self.env['ir.ui.view'].with_context(_force_unlink=True).sudo().search([('name', '=', name + ' ' + self.name)]).unlink()
-            page_result = self.env['website'].sudo().new_page(name + ' ' + self.name, template=xml_id, ispage=False)
+            # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
+            # and template
+            page_result = self.env['website'].sudo().new_page(
+                name=name + ' ' + self.name, template=xml_id,
+                add_menu=False, ispage=False)
             url = "/event/" + slug(self) + "/page" + page_result['url']  # url contains starting "/"
+            view_id = page_result['view_id']
+
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,
             'url': url,
@@ -327,12 +375,12 @@ class Event(models.Model):
             'sequence': sequence,
             'website_id': self.website_id.id,
         })
-        if menu_type:
-            self.env['website.event.menu'].create({
-                'menu_id': website_menu.id,
-                'event_id': self.id,
-                'menu_type': menu_type,
-            })
+        self.env['website.event.menu'].create({
+            'menu_id': website_menu.id,
+            'event_id': self.id,
+            'menu_type': menu_type,
+            'view_id': view_id,
+        })
         return website_menu
 
     # ------------------------------------------------------------
@@ -357,26 +405,18 @@ class Event(models.Model):
             return self.env.ref('website_event.mt_event_unpublished')
         return super(Event, self)._track_subtype(init_values)
 
-    def action_open_badge_editor(self):
-        """ open the event badge editor : redirect to the report page of event badge report """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'new',
-            'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
-        }
-
     def _get_event_resource_urls(self):
-        url_date_start = self.date_begin.strftime('%Y%m%dT%H%M%SZ')
-        url_date_stop = self.date_end.strftime('%Y%m%dT%H%M%SZ')
+        url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_stop = self.date_end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
             'dates': url_date_start + '/' + url_date_stop,
+            'ctz': self.date_tz,
             'details': self.name,
         }
         if self.address_id:
-            params.update(location=self.sudo().address_id.contact_address.replace('\n', ' '))
+            params.update(location=self.address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = '/event/%d/ics?%s' % (self.id, encoded_params)
@@ -395,3 +435,119 @@ class Event(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
+
+    @api.model
+    def _search_build_dates(self):
+        today = fields.Datetime.today()
+
+        def sdn(date):
+            return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
+
+        def sd(date):
+            return fields.Datetime.to_string(date)
+
+        def get_month_filter_domain(filter_name, months_delta):
+            first_day_of_the_month = today.replace(day=1)
+            filter_string = _('This month') if months_delta == 0 \
+                else format_date(self.env, value=today + relativedelta(months=months_delta),
+                    date_format='LLLL', lang_code=get_lang(self.env).code).capitalize()
+            return [filter_name, filter_string, [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=months_delta))),
+                ("date_begin", "<", sd(first_day_of_the_month + relativedelta(months=months_delta+1)))],
+                0]
+
+        return [
+            ['upcoming', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
+            ['today', _('Today'), [
+                ("date_end", ">", sd(today)),
+                ("date_begin", "<", sdn(today))],
+                0],
+            get_month_filter_domain('month', 0),
+            ['old', _('Past Events'), [
+                ("date_end", "<", sd(today))],
+                0],
+            ['all', _('All Events'), [], 0]
+        ]
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        with_description = options['displayDescription']
+        with_date = options['displayDetail']
+        date = options.get('date', 'all')
+        country = options.get('country')
+        tags = options.get('tags')
+        event_type = options.get('type', 'all')
+
+        domain = [website.website_domain()]
+        if event_type != 'all':
+            domain.append([("event_type_id", "=", int(event_type))])
+        search_tags = self.env['event.tag']
+        if tags:
+            try:
+                tag_ids = literal_eval(tags)
+            except SyntaxError:
+                pass
+            else:
+                # perform a search to filter on existing / valid tags implicitely + apply rules on color
+                search_tags = self.env['event.tag'].search([('id', 'in', tag_ids)])
+
+            # Example: You filter on age: 10-12 and activity: football.
+            # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
+            # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
+            # ("age: 10-12" OR "age: 12-15") AND "activity: football
+            for tags in search_tags.grouped('category_id').values():
+                domain.append([('tag_ids', 'in', tags.ids)])
+
+        no_country_domain = domain.copy()
+        if country:
+            if country == 'online':
+                domain.append([("country_id", "=", False)])
+            elif country != 'all':
+                domain.append(['|', ("country_id", "=", int(country)), ("country_id", "=", False)])
+
+        no_date_domain = domain.copy()
+        dates = self._search_build_dates()
+        current_date = None
+        for date_details in dates:
+            if date == date_details[0]:
+                domain.append(date_details[2])
+                no_country_domain.append(date_details[2])
+                if date_details[0] != 'upcoming':
+                    current_date = date_details[1]
+
+        search_fields = ['name']
+        fetch_fields = ['name', 'website_url']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+        }
+        if with_description:
+            search_fields.append('subtitle')
+            fetch_fields.append('subtitle')
+            mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
+        if with_date:
+            mapping['detail'] = {'name': 'range', 'type': 'html'}
+        return {
+            'model': 'event.event',
+            'base_domain': domain,
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-ticket',
+            # for website_event main controller:
+            'dates': dates,
+            'current_date': current_date,
+            'search_tags': search_tags,
+            'no_date_domain': no_date_domain,
+            'no_country_domain': no_country_domain,
+        }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        with_date = 'detail' in mapping
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        if with_date:
+            for event, data in zip(self, results_data):
+                begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
+                end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
+                data['range'] = '%s🠖%s' % (begin, end) if begin != end else begin
+        return results_data

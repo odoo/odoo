@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import AccessError, UserError
+from odoo.osv import expression
 
 
 class PhoneMixin(models.AbstractModel):
@@ -45,32 +48,79 @@ class PhoneMixin(models.AbstractModel):
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
     def _search_phone_mobile_search(self, operator, value):
+        value = value.strip() if isinstance(value, str) else value
+        phone_fields = [
+            fname for fname in self._phone_get_number_fields()
+            if fname in self._fields and self._fields[fname].store
+        ]
+        if not phone_fields:
+            raise UserError(_('Missing definition of phone fields.'))
 
-        if len(value) <= 2:
-            raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
+        # search if phone/mobile is set or not
+        if (value is True or not value) and operator in ('=', '!='):
+            if value:
+                # inverse the operator
+                operator = '=' if operator == '!=' else '!='
+            op = expression.AND if operator == '=' else expression.OR
+            return op([[(phone_field, operator, False)] for phone_field in phone_fields])
 
-        query = f"""
-                SELECT model.id
-                FROM {self._table} model
-                WHERE REGEXP_REPLACE(model.phone, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
-                  OR REGEXP_REPLACE(model.mobile, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
-            """
+        if len(value) < 3:
+            raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
-    # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
-    # we therefore remove it from input value and search for both of them in db
+        pattern = r'[\s\\./\(\)\-]'
+        sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
+
         if value.startswith('+') or value.startswith('00'):
-            value = value.replace('+', '').replace('00', '', 1)
-            starts_with = '00|\+'
-        else:
-            starts_with = '%'
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+                # we therefore remove it from input value and search for both of them in db
+                where_str = ' AND '.join(
+                    f"""model.{phone_field} IS NULL OR (
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s OR
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s
+                    )"""
+                    for phone_field in phone_fields
+                )
+            else:
+                # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+                # we therefore remove it from input value and search for both of them in db
+                where_str = ' OR '.join(
+                    f"""model.{phone_field} IS NOT NULL AND (
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s OR
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s
+                    )"""
+                    for phone_field in phone_fields
+                )
+            query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
 
-        self._cr.execute(query, (starts_with, value, starts_with, value))
+            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:])
+            if operator not in ('=', '!='):  # for like operators
+                term = f'{term}%'
+            self._cr.execute(
+                query, (pattern, '00' + term, pattern, '+' + term) * len(phone_fields)
+            )
+        else:
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                where_str = ' AND '.join(
+                    f"(model.{phone_field} IS NULL OR REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
+                    for phone_field in phone_fields
+                )
+            else:
+                where_str = ' OR '.join(
+                    f"(model.{phone_field} IS NOT NULL AND REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
+                    for phone_field in phone_fields
+                )
+            query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
+            term = re.sub(pattern, '', value)
+            if operator not in ('=', '!='):  # for like operators
+                term = f'%{term}%'
+            self._cr.execute(query, (pattern, term) * len(phone_fields))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
         return [('id', 'in', [r[0] for r in res])]
 
-    @api.depends(lambda self: self._phone_get_number_fields())
+    @api.depends(lambda self: self._phone_get_sanitize_triggers())
     def _compute_phone_sanitized(self):
         self._assert_phone_field()
         number_fields = self._phone_get_number_fields()
@@ -139,6 +189,11 @@ class PhoneMixin(models.AbstractModel):
             raise UserError(_('Invalid primary phone field on model %s', self._name))
         if not any(fname in self and self._fields[fname].type == 'char' for fname in self._phone_get_number_fields()):
             raise UserError(_('Invalid primary phone field on model %s', self._name))
+
+    def _phone_get_sanitize_triggers(self):
+        """ Tool method to get all triggers for sanitize """
+        res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
+        return res + self._phone_get_number_fields()
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to

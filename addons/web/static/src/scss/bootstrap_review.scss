@@ -17,6 +17,12 @@
     @include text-emphasis-variant(".text-#{$color}", $value);
 }
 
+// Restore text-X from BS4 that use text-emphasis-variant
+@each $color, $value in $theme-colors {
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+
 .card-body {
     // BS4 colored cards do not have a very popular design. This will reset them
     // to a BS3-like one: only the header and footer are colored and the body
@@ -60,23 +66,24 @@
 
 // Modify modals so that their scrollable element is the modal-body (except in
 // mobile).
+// TODO: should be replaced by .modal-dialog-scrollable class
 @include media-breakpoint-up(sm) {
-    .modal-dialog {
-        height: 100%;
-        padding: $modal-dialog-margin-y-sm-up 0;
-        margin: 0 auto;
-    }
-    .modal-content {
-        max-height: 100%;
-    }
-    .modal-header, .modal-footer {
-        flex: 0 0 auto;
-    }
-    .modal-body {
-        overflow: auto;
-        // fix iOS issue https://github.com/scottjehl/Device-Bugs/issues/8
-        -webkit-transform: translate3d(0, 0, 0);
-        min-height: 0;
+    :not(.s_popup) > .modal {
+        .modal-dialog {
+            height: 100%;
+            padding: $modal-dialog-margin-y-sm-up 0;
+            margin: 0 auto;
+        }
+        .modal-content {
+            max-height: 100%;
+        }
+        .modal-header, .modal-footer {
+            flex: 0 0 auto;
+        }
+        .modal-body {
+            overflow: auto;
+            min-height: 0;
+        }
     }
 }
 
@@ -90,30 +97,29 @@
 .modal-backdrop {
     display: none;
 }
-.modal:not([data-backdrop="false"]) {
+.modal:not([data-bs-backdrop="false"]) {
     background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
 }
 
-// Restore pointer cursor which came with the 'btn' class until BS 4.3.1
-.btn:not(:disabled):not(.disabled) {
-    cursor: pointer;
+// Force field label pointer to cursor
+.form-check, .form-select {
+    @include o-field-pointer();
+}
+
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
 }
 
 // Disable RTL for the popover position
 .popover {
     right: auto#{"/*rtl:ignore*/"};
-}
-
-// Review input group: BS allows to control button and input dimensions
-// individually but fails to make input-group correctly in all cases (for some
-// strange reasons they made it work well for sm and lg but not for the normal
-// sizing).
-.input-group-prepend,
-.input-group-append {
-    > .btn {
-        @include button-size($input-padding-y, $input-padding-x, $input-font-size, $input-line-height, $input-border-radius);
-        border-width: $input-border-width;
-    }
 }
 
 // Review $link-decoration behavior
@@ -184,4 +190,8 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     @if $o-navbar-nav-pills-link-border-radius != $nav-pills-border-radius {
         @include border-radius($o-navbar-nav-pills-link-border-radius);
     }
+}
+
+.carousel-control-next .visually-hidden {
+    left: 50%; // Avoid horizontal scrollbar in Chrome
 }

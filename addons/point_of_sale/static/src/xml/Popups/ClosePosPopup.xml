@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ClosePosPopup" owl="1">
+            <div class="popup close-pos-popup">
+                <header>
+                    <div class="title">Closing Session</div>
+                    <div class="total-orders">
+                        Total <t t-esc="ordersDetails.quantity"/> orders:
+                        <span class="amount" t-esc="env.pos.format_currency(ordersDetails.amount)"/>
+                    </div>
+                </header>
+                <main class="body">
+                    <div class="payment-methods-overview">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Payment Method</th>
+                                    <th>Expected</th>
+                                    <th style="width: 25%">Counted</th>
+                                    <th style="width: 20%">Difference</th>
+                                </tr>
+                            </thead>
+                            <t t-if="cashControl">
+                                <tbody>
+                                    <tr>
+                                        <td t-esc="defaultCashDetails.name"/>
+                                        <td t-esc="env.pos.format_currency(defaultCashDetails.amount)"/>
+                                        <td class="flex" t-on-input="() => this.handleInputChange(defaultCashDetails.id)">
+                                            <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted"/>
+                                            <div class="button icon" t-on-click="openDetailsPopup">
+                                                <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="env.pos.format_currency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
+                                    </tr>
+                                </tbody>
+                                <tbody class="cash-overview">
+                                    <tr>
+                                        <td>Opening</td>
+                                        <td t-esc="env.pos.format_currency(defaultCashDetails.opening)"/>
+                                    </tr>
+                                    <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move_index">
+                                        <td>
+                                            <div class="flex">
+                                                <div class="cash-sign" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
+                                                <t t-esc="move.name"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="env.pos.format_currency(Math.abs(move.amount))"/>
+                                    </tr>
+                                    <tr t-if="defaultCashDetails.payment_amount">
+                                        <td>
+                                            <div class="flex">
+                                                <div class="cash-sign" t-esc="defaultCashDetails.payment_amount &lt; 0 ? '-' : '+'"/>
+                                                Payments in <t t-esc="defaultCashDetails.name"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="env.pos.format_currency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                    </tr>
+                                </tbody>
+                            </t>
+                            <tbody t-if="otherPaymentMethods.length &gt; 0">
+                                <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
+                                    <td t-esc="pm.name"/>
+                                    <td t-esc="env.pos.format_currency(pm.amount)"/>
+                                    <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
+                                    <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
+                                    <td t-if="_showDiff" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="notes-container">
+                        <div class="opening-notes" t-if="openingNotes" >
+                            <t t-esc="openingNotes"/>
+                        </div>
+                        <textarea class="closing-notes" placeholder="Add a closing note..." t-model="state.notes"/>
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div class="button highlight" t-on-click="confirm">Close Session</div>
+                    <div class="button" t-on-click="closePos" title="Visit the Backend but keep session open">Backend</div>
+                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Discard</div>
+                    <!-- Download Sale Details -->
+                    <div class="small button icon" 
+                        t-on-click="downloadSalesReport" 
+                        title="Download a report with all the sales of the current PoS Session">
+                            <i class="fa fa-download" role="img"/>
+                    </div>
+                    <!-- Print Sale Details -->
+                    <div t-if="env.proxy.printer" class="small button icon">
+                        <SaleDetailsButton/>
+                    </div>
+                </footer>
+            </div>
+            <MoneyDetailsPopup
+                t-if="state.displayMoneyDetailsPopup"
+                manualInputCashCount="manualInputCashCount"
+                onConfirm.bind="updateCountedCash"
+                onDiscard.bind="closeDetailsPopup"
+            />
+    </t>
+
+</templates>

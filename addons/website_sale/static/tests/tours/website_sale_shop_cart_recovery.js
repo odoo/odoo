@@ -2,7 +2,6 @@ odoo.define('website_sale.tour_shop_cart_recovery', function (require) {
 'use strict';
 
 var localStorage = require('web.local_storage');
-var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
 const tourUtils = require('website_sale.tour_utils');
 require('web.dom_ready');
@@ -48,11 +47,11 @@ tour.register('shop_cart_recovery', {
     },
     {
         content: "click action",
-        trigger: '.o_dropdown_toggler_btn:contains("Action")',
+        trigger: '.dropdown-toggle:contains("Action")',
     },
     {
         content: "click Send a Cart Recovery Email",
-        trigger: 'a:containsExact("Send a Cart Recovery Email")',
+        trigger: 'span:containsExact("Send a Cart Recovery Email")',
     },
     {
         content: "click Send email",

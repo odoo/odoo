@@ -7,39 +7,39 @@
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
                 <form string="Job">
-                    <header>
-                        <button name="set_recruit" string="Start Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" groups="base.group_user"/>
-                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
-                    </header>
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
                         </div>
-                        <notebook> 
-                            <page string="Job Description">
-                                <div attrs="{'invisible': [('state', '!=', 'recruit')]}" name="job_description">
-                                    <label for="description"/>
-                                    <field name="description"/>
-                                </div>
-                            </page>
-                            <page string="Recruitment">
+                        <notebook>
+                            <page string="Recruitment" name="recruitment_page">
                                 <group>
                                     <group name="recruitment">
                                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                         <field name="department_id"/>
+                                        <field name="contract_type_id"/>
                                     </group>
-                                    <group>
-                                        <field name="no_of_recruitment"/>
+                                    <group name="recruitment2">
+                                        <label for="no_of_recruitment"/>
+                                        <div class="o_row" name="recruitment_target">
+                                            <field name="no_of_recruitment" class="col-3 ps-0"/>
+                                            <span class="ps-1">new Employees</span>
+                                        </div>
                                     </group>
                                 </group>
+                            </page>
+                            <page string="Job Summary" name="job_description_page">
+                                <field name="description" options="{'collaborative': true}"/>
                             </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -50,15 +50,15 @@
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
                 <tree string="Job" sample="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="department_id"/>
-                    <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
-                    <field name="expected_employees"/>
-                    <field name="no_of_hired_employee"/>
-                    <field name="state"/>
+                    <field name="no_of_employee" optional="hide"/>
+                    <field name="expected_employees" optional="hide"/>
+                    <field name="no_of_hired_employee" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -79,9 +79,6 @@
                                 </div>
                                 <div t-if="!selection_mode">
                                     <span>Vacancies : <field name="expected_employees"/></span>
-                                    <span t-att-class="record.state.raw_value == 'recruit'  and 'float-right badge badge-success' or 'float-right badge badge-danger'">
-                                        <field name="state"/>
-                                    </span>
                                 </div>
                             </div>
                         </t>
@@ -97,14 +94,14 @@
                 <search string="Jobs">
                     <field name="name" string="Job Position"/>
                     <field name="department_id" operator="child_of"/>
-                    <filter name="in_position" string="In Position" domain="[('state', '=', 'open')]"/>
-                    <filter name="in_recruitment" string="In Recruitment" domain="[('state', '=', 'recruit')]"/>
                     <separator/>
                     <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Employment Type" name="employment_type" domain="[]" context="{'group_by': 'contract_type_id'}"/>
                     </group>
                 </search>
             </field>

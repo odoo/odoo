@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-import uuid
+from psycopg2 import sql
+
+import hashlib
 import pytz
 
 from odoo import fields, models, api, _
@@ -28,13 +30,29 @@ class WebsiteTrack(models.Model):
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
     _description = 'Website Visitor'
-    _order = 'last_connection_datetime DESC'
+    _order = 'id DESC'
 
-    name = fields.Char('Name')
-    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=False, copy=False, groups='website.group_website_publisher')
-    active = fields.Boolean('Active', default=True)
+    def _get_access_token(self):
+        """ Either the user's partner.id or a hash. """
+        if not request:
+            raise ValueError("Visitors can only be created through the frontend.")
+
+        if not request.env.user._is_public():
+            return request.env.user.partner_id.id
+
+        msg = repr((
+            request.httprequest.remote_addr,
+            request.httprequest.environ.get('HTTP_USER_AGENT'),
+            request.session.sid,
+        )).encode('utf-8')
+        # Keep same length (32) as before, it will ease the migration without
+        # any real downside
+        return hashlib.sha1(msg).hexdigest()[:32]
+
+    name = fields.Char('Name', related='partner_id.name')
+    access_token = fields.Char(required=True, default=_get_access_token, copy=False)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.")
+    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.", compute='_compute_partner_id', store=True, index='btree_not_null')
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
@@ -49,7 +67,7 @@ class WebsiteVisitor(models.Model):
     visit_count = fields.Integer('# Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
-    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", groups="website.group_website_designer")
+    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", groups="website.group_website_designer", search="_search_page_ids")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
     last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
@@ -61,15 +79,27 @@ class WebsiteVisitor(models.Model):
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),
-        ('partner_uniq', 'unique(partner_id)', 'A partner is linked to only one visitor.'),
     ]
 
-    @api.depends('name')
+    @api.depends('partner_id')
     def name_get(self):
-        return [(
-            record.id,
-            (record.name or _('Website Visitor #%s', record.id))
-        ) for record in self]
+        res = []
+        for record in self:
+            res.append((
+                record.id,
+                record.partner_id.name or _('Website Visitor #%s', record.id)
+            ))
+        return res
+
+    @api.depends('access_token')
+    def _compute_partner_id(self):
+        # The browse in the loop is fine, there is no SQL Query on partner here
+        for visitor in self:
+            # If the access_token is not a 32 length hexa string, it means that
+            # the visitor is linked to a logged in user, in which case its
+            # partner_id is used instead as the token.
+            partner_id = len(visitor.access_token) != 32 and int(visitor.access_token)
+            visitor.partner_id = self.env['res.partner'].browse(partner_id)
 
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
     def _compute_email_phone(self):
@@ -90,7 +120,7 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
-        results = self.env['website.track'].read_group(
+        results = self.env['website.track']._read_group(
             [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id', 'url'], ['visitor_id', 'page_id', 'url'], lazy=False)
         mapped_data = {}
         for result in results:
@@ -107,11 +137,17 @@ class WebsiteVisitor(models.Model):
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
 
+    def _search_page_ids(self, operator, value):
+        if operator not in ('like', 'ilike', 'not like', 'not ilike', '=like', '=ilike', '=', '!='):
+            raise ValueError(_('This operator is not supported'))
+        return [('website_track_ids.page_id.name', operator, value)]
+
     @api.depends('website_track_ids.page_id')
     def _compute_last_visited_page_id(self):
-        results = self.env['website.track'].read_group([('visitor_id', 'in', self.ids)],
-                                                       ['visitor_id', 'page_id', 'visit_datetime:max'],
-                                                       ['visitor_id', 'page_id'], lazy=False)
+        results = self.env['website.track']._read_group(
+            [('visitor_id', 'in', self.ids)],
+            ['visitor_id', 'page_id', 'visit_datetime:max'],
+            ['visitor_id', 'page_id'], lazy=False)
         mapped_data = {result['visitor_id'][0]: result['page_id'][0] for result in results if result['page_id']}
         for visitor in self:
             visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
@@ -157,70 +193,115 @@ class WebsiteVisitor(models.Model):
             'context': compose_ctx,
         }
 
-    def _get_visitor_from_request(self, force_create=False):
-        """ Return the visitor as sudo from the request if there is a visitor_uuid cookie.
-            It is possible that the partner has changed or has disconnected.
-            In that case the cookie is still referencing the old visitor and need to be replaced
-            with the one of the visitor returned !!!. """
+    def _upsert_visitor(self, access_token, force_track_values=None):
+        """ Based on the given `access_token`, either create or return the
+        related visitor if exists, through a single raw SQL UPSERT Query.
+
+        It will also create a tracking record if requested, in the same query.
+
+        :param access_token: token to be used to upsert the visitor
+        :param force_track_values: an optional dict to create a track at the
+            same time.
+        :return: a tuple containing the visitor id and the upsert result (either
+            `inserted` or `updated).
+        """
+        country_code = request.geoip.get('country_code')
+        country_id = request.env['res.country'].sudo().search([
+            ('code', '=', country_code)
+        ], limit=1).id if country_code else None
+        create_values = {
+            'access_token': access_token,
+            'lang_id': request.lang.id,
+            'country_id': country_id,
+            'website_id': request.website.id,
+            'timezone': self._get_visitor_timezone() or None,
+            'write_uid': self.env.uid,
+            'create_uid': self.env.uid,
+            # If the access_token is not a 32 length hexa string, it means that the
+            # visitor is linked to a logged in user, in which case its partner_id is
+            # used instead as the token.
+            'partner_id': None if len(str(access_token)) == 32 else access_token,
+        }
+
+        query = """
+            INSERT INTO website_visitor (
+                partner_id, access_token, last_connection_datetime, visit_count, lang_id,
+                country_id, website_id, timezone, write_uid, create_uid, write_date, create_date)
+            VALUES (
+                %(partner_id)s, %(access_token)s, now() at time zone 'UTC', 1, %(lang_id)s,
+                %(country_id)s, %(website_id)s, %(timezone)s, %(create_uid)s, %(write_uid)s,
+                now() at time zone 'UTC', now() at time zone 'UTC')
+            ON CONFLICT (access_token)
+            DO UPDATE SET
+                last_connection_datetime=excluded.last_connection_datetime,
+                visit_count = CASE WHEN website_visitor.last_connection_datetime < NOW() AT TIME ZONE 'UTC' - INTERVAL '8 hours'
+                                    THEN website_visitor.visit_count + 1
+                                    ELSE website_visitor.visit_count
+                                END
+            RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
+        """
+
+        if force_track_values:
+            create_values['url'] = force_track_values['url']
+            create_values['page_id'] = force_track_values.get('page_id')
+            query = sql.SQL("""
+                WITH visitor AS (
+                    {query}, %(url)s AS url, %(page_id)s AS page_id
+                ), track AS (
+                    INSERT INTO website_track (visitor_id, url, page_id, visit_datetime)
+                    SELECT id, url, page_id::integer, now() at time zone 'UTC' FROM visitor
+                )
+                SELECT id, upsert from visitor;
+            """).format(query=sql.SQL(query))
+
+        self.env.cr.execute(query, create_values)
+        return self.env.cr.fetchone()
+
+    def _get_visitor_from_request(self, force_create=False, force_track_values=None):
+        """ Return the visitor as sudo from the request.
+
+        :param bool force_create: force a visitor creation if no visitor exists
+        :param force_track_values: an optional dict to create a track at the
+            same time.
+        :return: the website visitor if exists or forced, empty recordset
+                 otherwise.
+        """
 
         # This function can be called in json with mobile app.
         # In case of mobile app, no uid is set on the jsonRequest env.
         # In case of multi db, _env is None on request, and request.env unbound.
-        if not request:
+        if not (request and request.env and request.env.uid):
             return None
+
         Visitor = self.env['website.visitor'].sudo()
         visitor = Visitor
-        access_token = request.httprequest.cookies.get('visitor_uuid')
-        if access_token:
-            visitor = Visitor.with_context(active_test=False).search([('access_token', '=', access_token)])
-            # Prefetch access_token and other fields. Since access_token has a restricted group and we access
-            # a non restricted field (partner_id) first it is not fetched and will require an additional query to be retrieved.
-            visitor.access_token
+        access_token = self._get_access_token()
 
-        if not self.env.user._is_public():
-            partner_id = self.env.user.partner_id
-            if not visitor or visitor.partner_id and visitor.partner_id != partner_id:
-                # Partner and no cookie or wrong cookie
-                visitor = Visitor.with_context(active_test=False).search([('partner_id', '=', partner_id.id)])
-        elif visitor and visitor.partner_id:
-            # Cookie associated to a Partner
-            visitor = Visitor
+        if force_create:
+            visitor_id, _ = self._upsert_visitor(access_token, force_track_values)
+            visitor = Visitor.browse(visitor_id)
+        else:
+            visitor = Visitor.search([('access_token', '=', access_token)])
 
-        if visitor and not visitor.timezone:
+        if not force_create and visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
             if tz:
-                visitor.timezone = tz
-        if not visitor and force_create:
-            visitor = self._create_visitor()
+                visitor._update_visitor_timezone(tz)
 
         return visitor
 
-    def _handle_webpage_dispatch(self, response, website_page):
-        # get visitor. Done here to avoid having to do it multiple times in case of override.
-        visitor_sudo = self._get_visitor_from_request(force_create=True)
-        if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
-            expiration_date = datetime.now() + timedelta(days=365)
-            response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
-        self._handle_website_page_visit(website_page, visitor_sudo)
+    def _handle_webpage_dispatch(self, website_page):
+        """ Create a website.visitor if the http request object is a tracked
+        website.page or a tracked ir.ui.view.
+        Since this method is only called on tracked elements, the
+        last_connection_datetime might not be accurate as the visitor could have
+        been visiting only untracked page during his last visit."""
 
-    def _handle_website_page_visit(self, website_page, visitor_sudo):
-        """ Called on dispatch. This will create a website.visitor if the http request object
-        is a tracked website page or a tracked view. Only on tracked elements to avoid having
-        too much operations done on every page or other http requests.
-        Note: The side effect is that the last_connection_datetime is updated ONLY on tracked elements."""
         url = request.httprequest.url
-        website_track_values = {
-            'url': url,
-            'visit_datetime': datetime.now(),
-        }
+        website_track_values = {'url': url}
         if website_page:
             website_track_values['page_id'] = website_page.id
-            domain = [('page_id', '=', website_page.id)]
-        else:
-            domain = [('url', '=', url)]
-        visitor_sudo._add_tracking(domain, website_track_values)
-        if visitor_sudo.lang_id.id != request.lang.id:
-            visitor_sudo.write({'lang_id': request.lang.id})
+        self._get_visitor_from_request(force_create=True, force_track_values=website_track_values)
 
     def _add_tracking(self, domain, website_track_values):
         """ Add the track and update the visitor"""
@@ -231,83 +312,74 @@ class WebsiteVisitor(models.Model):
             self.env['website.track'].create(website_track_values)
         self._update_visitor_last_visit()
 
-    def _create_visitor(self):
-        """ Create a visitor. Tracking is added after the visitor has been created."""
-        country_code = request.session.get('geoip', {}).get('country_code', False)
-        country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id if country_code else False
-        vals = {
-            'lang_id': request.lang.id,
-            'country_id': country_id,
-            'website_id': request.website.id,
-        }
+    def _merge_visitor(self, target):
+        """ Merge an anonymous visitor data to a partner visitor then unlink
+        that anonymous visitor.
+        Purpose is to try to aggregate as much sub-records (tracked pages,
+        leads, ...) as possible.
+        It is especially useful to aggregate data from the same user on
+        different devices.
 
-        tz = self._get_visitor_timezone()
-        if tz:
-            vals['timezone'] = tz
+        This method is meant to be overridden for other modules to merge their
+        own anonymous visitor data to the partner visitor before unlink.
 
-        if not self.env.user._is_public():
-            vals['partner_id'] = self.env.user.partner_id.id
-            vals['name'] = self.env.user.partner_id.name
-        return self.sudo().create(vals)
-
-    def _link_to_partner(self, partner, update_values=None):
-        """ Link visitors to a partner. This method is meant to be overridden in
-        order to propagate, if necessary, partner information to sub records.
-
-        :param partner: partner used to link sub records;
-        :param update_values: optional values to update visitors to link;
-        """
-        vals = {'name': partner.name}
-        if update_values:
-            vals.update(update_values)
-        self.write(vals)
-
-    def _link_to_visitor(self, target, keep_unique=True):
-        """ Link visitors to target visitors, because they are linked to the
-        same identity. Purpose is mainly to propagate partner identity to sub
-        records to ease database update and decide what to do with "duplicated".
-        THis method is meant to be overridden in order to implement some specific
-        behavior linked to sub records of duplicate management.
+        This method is only called after the user logs in.
 
         :param target: main visitor, target of link process;
-        :param keep_unique: if True, find a way to make target unique;
         """
-        # Link sub records of self to target partner
-        if target.partner_id:
-            self._link_to_partner(target.partner_id)
-        # Link sub records of self to target visitor
-        self.website_track_ids.write({'visitor_id': target.id})
+        if not target.partner_id:
+            raise ValueError("The `target` visitor should be linked to a partner.")
+        self.website_track_ids.visitor_id = target.id
+        self.unlink()
 
-        if keep_unique:
-            self.unlink()
+    def _cron_unlink_old_visitors(self):
+        """ Unlink inactive visitors (see '_inactive_visitors_domain' for
+        details).
 
-        return target
+        Visitors were previously archived but we came to the conclusion that
+        archived visitors have very little value and bloat the database for no
+        reason. """
 
-    def _cron_archive_visitors(self):
-        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 30))
+        self.env['website.visitor'].sudo().search(self._inactive_visitors_domain()).unlink()
+
+    def _inactive_visitors_domain(self):
+        """ This method defines the domain of visitors that can be cleaned. By
+        default visitors not linked to any partner and not active for
+        'website.visitor.live.days' days (default being 60) are considered as
+        inactive.
+
+        This method is meant to be overridden by sub-modules to further refine
+        inactivity conditions. """
+
+        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 60))
         deadline = datetime.now() - timedelta(days=delay_days)
-        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
-        visitors_to_archive.write({'active': False})
+        return [('last_connection_datetime', '<', deadline), ('partner_id', '=', False)]
+
+    def _update_visitor_timezone(self, timezone):
+        """ We need to do this part here to avoid concurrent updates error. """
+        query = """
+            UPDATE website_visitor
+            SET timezone = %s
+            WHERE id IN (
+                SELECT id FROM website_visitor WHERE id = %s
+                FOR NO KEY UPDATE SKIP LOCKED
+            )
+        """
+        self.env.cr.execute(query, (timezone, self.id))
 
     def _update_visitor_last_visit(self):
-        """ We need to do this part here to avoid concurrent updates error. """
-        try:
-            with self.env.cr.savepoint():
-                query_lock = "SELECT * FROM website_visitor where id = %s FOR NO KEY UPDATE NOWAIT"
-                self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
-
-                date_now = datetime.now()
-                query = "UPDATE website_visitor SET "
-                if self.last_connection_datetime < (date_now - timedelta(hours=8)):
-                    query += "visit_count = visit_count + 1,"
-                query += """
-                    active = True,
-                    last_connection_datetime = %s
-                    WHERE id = %s
-                """
-                self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
-        except Exception:
-            pass
+        date_now = datetime.now()
+        query = "UPDATE website_visitor SET "
+        if self.last_connection_datetime < (date_now - timedelta(hours=8)):
+            query += "visit_count = visit_count + 1,"
+        query += """
+            last_connection_datetime = %s
+            WHERE id IN (
+                SELECT id FROM website_visitor WHERE id = %s
+                FOR NO KEY UPDATE SKIP LOCKED
+            )
+        """
+        self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
 
     def _get_visitor_timezone(self):
         tz = request.httprequest.cookies.get('tz') if request else None

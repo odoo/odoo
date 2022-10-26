@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectUpdateKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-component='props.Renderer']" position="after">
+            <ProjectRightSidePanel
+                context="props.context"
+                domain="props.domain"
+            />
+        </xpath>
+    </t>
+
+</templates>

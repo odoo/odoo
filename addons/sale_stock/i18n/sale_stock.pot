@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:29+0000\n"
-"PO-Revision-Date: 2020-12-11 07:29+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,14 @@ msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                </span>"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
@@ -48,11 +56,6 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
-msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr ""
 
 #. module: sale_stock
@@ -77,14 +80,6 @@ msgid "<strong>Incoterm:</strong>"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
@@ -92,11 +87,6 @@ msgid ""
 "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_aftersale
-msgid "After-Sale"
 msgstr ""
 
 #. module: sale_stock
@@ -183,35 +173,17 @@ msgid "Delivery Orders"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
+msgid "Delivery Status"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines in case of Service products. In case of "
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
-msgid "Display Name"
 msgstr ""
 
 #. module: sale_stock
@@ -297,31 +269,13 @@ msgid "Free Qty Today"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
-msgid "Has late picking"
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
+msgid "Fully Delivered"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
-#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
-#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__id
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
-#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
-#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
-msgid "ID"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
 msgstr ""
 
 #. module: sale_stock
@@ -343,6 +297,11 @@ msgid "Incoterm"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
+msgid "Incoterm Location"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
@@ -361,13 +320,8 @@ msgid "Inventory"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_location_route
+#: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Routes"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_invoiced
-msgid "Invoicing"
 msgstr ""
 
 #. module: sale_stock
@@ -391,35 +345,17 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_move____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_account_move_line____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_product_template____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_res_company____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_res_users____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rule____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report____last_update
-msgid "Last Modified on"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
+msgid "Lead Time"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_production_lot
+#: model:ir.model,name:sale_stock.model_stock_lot
 msgid "Lot/Serial"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
+#: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Make To Order"
 msgstr ""
@@ -472,6 +408,18 @@ msgid "No future availaibility"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
+msgid "Not Delivered"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
+
+#. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
@@ -479,14 +427,8 @@ msgid "On"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid "Ordered quantity decreased!"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
-msgid "Package"
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
+msgid "Partially Delivered"
 msgstr ""
 
 #. module: sale_stock
@@ -502,12 +444,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
-msgid "Product Template"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_type
-msgid "Product Type"
+msgid "Product"
 msgstr ""
 
 #. module: sale_stock
@@ -560,7 +497,7 @@ msgid "Sale Orders"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
 msgid "Sale order count"
 msgstr ""
 
@@ -591,7 +528,7 @@ msgid "Sales Order Lines"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
 msgid "Sales Orders"
 msgstr ""
 
@@ -621,7 +558,7 @@ msgid "Security Lead Time for Sales"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
 msgid "Selectable on Sales Order Line"
 msgstr ""
 
@@ -638,18 +575,6 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
-msgid "Sold in the last 365 days"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
-msgid ""
-"Some products have already been delivered. Returns can be created from the "
-"Delivery Orders."
 msgstr ""
 
 #. module: sale_stock
@@ -700,11 +625,11 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
+#: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
-"%(quantity).2f %(unit)s."
+"The ordered quantity cannot be decreased below the amount already delivered."
+" Instead, create a return in your inventory."
 msgstr ""
 
 #. module: sale_stock
@@ -726,7 +651,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
-msgid "Users"
+msgid "User"
 msgstr ""
 
 #. module: sale_stock
@@ -751,12 +676,6 @@ msgstr ""
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid "Warning"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
 msgid "Warning!"
 msgstr ""
 
@@ -768,22 +687,6 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid ""
-"You cannot decrease the ordered quantity below the delivered quantity.\n"
-"Create a return first."
 msgstr ""
 
 #. module: sale_stock

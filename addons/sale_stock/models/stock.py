@@ -1,30 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
+from odoo.tools.sql import column_exists, create_column
 
 
-class StockLocationRoute(models.Model):
-    _inherit = "stock.location.route"
+class StockRoute(models.Model):
+    _inherit = "stock.route"
     sale_selectable = fields.Boolean("Selectable on Sales Order Line")
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index=True)
+    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
         distinct_fields.append('sale_line_id')
         return distinct_fields
-
-    @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        move.ensure_one()
-        keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
-        keys_sorted.append(move.sale_line_id.id)
-        return keys_sorted
 
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
@@ -63,19 +59,31 @@ class StockRule(models.Model):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
-        fields += ['sale_line_id', 'partner_id']
+        fields += ['sale_line_id', 'partner_id', 'sequence']
         return fields
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
+    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False, index='btree_not_null')
+
+    def _auto_init(self):
+        """
+        Create related field here, too slow
+        when computing it afterwards through _compute_related.
+
+        Since group_id.sale_id is created in this module,
+        no need for an UPDATE statement.
+        """
+        if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
+            create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
+        return super()._auto_init()
 
     def _action_done(self):
         res = super()._action_done()
         sale_order_lines_vals = []
-        for move in self.move_lines:
+        for move in self.move_ids:
             sale_order = move.picking_id.sale_id
             # Creates new SO line only when pickings linked to a sale order and
             # for moves with qty. done and not already linked to a SO line.
@@ -89,6 +97,7 @@ class StockPicking(models.Model):
                 'product_id': product.id,
                 'product_uom_qty': 0,
                 'qty_delivered': move.quantity_done,
+                'product_uom': move.product_uom.id,
             }
             if product.invoice_policy == 'delivery':
                 # Check if there is already a SO line for this product to get
@@ -102,21 +111,17 @@ class StockPicking(models.Model):
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
-            self.env['sale.order.line'].create(sale_order_lines_vals)
+            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
         return res
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
-        note summarize the real proccessed quantity and promote a
+        note summarize the real processed quantity and promote a
         manual action.
 
         :param dict moves: a dict with a move as key and tuple with
         new and old quantity as value. eg: {move_1 : (4, 5)}
         """
-
-        def _keys_in_sorted(sale_line):
-            """ sort by order_id and the sale_person on the order """
-            return (sale_line.order_id.id, sale_line.order_id.user_id.id)
 
         def _keys_in_groupby(sale_line):
             """ group by order_id and the sale_person on the order """
@@ -140,29 +145,28 @@ class StockPicking(models.Model):
                 'origin_picking': origin_picking,
                 'moves_information': moves_information.values(),
             }
-            return self.env.ref('sale_stock.exception_on_picking')._render(values=values)
+            return self.env['ir.qweb']._render('sale_stock.exception_on_picking', values)
 
-        documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_groupby)
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
-class ProductionLot(models.Model):
-    _inherit = 'stock.production.lot'
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
 
     sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
     sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
+        sale_orders = defaultdict(lambda: self.env['sale.order'])
+        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
+            move = move_line.move_id
+            if move.picking_id.location_dest_id.usage == 'customer' and move.sale_line_id.order_id:
+                sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
-            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_ids = sale_orders[lot.id]
             lot.sale_order_count = len(lot.sale_order_ids)
 
     def action_view_so(self):

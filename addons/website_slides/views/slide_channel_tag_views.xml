@@ -39,7 +39,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record id="slide_channel_tag_action" model="ir.actions.act_window">
         <field name="name">Course Tags</field>
         <field name="res_model">slide.channel.tag</field>
@@ -53,6 +53,7 @@
         <field name="arch" type="xml">
             <search string="Course Tag Groups">
                 <field name="name"/>
+                <filter string="Has Menu Entry" name="filter_is_published" domain="[('is_published', '=', True)]"/>
             </search>
         </field>
     </record>
@@ -70,7 +71,7 @@
                         <field name="is_published"/><br/>
                     </div>
                     <group>
-                        <field name="tag_ids">
+                        <field name="tag_ids" nolabel="1">
                             <tree editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="group_sequence" invisible="1"/>
@@ -104,6 +105,14 @@
         <field name="name">Course Groups</field>
         <field name="res_model">slide.channel.tag.group</field>
         <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Course Group
+            </p>
+            <p>
+                Use Course Groups to classify and organize your Courses.
+            </p>
+        </field>
     </record>
 
     </data>

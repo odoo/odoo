@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.http import request
@@ -30,7 +28,7 @@ class MailingSMSController(http.Controller):
     def blacklist_page(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
-            return werkzeug.utils.redirect('/web')
+            return request.redirect('/web')
         return request.render('mass_mailing_sms.blacklist_main', {
             'mailing_id': mailing_id,
             'trace_code': trace_code,
@@ -40,8 +38,8 @@ class MailingSMSController(http.Controller):
     def blacklist_number(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
-            return werkzeug.utils.redirect('/web')
-        country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False) if request.session.get('geoip') else None
+            return request.redirect('/web')
+        country_code = request.geoip.get('country_code')
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
         sanitize_res = phone_validation.phone_sanitize_numbers([sms_number], country_code, None)[sms_number]
@@ -88,9 +86,7 @@ class MailingSMSController(http.Controller):
 
     @http.route('/r/<string:code>/s/<int:sms_sms_id>', type='http', auth="public")
     def sms_short_link_redirect(self, code, sms_sms_id, **post):
-        # don't assume geoip is set, it is part of the website module
-        # which mass_mailing doesn't depend on
-        country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
+        country_code = request.geoip.get('country_code')
         if sms_sms_id:
             trace_id = request.env['mailing.trace'].sudo().search([('sms_sms_id_int', '=', int(sms_sms_id))]).id
         else:
@@ -102,4 +98,4 @@ class MailingSMSController(http.Controller):
             country_code=country_code,
             mailing_trace_id=trace_id
         )
-        return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
+        return request.redirect(request.env['link.tracker'].get_url_from_code(code), code=301, local=False)

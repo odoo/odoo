@@ -35,7 +35,7 @@
             <field name="name">report.membership.pivot</field>
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
-                <pivot string="Membership" disable_linking="True" sample="1">
+                <pivot string="Membership" sample="1">
                     <field name="membership_id" type="row"/>
                     <field name="start_date" interval="month" type="col"/>
                     <field name="quantity" type="measure"/>
@@ -50,13 +50,33 @@
             <field name="name">report.membership.graph1</field>
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
-                <graph string="Membership" sample="1" disable_linking="1">
-                    <field name="membership_id" type="row"/>
-                    <field name="start_date" interval="month" type="col"/>
+                <graph string="Membership" sample="1">
+                    <field name="membership_id"/>
+                    <field name="start_date" interval="month"/>
                     <field name="quantity" type="measure"/>
                 </graph>
             </field>
         </record>
+
+    <record id="report_membership_view_tree" model="ir.ui.view">
+        <field name="name">report.membership.view.tree</field>
+        <field name="model">report.membership</field>
+        <field name="arch" type="xml">
+            <tree string="Membership">
+                <field name="partner_id"/>
+                <field name="membership_id" optional="hide"/>
+                <field name="start_date" optional="hide"/>
+                <field name="date_to" optional="hide"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="num_invoiced" optional="show" sum="Sum of # Invoiced"/>
+                <field name="num_paid" optional="show" sum="Sum of # Paid"/>
+                <field name="quantity" optional="show" sum="Sum of Quantity"/>
+                <field name="tot_earned" optional="show" sum="Sum of Earned Amount"/>
+                <field name="membership_state" optional="hide"/>
+            </tree>
+        </field>
+    </record>
 
         <record model="ir.actions.act_window" id="action_report_membership_tree">
             <field name="name">Members Analysis</field>

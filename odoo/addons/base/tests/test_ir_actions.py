@@ -23,9 +23,10 @@ class TestServerActionsBase(common.TransactionCase):
             'address_format': 'SuperFormat',
         })
         self.test_partner = self.env['res.partner'].create({
-            'name': 'TestingPartner',
             'city': 'OrigCity',
             'country_id': self.test_country.id,
+            'email': 'test.partner@test.example.com',
+            'name': 'TestingPartner',
         })
         self.context = {
             'active_model': 'res.partner',
@@ -35,6 +36,7 @@ class TestServerActionsBase(common.TransactionCase):
         # Model data
         Model = self.env['ir.model']
         Fields = self.env['ir.model.fields']
+        self.comment_html = '<p>MyComment</p>'
         self.res_partner_model = Model.search([('model', '=', 'res.partner')])
         self.res_partner_name_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'name')])
         self.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
@@ -54,7 +56,7 @@ class TestServerActionsBase(common.TransactionCase):
             'model_id': self.res_partner_model.id,
             'model_name': 'res.partner',
             'state': 'code',
-            'code': 'record.write({"comment": "MyComment"})',
+            'code': 'record.write({"comment": "%s"})' % self.comment_html,
         })
 
 
@@ -62,7 +64,7 @@ class TestServerActions(TestServerActionsBase):
 
     def test_00_action(self):
         self.action.with_context(self.context).run()
-        self.assertEqual(self.test_partner.comment, 'MyComment', 'ir_actions_server: invalid condition check')
+        self.assertEqual(self.test_partner.comment, self.comment_html, 'ir_actions_server: invalid condition check')
         self.test_partner.write({'comment': False})
 
         # Do: create contextual action
@@ -250,7 +252,7 @@ class TestServerActions(TestServerActionsBase):
         self.env.user.write({'groups_id': [Command.link(group0.id)]})
 
         bindings = Actions.get_bindings('res.country')
-        self.assertItemsEqual(bindings.get('action'), self.action.read())
+        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
 
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
@@ -498,22 +500,26 @@ class TestCustomFields(common.TransactionCase):
         partners = self.env['res.partner'].create([
             {'name': country.code, 'country_id': country.id} for country in countries
         ])
-        partners.flush()
+        self.env.flush_all()
 
-        # determine how many queries it takes to create a non-computed field
-        query_count = self.cr.sql_log_count
-        self.env['ir.model.fields'].create({
-            'model_id': self.env['ir.model']._get_id('res.partner'),
-            'name': 'x_oh_box',
-            'field_description': 'x_oh_box',
-            'ttype': 'char',
-        })
-        query_count = self.cr.sql_log_count - query_count
-
-        # create the related field, and assert it only takes 1 extra query
-        with self.assertQueryCount(query_count + 1):
+        # create a non-computed field, and assert how many queries it takes
+        model_id = self.env['ir.model']._get_id('res.partner')
+        query_count = 41
+        with self.assertQueryCount(query_count):
+            self.env.registry.clear_caches()
             self.env['ir.model.fields'].create({
-                'model_id': self.env['ir.model']._get_id('res.partner'),
+                'model_id': model_id,
+                'name': 'x_oh_box',
+                'field_description': 'x_oh_box',
+                'ttype': 'char',
+                'store': True,
+            })
+
+        # same with a related field, it only takes 8 extra queries
+        with self.assertQueryCount(query_count + 8):
+            self.env.registry.clear_caches()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
                 'name': 'x_oh_boy',
                 'field_description': 'x_oh_boy',
                 'ttype': 'char',

@@ -5,7 +5,7 @@
     'version' : '0.1',
     'sequence': 185,
     'category': 'Human Resources/Fleet',
-    'website' : 'https://www.odoo.com/page/fleet',
+    'website' : 'https://www.odoo.com/app/fleet',
     'summary' : 'Manage your fleet and track car costs',
     'description' : """
 Vehicle, leasing, insurances, cost
@@ -39,7 +39,8 @@ Main Features
         'views/res_config_settings_views.xml',
         'data/fleet_cars_data.xml',
         'data/fleet_data.xml',
-        'data/mail_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'data/mail_activity_type_data.xml',
     ],
 
     'demo': ['data/fleet_demo.xml'],
@@ -50,5 +51,6 @@ Main Features
         'web.assets_backend': [
             'fleet/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

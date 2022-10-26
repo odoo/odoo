@@ -18,15 +18,6 @@ tour.register('sale_signature', {
         trigger: 'a:contains("Sign")',
     },
     {
-        content: "check submit is disabled",
-        trigger: '.o_portal_sign_submit:disabled',
-        run: function () {},
-    },
-    {
-        content: "click Auto",
-        trigger: '.o_web_sign_auto_button',
-    },
-    {
         content: "check submit is enabled",
         trigger: '.o_portal_sign_submit:enabled',
         run: function () {},
@@ -46,6 +37,15 @@ tour.register('sale_signature', {
     {
         content: "check it's confirmed",
         trigger: '#quote_content:contains("Thank You")',
+    }, {
+        trigger: '#quote_content',
+        run: function () {
+            window.location.href = window.location.origin + '/web';
+        },  // Avoid race condition at the end of the tour by returning to the home page.
     },
+    {
+        trigger: 'nav',
+        run: function() {},
+    }
 ]);
 });

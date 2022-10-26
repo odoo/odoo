@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-import re
-from odoo.tools.misc import formatLang
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -43,17 +43,16 @@ class AccountMove(models.Model):
             create_column(self.env.cr, "account_move", "l10n_latam_document_type_id", "int4")
         return super()._auto_init()
 
-    l10n_latam_amount_untaxed = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes')
-    l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index=True,
+        'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index='btree_not_null',
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_document_number = fields.Char(
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
         string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
+    l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
 
     @api.depends('l10n_latam_document_type_id')
     def _compute_name(self):
@@ -70,19 +69,24 @@ class AccountMove(models.Model):
         self.filtered(
             lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
             and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
-        super(AccountMove, self - without_doc_type - manual_documents)._compute_name()
+        # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
+        group_by_document_type = defaultdict(self.env['account.move'].browse)
+        for move in (self - without_doc_type - manual_documents):
+            group_by_document_type[move.l10n_latam_document_type_id.id] += move
+        for group in group_by_document_type.values():
+            super(AccountMove, group)._compute_name()
 
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
         recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
-            rec.l10n_latam_manual_document_number = self._is_manual_document_number(rec.journal_id)
+            rec.l10n_latam_manual_document_number = rec._is_manual_document_number()
         remaining = self - recs_with_journal_id
         remaining.l10n_latam_manual_document_number = False
 
-    def _is_manual_document_number(self, journal):
-        return True if journal.type == 'purchase' else False
+    def _is_manual_document_number(self):
+        return self.journal_id.type == 'purchase'
 
     @api.depends('name')
     def _compute_l10n_latam_document_number(self):
@@ -98,7 +102,7 @@ class AccountMove(models.Model):
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
     def _inverse_l10n_latam_document_number(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_document_type_id and (x.l10n_latam_manual_document_number or not x.highest_name)):
+        for rec in self.filtered(lambda x: x.l10n_latam_document_type_id):
             if not rec.l10n_latam_document_number:
                 rec.name = '/'
             else:
@@ -127,31 +131,6 @@ class AccountMove(models.Model):
             return ""
 
         return super(AccountMove, self)._get_starting_sequence()
-
-    def _compute_l10n_latam_amount_and_taxes(self):
-        recs_invoice = self.filtered(lambda x: x.is_invoice())
-        for invoice in recs_invoice:
-            tax_lines = invoice.line_ids.filtered('tax_line_id')
-            currencies = invoice.line_ids.filtered(lambda x: x.currency_id == invoice.currency_id).mapped('currency_id')
-            included_taxes = invoice.l10n_latam_document_type_id and \
-                invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
-            if not included_taxes:
-                l10n_latam_amount_untaxed = invoice.amount_untaxed
-                not_included_invoice_taxes = tax_lines
-            else:
-                included_invoice_taxes = tax_lines.filtered(lambda x: x.tax_line_id in included_taxes)
-                not_included_invoice_taxes = tax_lines - included_invoice_taxes
-                if invoice.is_inbound():
-                    sign = -1
-                else:
-                    sign = 1
-                amount = 'amount_currency' if len(currencies) == 1 else 'balance'
-                l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped(amount))
-            invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
-            invoice.l10n_latam_tax_ids = not_included_invoice_taxes
-        remaining = self - recs_invoice
-        remaining.l10n_latam_amount_untaxed = False
-        remaining.l10n_latam_tax_ids = [(5, 0)]
 
     def _post(self, soft=True):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
@@ -214,58 +193,15 @@ class AccountMove(models.Model):
     @api.depends('l10n_latam_available_document_type_ids', 'debit_origin_id')
     def _compute_l10n_latam_document_type(self):
         for rec in self.filtered(lambda x: x.state == 'draft'):
-            debit_note = rec.debit_origin_id
             document_types = rec.l10n_latam_available_document_type_ids._origin
-            document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note') if debit_note else document_types
+            invoice_type = rec.move_type
+            if invoice_type in ['out_refund', 'in_refund']:
+                document_types = document_types.filtered(lambda x: x.internal_type not in ['debit_note', 'invoice'])
+            elif invoice_type in ['out_invoice', 'in_invoice']:
+                document_types = document_types.filtered(lambda x: x.internal_type not in ['credit_note'])
+            if rec.debit_origin_id:
+                document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
-
-    def _compute_invoice_taxes_by_group(self):
-        report_or_portal_view = 'commit_assetsbundle' in self.env.context or \
-            not self.env.context.get('params', {}).get('view_type') == 'form'
-        if not report_or_portal_view:
-            return super()._compute_invoice_taxes_by_group()
-
-        move_with_doc_type = self.filtered('l10n_latam_document_type_id')
-        for move in move_with_doc_type:
-            lang_env = move.with_context(lang=move.partner_id.lang).env
-            tax_lines = move.l10n_latam_tax_ids
-            tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
-            res = {}
-            # There are as many tax line as there are repartition lines
-            done_taxes = set()
-            for line in tax_lines:
-                res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_line_id.tax_group_id]['amount'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes:
-                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
-                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
-                    else:
-                        amount = line.tax_base_amount
-                    res[line.tax_line_id.tax_group_id]['base'] += amount
-                    # The base should be added ONCE
-                    done_taxes.add(tax_key_add_base)
-
-            # At this point we only want to keep the taxes with a zero amount since they do not
-            # generate a tax line.
-            zero_taxes = set()
-            for line in move.line_ids:
-                for tax in line.l10n_latam_tax_ids.flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res or tax.id in zero_taxes:
-                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                        zero_taxes.add(tax.id)
-
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            move.amount_by_group = [(
-                group.name, amounts['amount'],
-                amounts['base'],
-                formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
-                formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
-                len(res),
-                group.id
-            ) for group, amounts in res]
-        super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 
     @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
     def _check_unique_vendor_number(self):

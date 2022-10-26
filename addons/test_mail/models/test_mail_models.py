@@ -28,6 +28,39 @@ class MailTestGateway(models.Model):
     custom_field = fields.Char()
 
 
+class MailTestGatewayGroups(models.Model):
+    """ A model looking like discussion channels / groups (flat thread and
+    alias). Used notably for advanced gatewxay tests. """
+    _description = 'Channel/Group-like Chatter Model for Mail Gateway'
+    _name = 'mail.test.gateway.groups'
+    _inherit = ['mail.thread.blacklist', 'mail.alias.mixin']
+    _mail_flat_thread = False
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    custom_field = fields.Char()
+    customer_id = fields.Many2one('res.partner', 'Customer')
+
+    def _alias_get_creation_values(self):
+        values = super(MailTestGatewayGroups, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.gateway.groups').id
+        if self.id:
+            values['alias_force_thread_id'] = self.id
+            values['alias_parent_thread_id'] = self.id
+        return values
+
+    def _message_get_default_recipients(self):
+        return dict(
+            (record.id, {
+                'email_cc': False,
+                'email_to': record.email_from if not record.customer_id.ids else False,
+                'partner_ids': record.customer_id.ids,
+            })
+            for record in self
+        )
+
+
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """
@@ -50,6 +83,7 @@ class MailTestActivity(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char()
+    date = fields.Date()
     email_from = fields.Char()
     active = fields.Boolean(default=True)
 
@@ -59,8 +93,10 @@ class MailTestActivity(models.Model):
             summary=action_summary
         )
 
-    def action_close(self, action_feedback):
-        self.activity_feedback(['test_mail.mail_act_test_todo'], feedback=action_feedback)
+    def action_close(self, action_feedback, attachment_ids=None):
+        self.activity_feedback(['test_mail.mail_act_test_todo'],
+                               feedback=action_feedback,
+                               attachment_ids=attachment_ids)
 
 
 class MailTestTicket(models.Model):
@@ -78,6 +114,26 @@ class MailTestTicket(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     container_id = fields.Many2one('mail.test.container', tracking=True)
+
+    def _message_get_default_recipients(self):
+        return dict(
+            (record.id, {
+                'email_cc': False,
+                'email_to': record.email_from if not record.customer_id.ids else False,
+                'partner_ids': record.customer_id.ids,
+            })
+            for record in self
+        )
+
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Activate more groups to test query counters notably (and be backward
+        compatible for tests). """
+        groups = super(MailTestTicket, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        for group_name, _group_method, group_data in groups:
+            if group_name == 'portal':
+                group_data['active'] = True
+
+        return groups
 
     def _track_template(self, changes):
         res = super(MailTestTicket, self)._track_template(changes)
@@ -100,6 +156,18 @@ class MailTestTicket(models.Model):
         return super(MailTestTicket, self)._track_subtype(init_values)
 
 
+class MailTestTicketMC(models.Model):
+    """ Just mail.test.ticket, but multi company. Kept as different model to
+    avoid messing with existing tests, notably performance, and ease backward
+    comparison. """
+    _description = 'Ticket-like model'
+    _name = 'mail.test.ticket.mc'
+    _inherit = ['mail.test.ticket']
+
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    container_id = fields.Many2one('mail.test.container.mc', tracking=True)
+
+
 class MailTestContainer(models.Model):
     """ This model can be used in tests when container records like projects
     or teams are required. """
@@ -115,6 +183,26 @@ class MailTestContainer(models.Model):
         'mail.alias', 'Alias',
         delegate=True)
 
+    def _message_get_default_recipients(self):
+        return dict(
+            (record.id, {
+                'email_cc': False,
+                'email_to': False,
+                'partner_ids': record.customer_id.ids,
+            })
+            for record in self
+        )
+
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Activate more groups to test query counters notably (and be backward
+        compatible for tests). """
+        groups = super(MailTestContainer, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        for group_name, _group_method, group_data in groups:
+            if group_name == 'portal':
+                group_data['active'] = True
+
+        return groups
+
     def _alias_get_creation_values(self):
         values = super(MailTestContainer, self)._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('mail.test.container').id
@@ -122,3 +210,29 @@ class MailTestContainer(models.Model):
             values['alias_force_thread_id'] = self.id
             values['alias_parent_thread_id'] = self.id
         return values
+
+class MailTestContainerMC(models.Model):
+    """ Just mail.test.container, but multi company. Kept as different model to
+    avoid messing with existing tests, notably performance, and ease backward
+    comparison. """
+    _description = 'Project-like model with alias (MC)'
+    _name = 'mail.test.container.mc'
+    _mail_post_access = 'read'
+    _inherit = ['mail.test.container']
+
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+
+
+class MailTestComposerMixin(models.Model):
+    """ A simple invite-like wizard using the composer mixin, rendering on
+    itself. """
+    _description = 'Invite-like Wizard'
+    _name = 'mail.test.composer.mixin'
+    _inherit = ['mail.composer.mixin']
+
+    name = fields.Char('Name')
+    author_id = fields.Many2one('res.partner')
+    description = fields.Html('Description', render_engine="qweb", render_options={"post_process": True}, sanitize=False)
+
+    def _compute_render_model(self):
+        self.render_model = self._name

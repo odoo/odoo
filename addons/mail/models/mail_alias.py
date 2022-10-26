@@ -4,9 +4,11 @@
 import ast
 import re
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import remove_accents, is_html_empty
+from odoo.tools import is_html_empty, remove_accents
 
 # see rfc5322 section 3.2.3
 atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
@@ -31,9 +33,6 @@ class Alias(models.Model):
     _rec_name = 'alias_name'
     _order = 'alias_model_id, alias_name'
 
-    def _default_alias_domain(self):
-        return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-
     alias_name = fields.Char('Alias Name', copy=False, help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                      help="The model (Odoo Document Kind) to which this alias "
@@ -55,7 +54,7 @@ class Alias(models.Model):
         'Record Thread ID',
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
-    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=_default_alias_domain)
+    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
         help="Parent model holding the alias. The model holding the alias reference "
@@ -94,10 +93,9 @@ class Alias(models.Model):
                     alias.alias_name,
                 ))
 
+    @api.depends('alias_name')
     def _compute_alias_domain(self):
-        alias_domain = self._default_alias_domain()
-        for record in self:
-            record.alias_domain = alias_domain
+        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
@@ -161,6 +159,7 @@ class Alias(models.Model):
             """ Cleans and sanitizes the alias name """
             sanitized_name = remove_accents(name).lower().split('@')[0]
             sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+            sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
             sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
             return sanitized_name
 
@@ -226,9 +225,24 @@ class Alias(models.Model):
         }
 
     def _get_alias_bounced_body_fallback(self, message_dict):
-        return _("""Hi,<br/>
-The following email sent to %s cannot be accepted because this is a private email address.
-Only allowed people can contact us at this address.""", message_dict.get('to'))
+        contact_description = self._get_alias_contact_description()
+        default_email = self.env.company.partner_id.email_formatted if self.env.company.partner_id.email else self.env.company.name
+        return Markup(
+            _("""<p>Dear Sender,<br /><br />
+The message below could not be accepted by the address %(alias_display_name)s.
+Only %(contact_description)s are allowed to contact it.<br /><br />
+Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />
+Kind Regards,</p>"""
+             )) % {
+                 'alias_display_name': self.display_name,
+                 'contact_description': contact_description,
+                 'default_email': default_email,
+             }
+
+    def _get_alias_contact_description(self):
+        if self.alias_contact == 'partners':
+            return _('addresses linked to registered partners')
+        return _('some specific addresses')
 
     def _get_alias_bounced_body(self, message_dict):
         """Get the body of the email return in case of bounced email.
@@ -249,8 +263,7 @@ Only allowed people can contact us at this address.""", message_dict.get('to'))
             body = self.alias_bounced_content
         else:
             body = self._get_alias_bounced_body_fallback(message_dict)
-        template = self.env.ref('mail.mail_bounce_alias_security', raise_if_not_found=True)
-        return template._render({
+        return self.env['ir.qweb']._render('mail.mail_bounce_alias_security', {
             'body': body,
             'message': message_dict
-        }, engine='ir.qweb', minimal_qcontext=True)
+        }, minimal_qcontext=True)

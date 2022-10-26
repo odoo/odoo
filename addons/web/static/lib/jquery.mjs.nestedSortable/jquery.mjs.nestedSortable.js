@@ -262,6 +262,18 @@
 			childLevels = this._getChildLevels(this.helper);
 			newList = document.createElement(o.listType);
 
+			// Odoo begin patch
+			// At this stage, the registered positions of the following tree
+			// elements are not up to date with the fact that the placeholder
+			// has replaced the element that is being dragged, and may have
+			// different dimensions, which means that one would have to drag
+			// an item further than what seems to be required visually to
+			// effectively trigger an intersection if the placeholder is smaller
+			// than the dragged item. By refreshing the positions here, that
+			// problem is avoided.
+			self.refreshPositions();
+			// Odoo end patch
+
 			//Rearrange
 			for (i = this.items.length - 1; i >= 0; i--) {
 
@@ -346,7 +358,17 @@
 					this.direction = intersection === 1 ? "down" : "up";
 
 					// mjs - rearrange the elements and reset timeouts and hovering state
-					if (this.options.tolerance === "pointer" || this._intersectsWithSides(item)) {
+					if ((this.options.tolerance === "pointer" || this._intersectsWithSides(item)) &&
+						// Odoo begin patch
+						// Only allow to rearrange if itemElement was
+						// intersected while going up or if the placeholder is
+						// placed before itemElement in the dom, to avoid
+						// a situation where the placeholder would go UP while
+						// the mouse is going DOWN, which will cause flickering
+						// if the placeholder has to change parent (depth)
+						(intersection === 1 || (itemElement.compareDocumentPosition(this.placeholder[0]) & Node.DOCUMENT_POSITION_PRECEDING))
+						// Odoo end patch
+					) {
 						$(itemElement).mouseleave();
 						this.mouseentered = false;
 						$(itemElement).removeClass(o.hoveringClass);

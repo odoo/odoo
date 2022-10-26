@@ -3,14 +3,14 @@
     <menuitem name="Discuss"
         id="mail.menu_root_discuss"
         action="action_discuss"
-        web_icon="mail,static/description/icon.png"
+        web_icon="mail,static/description/icon.svg"
         groups="base.group_user"
-        sequence="1"
+        sequence="5"
     />
 
-	<record id="base.menu_email" model="ir.ui.menu">
+    <record id="base.menu_email" model="ir.ui.menu">
         <field name="sequence">3</field>
-	</record>
+    </record>
 
     <!-- Under Technical/Email -->
     <menuitem name="Emails"
@@ -18,6 +18,12 @@
         parent="base.menu_email"
         action="action_view_mail_mail"
         sequence="1"/>
+    <menuitem name="Incoming Mail Servers"
+        id="menu_action_fetchmail_server_tree"
+        parent="base.menu_email"
+        action="action_email_server_tree"
+        sequence="6"
+        groups="base.group_no_one"/>
     <menuitem id="menu_email_templates"
         parent="base.menu_email"
         action="action_email_template_tree_all"
@@ -34,16 +40,16 @@
         sequence="20"
         groups="base.group_no_one"/>
     <menuitem name="Channels/Partner"
-        id="mail_channel_partner_menu"
+        id="mail_channel_member_menu"
         parent="base.menu_email"
-        action="mail_channel_partner_action"
+        action="mail_channel_member_action"
         sequence="21"
         groups="base.group_no_one"/>
-    <menuitem name="Channel Moderation"
-        id="mail_moderation_menu"
+    <menuitem id="mail_gateway_allowed_menu"
         parent="base.menu_email"
+        action="mail_gateway_allowed_action"
         sequence="22"
-        action="mail_moderation_action"/>
+        groups="base.group_no_one"/>
 
     <!-- Under Technical/Discuss -->
     <menuitem name="Discuss"
@@ -56,6 +62,11 @@
         parent="mail.mail_menu_technical"
         action="action_view_mail_message"
         sequence="1"/>
+    <menuitem name="Scheduled Messages"
+        id="mail_message_schedule_menu"
+        parent="mail.mail_menu_technical"
+        action="mail_message_schedule_action"
+        sequence="2"/>
     <menuitem name="Subtypes"
         id="menu_message_subtype"
         parent="mail.mail_menu_technical"
@@ -97,6 +108,37 @@
         action="mail_blacklist_action"
         parent="mail.mail_menu_technical"
         sequence="22"/>
+
+    <menuitem id="res_users_settings_menu"
+        name="User Settings"
+        action="res_users_settings_action"
+        parent="mail.mail_menu_technical"
+        sequence="50"/>
+    <menuitem id="mail_guest_menu"
+        name="Guests"
+        action="mail_guest_action"
+        parent="mail.mail_menu_technical"
+        sequence="51"/>
+    <menuitem id="mail_channel_rtc_session_menu"
+        name="RTC sessions"
+        action="mail_channel_rtc_session_action"
+        parent="mail.mail_menu_technical"
+        sequence="52"/>
+    <menuitem id="mail_channel_ice_servers_menu"
+        name="ICE servers"
+        action="action_ice_servers"
+        parent="mail.mail_menu_technical"
+        sequence="53"/>
+    <menuitem id="mail_message_reaction_menu"
+        name="Message Reactions"
+        action="mail_message_reaction_action"
+        parent="mail.mail_menu_technical"
+        sequence="54"/>
+    <menuitem id="mail_link_preview_menu"
+        name="Link Previews"
+        action="mail_link_preview_action"
+        parent="mail.mail_menu_technical"
+        sequence="55"/>
 
     <!--
         This menuitem will be activated by integrations modules (like github, twitter, ...). It

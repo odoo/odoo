@@ -25,8 +25,7 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         """
         # 1) Configure the upsell warning in prepaid service product
         self.product_order_timesheet1.write({
-            'service_upsell_warning': True,
-            'service_upsell_threshold': 0.6,
+            'service_upsell_threshold': 0.5,
         })
 
         # 2) Create SO with a SOL containing this updated product
@@ -38,10 +37,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
 
         self.env['sale.order.line'].create({
             'order_id': so.id,
-            'name': self.product_order_timesheet1.name,
             'product_id': self.product_order_timesheet1.id,
             'product_uom_qty': 10,
-            'price_unit': self.product_order_timesheet1.list_price,
         })
         so.action_confirm()
 
@@ -70,8 +67,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         timesheet._compute_so_line()
         so.order_line._compute_qty_delivered()
         so.order_line._compute_invoice_status()
-        so._get_invoice_status()
-        # Normally this method is called at the end of _get_invoice_status and other compute method. Here, we simulate for invoice_status field
+        so._compute_invoice_status()
+        # Normally this method is called at the end of _compute_invoice_status and other compute method. Here, we simulate for invoice_status field
         so._compute_field_value(so._fields['invoice_status'])
 
         self.assertEqual(len(so.activity_search(['sale.mail_act_sale_upsell'])), 0, 'No upsell warning should appear in the SO.')
@@ -81,8 +78,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         timesheet._compute_so_line()
         so.order_line._compute_qty_delivered()
         so.order_line._compute_invoice_status()
-        so._get_invoice_status()
-        # Normally this method is called at the end of _get_invoice_status and other compute method. Here, we simulate for invoice_status field
+        so._compute_invoice_status()
+        # Normally this method is called at the end of _compute_invoice_status and other compute method. Here, we simulate for invoice_status field
         so._compute_field_value(so._fields['invoice_status'])
 
         # 5) Check if the SO has an 'sale.mail_act_sale_upsell' activity.

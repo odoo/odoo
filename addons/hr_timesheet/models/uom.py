@@ -15,4 +15,5 @@ class Uom(models.Model):
             "product_uom_dozen",
         ]
 
-    timesheet_widget = fields.Char("Widget", help="Widget used in the webclient when this unit is the one used to encode timesheets.")
+    # widget used in the webclient when this unit is the one used to encode timesheets.
+    timesheet_widget = fields.Char("Widget")

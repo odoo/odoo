@@ -31,11 +31,10 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             'email': 'supplier.serv@supercompany.com',
         })
 
-        user_type_expense = cls.env.ref('account.data_account_type_expenses')
         cls.account_expense_product = cls.env['account.account'].create({
-            'code': 'EXPENSE_PROD111',
+            'code': 'EXPENSE.PROD111',
             'name': 'Expense - Test Account',
-            'user_type_id': user_type_expense.id,
+            'account_type': 'expense',
         })
         # Create category
         cls.product_category = cls.env['product.category'].create({
@@ -134,7 +133,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
         # Check that calling 'action_view_invoice' return the same action despite the record rule
         action_user_1 = purchase_order_user2.with_user(self.purchase_user).action_view_invoice()
-        purchase_order_user2.invalidate_cache()
+        purchase_order_user2.invalidate_recordset()
         action_user_2 = purchase_order_user2.with_user(purchase_user_2).action_view_invoice()
         self.assertEqual(action_user_1, action_user_2)
 
@@ -142,7 +141,16 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         """Only purchase managers can approve a purchase order when double
         validation is enabled"""
         group_purchase_manager = self.env.ref('purchase.group_purchase_manager')
-        order = self.env.ref("purchase.purchase_order_1")
+        order = self.env['purchase.order'].create({
+            "partner_id": self.vendor.id,
+            "order_line": [
+                (0, 0, {
+                    'product_id': self.product.id,
+                    'name': f'{self.product.name} {1:05}',
+                    'price_unit': 79.80,
+                    'product_qty': 15.0,
+                }),
+            ]})
         company = order.sudo().company_id
         company.po_double_validation = 'two_step'
         company.po_double_validation_amount = 0

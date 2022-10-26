@@ -14,9 +14,12 @@ class StockRequestCount(models.TransientModel):
         default=fields.Datetime.now)
     user_id = fields.Many2one('res.users', string="User")
     quant_ids = fields.Many2many('stock.quant')
+    set_count = fields.Selection([('empty', 'Leave Empty'), ('set', 'Set Current Value')], default='empty', string='Count')
 
     def action_request_count(self):
         for count_request in self:
+            if count_request.set_count == 'set':
+                count_request.quant_ids.filtered(lambda q: not q.inventory_quantity_set).action_set_inventory_quantity()
             count_request.quant_ids.with_context(inventory_mode=True).write(
                 count_request._get_values_to_write())
 

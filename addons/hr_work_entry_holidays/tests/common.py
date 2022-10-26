@@ -16,8 +16,7 @@ class TestWorkEntryHolidaysBase(TestWorkEntryBase):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
             'work_entry_type_id': cls.work_entry_type_leave.id
         })
 

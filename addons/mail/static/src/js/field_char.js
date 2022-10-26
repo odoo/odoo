@@ -1,7 +1,8 @@
-odoo.define('sms.onchange_in_keyup', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var FieldChar = require('web.basic_fields').FieldChar;
+import { debounce } from "@web/core/utils/timing";
+import { FieldChar } from 'web.basic_fields';
+
 FieldChar.include({
 
     //--------------------------------------------------------------------------
@@ -9,13 +10,17 @@ FieldChar.include({
     //-------------------------------------------------------------------------
 
     /**
-     * Support a key-based onchange in text field. In order to avoid too much
-     * rpc to the server _triggerOnchange is throttled (once every second max)
+     * Support a key-based onchange in text field.
+     * The _triggerOnchange method is debounced to run after given debouce delay
+     * (or 2 seconds by default) on typing ends.
      *
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._triggerOnchange = _.throttle(this._triggerOnchange, 1000, {leading: false});
+        if (this.nodeOptions.keydown_debounce_delay === undefined) {
+            this.nodeOptions.keydown_debounce_delay = 2000;
+        }
+        this._triggerOnchange = debounce(this._triggerOnchange, this.nodeOptions.keydown_debounce_delay);
     },
 
 
@@ -43,14 +48,13 @@ FieldChar.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Triggers the 'change' event to refresh the value. Throttled at init to
-     * avoid spaming server.
+     * Triggers the 'change' event to refresh the value.
+     * This method is debounced to run after given debouce delay on typing ends.
+     * (to avoid spamming the server while the user is typing their message)
      *
      * @private
      */
     _triggerOnchange: function () {
         this.$input.trigger('change');
     },
-});
-
 });

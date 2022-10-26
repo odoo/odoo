@@ -4,7 +4,7 @@
 
 {
     "name": "Vietnam - Accounting",
-    "version": "2.0",
+    "version": "2.0.1",
     "author": "General Solutions",
     'website': 'http://gscom.vn',
     'category': 'Accounting/Localizations/Account Charts',
@@ -28,7 +28,7 @@ with Chart of account under Circular No. 200/2014/TT-BTC
          'data/l10n_vn_chart_data.xml',
          'data/account.account.template.csv',
          'data/l10n_vn_chart_post_data.xml',
-         'data/account_data.xml',
+         'data/account_tax_group_data.xml',
          'data/account_tax_report_data.xml',
          'data/account_tax_data.xml',
          'data/account_chart_template_data.xml',
@@ -39,4 +39,5 @@ with Chart of account under Circular No. 200/2014/TT-BTC
     ],
     'post_init_hook': '_post_init_hook',
 
+    'license': 'LGPL-3',
 }

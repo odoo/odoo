@@ -1,19 +1,19 @@
 odoo.define("website.tour.snippet_empty_parent_autoremove", function (require) {
 "use strict";
 
-const tour = require('web_tour.tour');
 const wTourUtils = require('website.tour_utils');
 
 function removeSelectedBlock() {
     return {
         content: "Remove selected block",
-        trigger: '#oe_snippets we-customizeblock-options:nth-last-child(2) .oe_snippet_remove',
+        trigger: '#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove',
     };
 }
 
-tour.register('snippet_empty_parent_autoremove', {
+wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     test: true,
-    url: '/?enable_editor=1',
+    url: '/',
+    edition: true,
 }, [
     // Base case: remove both columns from text - image
     wTourUtils.dragNDrop({
@@ -22,17 +22,17 @@ tour.register('snippet_empty_parent_autoremove', {
     }),
     {
         content: "Click on second column",
-        trigger: '#wrap .s_text_image .row > :nth-child(2)',
+        trigger: 'iframe #wrap .s_text_image .row > :nth-child(2)',
     },
     removeSelectedBlock(),
     {
         content: "Click on first column",
-        trigger: '#wrap .s_text_image .row > :first-child',
+        trigger: 'iframe #wrap .s_text_image .row > :first-child',
     },
     removeSelectedBlock(),
     {
         content: "Check that #wrap is empty",
-        trigger: '#wrap:empty',
+        trigger: 'iframe #wrap:empty',
     },
 
     // Banner: test that parallax, bg-filter and shape are not treated as content
@@ -46,29 +46,23 @@ tour.register('snippet_empty_parent_autoremove', {
     }),
     {
         content: "Check that parallax is present",
-        trigger: '#wrap .s_banner .s_parallax_bg',
+        trigger: 'iframe #wrap .s_banner .s_parallax_bg',
         run: () => null,
     },
     wTourUtils.changeOption('ColoredLevelBackground', 'Shape'),
     {
         content: "Check that shape is present",
-        trigger: '#wrap .s_banner .o_we_shape',
-        run: () => null,
-    },
-    wTourUtils.changeOption('ColoredLevelBackground', 'Filter'),
-    {
-        content: "Check that background-filter is present",
-        trigger: '#wrap .s_banner .o_we_bg_filter',
+        trigger: 'iframe #wrap .s_banner .o_we_shape',
         run: () => null,
     },
     {
         content: "Click on first column",
-        trigger: '#wrap .s_banner .row > :first-child',
+        trigger: 'iframe #wrap .s_banner .row > :first-child',
     },
     removeSelectedBlock(),
     {
         content: "Check that #wrap is empty",
-        trigger: '#wrap:empty',
+        trigger: 'iframe #wrap:empty',
         run: () => null,
     },
 ]);

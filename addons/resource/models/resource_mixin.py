@@ -33,22 +33,50 @@ class ResourceMixin(models.AbstractModel):
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
 
-    @api.model
-    def create(self, values):
-        if not values.get('resource_id'):
-            resource_vals = {'name': values.get(self._rec_name)}
-            tz = (values.pop('tz', False) or
-                  self.env['resource.calendar'].browse(values.get('resource_calendar_id')).tz)
-            if tz:
-                resource_vals['tz'] = tz
-            resource = self.env['resource.resource'].create(resource_vals)
-            values['resource_id'] = resource.id
-        return super(ResourceMixin, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        resources_vals_list = []
+        calendar_ids = [vals['resource_calendar_id'] for vals in vals_list if vals.get('resource_calendar_id')]
+        calendars_tz = {calendar.id: calendar.tz for calendar in self.env['resource.calendar'].browse(calendar_ids)}
+        for vals in vals_list:
+            if not vals.get('resource_id'):
+                resources_vals_list.append(
+                    self._prepare_resource_values(
+                        vals,
+                        vals.pop('tz', False) or calendars_tz.get(vals.get('resource_calendar_id'))
+                    )
+                )
+        if resources_vals_list:
+            resources = self.env['resource.resource'].create(resources_vals_list)
+            resources_iter = iter(resources.ids)
+            for vals in vals_list:
+                if not vals.get('resource_id'):
+                    vals['resource_id'] = next(resources_iter)
+        return super(ResourceMixin, self.with_context(check_idempotence=True)).create(vals_list)
+
+    def _prepare_resource_values(self, vals, tz):
+        resource_vals = {'name': vals.get(self._rec_name)}
+        if tz:
+            resource_vals['tz'] = tz
+        company_id = vals.get('company_id', self.env.company.id)
+        if company_id:
+            resource_vals['company_id'] = company_id
+        calendar_id = vals.get('resource_calendar_id')
+        if calendar_id:
+            resource_vals['calendar_id'] = calendar_id
+        return resource_vals
 
     def copy_data(self, default=None):
         if default is None:
             default = {}
-        resource = self.resource_id.copy()
+
+        resource_default = {}
+        if 'company_id' in default:
+            resource_default['company_id'] = default['company_id']
+        if 'resource_calendar_id' in default:
+            resource_default['calendar_id'] = default['resource_calendar_id']
+        resource = self.resource_id.copy(resource_default)
+
         default['resource_id'] = resource.id
         default['company_id'] = resource.company_id.id
         default['resource_calendar_id'] = resource.calendar_id.id
@@ -163,7 +191,8 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
+        compute_leaves = self.env.context.get('compute_leaves', True)
+        intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resource, domain, compute_leaves=compute_leaves)[resource.id]
         result = defaultdict(float)
         for start, stop, meta in intervals:
             result[start.date()] += (stop - start).total_seconds() / 3600

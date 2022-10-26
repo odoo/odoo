@@ -24,7 +24,7 @@
             <field name="zip">94134</field>
             <field name='country_id' ref='base.us'/>
             <field name='state_id' ref='state_us_5'/>
-            <field name="phone">+1 (650) 691-3277 </field>
+            <field name="phone">+1 (650) 555-0111 </field>
             <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
         </record>
@@ -33,7 +33,7 @@
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="login">demo</field>
             <field name="password">demo</field>
-            <field name="signature" type="xml"><span>-- <br/>+Mr Demo</span></field>
+            <field name="signature" type="html"><span>-- <br/>+Mr Demo</span></field>
             <field name="company_id" ref="main_company"/>
             <field name="groups_id" eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
             <field name="image_1920" type="base64" file="base/static/img/user_demo-image.jpg"/>
@@ -59,7 +59,7 @@
         </record>
 
         <record id="base.user_admin" model="res.users">
-            <field name="signature" type="xml"><span>-- <br/>Mitchell Admin</span></field>
+            <field name="signature" type="html"><span>-- <br/>Mitchell Admin</span></field>
         </record>
 
         <!-- Portal : partner and user -->

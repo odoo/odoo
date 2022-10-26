@@ -30,7 +30,8 @@ class TestError(common.HttpCase):
                 "Delete: another model requires the record being deleted. If possible, archive it instead.",
                 e.faultString,
             )
-            self.assertIn("Model: Model B (test_rpc.model_b), Field: Name (name)", e.faultString)
+            self.assertIn("Model: Model B (test_rpc.model_b)", e.faultString)
+            self.assertIn("Field: Name (name)", e.faultString)
 
     def test_02_delete(self):
         """ Delete: NOT NULL and ON DELETE RESTRICT constraints """
@@ -48,10 +49,8 @@ class TestError(common.HttpCase):
                 "another model requires the record being deleted. If possible, archive it instead.",
                 e.faultString,
             )
-            self.assertIn(
-                "Model: Model A (test_rpc.model_a), Constraint: test_rpc_model_a_field_b1_fkey",
-                e.faultString,
-            )
+            self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
+            self.assertIn("Constraint: test_rpc_model_a_field_b1_fkey", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
         try:
@@ -64,7 +63,5 @@ class TestError(common.HttpCase):
                 " another model requires the record being deleted. If possible, archive it instead.",
                 e.faultString,
             )
-            self.assertIn(
-                "Model: Model A (test_rpc.model_a), Constraint: test_rpc_model_a_field_b2_fkey",
-                e.faultString,
-            )
+            self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
+            self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)

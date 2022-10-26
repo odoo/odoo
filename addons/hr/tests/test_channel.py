@@ -6,15 +6,16 @@ from odoo.addons.hr.tests.common import TestHrCommon
 
 class TestChannel(TestHrCommon):
 
-    def setUp(self):
-        super(TestChannel, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestChannel, cls).setUpClass()
 
-        self.channel = self.env['mail.channel'].create({'name': 'Test'})
+        cls.channel = cls.env['mail.channel'].create({'name': 'Test'})
 
-        emp0 = self.env['hr.employee'].create({
-            'user_id': self.res_users_hr_officer.id,
+        emp0 = cls.env['hr.employee'].create({
+            'user_id': cls.res_users_hr_officer.id,
         })
-        self.department = self.env['hr.department'].create({
+        cls.department = cls.env['hr.department'].create({
             'name': 'Test Department',
             'member_ids': [(4, emp0.id)],
         })

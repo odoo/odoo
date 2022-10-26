@@ -6,13 +6,12 @@
     'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Integrate your POS with a Six payment terminal',
-    'description': '',
     'data': [
         'views/pos_payment_method_views.xml',
-        ],
+    ],
     'depends': ['point_of_sale'],
     'installable': True,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
     'assets': {
         'point_of_sale.assets': [
             'pos_six/static/lib/six_timapi/timapi.js',
@@ -20,8 +19,6 @@
             'pos_six/static/src/js/Chrome.js',
             'pos_six/static/src/js/models.js',
             'pos_six/static/src/js/payment_six.js',
-        ],
-        'web.assets_qweb': [
             'pos_six/static/src/xml/**/*',
         ],
     }

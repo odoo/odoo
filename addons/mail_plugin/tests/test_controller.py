@@ -26,7 +26,7 @@ class TestMailPluginController(TestMailPluginControllerCommon):
 
         company_id = result["company"]["id"]
         company = self.env["res.partner"].browse(company_id)
-        partner.invalidate_cache()
+        partner.invalidate_recordset()
         self.assertEqual(partner.parent_id, company, "Should change the company of the partner")
 
     def test_get_partner_blacklisted_domain(self):

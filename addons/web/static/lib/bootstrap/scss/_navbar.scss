@@ -4,7 +4,6 @@
 // Navbar brand
 // Navbar nav
 // Navbar text
-// Navbar divider
 // Responsive navbar
 // Navbar position
 // Navbar themes
@@ -21,16 +20,31 @@
   flex-wrap: wrap; // allow us to do the line break for collapsing content
   align-items: center;
   justify-content: space-between; // space out brand from logo
-  padding: $navbar-padding-y $navbar-padding-x;
+  padding-top: $navbar-padding-y;
+  padding-right: $navbar-padding-x; // default: null
+  padding-bottom: $navbar-padding-y;
+  padding-left: $navbar-padding-x; // default: null
+  @include gradient-bg();
 
   // Because flex properties aren't inherited, we need to redeclare these first
   // few properties so that content nested within behave properly.
-  > .container,
-  > .container-fluid {
+  // The `flex-wrap` property is inherited to simplify the expanded navbars
+  %container-flex-properties {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: inherit;
     align-items: center;
     justify-content: space-between;
+  }
+
+  > .container,
+  > .container-fluid {
+    @extend %container-flex-properties;
+  }
+
+  @each $breakpoint, $container-max-width in $container-max-widths {
+    > .container#{breakpoint-infix($breakpoint, $container-max-widths)} {
+      @extend %container-flex-properties;
+    }
   }
 }
 
@@ -40,16 +54,16 @@
 // Used for brand, project, or site names.
 
 .navbar-brand {
-  display: inline-block;
   padding-top: $navbar-brand-padding-y;
   padding-bottom: $navbar-brand-padding-y;
-  margin-right: $navbar-padding-x;
+  margin-right: $navbar-brand-margin-end;
   @include font-size($navbar-brand-font-size);
-  line-height: inherit;
+  text-decoration: if($link-decoration == none, null, none);
   white-space: nowrap;
 
-  @include hover-focus {
-    text-decoration: none;
+  &:hover,
+  &:focus {
+    text-decoration: if($link-hover-decoration == underline, none, null);
   }
 }
 
@@ -72,7 +86,6 @@
 
   .dropdown-menu {
     position: static;
-    float: none;
   }
 }
 
@@ -82,7 +95,6 @@
 //
 
 .navbar-text {
-  display: inline-block;
   padding-top: $nav-link-padding-y;
   padding-bottom: $nav-link-padding-y;
 }
@@ -112,9 +124,16 @@
   background-color: transparent; // remove default button style
   border: $border-width solid transparent; // remove default button style
   @include border-radius($navbar-toggler-border-radius);
+  @include transition($navbar-toggler-transition);
 
-  @include hover-focus {
+  &:hover {
     text-decoration: none;
+  }
+
+  &:focus {
+    text-decoration: none;
+    outline: 0;
+    box-shadow: 0 0 0 $navbar-toggler-focus-width;
   }
 }
 
@@ -125,11 +144,17 @@
   width: 1.5em;
   height: 1.5em;
   vertical-align: middle;
-  content: "";
-  background: no-repeat center center;
-  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 }
 
+.navbar-nav-scroll {
+  max-height: var(--#{$variable-prefix}scroll-height, 75vh);
+  overflow-y: auto;
+}
+
+// scss-docs-start navbar-expand-loop
 // Generate series of `.navbar-expand-*` responsive classes for configuring
 // where your navbar collapses.
 .navbar-expand {
@@ -137,17 +162,10 @@
     $next: breakpoint-next($breakpoint, $grid-breakpoints);
     $infix: breakpoint-infix($next, $grid-breakpoints);
 
+    // stylelint-disable-next-line scss/selector-no-union-class-name
     &#{$infix} {
-      @include media-breakpoint-down($breakpoint) {
-        > .container,
-        > .container-fluid {
-          padding-right: 0;
-          padding-left: 0;
-        }
-      }
-
       @include media-breakpoint-up($next) {
-        flex-flow: row nowrap;
+        flex-wrap: nowrap;
         justify-content: flex-start;
 
         .navbar-nav {
@@ -163,27 +181,53 @@
           }
         }
 
-        // For nesting containers, have to redeclare for alignment purposes
-        > .container,
-        > .container-fluid {
-          flex-wrap: nowrap;
+        .navbar-nav-scroll {
+          overflow: visible;
         }
 
         .navbar-collapse {
           display: flex !important; // stylelint-disable-line declaration-no-important
-
-          // Changes flex-bases to auto because of an IE10 bug
           flex-basis: auto;
         }
 
         .navbar-toggler {
           display: none;
         }
+
+        .offcanvas-header {
+          display: none;
+        }
+
+        .offcanvas {
+          position: inherit;
+          bottom: 0;
+          z-index: 1000;
+          flex-grow: 1;
+          visibility: visible !important; // stylelint-disable-line declaration-no-important
+          background-color: transparent;
+          border-right: 0;
+          border-left: 0;
+          @include transition(none);
+          transform: none;
+        }
+        .offcanvas-top,
+        .offcanvas-bottom {
+          height: auto;
+          border-top: 0;
+          border-bottom: 0;
+        }
+
+        .offcanvas-body {
+          display: flex;
+          flex-grow: 0;
+          padding: 0;
+          overflow-y: visible;
+        }
       }
     }
   }
 }
-
+// scss-docs-end navbar-expand-loop
 
 // Navbar themes
 //
@@ -194,7 +238,8 @@
   .navbar-brand {
     color: $navbar-light-brand-color;
 
-    @include hover-focus {
+    &:hover,
+    &:focus {
       color: $navbar-light-brand-hover-color;
     }
   }
@@ -203,7 +248,8 @@
     .nav-link {
       color: $navbar-light-color;
 
-      @include hover-focus {
+      &:hover,
+      &:focus {
         color: $navbar-light-hover-color;
       }
 
@@ -213,8 +259,6 @@
     }
 
     .show > .nav-link,
-    .active > .nav-link,
-    .nav-link.show,
     .nav-link.active {
       color: $navbar-light-active-color;
     }
@@ -226,17 +270,16 @@
   }
 
   .navbar-toggler-icon {
-    background-image: $navbar-light-toggler-icon-bg;
+    background-image: escape-svg($navbar-light-toggler-icon-bg);
   }
 
   .navbar-text {
     color: $navbar-light-color;
-    a {
-      color: $navbar-light-active-color;
 
-      @include hover-focus {
-        color: $navbar-light-active-color;
-      }
+    a,
+    a:hover,
+    a:focus  {
+      color: $navbar-light-active-color;
     }
   }
 }
@@ -246,7 +289,8 @@
   .navbar-brand {
     color: $navbar-dark-brand-color;
 
-    @include hover-focus {
+    &:hover,
+    &:focus {
       color: $navbar-dark-brand-hover-color;
     }
   }
@@ -255,7 +299,8 @@
     .nav-link {
       color: $navbar-dark-color;
 
-      @include hover-focus {
+      &:hover,
+      &:focus {
         color: $navbar-dark-hover-color;
       }
 
@@ -265,8 +310,6 @@
     }
 
     .show > .nav-link,
-    .active > .nav-link,
-    .nav-link.show,
     .nav-link.active {
       color: $navbar-dark-active-color;
     }
@@ -278,17 +321,15 @@
   }
 
   .navbar-toggler-icon {
-    background-image: $navbar-dark-toggler-icon-bg;
+    background-image: escape-svg($navbar-dark-toggler-icon-bg);
   }
 
   .navbar-text {
     color: $navbar-dark-color;
-    a {
+    a,
+    a:hover,
+    a:focus {
       color: $navbar-dark-active-color;
-
-      @include hover-focus {
-        color: $navbar-dark-active-color;
-      }
     }
   }
 }

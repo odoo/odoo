@@ -48,7 +48,7 @@ class StockBackorderConfirmation(models.TransientModel):
 
         for pick_id in pickings_not_to_do:
             moves_to_log = {}
-            for move in pick_id.move_lines:
+            for move in pick_id.move_ids:
                 if float_compare(move.product_uom_qty,
                                  move.quantity_done,
                                  precision_rounding=move.product_uom.rounding) > 0:
@@ -68,7 +68,6 @@ class StockBackorderConfirmation(models.TransientModel):
         if pickings_to_validate:
             return self.env['stock.picking']\
                 .browse(pickings_to_validate)\
-                .with_context(skip_backorder=True, picking_ids_not_to_backorder=self.pick_ids.ids)\
+                .with_context(skip_backorder=True, picking_ids_not_to_backorder=pickings_to_validate)\
                 .button_validate()
         return True
-

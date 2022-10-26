@@ -22,14 +22,14 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of acquirer-specific processing values
+        :return: The dict of provider-specific processing values
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider != 'alipay':
+        if self.provider_code != 'alipay':
             return res
 
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.provider_id.get_base_url()
         if self.fees:
             # Similarly to what is done in `payment::payment.transaction.create`, we need to round
             # the sum of the amount and of the fees to avoid inconsistent string representations.
@@ -39,14 +39,14 @@ class PaymentTransaction(models.Model):
             total_fee = self.amount
         rendering_values = {
             '_input_charset': 'utf-8',
-            'notify_url': urls.url_join(base_url, AlipayController._notify_url),
+            'notify_url': urls.url_join(base_url, AlipayController._webhook_url),
             'out_trade_no': self.reference,
-            'partner': self.acquirer_id.alipay_merchant_partner_id,
+            'partner': self.provider_id.alipay_merchant_partner_id,
             'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': self.reference,
-            'total_fee': total_fee,
+            'total_fee': f'{total_fee:.2f}',
         }
-        if self.acquirer_id.alipay_payment_method == 'standard_checkout':
+        if self.provider_id.alipay_payment_method == 'standard_checkout':
             # https://global.alipay.com/docs/ac/global/create_forex_trade
             rendering_values.update({
                 'service': 'create_forex_trade',
@@ -57,34 +57,33 @@ class PaymentTransaction(models.Model):
             rendering_values.update({
                 'service': 'create_direct_pay_by_user',
                 'payment_type': 1,
-                'seller_email': self.acquirer_id.alipay_seller_email,
+                'seller_email': self.provider_id.alipay_seller_email,
             })
 
-        sign = self.acquirer_id._alipay_build_sign(rendering_values)
+        sign = self.provider_id._alipay_compute_signature(rendering_values)
         rendering_values.update({
             'sign_type': 'MD5',
             'sign': sign,
-            'api_url': self.acquirer_id._alipay_get_api_url(),
+            'api_url': self.provider_id._alipay_get_api_url(),
         })
         return rendering_values
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Alipay data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param str provider_code: The code of the provider that handled the transaction
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'alipay':
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'alipay' or len(tx) == 1:
             return tx
 
-        reference = data.get('reference') or data.get('out_trade_no')
-        txn_id = data.get('trade_no')
+        reference = notification_data.get('reference') or notification_data.get('out_trade_no')
+        txn_id = notification_data.get('trade_no')
         if not reference or not txn_id:
             raise ValidationError(
                 "Alipay: " + _(
@@ -93,76 +92,36 @@ class PaymentTransaction(models.Model):
                 )
             )
 
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'alipay')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'alipay')])
         if not tx:
             raise ValidationError(
                 "Alipay: " + _("No transaction found matching reference %s.", reference)
             )
 
-        # Verify signature (done here because we need the reference to get the acquirer)
-        sign_check = tx.acquirer_id._alipay_build_sign(data)
-        sign = data.get('sign')
-        if sign != sign_check:
-            raise ValidationError(
-                "Alipay: " + _(
-                    "Expected signature %(sc) but received %(sign)s.", sc=sign_check, sign=sign
-                )
-            )
-
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Alipay data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
-        if self.provider != 'alipay':
+        super()._process_notification_data(notification_data)
+        if self.provider_code != 'alipay':
             return
 
-        if float_compare(float(data.get('total_fee', '0.0')), (self.amount + self.fees), 2) != 0:
-            # mc_gross is amount + fees
-            logging_values = {
-                'amount': data.get('total_fee', '0.0'),
-                'total': self.amount,
-                'fees': self.fees,
-                'reference': self.reference,
-            }
-            _logger.error(
-                "the paid amount (%(amount)s) does not match the total + fees (%(total)s + "
-                "%(fees)s) for the transaction with reference %(reference)s", logging_values
-            )
-            raise ValidationError("Alipay: " + _("The amount does not match the total + fees."))
-        if self.acquirer_id.alipay_payment_method == 'standard_checkout':
-            if data.get('currency') != self.currency_id.name:
-                raise ValidationError(
-                    "Alipay: " + _(
-                        "The currency returned by Alipay %(rc)s does not match the transaction "
-                        "currency %(tc)s.", rc=data.get('currency'), tc=self.currency_id.name
-                    )
-                )
-        elif data.get('seller_email') != self.acquirer_id.alipay_seller_email:
-            _logger.error(
-                "the seller email (%s) does not match the configured Alipay account (%s).",
-                data.get('seller_email'), self.acquirer_id.alipay_seller_email
-            )
-            raise ValidationError(
-                "Alipay: " + _("The seller email does not match the configured Alipay account.")
-            )
-
-        self.acquirer_reference = data.get('trade_no')
-        status = data.get('trade_status')
+        self.provider_reference = notification_data.get('trade_no')
+        status = notification_data.get('trade_status')
         if status in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
             self._set_done()
         elif status == 'TRADE_CLOSED':
             self._set_canceled()
         else:
             _logger.info(
-                "received invalid transaction status for transaction with reference %s: %s",
-                self.reference, status
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                status, self.reference,
             )
             self._set_error("Alipay: " + _("received invalid transaction status: %s", status))

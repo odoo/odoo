@@ -1,7 +1,7 @@
 odoo.define('website_sale_product_configurator.OptionalProductsModal', function (require) {
     "use strict";
 
-var OptionalProductsModal = require('sale_product_configurator.OptionalProductsModal');
+const { OptionalProductsModal } = require('@sale_product_configurator/js/product_configurator_modal');
 
 OptionalProductsModal.include({
     /**
@@ -23,8 +23,9 @@ OptionalProductsModal.include({
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this.isWebsite = params.isWebsite;
+        this.forceDialog = params.forceDialog;
 
-        this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
+        this.dialogClass = 'oe_advanced_configurator_modal' + (params.isWebsite ? ' oe_website_sale' : '');
     },
     /**
      * @override

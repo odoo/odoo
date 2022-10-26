@@ -12,7 +12,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _auth_method_calendar(cls):
-        token = request.params.get('token', '')
+        token = request.get_http_params().get('token', '')
 
         error_message = False
 

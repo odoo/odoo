@@ -23,4 +23,4 @@ class IrHttp(models.AbstractModel):
             raise BadRequest('Access token invalid')
 
         # take the identity of the API key user
-        request.uid = user_id
+        request.update_env(user=user_id)

@@ -19,3 +19,4 @@ from . import test_wise_operator
 from . import test_report
 from . import test_report_stock_quantity
 from . import test_report_tours
+from . import test_stock_return_picking

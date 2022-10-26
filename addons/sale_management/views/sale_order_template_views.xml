@@ -7,6 +7,9 @@
             <search string="Search Quotation Template">
                 <field name="name"/>
                 <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
             </search>
         </field>
     </record>
@@ -20,21 +23,28 @@
                 <sheet>
                     <div name="button_box" class="oe_button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
-                        <label for="name"/>
+                    <div class="oe_title" name="sale_order_template_title">
+                        <label for="name" id="sale_order_template_title"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Standard Consultancy Package"/>
+                            <field name="name" placeholder="e.g. Standard Consultancy Package" class="d-block"/>
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group name="sale_info">
                             <field name="active" invisible="1"/>
-                           <label for="number_of_days" string="Quotation expires after"/>
-                           <div id="number_of_days">
-                               <field name="number_of_days" class="oe_inline"/> days
-                           </div>
-                        </group>
-                        <group>
+                            <label for="number_of_days" string="Quotation expires after"/>
+                            <div id="number_of_days">
+                                <field name="number_of_days" style="width: 3rem;"/>
+                                <div class="d-inline-block">days</div>
+                            </div>
+                            <label for="require_signature" string="Online confirmation"/>
+                            <div>
+                                <field name="require_signature" class="oe_inline"/>
+                                <span>Signature</span>
+                                <field name="require_payment" class="oe_inline ms-3"/>
+                                <span>Payment</span>
+                            </div>
+                            <field name="mail_template_id" context="{'default_model': 'sale.order'}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -49,6 +59,7 @@
                                 <field name="sequence" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                     <group>
                                         <field name="product_id" attrs="{'required': [('display_type', '=', False)]}"/>
@@ -78,6 +89,7 @@
                                 </control>
 
                                 <field name="display_type" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
                                 <field name="name" widget="section_and_note_text"/>
@@ -99,19 +111,15 @@
                             <field name="quantity"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="company_id" invisible="1"/>
                           </tree>
                         </field>
                     </page>
-                    <page string="Confirmation" name="confirmation">
-                        <group>
-                            <field name="require_signature"/>
-                            <field name="require_payment"/>
-                            <field name="mail_template_id" context="{'default_model':'sale.order'}"/>
-                        </group>
-                    </page>
+                        <page string="Terms &amp; Conditions" name="terms_and_conditions">
+                            <field name="note" nolabel="1"
+                                   placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                        </page>
                     </notebook>
-                    <field name="note" nolabel="1"
-                        placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
                 </sheet>
             </form>
         </field>
@@ -124,6 +132,7 @@
         <field name="arch" type="xml">
             <tree string="Quotation Template">
                 <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -143,7 +152,5 @@
             </p>
         </field>
     </record>
-
-    <menuitem id="sale_order_template_menu" action="sale_order_template_action" parent="sale.menu_sales_config" sequence="1" name="Quotation Templates" groups="sale_management.group_sale_order_template"/>
 
 </odoo>

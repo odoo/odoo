@@ -12,12 +12,17 @@ class MailResendMessage(models.TransientModel):
     mail_message_id = fields.Many2one('mail.message', 'Message', readonly=True)
     partner_ids = fields.One2many('mail.resend.partner', 'resend_wizard_id', string='Recipients')
     notification_ids = fields.Many2many('mail.notification', string='Notifications', readonly=True)
-    has_cancel = fields.Boolean(compute='_compute_has_cancel')
+    can_cancel = fields.Boolean(compute='_compute_can_cancel')
+    can_resend = fields.Boolean(compute='_compute_can_resend')
     partner_readonly = fields.Boolean(compute='_compute_partner_readonly')
 
     @api.depends("partner_ids")
-    def _compute_has_cancel(self):
-        self.has_cancel = self.partner_ids.filtered(lambda p: not p.resend)
+    def _compute_can_cancel(self):
+        self.can_cancel = self.partner_ids.filtered(lambda p: not p.resend)
+
+    @api.depends('partner_ids.resend')
+    def _compute_can_resend(self):
+        self.can_resend = any([partner.resend for partner in self.partner_ids])
 
     def _compute_partner_readonly(self):
         self.partner_readonly = not self.env['res.partner'].check_access_rights('write', raise_exception=False)
@@ -63,17 +68,16 @@ class MailResendMessage(models.TransientModel):
                 record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
 
                 email_partners_data = []
-                for pid, active, pshare, notif, groups in self.env['mail.followers']._get_recipient_data(None, 'comment', False, pids=to_send.ids):
-                    if pid and notif == 'email' or not notif:
-                        pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
-                        if not pshare and notif:  # has an user and is not shared, is therefore user
-                            email_partners_data.append(dict(pdata, type='user'))
-                        elif pshare and notif:  # has an user and is shared, is therefore portal
-                            email_partners_data.append(dict(pdata, type='portal'))
-                        else:  # has no user, is therefore customer
-                            email_partners_data.append(dict(pdata, type='customer'))
+                recipients_data = self.env['mail.followers']._get_recipient_data(None, 'comment', False, pids=to_send.ids)[0]
+                for pid, pdata in recipients_data.items():
+                    if pid and pdata.get('notif', 'email') == 'email':
+                        email_partners_data.append(pdata)
 
-                record._notify_record_by_email(message, email_partners_data, check_existing=True, send_after_commit=False)
+                record._notify_thread_by_email(
+                    message, email_partners_data,
+                    resend_existing=True,
+                    send_after_commit=False
+                )
 
             self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
@@ -91,8 +95,8 @@ class PartnerResend(models.TransientModel):
     _description = 'Partner with additional information for mail resend'
 
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete='cascade')
-    name = fields.Char(related="partner_id.name", related_sudo=False, readonly=False)
-    email = fields.Char(related="partner_id.email", related_sudo=False, readonly=False)
-    resend = fields.Boolean(string="Send Again", default=True)
+    name = fields.Char(related='partner_id.name', string='Recipient Name', related_sudo=False, readonly=False)
+    email = fields.Char(related='partner_id.email', string='Email Address', related_sudo=False, readonly=False)
+    resend = fields.Boolean(string='Try Again', default=True)
     resend_wizard_id = fields.Many2one('mail.resend.message', string="Resend wizard")
-    message = fields.Char(string="Help message")
+    message = fields.Char(string='Error message')

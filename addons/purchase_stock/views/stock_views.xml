@@ -30,10 +30,10 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="inherit_id" ref="stock.view_warehouse_orderpoint_tree_editable"/>
             <field name="arch" type="xml">
-                <field name="route_id" position="after">
+                <xpath expr="//button[@name='action_stock_replenishment_info']" position="before">
                     <field name="show_supplier" invisible="1"/>
-                    <field name="supplier_id" optional="hide" attrs="{'invisible': [('show_supplier', '=', False)]}" options="{'no_create': True}"/>
-                </field>
+                    <field name="supplier_id" string="Vendor" optional="show" attrs="{'invisible': [('show_supplier', '=', False)]}" options="{'no_create': True}"/>
+                </xpath>
             </field>
         </record>
 

@@ -10,8 +10,6 @@ QUnit.module('Views');
 
 QUnit.module('LunchKanbanView Mobile', {
     beforeEach() {
-        const PORTAL_GROUP_ID = 1234;
-
         this.data = {
             'product': {
                 fields: {
@@ -36,12 +34,6 @@ QUnit.module('LunchKanbanView Mobile', {
             'lunch.supplier': {
                 fields: {},
                 records: [],
-            },
-            'ir.model.data': {
-                fields: {},
-                xmlid_to_res_id() {
-                    return Promise.resolve(PORTAL_GROUP_ID);
-                },
             },
             'lunch.location': {
                 fields: {
@@ -80,15 +72,15 @@ QUnit.module('LunchKanbanView Mobile', {
             }),
         });
 
-        assert.containsOnce(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)',
+        assert.containsOnce(kanban, '.o_legacy_kanban_view .o_kanban_record:not(.o_kanban_ghost)',
             "should have 1 records in the renderer");
 
         // check view layout
         assert.containsOnce(kanban, '.o_content > .o_lunch_content',
             "should have a 'kanban lunch wrapper' column");
-        assert.containsOnce(kanban, '.o_lunch_content > .o_kanban_view',
+        assert.containsOnce(kanban, '.o_lunch_content > .o_legacy_kanban_view',
             "should have a 'classical kanban view' column");
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_lunch_kanban_view',
+        assert.hasClass(kanban.$('.o_legacy_kanban_view'), 'o_lunch_kanban_view',
             "should have classname 'o_lunch_kanban_view'");
         assert.containsOnce($('.o_lunch_content'), '> details',
             "should have a 'lunch kanban' details/summary discolure panel");

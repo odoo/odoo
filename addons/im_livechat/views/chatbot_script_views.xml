@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="chatbot_script_view_form" model="ir.ui.view">
+        <field name="name">chatbot.script.view.form</field>
+        <field name="model">chatbot.script</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <field name="first_step_warning" invisible="1"/>
+                <div class="alert alert-info text-center" role="alert"
+                    attrs="{'invisible': [('first_step_warning', '!=', 'first_step_operator')]}">
+                    <span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>
+                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>
+                </div>
+                <div class="alert alert-info text-center" role="alert"
+                    attrs="{'invisible': [('first_step_warning', '!=', 'first_step_invalid')]}">
+                    <span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...).</span>
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_livechat_channels" type="object" class="oe_stat_button"
+                                icon="fa-comments" attrs="{'invisible': [('livechat_channel_count', '=', 0)]}">
+                            <field name="livechat_channel_count" string="Channels" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="title" string="Chatbot Name"/>
+                        <h1><field name="title" default_focus="1" placeholder='e.g. "Meeting Scheduler Bot"'/></h1>
+                    </div>
+                    <notebook>
+                        <page string="Script">
+                            <field name="script_step_ids" widget="chatbot_steps_one2many" nolabel="1"
+                                context="{'chatbot_script_answer_display_short_name': 1}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="chatbot_script_view_tree" model="ir.ui.view">
+        <field name="name">chatbot.script.view.tree</field>
+        <field name="model">chatbot.script</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="title"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="chatbot_script_view_search" model="ir.ui.view">
+        <field name="name">chatbot.script.view.search</field>
+        <field name="model">chatbot.script</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="title" string="Name" filter_domain="[('title', 'ilike', self)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="chatbot_script_action" model="ir.actions.act_window">
+        <field name="name">Chatbot</field>
+        <field name="res_model">chatbot.script</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Chatbot
+            </p><p>
+                You can create a new Chatbot with a defined script to speak to your website visitors.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

@@ -38,7 +38,7 @@ class ResPartner(models.Model):
 
     @api.depends('is_company')
     def _compute_slide_channel_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo().read_group(
+        read_group_res = self.env['slide.channel.partner'].sudo()._read_group(
             [('partner_id', 'in', self.ids)],
             ['partner_id'], 'partner_id'
         )
@@ -57,7 +57,15 @@ class ResPartner(models.Model):
                 partner.slide_channel_company_count = 0
 
     def action_view_courses(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_action_overview")
+        """ View partners courses. In singleton mode, return courses followed
+        by all its contacts (if company) or by themselves (if not a company).
+        Otherwise simply set a domain on required partners. """
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action['name'] = _('Followed Courses')
-        action['domain'] = ['|', ('partner_ids', 'in', self.ids), ('partner_ids', 'in', self.child_ids.ids)]
+        if len(self) == 1 and self.is_company:
+            action['domain'] = [('partner_id', 'in', self.child_ids.ids)]
+        elif len(self) == 1:
+            action['context'] = {'search_default_partner_id': self.id}
+        else:
+            action['domain'] = [('partner_id', 'in', self.ids)]
         return action

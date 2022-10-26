@@ -1,7 +1,12 @@
-.o_kanban_view.o_kanban_dashboard.o_project_kanban {
+.o_kanban_renderer.o_kanban_dashboard.o_project_kanban {
 
     .o_project_kanban_main {
         max-width: 300px;
+
+        // Prevents the kanban settings menu from overflowing and creating a scrollbar.
+        .o_kanban_card_manage_pane .o_kanban_card_manage_section a {
+            @extend .text-wrap;
+        }
     }
 
     .o_project_kanban_boxes {
@@ -14,6 +19,11 @@
             text-align: center;
             padding: 0 0 0 0;
             margin: 0 5px;
+
+            &:first-child {
+                 margin: 0 5px 0 0;
+                 padding-left: 12px
+             }
 
             .o_value {
                 font-weight: 800;
@@ -41,9 +51,18 @@
         }
     }
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .o_view_nocontent {
             top: 15%;
+        }
+    }
+
+    .o_kanban_record {
+        div[name="is_favorite"] .fa-star-o {
+            visibility: hidden;
+        }
+        &:hover div[name="is_favorite"] .fa-star-o {
+            visibility: visible;
         }
     }
 }

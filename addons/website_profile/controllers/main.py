@@ -35,11 +35,6 @@ class WebsiteProfile(http.Controller):
             return user.website_published and user.karma > 0
         return False
 
-    def _get_default_avatar(self):
-        img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
-        with open(img_path, 'rb') as f:
-            return base64.b64encode(f.read())
-
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
         # User can access - no matter what - his own profile
@@ -76,36 +71,18 @@ class WebsiteProfile(http.Controller):
     @http.route([
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
-    def get_user_profile_avatar(self, user_id, field='image_256', width=0, height=0, crop=False, **post):
-        if field not in ('image_128', 'image_256'):
+    def get_user_profile_avatar(self, user_id, field='avatar_256', width=0, height=0, crop=False, **post):
+        if field not in ('image_128', 'image_256', 'avatar_128', 'avatar_256'):
             return werkzeug.exceptions.Forbidden()
 
-        can_sudo = self._check_avatar_access(user_id, **post)
-        if can_sudo:
-            status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
-                model='res.users', id=user_id, field=field,
-                default_mimetype='image/png')
-        else:
-            status, headers, image_base64 = request.env['ir.http'].binary_content(
-                model='res.users', id=user_id, field=field,
-                default_mimetype='image/png')
-        if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, image_base64)
-        if status == 304:
-            return werkzeug.wrappers.Response(status=304)
+        if (int(width), int(height)) == (0, 0):
+            width, height = tools.image_guess_size_from_field_name(field)
 
-        if not image_base64:
-            image_base64 = self._get_default_avatar()
-            if not (width or height):
-                width, height = tools.image_guess_size_from_field_name(field)
-
-        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
-
-        content = base64.b64decode(image_base64)
-        headers = http.set_safe_image_headers(headers, content)
-        response = request.make_response(content, headers)
-        response.status_code = status
-        return response
+        can_sudo = self._check_avatar_access(int(user_id), **post)
+        return request.env['ir.binary']._get_image_stream_from(
+            request.env['res.users'].sudo(can_sudo).browse(int(user_id)),
+            field_name=field, width=int(width), height=int(height), crop=crop
+        ).get_response()
 
     @http.route(['/profile/user/<int:user_id>'], type='http', auth="public", website=True)
     def view_user_profile(self, user_id, **post):
@@ -163,12 +140,12 @@ class WebsiteProfile(http.Controller):
         else:
             user = request.env.user
         values = self._profile_edition_preprocess_values(user, **kwargs)
-        whitelisted_values = {key: values[key] for key in type(user).SELF_WRITEABLE_FIELDS if key in values}
+        whitelisted_values = {key: values[key] for key in user.SELF_WRITEABLE_FIELDS if key in values}
         user.write(whitelisted_values)
         if kwargs.get('url_param'):
-            return werkzeug.utils.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))
+            return request.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))
         else:
-            return werkzeug.utils.redirect("/profile/user/%d" % user.id)
+            return request.redirect("/profile/user/%d" % user.id)
 
     # Ranks and Badges
     # ---------------------------------------------------

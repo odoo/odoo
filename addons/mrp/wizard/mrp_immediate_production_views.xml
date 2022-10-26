@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Immediate production?">
                 <group>
-                    <p>You have not recorded <i>produced</i> quantities yet, by clicking on <i>apply</i> Odoo will produce all the finished products and consume all components.</p>
+                    <p colspan="2">You have not recorded <i>produced</i> quantities yet, by clicking on <i>apply</i> Odoo will produce all the finished products and consume all components.</p>
                 </group>
 
                 <field name="show_productions" invisible="1"/>
@@ -18,8 +18,8 @@
                 </field>
 
                 <footer>
-                    <button name="process" string="Apply" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                    <button name="process" string="Apply" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

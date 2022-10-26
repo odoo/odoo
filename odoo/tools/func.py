@@ -4,10 +4,12 @@
 __all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
            'classproperty', 'conditional', 'lazy']
 
+import warnings
+from inspect import getsourcefile, Parameter, signature
 from functools import wraps
-from inspect import getsourcefile
 from json import JSONEncoder
 
+from decorator import decorator
 
 class lazy_property(object):
     """ Decorator for a lazy property of an object, i.e., an object attribute
@@ -50,7 +52,7 @@ class lazy_classproperty(lazy_property):
 def conditional(condition, decorator):
     """ Decorator for a conditionally applied decorator.
 
-        Example:
+        Example::
 
            @conditional(get_config('use_cache'), ormcache)
            def fn():
@@ -61,18 +63,30 @@ def conditional(condition, decorator):
     else:
         return lambda fn: fn
 
+def filter_kwargs(func, kwargs):
+    """ Filter the given keyword arguments to only return the kwargs
+        that binds to the function's signature.
+    """
+    leftovers = set(kwargs)
+    for p in signature(func).parameters.values():
+        if p.kind in (Parameter.POSITIONAL_OR_KEYWORD, Parameter.KEYWORD_ONLY):
+            leftovers.discard(p.name)
+        elif p.kind == Parameter.VAR_KEYWORD:  # **kwargs
+            leftovers.clear()
+            break
+
+    if not leftovers:
+        return kwargs
+
+    return {key: kwargs[key] for key in kwargs if key not in leftovers}
+
 def synchronized(lock_attr='_lock'):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            lock = getattr(self, lock_attr)
-            try:
-                lock.acquire()
-                return func(self, *args, **kwargs)
-            finally:
-                lock.release()
-        return wrapper
-    return decorator
+    @decorator
+    def locked(func, inst, *args, **kwargs):
+        with getattr(inst, lock_attr):
+            return func(inst, *args, **kwargs)
+    return locked
+locked = synchronized()
 
 def frame_codeinfo(fframe, back=0):
     """ Return a (filename, line) pair for a previous frame .
@@ -103,6 +117,11 @@ def compose(a, b):
          def b():
             ...
     """
+    warnings.warn(
+        "Since 16.0, just byo or use a dedicated library like funcy.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     @wraps(b)
     def wrapper(*args, **kwargs):
         return a(b(*args, **kwargs))
@@ -118,12 +137,13 @@ def classproperty(func):
 
 
 class lazy(object):
-    """ A proxy to the (memoized) result of a lazy evaluation::
+    """ A proxy to the (memoized) result of a lazy evaluation:
 
-            foo = lazy(func, arg)           # func(arg) is not called yet
-            bar = foo + 1                   # eval func(arg) and add 1
-            baz = foo + 2                   # use result of func(arg) and add 2
+    .. code-block::
 
+        foo = lazy(func, arg)           # func(arg) is not called yet
+        bar = foo + 1                   # eval func(arg) and add 1
+        baz = foo + 2                   # use result of func(arg) and add 2
     """
     __slots__ = ['_func', '_args', '_kwargs', '_cached_value']
 
@@ -153,12 +173,12 @@ class lazy(object):
     def __bytes__(self): return bytes(self._value)
     def __format__(self, format_spec): return format(self._value, format_spec)
 
-    def __lt__(self, other): return self._value < other
-    def __le__(self, other): return self._value <= other
-    def __eq__(self, other): return self._value == other
-    def __ne__(self, other): return self._value != other
-    def __gt__(self, other): return self._value > other
-    def __ge__(self, other): return self._value >= other
+    def __lt__(self, other): return other > self._value
+    def __le__(self, other): return other >= self._value
+    def __eq__(self, other): return other == self._value
+    def __ne__(self, other): return other != self._value
+    def __gt__(self, other): return other < self._value
+    def __ge__(self, other): return other <= self._value
 
     def __hash__(self): return hash(self._value)
     def __bool__(self): return bool(self._value)

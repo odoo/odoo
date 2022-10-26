@@ -1,19 +1,28 @@
-odoo.define('web_editor.field.html', function (require) {
+/** @odoo-module alias=web_editor.field.html */
 'use strict';
 
-var ajax = require('web.ajax');
-var basic_fields = require('web.basic_fields');
-var core = require('web.core');
-var wysiwygLoader = require('web_editor.loader');
-var field_registry = require('web.field_registry');
+import ajax from 'web.ajax';
+import basic_fields from 'web.basic_fields';
+import core from 'web.core';
+import wysiwygLoader from 'web_editor.loader';
+import field_registry from 'web.field_registry';
+import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
+import {
+    getAdjacentPreviousSiblings,
+    getAdjacentNextSiblings,
+    setSelection,
+    rightPos,
+    getRangePosition
+} from '../editor/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
-require('web._field_registry');
+import 'web._field_registry';
+import "@web/views/fields/html/html_field"; // make sure the html field file has first been executed.
 
 var _lt = core._lt;
+var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
+var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 var QWeb = core.qweb;
-
-var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -27,8 +36,10 @@ var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
  *  - cssReadonly
  *  - snippets
  *  - wrapper
+ *  - resizable
+ *  - codeview
  */
-var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
+var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin).extend(TranslatableFieldMixin, {
     description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
@@ -36,12 +47,81 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     quickEditExclusion: [
         '[href]',
     ],
-
     custom_events: {
         wysiwyg_focus: '_onWysiwygFocus',
         wysiwyg_blur: '_onWysiwygBlur',
         wysiwyg_change: '_onChange',
         wysiwyg_attachment: '_onAttachmentChange',
+    },
+    /**
+     * Position the Model Selector Popover with respect to the
+     * wysiwyg current range.
+     *
+     * @override
+     * @param {ModelFieldSelectorPopover} modelSelector
+     */
+    positionModelSelector: async function (modelSelector) {
+        // Let the default positioning do its thing.
+        await this._super.apply(this, arguments);
+        let topPosition = parseInt(modelSelector.el.style.top.replace('px', ''));
+        let leftPosition = parseInt(modelSelector.el.style.left.replace('px', ''));
+
+        // Bring back the top position to the top of the editable.
+        topPosition -= this.el.offsetHeight;
+
+        // Offsets to the top and left position to match the editable selection.
+        const position = getRangePosition(modelSelector.$el, this.wysiwyg.options.document);
+        topPosition += position.top;
+        // Offset the popover to ensure the arrow is pointing at
+        // the precise range location.
+        leftPosition += position.left - 29;
+
+        // Restrict the PopOver to visible area,
+        // and ensure the popover is not too close to the edges of the window.
+        topPosition = Math.min(topPosition, window.window.innerHeight - modelSelector.el.offsetHeight - 15);
+        leftPosition = Math.min(leftPosition, window.window.innerWidth - modelSelector.el.offsetWidth - 10);
+
+        // Apply the position back to the element.
+        modelSelector.el.style.top = topPosition + 'px';
+        modelSelector.el.style.left = leftPosition + 'px';
+    },
+    /**
+     * Open a Model Field Selector which can select fields
+     * to create a dynamic placeholder <t-out> Element in the field HTML
+     * with or without a default text value.
+     *
+     * @override
+     * @public
+     * @param {String} baseModel
+     * @param {Array} chain
+     *
+     */
+    openDynamicPlaceholder: async function (baseModel, chain = []) {
+        let modelSelector;
+        const onFieldChanged = (ev) => {
+            this.wysiwyg.odooEditor.editable.focus();
+            if (ev.data.chain.length) {
+                let dynamicPlaceholder = "object." + ev.data.chain.join('.');
+                const defaultValue = ev.data.defaultValue;
+                dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
+
+                const t = document.createElement('T');
+                t.setAttribute('t-out', dynamicPlaceholder);
+                this.wysiwyg.odooEditor.execCommand('insert', t);
+                setSelection(...rightPos(t));
+                this.wysiwyg.odooEditor.editable.focus();
+            }
+            modelSelector.destroy();
+        };
+
+        const onFieldCancel = () => {
+            this.wysiwyg.odooEditor.editable.focus();
+            modelSelector.destroy();
+        };
+
+        modelSelector = await this._openNewModelSelector(
+            baseModel, chain, onFieldChanged, onFieldCancel
+        );
     },
 
     /**
@@ -66,6 +146,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (this.$iframe) {
             this.$iframe.remove();
         }
+        if (this._qwebPlugin) {
+            this._qwebPlugin.destroy();
+        }
         this._super();
     },
 
@@ -89,15 +172,25 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      *
      * @override
      */
-    commitChanges: function () {
+    commitChanges: async function () {
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
-        return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
-            this._isDirty = this.wysiwyg.isDirty();
-            _super();
-        });
+        // Do not wait for the resolution of the cleanForSave promise to update
+        // the internal value in case this happens during an urgentSave as the
+        // beforeunload event does not play well with asynchronicity. It is
+        // better to have a partially cleared value than to lose changes. When
+        // this function is called outside of an urgentSave context, the full
+        // cleaning is still awaited below and `_super` will reupdate the value.
+        const fullClean = this.wysiwyg.cleanForSave();
+        this._setValue(this._getValue());
+        this._isDirty = this.wysiwyg.isDirty();
+        await fullClean;
+        await this.wysiwyg.saveModifiedImages(this.$content);
+        // Update the value to the fully cleaned version.
+        this._setValue(this._getValue());
+        _super();
     },
     /**
      * @override
@@ -110,7 +203,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     getFocusableElement: function () {
-        return this.$wysiwygWrapper || $();
+        return this.wysiwyg && this.wysiwyg.$editable || $();
     },
     /**
      * Do not re-render this field if it was the origin of the onchange call.
@@ -125,10 +218,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         value = this._textToHtml(value);
         if (!event || event.target !== this) {
-            if (this.cssReadonly) {
-                return Promise.resolve();
-            } else if (this.mode === 'edit') {
+            if (this.mode === 'edit' && this.wysiwyg) {
                 this.wysiwyg.setValue(value);
+            } else if (this.cssReadonly) {
+                return Promise.resolve();
             } else {
                 this.$content.html(value);
             }
@@ -144,7 +237,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _getValue: function () {
-        var value = this.wysiwyg.getValue();
+        let value;
+        if (!this._$codeview || this._$codeview.hasClass('d-none')) {
+           value = this.wysiwyg.getValue();
+        } else {
+            value = this._$codeview.val();
+        }
         if (this.nodeOptions.wrapper) {
             return this._unWrap(value);
         }
@@ -157,12 +255,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @private
      * @returns {$.Promise}
      */
-    _createWysiwygIntance: async function () {
-        if (this.cssReadonly) {
-            return;
-        }
-        this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
-        this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
+    _createWysiwygInstance: async function () {
+        const Wysiwyg = await wysiwygLoader.getWysiwygClass();
+        this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
         return this.wysiwyg.appendTo(this.$el).then(() => {
             this.$content = this.wysiwyg.$editable;
             this._onLoadWysiwyg();
@@ -182,18 +277,49 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 res_model: this.model,
                 res_id: this.res_id,
             },
+            placeholder: this.attrs && this.attrs.placeholder,
+            collaborationChannel: !!this.nodeOptions.collaborative && {
+                collaborationModelName: this.model,
+                collaborationFieldName: this.name,
+                collaborationResId: parseInt(this.res_id),
+            },
             noAttachment: this.nodeOptions['no-attachment'],
             inIframe: !!this.nodeOptions.cssEdit,
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
             value: this.value,
-            mediaModalParams: {noVideos: true},
+            allowCommandVideo: Boolean(this.nodeOptions.allowCommandVideo) && (!this.field.sanitize || !this.field.sanitize_tags),
+            mediaModalParams: {
+                noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
+                res_model: this.model,
+                res_id: this.res_id,
+                useMediaLibrary: true,
+            },
             linkForceNewWindow: true,
-
             tabsize: 0,
-            height: 380,
-            resizable: true,
+            height: this.nodeOptions.height,
+            minHeight: this.nodeOptions.minHeight,
+            maxHeight: this.nodeOptions.maxHeight,
+            resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : false,
+            editorPlugins: [QWebPlugin],
         });
+    },
+    /**
+     * Toggle the code view and update the UI.
+     *
+     * @param {JQuery} $codeview
+     */
+    _toggleCodeView: function ($codeview) {
+        this.wysiwyg.odooEditor.observerUnactive();
+        $codeview.toggleClass('d-none');
+        this.$content.toggleClass('d-none');
+        if ($codeview.hasClass('d-none')) {
+            this.wysiwyg.odooEditor.observerActive();
+            this.wysiwyg.setValue($codeview.val());
+        } else {
+            $codeview.val(this.$content.html());
+            this.wysiwyg.odooEditor.observerActive();
+        }
     },
     /**
      * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
@@ -205,12 +331,14 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * when closing the wizard.
      *
      * @private
-     * @param {Object} attachments
+     * @param {Object} event the event containing attachment data
      */
-    _onAttachmentChange: function (attachments) {
-        if (!this.fieldNameAttachment) {
+    _onAttachmentChange: function (event) {
+        // This only needs to happen for the composer for now
+        if (!this.fieldNameAttachment || this.model !== 'mail.compose.message') {
             return;
         }
+        const attachments = event.data;
         this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: _.object([this.fieldNameAttachment], [{
@@ -223,9 +351,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _renderEdit: function () {
-        var value = this._textToHtml(this.value);
-        if (this.nodeOptions.wrapper) {
-            value = this._wrap(value);
+        if (this.nodeOptions.notEditable) {
+            return this._renderReadonly();
         }
         var fieldNameAttachment = _.chain(this.recordData)
             .pairs()
@@ -240,9 +367,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
         if (this.nodeOptions.cssEdit) {
             // must be async because the target must be append in the DOM
-            this._createWysiwygIntance();
+            this._createWysiwygInstance();
         } else {
-            return this._createWysiwygIntance();
+            return this._createWysiwygInstance();
         }
     },
     /**
@@ -260,8 +387,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         var def = new Promise(function (resolve) {
             resolver = resolve;
         });
+        const externalLinkSelector = `a:not([href^="${location.origin}"]):not([href^="/"])`;
         if (this.nodeOptions.cssReadonly) {
-            this.$iframe = $('<iframe class="o_readonly"/>');
+            this.$iframe = $('<iframe class="o_readonly d-none"/>');
             this.$iframe.appendTo(this.$el);
 
             var avoidDoubleLoad = 0; // this bug only appears on some computers with some chrome version.
@@ -276,6 +404,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 }
                 self.$content = $('#iframe_target', self.$iframe[0].contentWindow.document.body);
                 resolver();
+                self.trigger_up('iframe_updated', { $iframe: self.$iframe });
             };
 
             this.$iframe.on('load', function onLoad() {
@@ -286,9 +415,15 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         return;
                     }
                     var cwindow = self.$iframe[0].contentWindow;
+                    try {
+                        cwindow.document;
+                    } catch (_e) {
+                        return;
+                    }
                     cwindow.document
                         .open("text/html", "replace")
                         .write(
+                            '<!DOCTYPE html><html>' +
                             '<head>' +
                                 '<meta charset="utf-8"/>' +
                                 '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
@@ -300,14 +435,15 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                                     return '<style type="text/css">' + cssContent + '</style>';
                                 }).join('\n') + '\n' +
                             '</head>\n' +
-                            '<body class="o_in_iframe o_readonly">\n' +
+                            '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
                                 '<div id="iframe_target">' + value + '</div>\n' +
                                 '<script type="text/javascript">' +
                                     'if (window.top.' + self._onUpdateIframeId + ') {' +
                                         'window.top.' + self._onUpdateIframeId + '(' + _avoidDoubleLoad + ')' +
                                     '}' +
                                 '</script>\n' +
-                            '</body>');
+                            '</body>' +
+                            '</html>');
 
                     var height = cwindow.document.body.scrollHeight;
                     self.$iframe.css('height', Math.max(30, Math.min(height, 500)) + 'px');
@@ -317,16 +453,36 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                             self._onClick(ev);
                         }
                     });
+
+                    // Ensure all external links are opened in a new tab.
+                    for (const externalLink of cwindow.document.body.querySelectorAll(externalLinkSelector)) {
+                        externalLink.setAttribute('target', '_blank');
+                        externalLink.setAttribute('rel', 'noreferrer');
+                    }
                 });
             });
         } else {
             this.$content = $('<div class="o_readonly"/>').html(value);
             this.$content.appendTo(this.$el);
+            this._qwebPlugin = new QWebPlugin();
+            this._qwebPlugin.sanitizeElement(this.$content[0]);
+            // Ensure all external links are opened in a new tab.
+            for (const externalLink of this.$content.find(externalLinkSelector)) {
+                externalLink.setAttribute('target', '_blank');
+                externalLink.setAttribute('rel', 'noreferrer');
+            }
             resolver();
         }
 
         def.then(function () {
-            self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            if (!self.hasReadonlyModifier) {
+                self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+                self.$content.on('click', '.o_stars .fa-star, .o_stars .fa-star-o', self._onReadonlyClickStar.bind(self));
+            }
+            if (self.$iframe) {
+                // Iframe is hidden until fully loaded to avoid glitches.
+                self.$iframe.removeClass('d-none');
+            }
         });
     },
     /**
@@ -336,12 +492,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (jinjaRegex.test(value)) { // is jinja
-            return value;
-        }
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
-        } catch (e) {
+        } catch (_e) {
             if (value.match(/^\s*$/)) {
                 value = '<p><br/></p>';
             } else {
@@ -394,27 +547,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _onChange: function (ev) {
         this._doDebouncedAction.apply(this, arguments);
-
-        var $lis = this.$content.find('.note-editable ul.o_checklist > li:not(:has(> ul.o_checklist))');
-        if (!$lis.length) {
-            return;
-        }
-        var max = 0;
-        var ids = [];
-        $lis.map(function () {
-            var checklistId = parseInt(($(this).attr('id') || '0').replace(/^checklist-id-/, ''));
-            if (ids.indexOf(checklistId) === -1) {
-                if (checklistId > max) {
-                    max = checklistId;
-                }
-                ids.push(checklistId);
-            } else {
-                $(this).removeAttr('id');
-            }
-        });
-        $lis.not('[id]').each(function () {
-            $(this).attr('id', 'checklist-id-' + (++max));
-        });
     },
     /**
      * Allows Enter keypress in a textarea (source mode)
@@ -436,14 +568,16 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onReadonlyClickChecklist: function (ev) {
-        var self = this;
+        const self = this;
         if (ev.offsetX > 0) {
             return;
         }
         ev.stopPropagation();
         ev.preventDefault();
-        var checked = $(ev.target).hasClass('o_checked');
-        var checklistId = parseInt(($(ev.target).attr('id') || '0').replace(/^checklist-id-/, ''));
+        const checked = $(ev.target).hasClass('o_checked');
+        let checklistId = $(ev.target).attr('id');
+        checklistId = checklistId && checklistId.replace('checkId-', '');
+        checklistId = parseInt(checklistId || '0');
 
         this._rpc({
             route: '/web_editor/checklist',
@@ -459,19 +593,75 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         });
     },
     /**
+     * Check stars on click event in readonly.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReadonlyClickStar: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const node = ev.target;
+        const previousStars = getAdjacentPreviousSiblings(node, sib => (
+            sib.nodeType === Node.ELEMENT_NODE && sib.className.includes('fa-star')
+        ));
+        const nextStars = getAdjacentNextSiblings(node, sib => (
+            sib.nodeType === Node.ELEMENT_NODE && sib.classList.contains('fa-star')
+        ));
+        const shouldToggleOff = node.classList.contains('fa-star') && !nextStars.length;
+        const rating = shouldToggleOff ? 0 : previousStars.length + 1;
+
+        let starsId = $(node).parent().attr('id');
+        starsId = starsId && starsId.replace('checkId-', '');
+        starsId = parseInt(starsId || '0');
+        this._rpc({
+            route: '/web_editor/stars',
+            params: {
+                res_model: this.model,
+                res_id: this.res_id,
+                filename: this.name,
+                starsId,
+                rating,
+            },
+        }).then(value => this._setValue(value));
+    },
+    /**
      * Method called when the wysiwyg instance is loaded.
      *
      * @private
      */
     _onLoadWysiwyg: function () {
         var $button = this._renderTranslateButton();
-        $button.css({
-            'font-size': '15px',
-            position: 'absolute',
-            right: '+5px',
-            top: '+5px',
-        });
-        this.$el.append($button);
+        var $container;
+        if (this.nodeOptions.cssEdit && this.wysiwyg) {
+            $container = this.wysiwyg.$iframeBody.find('.email_designer_top_actions');
+        } else {
+            $container = this.$el;
+            $button.css({
+                'font-size': '15px',
+                position: 'absolute',
+                top: '5px',
+                [_t.database.parameters.direction === 'rtl' ? 'left' : 'right']: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            });
+        }
+        $container.append($button);
+        if (odoo.debug && this.nodeOptions.codeview) {
+            const $codeviewButtonToolbar = $(`
+                <div id="codeview-btn-group" class="btn-group">
+                    <button class="o_codeview_btn btn btn-primary">
+                        <i class="fa fa-code"></i>
+                    </button>
+                </div>
+            `);
+            this.$floatingCodeViewButton = $codeviewButtonToolbar.clone();
+            this._$codeview = $('<textarea class="o_codeview d-none"/>');
+            this.wysiwyg.$editable.after(this._$codeview);
+            this._$codeview.after(this.$floatingCodeViewButton);
+            this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
+            $codeviewButtonToolbar.click(() => this._toggleCodeView(this._$codeview));
+            this.$floatingCodeViewButton.click(() => this._toggleCodeView(this._$codeview));
+        }
     },
     /**
      * @private
@@ -493,9 +683,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     _onWysiwygFocus: function (ev) {},
 });
 
-
 field_registry.add('html', FieldHtml);
 
-
-return FieldHtml;
-});
+export default FieldHtml;

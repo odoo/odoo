@@ -34,9 +34,10 @@ PortalComposer.include({
 
         // default options
         this.options = _.defaults(this.options, {
+            'rate_with_void_content': false,
             'default_message': false,
             'default_message_id': false,
-            'default_rating_value': 0.0,
+            'default_rating_value': 4.0,
             'force_submit_url': false,
         });
         // star input widget
@@ -61,6 +62,10 @@ PortalComposer.include({
             // rating stars
             self.$input = self.$('input[name="rating_value"]');
             self.$star_list = self.$('.stars').find('i');
+            // if this is the first review, we do not use grey color contrast, even with default rating value.
+            if (!self.options.default_message_id) {
+                self.$star_list.removeClass('text-black-25');
+            }
 
             // set the default value to trigger the display of star widget and update the hidden input value.
             self.set("star_value", self.options.default_rating_value); 
@@ -148,6 +153,20 @@ PortalComposer.include({
             });
             $modal.modal('hide');
         });
+    },
+
+    /**
+     * @override
+     * @private
+     */
+    _onSubmitCheckContent: function (ev) {
+        if (this.options.rate_with_void_content) {
+            if (this.$input.val() === 0) {
+                return _t('The rating is required. Please make sure to select one before sending your review.')
+            }
+            return false;
+        }
+        return this._super.apply(this, arguments);
     },
 });
 });

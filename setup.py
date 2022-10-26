@@ -24,17 +24,18 @@ setup(
     include_package_data=True,
     install_requires=[
         'babel >= 1.0',
+        'chardet',
+        'cryptography',
         'decorator',
         'docutils',
-        'feedparser',
         'gevent',
-        'html2text',
+        'greenlet',
         'idna',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'libsass',
-        'mako',
-        'mock',
+        'MarkupSafe',
+        'num2words',
         'ofxparse',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
@@ -42,7 +43,8 @@ setup(
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycopg2 >= 2.2',
         'pydot',
-        'pypdf2',
+        'pyopenssl',
+        'PyPDF2',
         'pyserial',
         'python-dateutil',
         'python-stdnum',
@@ -51,16 +53,17 @@ setup(
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'zeep',
+        'urllib3',
         'vobject',
         'werkzeug',
+        'xlrd',
         'xlsxwriter',
         'xlwt',
+        'zeep',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     extras_require={
         'ldap': ['python-ldap'],
-        'SSL': ['pyopenssl'],
     },
     tests_require=[
         'freezegun',

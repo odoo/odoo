@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.addons.sale_project.tests.common import TestSaleProjectCommon
 
 
-class TestCommonSaleTimesheet(TestSaleCommon):
+class TestCommonSaleTimesheet(TestSaleProjectCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -34,54 +34,46 @@ class TestCommonSaleTimesheet(TestSaleCommon):
 
         cls.employee_user = cls.env['hr.employee'].create({
             'name': 'Employee User',
-            'timesheet_cost': 15,
+            'hourly_cost': 15,
         })
         cls.employee_manager = cls.env['hr.employee'].create({
             'name': 'Employee Manager',
-            'timesheet_cost': 45,
+            'hourly_cost': 45,
         })
 
         cls.employee_company_B = cls.env['hr.employee'].create({
             'name': 'Gregor Clegane',
             'user_id': cls.user_employee_company_B.id,
-            'timesheet_cost': 15,
+            'hourly_cost': 15,
         })
 
         cls.manager_company_B = cls.env['hr.employee'].create({
             'name': 'Cersei Lannister',
             'user_id': cls.user_manager_company_B.id,
-            'timesheet_cost': 45,
+            'hourly_cost': 45,
         })
 
         # Account and project
-        cls.account_sale = cls.company_data['default_account_revenue']
-        cls.analytic_account_sale = cls.env['account.analytic.account'].create({
-            'name': 'Project for selling timesheet - AA',
-            'code': 'AA-2030',
-            'company_id': cls.company_data['company'].id,
+        cls.analytic_account_sale.name = 'Project for selling timesheet - AA'
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan Test',
+            'company_id': cls.company_data_2['company'].id,
         })
         cls.analytic_account_sale_company_B = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet Company B - AA',
             'code': 'AA-2030',
+            'plan_id': cls.analytic_plan.id,
             'company_id': cls.company_data_2['company'].id,
         })
 
         # Create projects
         Project = cls.env['project.project'].with_context(tracking_disable=True)
-        cls.project_global = Project.create({
+        cls.project_global.write({
             'name': 'Project for selling timesheets',
             'allow_timesheets': True,
-            'analytic_account_id': cls.analytic_account_sale.id,
-            'allow_billable': True,
         })
-        cls.project_template = Project.create({
+        cls.project_template.write({
             'name': 'Project TEMPLATE for services',
-            'allow_timesheets': True,
-        })
-        cls.project_template_state = cls.env['project.task.type'].create({
-            'name': 'Only stage in project template',
-            'sequence': 1,
-            'project_ids': [(4, cls.project_template.id)]
         })
         # Projects: at least one per billable type
         cls.project_task_rate = Project.create({
@@ -90,14 +82,6 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'allow_billable': True,
             'partner_id': cls.partner_b.id,
             'analytic_account_id': cls.analytic_account_sale.id,
-        })
-        cls.project_project_rate = cls.project_task_rate.copy({
-            'name': 'Project with pricing_type="project_rate"',
-            'pricing_type': 'fixed_rate',
-        })
-        cls.project_employee_rate = cls.project_task_rate.copy({
-            'name': 'Project with pricing_type="employee_rate"',
-            'pricing_type': 'employee_rate',
         })
 
         cls.project_subtask = Project.create({
@@ -114,7 +98,6 @@ class TestCommonSaleTimesheet(TestSaleCommon):
         })
 
         # Create service products
-        uom_hour = cls.env.ref('uom.product_uom_hour')
 
         # -- ordered quantities (ordered, timesheet)
         cls.product_order_timesheet1 = cls.env['product.product'].create({
@@ -123,8 +106,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 13,
             'type': 'service',
             'invoice_policy': 'order',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED1',
             'service_type': 'timesheet',
             'service_tracking': 'no',
@@ -138,8 +121,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 90,
             'type': 'service',
             'invoice_policy': 'order',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -153,8 +136,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 20,
             'type': 'service',
             'invoice_policy': 'order',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED3',
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project',
@@ -168,8 +151,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 30,
             'type': 'service',
             'invoice_policy': 'order',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED4',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
@@ -183,8 +166,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 34,
             'type': 'service',
             'invoice_policy': 'order',
-            'uom_id': cls.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': cls.env.ref('uom.product_uom_hour').id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED4',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
@@ -201,8 +184,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 13,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI1',
             'service_type': 'timesheet',
             'service_tracking': 'no',
@@ -216,8 +199,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 90,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI2',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -231,8 +214,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 20,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI3',
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project',
@@ -246,8 +229,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 30,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI4',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
@@ -261,91 +244,13 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'list_price': 34,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': cls.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': cls.env.ref('uom.product_uom_hour').id,
+            'uom_id': cls.uom_hour.id,
+            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI5',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
             'project_template_id': cls.project_template.id,
             'project_id': False,
-            'taxes_id': False,
-            'property_account_income_id': cls.account_sale.id,
-        })
-
-        # -- milestones (delivered, manual)
-        cls.product_delivery_manual1 = cls.env['product.product'].create({
-            'name': "Service delivered, create no task",
-            'standard_price': 11,
-            'list_price': 13,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
-            'default_code': 'SERV-DELI1',
-            'service_type': 'manual',
-            'service_tracking': 'no',
-            'project_id': False,
-            'taxes_id': False,
-            'property_account_income_id': cls.account_sale.id,
-        })
-        cls.product_delivery_manual2 = cls.env['product.product'].create({
-            'name': "Service delivered, create task in global project",
-            'standard_price': 30,
-            'list_price': 90,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
-            'default_code': 'SERV-DELI2',
-            'service_type': 'manual',
-            'service_tracking': 'task_global_project',
-            'project_id': cls.project_global.id,
-            'taxes_id': False,
-            'property_account_income_id': cls.account_sale.id,
-        })
-        cls.product_delivery_manual3 = cls.env['product.product'].create({
-            'name': "Service delivered, create task in new project",
-            'standard_price': 10,
-            'list_price': 20,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
-            'default_code': 'SERV-DELI3',
-            'service_type': 'manual',
-            'service_tracking': 'task_in_project',
-            'project_id': False,  # will create a project
-            'taxes_id': False,
-            'property_account_income_id': cls.account_sale.id,
-        })
-        cls.product_delivery_manual4 = cls.env['product.product'].create({
-            'name': "Service delivered, create project only",
-            'standard_price': 15,
-            'list_price': 30,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
-            'default_code': 'SERV-DELI4',
-            'service_type': 'manual',
-            'service_tracking': 'project_only',
-            'project_id': False,
-            'taxes_id': False,
-            'property_account_income_id': cls.account_sale.id,
-        })
-        cls.product_delivery_manual5 = cls.env['product.product'].create({
-            'name': "Service delivered, create project only with template",
-            'standard_price': 17,
-            'list_price': 34,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': cls.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': cls.env.ref('uom.product_uom_hour').id,
-            'default_code': 'SERV-DELI4',
-            'service_type': 'manual',
-            'service_tracking': 'project_only',
-            'project_id': False,
-            'project_template_id': cls.project_template.id,
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
         })
@@ -359,10 +264,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
         })
         self.env['sale.order.line'].create([{
             'order_id': self.so.id,
-            'name': self.product_delivery_timesheet1.name,
             'product_id': self.product_delivery_timesheet1.id,
             'product_uom_qty': 10,
-            'price_unit': self.product_delivery_timesheet1.list_price
         }, {
             'order_id': self.so.id,
             'product_id': self.product_delivery_timesheet2.id,

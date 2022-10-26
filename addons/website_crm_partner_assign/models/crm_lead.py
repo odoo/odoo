@@ -4,7 +4,7 @@
 import random
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError
+from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.tools import html_escape
 
 
@@ -14,7 +14,7 @@ class CrmLead(models.Model):
 
     partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))
-    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index=True)
+    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index='btree_not_null')
     partner_declined_ids = fields.Many2many(
         'res.partner',
         'crm_lead_declined_partner',
@@ -51,7 +51,18 @@ class CrmLead(models.Model):
             leads.write({'user_id': salesman_id})
 
     def action_assign_partner(self):
-        return self.assign_partner(partner_id=False)
+        """ While assigning a partner, geo-localization is performed only for leads having country
+            set (see method 'assign_geo_localize' and 'search_geo_partner'). So for leads that does not
+            have country set, we show the notification, and for the rest, we geo-localize them.
+        """
+        leads_with_country = self.filtered(lambda lead: lead.country_id)
+        leads_without_country = self - leads_with_country
+        if leads_without_country:
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                'title': _("Warning"),
+                'message': _('There is no country set in addresses for %(lead_names)s.', lead_names=', '.join(leads_without_country.mapped('name'))),
+            })
+        return leads_with_country.assign_partner(partner_id=False)
 
     def assign_partner(self, partner_id=False):
         partner_dict = {}
@@ -95,6 +106,14 @@ class CrmLead(models.Model):
                         'partner_longitude': result[1]
                     })
         return True
+
+    def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
+        res = super()._prepare_customer_values(partner_name, is_company=is_company, parent_id=parent_id)
+        res.update({
+            'partner_latitude': self.partner_latitude,
+            'partner_longitude': self.partner_longitude,
+        })
+        return res
 
     def search_geo_partner(self):
         Partner = self.env['res.partner']
@@ -175,7 +194,7 @@ class CrmLead(models.Model):
             message += '<p>%s</p>' % html_escape(comment)
         for lead in self:
             lead.message_post(body=message)
-            lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
+            lead.sudo().convert_opportunity(lead.partner_id)  # sudo required to convert partner data
 
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
         if contacted:
@@ -205,7 +224,7 @@ class CrmLead(models.Model):
         for lead in self:
             lead_values = {
                 'expected_revenue': values['expected_revenue'],
-                'probability': values['probability'],
+                'probability': values['probability'] or False,
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] or False,
             }
@@ -232,6 +251,14 @@ class CrmLead(models.Model):
                     })
             lead.write(lead_values)
 
+    def update_contact_details_from_portal(self, values):
+        self.check_access_rights('write')
+        fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
+            'city', 'zip', 'state_id', 'country_id']
+        if any([key not in fields for key in values]):
+            raise UserError(_("Not allowed to update the following field(s) : %s.") % ", ".join([key for key in values if not key in fields]))
+        return self.sudo().write(values)
+
     @api.model
     def create_opp_portal(self, values):
         if not (self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id):
@@ -255,7 +282,7 @@ class CrmLead(models.Model):
 
         lead = self.create(values)
         lead.assign_salesman_of_assigned_partner()
-        lead.convert_opportunity(lead.partner_id.id)
+        lead.convert_opportunity(lead.partner_id)
         return {
             'id': lead.id
         }
@@ -264,9 +291,9 @@ class CrmLead(models.Model):
     #   DO NOT FORWARD PORT IN MASTER
     #   instead, crm.lead should implement portal.mixin
     #
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the online document for
-        portal users or if force_website=True in the context. """
+        portal users or if force_website=True. """
         self.ensure_one()
 
         user, record = self.env.user, self
@@ -275,10 +302,10 @@ class CrmLead(models.Model):
                 record.check_access_rights('read')
                 record.check_access_rule("read")
             except AccessError:
-                return super(CrmLead, self).get_access_action(access_uid)
+                return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
             user = self.env['res.users'].sudo().browse(access_uid)
             record = self.with_user(user)
-        if user.share or self.env.context.get('force_website'):
+        if user.share or force_website:
             try:
                 record.check_access_rights('read')
                 record.check_access_rule('read')
@@ -289,4 +316,4 @@ class CrmLead(models.Model):
                     'type': 'ir.actions.act_url',
                     'url': '/my/opportunity/%s' % record.id,
                 }
-        return super(CrmLead, self).get_access_action(access_uid)
+        return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)

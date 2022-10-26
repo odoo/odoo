@@ -1,11 +1,9 @@
-odoo.define('website_slides.slide.preview', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    var publicWidget = require('web.public.widget');
+    import publicWidget from 'web.public.widget';
 
     publicWidget.registry.websiteSlidesSlideToggleIsPreview = publicWidget.Widget.extend({
         selector: '.o_wslides_js_slide_toggle_is_preview',
-        xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
         events: {
             'click': '_onPreviewSlideClick',
         },
@@ -18,11 +16,11 @@ odoo.define('website_slides.slide.preview', function (require) {
                 },
             }).then(function (isPreview) {
                 if (isPreview) {
-                    $slideTarget.removeClass('badge-light badge-hide border');
-                    $slideTarget.addClass('badge-success');
+                    $slideTarget.removeClass('bg-light bg-hide border');
+                    $slideTarget.addClass('bg-success');
                 } else {
-                    $slideTarget.removeClass('badge-success');
-                    $slideTarget.addClass('badge-light badge-hide border');
+                    $slideTarget.removeClass('bg-success');
+                    $slideTarget.addClass('bg-light bg-hide border');
                 }
             });
         },
@@ -33,8 +31,6 @@ odoo.define('website_slides.slide.preview', function (require) {
         },
     });
 
-    return {
+    export default {
         websiteSlidesSlideToggleIsPreview: publicWidget.registry.websiteSlidesSlideToggleIsPreview
     };
-
-});

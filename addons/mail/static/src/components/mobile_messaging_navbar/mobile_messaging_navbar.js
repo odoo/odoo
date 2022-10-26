@@ -1,61 +1,23 @@
-odoo.define('mail/static/src/components/mobile_messaging_navbar/mobile_messaging_navbar.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-class MobileMessagingNavbar extends Component {
-
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps({
-            compareDepth: {
-                tabs: 2,
-            },
-        });
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+export class MobileMessagingNavbar extends Component {
 
     /**
-     * @private
-     * @param {MouseEvent} ev
+     * @returns {MobileMessagingNavbarView}
      */
-    _onClick(ev) {
-        this.trigger('o-select-mobile-messaging-navbar-tab', {
-            tabId: ev.currentTarget.dataset.tabId,
-        });
+    get mobileMessagingNavbarView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(MobileMessagingNavbar, {
-    defaultProps: {
-        tabs: [],
-    },
-    props: {
-        activeTabId: String,
-        tabs: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    icon: {
-                        type: String,
-                        optional: true,
-                    },
-                    id: String,
-                    label: String,
-                },
-            },
-        },
-    },
+    props: { record: Object },
     template: 'mail.MobileMessagingNavbar',
 });
 
-return MobileMessagingNavbar;
-
-});
+registerMessagingComponent(MobileMessagingNavbar);

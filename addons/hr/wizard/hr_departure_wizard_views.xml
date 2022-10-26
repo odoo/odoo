@@ -7,19 +7,37 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group id="info" string="Departure Info">
-                            <field name="employee_id" invisible="1"/>
-                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                        <h1><field name="employee_id" readonly="1" options="{'no_open': True}"/></h1>
+                        <group>
+                            <group id="info">
+                                <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                <field name="departure_date"/>
+                            </group>
+                            <group id="action">
+                                <!-- Override invisible="1" when inheriting -->
+                                <div class="o_td_label" id="activities_label" invisible="1">
+                                    <span class="o_form_label o_hr_form_label cursor-default">Close Activities</span>
+                                </div>
+                                <!-- Override invisible="1" when inheriting -->
+                                <div class="column" id="activities" invisible="1">
+                                </div>
+                                <separator colspan="2"/>
+                                <div class="o_td_label" id="label_info">
+                                    <span class="o_form_label o_hr_form_label cursor-default">HR Info</span>
+                                </div>
+                                <div class="column" id="info">
+                                    <div><field name="archive_private_address"/><label for="archive_private_address"/></div>
+                                </div>
+                            </group>
+                        </group>
+                        <div>
+                            <span class="o_form_label o_hr_form_label cursor-default">Detailed Reason</span>
                             <field name="departure_description"/>
-                            <field name="archive_private_address"/>
-                        </group>
-                        <group id="date" string="Departure Date">
-                            <field name="departure_date" />
-                        </group>
+                        </div>
                     </sheet>
                     <footer>
-                        <button name="action_register_departure" string="Save" type="object" class="oe_highlight"/>
-                        <button string="Only Employee" class="btn-secondary" special="cancel"/>
+                        <button name="action_register_departure" string="Apply" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

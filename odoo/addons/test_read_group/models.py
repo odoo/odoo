@@ -31,11 +31,19 @@ class Aggregate(models.Model):
     partner_id = fields.Many2one('res.partner')
 
 
+# we use a selection that is in reverse lexical order, in order to check the
+# possible reordering made by read_group on selection fields
+SELECTION = [('c', "C"), ('b', "B"), ('a', "A")]
+
+
 class GroupOnSelection(models.Model):
     _name = 'test_read_group.on_selection'
     _description = 'Group Test Read On Selection'
 
     state = fields.Selection([('a', "A"), ('b', "B")], group_expand='_expand_states')
+    static_expand = fields.Selection(SELECTION, group_expand=True)
+    dynamic_expand = fields.Selection(lambda self: SELECTION, group_expand=True)
+    no_expand = fields.Selection(SELECTION)
     value = fields.Integer()
 
     def _expand_states(self, states, domain, order):
@@ -65,3 +73,31 @@ class OrderLine(models.Model):
 
     order_id = fields.Many2one('test_read_group.order', ondelete='cascade')
     value = fields.Integer()
+
+
+class User(models.Model):
+    _name = 'test_read_group.user'
+    _description = "User"
+
+    name = fields.Char(required=True)
+    task_ids = fields.Many2many(
+        'test_read_group.task',
+        'test_read_group_task_user_rel',
+        'user_id',
+        'task_id',
+        string="Tasks",
+    )
+
+
+class Task(models.Model):
+    _name = 'test_read_group.task'
+    _description = "Project task"
+
+    name = fields.Char(required=True)
+    user_ids = fields.Many2many(
+        'test_read_group.user',
+        'test_read_group_task_user_rel',
+        'task_id',
+        'user_id',
+        string="Collaborators",
+    )

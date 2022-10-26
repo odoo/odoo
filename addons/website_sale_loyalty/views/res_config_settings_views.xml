@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_website_sale_loyalty" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.loyalty</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='website_sale_loyalty']" position="after">
+                <div class="content-group">
+                    <div class="mt8" attrs="{'invisible': [('module_loyalty', '=', False)]}">
+                        <button name="%(loyalty.loyalty_program_discount_loyalty_action)d" icon="fa-arrow-right" type="action" string="Loyalty Programs" class="btn-link"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

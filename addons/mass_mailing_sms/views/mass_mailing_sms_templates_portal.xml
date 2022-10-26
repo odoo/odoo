@@ -9,7 +9,7 @@
 
                         <form t-att-action="'/sms/%s/unsubscribe/%s' % (mailing_id, trace_code)" method="post">
                             <p>Please enter your phone number</p>
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="sms_number" class="col-sm-2 col-form-label">Number</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="sms_number" id="sms_number" t-att-required="true"/>
@@ -18,7 +18,7 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="trace_code" t-att-value="trace_code"/>
                             <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <div class="col-sm-10 offset-sm-2">
                                     <button type="submit" class="btn btn-primary">Unsubscribe me</button>
                                 </div>

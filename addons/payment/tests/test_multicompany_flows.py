@@ -1,14 +1,41 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
-from odoo.addons.payment.tests.multicompany_common import PaymentMultiCompanyCommon
 
 
 @tagged('post_install', '-at_install')
-class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
+class TestMultiCompanyFlows(PaymentHttpCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.company_a = cls.env.company # cls.company_data['company']
+        cls.company_b = cls.env.company.create({'name': "Payment Test Company"}) # cls.company_data_2['company']
+
+        cls.user_company_a = cls.internal_user
+        cls.user_company_b = cls.env['res.users'].create({
+            'name': f"{cls.company_b.name} User (TEST)",
+            'login': 'user_company_b',
+            'password': 'user_company_b',
+            'company_id': cls.company_b.id,
+            'company_ids': [Command.set(cls.company_b.ids)],
+            'groups_id': [Command.link(cls.group_user.id)],
+        })
+        cls.user_multi_company = cls.env['res.users'].create({
+            'name': "Multi Company User (TEST)",
+            'login': 'user_multi_company',
+            'password': 'user_multi_company',
+            'company_id': cls.company_a.id,
+            'company_ids': [Command.set([cls.company_a.id, cls.company_b.id])],
+            'groups_id': [Command.link(cls.group_user.id)],
+        })
+
+        cls.provider_company_b = cls._prepare_provider(company=cls.company_b)
 
     def test_pay_logged_in_another_company(self):
         """User pays for an amount in another company."""
@@ -21,7 +48,7 @@ class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
         # Pay in company B
         route_values['company_id'] = self.company_b.id
 
-        tx_context = self.get_tx_checkout_context(**route_values)
+        tx_context = self._get_tx_checkout_context(**route_values)
         for key, val in tx_context.items():
             if key in route_values:
                 if key == 'access_token':
@@ -32,9 +59,9 @@ class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
                 else:
                     self.assertEqual(val, route_values[key])
 
-        available_acquirers = self.env['payment.acquirer'].sudo().browse(tx_context['acquirer_ids'])
-        self.assertIn(self.acquirer_company_b, available_acquirers)
-        self.assertEqual(available_acquirers.company_id, self.company_b)
+        available_providers = self.env['payment.provider'].sudo().browse(tx_context['provider_ids'])
+        self.assertIn(self.provider_company_b, available_providers)
+        self.assertEqual(available_providers.company_id, self.company_b)
 
         validation_values = {
             k: tx_context[k]
@@ -49,24 +76,58 @@ class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
         }
         validation_values.update({
             'flow': 'direct',
-            'payment_option_id': self.acquirer_company_b.id,
+            'payment_option_id': self.provider_company_b.id,
             'tokenization_requested': False,
-            'validation_route': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self.get_processing_values(**validation_values)
+            processing_values = self._get_processing_values(**validation_values)
         tx_sudo = self._get_tx(processing_values['reference'])
 
         # Tx values == given values
-        self.assertEqual(tx_sudo.acquirer_id.id, self.acquirer_company_b.id)
+        self.assertEqual(tx_sudo.provider_id.id, self.provider_company_b.id)
         self.assertEqual(tx_sudo.amount, self.amount)
         self.assertEqual(tx_sudo.currency_id.id, self.currency.id)
         self.assertEqual(tx_sudo.partner_id.id, self.user_company_a.partner_id.id)
         self.assertEqual(tx_sudo.reference, self.reference)
         self.assertEqual(tx_sudo.company_id, self.company_b)
         # processing_values == given values
-        self.assertEqual(processing_values['acquirer_id'], self.acquirer_company_b.id)
+        self.assertEqual(processing_values['provider_id'], self.provider_company_b.id)
         self.assertEqual(processing_values['amount'], self.amount)
         self.assertEqual(processing_values['currency_id'], self.currency.id)
         self.assertEqual(processing_values['partner_id'], self.user_company_a.partner_id.id)
         self.assertEqual(processing_values['reference'], self.reference)
+
+    def test_full_access_to_partner_tokens(self):
+        self.partner = self.portal_partner
+
+        # Log in as user from Company A
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+
+        token = self._create_token()
+        token_company_b = self._create_token(provider_id=self.provider_company_b.id)
+
+        # A partner should see all his tokens on the /my/payment_method route,
+        # even if they are in other companies otherwise he won't ever see them.
+        manage_context = self._get_tx_manage_context()
+        self.assertEqual(manage_context['partner_id'], self.partner.id)
+        self.assertEqual(manage_context['provider_ids'], self.provider.ids)
+        self.assertIn(token.id, manage_context['token_ids'])
+        self.assertIn(token_company_b.id, manage_context['token_ids'])
+
+    def test_archive_token_logged_in_another_company(self):
+        """User archives his token from another company."""
+        # get user's token from company A
+        token = self._create_token(partner_id=self.portal_partner.id)
+
+        # assign user to another company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.portal_user.write({'company_ids': [company_b.id], 'company_id': company_b.id})
+
+        # Log in as portal user
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+
+        # Archive token in company A
+        url = self._build_url('/payment/archive_token')
+        self._make_json_rpc_request(url, {'token_id': token.id})
+
+        self.assertFalse(token.active)

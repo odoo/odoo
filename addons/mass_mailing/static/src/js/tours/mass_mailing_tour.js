@@ -1,8 +1,8 @@
 odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     "use strict";
 
-    var core = require('web.core');
-    var _t = core._t;
+    const {_t} = require('web.core');
+    const {Markup} = require('web.utils');
     var tour = require('web_tour.tour');
     var now = moment();
 
@@ -21,13 +21,14 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         content: _t("Let's try the Email Marketing app."),
         edition: 'community',
     }, {
-        trigger: '.o-kanban-button-new',
-        content: _t("Start by creating your first <b>Mailing</b>."),
+        trigger: '.o_list_button_add',
+        extra_trigger: '.o_mass_mailing_mailing_tree',
+        content: Markup(_t("Start by creating your first <b>Mailing</b>.")),
         position: 'bottom',
     }, {
         trigger: 'input[name="subject"]',
-        content: _t('Pick the <b>email subject</b>.'),
-        position: 'right',
+        content: Markup(_t('Pick the <b>email subject</b>.')),
+        position: 'bottom',
         run: 'text ' + now.format("MMMM") + " Newsletter",
     }, {
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
@@ -39,18 +40,18 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         auto: true,
     }, {
         trigger: 'div[name="body_arch"] iframe #newsletter',
-        content: _t('Choose this <b>theme</b>.'),
+        content: Markup(_t('Choose this <b>theme</b>.')),
         position: 'left',
         edition: 'enterprise',
         run: 'click',
     }, {
         trigger: 'div[name="body_arch"] iframe #default',
-        content: _t('Choose this <b>theme</b>.'),
+        content: Markup(_t('Choose this <b>theme</b>.')),
         position: 'right',
         edition: 'community',
         run: 'click',
     }, {
-        trigger: 'div[name="body_arch"] iframe div.o_mail_block_paragraph',
+        trigger: 'div[name="body_arch"] iframe div.s_text_block',
         content: _t('Click on this paragraph to edit it.'),
         position: 'top',
         edition: 'enterprise',
@@ -60,6 +61,11 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         content: _t('Click on this paragraph to edit it.'),
         position: 'top',
         edition: 'community',
+        run: 'click',
+    }, {
+        trigger: 'button[name="action_set_favorite"]',
+        content: _t('Click on this button to add this mailing to your templates.'),
+        position: 'bottom',
         run: 'click',
     }, {
         trigger: 'button[name="action_test"]',
@@ -80,7 +86,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         run: "click",
     }, {
         trigger: '.o_back_button',
-        content: _t("By using the <b>Breadcrumb</b>, you can navigate back to the overview."),
+        content: Markup(_t("By using the <b>Breadcrumb</b>, you can navigate back to the overview.")),
         position: 'bottom',
         run: 'click',
     }]

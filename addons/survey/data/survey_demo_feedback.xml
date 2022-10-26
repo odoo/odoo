@@ -28,6 +28,7 @@
         <field name="sequence">2</field>
         <field name="title">Where do you live ?</field>
         <field name="question_type">char_box</field>
+        <field name="question_placeholder">Brussels</field>
         <field name="constr_mandatory" eval="False"/>
     </record>
     <record model="survey.question" id="survey_feedback_p1_q2">
@@ -136,7 +137,7 @@
     <record model="survey.question" id="survey_feedback_p2_q2">
         <field name="survey_id" ref="survey_feedback" />
         <field name="sequence">8</field>
-        <field name="title">What do your think about our new eCommerce ?</field>
+        <field name="title">What do you think about our new eCommerce ?</field>
         <field name="question_type">matrix</field>
         <field name="matrix_subtype">multiple</field>
         <field name="constr_mandatory" eval="True"/>
@@ -192,31 +193,6 @@
         <field name="title">Do you have any other comments, questions, or concerns ?</field>
         <field name="question_type">text_box</field>
         <field name="constr_mandatory" eval="False"/>
-    </record>
-
-    <record model="survey.user_input" id="survey_answer_1">
-        <field name="survey_id" ref="survey.survey_feedback" />
-        <field name="partner_id" ref="base.partner_demo"/>
-        <field name="email">mark.brown23@example.com</field>
-        <field name="state">done</field>
-    </record>
-    <record model="survey.user_input" id="survey_answer_2">
-        <field name="survey_id" ref="survey.survey_feedback" />
-        <field name="partner_id" ref="base.res_partner_address_7"/>
-        <field name="email">billy.fox45@example.com</field>
-        <field name="state">done</field>
-    </record>
-    <record model="survey.user_input" id="survey_answer_3">
-        <field name="survey_id" ref="survey.survey_feedback" />
-        <field name="partner_id" eval="False"/>
-        <field name="email">Evelyne Gargouillis &lt;evelyne@example.com&gt;</field>
-        <field name="state">done</field>
-    </record>
-    <record model="survey.user_input" id="survey_answer_4">
-        <field name="survey_id" ref="survey.survey_feedback" />
-        <field name="partner_id" eval="False"/>
-        <field name="email">Martin Tamarre &lt;martin@example.com&gt;</field>
-        <field name="state">in_progress</field>
     </record>
 
 </data></odoo>

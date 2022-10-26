@@ -12,26 +12,28 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'category': 'Website/Website',
     'depends': ['website', 'mass_mailing', 'google_recaptcha'],
     'data': [
-        'security/ir.model.access.csv',
+        'data/ir_model_data.xml',
+        'views/snippets/s_popup.xml',
         'views/snippets_templates.xml',
-        'views/mailing_list_views.xml',
-        'views/website_mass_mailing_views.xml',
     ],
     'auto_install': ['website', 'mass_mailing'],
     'assets': {
         'web.assets_frontend': [
             'website_mass_mailing/static/src/scss/website_mass_mailing_popup.scss',
             'website_mass_mailing/static/src/js/website_mass_mailing.js',
+            'website_mass_mailing/static/src/xml/*.xml',
         ],
         'website.assets_wysiwyg': [
-            'website_mass_mailing/static/src/js/wysiwyg.js',
             'website_mass_mailing/static/src/js/website_mass_mailing.editor.js',
+            'website_mass_mailing/static/src/scss/website_mass_mailing_edit_mode.scss',
+            'website_mass_mailing/static/src/snippets/s_popup/options.js',
+        ],
+        'website.assets_editor': [
+            'website_mass_mailing/static/src/js/mass_mailing_form_editor.js',
         ],
         'web.assets_tests': [
             'website_mass_mailing/static/tests/**/*',
         ],
-        'web.assets_qweb': [
-            'website_mass_mailing/static/src/xml/*.xml',
-        ],
-    }
+    },
+    'license': 'LGPL-3',
 }

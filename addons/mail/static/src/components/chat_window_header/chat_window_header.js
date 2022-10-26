@@ -1,148 +1,23 @@
-odoo.define('mail/static/src/components/chat_window_header/chat_window_header.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const {
-    isEventHandled,
-    markEventHandled,
-} = require('mail/static/src/utils/utils.js');
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-class ChatWindowHeader extends Component {
+export class ChatWindowHeader extends Component {
 
     /**
-     * @override
+     * @returns {ChatWindowHeaderView}
      */
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
-            const thread = chatWindow && chatWindow.thread;
-            return {
-                chatWindow,
-                chatWindowHasShiftNext: chatWindow && chatWindow.hasShiftNext,
-                chatWindowHasShiftPrev: chatWindow && chatWindow.hasShiftPrev,
-                chatWindowName: chatWindow && chatWindow.name,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                thread,
-                threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
-                threadMassMailing: thread && thread.mass_mailing,
-                threadModel: thread && thread.model,
-            };
-        });
-    }
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {mail.chat_window}
-     */
-    get chatWindow() {
-        return this.env.models['mail.chat_window'].get(this.props.chatWindowLocalId);
-    }
-
-    /**
-     * @returns {string}
-     */
-    get shiftNextText() {
-        if (this.env.messaging.locale.textDirection === 'rtl') {
-            return this.env._t("Shift left");
-        }
-        return this.env._t("Shift right");
-    }
-
-    /**
-     * @returns {string}
-     */
-    get shiftPrevText() {
-        if (this.env.messaging.locale.textDirection === 'rtl') {
-            return this.env._t("Shift right");
-        }
-        return this.env._t("Shift left");
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext')) {
-            return;
-        }
-        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev')) {
-            return;
-        }
-        const chatWindow = this.chatWindow;
-        this.trigger('o-clicked', { chatWindow });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickClose(ev) {
-        ev.stopPropagation();
-        if (!this.chatWindow) {
-            return;
-        }
-        this.chatWindow.close();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickExpand(ev) {
-        ev.stopPropagation();
-        this.chatWindow.expand();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftPrev(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
-        this.chatWindow.shiftPrev();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftNext(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
-        this.chatWindow.shiftNext();
+     get chatWindowHeaderView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(ChatWindowHeader, {
-    components,
-    defaultProps: {
-        hasCloseAsBackButton: false,
-        isExpandable: false,
-    },
-    props: {
-        chatWindowLocalId: String,
-        hasCloseAsBackButton: Boolean,
-        isExpandable: Boolean,
-    },
+    props: { record: Object },
     template: 'mail.ChatWindowHeader',
 });
 
-return ChatWindowHeader;
-
-});
+registerMessagingComponent(ChatWindowHeader);

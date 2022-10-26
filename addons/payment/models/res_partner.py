@@ -13,7 +13,7 @@ class ResPartner(models.Model):
 
     @api.depends('payment_token_ids')
     def _compute_payment_token_count(self):
-        payments_data = self.env['payment.token'].read_group(
+        payments_data = self.env['payment.token']._read_group(
             [('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id']
         )
         partners_data = {payment_data['partner_id'][0]: payment_data['partner_id_count']

@@ -7,8 +7,7 @@
     'category': 'Inventory/Purchase',
     'sequence': 35,
     'summary': 'Purchase orders, tenders and agreements',
-    'description': "",
-    'website': 'https://www.odoo.com/page/purchase',
+    'website': 'https://www.odoo.com/app/purchase',
     'depends': ['account'],
     'data': [
         'security/purchase_security.xml',
@@ -29,25 +28,27 @@
         'views/portal_templates.xml',
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
+        'views/product_packaging_views.xml',
+        'views/analytic_account_views.xml',
     ],
     'demo': [
         'data/purchase_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'purchase/static/src/scss/purchase.scss',
-            'purchase/static/src/js/purchase_dashboard.js',
+            'purchase/static/src/toaster_button/*',
+            'purchase/static/src/views/*.js',
+            'purchase/static/src/views/*.scss',
             'purchase/static/src/js/purchase_toaster_button.js',
             'purchase/static/src/js/tours/purchase.js',
+            'purchase/static/src/**/*.xml',
         ],
         'web.assets_frontend': [
             'purchase/static/src/js/purchase_datetimepicker.js',
+            'purchase/static/src/js/purchase_portal_sidebar.js',
         ],
-        'web.assets_qweb': [
-            'purchase/static/src/xml/**/*',
-        ],
-    }
+    },
+    'license': 'LGPL-3',
 }

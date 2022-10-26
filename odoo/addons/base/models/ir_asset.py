@@ -1,17 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
-
 from glob import glob
 from logging import getLogger
 from werkzeug import urls
 
 import odoo
+import odoo.modules.module  # get_manifest, don't from-import it
+from odoo import api, fields, models, tools
 from odoo.tools import misc
-from odoo import tools
-from odoo.addons import __path__ as ADDONS_PATH
-from odoo import api, fields, http, models
 
 _logger = getLogger(__name__)
 
@@ -35,7 +32,9 @@ WILDCARD_CHARACTERS = {'*', "?", "[", "]"}
 
 def fs2web(path):
     """Converts a file system path to a web path"""
-    return '/'.join(os.path.split(path))
+    if os.path.sep == '/':
+        return path
+    return '/'.join(path.split(os.path.sep))
 
 def can_aggregate(url):
     parsed = urls.url_parse(url)
@@ -88,7 +87,7 @@ class IrAsset(models.Model):
     active = fields.Boolean(string='active', default=True)
     sequence = fields.Integer(string="Sequence", default=DEFAULT_SEQUENCE, required=True)
 
-    def _get_asset_paths(self, bundle, addons=None, css=False, js=False, xml=False):
+    def _get_asset_paths(self, bundle, addons=None, css=False, js=False):
         """
         Fetches all asset file paths from a given list of addons matching a
         certain bundle. The returned list is composed of tuples containing the
@@ -109,8 +108,8 @@ class IrAsset(models.Model):
         :param addons: list of addon names as strings. The files returned will
             only be contained in the given addons.
         :param css: boolean: whether or not to include style files
-        :param js: boolean: whether or not to include script files
-        :param xml: boolean: whether or not to include template files
+        :param js: boolean: whether or not to include script files and template
+            files
         :returns: the list of tuples (path, addon, bundle)
         """
         installed = self._get_installed_addons_list()
@@ -118,10 +117,10 @@ class IrAsset(models.Model):
             addons = self._get_active_addons_list()
 
         asset_paths = AssetPaths()
-        self._fill_asset_paths(bundle, addons, installed, css, js, xml, asset_paths, [])
+        self._fill_asset_paths(bundle, addons, installed, css, js, asset_paths, [])
         return asset_paths.list
 
-    def _fill_asset_paths(self, bundle, addons, installed, css, js, xml, asset_paths, seen):
+    def _fill_asset_paths(self, bundle, addons, installed, css, js, asset_paths, seen):
         """
         Fills the given AssetPaths instance by applying the operations found in
         the matching bundle of the given addons manifests.
@@ -138,14 +137,12 @@ class IrAsset(models.Model):
         if bundle in seen:
             raise Exception("Circular assets bundle declaration: %s" % " > ".join(seen + [bundle]))
 
-        manifest_cache = http.addons_manifest
         exts = []
         if js:
             exts += SCRIPT_EXTENSIONS
+            exts += TEMPLATE_EXTENSIONS
         if css:
             exts += STYLE_EXTENSIONS
-        if xml:
-            exts += TEMPLATE_EXTENSIONS
 
         # this index is used for prepending: files are inserted at the beginning
         # of the CURRENT bundle.
@@ -158,7 +155,7 @@ class IrAsset(models.Model):
             accordingly.
 
             It is nested inside `_get_asset_paths` since we need the current
-            list of addons, extensions, asset_paths and manifest_cache.
+            list of addons, extensions and asset_paths.
 
             :param directive: string
             :param target: string or None or False
@@ -166,7 +163,7 @@ class IrAsset(models.Model):
             """
             if directive == INCLUDE_DIRECTIVE:
                 # recursively call this function for each INCLUDE_DIRECTIVE directive.
-                self._fill_asset_paths(path_def, addons, installed, css, js, xml, asset_paths, seen + [bundle])
+                self._fill_asset_paths(path_def, addons, installed, css, js, asset_paths, seen + [bundle])
                 return
 
             addon, paths = self._get_paths(path_def, installed, exts)
@@ -189,7 +186,7 @@ class IrAsset(models.Model):
             elif directive == BEFORE_DIRECTIVE:
                 asset_paths.insert(paths, addon, bundle, target_index)
             elif directive == REMOVE_DIRECTIVE:
-                asset_paths.remove(paths, addon, bundle, path_def)
+                asset_paths.remove(paths, addon, bundle)
             elif directive == REPLACE_DIRECTIVE:
                 asset_paths.insert(paths, addon, bundle, target_index)
                 asset_paths.remove(target_paths, addon, bundle)
@@ -204,19 +201,8 @@ class IrAsset(models.Model):
 
         # 2. Process all addons' manifests.
         for addon in self._topological_sort(tuple(addons)):
-            manifest = manifest_cache.get(addon)
-            if not manifest:
-                continue
-            manifest_assets = manifest.get('assets', {})
-            for command in manifest_assets.get(bundle, []):
-                if isinstance(command, str):
-                    # Default directive: append
-                    directive, target, path_def = APPEND_DIRECTIVE, None, command
-                elif command[0] in DIRECTIVES_WITH_TARGET:
-                    directive, target, path_def = command
-                else:
-                    directive, path_def = command
-                    target = None
+            for command in odoo.modules.module.get_manifest(addon)['assets'].get(bundle, ()):
+                directive, target, path_def = self._process_command(command)
                 process_path(directive, target, path_def)
 
         # 3. Process the rest of 'ir.asset' records
@@ -248,10 +234,9 @@ class IrAsset(models.Model):
         target_path = self._get_paths(target_path_def, installed)[1][0]
 
         css = ext in STYLE_EXTENSIONS
-        js = ext in SCRIPT_EXTENSIONS
-        xml = ext in TEMPLATE_EXTENSIONS
+        js = ext in SCRIPT_EXTENSIONS or ext in TEMPLATE_EXTENSIONS
 
-        asset_paths = self._get_asset_paths(root_bundle, css=css, js=js, xml=xml)
+        asset_paths = self._get_asset_paths(root_bundle, css=css, js=js)
 
         for path, _, bundle in asset_paths:
             if path == target_path:
@@ -271,7 +256,7 @@ class IrAsset(models.Model):
         IrModule = self.env['ir.module.module']
 
         def mapper(addon):
-            manif = http.addons_manifest.get(addon, {})
+            manif = odoo.modules.module.get_manifest(addon)
             from_terp = IrModule.get_values_from_terp(manif)
             from_terp['name'] = addon
             from_terp['depends'] = manif.get('depends', ['base'])
@@ -296,7 +281,7 @@ class IrAsset(models.Model):
         # Main source: the current registry list
         # Second source of modules: server wide modules
         # Third source: the currently loading module from the context (similar to ir_ui_view)
-        return self.env.registry._init_modules | set(odoo.conf.server_wide_modules or []) | set(self.env.context.get('install_module', []))
+        return self.env.registry._init_modules.union(odoo.conf.server_wide_modules or []).union(self.env.context.get('install_module', []))
 
     def _get_paths(self, path_def, installed, extensions=None):
         """
@@ -316,7 +301,7 @@ class IrAsset(models.Model):
         path_url = fs2web(path_def)
         path_parts = [part for part in path_url.split('/') if part]
         addon = path_parts[0]
-        addon_manifest = http.addons_manifest.get(addon)
+        addon_manifest = odoo.modules.module.get_manifest(addon)
 
         safe_path = True
         if addon_manifest:
@@ -347,20 +332,18 @@ class IrAsset(models.Model):
                 except (ValueError, FileNotFoundError):
                     return False
                 if path.rpartition('.')[2] in TEMPLATE_EXTENSIONS:
+                    # normpath will strip the trailing /, which is why it has to be added afterwards
+                    static_path = os.path.normpath("%s/static" % addon) + os.path.sep
                     # Forbid xml to leak
-                    return ("%s/static/" % addon) in path
+                    return static_path in path
                 return True
 
             len_paths = len(paths)
             paths = list(filter(is_safe_path, paths))
             safe_path = safe_path and len_paths == len(paths)
 
-            # When fetching template file paths, we need the full paths since xml
-            # files are read from the file system. But web assets (scripts and
-            # stylesheets) must be loaded using relative paths, hence the trimming
-            # for non-xml file paths.
-            paths = [path if path.split('.')[-1] in TEMPLATE_EXTENSIONS else path[len(addons_path):] for path in paths]
-
+            # Web assets must be loaded using relative paths.
+            paths = [fs2web(path[len(addons_path):]) for path in paths]
         else:
             addon = None
 
@@ -379,6 +362,19 @@ class IrAsset(models.Model):
             for path in paths
             if not extensions or path.split('.')[-1] in extensions
         ]
+
+    def _process_command(self, command):
+        """Parses a given command to return its directive, target and path definition."""
+        if isinstance(command, str):
+            # Default directive: append
+            directive, target, path_def = APPEND_DIRECTIVE, None, command
+        elif command[0] in DIRECTIVES_WITH_TARGET:
+            directive, target, path_def = command
+        else:
+            directive, path_def = command
+            target = None
+        return directive, target, path_def
+
 
 class AssetPaths:
     """ A list of asset paths (path, addon, bundle) with efficient operations. """
@@ -410,16 +406,16 @@ class AssetPaths:
                 self.memo.add(path)
         self.list[index:index] = to_insert
 
-    def remove(self, paths, addon, bundle, path=None):
+    def remove(self, paths_to_remove, addon, bundle):
         """Removes the given paths from the current list."""
-        paths = {path for path in paths if path in self.memo}
+        paths = {path for path in paths_to_remove if path in self.memo}
         if paths:
             self.list[:] = [asset for asset in self.list if asset[0] not in paths]
             self.memo.difference_update(paths)
             return
 
-        if path:
-            self._raise_not_found(path, bundle)
+        if paths_to_remove:
+            self._raise_not_found(paths_to_remove, bundle)
 
     def _raise_not_found(self, path, bundle):
-        raise ValueError("File %s not found in bundle %s" % (path, bundle))
+        raise ValueError("File(s) %s not found in bundle %s" % (path, bundle))

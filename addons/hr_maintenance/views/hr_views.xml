@@ -4,6 +4,7 @@
         <field name="name">hr.employee.view.form.inherit.maintenance</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="50"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button name="%(maintenance.hr_equipment_action)d"

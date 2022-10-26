@@ -6,7 +6,6 @@
     'category': 'Human Resources/Employees',
     'sequence': 39,
     'summary': 'Manage work entries',
-    'description': "",
     'installable': True,
     'depends': [
         'hr_work_entry',
@@ -15,10 +14,10 @@
     'data': [
         'security/hr_work_entry_security.xml',
         'security/ir.model.access.csv',
-        'wizard/create_company_global_time_off_views.xml',
         'data/hr_work_entry_data.xml',
+        'data/ir_cron_data.xml',
         'views/hr_work_entry_views.xml',
-        'views/resource_views.xml',
+        'views/hr_contract_views.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
     ],
     'demo': [
@@ -28,5 +27,6 @@
         'web.assets_backend': [
             'hr_work_entry_contract/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

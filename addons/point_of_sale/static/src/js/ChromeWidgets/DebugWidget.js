@@ -1,17 +1,17 @@
 odoo.define('point_of_sale.DebugWidget', function (require) {
     'use strict';
 
-    const { useState } = owl;
-    const { useRef } = owl.hooks;
     const { getFileAsText } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    const { onMounted, onWillUnmount, useRef, useState } = owl;
+
     class DebugWidget extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({
                 barcodeInput: '',
                 weightInput: '',
@@ -29,7 +29,7 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
             this.animations = {};
             for (let eventName of ['open_cashbox', 'print_receipt', 'scale_read']) {
                 this.eventElementsRef[eventName] = useRef(eventName);
-                this.env.pos.proxy.add_notification(
+                this.env.proxy.add_notification(
                     eventName,
                     (() => {
                         if (this.animations[eventName]) {
@@ -44,12 +44,14 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
                     }).bind(this)
                 );
             }
-        }
-        mounted() {
-            NumberBuffer.on('buffer-update', this, this._onBufferUpdate);
-        }
-        willUnmount() {
-            NumberBuffer.off('buffer-update', this, this._onBufferUpdate);
+
+            onMounted(() => {
+                NumberBuffer.on('buffer-update', this, this._onBufferUpdate);
+            });
+
+            onWillUnmount(() => {
+                NumberBuffer.off('buffer-update', this, this._onBufferUpdate);
+            });
         }
         toggleWidget() {
             this.state.isShown = !this.state.isShown;
@@ -57,22 +59,22 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
         setWeight() {
             var weightInKg = parse.float(this.state.weightInput);
             if (!isNaN(weightInKg)) {
-                this.env.pos.proxy.debug_set_weight(weightInKg);
+                this.env.proxy.debug_set_weight(weightInKg);
             }
         }
         resetWeight() {
             this.state.weightInput = '';
-            this.env.pos.proxy.debug_reset_weight();
+            this.env.proxy.debug_reset_weight();
         }
-        barcodeScan() {
-            this.env.pos.barcode_reader.scan(this.state.barcodeInput);
+        async barcodeScan() {
+            await this.env.barcode_reader.scan(this.state.barcodeInput);
         }
-        barcodeScanEAN() {
-            const ean = this.env.pos.barcode_reader.barcode_parser.sanitize_ean(
+        async barcodeScanEAN() {
+            const ean = this.env.barcode_reader.barcode_parser.sanitize_ean(
                 this.state.barcodeInput || '0'
             );
             this.state.barcodeInput = ean;
-            this.env.pos.barcode_reader.scan(ean);
+            await this.env.barcode_reader.scan(ean);
         }
         async deleteOrders() {
             const { confirmed } = await this.showPopup('ConfirmPopup', {
@@ -144,7 +146,7 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
             }
         }
         refreshDisplay() {
-            this.env.pos.proxy.message('display_refresh', {});
+            this.env.proxy.message('display_refresh', {});
         }
         _onBufferUpdate(buffer) {
             this.state.buffer = buffer;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussMobileMailboxSelectionItem" owl="1">
+        <button class="o_DiscussMobileMailboxSelectionItem btn btn-secondary flex-grow-1 p-2"
+            t-att-class="{
+                'active o-active shadow-none': discussMobileMailboxSelectionItemView.owner.owner.discuss.activeThread === discussMobileMailboxSelectionItemView.mailbox.thread,
+            }" t-attf-class="{{ className }}" t-on-click="discussMobileMailboxSelectionItemView.onClick" t-att-data-mailbox-local-id="discussMobileMailboxSelectionItemView.mailbox.localId" type="button" t-ref="root"
+        >
+            <t t-esc="discussMobileMailboxSelectionItemView.mailbox.name"/>
+        </button>
+    </t>
+
+</templates>

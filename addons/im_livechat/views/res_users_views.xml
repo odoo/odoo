@@ -9,7 +9,8 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='tz']" position="after">
-                    <field name="livechat_username" string="Online Chat Name" readonly="0"/>
+                    <field name="livechat_username" string="Online Chat Name" readonly="0"
+                        attrs="{'invisible': [('share', '=', True)]}"/>
                 </xpath>
             </field>
         </record>
@@ -21,7 +22,8 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                     <xpath expr="//group[@name='messaging']" position="after">
-                        <group name="livechat" string="Livechat">
+                        <group name="livechat" string="Livechat"
+                            attrs="{'invisible': [('share', '=', True)]}">
                             <field name="livechat_username"/>
                         </group>
                     </xpath>

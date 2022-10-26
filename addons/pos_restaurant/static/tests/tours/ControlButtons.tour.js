@@ -1,7 +1,7 @@
 odoo.define('pos_restaurant.tour.ControlButtons', function (require) {
     'use strict';
 
-    const { TextAreaPopup } = require('pos_restaurant.tour.TextAreaPopupTourMethods');
+    const { TextAreaPopup } = require('point_of_sale.tour.TextAreaPopupTourMethods');
     const { NumberPopup } = require('point_of_sale.tour.NumberPopupTourMethods');
     const { Chrome } = require('pos_restaurant.tour.ChromeTourMethods');
     const { FloorScreen } = require('pos_restaurant.tour.FloorScreenTourMethods');
@@ -43,7 +43,7 @@ odoo.define('pos_restaurant.tour.ControlButtons', function (require) {
     // Test PrintBillButton
     ProductScreen.do.clickPrintBillButton();
     BillScreen.check.isShown();
-    BillScreen.do.clickBack();
+    BillScreen.do.clickOk();
 
     // Test GuestButton
     ProductScreen.do.clickGuestButton();

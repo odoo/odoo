@@ -15,11 +15,10 @@ class TestUi(odoo.tests.HttpCase):
             return 'Contact Us | My Website'
 
         patcher = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
     def test_01_test_ui(self):
-        self.env['link.tracker'].create({
+        self.env['link.tracker'].search_or_create({
             'campaign_id': 2,
             'medium_id': 2,
             'source_id': 2,

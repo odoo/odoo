@@ -5,7 +5,7 @@
     'name': 'ESC/POS Hardware Driver',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
-    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
+    'website': 'https://www.odoo.com/app/point-of-sale-hardware',
     'summary': 'Hardware Driver for ESC/POS Printers and Cashdrawers',
     'description': """
 ESC/POS Hardware Driver
@@ -20,4 +20,5 @@ that would need such functionality.
         'python' : ['pyusb','pyserial','qrcode'],
     },
     'installable': False,
+    'license': 'LGPL-3',
 }

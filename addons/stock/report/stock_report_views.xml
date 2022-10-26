@@ -21,6 +21,17 @@
             <field name="binding_model_id" ref="model_stock_picking"/>
             <field name="binding_type">report</field>
         </record>
+        <record id="action_report_picking_packages" model="ir.actions.report">
+            <field name="name">Packages</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_picking_packages</field>
+            <field name="report_file">stock.report_picking_packages</field>
+            <field name="print_report_name">'Packages - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[Command.link(ref('stock.group_tracking_lot'))]"/>
+        </record>
         <record id="action_report_inventory" model="ir.actions.report">
             <field name="name">Count Sheet</field>
             <field name="model">stock.quant</field>
@@ -61,12 +72,13 @@
         </record>
         <record id="action_report_lot_label" model="ir.actions.report">
             <field name="name">Lot/Serial Number (PDF)</field>
-            <field name="model">stock.production.lot</field>
+            <field name="model">stock.lot</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_lot_label</field>
             <field name="report_file">stock.report_lot_label</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
-            <field name="binding_model_id" ref="model_stock_production_lot"/>
+            <field name="binding_model_id" ref="model_stock_lot"/>
             <field name="binding_type">report</field>
         </record>
         <record id="action_report_picking_type_label" model="ir.actions.report">
@@ -86,67 +98,22 @@
             <field name="report_name">stock.report_stock_rule</field>
             <field name="report_file">stock.report_stock_rule</field>
         </record>
-        <record id="label_product_template" model="ir.actions.report">
-            <field name="name">Product Label (ZPL)</field>
-            <field name="model">product.template</field>
-            <field name="report_type">qweb-text</field>
-            <field name="report_name">stock.label_product_template_view</field>
-            <field name="report_file">stock.label_product_template_view</field>
-            <field name="binding_model_id" ref="product.model_product_template"/>
-            <field name="binding_type">report</field>
-        </record>
         <record id="label_product_product" model="ir.actions.report">
             <field name="name">Product Label (ZPL)</field>
             <field name="model">product.product</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_product_product_view</field>
             <field name="report_file">stock.label_product_product_view</field>
-            <field name="binding_model_id" ref="product.model_product_product"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="label_barcode_product_template" model="ir.actions.report">
-            <field name="name">Product Barcode (ZPL)</field>
-            <field name="model">product.template</field>
-            <field name="report_type">qweb-text</field>
-            <field name="report_name">stock.label_barcode_product_template_view</field>
-            <field name="report_file">stock.label_barcode_product_template_view</field>
-            <field name="binding_model_id" ref="product.model_product_template"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="label_barcode_product_product" model="ir.actions.report">
-            <field name="name">Product Barcode (ZPL)</field>
-            <field name="model">product.product</field>
-            <field name="report_type">qweb-text</field>
-            <field name="report_name">stock.label_barcode_product_product_view</field>
-            <field name="report_file">stock.label_barcode_product_product_view</field>
-            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_model_id" eval="False"/>
             <field name="binding_type">report</field>
         </record>
         <record id="label_lot_template" model="ir.actions.report">
             <field name="name">Lot/Serial Number (ZPL)</field>
-            <field name="model">stock.production.lot</field>
+            <field name="model">stock.lot</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_lot_template_view</field>
             <field name="report_file">stock.label_lot_template_view</field>
-            <field name="binding_model_id" ref="model_stock_production_lot"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="action_label_transfer_template_zpl" model="ir.actions.report">
-            <field name="name">Barcodes (ZPL)</field>
-            <field name="model">stock.picking</field>
-            <field name="report_type">qweb-text</field>
-            <field name="report_name">stock.label_transfer_template_view_zpl</field>
-            <field name="report_file">stock.label_transfer_template_view_zpl</field>
-            <field name="binding_model_id" ref="model_stock_picking"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="action_label_transfer_template_pdf" model="ir.actions.report">
-            <field name="name">Barcodes (PDF)</field>
-            <field name="model">stock.picking</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">stock.label_transfer_template_view_pdf</field>
-            <field name="report_file">stock.label_transfer_template_view_pdf</field>
-            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_model_id" ref="model_stock_lot"/>
             <field name="binding_type">report</field>
         </record>
         <record id="label_package_template" model="ir.actions.report">
@@ -174,6 +141,15 @@
             <field name="report_name">stock.label_picking_type_view</field>
             <field name="report_file">stock.label_picking_type_view</field>
             <field name="binding_model_id" ref="model_stock_picking_type"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_picking" model="ir.actions.report">
+            <field name="name">Reception Report Label</field>
+            <field name="model">stock.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_reception_report_label</field>
+            <field name="report_file">stock.report_reception_report_label</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet_dymo"/>
             <field name="binding_type">report</field>
         </record>
     </data>

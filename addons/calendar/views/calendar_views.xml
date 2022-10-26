@@ -39,24 +39,20 @@
             <form string="Calendar Alarm">
                 <sheet>
                     <group>
-                        <group>
+                        <group name="left_details">
                             <field name="name" invisible="1"/>
                             <field name="alarm_type"/>
+                            <field name="mail_template_id" context="{'default_model': 'calendar.event'}"
+                                   attrs="{'invisible': [('alarm_type', '!=', 'email')], 'required': [('alarm_type', '=', 'email')]}"/>
+                            <field name="body" attrs="{'invisible': [('alarm_type', '!=', 'notification')]}"/>
                         </group>
-                        <group>
+                        <group name="right_details">
                             <label for="duration"/>
                             <div class="o_row">
                                 <field name="duration"/>
                                 <field name="interval"/>
                             </div>
                         </group>
-                        <group attrs="{'invisible': [('alarm_type','=','notification')]}">
-                            <field name="mail_template_id" attrs="{'invisible': [('alarm_type','!=','email')], 'required': [('alarm_type', '=', 'email')]}"
-                                context="{'default_model': 'calendar.event'}"/>
-                        </group>
-                    </group>
-                    <group attrs="{'invisible': [('alarm_type','!=','notification')]}">
-                        <field name="body"/>
                     </group>
                 </sheet>
             </form>
@@ -77,7 +73,7 @@
         <field name="arch" type="xml">
             <tree string="Meetings" sample="1" multi_edit="1">
                 <header>
-                    <button name="action_mass_mailing" type="object"
+                    <button name="action_open_composer" type="object" context="{'composition_mode':'mass_mail'}"
                             string="Send Mail"/>
                 </header>
                 <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>
@@ -104,7 +100,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Meetings">
+            <form string="Meetings" js_class="calendar_form">
                 <div attrs="{'invisible': [('recurrence_id','=',False)]}" class="alert alert-info oe_edit_only" role="status">
                     <p>Edit recurring event</p>
                     <field name="recurrence_update" widget="radio"/>
@@ -118,29 +114,30 @@
                     <field name="res_id" invisible="1" />
                     <field name="attendee_status" invisible="1"/>
                     <field name="active" invisible="1"/>
-                    <div class="oe_title">
+                    <div class="oe_title mb-3">
                         <div>
                             <label for="name"/>
                         </div>
                         <h1>
                             <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
-                        <div class="d-flex">
-                            <field name="partner_ids" widget="many2manyattendee"
-                                placeholder="Select attendees..."
-                                context="{'force_email':True}"
-                                class="oe_inline o_calendar_attendees"
-                            />
-                            <div name="send_buttons">
-                                <button name="action_mass_mailing" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
-                            </div>
-                        </div>
                     </div>
-                    <group>
-                        <group>
-                            <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" attrs="{'invisible': [('videocall_location', '=', False)]}" />
-                        </group>
-                    </group>
+                    <div class="d-flex align-items-baseline">
+                        <field name="partner_ids" widget="many2manyattendee"
+                            placeholder="Select attendees..."
+                            context="{'force_email':True}"
+                            domain="[('type','!=','private')]"
+                            class="oe_inline o_calendar_attendees"
+                        />
+                        <div name="send_buttons" class="sm-2">
+                            <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
+                        </div>
+                        <button name="action_join_video_call" class="btn-primary" help="Join Video Call" type="object" string="Join Video Call" attrs="{'invisible': [('videocall_location', '=', False)]}"/>
+                    </div>
+                    <div class="alert alert-warning o_form_header mt-2" attrs="{'invisible': [('invalid_email_partner_ids', '=', [])]}" role="status">
+                        <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
+                        <field name="invalid_email_partner_ids" widget="many2manyattendee" class="oe_inline o_calendar_attendees"/>
+                    </div>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group>
@@ -157,17 +154,32 @@
                                         <span> hours</span>
                                     </div>
                                      <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
-                                    <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
+                                    <field name="allday" force_save="1"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
                                 </group>
                                 <group>
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                     <field name="location" />
+                                    <label for="videocall_location"/>
+                                    <div col="2" class="o_row">
+                                        <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                                        <button name="clear_videocall_location" type="object" class="btn btn-link"
+                                            attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                            <span class="fa fa-times"></span><span> Clear meeting</span>
+                                        </button>
+                                        <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
+                                            attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                            <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
+                                        </button>
+                                    </div>
+                                    <field name="videocall_source" invisible="1"/>
+                                    <field name="access_token" invisible="1" force_save="1"/>
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
-
                             </group>
-                            <label for="description"/>
-                            <field name="description"/>
+                            <group>
+                                <field name="description"/>
+                            </group>
                         </page>
                         <page name="page_options" string="Options">
                             <group>
@@ -180,7 +192,7 @@
                                             <label for="interval"/>
                                             <div class="o_col">
                                                 <div class="o_row">
-                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="interval" class="oe_inline" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                     <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                 </div>
                                                 <widget name="week_days" attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}"/>
@@ -219,7 +231,7 @@
 
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
-                            <field name="attendee_ids" widget="one2many" mode="tree,kanban">
+                            <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
                                     <field name="email" widget="email"/>
@@ -242,7 +254,7 @@
                                                 <field name="email" widget="email"/>
                                                 <span>Status: <field name="state" /></span>
 
-                                                <div class="text-right">
+                                                <div class="text-end">
                                                     <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" class="btn fa fa-asterisk"/>
                                                     <button name="do_accept" states="needsAction,tentative,declined" string="Accept" type="object" class="btn fa fa-check text-success"/>
                                                     <button name="do_decline" states="needsAction,tentative,accepted" string="Decline" type="object" class="btn fa fa-times-circle text-danger"/>
@@ -252,12 +264,6 @@
                                     </templates>
                                 </kanban>
                             </field>
-                        </page>
-                        <page name="page_misc" string="Misc" groups="base.group_no_one">
-                            <group>
-                                <label for="user_id"/>
-                                <field name="user_id" nolabel="1" widget="many2one_avatar_user"/>
-                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -277,21 +283,25 @@
             <calendar js_class="attendee_calendar" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
                 event_open_popup="true"
                 event_limit="5"
-                color="user_id">
-                <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
-                <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" />
+                color="partner_ids">
                 <field name="attendee_status" invisible="1"/>
-                <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
-                <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
+                <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
+                       filters="1" widget="many2manyattendee" write_model="calendar.filters"
+                       write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
+                />
+                <field name="videocall_location" widget="url" text="Join Video Call" options="{'icon': 'fa fa-lg fa-video-camera'}" attrs="{'invisible': [('videocall_location', '=', False)]}"/>
                 <field name="is_highlighted" invisible="1"/>
-                <field name="description" attrs="{'invisible': [('description', '=', False)]}"/>
+                <field name="is_organizer_alone" invisible="1"/>
+                <field name="display_description" invisible="1"/>
+                <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
+                <field name="description" attrs="{'invisible': [('display_description', '=', False)]}"/>
                 <field name="privacy"/>
-                <field name="show_as"/>
                 <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}"/>
                 <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>
+                <field name="partner_id" string="Organizer"/>
             </calendar>
         </field>
     </record>
@@ -324,7 +334,6 @@
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
-                    <filter string="Availability" name="availability" domain="[]" context="{'group_by': 'show_as'}"/>
                 </group>
             </search>
         </field>
@@ -354,7 +363,8 @@
             <field name="arch" type="xml">
                 <notebook colspan="4" position="inside">
                     <!-- Placeholder container to hold information about external accounts (Google calendar, Microsoft calendar, ...) -->
-                    <page string="Calendar" name="calendar" invisible="1" groups="base.group_system">
+                    <page string="Calendar" name="calendar" invisible="1" groups="base.group_system"
+                         attrs="{'invisible': [('share', '=', True)]}">
                         <group name="calendar_accounts"/>
                     </page>
                 </notebook>
@@ -386,9 +396,9 @@
     <menuitem
         id="mail_menu_calendar"
         name="Calendar"
-        sequence="2"
+        sequence="10"
         action="action_calendar_event"
-        web_icon="calendar,static/description/icon.png"
+        web_icon="calendar,static/description/icon.svg"
         groups="base.group_user"/>
 
     <menuitem
@@ -424,13 +434,5 @@
         parent="menu_calendar_configuration"
         action="action_calendar_alarm"
         groups="base.group_no_one"/>
-
-    <!-- called in js from '/js/base_calendar.js' -->
-    <record id="action_calendar_event_notify" model="ir.actions.act_window">
-        <field name="name">Meetings</field>
-        <field name="res_model">calendar.event</field>
-        <field name="view_mode">form,calendar,tree</field>
-        <field name="view_id" ref="view_calendar_event_form"/>
-    </record>
 
 </odoo>

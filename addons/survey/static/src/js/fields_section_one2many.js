@@ -51,7 +51,11 @@ var SectionListRenderer = ListRenderer.extend({
                 if (record.data.questions_selection === "random") {
                     nbrColumns--;
                 }
+                // Render empty cells for buttons to avoid having unaligned elements
+                nbrColumns -= this.columns.filter(elem => elem.tag === "button_group").length;
                 $cell.attr('colspan', nbrColumns);
+            } else if (node.tag === "button_group") {
+                $cell.addClass('o_invisible_modifier');
             } else {
                 $cell.removeClass('o_invisible_modifier');
                 return $cell.addClass('o_hidden');

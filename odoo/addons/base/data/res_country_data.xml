@@ -350,7 +350,7 @@
         <record id="cy" model="res.country">
             <field name="name">Cyprus</field>
             <field name="code">cy</field>
-            <field name="currency_id" ref="CYP" />
+            <field name="currency_id" ref="EUR" />
             <field eval="357" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -408,6 +408,7 @@
             <field name="code">ec</field>
             <field name="currency_id" ref="USD" />
             <field eval="593" name="phone_code" />
+            <field name="vat_label">RUC</field>
         </record>
         <record id="ee" model="res.country">
             <field name="name">Estonia</field>
@@ -616,6 +617,7 @@
             <field name="code">hn</field>
             <field name="currency_id" ref="HNL" />
             <field eval="504" name="phone_code" />
+            <field name="vat_label">RTN</field>
         </record>
         <record id="hr" model="res.country">
             <field name="name">Croatia</field>
@@ -1294,7 +1296,7 @@
         <record id="sm" model="res.country">
             <field name="name">San Marino</field>
             <field name="code">sm</field>
-            <field name="currency_id" ref="ITL" />
+            <field name="currency_id" ref="EUR" />
             <field eval="378" name="phone_code" />
         </record>
         <record id="sn" model="res.country">
@@ -1589,7 +1591,7 @@
         </record>
 
         <record id="europe" model="res.country.group">
-            <field name="name">Europe</field>
+            <field name="name">European Union</field>
             <field name="country_ids" eval="[Command.set([
                 ref('at'),ref('be'),ref('bg'),ref('hr'),ref('cy'),
                 ref('cz'),ref('dk'),ref('ee'),ref('fi'),ref('fr'),
@@ -1620,6 +1622,11 @@
                 ref('mt'),ref('nl'),ref('no'),ref('pl'),ref('pm'),
                 ref('pt'),ref('re'),ref('ro'),ref('se'),ref('si'),
                 ref('sk'),ref('sm'),ref('va'),ref('yt')])]"/>
+        </record>
+
+        <record id="gulf_cooperation_council" model="res.country.group">
+            <field name="name">Gulf Cooperation Council (GCC)</field>
+            <field name="country_ids" eval="[(6,0, [ref('base.sa'), ref('base.ae'), ref('base.bh'), ref('base.om'), ref('base.qa'), ref('base.kw')])]"/>
         </record>
     </data>
 </odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mailing_report_deactivated" name="Report Unsubscribed">
+        <t t-call="mass_mailing.layout">
+            <div class="container mt8">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3">
+                        <h3>Mailing Reports Turned Off</h3>
+                        <div class="alert alert-success text-center" role="status">
+                            <p>
+                                Mailing Reports have been turned off for all users. <br/>
+                                If needed, they can be turned back on from the
+                                <a t-if="menu_id" t-attf-href="/web#menu_id=#{menu_id}">
+                                    Settings Menu.
+                                </a>
+                                <t t-else="">
+                                    Settings Menu.
+                                </t>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Dummy layout to "view" a template content (html) -->
+    <template id="view" name="Browser View">
+&lt;!DOCTYPE html&gt;
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+        <style type="text/css">
+            <!-- Hide the link view online as it is displayed online -->
+            .o_snippet_view_in_browser {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Raw body inserted here because it is a rendered mailing, therefore internal content -->
+        <t t-out="body"/>
+    </body>
+</html>
+    </template>
+</odoo>

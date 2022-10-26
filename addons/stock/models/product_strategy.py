@@ -27,6 +27,10 @@ class StockPutawayRule(models.Model):
     def _default_location_id(self):
         if self.env.context.get('active_model') == 'stock.location':
             return self.env.context.get('active_id')
+        if not self.env.user.has_group('stock.group_stock_multi_warehouses'):
+            wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+            input_loc, _ = wh._get_input_output_locations(wh.reception_steps, wh.delivery_steps)
+            return input_loc
 
     def _default_product_id(self):
         if self.env.context.get('active_model') == 'product.template' and self.env.context.get('active_id'):
@@ -62,7 +66,7 @@ class StockPutawayRule(models.Model):
         domain="[('child_ids', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         default=_default_location_id, required=True, ondelete='cascade', index=True)
     location_out_id = fields.Many2one(
-        'stock.location', 'Store to', check_company=True,
+        'stock.location', 'Store to sublocation', check_company=True,
         domain="[('id', 'child_of', location_in_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=True, ondelete='cascade')
     sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
@@ -75,24 +79,44 @@ class StockPutawayRule(models.Model):
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
+        child_location_count = 0
         if self.location_out_id:
             child_location_count = self.env['stock.location'].search_count([
                 ('id', '=', self.location_out_id.id),
                 ('id', 'child_of', self.location_in_id.id),
                 ('id', '!=', self.location_in_id.id),
             ])
-            if not child_location_count:
-                self.location_out_id = None
+        if not child_location_count or not self.location_out_id:
+            self.location_out_id = self.location_in_id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        rules = super().create(vals_list)
+        rules._enable_show_reserved()
+        return rules
 
     def write(self, vals):
         if 'company_id' in vals:
             for rule in self:
                 if rule.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        self._enable_show_reserved()
         return super(StockPutawayRule, self).write(vals)
 
-    def _get_putaway_location(self, product, quantity=0, package=None, qty_by_location=None):
-        package_type = package and package.package_type_id or None
+    def _enable_show_reserved(self):
+        out_locations = self.location_out_id
+        if out_locations:
+            self.env['stock.picking.type'].with_context(active_test=False)\
+                .search([('default_location_dest_id', 'in', out_locations.ids)])\
+                .write({'show_reserved': True})
+
+    def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
+        # find package type on package or packaging
+        package_type = self.env['stock.package.type']
+        if package:
+            package_type = package.package_type_id
+        elif packaging:
+            package_type = packaging.package_type_id
 
         checked_locations = set()
         for putaway_rule in self:
@@ -105,14 +129,14 @@ class StockPutawayRule(models.Model):
                     return location_out
                 continue
 
-            child_locations = self.env['stock.location'].search([('id', 'child_of', location_out.id), ('usage', '=', 'internal')])
+            child_locations = location_out.child_internal_location_ids
             # check if already have the product/package type stored
             for location in child_locations:
                 if location in checked_locations:
                     continue
                 if package_type:
-                    if location.quant_ids.filtered(lambda q: q.product_id == product and q.package_id and q.package_id.package_type_id == package_type):
-                        if location._check_can_be_used(product, package=package, location_qty=qty_by_location[location.id]):
+                    if location.quant_ids.filtered(lambda q: q.package_id and q.package_id.package_type_id == package_type):
+                        if location._check_can_be_used(product, quantity, package=package, location_qty=qty_by_location[location.id]):
                             return location
                         else:
                             checked_locations.add(location)

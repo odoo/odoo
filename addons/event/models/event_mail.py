@@ -5,6 +5,7 @@ import logging
 import random
 import threading
 
+from collections import namedtuple
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -29,6 +30,10 @@ class EventTypeMail(models.Model):
     _name = 'event.type.mail'
     _description = 'Mail Scheduling on Event Category'
 
+    @api.model
+    def _selection_template_model(self):
+        return [('mail.template', 'Mail')]
+
     event_type_id = fields.Many2one(
         'event.type', string='Event Type',
         ondelete='cascade', required=True)
@@ -44,17 +49,24 @@ class EventTypeMail(models.Model):
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
         string='Trigger', default="before_event", required=True)
-    template_id = fields.Many2one(
-        'mail.template', string='Email Template',
-        domain=[('model', '=', 'event.registration')], ondelete='restrict',
-        help='This field contains the template of the mail that will be automatically sent')
+    template_model_id = fields.Many2one('ir.model', string='Template Model', compute='_compute_template_model_id', compute_sudo=True)
+    template_ref = fields.Reference(string='Template', selection='_selection_template_model', required=True)
 
-    @api.model
-    def _get_event_mail_fields_whitelist(self):
-        """ Whitelist of fields that are copied from event_type_mail_ids to event_mail_ids when
-        changing the event_type_id field of event.event """
-        return ['notification_type', 'template_id', 'interval_nbr', 'interval_unit', 'interval_type']
+    @api.depends('notification_type')
+    def _compute_template_model_id(self):
+        mail_model = self.env['ir.model']._get('mail.template')
+        for mail in self:
+            mail.template_model_id = mail_model if mail.notification_type == 'mail' else False
 
+    def _prepare_event_mail_values(self):
+        self.ensure_one()
+        return namedtuple("MailValues", ['notification_type', 'interval_nbr', 'interval_unit', 'interval_type', 'template_ref'])(
+            self.notification_type,
+            self.interval_nbr,
+            self.interval_unit,
+            self.interval_type,
+            '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        )
 
 class EventMailScheduler(models.Model):
     """ Event automated mailing. This model replaces all existing fields and
@@ -63,6 +75,10 @@ class EventMailScheduler(models.Model):
     _name = 'event.mail'
     _rec_name = 'event_id'
     _description = 'Event Automated Mailing'
+
+    @api.model
+    def _selection_template_model(self):
+        return [('mail.template', 'Mail')]
 
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
@@ -78,10 +94,6 @@ class EventMailScheduler(models.Model):
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
         string='Trigger ', default="before_event", required=True)
-    template_id = fields.Many2one(
-        'mail.template', string='Email Template',
-        domain=[('model', '=', 'event.registration')], ondelete='restrict',
-        help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
     # contact and status
     mail_registration_ids = fields.One2many(
@@ -92,6 +104,14 @@ class EventMailScheduler(models.Model):
         [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent')],
         string='Global communication Status', compute='_compute_mail_state')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)
+    template_model_id = fields.Many2one('ir.model', string='Template Model', compute='_compute_template_model_id', compute_sudo=True)
+    template_ref = fields.Reference(string='Template', selection='_selection_template_model', required=True)
+
+    @api.depends('notification_type')
+    def _compute_template_model_id(self):
+        mail_model = self.env['ir.model']._get('mail.template')
+        for mail in self:
+            mail.template_model_id = mail_model if mail.notification_type == 'mail' else False
 
     @api.depends('event_id.date_begin', 'event_id.date_end', 'interval_type', 'interval_unit', 'interval_nbr')
     def _compute_scheduled_date(self):
@@ -140,11 +160,11 @@ class EventMailScheduler(models.Model):
                 if scheduler.mail_done or scheduler.notification_type != 'mail':
                     continue
                 # no template -> ill configured, skip and avoid crash
-                if not scheduler.template_id:
+                if not scheduler.template_ref:
                     continue
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.mail_attendees(scheduler.template_id.id)
+                    scheduler.event_id.mail_attendees(scheduler.template_ref.id)
                     scheduler.update({
                         'mail_done': True,
                         'mail_count_done': scheduler.event_id.seats_reserved + scheduler.event_id.seats_used,
@@ -162,13 +182,23 @@ class EventMailScheduler(models.Model):
             return self.env['event.mail.registration'].create(new)
         return self.env['event.mail.registration']
 
+    def _prepare_event_mail_values(self):
+        self.ensure_one()
+        return namedtuple("MailValues", ['notification_type', 'interval_nbr', 'interval_unit', 'interval_type', 'template_ref'])(
+            self.notification_type,
+            self.interval_nbr,
+            self.interval_unit,
+            self.interval_type,
+            '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        )
+
     @api.model
     def _warn_template_error(self, scheduler, exception):
         # We warn ~ once by hour ~ instead of every 10 min if the interval unit is more than 'hours'.
         if random.random() < 0.1666 or scheduler.interval_unit in ('now', 'hours'):
             ex_s = exception_to_unicode(exception)
             try:
-                event, template = scheduler.event_id, scheduler.template_id
+                event, template = scheduler.event_id, scheduler.template_ref
                 emails = list(set([event.organizer_id.email, event.user_id.email, template.write_uid.email]))
                 subject = _("WARNING: Event Scheduler Error for event: %s", event.name)
                 body = _("""Event Scheduler for:
@@ -215,15 +245,14 @@ You receive this email because you are:
 
         for scheduler in schedulers:
             try:
-                with self.env.cr.savepoint():
-                    # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
-                    self.browse(scheduler.id).execute()
+                # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
+                self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
-                self.invalidate_cache()
+                self.env.invalidate_all()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit and not getattr(threading.currentThread(), 'testing', False):
+                if autocommit and not getattr(threading.current_thread(), 'testing', False):
                     self.env.cr.commit()
         return True
 
@@ -248,15 +277,27 @@ class EventMailRegistration(models.Model):
             reg_mail.scheduler_id.notification_type == 'mail'
         )
         for reg_mail in todo:
-            reg_mail.scheduler_id.template_id.send_mail(reg_mail.registration_id.id)
+            organizer = reg_mail.scheduler_id.event_id.organizer_id
+            company = self.env.company
+            author = self.env.ref('base.user_root')
+            if organizer.email:
+                author = organizer
+            elif company.email:
+                author = company.partner_id
+            elif self.env.user.email:
+                author = self.env.user
+
+            email_values = {
+                'email_from': author.email_formatted,
+                'author_id': author.id,
+            }
+            reg_mail.scheduler_id.template_ref.send_mail(reg_mail.registration_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
         for mail in self:
             if mail.registration_id:
-                date_open = mail.registration_id.date_open
-                date_open_datetime = date_open or fields.Datetime.now()
-                mail.scheduled_date = date_open_datetime + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
+                mail.scheduled_date = mail.registration_id.create_date + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
             else:
                 mail.scheduled_date = False

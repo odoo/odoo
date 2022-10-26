@@ -1,58 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--  MAILING CONTACT SUBSCRIPTION -->
-    <record model="ir.ui.view" id="mailing_contact_subscription_view_form">
-        <field name="name">mailing.contact.subscription.view.form</field>
-        <field name="model">mailing.contact.subscription</field>
-        <field name="priority">10</field>
-        <field name="arch" type="xml">
-            <form string="Mailing List Subscription">
-                <sheet>
-                    <group>
-                        <field name="list_id"/>
-                        <field name="is_blacklisted" invisible="1"/>
-                        <label for="contact_id" class="oe_inline"/>
-                        <div class="o_row o_row_readonly">
-                            <i class="fa fa-ban text-danger" role="img" title="This email is blacklisted for mass mailings"
-                                aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
-                            <field name="contact_id"/>
-                        </div>
-                        <field name="unsubscription_date" readonly="1"/>
-                        <field name="opt_out"/>
-                        <field name="message_bounce" readonly="1"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="mailing_contact_subscription_view_tree">
-        <field name="name">mailing.contact.subscription.view.tree</field>
-        <field name="model">mailing.contact.subscription</field>
-        <field name="arch" type="xml">
-            <tree string="Mailing List Subscriptions">
-                <field name="contact_id"/>
-                <field name="unsubscription_date"/>
-                <field name="opt_out"/>
-                <field name="message_bounce"/>
-                <field name="is_blacklisted"/>
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="mailing_contact_subscription_view_search">
-        <field name="name">mailing.contact.subscription.view.search</field>
-        <field name="model">mailing.contact.subscription</field>
-        <field name="arch" type="xml">
-           <search string="Mailing List Subscriptions">
-                <field name="contact_id"/>
-                <field name="opt_out"/>
-                <field name="list_id"/>
-            </search>
-        </field>
-    </record>
-
-    <record id="mailing_contact_view_search" model="ir.ui.view">
+     <record id="mailing_contact_view_search" model="ir.ui.view">
         <field name="name">mailing.contact.view.search</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
@@ -93,17 +41,20 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing List Contacts" sample="1">
+            <tree string="Mailing List Contacts" sample="1" multi_edit="1" js_class="mailing_contact_list">
                 <header>
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
-                <field name="create_date"/>
-                <field name="name"/>
+                <field name="create_date" optional="show"/>
+                <field name="title_id" optional="hide"/>
+                <field name="name" readonly="1"/>
                 <field name="company_name"/>
-                <field name="email"/>
+                <field name="email" readonly="1"/>
                 <field name="is_blacklisted" string="Email Blacklisted"/>
-                <field name="message_bounce" sum="Total Bounces"/>
-                <field name="opt_out" invisible="'default_list_ids' not in context"/>
+                <field name="country_id" optional="hide"/>
+                <field name="message_bounce" sum="Total Bounces" readonly="1"/>
+                <field name="opt_out" invisible="'default_list_ids' not in context" readonly="1"/>
+                <field name="list_ids" widget="many2many_tags" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -112,7 +63,7 @@
         <field name="name">mailing.contact.view.kanban</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
-            <kanban sample="1">
+            <kanban sample="1" js_class="mailing_contact_kanban">
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
@@ -126,7 +77,7 @@
                                         <t t-esc="record.name.value"/>
                                     </strong>
                                 </div>
-                                <span class="badge badge-pill" title="Number of bounced email.">
+                                <span class="badge rounded-pill" title="Number of bounced email.">
                                     <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
                                 </span>
                             </div>
@@ -156,14 +107,15 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <form string="Mailing List Contacts">
+                <field name="id" invisible="1"/>
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Contact Name"/>
                         <h1>
-                            <field class="o_text_overflow" name="name" placeholder="e.g. John Smith"/>
+                            <field class="text-break" name="name" placeholder="e.g. John Smith"/>
                         </h1>
                         <div>
-                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags" style="width: 100%%"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags" style="width: 100%"/>
                         </div>
                     </div>
                     <group>
@@ -182,8 +134,8 @@
                             <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                         <group>
-                            <field name="create_date" readonly="1"/>
-                            <field name="message_bounce"/>
+                            <field name="create_date" attrs="{'invisible': [('id', '=', False)]}" readonly="1"/>
+                            <field name="message_bounce" attrs="{'invisible': [('id', '=', False)]}" readonly="1"/>
                         </group>
                     </group>
                     <field name="subscription_list_ids">
@@ -207,7 +159,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <pivot string="Mailing List Contacts" stacked="True" sample="1">
+            <pivot string="Mailing List Contacts" stacked="1" sample="1">
                 <field name="create_date" type="row"/>
             </pivot>
         </field>
@@ -218,8 +170,8 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <graph string="Mailing List Contacts" stacked="True" sample="1">
-                <field name="create_date" type="row"/>
+            <graph string="Mailing List Contacts" sample="1">
+                <field name="create_date"/>
             </graph>
         </field>
     </record>
@@ -237,8 +189,4 @@
             </p>
         </field>
     </record>
-
-    <menuitem name="Mailing List Contacts" id="menu_email_mass_mailing_contacts"
-        parent="mass_mailing_mailing_list_menu" sequence="4"
-        action="action_view_mass_mailing_contacts"/>
 </odoo>

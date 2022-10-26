@@ -32,6 +32,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         "account",
         "base_iban",
         "base_vat",
+        "l10n_din5008",
     ],
     "data": [
         'data/res.country.state.csv',
@@ -39,8 +40,13 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         'data/account_account_template.xml',
         'data/account_chart_template.xml',
         'data/account_tax_report_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_tax_template.xml',
         'data/account_fiscal_position_template.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

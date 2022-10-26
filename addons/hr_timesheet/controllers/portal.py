@@ -4,7 +4,6 @@
 from collections import OrderedDict
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
-from datetime import datetime
 
 from odoo import fields, http, _
 from odoo.http import request
@@ -12,6 +11,7 @@ from odoo.tools import date_utils, groupby as groupbyelem
 from odoo.osv.expression import AND, OR
 
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 
 
 class TimesheetCustomerPortal(CustomerPortal):
@@ -27,11 +27,16 @@ class TimesheetCustomerPortal(CustomerPortal):
     def _get_searchbar_inputs(self):
         return {
             'all': {'input': 'all', 'label': _('Search in All')},
-            'project': {'input': 'project', 'label': _('Search in Project')},
-            'name': {'input': 'name', 'label': _('Search in Description')},
             'employee': {'input': 'employee', 'label': _('Search in Employee')},
-            'task': {'input': 'task', 'label': _('Search in Task')}
+            'project': {'input': 'project', 'label': _('Search in Project')},
+            'task': {'input': 'task', 'label': _('Search in Task')},
+            'name': {'input': 'name', 'label': _('Search in Description')},
         }
+
+    def _task_get_searchbar_sortings(self, milestones_allowed):
+        values = super()._task_get_searchbar_sortings(milestones_allowed)
+        values['progress'] = {'label': _('Progress'), 'order': 'progress asc', 'sequence': 10}
+        return values
 
     def _get_searchbar_groupby(self):
         return {
@@ -62,6 +67,15 @@ class TimesheetCustomerPortal(CustomerPortal):
             'date': 'date'
         }
 
+    def _get_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Newest'), 'order': 'date desc'},
+            'employee': {'label': _('Employee'), 'order': 'employee_id'},
+            'project': {'label': _('Project'), 'order': 'project_id'},
+            'task': {'label': _('Task'), 'order': 'task_id'},
+            'name': {'label': _('Description'), 'order': 'name'},
+        }
+
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet = request.env['account.analytic.line']
@@ -71,10 +85,7 @@ class TimesheetCustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
         _items_per_page = 100
 
-        searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'date desc'},
-            'name': {'label': _('Description'), 'order': 'name'},
-        }
+        searchbar_sortings = self._get_searchbar_sortings()
 
         searchbar_inputs = self._get_searchbar_inputs()
 
@@ -126,11 +137,13 @@ class TimesheetCustomerPortal(CustomerPortal):
             timesheets = Timesheet_sudo.search(domain, order=orderby, limit=_items_per_page, offset=pager['offset'])
             if field:
                 if groupby == 'date':
-                    time_data = Timesheet_sudo.read_group(domain, ['date', 'unit_amount:sum'], ['date:day'])
-                    mapped_time = dict([(datetime.strptime(m['date:day'], '%d %b %Y').date(), m['unit_amount']) for m in time_data])
-                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k]) for k, g in groupbyelem(timesheets, itemgetter('date'))]
+                    raw_timesheets_group = Timesheet_sudo.read_group(
+                        domain, ["unit_amount:sum", "ids:array_agg(id)"], ["date:day"]
+                    )
+                    grouped_timesheets = [(Timesheet_sudo.browse(group["ids"]), group["unit_amount"]) for group in raw_timesheets_group]
+
                 else:
-                    time_data = time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
+                    time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
                     mapped_time = dict([(m[field][0] if m[field] else False, m['unit_amount']) for m in time_data])
                     grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
                 return timesheets, grouped_timesheets
@@ -161,3 +174,12 @@ class TimesheetCustomerPortal(CustomerPortal):
             'is_uom_day': request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
         })
         return request.render("hr_timesheet.portal_my_timesheets", values)
+
+class TimesheetProjectCustomerPortal(ProjectCustomerPortal):
+
+    def _show_task_report(self, task_sudo, report_type, download):
+        domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
+        task_domain = AND([domain, [('task_id', '=', task_sudo.id)]])
+        timesheets = request.env['account.analytic.line'].sudo().search(task_domain)
+        return self._show_report(model=timesheets,
+            report_type=report_type, report_ref='hr_timesheet.timesheet_report_task_timesheets', download=download)

@@ -12,13 +12,17 @@ class Lead2OpportunityPartner(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-
         """ Allow support of active_id / active_model instead of jut default_lead_id
         to ease window action definitions, and be backward compatible. """
         result = super(Lead2OpportunityPartner, self).default_get(fields)
 
         if not result.get('lead_id') and self.env.context.get('active_id'):
             result['lead_id'] = self.env.context.get('active_id')
+
+        if result.get('lead_id'):
+            if self.env['crm.lead'].browse(result['lead_id']).probability == 100:
+                raise UserError(_("Closed/Dead leads cannot be converted into opportunities."))
+
         return result
 
     name = fields.Selection([
@@ -50,7 +54,8 @@ class Lead2OpportunityPartner(models.TransientModel):
     @api.depends('duplicated_lead_ids')
     def _compute_name(self):
         for convert in self:
-            convert.name = 'merge' if convert.duplicated_lead_ids and len(convert.duplicated_lead_ids) >= 2 else 'convert'
+            if not convert.name:
+                convert.name = 'merge' if convert.duplicated_lead_ids and len(convert.duplicated_lead_ids) >= 2 else 'convert'
 
     @api.depends('lead_id')
     def _compute_action(self):
@@ -77,7 +82,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                 convert.lead_id.partner_id.email if convert.lead_id.partner_id.email else convert.lead_id.email_from,
                 include_lost=True).ids
 
-    @api.depends('action')
+    @api.depends('action', 'lead_id')
     def _compute_partner_id(self):
         for convert in self:
             if convert.action == 'exist':
@@ -104,15 +109,6 @@ class Lead2OpportunityPartner(models.TransientModel):
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=None)
             convert.team_id = team.id
 
-    @api.model
-    def view_init(self, fields):
-        # JEM TDE FIXME: clean that brol
-        """ Check some preconditions before the wizard executes. """
-        for lead in self.env['crm.lead'].browse(self._context.get('active_ids', [])):
-            if lead.probability == 100:
-                raise UserError(_("Closed/Dead leads cannot be converted into opportunities."))
-        return False
-
     def action_apply(self):
         if self.name == 'merge':
             result_opportunity = self._action_merge()
@@ -134,7 +130,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                     'user_id': self.user_id.id,
                     'team_id': self.team_id.id,
                 })
-        (to_merge - result_opportunity).unlink()
+        (to_merge - result_opportunity).sudo().unlink()
         return result_opportunity
 
     def _action_convert(self):
@@ -151,7 +147,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                 self._convert_handle_partner(
                     lead, self.action, self.partner_id.id or lead.partner_id.id)
 
-            lead.convert_opportunity(lead.partner_id.id, user_ids=False, team_id=False)
+            lead.convert_opportunity(lead.partner_id, user_ids=False, team_id=False)
 
         leads_to_allocate = leads
         if not self.force_assignment:

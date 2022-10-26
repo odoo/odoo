@@ -4,7 +4,7 @@
     <template id="report_pricelist_page">
         <div class="container bg-white p-4 my-4">
             <div class="row my-3">
-                <div class="col-12">
+                <div class="col-12" t-if="is_visible_title">
                     <h2 t-if="is_html_type">
                         Pricelist:
                         <a href="#" class="o_action" data-model="product.pricelist" t-att-data-res-id="pricelist.id">
@@ -17,20 +17,26 @@
                 </div>
             </div>
             <div class="row">
+                <div t-att-class="'text-center' + (' offset-8' if is_html_type else ' offset-7')">
+                    <strong>Sales Order Line Quantities (price per unit)</strong>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12">
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Products</th>
+                                <th groups="uom.group_uom">UoM</th>
                                 <t t-foreach="quantities" t-as="qty">
-                                    <th class="text-right"><t t-esc="qty"/> Units</th>
+                                    <th class="text-end"><t t-esc="qty"/></th>
                                 </t>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="products" t-as="product">
                                 <tr>
-                                    <td t-att-class="is_product_tmpl and 'font-weight-bold' or None">
+                                    <td t-att-class="is_product_tmpl and 'fw-bold' or None">
                                         <a t-if="is_html_type" href="#" class="o_action" t-att-data-model="is_product_tmpl and 'product.template' or 'product.product'" t-att-data-res-id="product['id']">
                                             <t t-esc="product['name']"/>
                                         </a>
@@ -38,22 +44,28 @@
                                             <t t-esc="product['name']"/>
                                         </t>
                                     </td>
+                                    <td groups="uom.group_uom">
+                                        <t t-esc="product['uom']"/>
+                                    </td>
                                     <t t-foreach="quantities" t-as="qty">
-                                        <td class="text-right">
+                                        <td class="text-end">
                                             <t t-esc="product['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>
                                         </td>
                                     </t>
                                 </tr>
-                                <t t-if="is_product_tmpl">
+                                <t t-if="is_product_tmpl and 'variants' in product">
                                     <tr t-foreach="product['variants']" t-as="variant">
                                         <td>
-                                            <a t-if="is_html_type" href="#" class="o_action ml-4" data-model="product.product" t-att-data-res-id="variant['id']">
+                                            <a t-if="is_html_type" href="#" class="o_action ms-4" data-model="product.product" t-att-data-res-id="variant['id']">
                                                 <t t-esc="variant['name']"/>
                                             </a>
-                                            <span t-else="" class="ml-4" t-esc="variant['name']"/>
+                                            <span t-else="" class="ms-4" t-esc="variant['name']"/>
+                                        </td>
+                                        <td groups="uom.group_uom">
+                                            <t t-esc="product['uom']"/>
                                         </td>
                                         <t t-foreach="quantities" t-as="qty">
-                                            <td class="text-right">
+                                            <td class="text-end">
                                                 <t t-esc="variant['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>
                                             </td>
                                         </t>

@@ -1,9 +1,19 @@
 odoo.define('point_of_sale.PosComponent', function (require) {
     'use strict';
 
-    const { Component } = owl;
+    const { LegacyComponent } = require("@web/legacy/legacy_component");
+    const { onRendered } = owl;
 
-    class PosComponent extends Component {
+    let nextId = 0;
+
+    class PosComponent extends LegacyComponent {
+        setup() {
+            onRendered(() => {
+                if (this.env.isDebug()) {
+                    console.log('Rendered:', this.constructor.name);
+                }
+            });
+        }
         /**
          * This function is available to all Components that inherit this class.
          * The goal of this function is to show an awaitable dialog (popup) that
@@ -28,7 +38,7 @@ odoo.define('point_of_sale.PosComponent', function (require) {
          */
         showPopup(name, props) {
             return new Promise((resolve) => {
-                this.trigger('show-popup', { name, props, resolve });
+                this.env.posbus.trigger('show-popup', { name, props, resolve, id: nextId++ });
             });
         }
         showTempScreen(name, props) {

@@ -4,7 +4,7 @@
 from odoo import http
 
 from odoo.addons.website_event_track.controllers.event_track import EventTrackController
-
+from odoo.osv import expression
 
 class EventTrackLiveController(EventTrackController):
 
@@ -12,8 +12,10 @@ class EventTrackLiveController(EventTrackController):
     def get_next_track_suggestion(self, track_id):
         track = self._fetch_track(track_id)
         track_suggestion = track._get_track_suggestions(
-            restrict_domain=[('youtube_video_url', '!=', False), ('is_published', '=', True)],
-            limit=1)
+            restrict_domain=expression.AND([
+                self._get_event_tracks_domain(track.event_id),
+                [('youtube_video_url', '!=', False)]
+            ]), limit=1)
         if not track_suggestion:
             return False
         track_suggestion_sudo = track_suggestion.sudo()

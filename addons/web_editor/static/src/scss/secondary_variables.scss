@@ -20,7 +20,7 @@ $-combination-additions: ();
 $o-color-palette: map-get($o-color-palettes, $o-color-palette-name) or ();
 // Original color palette can contain override of the default combinations (so keep 'null' values for this merge)
 $o-color-palette: map-merge($-combination-additions, $o-color-palette);
-$o-color-palette: map-merge($o-base-color-palette, o-map-omit($o-color-palette));
+$o-color-palette: map-merge($o-base-color-palette, $o-color-palette);
 
 // Theme colors
 $o-theme-color-palette: map-get($o-theme-color-palettes, $o-theme-color-palette-name) or () !default;
@@ -40,15 +40,15 @@ $o-theme-color-palette: map-merge((
     // very dark version of a desaturate version of the main color
     'light': lighten(desaturate($-main-color, 80%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
     'dark': darken(desaturate($-main-color, 80%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
-), o-map-omit($o-theme-color-palette));
-$o-theme-color-palette: map-merge($o-base-theme-color-palette, o-map-omit($o-theme-color-palette));
+), $o-theme-color-palette);
+$o-theme-color-palette: map-merge($o-base-theme-color-palette, $o-theme-color-palette);
 
 // Gray colors
 // Extend grays with transparent ones (for some reason, BS4 create black-50 and
 // white-50 but does not allow overridding that with variables).
 $o-gray-color-palette: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or () !default;
-$o-gray-color-palette: map-merge($o-transparent-grays, o-map-omit($o-gray-color-palette));
-$o-gray-color-palette: map-merge($o-base-gray-color-palette, o-map-omit($o-gray-color-palette));
+$o-gray-color-palette: map-merge($o-transparent-grays, $o-gray-color-palette);
+$o-gray-color-palette: map-merge($o-base-gray-color-palette, $o-gray-color-palette);
 
 $o-color-system-initialized: false;
 
@@ -111,13 +111,13 @@ $o-color-system-initialized: false;
     // value. We can thus search in those.
     @if $o-color-system-initialized {
         @if map-has-key($colors, $name) {
-            @return color($name);
+            @return map-get($colors, $name);
         }
         @if map-has-key($theme-colors, $name) {
-            @return theme-color($name);
+            @return map-get($theme-colors, $name);
         }
         @if map-has-key($grays, $name) {
-            @return gray($name);
+            @return map-get($grays, $name);
         }
     }
 

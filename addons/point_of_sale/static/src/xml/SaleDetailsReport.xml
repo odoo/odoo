@@ -15,7 +15,7 @@
 
             <div class="orderlines">
                 <t t-foreach="products" t-as="line" t-key="line.product_id">
-                    <div>
+                    <div class="responsive-price">
                         <t t-esc="line.product_name.substr(0,20)" />
                         <span class="pos-receipt-right-align">
                             <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />
@@ -39,9 +39,9 @@
             <div>
                 Payments:
             </div>
-            <div t-foreach="payments" t-as="payment">
-                <t t-esc="payment.name" />
-                <span t-esc="pos.format_currency_no_symbol(payment.total)" class="pos-receipt-right-align"/>
+            <div t-foreach="payments" t-as="payment" t-key="payment_index">
+                <t t-esc="payment['name']" />
+                <span t-esc="pos.format_currency_no_symbol(payment['total'])" class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -51,7 +51,7 @@
             <div>
                 Taxes:
             </div>
-            <div t-foreach="taxes" t-as="tax">
+            <div t-foreach="taxes" t-as="tax" t-key="tax_index">
                 <t t-esc="tax.name" />
                 <span t-esc="pos.format_currency_no_symbol(tax.tax_amount)" class="pos-receipt-right-align"/>
             </div>

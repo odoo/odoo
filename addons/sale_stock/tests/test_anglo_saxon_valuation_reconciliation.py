@@ -4,8 +4,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests import Form, tagged
 
 
-@tagged('post_install', '-at_install')
-class TestValuationReconciliation(ValuationReconciliationTestCommon):
+class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -67,6 +66,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         move1.move_line_ids.qty_done = 11
         move1._action_done()
 
+
+@tagged('post_install', '-at_install')
+class TestValuationReconciliation(TestValuationReconciliationCommon):
     def test_shipment_invoice(self):
         """ Tests the case into which we send the goods to the customer before
         making the invoice
@@ -110,11 +112,12 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
-        return_pick.move_lines.quantity_done = 1
+        return_pick.move_ids.quantity_done = 1
         return_pick._action_done()
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',
             'refund_method': 'cancel',
+            'journal_id': invoice.journal_id.id,
         })
         refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state.")

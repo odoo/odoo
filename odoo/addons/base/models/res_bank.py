@@ -6,9 +6,6 @@ from collections.abc import Iterable
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.exceptions import UserError
-
-import werkzeug.urls
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -81,16 +78,19 @@ class ResPartnerBank(models.Model):
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder")
     partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], required=True)
+    allow_out_payment = fields.Boolean('Send Money', help='This account can be used for outgoing payments', default=False, copy=False, readonly=False)
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name', readonly=False)
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
     sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, ondelete='cascade', readonly=True)
+    company_id = fields.Many2one('res.company', 'Company', related='partner_id.company_id', store=True, readonly=True)
 
-    _sql_constraints = [
-        ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
-    ]
+    _sql_constraints = [(
+        'unique_number',
+        'unique(sanitized_acc_number, partner_id)',
+        'The combination Account Number/Partner must be unique.'
+    )]
 
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):

@@ -19,7 +19,7 @@ class ResPartner(models.Model):
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
-        pos_order_data = self.env['pos.order'].read_group(
+        pos_order_data = self.env['pos.order']._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )
@@ -36,11 +36,11 @@ class ResPartner(models.Model):
         '''
         This function returns an action that displays the pos orders from partner.
         '''
-        action = self.env.ref('point_of_sale.action_pos_pos_form').read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
         if self.is_company:
-            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+            action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
-            action['domain'] = [('partner_id.id', '=', self.id)]
+            action['domain'] = [('partner_id', '=', self.id)]
         return action
 
     @api.model

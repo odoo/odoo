@@ -37,19 +37,14 @@ QUnit.module('LunchListView', {
                 fields: {},
                 records: [],
             },
-            'ir.model.data': {
-                fields: {},
-                xmlid_to_res_id() {
-                    return Promise.resolve(PORTAL_GROUP_ID);
-                },
-            },
             'lunch.location': {
                 fields: {
                     name: {string: 'Name', type: 'char'},
+                    company_id: {string: 'Company', type: 'many2one', relation: 'res.company'},
                 },
                 records: [
-                    {id: 1, name: "Office 1"},
-                    {id: 2, name: "Office 2"},
+                    {id: 1, name: "Office 1", company_id: false},
+                    {id: 2, name: "Office 2", company_id: false},
                 ],
             },
             'res.users': {
@@ -63,21 +58,30 @@ QUnit.module('LunchListView', {
                     {id: 3, name: "Jean-Luc Portal", groups_id: [PORTAL_GROUP_ID]},
                 ],
             },
+            'res.company': {
+                fields: {
+                    name: {string: 'Name', type: 'char'},
+                }, records: [
+                    {id: 1, name: "Dunder Trade Company"},
+                ]
+            }
         };
         this.regularInfos = {
             username: "Marc Demo",
             wallet: 36.5,
             is_manager: false,
+            group_portal_id: PORTAL_GROUP_ID,
             currency: {
                 symbol: "\u20ac",
                 position: "after"
             },
             user_location: [2, "Office 2"],
+            alerts: [{id: 42, message: '<b>Warning! Neurotoxin pressure has reached dangerously unlethal levels.</b>'}]
         };
     },
 }, function () {
     QUnit.test('basic rendering', async function (assert) {
-        assert.expect(6);
+        assert.expect(9);
 
         const list = await createLunchView({
             View: LunchListView,
@@ -101,12 +105,17 @@ QUnit.module('LunchListView', {
             "should have a 'lunch filters' column");
         assert.containsOnce(list, '.o_content > .o_lunch_content',
             "should have a 'lunch wrapper' column");
-        assert.containsOnce(list, '.o_lunch_content > .o_list_view',
+        assert.containsOnce(list, '.o_lunch_content > .o_legacy_list_view',
             "should have a 'classical list view' column");
-        assert.hasClass(list.$('.o_list_view'), 'o_lunch_list_view',
+        assert.hasClass(list.$('.o_legacy_list_view'), 'o_lunch_list_view',
             "should have classname 'o_lunch_list_view'");
-        assert.containsOnce(list, '.o_lunch_content > span > .o_lunch_banner',
+        assert.containsOnce(list, '.o_lunch_content > .o_lunch_banner',
             "should have a 'lunch' banner");
+
+        const $alertMessage = list.$('.alert > *');
+        assert.equal($alertMessage.length, 1);
+        assert.equal($alertMessage.prop('tagName'), 'B');
+        assert.equal($alertMessage.text(), "Warning! Neurotoxin pressure has reached dangerously unlethal levels.")
 
         list.destroy();
     });
@@ -114,7 +123,7 @@ QUnit.module('LunchListView', {
     QUnit.module('LunchWidget', function () {
 
         QUnit.test('search panel domain location', async function (assert) {
-            assert.expect(20);
+            assert.expect(18);
             let expectedLocation = 1;
             let locationId = this.data['lunch.location'].records[0].id;
             const regularInfos = _.extend({}, this.regularInfos);
@@ -164,7 +173,6 @@ QUnit.module('LunchListView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
                 // Click m2o
                 '/web/dataset/call_kw/lunch.location/name_search',
                 // Click new location
@@ -173,14 +181,13 @@ QUnit.module('LunchListView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
             ]);
 
             list.destroy();
         });
 
         QUnit.test('search panel domain location false: fetch products in all locations', async function (assert) {
-            assert.expect(10);
+            assert.expect(9);
             const regularInfos = _.extend({}, this.regularInfos);
 
             const list = await createLunchView({
@@ -218,7 +225,6 @@ QUnit.module('LunchListView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
             ])
 
             list.destroy();

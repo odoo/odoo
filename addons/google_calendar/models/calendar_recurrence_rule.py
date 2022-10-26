@@ -2,20 +2,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import logging
 
-from odoo import api, fields, models
+from odoo import api, models, Command
+from odoo.tools import email_normalize
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
+_logger = logging.getLogger(__name__)
 
 class RecurrenceRule(models.Model):
     _name = 'calendar.recurrence'
     _inherit = ['calendar.recurrence', 'google.calendar.sync']
 
 
-    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync').calendar_event_ids
-        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit)
+        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit,
+                                                    generic_values_creation)
 
         google_service = GoogleCalendarService(self.env['google.service'])
 
@@ -85,19 +89,55 @@ class RecurrenceRule(models.Model):
 
         base_event_time_fields = ['start', 'stop', 'allday']
         new_event_values = self.env["calendar.event"]._odoo_values(gevent)
+        # We update the attendee status for all events in the recurrence
+        google_attendees = gevent.attendees or []
+        emails = [a.get('email') for a in google_attendees]
+        partners = self._get_sync_partner(emails)
+        existing_attendees = self.calendar_event_ids.attendee_ids
+        for attendee in zip(emails, partners, google_attendees):
+            email = attendee[0]
+            if email in existing_attendees.mapped('email'):
+                # Update existing attendees
+                existing_attendees.filtered(lambda att: att.email == email).write({'state': attendee[2].get('responseStatus')})
+            else:
+                # Create new attendees
+                if attendee[2].get('self'):
+                    partner = self.env.user.partner_id
+                elif attendee[1]:
+                    partner = attendee[1]
+                else:
+                    continue
+                self.calendar_event_ids.write({'attendee_ids': [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]})
+                if attendee[2].get('displayName') and not partner.name:
+                    partner.name = attendee[2].get('displayName')
+
+        for odoo_attendee_email in set(existing_attendees.mapped('email')):
+            # Remove old attendees. Sometimes, several partners have the same email.
+            if email_normalize(odoo_attendee_email) not in emails:
+                attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
+                self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
+
+        # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
+            non_equal_values = [
+                (key, old_event_values[key] and old_event_values[key].strftime('%m/%d/%Y, %H:%M:%S'), '-->',
+                      new_event_values[key] and new_event_values[key].strftime('%m/%d/%Y, %H:%M:%S')
+                 ) for key in ['start', 'stop'] if new_event_values[key] != old_event_values[key]
+            ]
+            log_msg = f"Recurrence {self.id} {self.rrule} has all events ({len(self.calendar_event_ids.ids)})  deleted because of base event value change: {non_equal_values}"
+            _logger.info(log_msg)
             # We archive the old events to recompute the recurrence. These events are already deleted on Google side.
             # We can't call _cancel because events without user_id would not be deleted
             (self.calendar_event_ids - base_event_id).google_id = False
             (self.calendar_event_ids - base_event_id).unlink()
-            base_event_id.write(dict(new_event_values, google_id=False, need_sync=False))
+            base_event_id.with_context(dont_notify=True).write(dict(new_event_values, google_id=False, need_sync=False))
             if self.rrule == current_rrule:
                 # if the rrule has changed, it will be recalculated below
                 # There is no detached event now
-                self._apply_recurrence()
+                self.with_context(dont_notify=True)._apply_recurrence()
         else:
             time_fields = (
                     self.env["calendar.event"]._get_time_fields()
@@ -116,9 +156,12 @@ class RecurrenceRule(models.Model):
         if self.rrule != current_rrule:
             detached_events = self._apply_recurrence()
             detached_events.google_id = False
+            log_msg = f"Recurrence #{self.id} | current rule: {current_rrule} | new rule: {self.rrule} | remaining: {len(self.calendar_event_ids)} | removed: {len(detached_events)}"
+            _logger.info(log_msg)
             detached_events.unlink()
 
     def _create_from_google(self, gevents, vals_list):
+        attendee_values = {}
         for gevent, vals in zip(gevents, vals_list):
             base_values = dict(
                 self.env['calendar.event']._odoo_values(gevent),  # FIXME default reminders
@@ -137,12 +180,22 @@ class RecurrenceRule(models.Model):
             vals['calendar_event_ids'] = [(4, base_event.id)]
             # event_tz is written on event in Google but on recurrence in Odoo
             vals['event_tz'] = gevent.start.get('timeZone')
-        recurrence = super()._create_from_google(gevents, vals_list)
-        recurrence._apply_recurrence()
+            attendee_values[base_event.id] = {'attendee_ids': base_values.get('attendee_ids')}
+
+        recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        generic_values_creation = {
+            rec.id: attendee_values[rec.base_event_id.id]
+            for rec in recurrence if attendee_values.get(rec.base_event_id.id)
+        }
+        recurrence.with_context(dont_notify=True)._apply_recurrence(generic_values_creation=generic_values_creation)
         return recurrence
 
     def _get_sync_domain(self):
-        return [('calendar_event_ids.user_id', '=', self.env.user.id)]
+        # Empty rrule may exists in historical data. It is not a desired behavior but it could have been created with
+        # older versions of the module. When synced, these recurrency may come back from Google after database cleaning
+        # and trigger errors as the records are not properly populated.
+        # We also prevent sync of other user recurrent events.
+        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):
@@ -157,10 +210,9 @@ class RecurrenceRule(models.Model):
             return {}
         values = event._google_values()
         values['id'] = self.google_id
-
         if not self._is_allday():
-            values['start']['timeZone'] = self.event_tz
-            values['end']['timeZone'] = self.event_tz
+            values['start']['timeZone'] = self.event_tz or 'Etc/UTC'
+            values['end']['timeZone'] = self.event_tz or 'Etc/UTC'
 
         # DTSTART is not allowed by Google Calendar API.
         # Event start and end times are specified in the start and end fields.

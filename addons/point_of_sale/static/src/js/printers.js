@@ -1,3 +1,4 @@
+/* global html2canvas */
 odoo.define('point_of_sale.Printer', function (require) {
 "use strict";
 
@@ -29,7 +30,11 @@ class PrintResultGenerator {
             successful: false,
             message: {
                 title: _t('Connection to the printer failed'),
-                body: _t('Please check if the printer is still connected.'),
+                body: _t('Please check if the printer is still connected. \n' +
+                    'Some browsers don\'t allow HTTP calls from websites to devices in the network (for security reasons). ' +
+                    'If it is the case, you will need to follow Odoo\'s documentation for ' +
+                    '\'Self-signed certificate for ePOS printers\' and \'Secure connection (HTTPS)\' to solve the issue'
+                ),
             },
         });
     }
@@ -41,9 +46,10 @@ class PrintResultGenerator {
 }
 
 var PrinterMixin = {
-    init: function() {
+    init: function (pos) {
         this.receipt_queue = [];
         this.printResultGenerator = new PrintResultGenerator();
+        this.pos = pos;
     },
 
     /**
@@ -62,7 +68,7 @@ var PrinterMixin = {
             image = await this.htmlToImg(receipt);
             try {
                 sendPrintResult = await this.send_printing_job(image);
-            } catch (error) {
+            } catch (_error) {
                 // Error in communicating to the IoT box.
                 this.receipt_queue.length = 0;
                 return this.printResultGenerator.IoTActionError();
@@ -90,21 +96,20 @@ var PrinterMixin = {
      * @param {String} receipt: The receipt to be printed, in HTML
      */
     htmlToImg: function (receipt) {
-        var self = this;
         $('.pos-receipt-print').html(receipt);
-        var promise = new Promise(function (resolve, reject) {
-            self.receipt = $('.pos-receipt-print>.pos-receipt');
-            html2canvas(self.receipt[0], {
-                onparsed: function(queue) {
-                    queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
-                },
-                onrendered: function (canvas) {
-                    $('.pos-receipt-print').empty();
-                    resolve(self.process_canvas(canvas));
-                }
-            })
+        this.receipt = $('.pos-receipt-print>.pos-receipt');
+        // Odoo RTL support automatically flip left into right but html2canvas
+        // won't work as expected if the receipt is aligned to the right of the
+        // screen so we need to flip it back.
+        this.receipt.parent().css({ left: 0, right: 'auto' });
+        return html2canvas(this.receipt[0], {
+            height: Math.ceil(this.receipt.outerHeight() + this.receipt.offset().top),
+            width: Math.ceil(this.receipt.outerWidth() + 2 * this.receipt.offset().left),
+            scale: 1,
+        }).then(canvas => {
+            $('.pos-receipt-print').empty();
+            return this.process_canvas(canvas);
         });
-        return promise;
     },
 
     _onIoTActionResult: function (data){
@@ -128,8 +133,7 @@ var PrinterMixin = {
 
 var Printer = core.Class.extend(PrinterMixin, {
     init: function (url, pos) {
-        PrinterMixin.init.call(this, arguments);
-        this.pos = pos;
+        PrinterMixin.init.call(this, pos);
         this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
     },
 

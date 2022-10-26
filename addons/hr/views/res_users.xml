@@ -12,7 +12,9 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <footer position="replace"/>
+                <footer position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </footer>
                 <h1 position="replace"/>
                 <xpath expr="//field[@name='image_1920']" position="replace"/>
                 <xpath expr="//field[@name='company_id']" position="attributes">
@@ -29,6 +31,12 @@
                 <field name="tz" position="attributes">
                     <attribute name="required">1</attribute>
                 </field>
+                <field name="tz" position="after">
+                    <field name="is_system" invisible="1"/>
+                </field>
+                <xpath expr="//button[@name='%(base.action_view_base_language_install)d']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_system', '=', False)]}</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -39,6 +47,7 @@
             <field name="arch" type="xml">
                 <form position="attributes">
                     <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
                     <attribute name="js_class">hr_employee_profile_form</attribute>
                 </form>
                 <notebook position="replace">
@@ -75,14 +84,15 @@
                             </div>
                         </button>
                     </div>
-                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Employee's Name" required="True" readonly="context.get('from_my_profile', False)"/>
                         </h1>
                     </div>
                     <div class="row">
-                        <h2 class="col-6">
+                        <h2 class="col-6 ps-0">
                             <field name="job_title" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                         </h2>
                     </div>
@@ -105,8 +115,8 @@
                 </notebook>
                 <notebook position="inside">
                     <page name="public" string="Work Information">
-                        <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
-                            <div id="o_work_employee_main">
+                        <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
+                            <div id="o_work_employee_main" class="flex-grow-1">
                                 <group string="Location">
                                     <field name="department_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     <field name="address_id"
@@ -167,7 +177,7 @@
                                 <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="emergency_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
                             </group>
-                            <group string="Work Permit" name="work_permit">
+                            <group string="Work Permit" name="has_work_permit">
                                 <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="permit_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="visa_expire" attrs="{'readonly': [('can_edit', '=', False)]}"/>
@@ -186,6 +196,33 @@
                         </group>
                     </page>
                 </notebook>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form_inherit_hr" model="ir.ui.view">
+            <field name="name">view.users.simple.form.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='mobile']" position="after">
+                    <field name="create_employee_id" force_save="1" invisible="1"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="not context.get('allow_create_employee', True)" attrs="{'invisible': [('create_employee_id', '>', 0)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form" model="ir.ui.view">
+            <field name="name">view.users.simple.form.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <sheet position="after">
+                    <footer>
+                        <button string="Save" special="save" class="btn btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+                    </footer>
+                </sheet>
             </field>
         </record>
 

@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import base64
 import collections
+import concurrent.futures
 import difflib
 import functools
 import importlib
@@ -29,8 +30,14 @@ import time
 import unittest
 import warnings
 from collections import defaultdict
-from contextlib import contextmanager
+from concurrent.futures import Future, CancelledError, wait
+try:
+    from concurrent.futures import InvalidStateError
+except ImportError:
+    InvalidStateError = NotImplementedError
+from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
 from xmlrpc import client as xmlrpclib
@@ -44,10 +51,13 @@ from lxml import etree, html
 import odoo
 from odoo import api
 from odoo.models import BaseModel
+from odoo.exceptions import AccessError
+from odoo.modules.registry import Registry
+from odoo.osv import expression
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
-from odoo.sql_db import Cursor
-from odoo.tools import float_compare, single_email_re
+from odoo.sql_db import BaseCursor, Cursor
+from odoo.tools import float_compare, single_email_re, profiler, lower_logging
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -57,6 +67,7 @@ except ImportError:
     # chrome headless tests will be skipped
     websocket = None
 
+from .runner import stats_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -65,6 +76,10 @@ ADDONS_PATH = odoo.tools.config['addons_path']
 HOST = '127.0.0.1'
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = odoo.SUPERUSER_ID
+
+CHECK_BROWSER_SLEEP = 0.1 # seconds
+CHECK_BROWSER_ITERATIONS = 100
+BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 
 
 def get_db_name():
@@ -136,6 +151,9 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
+    # automatically give a password equal to login
+    if not create_values.get('password'):
+        create_values['password'] = login + 'x' * (8 - len(login))
     # generate email if not given as most test require an email
     if 'email' not in create_values:
         if single_email_re.match(login):
@@ -172,16 +190,10 @@ class RecordCapturer:
 # ------------------------------------------------------------
 # Main classes
 # ------------------------------------------------------------
-class OdooSuite(unittest.suite.TestSuite):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        from odoo.http import root
-        if not root._loaded:
-            root.load_addons()
-            root._loaded = True
-
-    if sys.version_info < (3, 8):
+if sys.version_info >= (3, 8):
+    BackportSuite = unittest.suite.TestSuite
+else:
+    class BackportSuite(unittest.suite.TestSuite):
         # Partial backport of bpo-24412, merged in CPython 3.8
 
         def _handleClassSetUp(self, test, result):
@@ -217,12 +229,13 @@ class OdooSuite(unittest.suite.TestSuite):
                 finally:
                     unittest.suite._call_if_exists(result, '_restoreStdout')
                     if currentClass._classSetupFailed is True:
-                        currentClass.doClassCleanups()
-                        if len(currentClass.tearDown_exceptions) > 0:
-                            for exc in currentClass.tearDown_exceptions:
-                                self._createClassOrModuleLevelException(
-                                        result, exc[1], 'setUpClass', className,
-                                        info=exc)
+                        if hasattr(currentClass, 'doClassCleanups'):
+                            currentClass.doClassCleanups()
+                            if len(currentClass.tearDown_exceptions) > 0:
+                                for exc in currentClass.tearDown_exceptions:
+                                    self._createClassOrModuleLevelException(
+                                            result, exc[1], 'setUpClass', className,
+                                            info=exc)
 
         def _createClassOrModuleLevelException(self, result, exc, method_name, parent, info=None):
             errorName = f'{method_name} ({parent})'
@@ -265,14 +278,46 @@ class OdooSuite(unittest.suite.TestSuite):
                                                             className)
                 finally:
                     unittest.suite._call_if_exists(result, '_restoreStdout')
-                    previousClass.doClassCleanups()
-                    if len(previousClass.tearDown_exceptions) > 0:
-                        for exc in previousClass.tearDown_exceptions:
-                            className = unittest.util.strclass(previousClass)
-                            self._createClassOrModuleLevelException(result, exc[1],
-                                                                    'tearDownClass',
-                                                                    className,
-                                                                    info=exc)
+                    if hasattr(previousClass, 'doClassCleanups'):
+                        previousClass.doClassCleanups()
+                        if len(previousClass.tearDown_exceptions) > 0:
+                            for exc in previousClass.tearDown_exceptions:
+                                className = unittest.util.strclass(previousClass)
+                                self._createClassOrModuleLevelException(result, exc[1],
+                                                                        'tearDownClass',
+                                                                        className,
+                                                                        info=exc)
+
+class OdooSuite(BackportSuite):
+    def _handleClassSetUp(self, test, result):
+        previous_test_class = getattr(result, '_previousTestClass', None)
+        if not (
+                previous_test_class != type(test)
+            and hasattr(result, 'stats')
+            and stats_logger.isEnabledFor(logging.INFO)
+        ):
+            super()._handleClassSetUp(test, result)
+            return
+
+        test_class = type(test)
+        test_id = f'{test_class.__module__}.{test_class.__qualname__}.setUpClass'
+        with result.collectStats(test_id):
+            super()._handleClassSetUp(test, result)
+
+    def _tearDownPreviousClass(self, test, result):
+        previous_test_class = getattr(result, '_previousTestClass', None)
+        if not (
+                previous_test_class
+            and previous_test_class != type(test)
+            and hasattr(result, 'stats')
+            and stats_logger.isEnabledFor(logging.INFO)
+        ):
+            super()._tearDownPreviousClass(test, result)
+            return
+
+        test_id = f'{previous_test_class.__module__}.{previous_test_class.__qualname__}.tearDownClass'
+        with result.collectStats(test_id):
+            super()._tearDownPreviousClass(test, result)
 
 
 class MetaCase(type):
@@ -283,7 +328,8 @@ class MetaCase(type):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
-            cls.test_tags = {'standard', 'at_install'}
+            if getattr(cls, 'test_tags', None) is None:
+                cls.test_tags = {'standard', 'at_install'}
             cls.test_module = cls.__module__.split('.')[2]
             cls.test_class = cls.__name__
             cls.test_sequence = 0
@@ -292,11 +338,10 @@ class MetaCase(type):
 def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     """Takes some xml and normalize it to make it comparable to other xml
     in particular, blank text is removed, and the output is pretty-printed
-    :param arch_string: the string representing an XML arch
-    :type arch_string: str
-    :param parser_method: an string representing which lxml.Parser class to use
+
+    :param str arch_string: the string representing an XML arch
+    :param str parser_method: an string representing which lxml.Parser class to use
         when normalizing both archs. Takes either "xml" or "html"
-    :type parser_method: str
     :return: the normalized arch
     :rtype str:
     """
@@ -344,6 +389,30 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
 
+    def run(self, result):
+        testMethod = getattr(self, self._testMethodName)
+
+        if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
+            tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+        else:
+            tests_run_count = 1
+            _logger.info('Auto retry disabled for %s', self)
+
+        failure = False
+        for retry in range(tests_run_count):
+            if retry:
+                _logger.runbot(f'Retrying a failed test: {self}')
+            if retry < tests_run_count-1:
+                with warnings.catch_warnings(), \
+                        result.soft_fail(), \
+                        lower_logging(25, logging.INFO) as quiet_log:
+                    super().run(result)
+                    failure = result.had_failure or quiet_log.had_error_log
+            else:  # last try
+                super().run(result)
+            if not failure:
+                break
+
     def shortDescription(self):
         return None
 
@@ -362,7 +431,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
 
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,
-        shortcut for ``get_object_reference``
+        shortcut for ``_xmlid_lookup``
 
         :param xid: fully-qualified :term:`external identifier`, in the form
                     :samp:`{module}.{identifier}`
@@ -389,6 +458,24 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+    @classmethod
+    def classPatch(cls, obj, key, val):
+        """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
+        patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
+        patcher.start()
+        cls.addClassCleanup(patcher.stop)
+
+    def startPatcher(self, patcher):
+        mock = patcher.start()
+        self.addCleanup(patcher.stop)
+        return mock
+
+    @classmethod
+    def startClassPatcher(cls, patcher):
+        mock = patcher.start()
+        cls.addClassCleanup(patcher.stop)
+        return mock
+
     @contextmanager
     def with_user(self, login):
         """ Change user for a given test, like with self.with_user() ... """
@@ -406,13 +493,43 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             self.env = self.env(user=self.uid)
 
     @contextmanager
+    def debug_mode(self):
+        """ Enable the effects of group 'base.group_no_one'; mainly useful with :class:`Form`. """
+        origin_user_has_groups = BaseModel.user_has_groups
+
+        def user_has_groups(self, groups):
+            group_set = set(groups.split(','))
+            if '!base.group_no_one' in group_set:
+                return False
+            elif 'base.group_no_one' in group_set:
+                group_set.remove('base.group_no_one')
+                return not group_set or origin_user_has_groups(self, ','.join(group_set))
+            return origin_user_has_groups(self, groups)
+
+        with patch('odoo.models.BaseModel.user_has_groups', user_has_groups):
+            yield
+
+    @contextmanager
     def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
-        with super(BaseCase, self).assertRaises(exception, msg=msg) as cm:
+        with ExitStack() as init:
             if hasattr(self, 'env'):
-                with self.env.clear_upon_failure():
-                    yield cm
-            else:
+                init.enter_context(self.env.cr.savepoint())
+                if issubclass(exception, AccessError):
+                    # The savepoint() above calls flush(), which leaves the
+                    # record cache with lots of data.  This can prevent
+                    # access errors to be detected. In order to avoid this
+                    # issue, we clear the cache before proceeding.
+                    self.env.cr.clear()
+
+            with ExitStack() as inner:
+                cm = inner.enter_context(super().assertRaises(exception, msg=msg))
+                # *moves* the cleanups from init to inner, this ensures the
+                # savepoint gets rolled back when `yield` raises `exception`,
+                # but still allows the initialisation to be protected *and* not
+                # interfered with by `assertRaises`.
+                inner.push(init.pop_all())
+
                 yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
@@ -421,6 +538,19 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 func(*args, **kwargs)
         else:
             return self._assertRaises(exception, **kwargs)
+
+    if sys.version_info < (3, 10):
+        # simplified backport of assertNoLogs()
+        @contextmanager
+        def assertNoLogs(self, logger: str, level: str):
+            # assertLogs ensures there is at least one log record when
+            # exiting the context manager. We insert one dummy record just
+            # so we pass that silly test while still capturing the logs.
+            with self.assertLogs(logger, level) as capture:
+                logging.getLogger(logger).log(getattr(logging, level), "Dummy log record")
+                yield
+                if len(capture.output) > 1:
+                    raise self.failureException(f"Unexpected logs found: {capture.output[1:]}")
 
     @contextmanager
     def assertQueries(self, expected, flush=True):
@@ -439,15 +569,15 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             return lambda x: x
 
         if flush:
-            self.env.user.flush()
-            self.env.cr.precommit.run()
+            self.env.flush_all()
+            self.env.cr.flush()
 
         with patch('odoo.sql_db.Cursor.execute', execute):
             with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
                 yield actual_queries
                 if flush:
-                    self.env.user.flush()
-                    self.env.cr.precommit.run()
+                    self.env.flush_all()
+                    self.env.cr.flush()
 
         self.assertEqual(
             len(actual_queries), len(expected),
@@ -481,13 +611,13 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 login = self.env.user.login
                 expected = counters.get(login, default)
                 if flush:
-                    self.env.user.flush()
-                    self.env.cr.precommit.run()
+                    self.env.flush_all()
+                    self.env.cr.flush()
                 count0 = self.cr.sql_log_count
                 yield
                 if flush:
-                    self.env.user.flush()
-                    self.env.cr.precommit.run()
+                    self.env.flush_all()
+                    self.env.cr.flush()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -505,12 +635,12 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             # flush before and after during warmup, in order to reproduce the
             # same operations, otherwise the caches might not be ready!
             if flush:
-                self.env.user.flush()
-                self.env.cr.precommit.run()
+                self.env.flush_all()
+                self.env.cr.flush()
             yield
             if flush:
-                self.env.user.flush()
-                self.env.cr.precommit.run()
+                self.env.flush_all()
+                self.env.cr.flush()
 
     def assertRecordValues(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.
@@ -540,7 +670,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 field_type = field.type
                 if field_type == 'monetary':
                     # Compare monetary field.
-                    currency_field_name = record._fields[field_name].currency_field
+                    currency_field_name = record._fields[field_name].get_currency_field(record)
                     record_currency = record[currency_field_name]
                     if field_name not in candidate:
                         diff[field_name] = (record_value, None)
@@ -637,6 +767,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
 
     def _assertXMLEqual(self, original, expected, parser="xml"):
         """Asserts that two xmls archs are equal
+
         :param original: the xml arch to test
         :type original: str
         :param expected: the xml arch of reference
@@ -657,6 +788,15 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     def assertHTMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected, 'html')
 
+    def profile(self, description='', **kwargs):
+        test_method = getattr(self, '_testMethodName', 'Unknown test method')
+        if not hasattr(self, 'profile_session'):
+            self.profile_session = profiler.make_session(test_method)
+        return profiler.Profiler(
+            description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
+            db=self.env.cr.dbname,
+            profile_session=self.profile_session,
+            **kwargs)
 
 savepoint_seq = itertools.count()
 
@@ -676,9 +816,27 @@ class TransactionCase(BaseCase):
     fields. If a test modifies the registry (custom models and/or fields), it
     should prepare the necessary cleanup (`self.registry.reset_changes()`).
     """
+    registry: Registry = None
+    env: api.Environment = None
+    cr: Cursor = None
+
+
+    @classmethod
+    def _gc_filestore(cls):
+        # attachment can be created or unlink during the tests.
+        # they can addup during test and take some disc space.
+        # since cron are not running during tests, we need to gc manually
+        # We need to check the status of the file system outside of the test cursor
+        with odoo.registry(get_db_name()).cursor() as cr:
+            gc_env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+            gc_env['ir.attachment']._gc_file_store_unsafe()
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.addClassCleanup(cls._gc_filestore)
+
         cls.registry = odoo.registry(get_db_name())
         cls.addClassCleanup(cls.registry.reset_changes)
         cls.addClassCleanup(cls.registry.clear_caches)
@@ -687,7 +845,6 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(cls.cr.close)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
-        cls.addClassCleanup(cls.env.reset)
 
     def setUp(self):
         super().setUp()
@@ -702,7 +859,7 @@ class TransactionCase(BaseCase):
         self.addCleanup(self.env.clear)
 
         # flush everything in setUpClass before introducing a savepoint
-        self.env['base'].flush()
+        self.env.flush_all()
 
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
@@ -743,22 +900,61 @@ class SingleTransactionCase(BaseCase):
         cls.addClassCleanup(cls.cr.close)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
-        cls.addClassCleanup(cls.env.reset)
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
-        self.env.user.flush()
+        self.env.flush_all()
 
 
 class ChromeBrowserException(Exception):
     pass
 
+def fmap(future, map_fun):
+    """Maps a future's result through a callback.
 
-class ChromeBrowser():
+    Resolves to the application of ``map_fun`` to the result of ``future``.
+
+    .. warning:: this does *not* recursively resolve futures, if that's what
+                 you need see :func:`fchain`
+    """
+    fmap_future = Future()
+    @future.add_done_callback
+    def _(f):
+        try:
+            fmap_future.set_result(map_fun(f.result()))
+        except Exception as e:
+            fmap_future.set_exception(e)
+    return fmap_future
+
+def fchain(future, next_callback):
+    """Chains a future's result to a new future through a callback.
+
+    Corresponds to the ``bind`` monadic operation (aka flatmap aka then...
+    kinda).
+    """
+    new_future = Future()
+    @future.add_done_callback
+    def _(f):
+        try:
+            n = next_callback(f.result())
+            @n.add_done_callback
+            def _(f):
+                try:
+                    new_future.set_result(f.result())
+                except Exception as e:
+                    new_future.set_exception(e)
+
+        except Exception as e:
+            new_future.set_exception(e)
+
+    return new_future
+
+class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
+    remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, logger, window_size, test_class):
-        self._logger = logger
+    def __init__(self, test_class):
+        self._logger = test_class._logger
         self.test_class = test_class
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
@@ -766,24 +962,47 @@ class ChromeBrowser():
         self.devtools_port = None
         self.ws_url = ''  # WebSocketUrl
         self.ws = None  # websocket
-        self.request_id = 0
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
         self.chrome_pid = None
 
         otc = odoo.tools.config
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
         self.screencasts_dir = None
+        self.screencasts_frames_dir = None
         if otc['screencasts']:
             self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
+            self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
+            os.makedirs(self.screencasts_frames_dir, exist_ok=True)
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
-        self.window_size = window_size
+        self.window_size = test_class.browser_size
+        self.touch_enabled = test_class.touch_enabled
         self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
         self._logger.info('Websocket url found: %s', self.ws_url)
         self._open_websocket()
+        self._request_id = itertools.count()
+        self._result = Future()
+        self.error_checker = None
+        self.had_failure = False
+        # maps request_id to Futures
+        self._responses = {}
+        # maps frame ids to callbacks
+        self._frames = {}
+        self._handlers = {
+            'Runtime.consoleAPICalled': self._handle_console,
+            'Runtime.exceptionThrown': self._handle_exception,
+            'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
+            'Page.screencastFrame': self._handle_screencast_frame,
+        }
+        self._receiver = threading.Thread(
+            target=self._receive,
+            name="WebSocket events consumer",
+            args=(get_db_name(),)
+        )
+        self._receiver.start()
         self._logger.info('Enable chrome headless console log notification')
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
@@ -802,6 +1021,8 @@ class ChromeBrowser():
         if self.chrome_pid is not None:
             self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
             self._websocket_send('Browser.close')
+            self._logger.info("Closing websocket connection")
+            self.ws.close()
             self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
             os.kill(self.chrome_pid, signal.SIGTERM)
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
@@ -815,7 +1036,7 @@ class ChromeBrowser():
     def executable(self):
         system = platform.system()
         if system == 'Linux':
-            for bin_ in ['google-chrome', 'chromium', 'chromium-browser']:
+            for bin_ in ['google-chrome', 'chromium', 'chromium-browser', 'google-chrome-stable']:
                 try:
                     return find_in_path(bin_)
                 except IOError:
@@ -831,39 +1052,42 @@ class ChromeBrowser():
                     return bin_
 
         elif system == 'Windows':
-            # TODO: handle windows platform: https://stackoverflow.com/a/40674915
-            pass
+            bins = [
+                '%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe',
+                '%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe',
+                '%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe',
+            ]
+            for bin_ in bins:
+                bin_ = os.path.expandvars(bin_)
+                if os.path.exists(bin_):
+                    return bin_
 
         raise unittest.SkipTest("Chrome executable not found")
 
-    def _spawn_chrome(self, cmd):
-        if os.name != 'posix':
-            return
-
-        pid = os.fork()
-        if pid != 0:
-            port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
-            for _ in range(100):
-                time.sleep(0.1)
-                if port_file.is_file():
-                    with port_file.open('r', encoding='utf-8') as f:
-                        self.devtools_port = int(f.readline())
-                    break
-            else:
-                raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
-            return pid
-        else:
-            if platform.system() != 'Darwin':
-                # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
-                # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
-                # this exceeds our default memory limits.
-                # OSX already reserve huge memory for processes
+    def _chrome_without_limit(self, cmd):
+        if os.name == 'posix' and platform.system() != 'Darwin':
+            # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+            # the memory reservation algorithm requires more than 8GiB of
+            # virtual mem for alignment this exceeds our default memory limits.
+            def preexec():
                 import resource
                 resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
-            # redirect browser stderr to /dev/null
-            with open(os.devnull, 'wb', 0) as stderr_replacement:
-                os.dup2(stderr_replacement.fileno(), sys.stderr.fileno())
-            os.execv(cmd[0], cmd)
+        else:
+            preexec = None
+
+        # pylint: disable=subprocess-popen-preexec-fn
+        return subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
+
+    def _spawn_chrome(self, cmd):
+        proc = self._chrome_without_limit(cmd)
+        port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
+        for _ in range(CHECK_BROWSER_ITERATIONS):
+            time.sleep(CHECK_BROWSER_SLEEP)
+            if port_file.is_file() and port_file.stat().st_size > 5:
+                with port_file.open('r', encoding='utf-8') as f:
+                    self.devtools_port = int(f.readline())
+                    return proc.pid
+        raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
 
     def _chrome_start(self):
         if self.chrome_pid is not None:
@@ -891,10 +1115,15 @@ class ChromeBrowser():
             '--autoplay-policy': 'no-user-gesture-required',
             '--window-size': self.window_size,
             '--remote-debugging-address': HOST,
-            '--remote-debugging-port': '0',
+            '--remote-debugging-port': str(self.remote_debugging_port),
             '--no-sandbox': '',
             '--disable-gpu': '',
         }
+        if self.touch_enabled:
+            # enable Chrome's Touch mode, useful to detect touch capabilities using
+            # "'ontouchstart' in window"
+            switches['--touch-events'] = ''
+
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
         url = 'about:blank'
@@ -910,21 +1139,30 @@ class ChromeBrowser():
         self._logger.info('Browser version: %s', version['Browser'])
         infos = self._json_command('', get_key=0)  # Infos about the first tab
         self.ws_url = infos['webSocketDebuggerUrl']
+        self.dev_tools_frontend_url = infos.get('devtoolsFrontendUrl')
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
     def _json_command(self, command, timeout=3, get_key=None):
-        """
-        Inspect dev tools with get
+        """Queries browser state using JSON
+
         Available commands:
-            '' : return list of tabs with their id
-            list (or json/): list tabs
-            new : open a new tab
-            activate/ + an id: activate a tab
-            close/ + and id: close a tab
-            version : get chrome and dev tools version
-            protocol : get the full protocol
+
+        ``''``
+            return list of tabs with their id
+        ``list`` (or ``json/``)
+            list tabs
+        ``new``
+            open a new tab
+        :samp:`activate/{id}`
+            activate a tab
+        :samp:`close/{id}`
+            close a tab
+        ``version``
+            get chrome and dev tools version
+        ``protocol``
+            get the full protocol
         """
-        command = os.path.join('json', command).strip('/')
+        command = '/'.join(['json', command]).strip('/')
         url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
@@ -964,150 +1202,225 @@ class ChromeBrowser():
         raise unittest.SkipTest("Error during Chrome headless connection")
 
     def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url)
+        self.ws = websocket.create_connection(self.ws_url, enable_multithread=True)
         if self.ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
         self.ws.settimeout(0.01)
 
-    def _websocket_send(self, method, params=None):
-        """
-        send chrome devtools protocol commands through websocket
+    def _receive(self, dbname):
+        threading.current_thread().dbname = dbname
+        # So CDT uses a streamed JSON-RPC structure, meaning a request is
+        # {id, method, params} and eventually a {id, result | error} should
+        # arrive the other way, however for events it uses "notifications"
+        # meaning request objects without an ``id``, but *coming from the server
+        while True: # or maybe until `self._result` is `done()`?
+            try:
+                msg = self.ws.recv()
+                self._logger.debug('\n<- %s', msg)
+            except websocket.WebSocketTimeoutException:
+                continue
+            except Exception as e:
+                # if the socket is still connected something bad happened,
+                # otherwise the client was just shut down
+                if self.ws.connected:
+                    self._result.set_exception(e)
+                    raise
+                self._result.cancel()
+                return
+
+            res = json.loads(msg)
+            request_id = res.get('id')
+            try:
+                if request_id is None:
+                    handler = self._handlers.get(res['method'])
+                    if handler:
+                        handler(**res['params'])
+                else:
+                    f = self._responses.pop(request_id, None)
+                    if f:
+                        if 'result' in res:
+                            f.set_result(res['result'])
+                        else:
+                            f.set_exception(ChromeBrowserException(res['error']['message']))
+            except Exception:
+                _logger.exception("While processing message %s", msg)
+
+    def _websocket_request(self, method, *, params=None, timeout=10.0):
+        assert threading.get_ident() != self._receiver.ident,\
+            "_websocket_request must not be called from the consumer thread"
+        if self.ws is None:
+            return
+
+        f = self._websocket_send(method, params=params, with_future=True)
+        try:
+            return f.result(timeout=timeout)
+        except concurrent.futures.TimeoutError:
+            raise TimeoutError(f'{method}({params or ""})')
+
+    def _websocket_send(self, method, *, params=None, with_future=False):
+        """send chrome devtools protocol commands through websocket
+
+        If ``with_future`` is set, returns a ``Future`` for the operation.
         """
         if self.ws is None:
             return
-        sent_id = self.request_id
-        payload = {
-            'method': method,
-            'id':  sent_id,
-        }
+
+        result = None
+        request_id = next(self._request_id)
+        if with_future:
+            result = self._responses[request_id] = Future()
+        payload = {'method': method, 'id': request_id}
         if params:
-            payload.update({'params': params})
+            payload['params'] = params
+        self._logger.debug('\n-> %s', payload)
         self.ws.send(json.dumps(payload))
-        self.request_id += 1
-        return sent_id
+        return result
 
-    def _get_message(self, raise_log_error=True):
-        """
-        :param bool raise_log_error:
-
-            by default, error logging messages reported by the browser are
-            converted to exception in order to fail the current test.
-
-            This is undersirable for *some* message loops, mostly when waiting
-            for a response to a command we've sent (wait_id): we do want to
-            properly handle exceptions and to forward the browser logs in order
-            to avoid losing information, but e.g. if the client generates two
-            console.error() we don't want the first call to take_screenshot to
-            trip up on the second console.error message and throw a second
-            exception. At the same time we don't want to *lose* the second
-            console.error as it might provide useful information.
-        """
-        try:
-            res = json.loads(self.ws.recv())
-        except websocket.WebSocketTimeoutException:
-            res = {}
-
-        if res.get('method') == 'Runtime.consoleAPICalled':
-            params = res['params']
-
-            # console formatting differs somewhat from Python's, if args[0] has
-            # format modifiers that many of args[1:] get formatted in, missing
-            # args are replaced by empty strings and extra args are concatenated
-            # (space-separated)
-            #
-            # current version modifies the args in place which could and should
-            # probably be improved
+    def _handle_console(self, type, args=None, stackTrace=None, **kw): # pylint: disable=redefined-builtin
+        # console formatting differs somewhat from Python's, if args[0] has
+        # format modifiers that many of args[1:] get formatted in, missing
+        # args are replaced by empty strings and extra args are concatenated
+        # (space-separated)
+        #
+        # current version modifies the args in place which could and should
+        # probably be improved
+        if args:
+            arg0, args = str(self._from_remoteobject(args[0])), args[1:]
+        else:
             arg0, args = '', []
-            if params.get('args'):
-                arg0 = str(self._from_remoteobject(params['args'][0]))
-                args = params['args'][1:]
-            formatted = [re.sub(r'%[%sdfoOc]', self.console_formatter(args), arg0)]
-            # formatter consumes args it uses, leaves unformatted args untouched
-            formatted.extend(str(self._from_remoteobject(arg)) for arg in args)
-            message = ' '.join(formatted)
-            stack = ''.join(self._format_stack(params))
-            if stack:
-                message += '\n' + stack
+        formatted = [re.sub(r'%[%sdfoOc]', self.console_formatter(args), arg0)]
+        # formatter consumes args it uses, leaves unformatted args untouched
+        formatted.extend(str(self._from_remoteobject(arg)) for arg in args)
+        message = ' '.join(formatted)
+        stack = ''.join(self._format_stack({'type': type, 'stackTrace': stackTrace}))
+        if stack:
+            message += '\n' + stack
 
-            log_type = params['type']
-            if raise_log_error and log_type == 'error':
+        log_type = type
+        self._logger.getChild('browser').log(
+            self._TO_LEVEL.get(log_type, logging.INFO),
+            "%s", message # might still have %<x> characters
+        )
+
+        if log_type == 'error':
+            self.had_failure = True
+            if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
                 self._save_screencast()
-                raise ChromeBrowserException(message)
+                try:
+                    self._result.set_exception(ChromeBrowserException(message))
+                except CancelledError:
+                    ...
+                except InvalidStateError:
+                    self._logger.warning(
+                        "Trying to set result to failed (%s) but found the future settled (%s)",
+                        message, self._result
+                    )
+        elif 'test successful' in message:
+            if self.test_class.allow_end_on_form:
+                self._result.set_result(True)
+                return
 
-            self._logger.getChild('browser').log(
-                self._TO_LEVEL.get(log_type, logging.INFO),
-                "%s", message # might still have %<x> characters
+            qs = fchain(
+                self._websocket_send('DOM.getDocument', params={'depth': 0}, with_future=True),
+                lambda d: self._websocket_send("DOM.querySelector", params={
+                    'nodeId': d['root']['nodeId'],
+                    'selector': '.o_legacy_form_view.o_form_editable, .o_form_dirty',
+                }, with_future=True)
             )
-            res['success'] = 'test successful' in message
+            @qs.add_done_callback
+            def _qs_result(fut):
+                # stupid dumbass chrome returns a nodeid of 0 when nothing
+                # is found
+                if fut.result()['nodeId']:
+                    self.take_screenshot("unsaved_form_")
+                    self._result.set_exception(ChromeBrowserException("""\
+Tour finished with an open form view in edition mode.
 
-        if res.get('method') == 'Runtime.exceptionThrown':
-            exception_details = res['params']['exceptionDetails']
-            descr = exception_details.get('exception', {}).get('description')
-            self.take_screenshot()
-            self._save_screencast()
-            raise ChromeBrowserException(descr or pprint.pformat(exception_details))
+Form views in edition mode are automatically saved when the page is closed, \
+which leads to stray network requests and inconsistencies."""))
+                    return
 
-        return res
+                try:
+                    self._result.set_result(True)
+                except Exception:
+                    # if the future was already failed, we're happy,
+                    # otherwise swap for a new failed
+                    if self._result.exception() is None:
+                        self._result = Future()
+                        self._result.set_exception(ChromeBrowserException(
+                            "Tried to make the tour successful twice."
+                        ))
+
+
+    def _handle_exception(self, exceptionDetails, timestamp):
+        message = exceptionDetails['text']
+        exception = exceptionDetails.get('exception')
+        if exception:
+            message += str(self._from_remoteobject(exception))
+        exceptionDetails['type'] = 'trace'  # fake this so _format_stack works
+        stack = ''.join(self._format_stack(exceptionDetails))
+        if stack:
+            message += '\n' + stack
+
+        self.take_screenshot()
+        self._save_screencast()
+        try:
+            self._result.set_exception(ChromeBrowserException(message))
+        except CancelledError:
+            ...
+        except InvalidStateError:
+            self._logger.warning(
+                "Trying to set result to failed (%s) but found the future settled (%s)",
+                message, self._result
+            )
+
+    def _handle_frame_stopped_loading(self, frameId):
+        wait = self._frames.pop(frameId, None)
+        if wait:
+            wait()
+
+    def _handle_screencast_frame(self, sessionId, data, metadata):
+        self._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
+        outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % len(self.screencast_frames))
+        with open(outfile, 'w') as f:
+            f.write(data)
+            self.screencast_frames.append({
+                'file_path': outfile,
+                'timestamp': metadata.get('timestamp')
+            })
 
     _TO_LEVEL = {
         'debug': logging.DEBUG,
         'log': logging.INFO,
         'info': logging.INFO,
-        'warning': logging.INFO, # logging.WARNING,
+        'warning': logging.WARNING,
         'error': logging.ERROR,
         # TODO: what do with
         # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
         # endGroup, assert, profile, profileEnd, count, timeEnd
     }
 
-    def _websocket_wait_id(self, awaited_id, timeout=10):
-        """
-        blocking wait for a certain id in a response
-        warning other messages are discarded
-        """
-        start_time = time.time()
-        while time.time() - start_time < timeout:
-            res = self._get_message(raise_log_error=False)
-            if res.get('id') == awaited_id:
-                return res
-        self._logger.info('timeout exceeded while waiting for id : %d', awaited_id)
-        return {}
-
-    def _websocket_wait_event(self, method, params=None, timeout=10):
-        """
-        blocking wait for a particular event method and eventually a dict of params
-        """
-        start_time = time.time()
-        while time.time() - start_time < timeout:
-            res = self._get_message()
-            if res.get('method', '') == method:
-                if params:
-                    if set(params).issubset(set(res.get('params', {}))):
-                        return res
-                else:
-                    return res
-            elif res:
-                self._logger.debug('chrome devtools protocol event: %s', res)
-        self._logger.info('timeout exceeded while waiting for : %s', method)
-
     def take_screenshot(self, prefix='sc_', suffix=None):
-        if suffix is None:
-            suffix = '_%s' % self.test_class
-        ss_id = self._websocket_send('Page.captureScreenshot')
-        self._logger.info('Asked for screenshot (id: %s)', ss_id)
-        res = self._websocket_wait_id(ss_id)
-        base_png = res.get('result', {}).get('data')
-        if not base_png:
-            self._logger.warning("Couldn't capture screenshot: expected image data, got %s", res)
-            return
+        def handler(f):
+            base_png = f.result(timeout=0)['data']
+            if not base_png:
+                self._logger.warning("Couldn't capture screenshot: expected image data, got ?? error ??")
+                return
 
-        decoded = base64.b64decode(base_png, validate=True)
-        fname = '{}{:%Y%m%d_%H%M%S_%f}{}.png'.format(prefix, datetime.now(), suffix)
-        full_path = os.path.join(self.screenshots_dir, fname)
-        with open(full_path, 'wb') as f:
-            f.write(decoded)
-        self._logger.runbot('Screenshot in: %s', full_path)
+            decoded = base64.b64decode(base_png, validate=True)
+            fname = '{}{:%Y%m%d_%H%M%S_%f}{}.png'.format(
+                prefix, datetime.now(),
+                suffix or '_%s' % self.test_class.__name__)
+            full_path = os.path.join(self.screenshots_dir, fname)
+            with open(full_path, 'wb') as f:
+                f.write(decoded)
+            self._logger.runbot('Screenshot in: %s', full_path)
+
+        self._logger.info('Asking for screenshot')
+        f = self._websocket_send('Page.captureScreenshot', with_future=True)
+        f.add_done_callback(handler)
+        return f
 
     def _save_screencast(self, prefix='failed'):
         # could be encododed with something like that
@@ -1151,118 +1464,114 @@ class ChromeBrowser():
             self._logger.runbot('Screencast frames in: %s', outfile)
 
     def start_screencast(self):
-        if self.screencasts_dir:
-            os.makedirs(self.screencasts_dir, exist_ok=True)
-            self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
-            os.makedirs(self.screencasts_frames_dir, exist_ok=True)
+        assert self.screencasts_dir
         self._websocket_send('Page.startScreencast')
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
-        _id = self._websocket_send('Network.setCookie', params=params)
-        return self._websocket_wait_id(_id)
+        self._websocket_request('Network.setCookie', params=params)
+        return
 
     def delete_cookie(self, name, **kwargs):
-        params = {kw:kwargs[kw] for kw in kwargs if kw in ['url', 'domain', 'path']}
-        params.update({'name': name})
-        _id = self._websocket_send('Network.deleteCookies', params=params)
-        return self._websocket_wait_id(_id)
+        params = {k: v for k, v in kwargs.items() if k in ['url', 'domain', 'path']}
+        params['name'] = name
+        self._websocket_request('Network.deleteCookies', params=params)
+        return
 
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
-        awaited_result = {'result': {'type': 'boolean', 'value': True}}
-        ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
-        last_bad_res = ''
         start_time = time.time()
-        tdiff = time.time() - start_time
-        has_exceeded = False
-        while tdiff < timeout:
-            res = self._get_message()
+        result = None
+        while True:
+            taken = time.time() - start_time
+            if taken > timeout:
+                break
 
-            if res.get('id') == ready_id:
-                if res.get('result') == awaited_result:
-                    if has_exceeded:
-                        self._logger.info('The ready code tooks too much time : %s', tdiff)
-                    return True
-                else:
-                    last_bad_res = res
-                    ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
-            tdiff = time.time() - start_time
-            if tdiff >= 2 and not has_exceeded:
-                has_exceeded = True
+            result = self._websocket_request('Runtime.evaluate', params={
+                'expression': "try { %s } catch {}" % ready_code,
+                'awaitPromise': True,
+            }, timeout=timeout-taken)['result']
+
+            if result == {'type': 'boolean', 'value': True}:
+                time_to_ready = time.time() - start_time
+                if taken > 2:
+                    self._logger.info('The ready code tooks too much time : %s', time_to_ready)
+                return True
 
         self.take_screenshot(prefix='sc_failed_ready_')
-        self._logger.info('Ready code last try result: %s', last_bad_res or res)
+        self._logger.info('Ready code last try result: %s', result)
         return False
 
-    def _wait_code_ok(self, code, timeout):
+    def _wait_code_ok(self, code, timeout, error_checker=None):
+        self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
-        code_id = self._websocket_send('Runtime.evaluate', params={'expression': code})
-        start_time = time.time()
-        logged_error = False
-        nb_frame = 0
-        while time.time() - start_time < timeout:
-            res = self._get_message()
+        start = time.time()
+        res = self._websocket_request('Runtime.evaluate', params={
+            'expression': code,
+            'awaitPromise': True,
+        }, timeout=timeout)['result']
+        if res.get('subtype') == 'error':
+            raise ChromeBrowserException("Running code returned an error: %s" % res)
 
-            if res.get('id', -1) == code_id:
-                self._logger.info('Code start result: %s', res)
-                if res.get('result', {}).get('result').get('subtype', '') == 'error':
-                    raise ChromeBrowserException("Running code returned an error: %s" % res)
-            elif res.get('success'):
-                return True
-            elif res.get('method') == 'Page.screencastFrame':
-                session_id = res.get('params').get('sessionId')
-                self._websocket_send('Page.screencastFrameAck', params={'sessionId': int(session_id)})
-                outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % nb_frame)
-                frame = res.get('params')
-                with open(outfile, 'w') as f:
-                    f.write(frame.get('data'))
-                    nb_frame += 1
-                    self.screencast_frames.append({
-                        'file_path': outfile,
-                        'timestamp': frame.get('metadata').get('timestamp')
-                    })
-            elif res:
-                self._logger.debug('chrome devtools protocol event: %s', res)
+        err = ChromeBrowserException("failed")
+        try:
+            # if the runcode was a promise which took some time to execute,
+            # discount that from the timeout
+            if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                return
+        except CancelledError:
+            # regular-ish shutdown
+            return
+        except Exception as e:
+            err = e
+
         self.take_screenshot()
         self._save_screencast()
-        raise ChromeBrowserException('Script timeout exceeded : %s' % (time.time() - start_time))
+        if isinstance(err, ChromeBrowserException):
+            raise err
 
+        if isinstance(err, concurrent.futures.TimeoutError):
+            raise ChromeBrowserException('Script timeout exceeded') from err
+        raise ChromeBrowserException("Unknown error") from err
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
-        nav_id = self._websocket_send('Page.navigate', params={'url': url})
-        nav_result = self._websocket_wait_id(nav_id)
+        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=20.0)
         self._logger.info("Navigation result: %s", nav_result)
-        frame_id = nav_result.get('result', {}).get('frameId', '')
-        if wait_stop and frame_id:
-            self._logger.info('Waiting for frame "%s" to stop loading', frame_id)
-            self._websocket_wait_event('Page.frameStoppedLoading', params={'frameId': frame_id})
+        if wait_stop:
+            frame_id = nav_result['frameId']
+            e = threading.Event()
+            self._frames[frame_id] = e.set
+            self._logger.info('Waiting for frame %r to stop loading', frame_id)
+            e.wait(10)
 
     def clear(self):
         self._websocket_send('Page.stopScreencast')
         if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
             shutil.rmtree(self.screencasts_frames_dir)
         self.screencast_frames = []
-        sl_id = self._websocket_send('Page.stopLoading')
-        self._websocket_wait_id(sl_id)
-        clear_service_workers = """
-        if ('serviceWorker' in navigator) {
+        self._websocket_request('Page.stopLoading')
+        self._websocket_request('Runtime.evaluate', params={'expression': """
+        ('serviceWorker' in navigator) &&
             navigator.serviceWorker.getRegistrations().then(
-                registrations => registrations.forEach(r => r.unregister())
+                registrations => Promise.all(registrations.map(r => r.unregister()))
             )
-        }
-        """
-        cl_id = self._websocket_send('Runtime.evaluate', params={'expression': clear_service_workers, 'awaitPromise': True})
-        self._websocket_wait_id(cl_id)
+        """, 'awaitPromise': True})
+        # wait for the screenshot or whatever
+        wait(self._responses.values(), 10)
         self._logger.info('Deleting cookies and clearing local storage')
-        dc_id = self._websocket_send('Network.clearBrowserCache')
-        self._websocket_wait_id(dc_id)
-        dc_id = self._websocket_send('Network.clearBrowserCookies')
-        self._websocket_wait_id(dc_id)
-        cl_id = self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})
-        self._websocket_wait_id(cl_id)
+        self._websocket_request('Network.clearBrowserCache')
+        self._websocket_request('Network.clearBrowserCookies')
+        self._websocket_request('Runtime.evaluate', params={'expression': 'try {localStorage.clear(); sessionStorage.clear();} catch(e) {}'})
         self.navigate_to('about:blank', wait_stop=True)
+        # hopefully after navigating to about:blank there's no event left
+        self._frames.clear()
+        # wait for the clearing requests to finish in case the browser is re-used
+        wait(self._responses.values(), 10)
+        self._responses.clear()
+        self._result.cancel()
+        self._result = Future()
+        self.had_failure = False
 
     def _from_remoteobject(self, arg):
         """ attempts to make a CDT RemoteObject comprehensible
@@ -1340,20 +1649,55 @@ class ChromeBrowser():
         return replacer
 
 
+class Opener(requests.Session):
+    """
+    Flushes and clears the current transaction when starting a request.
+
+    This is likely necessary when we make a request to the server, as the
+    request is made with a test cursor, which uses a different cache than this
+    transaction.
+    """
+    def __init__(self, cr: BaseCursor):
+        super().__init__()
+        self.cr = cr
+
+    def request(self, *args, **kwargs):
+        self.cr.flush()
+        self.cr.clear()
+        return super().request(*args, **kwargs)
+
+
+class Transport(xmlrpclib.Transport):
+    """ see :class:`Opener` """
+    def __init__(self, cr: BaseCursor):
+        self.cr = cr
+        super().__init__()
+
+    def request(self, *args, **kwargs):
+        self.cr.flush()
+        self.cr.clear()
+        return super().request(*args, **kwargs)
+
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
+    touch_enabled = False
+    allow_end_on_form = False
 
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
+    _logger: logging.Logger = None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        ICP = cls.env['ir.config_parameter']
+        ICP.set_param('web.base.url', cls.base_url())
+        ICP.env.flush_all()
         # v8 api with correct xmlrpc exception handling.
-        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
-        self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
-        self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
-        self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
-        cls = type(self)
+        cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
@@ -1361,14 +1705,18 @@ class HttpCase(TransactionCase):
         if self.registry_test_mode:
             self.registry.enter_test_mode(self.cr)
             self.addCleanup(self.registry.leave_test_mode)
+
+        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
+        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
+        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
-        self.opener = requests.Session()
+        self.opener = Opener(self.cr)
 
     @classmethod
     def start_browser(cls):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
+            cls.browser = ChromeBrowser(cls)
             cls.addClassCleanup(cls.terminate_browser)
 
     @classmethod
@@ -1377,10 +1725,11 @@ class HttpCase(TransactionCase):
             cls.browser.stop()
             cls.browser = None
 
-    def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
-        self.env['base'].flush()
+    def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
-            url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], url)
+            url = self.base_url() + url
+        if head:
+            return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
         if data or files:
             return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
         return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
@@ -1407,26 +1756,29 @@ class HttpCase(TransactionCase):
             odoo.tools.misc.dumpstacks()
 
     def logout(self, keep_db=True):
-        self.session.logout(keep_db=True)
+        self.session.logout(keep_db=keep_db)
         odoo.http.root.session_store.save(self.session)
 
     def authenticate(self, user, password):
-        db = get_db_name()
         if getattr(self, 'session', None):
             odoo.http.root.session_store.delete(self.session)
 
-        self.session = session  = odoo.http.root.session_store.new()
-        session.db = db
+        self.session = session = odoo.http.root.session_store.new()
+        session.update(odoo.http.get_default_session(), db=get_db_name())
+        session.context['lang'] = odoo.http.DEFAULT_LANG
 
         if user: # if authenticated
-            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            # Flush and clear the current transaction.  This is useful, because
+            # the call below opens a test cursor, which uses a different cache
+            # than this transaction.
+            self.cr.flush()
+            self.cr.clear()
+            uid = self.registry['res.users'].authenticate(session.db, user, password, {'interactive': False})
             env = api.Environment(self.cr, uid, {})
             session.uid = uid
             session.login = user
             session.session_token = uid and security.compute_session_token(session, env)
-            session.context = dict(env['res.users'].context_get() or {})
-            session.context['uid'] = uid
-            session._fix_lang(session.context)
+            session.context = dict(env['res.users'].context_get())
 
         odoo.http.root.session_store.save(session)
         # Reset the opener: turns out when we set cookies['foo'] we're really
@@ -1442,7 +1794,7 @@ class HttpCase(TransactionCase):
         #
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
-        self.opener = requests.Session()
+        self.opener = Opener(self.cr)
         self.opener.cookies['session_id'] = session.sid
         if self.browser:
             self._logger.info('Setting session cookie in browser')
@@ -1450,15 +1802,18 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
         - wait for ready object to be available
         - eval(code) inside the page
+        - open another chrome window to watch code execution if watch is True
 
         To signal success test do: console.log('test successful')
-        To signal test failure raise an exception or call console.error
+        To signal test failure raise an exception or call console.error with a message.
+        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
+
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -1468,24 +1823,34 @@ class HttpCase(TransactionCase):
             timeout = timeout * 1.5
 
         self.start_browser()
-
+        if watch and self.browser.dev_tools_frontend_url:
+            _logger.warning('watch mode is only suitable for local testing - increasing tour timeout to 3600')
+            timeout = max(timeout*10, 3600)
+            debug_front_end = f'http://127.0.0.1:{self.browser.devtools_port}{self.browser.dev_tools_frontend_url}'
+            self.browser._chrome_without_limit([self.browser.executable, debug_front_end])
+            time.sleep(3)
         try:
             self.authenticate(login, login)
-            base_url = "http://%s:%s" % (HOST, odoo.tools.config['http_port'])
-            ICP = self.env['ir.config_parameter']
-            ICP.set_param('web.base.url', base_url)
-            # flush updates to the database before launching the client side,
-            # otherwise they simply won't be visible
-            ICP.flush()
-            if re.match('[a-z]*:', url_path or ''): # about:, http:, ...
-                url = url_path
-            else:
-                url = "%s%s" % (base_url, url_path or '/')
+            # Flush and clear the current transaction.  This is useful in case
+            # we make requests to the server, as these requests are made with
+            # test cursors, which uses different caches than this transaction.
+            self.cr.flush()
+            self.cr.clear()
+            url = werkzeug.urls.url_join(self.base_url(), url_path)
+            if watch:
+                parsed = werkzeug.urls.url_parse(url)
+                qs = parsed.decode_query()
+                qs['watch'] = '1'
+                url = parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
             self._logger.info('Open "%s" in browser', url)
 
             if self.browser.screencasts_dir:
                 self._logger.info('Starting screencast')
                 self.browser.start_screencast()
+            if cookies:
+                for name, value in cookies.items():
+                    self.browser.set_cookie(name, value, '/', HOST)
+
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
@@ -1495,7 +1860,7 @@ class HttpCase(TransactionCase):
 
             error = False
             try:
-                self.browser._wait_code_ok(code, timeout)
+                self.browser._wait_code_ok(code, timeout, error_checker=error_checker)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
@@ -1503,7 +1868,7 @@ class HttpCase(TransactionCase):
                     message = 'The test code "%s" failed' % code
                 else:
                     message = "Some js test failed"
-                self.fail('%s\n%s' % (message, error))
+                self.fail('%s\n\n%s' % (message, error))
 
         finally:
             # clear browser to make it stop sending requests, in case we call
@@ -1512,6 +1877,10 @@ class HttpCase(TransactionCase):
             self.browser.clear()
             self._wait_remaining_requests()
 
+    @classmethod
+    def base_url(cls):
+        return f"http://{HOST}:{odoo.tools.config['http_port']}"
+
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
@@ -1519,12 +1888,17 @@ class HttpCase(TransactionCase):
         step_delay = ', %s' % step_delay if step_delay else ''
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
         ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
-        res = self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
-        # some tests read the result after the tour, and as  the tour does not
-        # use this environment's cache, invalidate it to fetch the data from the
-        # database
-        self.env.cache.invalidate()
-        return res
+        return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+
+    def profile(self, **kwargs):
+        """
+        for http_case, also patch _get_profiler_context_manager in order to profile all requests
+        """
+        sup = super()
+        _profiler = sup.profile(**kwargs)
+        def route_profiler(request):
+            return sup.profile(description=request.httprequest.full_path)
+        return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
 
 # kept for backward compatibility
@@ -1536,6 +1910,12 @@ class HttpSavepointCase(HttpCase):
             "Deprecated class HttpSavepointCase has been merged into HttpCase",
             DeprecationWarning, stacklevel=2,
         )
+
+
+def no_retry(arg):
+    """Disable auto retry on decorated test method or test class"""
+    arg._retry = False
+    return arg
 
 
 def users(*logins):
@@ -1558,7 +1938,7 @@ def users(*logins):
                     func(*args, **kwargs)
                 # Invalidate the cache between subtests, in order to not reuse
                 # the former user's cache (`test_read_mail`, `test_write_mail`)
-                self.env.cache.invalidate()
+                self.env.invalidate_all()
         finally:
             self.uid = old_uid
 
@@ -1573,16 +1953,16 @@ def warmup(func, *args, **kwargs):
         effects of the warmup phase are rolled back thanks to a savepoint.
     """
     self = args[0]
-    self.env['base'].flush()
-    self.env.cache.invalidate()
+    self.env.flush_all()
+    self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
     self.cr.execute('SAVEPOINT test_warmup')
     func(*args, **kwargs)
-    self.env['base'].flush()
+    self.env.flush_all()
     # run once for real
     self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
-    self.env.cache.invalidate()
+    self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)
 
@@ -1602,24 +1982,7 @@ def can_import(module):
     else:
         return True
 
-# TODO: sub-views (o2m, m2m) -> sub-form?
-# TODO: domains
-ref_re = re.compile(r"""
-# first match 'form_view_ref' key, backrefs are used to handle single or
-# double quoting of the value
-(['"])(?P<view_type>\w+_view_ref)\1
-# colon separator (with optional spaces around)
-\s*:\s*
-# open quote for value
-(['"])
-(?P<view_id>
-    # we'll just match stuff which is normally part of an xid:
-    # word and "." characters
-    [.\w]+
-)
-# close with same quote as opening
-\3
-""", re.VERBOSE)
+
 class Form(object):
     """ Server-side form view implementation (partial)
 
@@ -1707,8 +2070,9 @@ class Form(object):
             view_id = env.ref(view).id
         else:
             view_id = view or False
-        fvg = recordp.fields_view_get(view_id, 'form')
+        fvg = recordp.get_view(view_id, 'form')
         fvg['tree'] = etree.fromstring(fvg['arch'])
+        fvg['fields'] = self._get_view_fields(fvg['tree'], recordp)
 
         object.__setattr__(self, '_view', fvg)
 
@@ -1727,37 +2091,40 @@ class Form(object):
         else:
             self._init_from_defaults(self._model)
 
+    def _get_view_fields(self, node, model):
+        level = node.xpath('count(ancestor::field)')
+        fnames = set(el.get('name') for el in node.xpath('.//field[count(ancestor::field) = %s]' % level))
+        fields = {fname: info for fname, info in model.fields_get().items() if fname in fnames}
+        return fields
+
     def _o2m_set_edition_view(self, descr, node, level):
         default_view = next(
             (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
             'tree'
         )
-        refs = {
-            m.group('view_type'): m.group('view_id')
-            for m in ref_re.finditer(node.get('context', ''))
-        }
+        refs = self._env['ir.ui.view']._get_view_refs(node)
         # always fetch for simplicity, ensure we always have a tree and
         # a form view
         submodel = self._env[descr['relation']]
-        views = submodel.with_context(**refs) \
-            .load_views([(False, 'tree'), (False, 'form')])['fields_views']
-        # embedded views should take the priority on externals
-        views.update(descr['views'])
-        # re-set all resolved views on the descriptor
-        descr['views'] = views
+        views = {view.tag: view for view in node.xpath('./*[descendant::field]')}
+        for view_type in ['tree', 'form']:
+            # embedded views should take the priority on externals
+            if view_type not in views:
+                sub_fvg = submodel.with_context(**refs).get_view(view_type=view_type)
+                sub_node = etree.fromstring(sub_fvg['arch'])
+                views[view_type] = sub_node
+                node.append(sub_node)
         # if the default view is a kanban or a non-editable list, the
         # "edition controller" is the form view
-        edition = views['form']
-        edition['tree'] = etree.fromstring(edition['arch'])
-        if default_view == 'tree':
-            subarch = etree.fromstring(views['tree']['arch'])
-            if subarch.get('editable'):
-                edition = views['tree']
-                edition['tree'] = subarch
+        edition_view = 'tree' if default_view == 'tree' and views['tree'].get('editable') else 'form'
+        edition = {
+            'fields': self._get_view_fields(views[edition_view], submodel),
+            'tree': views[edition_view],
+        }
 
         # don't recursively process o2ms in o2ms
         self._process_fvg(submodel, edition, level=level-1)
-        descr['views']['edition'] = edition
+        descr['edition_view'] = edition
 
     def __str__(self):
         return "<%s %s(%s)>" % (
@@ -1767,25 +2134,66 @@ class Form(object):
         )
 
     def _process_fvg(self, model, fvg, level=2):
-        """ Post-processes to augment the fields_view_get with:
-
+        """ Post-processes to augment the view_get with:
         * an id field (may not be present if not in the view but needed)
         * pre-processed modifiers (map of modifier name to json-loaded domain)
         * pre-processed onchanges list
         """
+        inherited_modifiers = ['invisible']
         fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {'id': {'required': False, 'readonly': True}}
+        modifiers = fvg['modifiers'] = {'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]}}
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
-        for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
+        field_level = fvg['tree'].xpath('count(ancestor::field)')
+        eval_context = {
+            "uid": self._env.user.id,
+            "tz": self._env.user.tz,
+            "lang": self._env.user.lang,
+            "datetime": datetime,
+            "context_today": lambda: odoo.fields.Date.context_today(self._env.user),
+            "relativedelta": relativedelta,
+            "current_date": time.strftime("%Y-%m-%d"),
+            "allowed_company_ids": [self._env.user.company_id.id],
+            "context": {},
+        }
+        for f in fvg['tree'].xpath('.//field[count(ancestor::field) = %s]' % field_level):
             fname = f.get('name')
             order.append(fname)
 
-            modifiers[fname] = {
-                modifier: bool(domain) if isinstance(domain, int) else normalize_domain(domain)
-                for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
-            }
+            node_modifiers = {}
+            for modifier, domain in json.loads(f.get('modifiers', '{}')).items():
+                if isinstance(domain, int):
+                    node_modifiers[modifier] = [TRUE_LEAF] if domain else [FALSE_LEAF]
+                elif isinstance(domain, str):
+                    node_modifiers[modifier] = normalize_domain(safe_eval(domain, eval_context))
+                else:
+                    node_modifiers[modifier] = normalize_domain(domain)
+
+            for a in f.xpath('ancestor::*[@modifiers][count(ancestor::field) = %s]' % field_level):
+                ancestor_modifiers = json.loads(a.get('modifiers'))
+                for modifier in inherited_modifiers:
+                    if modifier in ancestor_modifiers:
+                        domain = ancestor_modifiers[modifier]
+                        ancestor_domain = ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
+                        node_domain = node_modifiers.get(modifier, [])
+                        # Combine the field modifiers with his ancestor modifiers with an OR connector
+                        # e.g. A field is invisible if its own invisible modifier is True
+                        # OR if one of its ancestor invisible modifier is True
+                        node_modifiers[modifier] = expression.OR([ancestor_domain, node_domain])
+
+            if fname in modifiers:
+                # The field is multiple times in the view, combine the modifier domains with an AND connector
+                # e.g. a field is invisible if all occurences of the field are invisible in the view.
+                # e.g. a field is readonly if all occurences of the field are readonly in the view.
+                for modifier in set(node_modifiers.keys()).union(modifiers[fname].keys()):
+                    modifiers[fname][modifier] = expression.AND([
+                        modifiers[fname].get(modifier, [FALSE_LEAF]),
+                        node_modifiers.get(modifier, [FALSE_LEAF]),
+                    ])
+            else:
+                modifiers[fname] = node_modifiers
+
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
@@ -1798,7 +2206,7 @@ class Form(object):
             if level and descr['type'] == 'one2many':
                 self._o2m_set_edition_view(descr, f, level)
 
-        fvg['onchange'] = model._onchange_spec(fvg)
+        fvg['onchange'] = model._onchange_spec({'arch': etree.tostring(fvg['tree'])})
 
     def _init_from_defaults(self, model):
         vals = self._values
@@ -1838,8 +2246,11 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
-        d = (modmap or self._view['modifiers'])[field].get(modifier, default)
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
+        if view is None:
+            view = self._view
+
+        d = (modmap or view['modifiers'])[field].get(modifier, default)
         if isinstance(d, bool):
             return d
 
@@ -1880,7 +2291,7 @@ class Form(object):
                     # we're looking up the "current view" so bits might be
                     # missing when processing o2ms in the parent (see
                     # values_to_save:1450 or so)
-                    f_ = self._view['fields'].get(f, {'type': None})
+                    f_ = view['fields'].get(f, {'type': None})
                     if f_['type'] == 'many2many':
                         # field value should be [(6, _, ids)], we want just the ids
                         field_val = field_val[0][2] if field_val else []
@@ -1931,9 +2342,10 @@ class Form(object):
         assert descr['type'] not in ('many2many', 'one2many'), \
             "Can't set an o2m or m2m field, manipulate the corresponding proxies"
 
-        # TODO: consider invisible to be the same as readonly?
         assert not self._get_modifier(field, 'readonly'), \
             "can't write on readonly field {}".format(field)
+        assert not self._get_modifier(field, 'invisible'), \
+            "can't write on invisible field {}".format(field)
 
         if descr['type'] == 'many2one':
             assert isinstance(value, BaseModel) and value._name == descr['relation']
@@ -1974,7 +2386,7 @@ class Form(object):
             record_to_values(self._view['fields'], r)
         )
         self._changed.clear()
-        self._model.flush()
+        self._model.env.flush_all()
         self._model.env.clear()  # discard cache and pending recomputations
         return r
 
@@ -2020,7 +2432,7 @@ class Form(object):
 
             get_modifier = functools.partial(
                 self._get_modifier,
-                f, modmap=view['modifiers'],
+                f, view=view,
                 vals=modifiers_values or record_values
             )
             descr = fields[f]
@@ -2040,7 +2452,7 @@ class Form(object):
                     continue
 
             if descr['type'] == 'one2many':
-                subview = descr['views']['edition']
+                subview = descr['edition_view']
                 fields_ = subview['fields']
                 oldvals = v
                 v = []
@@ -2078,7 +2490,7 @@ class Form(object):
             values[f] = v
         return values
 
-    def _perform_onchange(self, fields):
+    def _perform_onchange(self, fields, context=None):
         assert isinstance(fields, list)
         # marks any onchange source as changed
         self._changed.update(fields)
@@ -2090,8 +2502,10 @@ class Form(object):
             return
 
         record = self._model.browse(self._values.get('id'))
+        if context is not None:
+            record = record.with_context(**context)
         result = record.onchange(self._onchange_values(), fields, spec)
-        self._model.flush()
+        self._model.env.flush_all()
         self._model.env.clear()  # discard cache and pending recomputations
         if result.get('warning'):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
@@ -2106,6 +2520,7 @@ class Form(object):
             for k, v in values.items()
             if k in self._view['fields']
         )
+        return result
 
     def _onchange_values(self):
         return self._onchange_values_(self._view['fields'], self._values)
@@ -2125,7 +2540,7 @@ class Form(object):
         values = {}
         for k, v in record.items():
             if fields[k]['type'] == 'one2many':
-                subfields = fields[k]['views']['edition']['fields']
+                subfields = fields[k]['edition_view']['fields']
                 it = values[k] = []
                 for (c, rid, vs) in v:
                     if c == 1 and isinstance(vs, UpdateDict):
@@ -2149,7 +2564,7 @@ class Form(object):
             return value[0]
         elif descr['type'] == 'one2many':
             # ignore o2ms nested in o2ms
-            if not descr['views']:
+            if not descr['edition_view']:
                 return []
 
             if current is None:
@@ -2158,7 +2573,7 @@ class Form(object):
             c = {t[1] for t in current if t[0] in (1, 2)}
             current_values = {c[1]: c[2] for c in current if c[0] == 1}
             # which view should this be???
-            subfields = descr['views']['edition']['fields']
+            subfields = descr['edition_view']['fields']
             # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
                 if command[0] == 0:
@@ -2234,7 +2649,7 @@ class O2MForm(Form):
         object.__setattr__(self, '_model', m)
 
         # copy so we don't risk breaking it too much (?)
-        fvg = dict(proxy._descr['views']['edition'])
+        fvg = dict(proxy._descr['edition_view'])
         object.__setattr__(self, '_view', fvg)
         self._process_fvg(m, fvg)
 
@@ -2249,11 +2664,11 @@ class O2MForm(Form):
             if hasattr(vals, '_changed'):
                 self._changed.update(vals._changed)
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
         if vals is None:
             vals = {**self._values, '•parent•': self._proxy._parent._values}
 
-        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+        return super()._get_modifier(field, modifier, default=default, view=view, modmap=modmap, vals=vals)
 
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
@@ -2284,7 +2699,7 @@ class O2MForm(Form):
                 raise AssertionError("Expected command type 0 or 1, found %s" % c)
 
         # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
-        proxy._parent._perform_onchange([proxy._field])
+        proxy._parent._perform_onchange([proxy._field], self._env.context)
 
     def _values_to_save(self, all_fields=False):
         """ Validates values and returns only fields modified since
@@ -2325,6 +2740,8 @@ class X2MProxy(object):
     def _assert_editable(self):
         assert not self._parent._get_modifier(self._field, 'readonly'),\
             'field %s is not editable' % self._field
+        assert not self._parent._get_modifier(self._field, 'invisible'),\
+            'field %s is not visible' % self._field
 
 class O2MProxy(X2MProxy):
     """ O2MProxy()
@@ -2335,7 +2752,7 @@ class O2MProxy(X2MProxy):
         # reify records to a list so they can be manipulated easily?
         self._records = []
         model = self._model
-        fields = self._descr['views']['edition']['fields']
+        fields = self._descr['edition_view']['fields']
         for (command, rid, values) in self._parent._values[self._field]:
             if command == 0:
                 self._records.append(values)
@@ -2428,7 +2845,7 @@ class O2MProxy(X2MProxy):
         del self._records[index]
         self._parent._perform_onchange([self._field])
 
-class M2MProxy(X2MProxy, collections.Sequence):
+class M2MProxy(X2MProxy, collections.abc.Sequence):
     """ M2MProxy()
 
     Behaves as a :class:`~collection.Sequence` of recordsets, can be
@@ -2510,6 +2927,8 @@ def record_to_values(fields, record):
     # emergency_contact or whatever. Since we always get the id anyway, just
     # remove it from the fields to read
     to_read = list(fields.keys() - {'id'})
+    if not to_read:
+        return r
     for f, v in record.read(to_read)[0].items():
         descr = fields[f]
         if descr['type'] == 'many2one':
@@ -2552,18 +2971,21 @@ def _get_node(view, f, *arg):
     ), *arg)
 
 def tagged(*tags):
-    """
-    A decorator to tag BaseCase objects
-    Tags are stored in a set that can be accessed from a 'test_tags' attribute
-    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
+    """A decorator to tag BaseCase objects.
+
+    Tags are stored in a set that can be accessed from a 'test_tags' attribute.
+
+    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
+
     By default, all Test classes from odoo.tests.common have a test_tags
-    attribute that defaults to 'standard' and also the module technical name
-    When using class inheritance, the tags are NOT inherited.
+    attribute that defaults to 'standard' and 'at_install'.
+
+    When using class inheritance, the tags ARE inherited.
     """
+    include = {t for t in tags if not t.startswith('-')}
+    exclude = {t[1:] for t in tags if t.startswith('-')}
     def tags_decorator(obj):
-        include = {t for t in tags if not t.startswith('-')}
-        exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude # todo remove getattr in master since we want to limmit tagged to BaseCase and always have +standard tag
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
         return obj
     return tags_decorator
 

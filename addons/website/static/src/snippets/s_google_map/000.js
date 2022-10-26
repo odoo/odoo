@@ -1,3 +1,4 @@
+/* global google */
 odoo.define('website.s_google_map', function (require) {
 'use strict';
 

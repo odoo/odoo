@@ -6,37 +6,38 @@ from .common import PurchaseTestCommon
 
 class TestMoveCancelPropagation(PurchaseTestCommon):
 
-    def setUp(self):
-        super(TestMoveCancelPropagation, self).setUp()
-        self.customer = self.env['res.partner'].create({'name': 'abc'})
-        self.group = self.env['procurement.group'].create({'partner_id': self.customer.id, 'name': 'New Group'})
-        self.warehouse = self.env.ref('stock.warehouse0')
-        cust_location = self.env.ref('stock.stock_location_customers')
-        seller = self.env['product.supplierinfo'].create({
-            'name': self.customer.id,
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.customer = cls.env['res.partner'].create({'name': 'abc'})
+        cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
+        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cust_location = cls.env.ref('stock.stock_location_customers')
+        seller = cls.env['product.supplierinfo'].create({
+            'partner_id': cls.customer.id,
             'price': 100.0,
         })
-        product = self.env['product.product'].create({
+        product = cls.env['product.product'].create({
             'name': 'Geyser',
             'type': 'product',
-            'route_ids': [(4, self.route_mto), (4, self.route_buy)],
+            'route_ids': [(4, cls.route_mto), (4, cls.route_buy)],
             'seller_ids': [(6, 0, [seller.id])],
         })
-        self.picking_out = self.env['stock.picking'].create({
-            'location_id': self.warehouse.out_type_id.default_location_src_id.id,
+        cls.picking_out = cls.env['stock.picking'].create({
+            'location_id': cls.warehouse.out_type_id.default_location_src_id.id,
             'location_dest_id': cust_location.id,
-            'partner_id': self.customer.id,
-            'group_id': self.group.id,
-            'picking_type_id': self.ref('stock.picking_type_out'),
+            'partner_id': cls.customer.id,
+            'group_id': cls.group.id,
+            'picking_type_id': cls.env.ref('stock.picking_type_out').id,
         })
-        self.move = self.env['stock.move'].create({
+        cls.move = cls.env['stock.move'].create({
             'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 10,
             'product_uom': product.uom_id.id,
-            'picking_id': self.picking_out.id,
-            'group_id': self.group.id,
-            'location_id': self.warehouse.out_type_id.default_location_src_id.id,
+            'picking_id': cls.picking_out.id,
+            'group_id': cls.group.id,
+            'location_id': cls.warehouse.out_type_id.default_location_src_id.id,
             'location_dest_id': cust_location.id,
             'procure_method': 'make_to_order',
         })
@@ -251,15 +252,15 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         """Check for done and cancelled moves. Ensure that the RFQ cancellation
         will not impact the delivery state if it's already cancelled.
         """
-        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
-        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
-        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        picking_type_out = self.env.ref('stock.picking_type_out')
 
         partner = self.env['res.partner'].create({
             'name': 'Steve'
         })
         seller = self.env['product.supplierinfo'].create({
-            'name': partner.id,
+            'partner_id': partner.id,
             'price': 10.0,
         })
         product_car = self.env['product.product'].create({

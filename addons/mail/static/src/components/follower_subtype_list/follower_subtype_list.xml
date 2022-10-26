@@ -2,37 +2,36 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.FollowerSubtypeList" owl="1">
-        <div class="o_FollowerSubtypeList modal-dialog">
-            <t t-if="followerSubtypeList">
+        <t t-if="followerSubtypeList">
+            <div class="o_FollowerSubtypeList modal-dialog" t-attf-class="{{ className }}" t-ref="root">
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">
-                            Edit Subscription of <t t-esc="followerSubtypeList.follower.name"/>
+                            Edit Subscription of <t t-esc="followerSubtypeList.follower.partner.nameOrDisplayName"/>
                         </h4>
-                        <i class="o_FollowerSubtypeList_closeButton close fa fa-times" aria-label="Close" t-on-click="_onClickCancel"/>
+                        <i class="o_FollowerSubtypeList_closeButton close fa fa-times" aria-label="Close" t-on-click="followerSubtypeList.onClickCancel"/>
                     </header>
                     <main class="modal-body">
-                        <div class="o_FollowerSubtypeList_subtypes">
-                            <t t-foreach="followerSubtypeList.follower.subtypes" t-as="subtype" t-key="subtype.id">
+                        <div class="o_FollowerSubtypeList_subtypes flex-column d-flex">
+                            <t t-foreach="followerSubtypeList.followerSubtypeViews" t-as="followerSubtypeView" t-key="followerSubtypeView.localId">
                                 <FollowerSubtype
-                                    class="o_FollowerSubtypeList_subtype"
-                                    followerLocalId="followerSubtypeList.follower.localId"
-                                    followerSubtypeLocalId="subtype.localId"
+                                    className="'o_FollowerSubtypeList_subtype'"
+                                    record="followerSubtypeView"
                                 />
                             </t>
                         </div>
                     </main>
                     <div class="modal-footer">
-                        <button class="o-apply btn btn-primary" t-on-click="_onClickApply">
+                        <button class="o-apply btn btn-primary" t-on-click="followerSubtypeList.onClickApply">
                             Apply
                         </button>
-                        <button class="o-cancel btn btn-secondary" t-on-click="_onClickCancel">
+                        <button class="o-cancel btn btn-secondary" t-on-click="followerSubtypeList.onClickCancel">
                             Cancel
                         </button>
                     </div>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>

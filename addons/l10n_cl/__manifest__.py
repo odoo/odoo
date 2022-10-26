@@ -6,14 +6,13 @@
     'version': "3.0",
     'description': """
 Chilean accounting chart and tax localization.
-Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
+Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
     """,
     'author': 'Blanco Martín & Asociados',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/accounting/fiscal_localizations/localizations/chile.html',
     'category': 'Accounting/Localizations/Account Charts',
-    'website': 'https://www.odoo.com/documentation/user/14.0/accounting/fiscal_localizations/localizations/chile.html',
     'depends': [
         'contacts',
-        'base_address_city',
         'base_vat',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
@@ -22,9 +21,9 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
     'data': [
         'views/account_move_view.xml',
         'views/account_tax_view.xml',
-        'views/ir_sequence_view.xml',
         'views/res_bank_view.xml',
         'views/res_country_view.xml',
+        'views/res_company_view.xml',
         'views/report_invoice.xml',
         'views/res_partner.xml',
         'views/res_config_settings_view.xml',
@@ -35,7 +34,6 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
         'data/account_tax_data.xml',
         'data/l10n_latam_identification_type_data.xml',
         'data/l10n_latam.document.type.csv',
-        'data/menuitem_data.xml',
         'data/product_data.xml',
         'data/uom_data.xml',
         'data/res.currency.csv',
@@ -49,5 +47,6 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
     'demo': [
         'demo/demo_company.xml',
         'demo/partner_demo.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

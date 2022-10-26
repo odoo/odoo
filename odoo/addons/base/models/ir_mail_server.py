@@ -3,23 +3,28 @@
 
 from email.message import EmailMessage
 from email.utils import make_msgid
+import base64
 import datetime
 import email
 import email.policy
+import idna
 import logging
 import re
 import smtplib
-from socket import gaierror, timeout
-from ssl import SSLError
+import ssl
 import sys
 import threading
 
-import html2text
-import idna
+from socket import gaierror, timeout
+from OpenSSL import crypto as SSLCrypto
+from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
+from OpenSSL.SSL import Error as SSLError
+from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr
+from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize
+
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -70,7 +75,13 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [formataddr(('', c), charset='ascii') for c in candidates]
+    valid_addresses = []
+    for c in candidates:
+        try:
+            valid_addresses.append(formataddr(('', c), charset='ascii'))
+        except idna.IDNAError:
+            pass
+    return valid_addresses
 
 
 class IrMailServer(models.Model):
@@ -82,25 +93,105 @@ class IrMailServer(models.Model):
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
 
-    name = fields.Char(string='Description', required=True, index=True)
+    name = fields.Char(string='Name', required=True, index=True)
+    from_filter = fields.Char(
+        "FROM Filtering",
+        help='Define for which email address or domain this server can be used.\n'
+             'e.g.: "notification@odoo.com" or "odoo.com"')
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
+    smtp_authentication = fields.Selection([('login', 'Username'), ('certificate', 'SSL Certificate')], string='Authenticate with', required=True, default='login')
+    smtp_authentication_info = fields.Text('Authentication Info', compute='_compute_smtp_authentication_info')
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
     smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
     smtp_encryption = fields.Selection([('none', 'None'),
                                         ('starttls', 'TLS (STARTTLS)'),
                                         ('ssl', 'SSL/TLS')],
-                                       string='Connection Security', required=True, default='none',
+                                       string='Connection Encryption', required=True, default='none',
                                        help="Choose the connection encryption scheme:\n"
                                             "- None: SMTP sessions are done in cleartext.\n"
                                             "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
                                             "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)")
+    smtp_ssl_certificate = fields.Binary(
+        'SSL Certificate', groups='base.group_system', attachment=False,
+        help='SSL certificate used for authentication')
+    smtp_ssl_private_key = fields.Binary(
+        'SSL Private Key', groups='base.group_system', attachment=False,
+        help='SSL private key used for authentication')
     smtp_debug = fields.Boolean(string='Debugging', help="If enabled, the full output of SMTP sessions will "
                                                          "be written to the server log at DEBUG level "
                                                          "(this is very verbose and may include confidential info!)")
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
+
+    @api.depends('smtp_authentication')
+    def _compute_smtp_authentication_info(self):
+        for server in self:
+            if server.smtp_authentication == 'login':
+                server.smtp_authentication_info = _(
+                    'Connect to your server through your usual username and password. \n'
+                    'This is the most basic SMTP authentication process and '
+                    'may not be accepted by all providers. \n')
+            elif server.smtp_authentication == 'certificate':
+                server.smtp_authentication_info = _(
+                    'Authenticate by using SSL certificates, belonging to your domain name. \n'
+                    'SSL certificates allow you to authenticate your mail server for the entire domain name.')
+            else:
+                server.smtp_authentication = False
+
+    @api.constrains('smtp_ssl_certificate', 'smtp_ssl_private_key')
+    def _check_smtp_ssl_files(self):
+        """We must provided both files or none."""
+        for mail_server in self:
+            if mail_server.smtp_ssl_certificate and not mail_server.smtp_ssl_private_key:
+                raise UserError(_('SSL private key is missing for %s.', mail_server.name))
+            elif mail_server.smtp_ssl_private_key and not mail_server.smtp_ssl_certificate:
+                raise UserError(_('SSL certificate is missing for %s.', mail_server.name))
+
+    def write(self, vals):
+        """Ensure we cannot archive a server in-use"""
+        usages_per_server = {}
+        if not vals.get('active', True):
+            usages_per_server = self._active_usages_compute()
+
+        if not usages_per_server:
+            return super().write(vals)
+
+        # Write cannot be performed as some server are used, build detailed usage per server
+        usage_details_per_server = {}
+        is_multiple_server_usage = len(usages_per_server) > 1
+        for server in self:
+            if server.id not in usages_per_server:
+                continue
+            usage_details = []
+            if is_multiple_server_usage:
+                usage_details.append(_('%s (Dedicated Outgoing Mail Server):', server.display_name))
+            usage_details.extend(map(lambda u: f'- {u}', usages_per_server[server.id]))
+            usage_details_per_server[server] = usage_details
+
+        # Raise the error with the ordered list of servers and concatenated detailed usages
+        servers_ordered_by_name = sorted(usage_details_per_server.keys(), key=lambda r: r.display_name)
+        error_server_usage = ', '.join(server.display_name for server in servers_ordered_by_name)
+        error_usage_details = '\n'.join(line
+                                        for server in servers_ordered_by_name
+                                        for line in usage_details_per_server[server])
+        if is_multiple_server_usage:
+            raise UserError(
+                _('You cannot archive these Outgoing Mail Servers (%s) because they are still used in the following case(s):\n%s',
+                  error_server_usage, error_usage_details))
+        raise UserError(
+            _('You cannot archive this Outgoing Mail Server (%s) because it is still used in the following case(s):\n%s',
+              error_server_usage, error_usage_details))
+
+    def _active_usages_compute(self):
+        """Compute a dict server id to list of user-friendly outgoing mail servers usage of this record set.
+
+        This method must be overridden by all modules that uses this class in order to complete the list with
+        user-friendly string describing the active elements that could send mail through the instance of this class.
+        :return dict: { ir_mail_server.id: usage_str_list }.
+        """
+        return dict()
 
     def _get_test_email_addresses(self):
         self.ensure_one()
@@ -114,7 +205,7 @@ class IrMailServer(models.Model):
         for server in self:
             smtp = False
             try:
-                smtp = self.connect(mail_server_id=server.id)
+                smtp = self.connect(mail_server_id=server.id, allow_archived=True)
                 # simulate sending an email from current user's address - without sending it!
                 email_from, email_to = server._get_test_email_addresses()
                 # Testing the MAIL FROM step should detect sender filter problems
@@ -145,6 +236,8 @@ class IrMailServer(models.Model):
                 raise UserError(_("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", ustr(e.strerror)))
             except smtplib.SMTPResponseException as e:
                 raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
+            except smtplib.SMTPNotSupportedError as e:
+                raise UserError(_("An option is not supported by the server:\n %s", e.strerror))
             except smtplib.SMTPException as e:
                 raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e)))
             except SSLError as e:
@@ -171,7 +264,8 @@ class IrMailServer(models.Model):
         }
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
-                smtp_debug=False, mail_server_id=None):
+                smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,
+                allow_archived=False):
         """Returns a new SMTP connection to the given SMTP server.
            When running in test mode, this method does nothing and returns `None`.
 
@@ -180,36 +274,88 @@ class IrMailServer(models.Model):
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
            :param string encryption: optional, ``'ssl'`` | ``'starttls'``
+           :param smtp_from: FROM SMTP envelop, used to find the best mail server
+           :param ssl_certificate: filename of the SSL certificate used for authentication
+               Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_certificate"
+           :param ssl_private_key: filename of the SSL private key used for authentication
+               Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_private_key"
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
+           :param bool allow_archived: by default (False), an exception is raised when calling this method on an
+           archived record (using mail_server_id param). It can be set to True for testing so that the exception is no
+           longer raised.
         """
         # Do not actually connect while running in test mode
-        if getattr(threading.currentThread(), 'testing', False):
-            return None
+        if self._is_test_mode():
+            return
 
         mail_server = smtp_encryption = None
         if mail_server_id:
             mail_server = self.sudo().browse(mail_server_id)
+            if not allow_archived and not mail_server.active:
+                raise UserError(_('The server "%s" cannot be used because it is archived.', mail_server.display_name))
         elif not host:
-            mail_server = self.sudo().search([], order='sequence', limit=1)
+            mail_server, smtp_from = self.sudo()._find_mail_server(smtp_from)
+
+        if not mail_server:
+            mail_server = self.env['ir.mail_server']
+        ssl_context = None
 
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
-            smtp_user = mail_server.smtp_user
-            smtp_password = mail_server.smtp_pass
+            if mail_server.smtp_authentication == "certificate":
+                smtp_user = None
+                smtp_password = None
+            else:
+                smtp_user = mail_server.smtp_user
+                smtp_password = mail_server.smtp_pass
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
+            from_filter = mail_server.from_filter
+            if (mail_server.smtp_authentication == "certificate"
+               and mail_server.smtp_ssl_certificate
+               and mail_server.smtp_ssl_private_key):
+                try:
+                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
+                    certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
+                    smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
+                    private_key = SSLCrypto.load_privatekey(FILETYPE_PEM, smtp_ssl_private_key)
+                    ssl_context._ctx.use_certificate(certificate)
+                    ssl_context._ctx.use_privatekey(private_key)
+                    # Check that the private key match the certificate
+                    ssl_context._ctx.check_privatekey()
+                except SSLCryptoError as e:
+                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                except SSLError as e:
+                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
+
         else:
             # we were passed individual smtp parameters or nothing and there is no default server
             smtp_server = host or tools.config.get('smtp_server')
             smtp_port = tools.config.get('smtp_port', 25) if port is None else port
             smtp_user = user or tools.config.get('smtp_user')
             smtp_password = password or tools.config.get('smtp_password')
+            from_filter = self.env['ir.config_parameter'].sudo().get_param(
+                'mail.default.from_filter', tools.config.get('from_filter'))
             smtp_encryption = encryption
             if smtp_encryption is None and tools.config.get('smtp_ssl'):
                 smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
+            smtp_ssl_certificate_filename = ssl_certificate or tools.config.get('smtp_ssl_certificate_filename')
+            smtp_ssl_private_key_filename = ssl_private_key or tools.config.get('smtp_ssl_private_key_filename')
+
+            if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
+                try:
+                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
+                    # Check that the private key match the certificate
+                    ssl_context._ctx.check_privatekey()
+                except SSLCryptoError as e:
+                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                except SSLError as e:
+                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
 
         if not smtp_server:
             raise UserError(
@@ -227,6 +373,7 @@ class IrMailServer(models.Model):
             connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
         else:
             connection = smtplib.SMTP(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
+
         connection.set_debuglevel(smtp_debug)
         if smtp_encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
@@ -235,20 +382,37 @@ class IrMailServer(models.Model):
             # (as per RFC 3207) so for example any AUTH
             # capability that appears only on encrypted channels
             # will be correctly detected for next step
-            connection.starttls()
+            connection.starttls(context=ssl_context)
 
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
             local, at, domain = smtp_user.rpartition('@')
             if at:
                 smtp_user = local + at + idna.encode(domain).decode('ascii')
-            connection.login(smtp_user, smtp_password or '')
+            mail_server._smtp_login(connection, smtp_user, smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
         connection.ehlo_or_helo_if_needed()
 
+        # Store the "from_filter" of the mail server / odoo-bin argument to  know if we
+        # need to change the FROM headers or not when we will prepare the mail message
+        connection.from_filter = from_filter
+        connection.smtp_from = smtp_from
+
         return connection
+
+    def _smtp_login(self, connection, smtp_user, smtp_password):
+        """Authenticate the SMTP connection.
+
+        Can be overridden in other module for different authentication methods.Can be
+        called on the model itself or on a singleton.
+
+        :param connection: The SMTP connection to authenticate
+        :param smtp_user: The user to used for the authentication
+        :param smtp_password: The password to used for the authentication
+        """
+        connection.login(smtp_user, smtp_password)
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
@@ -274,6 +438,8 @@ class IrMailServer(models.Model):
                                               or 'html'). Default is 'plain'.
            :param list attachments: list of (filename, filecontents) pairs, where filecontents is a string
                                     containing the bytes of the attachment
+           :param message_id:
+           :param references:
            :param list email_cc: optional list of string values for CC header (to be joined with commas)
            :param list email_bcc: optional list of string values for BCC header (to be joined with commas)
            :param dict headers: optional map of headers to set on the outgoing mail (may override the
@@ -283,7 +449,7 @@ class IrMailServer(models.Model):
         """
         email_from = email_from or self._get_default_from_address()
         assert email_from, "You must either provide a sender address explicitly or configure "\
-                           "using the combintion of `mail.catchall.domain` and `mail.default.from` "\
+                           "using the combination of `mail.catchall.domain` and `mail.default.from` "\
                            "ICPs, in the server configuration file or with the "\
                            "--email-from startup parameter."
 
@@ -318,7 +484,7 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
-            msg.add_alternative(html2text.html2text(email_body), subtype='plain', charset='utf-8')
+            msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
@@ -346,11 +512,12 @@ class IrMailServer(models.Model):
         If "mail.catchall.domain" is not set, return None.
 
         '''
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        postmaster = get_param('mail.bounce.alias', default='postmaster-odoo')
-        domain = get_param('mail.catchall.domain')
-        if postmaster and domain:
-            return '%s@%s' % (postmaster, domain)
+        ICP = self.env['ir.config_parameter'].sudo()
+        bounce_alias = ICP.get_param('mail.bounce.alias')
+        domain = ICP.get_param('mail.catchall.domain')
+        if bounce_alias and domain:
+            return '%s@%s' % (bounce_alias, domain)
+        return
 
     @api.model
     def _get_default_from_address(self):
@@ -359,23 +526,94 @@ class IrMailServer(models.Model):
         Used for the "header from" address when no other has been received.
 
         :return str/None:
-            Combines config parameters ``mail.default.from`` and
+            If the config parameter ``mail.default.from`` contains
+            a full email address, return it.
+            Otherwise, combines config parameters ``mail.default.from`` and
             ``mail.catchall.domain`` to generate a default sender address.
 
             If some of those parameters is not defined, it will default to the
             ``--email-from`` CLI/config parameter.
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        domain = get_param('mail.catchall.domain')
         email_from = get_param("mail.default.from")
+        if email_from and "@" in email_from:
+            return email_from
+        domain = get_param("mail.catchall.domain")
         if email_from and domain:
             return "%s@%s" % (email_from, domain)
         return tools.config.get("email_from")
 
+    def _prepare_email_message(self, message, smtp_session):
+        """Prepare the SMTP information (from, to, message) before sending.
+
+        :param message: the email.message.Message to send, information like the
+            Return-Path, the From, etc... will be used to find the smtp_from and to smtp_to
+        :param smtp_session: the opened SMTP session to use to authenticate the sender
+        :return: smtp_from, smtp_to_list, message
+            smtp_from: email to used during the authentication to the mail server
+            smtp_to_list: list of email address which will receive the email
+            message: the email.message.Message to send
+        """
+        # Use the default bounce address **only if** no Return-Path was
+        # provided by caller.  Caller may be using Variable Envelope Return
+        # Path (VERP) to detect no-longer valid email addresses.
+        bounce_address = message['Return-Path'] or self._get_default_bounce_address() or message['From']
+        smtp_from = message['From'] or bounce_address
+        assert smtp_from, "The Return-Path or From header is required for any outbound email"
+
+        email_to = message['To']
+        email_cc = message['Cc']
+        email_bcc = message['Bcc']
+        del message['Bcc']
+
+        # All recipient addresses must only contain ASCII characters
+        smtp_to_list = [
+            address
+            for base in [email_to, email_cc, email_bcc]
+            for address in extract_rfc2822_addresses(base)
+            if address
+        ]
+        assert smtp_to_list, self.NO_VALID_RECIPIENT
+
+        x_forge_to = message['X-Forge-To']
+        if x_forge_to:
+            # `To:` header forged, e.g. for posting on mail.channels, to avoid confusion
+            del message['X-Forge-To']
+            del message['To']           # avoid multiple To: headers!
+            message['To'] = x_forge_to
+
+        # Try to not spoof the mail from headers
+        from_filter = getattr(smtp_session, 'from_filter', False)
+        smtp_from = getattr(smtp_session, 'smtp_from', False) or smtp_from
+
+        notifications_email = email_normalize(self._get_default_from_address())
+        if notifications_email and smtp_from == notifications_email and message['From'] != notifications_email:
+            smtp_from = encapsulate_email(message['From'], notifications_email)
+
+        if message['From'] != smtp_from:
+            del message['From']
+            message['From'] = smtp_from
+
+        # Check if it's still possible to put the bounce address as smtp_from
+        if self._match_from_filter(bounce_address, from_filter):
+            # Mail headers FROM will be spoofed to be able to receive bounce notifications
+            # Because the mail server support the domain of the bounce address
+            smtp_from = bounce_address
+
+        # The email's "Envelope From" (Return-Path) must only contain ASCII characters.
+        smtp_from_rfc2822 = extract_rfc2822_addresses(smtp_from)
+        assert smtp_from_rfc2822, (
+            f"Malformed 'Return-Path' or 'From' address: {smtp_from} - "
+            "It should contain one valid plain ASCII email")
+        smtp_from = smtp_from_rfc2822[-1]
+
+        return smtp_from, smtp_to_list, message
+
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
-                   smtp_session=None):
+                   smtp_user=None, smtp_password=None, smtp_encryption=None,
+                   smtp_ssl_certificate=None, smtp_ssl_private_key=None,
+                   smtp_debug=False, smtp_session=None):
         """Sends an email directly (no queuing).
 
         No retries are done, the caller should handle MailDeliveryException in order to ensure that
@@ -401,53 +639,28 @@ class IrMailServer(models.Model):
         :param smtp_port: optional SMTP port, if mail_server_id is not passed
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
+        :param smtp_ssl_certificate: filename of the SSL certificate used for authentication
+        :param smtp_ssl_private_key: filename of the SSL private key used for authentication
         :param smtp_debug: optional SMTP debug flag, if mail_server_id is not passed
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
-        # Use the default bounce address **only if** no Return-Path was
-        # provided by caller.  Caller may be using Variable Envelope Return
-        # Path (VERP) to detect no-longer valid email addresses.
-        smtp_from = message['Return-Path'] or self._get_default_bounce_address() or message['From']
-        assert smtp_from, "The Return-Path or From header is required for any outbound email"
+        smtp = smtp_session
+        if not smtp:
+            smtp = self.connect(
+                smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption,
+                smtp_from=message['From'], ssl_certificate=smtp_ssl_certificate, ssl_private_key=smtp_ssl_private_key,
+                smtp_debug=smtp_debug, mail_server_id=mail_server_id,)
 
-        # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
-        from_rfc2822 = extract_rfc2822_addresses(smtp_from)
-        assert from_rfc2822, ("Malformed 'Return-Path' or 'From' address: %r - "
-                              "It should contain one valid plain ASCII email") % smtp_from
-        # use last extracted email, to support rarities like 'Support@MyComp <support@mycompany.com>'
-        smtp_from = from_rfc2822[-1]
-        email_to = message['To']
-        email_cc = message['Cc']
-        email_bcc = message['Bcc']
-        del message['Bcc']
-
-        smtp_to_list = [
-            address
-            for base in [email_to, email_cc, email_bcc]
-            for address in extract_rfc2822_addresses(base)
-            if address
-        ]
-        assert smtp_to_list, self.NO_VALID_RECIPIENT
-
-        x_forge_to = message['X-Forge-To']
-        if x_forge_to:
-            # `To:` header forged, e.g. for posting on mail.channels, to avoid confusion
-            del message['X-Forge-To']
-            del message['To']           # avoid multiple To: headers!
-            message['To'] = x_forge_to
+        smtp_from, smtp_to_list, message = self._prepare_email_message(message, smtp)
 
         # Do not actually send emails in testing mode!
-        if getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode():
+        if self._is_test_mode():
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
         try:
             message_id = message['Message-Id']
-            smtp = smtp_session
-            smtp = smtp or self.connect(
-                smtp_server, smtp_port, smtp_user, smtp_password,
-                smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
 
             if sys.version_info < (3, 7, 4):
                 # header folding code is buggy and adds redundant carriage
@@ -476,6 +689,80 @@ class IrMailServer(models.Model):
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 
+    def _find_mail_server(self, email_from, mail_servers=None):
+        """Find the appropriate mail server for the given email address.
+
+        Returns: Record<ir.mail_server>, email_from
+        - Mail server to use to send the email (None if we use the odoo-bin arguments)
+        - Email FROM to use to send the email (in some case, it might be impossible
+          to use the given email address directly if no mail server is configured for)
+        """
+        email_from_normalized = email_normalize(email_from)
+        email_from_domain = email_domain_extract(email_from_normalized)
+        notifications_email = email_normalize(self._get_default_from_address())
+        notifications_domain = email_domain_extract(notifications_email)
+
+        if mail_servers is None:
+            mail_servers = self.sudo().search([], order='sequence')
+
+        # 1. Try to find a mail server for the right mail from
+        mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)
+        if mail_server:
+            return mail_server[0], email_from
+
+        mail_server = mail_servers.filtered(lambda m: email_domain_normalize(m.from_filter) == email_from_domain)
+        if mail_server:
+            return mail_server[0], email_from
+
+        # 2. Try to find a mail server for <notifications@domain.com>
+        if notifications_email:
+            mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == notifications_email)
+            if mail_server:
+                return mail_server[0], notifications_email
+
+            mail_server = mail_servers.filtered(lambda m: email_domain_normalize(m.from_filter) == notifications_domain)
+            if mail_server:
+                return mail_server[0], notifications_email
+
+        # 3. Take the first mail server without "from_filter" because
+        # nothing else has been found... Will spoof the FROM because
+        # we have no other choices
+        mail_server = mail_servers.filtered(lambda m: not m.from_filter)
+        if mail_server:
+            return mail_server[0], email_from
+
+        # 4. Return the first mail server even if it was configured for another domain
+        if mail_servers:
+            return mail_servers[0], email_from
+
+        # 5: SMTP config in odoo-bin arguments
+        from_filter = self.env['ir.config_parameter'].sudo().get_param(
+            'mail.default.from_filter', tools.config.get('from_filter'))
+
+        if self._match_from_filter(email_from, from_filter):
+            return None, email_from
+
+        if notifications_email and self._match_from_filter(notifications_email, from_filter):
+            return None, notifications_email
+
+        return None, email_from
+
+    @api.model
+    def _match_from_filter(self, email_from, from_filter):
+        """Return True is the given email address match the "from_filter" field.
+
+        The from filter can be Falsy (always match),
+        a domain name or an full email address.
+        """
+        if not from_filter:
+            return True
+
+        normalized_mail_from = email_normalize(email_from)
+        if '@' in from_filter:
+            return email_normalize(from_filter) == normalized_mail_from
+
+        return email_domain_extract(normalized_mail_from) == email_domain_normalize(from_filter)
+
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
         result = {}
@@ -489,3 +776,11 @@ class IrMailServer(models.Model):
         else:
             self.smtp_port = 25
         return result
+
+    def _is_test_mode(self):
+        """Return True if we are running the tests, so we do not send real emails.
+
+        Can be overridden in tests after mocking the SMTP lib to test in depth the
+        outgoing mail server.
+        """
+        return getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()

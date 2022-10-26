@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import fields, models, api
+from odoo import fields, models
+from odoo.tools.translate import html_translate
+from odoo.http import request
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    inventory_availability = fields.Selection([
-        ('never', 'Sell regardless of inventory'),
-        ('always', 'Show inventory on website and prevent sales if not enough stock'),
-        ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
-        ('custom', 'Show product-specific notifications'),
-    ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
-    available_threshold = fields.Float(string='Availability Threshold', default=5.0)
-    custom_message = fields.Text(string='Custom Message', default='', translate=True)
+    allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
+
+    available_threshold = fields.Float(string='Show Threshold', default=5.0)
+    show_availability = fields.Boolean(string='Show availability Qty', default=False)
+    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
 
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         combination_info = super(ProductTemplate, self)._get_combination_info(
@@ -27,28 +25,37 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            virtual_available = product.with_context(warehouse=website.warehouse_id.id).virtual_available
+            free_qty = product.with_context(warehouse=website._get_warehouse_available()).free_qty
+            has_stock_notification = product._has_stock_notification(self.env.user.partner_id) \
+                                     or request \
+                                     and product.id in request.session.get('product_with_stock_notification_enabled',
+                                                                           set())
+            stock_notification_email = request and request.session.get('stock_notification_email', '')
             combination_info.update({
-                'virtual_available': virtual_available,
-                'virtual_available_formatted': self.env['ir.qweb.field.float'].value_to_html(virtual_available, {'precision': 0}),
+                'free_qty': free_qty,
                 'product_type': product.type,
-                'inventory_availability': product.inventory_availability,
-                'available_threshold': product.available_threshold,
-                'custom_message': product.custom_message,
-                'product_template': product.product_tmpl_id.id,
-                'cart_qty': product.cart_qty,
+                'product_template': self.id,
+                'available_threshold': self.available_threshold,
+                'cart_qty': product._get_cart_qty(website),
                 'uom_name': product.uom_id.name,
+                'allow_out_of_stock_order': self.allow_out_of_stock_order,
+                'show_availability': self.show_availability,
+                'out_of_stock_message': self.out_of_stock_message,
+                'has_stock_notification': has_stock_notification,
+                'stock_notification_email': stock_notification_email,
             })
         else:
             product_template = self.sudo()
             combination_info.update({
-                'virtual_available': 0,
+                'free_qty': 0,
                 'product_type': product_template.type,
-                'inventory_availability': product_template.inventory_availability,
+                'allow_out_of_stock_order': product_template.allow_out_of_stock_order,
                 'available_threshold': product_template.available_threshold,
-                'custom_message': product_template.custom_message,
                 'product_template': product_template.id,
-                'cart_qty': 0
+                'cart_qty': 0,
             })
 
         return combination_info
+
+    def _is_sold_out(self):
+        return self.product_variant_id._is_sold_out()

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_mega_menu_menu_image_menu" name="Menu - Image - Menu">
-    <section class="s_mega_menu_menu_image_menu py-4">
+<template id="s_mega_menu_menu_image_menu" name="Menu - Image - Menu" groups="base.group_user">
+    <section class="s_mega_menu_menu_image_menu py-4 o_colored_level o_cc o_cc1">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-4 py-2 text-center">
+                <div class="col-12 col-sm py-2 text-center">
                     <h4 class="o_default_snippet_text" >Left Menu</h4>
                     <nav class="nav flex-column">
                         <t t-foreach="3" t-as="i">
@@ -16,10 +16,10 @@
                         </t>
                     </nav>
                 </div>
-                <div class="col-lg-4 py-2 text-center">
+                <div class="col-12 col-sm py-2 text-center">
                     <img class="img-fluid" src="/web/image/website.s_mega_menu_menu_image_menu_default_image"/>
                 </div>
-                <div class="col-lg-4 py-2 text-center">
+                <div class="col-12 col-sm py-2 text-center">
                     <h4 class="o_default_snippet_text">Right Menu</h4>
                     <nav class="nav flex-column">
                         <t t-foreach="3" t-as="i">

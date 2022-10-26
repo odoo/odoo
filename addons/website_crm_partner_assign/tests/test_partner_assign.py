@@ -34,8 +34,67 @@ class TestPartnerAssign(TransactionCase):
             }.get(addr)
 
         patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.GeoCoder.geo_find', wraps=geo_find)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
+
+    def test_opportunity_count(self):
+        self.customer_uk.write({
+            'is_company': True,
+            'child_ids': [
+                (0, 0, {'name': 'Uk Children 1',
+                       }),
+                (0, 0, {'name': 'Uk Children 2',
+                       }),
+            ],
+        })
+        lead_uk_assigned = self.env['crm.lead'].create({
+            'name': 'Office Design and Architecture',
+            'partner_assigned_id': self.customer_uk.id,
+            'type': 'opportunity',
+        })
+        children_leads = self.env['crm.lead'].create([
+            {'name': 'Children 1 Lead 1',
+             'partner_id': self.customer_uk.child_ids[0].id,
+             'type': 'lead'},
+            {'name': 'Children 1 Lead 2',
+             'partner_id': self.customer_uk.child_ids[0].id,
+             'type': 'lead'},
+            {'name': 'Children 2 Lead 1',
+             'partner_id': self.customer_uk.child_ids[1].id,
+             'type': 'lead'},
+            {'name': 'Children 2 Lead 2',
+             'partner_id': self.customer_uk.child_ids[1].id,
+             'type': 'lead'},
+        ])
+        children_leads_assigned = self.env['crm.lead'].create([
+            {'name': 'Children 1 Lead 1',
+             'partner_assigned_id': self.customer_uk.child_ids[0].id,
+             'type': 'lead'},
+            {'name': 'Children 1 Lead 2',
+             'partner_assigned_id': self.customer_uk.child_ids[0].id,
+             'type': 'lead'},
+            {'name': 'Children 2 Lead 1',
+             'partner_assigned_id': self.customer_uk.child_ids[1].id,
+             'type': 'lead'},
+            {'name': 'Children 2 Lead 2',
+             'partner_assigned_id': self.customer_uk.child_ids[1].id,
+             'type': 'lead'},
+        ])
+
+        self.assertEqual(
+            repr(self.customer_uk.action_view_opportunity()['domain']),
+            repr([('id', 'in', sorted(self.lead_uk.ids + lead_uk_assigned.ids + children_leads.ids))]),
+            'Parent: own + children leads + assigned'
+        )
+        self.assertEqual(
+            repr(self.customer_uk.child_ids[0].action_view_opportunity()['domain']),
+            repr([('id', 'in', sorted(children_leads[0:2].ids + children_leads_assigned[0:2].ids))]),
+            'Children: own leads + assigned'
+        )
+        self.assertEqual(
+            repr(self.customer_uk.child_ids[1].action_view_opportunity()['domain']),
+            repr([('id', 'in', sorted(children_leads[2:].ids + children_leads_assigned[2:].ids))]),
+            'Children: own leads + assigned'
+        )
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
@@ -61,7 +120,8 @@ class TestPartnerAssign(TransactionCase):
 
         # In order to test find nearest Partner functionality and assign to opportunity,
         # I Set Geo Lattitude and Longitude according to partner address.
-        partner_be.geo_localize()
+        # YTI Note: We should probably mock the call
+        partner_be.with_context(force_geo_localize=True).geo_localize()
 
         # I check Geo Latitude and Longitude of partner after set
         self.assertTrue(50 < partner_be.partner_latitude < 51, "Latitude is wrong: 50 < %s < 51" % partner_be.partner_latitude)
@@ -102,7 +162,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
             company_id=self.env.ref("base.main_company").id,
             grade_id=self.grade.id,
             user_id=self.user_sales_manager.id,
-            notification_type='inbox',
+            notification_type='email',
             groups='base.group_portal',
         )
 
@@ -155,6 +215,6 @@ class TestPartnerLeadPortal(TestCrmCommon):
         self.assertEqual(opportunity.partner_assigned_id, self.user_portal.partner_id, 'Assigned Partner of created opportunity is the (portal) creator.')
 
     def test_portal_mixin_url(self):
-        record_action = self.lead_portal.get_access_action(self.user_portal.id)
+        record_action = self.lead_portal._get_access_action(access_uid=self.user_portal.id)
         self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead_portal.id)
         self.assertEqual(record_action['type'], 'ir.actions.act_url')

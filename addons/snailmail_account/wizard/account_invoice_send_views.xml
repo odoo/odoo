@@ -9,7 +9,7 @@
                 <xpath expr="//div[@name='option_email']" position='before'>
                     <div name="option_letter">
                         <field name="invalid_addresses" invisible="1"/>
-                        <div name="option" class="text-left d-inline-block">
+                        <div name="option" class="text-start d-inline-block">
                             <field name="snailmail_is_letter" />
                             <b><label for="snailmail_is_letter"/></b>
                         </div>
@@ -23,28 +23,16 @@
                                     <i class="fa fa-info-circle" role="img" aria-label="Warning" title="Make sure you have enough Stamps on your account."/>
                                 )</b>
                             </span>
-                            <span attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('partner_id', '=', False)]}">
-                                <span attrs="{'invisible': [('invalid_addresses', '!=', 0)]}">
-                                    <div class="text-right text-muted d-inline-block" name="address">
-                                        <span> to: </span>
-                                        <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
-                                    </div>
-                                </span>
-                                <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
-                                    <div class="text-right d-inline-block" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
-                                        <span class="text-danger">
-                                            The customer address is not complete.
-                                        </span>
-                                    </div>
-                                </span>
+                            <span class="text-end d-inline-block " attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('partner_id', '=', False)]}" name="address">
+                                <span class="text-muted" attrs="{'invisible': [('invalid_addresses', '!=', 0)]}"> to: </span>
+                                <span class="text-danger" attrs="{'invisible': [('invalid_addresses', '=', 0)]}"> The customer's address is incomplete: </span>
+                                <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
                             </span>
-                            <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
-                                <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
-                                    <span class="text-danger">
-                                        Some customer addresses are not complete.
-                                    </span>
-                                    <button type="object" name="invalid_addresses_action" class="btn btn-link" role="button"><field name="invalid_addresses" readonly="1" options="{'digits':[0,0]}"/> invoices</button>
+                            <span attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('invalid_addresses', '=', 0)]}">
+                                <span class="text-danger">
+                                    Some customer addresses are incomplete.
                                 </span>
+                                <button type="object" name="invalid_addresses_action" class="btn btn-link" role="button"><field name="invalid_addresses" readonly="1" options="{'digits':[0,0]}"/> Contacts</button>
                             </span>
                         </span>
                     </div>

@@ -1,41 +1,23 @@
-odoo.define('mail/static/src/components/thread_typing_icon/thread_typing_icon.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-class ThreadTypingIcon extends Component {
+export class ThreadTypingIcon extends Component {
 
-    constructor(...args) {
-        super(...args);
-        useShouldUpdateBasedOnProps();
+    /**
+     * @returns {ThreadTypingIconView}
+     */
+    get threadTypingIconView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(ThreadTypingIcon, {
-    defaultProps: {
-        animation: 'none',
-        size: 'small',
-    },
-    props: {
-        animation: {
-            type: String,
-            validate: prop => ['bounce', 'none', 'pulse'].includes(prop),
-        },
-        size: {
-            type: String,
-            validate: prop => ['small', 'medium'].includes(prop),
-        },
-        title: {
-            type: String,
-            optional: true,
-        }
-    },
+    props: { record: Object },
     template: 'mail.ThreadTypingIcon',
 });
 
-return ThreadTypingIcon;
-
-});
+registerMessagingComponent(ThreadTypingIcon);

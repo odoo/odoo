@@ -4,46 +4,47 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const ControlButtonsMixin = require('point_of_sale.ControlButtonsMixin');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
-    const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
-    const { Gui } = require('point_of_sale.Gui');
-    const { useState } = owl.hooks;
+    const { useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { isConnectionError } = require('point_of_sale.utils');
+    const { parse } = require('web.field_utils');
+
+    const { onMounted, useState } = owl;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('update-selected-orderline', this._updateSelectedOrderline);
-            useListener('new-orderline-selected', this._newOrderlineSelected);
+            useListener('select-line', this._selectLine);
             useListener('set-numpad-mode', this._setNumpadMode);
             useListener('click-product', this._clickProduct);
-            useListener('click-customer', this._onClickCustomer);
+            useListener('click-partner', this.onClickPartner);
             useListener('click-pay', this._onClickPay);
             useBarcodeReader({
                 product: this._barcodeProductAction,
                 weight: this._barcodeProductAction,
                 price: this._barcodeProductAction,
-                client: this._barcodeClientAction,
+                client: this._barcodePartnerAction,
                 discount: this._barcodeDiscountAction,
                 error: this._barcodeErrorAction,
-            })
-            onChangeOrder(null, (newOrder) => newOrder && this.render());
+            });
             NumberBuffer.use({
                 nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
-            this.state = useState({ numpadMode: 'quantity' });
-            this.mobile_pane = this.props.mobile_pane || 'right';
+            onMounted(this.onMounted);
+            // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
+            // We don't do this in the `mounted` lifecycle method because it is called before
+            // the callbacks in `onMounted` hook.
+            onMounted(() => NumberBuffer.reset());
+            this.state = useState({
+                mobile_pane: this.props.mobile_pane || 'right',
+            });
         }
-        mounted() {
-            if(this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control') {
-                Gui.showPopup('CashOpeningPopup');
-            }
-            this.env.pos.on('change:selectedClient', this.render, this);
-        }
-        willUnmount() {
-            this.env.pos.off('change:selectedClient', null, this);
+        onMounted() {
+            this.env.posbus.trigger('start-cash-control');
         }
         /**
          * To be overridden by modules that checks availability of
@@ -53,21 +54,17 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get isScaleAvailable() {
             return true;
         }
-        get client() {
-            return this.env.pos.get_client();
+        get partner() {
+            return this.currentOrder ? this.currentOrder.get_partner() : null;
         }
         get currentOrder() {
             return this.env.pos.get_order();
         }
-        async _clickProduct(event) {
-            if (!this.currentOrder) {
-                this.env.pos.add_new_order();
-            }
-            const product = event.detail;
+        async _getAddProductOptions(product, base_code) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
-            if (this.env.pos.config.product_configurator && _.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
+            if (_.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
                 let attributes = _.map(product.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
                                   .filter((attr) => attr !== undefined);
                 let { confirmed, payload } = await this.showPopup('ProductConfiguratorPopup', {
@@ -138,27 +135,42 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
 
-            // Add the product after having the extra information.
-            this.currentOrder.add_product(product, {
-                draftPackLotLines,
-                description: description,
-                price_extra: price_extra,
-                quantity: weight,
-            });
+            if (base_code && this.env.pos.db.product_packaging_by_barcode[base_code.code]) {
+                weight = this.env.pos.db.product_packaging_by_barcode[base_code.code].qty;
+            }
 
+            return { draftPackLotLines, quantity: weight, description, price_extra };
+        }
+        async _addProduct(product, options) {
+            this.currentOrder.add_product(product, options);
+        }
+        async _clickProduct(event) {
+            if (!this.currentOrder) {
+                this.env.pos.add_new_order();
+            }
+            const product = event.detail;
+            const options = await this._getAddProductOptions(product);
+            // Do not add product if options is undefined.
+            if (!options) return;
+            // Add the product after having the extra information.
+            await this._addProduct(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {
             const { mode } = event.detail;
             NumberBuffer.capture();
             NumberBuffer.reset();
-            this.state.numpadMode = mode;
+            this.env.pos.numpadMode = mode;
+        }
+        _selectLine() {
+            NumberBuffer.reset();
         }
         async _updateSelectedOrderline(event) {
-            if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
+            if (this.env.pos.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
                 let selectedLine = order.get_selected_orderline();
-                let lastId = order.orderlines.last().cid;
+                let orderlines = order.orderlines;
+                let lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
                 let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
 
                 if(selectedLine.noDecrease) {
@@ -168,48 +180,98 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     });
                     return;
                 }
+                const parsedInput = event.detail.buffer && parse.float(event.detail.buffer) || 0;
                 if(lastId != selectedLine.cid)
                     this._showDecreaseQuantityPopup();
-                else if(currentQuantity < event.detail.buffer)
+                else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
-                else if(event.detail.buffer < currentQuantity)
+                else if(parsedInput < currentQuantity)
                     this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
                 this._setValue(val);
+                if (val == 'remove') {
+                    NumberBuffer.reset();
+                    this.env.pos.numpadMode = 'quantity';
+                }
             }
-        }
-        async _newOrderlineSelected() {
-            NumberBuffer.reset();
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {
-                if (this.state.numpadMode === 'quantity') {
-                    this.currentOrder.get_selected_orderline().set_quantity(val);
-                } else if (this.state.numpadMode === 'discount') {
+                if (this.env.pos.numpadMode === 'quantity') {
+                    const result = this.currentOrder.get_selected_orderline().set_quantity(val);
+                    if (!result) NumberBuffer.reset();
+                } else if (this.env.pos.numpadMode === 'discount') {
                     this.currentOrder.get_selected_orderline().set_discount(val);
-                } else if (this.state.numpadMode === 'price') {
+                } else if (this.env.pos.numpadMode === 'price') {
                     var selected_orderline = this.currentOrder.get_selected_orderline();
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
                 }
-                if (this.env.pos.config.iface_customer_facing_display) {
-                    this.env.pos.send_current_order_to_customer_facing_display();
+            }
+        }
+        async _barcodeProductAction(code) {
+            let product = this.env.pos.db.get_product_by_barcode(code.base_code);
+            if (!product) {
+                // find the barcode in the backend
+                let foundProductIds = [];
+                try {
+                    foundProductIds = await this.rpc({
+                        model: 'product.product',
+                        method: 'search',
+                        args: [[['barcode', '=', code.base_code]]],
+                        context: this.env.session.user_context,
+                    });
+                } catch (error) {
+                    if (isConnectionError(error)) {
+                        return this.showPopup('OfflineErrorPopup', {
+                            title: this.env._t('Network Error'),
+                            body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
+                        });
+                    } else {
+                        throw error;
+                    }
+                }
+                if (foundProductIds.length) {
+                    await this.env.pos._addProducts(foundProductIds);
+                    // assume that the result is unique.
+                    product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
+                } else {
+                    return this._barcodeErrorAction(code);
                 }
             }
-        }
-        _barcodeProductAction(code) {
-            // NOTE: scan_product call has side effect in pos if it returned true.
-            if (!this.env.pos.scan_product(code)) {
-                this._barcodeErrorAction(code);
+            const options = await this._getAddProductOptions(product, code);
+            // Do not proceed on adding the product when no options is returned.
+            // This is consistent with _clickProduct.
+            if (!options) return;
+
+            // update the options depending on the type of the scanned code
+            if (code.type === 'price') {
+                Object.assign(options, {
+                    price: code.value,
+                    extras: {
+                        price_manually_set: true,
+                    },
+                });
+            } else if (code.type === 'weight') {
+                Object.assign(options, {
+                    quantity: code.value,
+                    merge: false,
+                });
+            } else if (code.type === 'discount') {
+                Object.assign(options, {
+                    discount: code.value,
+                    merge: false,
+                });
             }
+            this.currentOrder.add_product(product,  options)
         }
-        _barcodeClientAction(code) {
+        _barcodePartnerAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
             if (partner) {
-                if (this.currentOrder.get_client() !== partner) {
-                    this.currentOrder.set_client(partner);
+                if (this.currentOrder.get_partner() !== partner) {
+                    this.currentOrder.set_partner(partner);
                     this.currentOrder.set_pricelist(
                         _.findWhere(this.env.pos.pricelists, {
                             id: partner.property_product_pricelist[0],
@@ -240,6 +302,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 return code.code;
             }
         }
+        async _displayAllControlPopup() {
+            await this.showPopup('ControlButtonPopup', {
+                controlButtons: this.controlButtons
+            });
+        }
         /**
          * override this method to perform procedure if the scale is not available.
          * @see isScaleAvailable
@@ -250,7 +317,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 startingValue: 0,
                 title: this.env._t('Set the new quantity'),
             });
-            let newQuantity = inputNumber !== ""? inputNumber: null;
+            let newQuantity = inputNumber && inputNumber !== "" ? parse.float(inputNumber) : null;
             if (confirmed && newQuantity !== null) {
                 let order = this.env.pos.get_order();
                 let selectedLine = this.env.pos.get_order().get_selected_orderline();
@@ -269,30 +336,47 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
         }
-        async _onClickCustomer() {
-            // IMPROVEMENT: This code snippet is very similar to selectClient of PaymentScreen.
-            const currentClient = this.currentOrder.get_client();
-            const { confirmed, payload: newClient } = await this.showTempScreen(
-                'ClientListScreen',
-                { client: currentClient }
+        async onClickPartner() {
+            // IMPROVEMENT: This code snippet is very similar to selectPartner of PaymentScreen.
+            const currentPartner = this.currentOrder.get_partner();
+            if (currentPartner && this.currentOrder.getHasRefundLines()) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t("Can't change customer"),
+                    body: _.str.sprintf(
+                        this.env._t(
+                            "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer."
+                        ),
+                        currentPartner.name
+                    ),
+                });
+                return;
+            }
+            const { confirmed, payload: newPartner } = await this.showTempScreen(
+                'PartnerListScreen',
+                { partner: currentPartner }
             );
             if (confirmed) {
-                this.currentOrder.set_client(newClient);
-                this.currentOrder.updatePricelist(newClient);
+                this.currentOrder.set_partner(newPartner);
+                this.currentOrder.updatePricelist(newPartner);
             }
         }
-        _onClickPay() {
-            this.showScreen('PaymentScreen');
+        async _onClickPay() {
+            if (this.env.pos.get_order().orderlines.some(line => line.get_product().tracking !== 'none' && !line.has_valid_product_lot()) && (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots)) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Some Serial/Lot Numbers are missing'),
+                    body: this.env._t('You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?'),
+                    confirmText: this.env._t('Yes'),
+                    cancelText: this.env._t('No')
+                });
+                if (confirmed) {
+                    this.showScreen('PaymentScreen');
+                }
+            } else {
+                this.showScreen('PaymentScreen');
+            }
         }
         switchPane() {
-            if (this.mobile_pane === "left") {
-                this.mobile_pane = "right";
-                this.render();
-            }
-            else {
-                this.mobile_pane = "left";
-                this.render();
-            }
+            this.state.mobile_pane = this.state.mobile_pane === "left" ? "right" : "left";
         }
     }
     ProductScreen.template = 'ProductScreen';

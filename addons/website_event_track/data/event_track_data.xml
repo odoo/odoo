@@ -16,14 +16,14 @@
             <field name="name">Announced</field>
             <field name="sequence">3</field>
             <field name="color">3</field>
-            <field name="is_accepted" eval="True"/>
+            <field name="is_visible_in_agenda" eval="True"/>
         </record>
         <record id="event_track_stage3" model="event.track.stage">
             <field name="name">Published</field>
             <field name="sequence">4</field>
             <field name="color">4</field>
-            <field name="is_accepted" eval="True"/>
-            <field name="is_done" eval="True"/>
+            <field name="is_visible_in_agenda" eval="True"/>
+            <field name="is_fully_accessible" eval="True"/>
         </record>
         <record id="event_track_stage4" model="event.track.stage">
             <field name="name">Refused</field>

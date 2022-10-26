@@ -5,7 +5,7 @@ from ast import literal_eval
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo.addons.crm.models.crm_lead import CRM_LEAD_FIELDS_TO_MERGE
+from odoo.addons.crm.models.crm_lead import PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sales_team.tests.common import TestSalesCommon
@@ -53,11 +53,27 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
         'create_date', 'date_action_last', 'email_from', 'email_cc', 'website'
     ]
+    merge_fields = ['description', 'type', 'priority']
 
     @classmethod
     def setUpClass(cls):
         super(TestCrmCommon, cls).setUpClass()
         cls._init_mail_gateway()
+
+        # Salesmen organization
+        # ------------------------------------------------------------
+        # Role: M (team member) R (team manager)
+        # SALESMAN---------------sales_team_1
+        # admin------------------M-----------
+        # user_sales_manager-----R-----------
+        # user_sales_leads-------M-----------
+        # user_sales_salesman----/-----------
+
+        # Sales teams organization
+        # ------------------------------------------------------------
+        # SALESTEAM-----------SEQU-----COMPANY
+        # sales_team_1--------5--------False
+        # data----------------9999-----??
 
         cls.sales_team_1.write({
             'alias_name': 'sales.test',
@@ -74,7 +90,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'assignment_domain': False,
         })
 
-        (cls.user_sales_manager | cls.user_sales_leads | cls.user_sales_salesman).write({
+        (cls.user_sales_manager + cls.user_sales_leads + cls.user_sales_salesman).write({
             'groups_id': [(4, cls.env.ref('crm.group_use_lead').id)]
         })
 
@@ -107,8 +123,14 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'is_won': True,
         })
 
+        # countries and langs
         base_us = cls.env.ref('base.us')
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('en_US')
+        cls.lang_en = cls.env['res.lang']._lang_get('en_US')
+        cls.lang_fr = cls.env['res.lang']._lang_get('fr_FR')
 
+        # leads
         cls.lead_1 = cls.env['crm.lead'].create({
             'name': 'Nibbler Spacecraft Request',
             'type': 'lead',
@@ -117,7 +139,10 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'partner_id': False,
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
+            'lang_id': cls.lang_fr.id,
+            'phone': '+1 202 555 9999',
             'country_id': cls.env.ref('base.us').id,
+            'probability': 20,
         })
         # update lead_1: stage_id is not computed anymore by default for leads
         cls.lead_1.write({
@@ -139,7 +164,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'team_id': cls.sales_team_1.id,
         })
         cls.lead_team_1_lost.action_set_lost()
-        (cls.lead_team_1_won | cls.lead_team_1_lost).flush()
+        (cls.lead_team_1_won + cls.lead_team_1_lost).flush_recordset()
 
         # email / phone data
         cls.test_email_data = [
@@ -152,12 +177,12 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'philip.j.fry@test.example.com',
             'turanga.leela@test.example.com',
         ]
-        cls.test_pĥone_data = [
+        cls.test_phone_data = [
             '+1 202 555 0122',  # formatted US number
             '202 555 0999',  # local US number
             '202 555 0888',  # local US number
         ]
-        cls.test_pĥone_data_sanitized = [
+        cls.test_phone_data_sanitized = [
             '+12025550122',
             '+12025550999',
             '+12025550888',
@@ -176,9 +201,10 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_1 = cls.env['res.partner'].create({
             'name': 'Philip J Fry',
             'email': cls.test_email_data[1],
-            'mobile': cls.test_pĥone_data[0],
+            'mobile': cls.test_phone_data[0],
             'title': cls.env.ref('base.res_partner_title_mister').id,
             'function': 'Delivery Boy',
+            'lang': cls.lang_en.code,
             'phone': False,
             'parent_id': cls.contact_company_1.id,
             'is_company': False,
@@ -190,8 +216,9 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_2 = cls.env['res.partner'].create({
             'name': 'Turanga Leela',
             'email': cls.test_email_data[2],
-            'mobile': cls.test_pĥone_data[1],
-            'phone': cls.test_pĥone_data[2],
+            'lang': cls.lang_en.code,
+            'mobile': cls.test_phone_data[1],
+            'phone': cls.test_phone_data[2],
             'parent_id': False,
             'is_company': False,
             'street': 'Cookieville Minimum-Security Orphanarium',
@@ -206,13 +233,79 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'street': 'Mom Friendly Robot Street',
             'city': 'New new York',
             'country_id': base_us.id,
+            'lang': cls.lang_en.code,
             'mobile': '+1 202 555 0888',
             'zip': '87654',
         })
 
+        # test activities
+        cls.activity_type_1 = cls.env['mail.activity.type'].create({
+            'name': 'Lead Test Activity 1',
+            'summary': 'ACT 1 : Presentation, barbecue, ... ',
+            'res_model': 'crm.lead',
+            'category': 'meeting',
+            'delay_count': 5,
+        })
+        cls.env['ir.model.data'].create({
+            'name': cls.activity_type_1.name.lower().replace(' ', '_'),
+            'module': 'crm',
+            'model': cls.activity_type_1._name,
+            'res_id': cls.activity_type_1.id,
+        })
+
+    def setUp(self):
+        super(TestCrmCommon, self).setUp()
+        self.flush_tracking()
+
+    @classmethod
+    def _activate_multi_company(cls):
+        cls.company_2 = cls.env['res.company'].create({
+            'country_id': cls.env.ref('base.au').id,
+            'currency_id': cls.env.ref('base.AUD').id,
+            'email': 'company.2@test.example.com',
+            'name': 'New Test Company',
+        })
+
+        cls.user_sales_manager_mc = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_2.id,
+            company_ids=[(4, cls.company_main.id), (4, cls.company_2.id)],
+            email='user.sales.manager.mc@test.example.com',
+            login='user_sales_manager_mc',
+            groups='sales_team.group_sale_manager,base.group_partner_manager',
+            name='Myrddin Sales Manager',
+            notification_type='inbox',
+        )
+        cls.team_company2 = cls.env['crm.team'].create({
+            'company_id': cls.company_2.id,
+            'name': 'C2 Team',
+            'sequence': 10,
+            'user_id': False,
+        })
+        cls.team_company2_m1 = cls.env['crm.team.member'].create({
+            'crm_team_id': cls.team_company2.id,
+            'user_id': cls.user_sales_manager_mc.id,
+            'assignment_max': 30,
+            'assignment_domain': False,
+        })
+
+        cls.team_company1 = cls.env['crm.team'].create({
+            'company_id': cls.company_main.id,
+            'name': 'MainCompany Team',
+            'sequence': 50,
+            'user_id': cls.user_sales_manager.id,
+        })
+
+        cls.partner_c2 = cls.env['res.partner'].create({
+            'company_id': cls.company_2.id,
+            'email': '"Partner C2" <partner_c2@multicompany.example.com>',
+            'name': 'Customer for C2',
+            'phone': '+32455001122',
+        })
+
     def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,
                             partner_count=0, partner_ids=None, user_ids=None,
-                            country_ids=None):
+                            country_ids=None, probabilities=None, suffix=''):
         """ Helper tool method creating a batch of leads, useful when dealing
         with batch processes. Please update me.
 
@@ -227,7 +320,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         """
         types = ['lead', 'opportunity']
         leads_data = [{
-            'name': 'TestLead_%04d' % (x),
+            'name': f'TestLead{suffix}_{x:04d}',
             'type': lead_type if lead_type else types[x % 2],
             'priority': '%s' % (x % 3),
         } for x in range(count)]
@@ -280,6 +373,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             for idx, lead_data in enumerate(leads_data):
                 lead_data['user_id'] = user_ids[idx % len(user_ids)]
 
+        # probabilities
+        if probabilities:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['probability'] = probabilities[idx % len(probabilities)]
+
         # duplicates (currently only with email)
         dups_data = []
         if email_dup_count and not partner_ids:
@@ -303,49 +401,48 @@ class TestCrmCommon(TestSalesCommon, MailCase):
           * a lead with customer but another email
           * a lost opportunity with same email_from
         """
-        self.customer = self.env['res.partner'].create({
+        customer = self.env['res.partner'].create({
             'name': 'Lead1 Email Customer',
             'email': lead.email_from,
         })
-        self.lead_email_from = self.env['crm.lead'].create({
+        lead_email_from = self.env['crm.lead'].create({
             'name': 'Duplicate: same email_from',
             'type': 'lead',
             'team_id': lead.team_id.id,
             'email_from': lead.email_from,
+            'probability': lead.probability,
         })
-        # self.lead_email_normalized = self.env['crm.lead'].create({
-        #     'name': 'Duplicate: email_normalize comparison',
-        #     'type': 'lead',
-        #     'team_id': lead.team_id.id,
-        #     'stage_id': lead.stage_id.id,
-        #     'email_from': 'CUSTOMER WITH NAME <%s>' % lead.email_normalized.upper(),
-        # })
-        self.lead_partner = self.env['crm.lead'].create({
+        lead_email_normalized = self.env['crm.lead'].create({
+            'name': 'Duplicate: email_normalize comparison',
+            'type': 'lead',
+            'team_id': lead.team_id.id,
+            'stage_id': lead.stage_id.id,
+            'email_from': 'CUSTOMER WITH NAME <%s>' % lead.email_normalized.upper(),
+            'probability': lead.probability,
+        })
+        lead_partner = self.env['crm.lead'].create({
             'name': 'Duplicate: customer ID',
             'type': 'lead',
             'team_id': lead.team_id.id,
-            'partner_id': self.customer.id,
+            'partner_id': customer.id,
+            'probability': lead.probability,
         })
         if create_opp:
-            self.opp_lost = self.env['crm.lead'].create({
+            opp_lost = self.env['crm.lead'].create({
                 'name': 'Duplicate: lost opportunity',
                 'type': 'opportunity',
                 'team_id': lead.team_id.id,
                 'stage_id': lead.stage_id.id,
                 'email_from': lead.email_from,
+                'probability': lead.probability,
             })
-            self.opp_lost.action_set_lost()
+            opp_lost.action_set_lost()
         else:
-            self.opp_lost = self.env['crm.lead']
+            opp_lost = self.env['crm.lead']
 
-        # self.assertEqual(self.lead_email_from.email_normalized, self.lead_email_normalized.email_normalized)
-        # self.assertTrue(lead.email_from != self.lead_email_normalized.email_from)
-        # self.assertFalse(self.opp_lost.active)
-
-        # new_lead = self.lead_email_from | self.lead_email_normalized | self.lead_partner | self.opp_lost
-        new_leads = self.lead_email_from | self.lead_partner | self.opp_lost
-        new_leads.flush()  # compute notably probability
-        return new_leads
+        new_leads = lead_email_from + lead_email_normalized + lead_partner + opp_lost
+        new_leads.flush_recordset()  # compute notably probability
+        return customer, new_leads
 
     @contextmanager
     def assertLeadMerged(self, opportunity, leads, **expected):
@@ -361,12 +458,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         self.assertIn(opportunity, leads)
 
         # save opportunity value before being modified by merge process
-        fields_all = self.FIELDS_FIRST_SET + ['description', 'type', 'priority']
-        # ensure tests are synchronized with crm code
-        self.assertTrue(all(field in fields_all for field in CRM_LEAD_FIELDS_TO_MERGE + list(self.env['crm.lead']._merge_get_fields_specific().keys())))
+        fields_all = self.FIELDS_FIRST_SET + self.merge_fields
         original_opp_values = dict(
             (fname, opportunity[fname])
             for fname in fields_all
+            if fname in opportunity
         )
 
         def _find_value(lead, fname):
@@ -384,11 +480,18 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         def _get_description():
             values = [_find_value(lead, 'description') for lead in leads]
-            return '\n\n'.join(value for value in values if value)
+            return '<br><br>'.join(value for value in values if value)
 
         def _get_priority():
             values = [_find_value(lead, 'priority') for lead in leads]
             return max(values)
+
+        def _aggregate(fname):
+            if isinstance(self.env['crm.lead'][fname], models.BaseModel):
+                values = leads.mapped(fname)
+            else:
+                values = [_find_value(lead, fname) for lead in leads]
+            return values
 
         try:
             # merge process will modify opportunity
@@ -396,10 +499,15 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         finally:
             # support specific values caller may want to check in addition to generic tests
             for fname, expected in expected.items():
-                self.assertEqual(opportunity[fname], expected)
+                if expected is False:
+                    self.assertFalse(opportunity[fname], "%s must be False" % fname)
+                else:
+                    self.assertEqual(opportunity[fname], expected, "%s must be equal to %s" % (fname, expected))
 
             # classic fields: first not void wins or specific computation
             for fname in fields_all:
+                if fname not in opportunity:  # not all fields available when doing -u
+                    continue
                 opp_value = opportunity[fname]
                 if fname == 'description':
                     self.assertEqual(opp_value, _get_description())
@@ -407,6 +515,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                     self.assertEqual(opp_value, _get_type())
                 elif fname == 'priority':
                     self.assertEqual(opp_value, _get_priority())
+                elif fname in ('order_ids', 'visitor_ids'):
+                    self.assertEqual(opp_value, _aggregate(fname))
+                elif fname in PARTNER_ADDRESS_FIELDS_TO_SYNC:
+                    # Specific computation, has its own test
+                    continue
                 else:
                     self.assertEqual(
                         opp_value if opp_value or not isinstance(opp_value, models.BaseModel) else False,
@@ -461,12 +574,7 @@ class TestLeadConvertCommon(TestCrmCommon):
         cls.lead_1.write({'date_open': Datetime.from_string('2020-01-15 11:30:00')})
 
         cls.crm_lead_dt_patcher = patch('odoo.addons.crm.models.crm_lead.fields.Datetime', wraps=Datetime)
-        cls.crm_lead_dt_mock = cls.crm_lead_dt_patcher.start()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.crm_lead_dt_patcher.stop()
-        super(TestLeadConvertCommon, cls).tearDownClass()
+        cls.crm_lead_dt_mock = cls.startClassPatcher(cls.crm_lead_dt_patcher)
 
     @classmethod
     def _switch_to_multi_membership(cls):
@@ -503,7 +611,7 @@ class TestLeadConvertCommon(TestCrmCommon):
         })
         cls.sales_team_convert_m1.write({
             'assignment_max': 30,
-            'assignment_domain': [('priority', 'in', ['2', '3'])]
+            'assignment_domain': [('probability', '>=', 20)]
         })
         cls.sales_team_convert_m2 = cls.env['crm.team.member'].create({
             'user_id': cls.user_sales_manager.id,
@@ -532,12 +640,13 @@ class TestLeadConvertCommon(TestCrmCommon):
                 member_leads.filtered_domain(literal_eval(member.assignment_domain)),
                 member_leads
             )
-        if member.crm_team_id.assignment_domain:
-            self.assertEqual(
-                member_leads.filtered_domain(literal_eval(member.crm_team_id.assignment_domain)),
-                member_leads,
-                'Assign domain not matching: %s' % member.crm_team_id.assignment_domain
-            )
+        # TODO this condition is not fulfilled in case of merge, need to change merge/assignment process
+        # if member.crm_team_id.assignment_domain:
+        #     self.assertEqual(
+        #         member_leads.filtered_domain(literal_eval(member.crm_team_id.assignment_domain)),
+        #         member_leads,
+        #         'Assign domain not matching: %s' % member.crm_team_id.assignment_domain
+        #     )
 
 class TestLeadConvertMassCommon(TestLeadConvertCommon):
 
@@ -575,20 +684,24 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'partner_id': cls.contact_1.id,
         })
         cls.lead_w_partner.write({'stage_id': False})
+
+        cls.tags = cls.env['crm.tag'].create([{'name': 'Tag %i' % i} for i in range(4)])
+        cls.lead_1.tag_ids = cls.tags[:3]
         cls.lead_w_partner_company = cls.env['crm.lead'].create({
             'name': 'New1',
             'type': 'lead',
-            'probability': 15,
+            'probability': 50,
             'user_id': cls.user_sales_manager.id,
             'stage_id': cls.stage_team1_1.id,
             'partner_id': cls.contact_company_1.id,
             'contact_name': 'Hermes Conrad',
             'email_from': 'hermes.conrad@test.example.com',
+            'tag_ids': (cls.tags[:2] | cls.tags[3]),
         })
         cls.lead_w_contact = cls.env['crm.lead'].create({
             'name': 'LeadContact',
             'type': 'lead',
-            'probability': 15,
+            'probability': 25,
             'contact_name': 'TestContact',
             'user_id': cls.user_sales_salesman.id,
             'stage_id': cls.stage_gen_1.id,
@@ -611,4 +724,4 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'stage_id': cls.stage_team1_2.id,
             'active': False,
         })
-        (cls.lead_w_partner | cls.lead_w_partner_company | cls.lead_w_contact | cls.lead_w_email | cls.lead_w_email_lost).flush()
+        cls.env.flush_all()

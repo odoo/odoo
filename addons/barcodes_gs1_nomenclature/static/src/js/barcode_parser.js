@@ -88,9 +88,6 @@ BarcodeParser.include({
         const results = [];
         const rules = this.nomenclature.rules.filter(rule => rule.encoding === 'gs1-128');
         let separatorReg = FNC1_CHAR + "?";
-        if (this.nomenclature.gs1_separator_fnc1 && this.nomenclature.gs1_separator_fnc1.trim()){
-            separatorReg = `(?:${this.nomenclature.gs1_separator_fnc1})?`;
-        }
 
         while (barcode.length > 0) {
             const barcodeLength = barcode.length;
@@ -151,5 +148,8 @@ BarcodeParser.include({
     },
 });
 
-return BarcodeParser;
+return {
+    BarcodeParser,
+    FNC1_CHAR,
+};
 });

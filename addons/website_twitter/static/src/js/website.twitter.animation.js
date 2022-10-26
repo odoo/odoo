@@ -2,13 +2,13 @@ odoo.define('website_twitter.animation', function (require) {
 'use strict';
 
 var core = require('web.core');
+const {Markup} = require('web.utils');
 var publicWidget = require('web.public.widget');
 
 var qweb = core.qweb;
 
 publicWidget.registry.twitter = publicWidget.Widget.extend({
     selector: '.twitter',
-    xmlDependencies: ['/website_twitter/static/src/xml/website.twitter.xml'],
     disabledInEditableMode: false,
     events: {
         'mouseenter .wrap-row': '_onEnterRow',
@@ -47,7 +47,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 }
 
                 // Parse tweet text
-                tweet.text = tweet.text
+                tweet.text = Markup(_.escape(tweet.text)
                     .replace(
                         /[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g,
                         function (url) {
@@ -65,18 +65,12 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                         function (hashtag) {
                             return _makeLink('http://twitter.com/search?q='+hashtag.replace('#',''), hashtag);
                         }
-                    );
+                    ));
 
                 return qweb.render('website.Twitter.Tweet', {tweet: tweet});
 
                 function _makeLink(url, text) {
-                    var c = $('<a/>', {
-                        text: text,
-                        href: url,
-                        target: '_blank',
-                        rel: 'noreferrer noopener',
-                    });
-                    return c.prop('outerHTML');
+                    return Markup`<a href="${url}" target="_blank" rel="noreferrer noopener">${text}</a>`;
                 }
             });
 

@@ -8,7 +8,7 @@ class TestProductTemplate(TransactionCase):
       })
 
       seller = self.env['product.supplierinfo'].create({
-        'name': partner.id,
+        'partner_id': partner.id,
         'price': 12.0,
         'delay': 1,
         'product_code': 'VOB2a',

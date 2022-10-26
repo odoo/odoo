@@ -57,5 +57,13 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
     ReceiptScreen.check.totalAmountContains('$ 30.00 + $ 1.00 tip');
     ReceiptScreen.do.clickNextOrder();
 
+    // Test customer note in receipt
+    ProductScreen.exec.addOrderline('Desk Pad', '1', '5');
+    ProductScreen.exec.addCustomerNote('Test customer note')
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.customerNoteIsThere('Test customer note');
+
     Tour.register('ReceiptScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

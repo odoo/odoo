@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data noupdate="0">
+    <!--
+        There are 4 groups
+        The way the groups work is different when `account_accountant` is installed or not.
+
+        Invoicing only:
+        ```
+         group_account_invoice ⇨ group_account_manager   (only those two should be used)
+                               ⬂
+        group_account_readonly ⇨ group_account_user      (those two are only visible through a server action)
+        ```
+
+        Invoicing + Accounting:
+        ```
+         group_account_invoice ⬂
+        group_account_readonly ⇨ group_account_user ⇨ group_account_manager
+        ```
+        `group_account_user` is almost (a bit more than) the sum of `group_account_invoice` and `group_account_readonly`
+        `group_account_manager` is the king (except when Consolidation is installed, then there is a super-king)
+
+        `group_account_invoice` can create/edit invoices, refunds, payments, etc but cannot see accounting related stuff (journal entries, reports, reconciliation,...)
+        `group_account_readonly` can see (and only see) everything, including the journal entries, advanced configuration, reports
+        `group_account_user`  is the accountant: he can do everything except advanced config (accounting periods for instance)
+        `group_account_manager` can edit some config that `group_account_user` cannot do
+
+        When you have only Invoicing installed, only `group_account_invoice` and `group_account_manager` should be used. The others are giving a shallow access to Accounting features, but we want to remove that.
+    -->
 
     <record model="ir.module.category" id="base.module_category_accounting_accounting">
         <field name="description">Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing.</field>
         <field name="sequence">7</field>
+    </record>
+
+    <record id="group_delivery_invoice_address" model="res.groups">
+        <field name="name">Delivery Address</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="group_show_line_subtotals_tax_excluded" model="res.groups">
@@ -41,14 +72,7 @@
         <field name="name">Billing Administrator</field>
         <field name="category_id" ref="base.module_category_accounting_accounting"/>
         <field name="implied_ids" eval="[(4, ref('group_account_invoice')),(4, ref('base.group_private_addresses'))]"/>
-    </record>
-
-    <record id="base.user_admin" model="res.users">
-        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
-    </record>
-
-    <record id="base.group_system" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
     <record id="group_warning_account" model="res.groups">
@@ -267,17 +291,9 @@
         <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
-    <!-- account analytic default-->
-    <record id="analytic_default_comp_rule" model="ir.rule">
-        <field name="name">Analytic Default multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_default"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="account_tax_carryover_line_comp_rule" model="ir.rule">
-        <field name="name">Carry over line multi-company</field>
-        <field name="model_id" ref="model_account_tax_carryover_line"/>
+    <record id="report_external_value_comp_rule" model="ir.rule">
+        <field name="name">Report External Value multi-company</field>
+        <field name="model_id" ref="model_account_report_external_value"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 </data>

@@ -60,6 +60,7 @@
                 <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
+                <field name="number_of_opened_session"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -69,16 +70,16 @@
                                         <t t-esc="record.name.value"/>
                                     </div>
                                     <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
-                                        <div class="badge badge-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opening_control'">
-                                        <div class="badge badge-info o_kanban_inline_block">Opening Control</div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opening Control</div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'closing_control'">
-                                        <div class="badge badge-info o_kanban_inline_block">Closing Control</div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Closing Control</div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1">
-                                        <div t-attf-class="badge badge-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
+                                        <div t-attf-class="badge bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
                                              title="The session has been opened for an unusually long period. Please consider closing.">
                                              To Close
                                         </div>
@@ -91,13 +92,13 @@
                             <div class="container o_kanban_card_content">
                                 <div class="row">
                                     <div class="col-6 o_kanban_primary_left">
-                                        <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object">Resume</button>
+                                        <button t-if="record.current_session_state.raw_value != 'closing_control'" class="btn btn-primary" name="open_ui" type="object">
+                                            <t t-if="record.current_session_state.raw_value === 'opened'">Continue selling</t>
+                                            <t t-elif="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value">New Session</t>
+                                            <t t-elif="record.current_session_state.raw_value === 'opening_control'">Open Session</t>
+                                        </button>
 
-                                        <button t-if="record.current_session_state.raw_value === 'new_session' || record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
-
-                                        <button t-if="_.contains(['opened', 'closing_control'], record.current_session_state.raw_value)" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
-
-                                        <button t-if="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>
+                                        <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
 
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
@@ -113,17 +114,22 @@
 
                                         <div t-if="record.last_session_closing_date.value" attrs='{"invisible": [("cash_control","=",False)]}' class="row">
                                             <div class="col-6">
-                                                <span>Cash Balance</span>
+                                                <span>Last Closing Cash Balance</span>
                                             </div>
                                             <div class="col-6">
                                                 <span><field name="last_session_closing_cash" widget="monetary"/></span>
                                             </div>
                                         </div>
+
+                                        <button t-if="record.number_of_opened_session.value &gt; 1" class="btn btn-link" style="padding-left:0; text-decoration: underline" name="open_opened_session_list" type="object">
+                                            There are <t t-esc="record.number_of_opened_session.value"/> open sessions
+                                        </button>
                                     </div>
                                 </div>
                                 <div style="text-align:right;">
                                     <field name="current_user_id" widget="many2one_avatar_user"/>
                                 </div>
+
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
                                     <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
@@ -149,7 +155,7 @@
 
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
                                     <div role="menuitem" class="col-12">
-                                        <a type="edit">Settings</a>
+                                        <a name="action_pos_config_modal_edit" type="object">Edit</a>
                                     </div>
                                 </div>
                             </div>

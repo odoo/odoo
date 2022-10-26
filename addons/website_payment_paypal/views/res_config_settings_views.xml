@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.payment.paypal</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="website_payment.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="website_payment_right_pane" position="inside">
+                <div class="content-group">
+                    <div class="row mt8 ms-4">
+                        <label class="col-lg-3" string="Email" for="paypal_email_account"/>
+                        <field name="paypal_email_account"/>
+                    </div>
+                    <div class="mt8 text-muted">
+                        After your first sale, Paypal will email you to link your Paypal account, or setup a new business account, to claim your funds, and setup payment methods.
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

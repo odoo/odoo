@@ -23,20 +23,24 @@
 
         <style> body { background: #222; } </style>
 
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <link rel="shortcut icon" href="/point_of_sale/static/src/img/favicon.ico" type="image/x-icon"/>
 
         <script type="text/javascript">
-            var odoo = <t t-raw="json.dumps({
+            var odoo = <t t-out="json.dumps({
                 'csrf_token': request.csrf_token(None),
-                'session_info': session_info,
+                '__session_info__': session_info,
                 'login_number': login_number,
+                'pos_session_id': pos_session_id,
                 'debug': debug,
             })"/>;
+            // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
+            // what is genuinely necessary, and not the whole backend.
+            odoo.loadMenusPromise = Promise.resolve();
         </script>
 
         <t t-call="point_of_sale.assets_common"/>
         <t t-call="web.conditional_assets_tests"/>
-        <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>
+        <t t-call-assets="point_of_sale.assets_backend_prod_only" />
     </head>
     <body>
     </body>

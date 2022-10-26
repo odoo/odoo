@@ -1,9 +1,11 @@
 odoo.define('point_of_sale.SelectionPopup', function (require) {
     'use strict';
 
-    const { useState } = owl.hooks;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { _lt } = require('@web/core/l10n/translation');
+
+    const { useState } = owl;
 
     // formerly SelectionPopupWidget
     class SelectionPopup extends AbstractAwaitablePopup {
@@ -24,8 +26,8 @@ odoo.define('point_of_sale.SelectionPopup', function (require) {
          *          item: any,
          *      }
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ selectedId: this.props.list.find((item) => item.isSelected) });
         }
         selectItem(itemId) {
@@ -44,11 +46,11 @@ odoo.define('point_of_sale.SelectionPopup', function (require) {
     }
     SelectionPopup.template = 'SelectionPopup';
     SelectionPopup.defaultProps = {
-        confirmText: 'Confirm',
-        cancelText: 'Cancel',
-        title: 'Select',
+        cancelText: _lt('Cancel'),
+        title: _lt('Select'),
         body: '',
         list: [],
+        confirmKey: false,
     };
 
     Registries.Component.add(SelectionPopup);

@@ -7,6 +7,7 @@
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
                 <form string="Landed Costs">
+                    <field name="company_id" invisible="1"/>
                     <field name="stock_valuation_layer_ids" invisible="1"/>
                     <header>
                         <button name="button_validate" string="Validate" states="draft" class="oe_highlight" type="object"/>
@@ -29,9 +30,10 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="allowed_picking_ids" invisible="1"/>
                                 <field name="target_model" widget="radio" invisible="1"/>
-                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('id', 'in', allowed_picking_ids)]" attrs="{'invisible': [('target_model', '!=', 'picking')]}"/>
+                                <field name="picking_ids" widget="many2many_tags" 
+                                    options="{'no_create_edit': True}" attrs="{'invisible': [('target_model', '!=', 'picking')]}"
+                                    domain="[('company_id', '=', company_id), ('move_ids.stock_valuation_layer_ids', '!=', False)]"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>
@@ -64,7 +66,7 @@
                                     <tree string="Cost Lines" editable="bottom">
                                         <field name="product_id"
                                             domain="[('landed_cost_ok', '=', True)]"
-                                            context="{'default_landed_cost_ok': True, 'default_type': 'service'}"/>
+                                            context="{'default_landed_cost_ok': True, 'default_detailed_type': 'service'}"/>
                                         <field name="name"/>
                                         <field name="account_id" options="{'no_create': True}"/>
                                         <field name="split_method"/>
@@ -121,7 +123,7 @@
             <field name="name">stock.landed.cost.tree</field>
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
-                <tree string="Landed Costs">
+                <tree string="Landed Costs" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                     <field name="name" decoration-bf="1"/>
                     <field name="date"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -164,14 +166,14 @@
                                         <span t-esc="record.name.value"/>
                                     </strong>
                                     <div class="col-6">
-                                        <span class="float-right badge badge-secondary">
+                                        <span class="float-end badge text-bg-secondary">
                                             <field name="state"/>
                                         </span>
                                     </div>
                                     <div class="col-6">
                                         <i class="fa fa-clock-o" title="Date" role="img" aria-label="Date"/><span t-esc="record.date.value"/>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-end">
                                         <field name="account_journal_id"/>
                                     </div>
                                 </div>
@@ -196,12 +198,12 @@
                     <filter string="Date" name="date" date="date"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="status" context="{'group_by': 'state'}"/>
                         <filter string="Date" name="group_by_month" context="{'group_by': 'date'}"/>

@@ -10,8 +10,7 @@ class SMSTemplatePreview(models.TransientModel):
 
     @api.model
     def _selection_target_model(self):
-        models = self.env['ir.model'].search([])
-        return [(model.model, model.name) for model in models]
+        return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
     @api.model
     def _selection_languages(self):

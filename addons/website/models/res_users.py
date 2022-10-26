@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -19,16 +19,10 @@ class ResUsers(models.Model):
         ('login_key', 'unique (login, website_id)', 'You can not have two users with the same login!'),
     ]
 
-    def _has_unsplash_key_rights(self):
-        self.ensure_one()
-        if self.has_group('website.group_website_designer'):
-            return True
-        return super(ResUsers, self)._has_unsplash_key_rights()
-
     @api.constrains('login', 'website_id')
     def _check_login(self):
         """ Do not allow two users with the same login without website """
-        self.flush(['login', 'website_id'])
+        self.flush_model(['login', 'website_id'])
         self.env.cr.execute(
             """SELECT login
                  FROM res_users
@@ -69,32 +63,28 @@ class ResUsers(models.Model):
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):
         """ Override to link the logged in user's res.partner to website.visitor.
-        If both a request-based visitor and a user-based visitor exist we try
-        to update them (have same partner_id), and move sub records to the main
-        visitor (user one). Purpose is to try to keep a main visitor with as
-        much sub-records (tracked pages, leads, ...) as possible. """
+        If a visitor already exists for that user, assign it data from the
+        current anonymous visitor (if exists).
+        Purpose is to try to aggregate as much sub-records (tracked pages,
+        leads, ...) as possible. """
+        visitor_pre_authenticate_sudo = None
+        if request and request.env:
+            visitor_pre_authenticate_sudo = request.env['website.visitor']._get_visitor_from_request()
         uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
-        if uid:
+        if uid and visitor_pre_authenticate_sudo:
             with cls.pool.cursor() as cr:
                 env = api.Environment(cr, uid, {})
-                visitor_sudo = env['website.visitor']._get_visitor_from_request()
-                if visitor_sudo:
-                    user_partner = env.user.partner_id
-                    other_user_visitor_sudo = env['website.visitor'].with_context(active_test=False).sudo().search(
-                        [('partner_id', '=', user_partner.id), ('id', '!=', visitor_sudo.id)],
-                        order='last_connection_datetime DESC',
-                    )  # current 13.3 state: 1 result max as unique visitor / partner
-                    if other_user_visitor_sudo:
-                        visitor_main = other_user_visitor_sudo[0]
-                        other_visitors = other_user_visitor_sudo[1:]  # normally void
-                        (visitor_sudo + other_visitors)._link_to_visitor(visitor_main, keep_unique=True)
-                        visitor_main.name = user_partner.name
-                        visitor_main.active = True
-                        visitor_main._update_visitor_last_visit()
-                    else:
-                        if visitor_sudo.partner_id != user_partner:
-                            visitor_sudo._link_to_partner(
-                                user_partner,
-                                update_values={'partner_id': user_partner.id})
-                        visitor_sudo._update_visitor_last_visit()
+                user_partner = env.user.partner_id
+                visitor_current_user_sudo = env['website.visitor'].sudo().search([
+                    ('partner_id', '=', user_partner.id)
+                ], limit=1)
+                if visitor_current_user_sudo:
+                    # A visitor exists for the logged in user, link public
+                    # visitor records to it.
+                    if visitor_pre_authenticate_sudo != visitor_current_user_sudo:
+                        visitor_pre_authenticate_sudo._merge_visitor(visitor_current_user_sudo)
+                    visitor_current_user_sudo._update_visitor_last_visit()
+                else:
+                    visitor_pre_authenticate_sudo.access_token = user_partner.id
+                    visitor_pre_authenticate_sudo._update_visitor_last_visit()
         return uid

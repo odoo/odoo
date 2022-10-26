@@ -1,18 +1,12 @@
-odoo.define('mail/static/src/utils/utils.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { delay } = require('web.concurrency');
-const {
-    patch: webUtilsPatch,
-    unaccent,
-    unpatch: webUtilsUnpatch,
-} = require('web.utils');
+import { delay } from 'web.concurrency';
+import { unaccent } from 'web.utils';
 
 //------------------------------------------------------------------------------
 // Public
 //------------------------------------------------------------------------------
 
-const classPatchMap = new WeakMap();
 const eventHandledWeakMap = new WeakMap();
 
 /**
@@ -25,25 +19,6 @@ const eventHandledWeakMap = new WeakMap();
  */
 function cleanSearchTerm(searchTerm) {
     return unaccent(searchTerm.toLowerCase());
-}
-
-/**
- * Executes the provided functions in order, but with a potential delay between
- * them if they take too much time. This is done in order to avoid blocking the
- * main thread for too long.
- *
- * @param {function[]} functions
- * @param {integer} [maxTimeFrame=100] time (in ms) until a delay is introduced
- */
-async function executeGracefully(functions, maxTimeFrame = 100) {
-    let startDate = new Date();
-    for (const func of functions) {
-        if (new Date() - startDate > maxTimeFrame) {
-            await new Promise(resolve => setTimeout(resolve));
-            startDate = new Date();
-        }
-        await func();
-    }
 }
 
 /**
@@ -83,111 +58,13 @@ async function nextTick() {
     await delay(0);
 }
 
-/**
- * Inspired by web.utils:patch utility function
- *
- * @param {Class} Class
- * @param {string} patchName
- * @param {Object} patch
- * @returns {function} unpatch function
- */
-function patchClassMethods(Class, patchName, patch) {
-    let metadata = classPatchMap.get(Class);
-    if (!metadata) {
-        metadata = {
-            origMethods: {},
-            patches: {},
-            current: []
-        };
-        classPatchMap.set(Class, metadata);
-    }
-    if (metadata.patches[patchName]) {
-        throw new Error(`Patch [${patchName}] already exists`);
-    }
-    metadata.patches[patchName] = patch;
-    applyPatch(Class, patch);
-    metadata.current.push(patchName);
-
-    function applyPatch(Class, patch) {
-        Object.keys(patch).forEach(function (methodName) {
-            const method = patch[methodName];
-            if (typeof method === "function") {
-                const original = Class[methodName];
-                if (!(methodName in metadata.origMethods)) {
-                    metadata.origMethods[methodName] = original;
-                }
-                Class[methodName] = function (...args) {
-                    const previousSuper = this._super;
-                    this._super = original;
-                    const res = method.call(this, ...args);
-                    this._super = previousSuper;
-                    return res;
-                };
-            }
-        });
-    }
-
-    return () => unpatchClassMethods.bind(Class, patchName);
-}
-
-/**
- * @param {Class} Class
- * @param {string} patchName
- * @param {Object} patch
- * @returns {function} unpatch function
- */
-function patchInstanceMethods(Class, patchName, patch) {
-    return webUtilsPatch(Class.prototype, patchName, patch);
-}
-
-/**
- * Inspired by web.utils:unpatch utility function
- *
- * @param {Class} Class
- * @param {string} patchName
- */
-function unpatchClassMethods(Class, patchName) {
-    let metadata = classPatchMap.get(Class);
-    if (!metadata) {
-        return;
-    }
-    classPatchMap.delete(Class);
-
-    // reset to original
-    for (let k in metadata.origMethods) {
-        Class[k] = metadata.origMethods[k];
-    }
-
-    // apply other patches
-    for (let name of metadata.current) {
-        if (name !== patchName) {
-            patchClassMethods(Class, name, metadata.patches[name]);
-        }
-    }
-}
-
-/**
- * @param {Class} Class
- * @param {string} patchName
- */
-function unpatchInstanceMethods(Class, patchName) {
-    return webUtilsUnpatch(Class.prototype, patchName);
-}
-
 //------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
 
-return {
+export {
     cleanSearchTerm,
-    executeGracefully,
     isEventHandled,
     markEventHandled,
     nextTick,
-    patchClassMethods,
-    patchInstanceMethods,
-    unpatchClassMethods,
-    unpatchInstanceMethods,
 };
-
-});

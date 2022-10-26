@@ -1,142 +1,87 @@
 odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 'use strict';
 
-const core = require('web.core');
-const OdooEditorLib = require('web_editor.odoo-editor');
-const Widget = require('web.Widget');
-const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
-
-const getInSelection = OdooEditorLib.getInSelection;
-const getDeepRange = OdooEditorLib.getDeepRange;
-const setCursor = OdooEditorLib.setCursor;
-const nodeSize = OdooEditorLib.nodeSize;
-
-const _t = core._t;
+const Link = require('wysiwyg.widgets.Link');
+const {ColorPaletteWidget} = require('web_editor.ColorPalette');
+const {ColorpickerWidget} = require('web.Colorpicker');
+const {
+    computeColorClasses,
+    getCSSVariableValue,
+    getColorClass,
+    getNumericAndUnit,
+    isColorGradient,
+} = require('web_editor.utils');
 
 /**
  * Allows to customize link content and style.
  */
-const LinkTools = Widget.extend({
+const LinkTools = Link.extend({
     template: 'wysiwyg.widgets.linkTools',
-    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
-    events: {
-        'input': '_onAnyChange',
-        'change': '_onAnyChange',
-        'input input[name="url"]': '_onURLInput',
+    events: _.extend({}, Link.prototype.events, {
         'click we-select we-button': '_onPickSelectOption',
         'click we-checkbox': '_onClickCheckbox',
-    },
+        'change .link-custom-color-border input': '_onChangeCustomBorderWidth',
+        'keypress .link-custom-color-border input': '_onKeyPressCustomBorderWidth',
+        'click we-select [name="link_border_style"] we-button': '_onBorderStyleSelectOption',
+    }),
 
     /**
-     * @constructor
+     * @override
      */
-    init: function (parent, options, editable, $button, link) {
-        this.options = options || {};
-        this._super(parent, _.extend({
-            title: _t("Link to"),
-        }, this.options));
-
-        this.$button = $button;
-        this.colorsData = [
-            {type: '', label: _t("Link"), btnPreview: 'link'},
-            {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
-            {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
-            // Note: by compatibility the dialog should be able to remove old
-            // colors that were suggested like the BS status colors or the
-            // alpha -> epsilon classes. This is currently done by removing
-            // all btn-* classes anyway.
-        ];
-
-        this.editable = editable;
-        this.$editable = $(editable);
-        this.data = {};
-
-        this.data.className = "";
-        this.data.iniClassName = "";
-
-        this.data.range = editable.ownerDocument.getSelection().getRangeAt(0);
-
-        this.$link = this._getOrCreateLink(link);
-        this.data.iniClassName = this.$link.attr("class") || "";
-        this.colorCombinationClass = '';
-
-        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
-        this.data.className = this.data.iniClassName.replace(allBtnClassSuffixes, ' ');
-        const [encodedText, images] = wysiwygUtils.encodeNodeToText(this.$link[0]);
-        this.data.content = encodedText;
-        this.data.originalText = wysiwygUtils.decodeText(encodedText, images);
-        this.data.images = images;
-        this.data.oldAttributes = this.$link.getAttributes();
-        this.data.url = this.$link.attr('href');
-        this.data.isNewWindow = this.$link.attr('target') === '_blank';
-
-        const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
-        this.data.className = this.data.iniClassName
-            .replace(allBtnClassSuffixes, ' ')
-            .replace(allBtnShapes, ' ');
-        // 'o_submit' class will force anchor to be handled as a button in linkdialog.
-        if (/(?:s_website_form_send|o_submit)/.test(this.data.className)) {
-            this.isButton = true;
-        }
+    init: function (parent, options, editable, data, $button, link) {
+        this._link = link;
+        this._observer = new MutationObserver(() =>{
+            this._setLinkContent = false;
+            this._observer.disconnect();
+        });
+        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._super(parent, options, editable, data, $button, this._link);
+        // Keep track of each selected custom color and colorpicker.
+        this.customColors = {};
+        this.colorpickers = {};
+        this.colorpickersPromises = {};
     },
     /**
      * @override
      */
     start: function () {
-        this.$button.addClass('active');
-
-        if (this.data.iniClassName) {
-            const options = [
-                'we-selection-items[name="link_style_color"] > we-button',
-                'we-selection-items[name="link_style_size"] > we-button',
-                'we-selection-items[name="link_style_shape"] > we-button',
-            ];
-            for (const option of this.$(options.join(','))) {
-                const $option = $(option);
-                const value = $option.data('value');
-                let active = false;
-                if (value) {
-                    const subValues = value.split(',');
-                    let subActive = true;
-                    for (let subValue of subValues) {
-                        const classPrefix = new RegExp('(^|btn-| |btn-outline-)' + subValue);
-                        subActive = subActive && classPrefix.test(this.data.iniClassName);
-                    }
-                    active = subActive;
-                } else {
-                    active = !this.data.iniClassName.includes('btn-');
-                }
-                this._setSelectOption($option, active);
-            }
-        }
-        if (this.data.url) {
-            var match = /mailto:(.+)/.exec(this.data.url);
-            this.$('input[name="url"]').val(match ? match[1] : this.data.url);
-            this._onURLInput();
-        }
-        if (this.data.isNewWindow) {
-            this.$('we-button.o_we_checkbox_wrapper').toggleClass('active', true);
-        }
-
-        this._updateOptionsUI();
-        this._adaptLink(false);
-
-        this.$('input:visible:first').focus();
-
-        return this._super.apply(this, arguments);
+        this._addHintClasses();
+        return this._super(...arguments);
     },
     destroy: function () {
-        this.options.wysiwyg.odooEditor.automaticStepSkipStack();
-        $('.oe_edited_link').removeClass('oe_edited_link');
+        if (!this.el) {
+            return this._super(...arguments);
+        }
         const $contents = this.$link.contents();
-        if (!this.$link.attr('href') && !this.colorCombinationClass) {
+        if (this.shouldUnlink()) {
             $contents.unwrap();
         }
-        this.$button.removeClass('active');
-        const start = $contents[0] || this.$link[0];
-        const end = $contents[$contents.length - 1] || this.$link[0];
-        setCursor(start, 0, end, nodeSize(end));
+        this._observer.disconnect();
         this._super(...arguments);
+        this._removeHintClasses();
+    },
+    shouldUnlink: function () {
+        return !this.$link.attr('href') && !this.colorCombinationClass
+    },
+    applyLinkToDom() {
+        this._observer.disconnect();
+        this._removeHintClasses();
+        this._super(...arguments);
+        this.options.wysiwyg.odooEditor.historyStep();
+        this._addHintClasses();
+        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    focusUrl() {
+        this.el.scrollIntoView();
+        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -144,116 +89,113 @@ const LinkTools = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Adapt the link to changes.
-     *
-     * @private
+     * @override
      */
-    _adaptLink: function (createStep = true) {
+    _adaptPreview: function () {
         var data = this._getData();
         if (data === null) {
             return;
         }
-        const attrs = Object.assign({}, this.data.oldAttributes, {
-            target: data.isNewWindow ? '_blank' : '',
-            href: data.url,
-            class: `${data.classes}`,
-        });
-        const $links = $('.oe_edited_link');
-        $links.removeClass('oe_edited_link');
-        this.$link.attr(attrs);
-        if (data.content !== this.data.originalText || data.url !== this.data.url) {
-            const content = (data.content && data.content.length) ? data.content : data.url;
-            // If there is a this.data.originalText, it means that we selected
-            // the text and we could not change the content through the text input.
-            // .html() in needed in case we selected images.
-            if (this.data.originalText) {
-                this.$link.html(content);
-            } else {
-                this.$link.text(content);
-            }
-        }
-        if (createStep) {
-            this.options.wysiwyg.odooEditor.historyStep();
-        }
-        this.options.wysiwyg.odooEditor.automaticStepSkipStack();
-        $links.addClass('oe_edited_link');
+        this.applyLinkToDom(data);
     },
     /**
-     * Get the link's data (url, content and styles).
-     *
-     * @private
-     * @returns {Object} {content: String, url: String, classes: String, isNewWindow: Boolean}
+     * @override
      */
-    _getData: function () {
-        var $url = this.$('input[name="url"]');
-        var url = $url.val();
-        var content = this.$('input[name="label"]').val() || url;
-        content = wysiwygUtils.decodeText(content, this.data.images);
-
-        if (!this.isButton && $url.prop('required') && (!url || !$url[0].checkValidity())) {
-            return null;
-        }
-
-        const type = this.$('we-selection-items[name="link_style_color"] we-button.active').data('value') || '';
-        const size = this.$('we-selection-items[name="link_style_size"] we-button.active').data('value') || '';
-        const shape = this.$('we-selection-items[name="link_style_shape"] we-button.active').data('value') || '';
-        const shapes = shape ? shape.split(',') : [];
-        const style = ['outline', 'fill'].includes(shapes[0]) ? `${shapes[0]}-` : '';
-        const shapeClasses = shapes.slice(style ? 1 : 0).join(' ');
-        const classes = (this.data.className || '') +
-            (type ? (` btn btn-${style}${type}`) : '') +
-            (type && shapeClasses ? (` ${shapeClasses}`) : '') +
-            (type && size ? (' btn-' + size) : '');
-        var isNewWindow = this.$('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
-        var doStripDomain = this.$('we-checkbox[name="do_strip_domain"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
-        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
-            url = ('mailto:' + url);
-        } else if (url.indexOf(location.origin) === 0 && doStripDomain) {
-            url = url.slice(location.origin.length);
-        }
-        var allWhitespace = /\s+/gi;
-        var allStartAndEndSpace = /^\s+|\s+$/gi;
-        return {
-            content: content,
-            url: this._correctLink(url),
-            classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, '').replace(/oe_edited_link/, ''),
-            oldAttributes: this.data.oldAttributes,
-            isNewWindow: isNewWindow,
-            doStripDomain: doStripDomain,
-        };
+    _doStripDomain: function () {
+        return this.$('we-checkbox[name="do_strip_domain"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
     },
-    _getOrCreateLink: function (linkToEdit) {
-        this.options.wysiwyg.odooEditor.automaticStepSkipStack();
-        const doc = this.editable.ownerDocument;
-        const range = getDeepRange(this.editable, {splitText: true, select: true, correctTripleClick: true});
-        this.needLabel = false;
-        let link = linkToEdit || getInSelection(doc, 'a');
-        const $link = $(link);
-        if (link && !linkToEdit && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
-            // Expand the current link to include the whole selection.
-            let before = link.previousSibling;
-            while (before !== null && range.intersectsNode(before)) {
-                link.insertBefore(before, link.firstChild);
-                before = link.previousSibling;
-            }
-            let after = link.nextSibling;
-            while (after !== null && range.intersectsNode(after)) {
-                link.appendChild(after);
-                after = link.nextSibling;
-            }
-        } else if (!link) {
-            link = document.createElement('a');
-            if (range.collapsed) {
-                range.insertNode(link);
-                this.needLabel = true;
-            } else {
-                link.appendChild(range.extractContents());
-                range.insertNode(link);
-            }
-        }
-        link.classList.add('oe_edited_link');
-        return $(link);
+    /**
+     * @override
+     */
+    _getLinkOptions: function () {
+        const options = [
+            'we-selection-items[name="link_style_color"] > we-button',
+            'we-selection-items[name="link_style_size"] > we-button',
+            'we-selection-items[name="link_style_shape"] > we-button',
+        ];
+        return this.$(options.join(','));
     },
+    /**
+     * @override
+     */
+    _getLinkShape: function () {
+        return this.$('we-selection-items[name="link_style_shape"] we-button.active').data('value') || '';
+    },
+    /**
+     * @override
+     */
+    _getLinkSize: function () {
+        return this.$('we-selection-items[name="link_style_size"] we-button.active').data('value') || '';
+    },
+    /**
+     * @override
+     */
+    _getLinkType: function () {
+        return this.$('we-selection-items[name="link_style_color"] we-button.active').data('value') || '';
+    },
+    /**
+     * @override
+     */
+    _getLinkCustomTextColor: function () {
+        return this.customColors['color'];
+    },
+    /**
+     * @override
+     */
+    _getLinkCustomBorder: function () {
+        return this.customColors['border-color'];
+    },
+    /**
+     * @override
+     */
+    _getLinkCustomBorderWidth: function () {
+        return this.$('.link-custom-color-border input').val() || '';
+    },
+    /**
+     * @override
+     */
+    _getLinkCustomBorderStyle: function () {
+        return this.$('.link-custom-color-border we-button.active').data('value') || '';
+    },
+    /**
+     * @override
+     */
+    _getLinkCustomFill: function () {
+        return this.customColors['background-color'];
+    },
+    /**
+     * @override
+     */
+    _getLinkCustomClasses: function () {
+        let textClass = this.customColors['color'];
+        const colorPickerFg = this.colorpickers['color'];
+        if (
+            !textClass ||
+            !colorPickerFg ||
+            !computeColorClasses(colorPickerFg.getColorNames(), 'text-').includes(textClass)
+        ) {
+            textClass = '';
+        }
+        let fillClass = this.customColors['background-color'];
+        const colorPickerBg = this.colorpickers['background-color'];
+        if (
+            !fillClass ||
+            !colorPickerBg ||
+            !computeColorClasses(colorPickerBg.getColorNames(), 'bg-').includes(fillClass)
+        ) {
+            fillClass = '';
+        }
+        return ` ${textClass} ${fillClass}`;
+    },
+    /**
+     * @override
+     */
+    _isNewWindow: function () {
+        return this.$('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
+    },
+    /**
+     * @override
+     */
     _setSelectOption: function ($option, active) {
         $option.toggleClass('active', active);
         if (active) {
@@ -263,7 +205,7 @@ const LinkTools = Widget.extend({
         }
     },
     /**
-     * @private
+     * @override
      */
     _updateOptionsUI: function () {
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
@@ -271,55 +213,204 @@ const LinkTools = Widget.extend({
             this.colorCombinationClass = el.dataset.value;
             // Hide the size and shape options if the link is an unstyled anchor.
             this.$('.link-size-row, .link-shape-row').toggleClass('d-none', !this.colorCombinationClass);
+            // Show custom colors only for Custom style.
+            this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
+
+            this._updateColorpicker('color');
+            this._updateColorpicker('background-color');
+            this._updateColorpicker('border-color');
+
+            const borderWidth = this.linkEl.style['border-width'];
+            const numberAndUnit = getNumericAndUnit(borderWidth);
+            this.$('.link-custom-color-border input').val(numberAndUnit ? numberAndUnit[0] : "1");
+            let borderStyle = this.linkEl.style['border-style'];
+            if (!borderStyle || borderStyle === 'none') {
+                borderStyle = 'solid';
+            }
+            const $activeBorderStyleButton = this.$(`.link-custom-color-border [name="link_border_style"] we-button[data-value="${borderStyle}"]`);
+            $activeBorderStyleButton.addClass('active');
+            $activeBorderStyleButton.siblings('we-button').removeClass("active");
+            const $activeBorderStyleToggler = $activeBorderStyleButton.closest('we-select').find('we-toggler');
+            $activeBorderStyleToggler.empty();
+            $activeBorderStyleButton.find('div').clone().appendTo($activeBorderStyleToggler);
         }
     },
     /**
+     * Updates the colorpicker associated to a given property - updated with its selected color.
+     *
      * @private
+     * @param {string} cssProperty
      */
-    _correctLink: function (url) {
-        if (url.indexOf('mailto:') === 0 || url.indexOf('tel:') === 0) {
-            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
-            url = 'mailto:' + url;
-        } else if (url.indexOf('://') === -1 && url[0] !== '/'
-                    && url[0] !== '#' && url.slice(0, 2) !== '${') {
-            url = 'http://' + url;
+    _updateColorpicker: async function (cssProperty) {
+        const prefix = {
+            'color': 'text-',
+            'background-color': 'bg-',
+        }[cssProperty];
+
+        let colorpicker = this.colorpickers[cssProperty];
+        await this.colorpickersPromises[cssProperty];
+        if (!colorpicker) {
+            colorpicker = new ColorPaletteWidget(this, {
+                excluded: ['transparent_grayscale'],
+                $editable: $(this.options.wysiwyg.odooEditor.editable),
+                withGradients: cssProperty === 'background-color',
+            });
+            this.colorpickers[cssProperty] = colorpicker;
+            const target = this.el.querySelector({
+                'color': '.link-custom-color-text .dropdown-menu',
+                'background-color': '.link-custom-color-fill .dropdown-menu',
+                'border-color': '.link-custom-color-border .o_we_so_color_palette .dropdown-menu',
+            }[cssProperty]);
+            this.colorpickersPromises[cssProperty] = colorpicker.appendTo($(target));
+            await this.colorpickersPromises[cssProperty];
+            colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
+                // Reset color styles in link content to make sure new color is not hidden.
+                // Only done when applied to avoid losing state during preview.
+                if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                    const selection = window.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(this.linkEl);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'color');
+                    this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'backgroundColor');
+                }
+
+                let color = ev.data.color;
+                const colorNames = colorpicker.getColorNames();
+                const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
+                const colorClass = `${prefix}${color}`;
+                if (colorClasses.includes(colorClass)) {
+                    color = colorClass;
+                } else if (colorNames.includes(color)) {
+                    // Store as color value.
+                    color = getCSSVariableValue(color);
+                }
+                this.customColors[cssProperty] = color;
+                this.applyLinkToDom(this._getData());
+                if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                    this.options.wysiwyg.odooEditor.historyStep();
+                    this._updateOptionsUI();
+                }
+            });
         }
-        return url;
+
+        // Update selected color.
+        const colorNames = colorpicker.getColorNames();
+        let color = this.linkEl.style[cssProperty];
+        const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
+        const colorClass = prefix && getColorClass(this.linkEl, colorNames, prefix);
+        const isColorClass = colorClasses.includes(colorClass);
+        if (isColorClass) {
+            color = colorClass;
+        } else if (cssProperty === 'background-color') {
+            const gradientColor = this.linkEl.style['background-image'];
+            if (isColorGradient(gradientColor)) {
+                color = gradientColor;
+            }
+        }
+        this.customColors[cssProperty] = color;
+        if (cssProperty === 'border-color') {
+            // Highlight matching named color if any.
+            const colorName = colorpicker.colorToColorNames[ColorpickerWidget.normalizeCSSColor(color)];
+            colorpicker.setSelectedColor(null, colorName || color, false);
+        } else {
+            colorpicker.setSelectedColor(null, isColorClass ? color.replace(prefix, '') : color, false);
+        }
+
+        // Update preview.
+        const $colorPreview = this.$('.link-custom-color-' + (cssProperty === 'border-color' ? 'border' : cssProperty === 'color' ? 'text' : 'fill') + ' .o_we_color_preview');
+        const previewClasses = computeColorClasses(colorNames, 'bg-');
+        $colorPreview[0].classList.remove(...previewClasses);
+        if (isColorClass) {
+            $colorPreview.css('background-color', `var(--we-cp-${color.replace(prefix, '')}`);
+            $colorPreview.css('background-image', '');
+        } else {
+            $colorPreview.css('background-color', isColorGradient(color) ? 'rgba(0, 0, 0, 0)' : color);
+            $colorPreview.css('background-image', isColorGradient(color) ? color : '');
+        }
+    },
+    /**
+     * Add hint to the classes of the link and button.
+     */
+    _addHintClasses () {
+        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
+        this.$link.addClass('oe_edited_link');
+        this.$button.addClass('active');
+        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
+    },
+    /**
+     * Remove hint to the classes of the link and button.
+     */
+    _removeHintClasses () {
+        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
+        $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
+        this.$button.removeClass('active');
+        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onAnyChange: function () {
-        this._adaptLink();
-    },
     _onClickCheckbox: function (ev) {
         const $target = $(ev.target);
         $target.closest('we-button.o_we_checkbox_wrapper').toggleClass('active');
-        this._adaptLink();
+        this._adaptPreview();
     },
     _onPickSelectOption: function (ev) {
         const $target = $(ev.target);
+        if ($target.closest('[name="link_border_style"]').length) {
+            return;
+        }
         const $select = $target.closest('we-select');
         $select.find('we-selection-items we-button').toggleClass('active', false);
         this._setSelectOption($target, true);
         this._updateOptionsUI();
-        this._adaptLink();
+        this._adaptPreview();
     },
     /**
+     * Sets the border width on the link.
+     *
      * @private
+     * @param {Event} ev
      */
-    _onURLInput: function () {
-        var $linkUrlInput = this.$('#o_link_dialog_url_input');
-        let value = $linkUrlInput.val();
-        let isLink = value.indexOf('@') < 0;
-        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
-        this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+    _onChangeCustomBorderWidth: function (ev) {
+        const value = ev.target.value;
+        if (parseInt(value) >= 0) {
+            this.$link.css('border-width', value + 'px');
+        }
+    },
+    /**
+     * Sets the border width on the link when enter is pressed.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onKeyPressCustomBorderWidth: function (ev) {
+        if (ev.keyCode === $.ui.keyCode.ENTER) {
+            this._onChangeCustomBorderWidth(ev);
+        }
+    },
+    /**
+     * Sets the border style on the link.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onBorderStyleSelectOption: function (ev) {
+        const value = ev.currentTarget.dataset.value;
+        if (value) {
+            this.$link.css('border-style', value);
+            const $target = $(ev.currentTarget);
+            const $activeBorderStyleToggler = $target.closest('we-select').find('we-toggler');
+            $activeBorderStyleToggler.empty();
+            $target.find('div').clone().appendTo($activeBorderStyleToggler);
+            // Ensure only one option is active in the dropdown.
+            $target.addClass('active');
+            $target.siblings('we-button').removeClass("active");
+            this.options.wysiwyg.odooEditor.historyStep();
+        }
     },
 });
 

@@ -3,31 +3,12 @@
     $url: map-get($font-config, 'url');
     @if $url {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
-    }
-}
-
-:root {
-    // Override css variables to influence the default style of the editor
-    // without duplicating the css.
-    @include print-variable('o-we-toolbar-height', $o-navbar-height);
-
-    @include print-variable('priority-palette-prefix', $o-palette-priority-prefix);
-
-    // Need the colors and name of each color palette
-    $palette-names: ();
-    @each $palette-name, $palette in $o-color-palettes {
-        @if $palette-name != 'user-palette' {
-            @each $key, $value in $palette {
-                @include print-variable('o-palette-#{$palette-name}-#{$key}', $value);
-            }
-            $palette-names: append($palette-names, $palette-name);
+    } @else {
+        $name: map-get($font-config, 'name');
+        $attachment: map-get($font-config, 'attachment');
+        @if $attachment {
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
         }
-    }
-    @include print-variable('palette-names', $palette-names);
-
-    // Need info about the base grays which are used to compute the final grays
-    @each $name, $color in $o-base-gray-color-palette {
-        @include print-variable('base-#{$name}', $color);
     }
 }
 
@@ -38,12 +19,6 @@
             padding: 0 2px 2px 2px;
         }
     }
-}
-
-// TRANSLATIONS
-.oe_translate_examples li {
-    margin: 10px;
-    padding: 4px;
 }
 
 html[lang] > body.editor_enable [data-oe-translation-state] {
@@ -58,15 +33,43 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     }
 }
 
+html[data-edit_translations="1"] {
+    .o_translate_mode_hidden {
+        display: none !important;
+    }
+}
+
+.o_snippet_override_invisible {
+    display: block !important;
+    opacity: 70%;
+    position: relative;
+
+    &::before {
+        position: absolute;
+        // Content is 0px wide => use available width.
+        width: -webkit-fill-available;
+        width: -moz-available;
+        right: 20px;
+        z-index: 100;
+        background-color: $o-we-accent;
+        font-size: 0px;
+        content: "."; // Content is mandatory.
+    }
+    &.d-md-none::before {
+        height: 50px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/desktop_invisible.svg") no-repeat 100% 100%;
+    }
+    &:not(.d-md-none)::before {
+        height: 30px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/mobile_invisible.svg") no-repeat 100% 100%;
+    }
+}
+
 // SNIPPET PANEL
 $i: 1;
 @each $font-name, $font-config in $o-theme-font-configs {
     we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
         font-family: o-safe-get($font-config, 'family', $font-family-base);
-
-        &::before {
-            content: $font-name;
-        }
     }
     $i: $i + 1;
 }
@@ -76,20 +79,33 @@ $i: 1;
 
 #oe_snippets > .o_we_customize_panel {
     .o_we_user_value_widget.o_palette_color_preview_button {
+        display: inline-flex;
+        margin: 1% 0;
+        padding-right: 0.3rem;
+        width: 50%;
+        background: transparent;
+
+        &.active, &:hover {
+            background: transparent;
+
+            > div {
+                box-shadow: 0 0 0 2px $o-we-bg-darkest, 0 0 0 3px $o-we-accent;
+            }
+        }
+
         > div {
             display: flex;
             flex: 1 1 auto;
             align-items: stretch;
+            justify-content: flex-end;
+            margin: 3px;
+            min-height: $o-we-sidebar-content-field-dropdown-grid-item-height * .5;
+            border-radius: $o-we-sidebar-content-field-dropdown-grid-item-height;
+            box-shadow: 0 0 0 1px $o-we-bg-darkest;
         }
+
         .o_palette_color_preview {
             flex: 1 0 0;
-            margin: 1px 0;
-            transition: flex 150ms ease 0s;
-        }
-        &:not(:hover) .o_palette_color_preview {
-            &:nth-child(4), &:nth-child(5) {
-                flex: 0 0 0;
-            }
         }
     }
 
@@ -105,7 +121,7 @@ $i: 1;
         }
     }
 
-    we-button.o_we_mobile {
+    we-button.o_we_device {
         > div {
             // FIXME maybe there is some refactoring to do so that all SVG icons
             // can be properly aligned with extra CSS rules...
@@ -113,21 +129,19 @@ $i: 1;
             align-items: center;
 
             svg {
-                width: 15px;
-                fill: $o-we-color-danger;
+                width: 12px;
+                fill: $o-we-sidebar-content-field-clickable-color;
                 margin-bottom: 0;
-                margin-left: -3px;
 
                 &:hover {
-                    fill: darken($o-we-color-danger, 7.5%);
+                    fill: $o-we-sidebar-content-field-pressed-color;
                 }
             }
         }
-        &.active > div > svg {
-            fill: $o-we-sidebar-content-field-color;
-
+        &.active > div svg {
+            fill: $o-we-color-danger;
             &:hover {
-                fill: $o-we-sidebar-content-field-pressed-color;
+                fill: darken($o-we-color-danger, 7.5%);
             }
         }
     }
@@ -145,7 +159,11 @@ $i: 1;
         .o_we_so_color_palette.o_we_user_value_widget {
 
             + .o_we_so_color_palette {
-                margin-left: 10px;
+                margin-left: $o-we-item-spacing * .5;
+
+                &:nth-child(4) {
+                    margin-left: $o-we-item-spacing * 3;
+                }
             }
             .o_we_color_preview {
                 width: $o-we-sidebar-content-field-colorpicker-size-large;
@@ -165,6 +183,12 @@ $i: 1;
 
             > div, we-toggler {
                 height: 100%;
+            }
+
+            we-selection-items {
+                padding-top: $o-we-dropdown-item-height * .5;
+                padding-bottom: $o-we-dropdown-item-height * .5;
+                background: $o-we-dropdown-item-active-bg;
             }
         }
         we-toggler {
@@ -231,4 +255,10 @@ $i: 1;
     .pac-item-query {
         color: $o-we-sidebar-content-field-clickable-color;
     }
+}
+
+// Editor UI
+.o_table_ui {
+    // TODO make a proper way to not instantiate table UI in the website.
+    display: none !important;
 }

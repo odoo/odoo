@@ -59,7 +59,7 @@ class TestReflection(common.TransactionCase):
                         self.assertEqual(ir_field.index, bool(field.index))
                         self.assertEqual(ir_field.store, bool(field.store))
                         self.assertEqual(ir_field.copied, bool(field.copy))
-                        self.assertEqual(ir_field.related, bool(field.related) and ".".join(field.related))
+                        self.assertEqual(ir_field.related, field.related or False)
                         self.assertEqual(ir_field.readonly, bool(field.readonly))
                         self.assertEqual(ir_field.required, bool(field.required))
                         self.assertEqual(ir_field.selectable, bool(field.search or field.store))
@@ -150,7 +150,7 @@ class TestSchema(common.TransactionCase):
         columns_data = self.get_columns_data('test_new_api_foo')
         self.assertEqual(set(columns_data),
                          {'id', 'create_date', 'create_uid', 'write_date',
-                          'write_uid', 'name', 'value1', 'value2'})
+                          'write_uid', 'name', 'value1', 'value2', 'text'})
 
         # retrieve schema data about the table's foreign keys
         foreign_keys = self.get_foreign_keys('test_new_api_foo')

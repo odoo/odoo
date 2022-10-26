@@ -15,31 +15,31 @@ _logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    def _default_visible_expense_policy(self):
-        return self.user_has_groups('analytic.group_analytic_accounting')
-
-    service_type = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
+    service_type = fields.Selection(
+        [('manual', 'Manually set quantities on order')], string='Track Service',
+        compute='_compute_service_type', store=True, readonly=False, precompute=True,
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-             "Create a task and track hours: Create a task on the sales order validation and track the work hours.",
-        default='manual')
+             "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
-        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Expenses',
-        default='no',
+        [('no', 'No'),
+         ('cost', 'At cost'),
+         ('sales_price', 'Sales price')
+        ], string='Re-Invoice Expenses', default='no',
+        compute='_compute_expense_policy', store=True, readonly=False,
         help="Expenses and vendor bills can be re-invoiced to a customer."
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
-    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy', default=lambda self: self._default_visible_expense_policy())
-    sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
+    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
+    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
     visible_qty_configurator = fields.Boolean("Quantity visible in configurator", compute='_compute_visible_qty_configurator')
-    invoice_policy = fields.Selection([
-        ('order', 'Ordered quantities'),
-        ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+    invoice_policy = fields.Selection(
+        [('order', 'Ordered quantities'),
+         ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+        compute='_compute_invoice_policy', store=True, readonly=False, precompute=True,
         help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
-             'Delivered Quantity: Invoice quantities delivered to the customer.',
-        default='order')
+             'Delivered Quantity: Invoice quantities delivered to the customer.')
 
     def _compute_visible_qty_configurator(self):
         for product_template in self:
@@ -51,17 +51,14 @@ class ProductTemplate(models.Model):
         for product_template in self:
             product_template.visible_expense_policy = visibility
 
-
-    @api.onchange('sale_ok')
-    def _change_sale_ok(self):
-        if not self.sale_ok:
-            self.expense_policy = 'no'
+    @api.depends('sale_ok')
+    def _compute_expense_policy(self):
+        self.filtered(lambda t: not t.sale_ok).expense_policy = 'no'
 
     @api.depends('product_variant_ids.sales_count')
     def _compute_sales_count(self):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
-
 
     @api.constrains('company_id')
     def _check_sale_product_company(self):
@@ -118,26 +115,34 @@ class ProductTemplate(models.Model):
 
         :param product_template_attribute_value_ids: the combination for which
             to get or create variant
-        :type product_template_attribute_value_ids: json encoded list of id
+        :type product_template_attribute_value_ids: list of id
             of `product.template.attribute.value`
 
         :return: id of the product variant matching the combination or 0
         :rtype: int
         """
         combination = self.env['product.template.attribute.value'] \
-            .browse(json.loads(product_template_attribute_value_ids))
+            .browse(product_template_attribute_value_ids)
 
         return self._create_product_variant(combination, log_warning=True).id or 0
 
     @api.onchange('type')
     def _onchange_type(self):
-        """ Force values to stay consistent with integrity constraints """
         res = super(ProductTemplate, self)._onchange_type()
-        if self.type == 'consu':
-            if not self.invoice_policy:
-                self.invoice_policy = 'order'
-            self.service_type = 'manual'
+        if self._origin and self.sales_count > 0:
+            res['warning'] = {
+                'title': _("Warning"),
+                'message': _("You cannot change the product's type because it is already used in sales orders.")
+            }
         return res
+
+    @api.depends('type')
+    def _compute_service_type(self):
+        self.filtered(lambda t: t.type == 'consu' or not t.service_type).service_type = 'manual'
+
+    @api.depends('type')
+    def _compute_invoice_policy(self):
+        self.filtered(lambda t: t.type == 'consu' or not t.invoice_policy).invoice_policy = 'order'
 
     @api.model
     def get_import_templates(self):
@@ -204,8 +209,7 @@ class ProductTemplate(models.Model):
 
         display_image = True
         quantity = self.env.context.get('quantity', add_qty)
-        context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
-        product_template = self.with_context(context)
+        product_template = self
 
         combination = combination or product_template.env['product.template.attribute.value']
 
@@ -236,14 +240,23 @@ class ProductTemplate(models.Model):
                     no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
                 )
             list_price = product.price_compute('list_price')[product.id]
-            price = product.price if pricelist else list_price
-            display_image = bool(product.image_1920)
+            if pricelist:
+                price = pricelist._get_product_price(product, quantity)
+            else:
+                price = list_price
+            display_image = bool(product.image_128)
             display_name = product.display_name
+            price_extra = (product.price_extra or 0.0) + (sum(no_variant_attributes_price_extra) or 0.0)
         else:
-            product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
+            current_attributes_price_extra = [v.price_extra or 0.0 for v in combination]
+            product_template = product_template.with_context(current_attributes_price_extra=current_attributes_price_extra)
+            price_extra = sum(current_attributes_price_extra)
             list_price = product_template.price_compute('list_price')[product_template.id]
-            price = product_template.price if pricelist else list_price
-            display_image = bool(product_template.image_1920)
+            if pricelist:
+                price = pricelist._get_product_price(product_template, quantity)
+            else:
+                price = list_price
+            display_image = bool(product_template.image_128)
 
             combination_name = combination._get_combination_name()
             if combination_name:
@@ -252,6 +265,10 @@ class ProductTemplate(models.Model):
         if pricelist and pricelist.currency_id != product_template.currency_id:
             list_price = product_template.currency_id._convert(
                 list_price, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
+                fields.Date.today()
+            )
+            price_extra = product_template.currency_id._convert(
+                price_extra, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
                 fields.Date.today()
             )
 
@@ -265,8 +282,15 @@ class ProductTemplate(models.Model):
             'display_image': display_image,
             'price': price,
             'list_price': list_price,
+            'price_extra': price_extra,
             'has_discounted_price': has_discounted_price,
         }
+
+    def _can_be_added_to_cart(self):
+        """
+        Pre-check to `_is_add_to_cart_possible` to know if product can be sold.
+        """
+        return self.sale_ok
 
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
@@ -281,7 +305,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if not self.active:
+        if not self.active or not self._can_be_added_to_cart():
             # for performance: avoid calling `_get_possible_combinations`
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False

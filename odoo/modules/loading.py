@@ -37,14 +37,16 @@ def load_data(cr, idref, mode, kind, package):
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
-            kind = ['demo_xml', 'demo']
+            keys = ['demo_xml', 'demo']
         elif kind == 'data':
-            kind = ['init_xml', 'update_xml', 'data']
+            keys = ['init_xml', 'update_xml', 'data']
         if isinstance(kind, str):
-            kind = [kind]
+            keys = [kind]
         files = []
-        for k in kind:
+        for k in keys:
             for f in package.data[k]:
+                if f in files:
+                    _logger.warning("File %s is imported twice in module %s %s", f, package.name, kind)
                 files.append(f)
                 if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
                     # init_xml, update_xml and demo_xml are deprecated except
@@ -60,7 +62,7 @@ def load_data(cr, idref, mode, kind, package):
     filename = None
     try:
         if kind in ('demo', 'test'):
-            threading.currentThread().testing = True
+            threading.current_thread().testing = True
         for filename in _get_files_of_kind(kind):
             _logger.info("loading %s/%s", package.name, filename)
             noupdate = False
@@ -69,7 +71,7 @@ def load_data(cr, idref, mode, kind, package):
             tools.convert_file(cr, package.name, filename, idref, mode, noupdate, kind)
     finally:
         if kind in ('demo', 'test'):
-            threading.currentThread().testing = False
+            threading.current_thread().testing = False
 
     return bool(filename)
 
@@ -81,9 +83,10 @@ def load_demo(cr, package, idref, mode):
         return False
 
     try:
-        _logger.info("Module %s: loading demo", package.name)
-        with cr.savepoint(flush=False):
-            load_data(cr, idref, mode, kind='demo', package=package)
+        if package.data.get('demo') or package.data.get('demo_xml'):
+            _logger.info("Module %s: loading demo", package.name)
+            with cr.savepoint(flush=False):
+                load_data(cr, idref, mode, kind='demo', package=package)
         return True
     except Exception as e:
         # If we could not install demo data for this module
@@ -116,17 +119,22 @@ def force_demo(cr):
         load_demo(cr, package, {}, 'init')
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    env['ir.module.module'].invalidate_cache(['demo'])
+    env['ir.module.module'].invalidate_model(['demo'])
+    env['res.groups']._update_user_groups_view()
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True,
                       skip_modules=None, report=None, models_to_check=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
+
+       :param cr:
        :param graph: graph of module nodes to load
        :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
                               for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
+       :param report:
+       :param set models_to_check:
        :return: list of modules that were installed or updated
     """
     if models_to_check is None:
@@ -167,17 +175,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             module_log_level = logging.INFO
         _logger.log(module_log_level, 'Loading module %s (%d/%d)', module_name, index, module_count)
 
+        new_install = package.state == 'to install'
         if needs_update:
-            if package.name != 'base':
-                registry.setup_models(cr)
-            migrations.migrate_module(package, 'pre')
+            if not new_install:
+                if package.name != 'base':
+                    registry.setup_models(cr)
+                migrations.migrate_module(package, 'pre')
             if package.name != 'base':
                 env = api.Environment(cr, SUPERUSER_ID, {})
-                env['base'].flush()
+                env.flush_all()
 
         load_openerp_module(package.name)
 
-        new_install = package.state == 'to install'
         if new_install:
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
@@ -221,7 +230,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             load_data(cr, idref, mode, kind='data', package=package)
             demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode)
             cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
-            module.invalidate_cache(['demo'])
+            module.invalidate_model(['demo'])
 
             migrations.migrate_module(package, 'post')
 
@@ -299,7 +308,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
-            module.flush()
+            module.env.flush_all()
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
         extras = []
@@ -369,7 +378,10 @@ def load_marked_modules(cr, graph, states, force, progressdict, report,
             break
     return processed_modules
 
-def load_modules(db, force_demo=False, status=None, update_module=False):
+def load_modules(registry, force_demo=False, status=None, update_module=False):
+    """ Load the modules for a registry object that has just been created.  This
+        function is part of Registry.new() and should not be used anywhere else.
+    """
     initialize_sys_path()
 
     force = []
@@ -378,7 +390,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     models_to_check = set()
 
-    with db.cursor() as cr:
+    with registry.cursor() as cr:
+        # prevent endless wait for locks on schema changes (during online
+        # installs) if a concurrent transaction has accessed the table;
+        # connection settings are automatically reset when the connection is
+        # borrowed from the pool
+        cr.execute("SET SESSION lock_timeout = '15s'")
         if not odoo.modules.db.is_initialized(cr):
             if not update_module:
                 _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
@@ -389,10 +406,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             tools.config["init"]["all"] = 1
             if not tools.config['without_demo']:
                 tools.config["demo"]['all'] = 1
-
-        # This is a brand new registry, just created in
-        # odoo.modules.registry.Registry.new().
-        registry = odoo.registry(cr.dbname)
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -437,13 +450,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             module_names = [k for k, v in tools.config['update'].items() if v]
             if module_names:
-                modules = Module.search([('state', '=', 'installed'), ('name', 'in', module_names)])
+                modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', module_names)])
                 if modules:
                     modules.button_upgrade()
 
+            env.flush_all()
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-            Module.invalidate_cache(['state'])
-            Module.flush()
+            Module.invalidate_model(['state'])
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # IMPORTANT: this is done in two parts, first loading all installed or
@@ -506,7 +519,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
-            env['base'].flush()
+            env.flush_all()
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
@@ -532,10 +545,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                api.Environment.reset()
                 registry = odoo.modules.registry.Registry.new(
                     cr.dbname, force_demo, status, update_module
                 )
+                cr.reset()
                 registry.check_tables_exist(cr)
                 cr.commit()
                 return registry
@@ -566,7 +579,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         else:
             _logger.error('At least one test failed when loading the modules.')
 
-        # STEP 8: call _register_hook on every model
+
+        # STEP 8: save installed/updated modules for post-install tests and _register_hook
+        registry.updated_modules += processed_modules
+
+        # STEP 9: call _register_hook on every model
         # This is done *exactly once* when the registry is being loaded. See the
         # management of those hooks in `Registry.setup_models`: all the calls to
         # setup_models() done here do not mess up with hooks, as registry.ready
@@ -574,10 +591,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         env = api.Environment(cr, SUPERUSER_ID, {})
         for model in env.values():
             model._register_hook()
-        env['base'].flush()
+        env.flush_all()
 
-        # STEP 9: save installed/updated modules for post-install tests
-        registry.updated_modules += processed_modules
 
 def reset_modules_state(db_name):
     """

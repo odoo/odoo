@@ -16,7 +16,6 @@ var _t = core._t;
  */
 var PortalComposer = publicWidget.Widget.extend({
     template: 'portal.Composer',
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
         'change .o_portal_chatter_file_input': '_onFileInputChange',
         'click .o_portal_chatter_attachment_btn': '_onAttachmentButtonClick',
@@ -98,6 +97,15 @@ var PortalComposer = publicWidget.Widget.extend({
             self.$sendButton.prop('disabled', false);
         });
     },
+    _prepareAttachmentData: function (file) {
+        return {
+            'name': file.name,
+            'file': file,
+            'res_id': this.options.res_id,
+            'res_model': this.options.res_model,
+            'access_token': this.options.token,
+        };
+    },
     /**
      * @private
      * @returns {Promise}
@@ -109,13 +117,7 @@ var PortalComposer = publicWidget.Widget.extend({
 
         return Promise.all(_.map(this.$fileInput[0].files, function (file) {
             return new Promise(function (resolve, reject) {
-                var data = {
-                    'name': file.name,
-                    'file': file,
-                    'res_id': self.options.res_id,
-                    'res_model': self.options.res_model,
-                    'access_token': self.options.token,
-                };
+                var data = self._prepareAttachmentData(file);
                 ajax.post('/portal/attachment/add', data).then(function (attachment) {
                     attachment.state = 'pending';
                     self.attachments.push(attachment);
@@ -155,14 +157,23 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onSubmitButtonClick: function (ev) {
         ev.preventDefault();
-        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
+        const error = this._onSubmitCheckContent();
+        if (error) {
             this.$inputTextarea.addClass('border-danger');
-            const error = _t('Some fields are required. Please make sure to write a message or attach a document');
             this.$(".o_portal_chatter_composer_error").text(error).removeClass('d-none');
             return Promise.reject();
         } else {
             return this._chatterPostMessage(ev.currentTarget.getAttribute('data-action'));
         }
+    },
+
+    /**
+     * @private
+     */
+    _onSubmitCheckContent: function () {
+        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
+            return _t('Some fields are required. Please make sure to write a message or attach a document');
+        };
     },
 
     //--------------------------------------------------------------------------

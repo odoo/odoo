@@ -19,15 +19,15 @@
                     </tree>
                 </field>
                 <footer>
-                    <button name="action_mailing_lists_merge" type="object" string="Merge" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button name="action_mailing_lists_merge" type="object" string="Merge" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>
     </record>
 
     <record id="mailing_list_merge_action" model="ir.actions.act_window">
-        <field name="name">Merge Selected Mailing Lists</field>
+        <field name="name">Merge</field>
         <field name="res_model">mailing.list.merge</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

@@ -4,13 +4,12 @@
     <template id="invitation_page_anonymous" name="Calendar Invitation Page for anonymous users">
         <t t-call="web.layout">
             <t t-set="head">
-                <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_frontend" t-js="false"/>
             </t>
 
             <div class="container">
                 <div class="o_logo">
-                    <img class="img img-fluid d-block mx-auto" src="/web/binary/company_logo" alt="Logo"/>
+                    <img t-attf-src="/web/binary/company_logo?company={{ company.id }}" alt="Logo"/>
                 </div>
 
                 <div class="card">
@@ -19,7 +18,7 @@
                     </div>
                     <div class="card-body">
                         <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
-                            <span class="float-right badge badge-info">
+                            <span class="float-end badge text-bg-info">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
                                 <t t-if="attendee.state == 'declined'">No I'm not going.</t>
                                 <t t-if="attendee.state == 'tentative'">Tentative</t>

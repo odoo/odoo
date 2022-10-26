@@ -12,10 +12,15 @@
         'iap',
         'mail',
     ],
-    'application': False,
     'installable': True,
     'auto_install': True,
     'data': [
         'data/mail_templates.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'iap_mail/static/src/js/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

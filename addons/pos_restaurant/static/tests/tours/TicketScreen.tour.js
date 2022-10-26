@@ -17,6 +17,7 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
 
     // Deleting the last order in the table brings back to floorscreen
     FloorScreen.do.clickTable('T4');
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.check.isShown();
     Chrome.do.clickTicketButton();
     TicketScreen.check.nthRowContains(2, '-0001');
@@ -38,6 +39,7 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
     TicketScreen.do.deleteOrder('-0003');
     Chrome.do.confirmPopup();
     TicketScreen.do.selectOrder('-0002');
+    ProductScreen.check.isShown();
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
     Chrome.do.backToFloor();

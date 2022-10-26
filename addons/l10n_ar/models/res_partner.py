@@ -24,7 +24,7 @@ class ResPartner(models.Model):
         [('multilateral', 'Multilateral'), ('local', 'Local'), ('exempt', 'Exempt')],
         'Gross Income Type', help='Type of gross income: exempt, local, multilateral')
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', index=True, help='Defined by AFIP to'
+        'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', index='btree_not_null', help='Defined by AFIP to'
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
     l10n_ar_special_purchase_document_type_ids = fields.Many2many(
@@ -113,9 +113,12 @@ class ResPartner(models.Model):
             except Exception as error:
                 raise ValidationError(repr(error))
 
-    @api.model
     def _get_id_number_sanitize(self):
-        """ Sanitize the identification number. Return the digits/integer value of the identification number """
+        """ Sanitize the identification number. Return the digits/integer value of the identification number
+        If not vat number defined return 0 """
+        self.ensure_one()
+        if not self.vat:
+            return 0
         if self.l10n_latam_identification_type_id.l10n_ar_afip_code in ['80', '86']:
             # Compact is the number clean up, remove all separators leave only digits
             res = int(stdnum.ar.cuit.compact(self.vat))

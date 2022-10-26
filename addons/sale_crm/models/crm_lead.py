@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class CrmLead(models.Model):
@@ -17,20 +18,16 @@ class CrmLead(models.Model):
     @api.depends('order_ids.state', 'order_ids.currency_id', 'order_ids.amount_untaxed', 'order_ids.date_order', 'order_ids.company_id')
     def _compute_sale_data(self):
         for lead in self:
-            total = 0.0
-            quotation_cnt = 0
-            sale_order_cnt = 0
             company_currency = lead.company_currency or self.env.company.currency_id
-            for order in lead.order_ids:
-                if order.state in ('draft', 'sent'):
-                    quotation_cnt += 1
-                if order.state not in ('draft', 'sent', 'cancel'):
-                    sale_order_cnt += 1
-                    total += order.currency_id._convert(
-                        order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today())
-            lead.sale_amount_total = total
-            lead.quotation_count = quotation_cnt
-            lead.sale_order_count = sale_order_cnt
+            sale_orders = lead.order_ids.filtered_domain(self._get_lead_sale_order_domain())
+            lead.sale_amount_total = sum(
+                order.currency_id._convert(
+                    order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today()
+                )
+                for order in sale_orders
+            )
+            lead.quotation_count = len(lead.order_ids.filtered_domain(self._get_lead_quotation_domain()))
+            lead.sale_order_count = len(sale_orders)
 
     def action_sale_quotations_new(self):
         if not self.partner_id:
@@ -40,12 +37,49 @@ class CrmLead(models.Model):
 
     def action_new_quotation(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale_crm.sale_action_quotations_new")
+        action['context'] = self._prepare_opportunity_quotation_context()
+        action['context']['search_default_opportunity_id'] = self.id
+        return action
+
+    def action_view_sale_quotation(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
+        action['context'] = self._prepare_opportunity_quotation_context()
+        action['context']['search_default_draft'] = 1
+        action['domain'] = expression.AND([[('opportunity_id', '=', self.id)], self._get_lead_quotation_domain()])
+        quotations = self.order_ids.filtered_domain(self._get_lead_quotation_domain())
+        if len(quotations) == 1:
+            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['res_id'] = quotations.id
+        return action
+
+    def action_view_sale_order(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['context'] = {
-            'search_default_opportunity_id': self.id,
-            'default_opportunity_id': self.id,
             'search_default_partner_id': self.partner_id.id,
             'default_partner_id': self.partner_id.id,
-            'default_team_id': self.team_id.id,
+            'default_opportunity_id': self.id,
+        }
+        action['domain'] = expression.AND([[('opportunity_id', '=', self.id)], self._get_lead_sale_order_domain()])
+        orders = self.order_ids.filtered_domain(self._get_lead_sale_order_domain())
+        if len(orders) == 1:
+            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['res_id'] = orders.id
+        return action
+
+    def _get_lead_quotation_domain(self):
+        return [('state', 'in', ('draft', 'sent'))]
+
+    def _get_lead_sale_order_domain(self):
+        return [('state', 'not in', ('draft', 'sent', 'cancel'))]
+
+    def _prepare_opportunity_quotation_context(self):
+        """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
+        self.ensure_one()
+        quotation_context = {
+            'default_opportunity_id': self.id,
+            'default_partner_id': self.partner_id.id,
             'default_campaign_id': self.campaign_id.id,
             'default_medium_id': self.medium_id.id,
             'default_origin': self.name,
@@ -53,33 +87,14 @@ class CrmLead(models.Model):
             'default_company_id': self.company_id.id or self.env.company.id,
             'default_tag_ids': [(6, 0, self.tag_ids.ids)]
         }
-        return action
+        if self.team_id:
+            quotation_context['default_team_id'] = self.team_id.id
+        if self.user_id:
+            quotation_context['default_user_id'] = self.user_id.id
+        return quotation_context
 
-    def action_view_sale_quotation(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
-        action['context'] = {
-            'search_default_draft': 1,
-            'search_default_partner_id': self.partner_id.id,
-            'default_partner_id': self.partner_id.id,
-            'default_opportunity_id': self.id
-        }
-        action['domain'] = [('opportunity_id', '=', self.id), ('state', 'in', ['draft', 'sent'])]
-        quotations = self.mapped('order_ids').filtered(lambda l: l.state in ('draft', 'sent'))
-        if len(quotations) == 1:
-            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
-            action['res_id'] = quotations.id
-        return action
-
-    def action_view_sale_order(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
-        action['context'] = {
-            'search_default_partner_id': self.partner_id.id,
-            'default_partner_id': self.partner_id.id,
-            'default_opportunity_id': self.id,
-        }
-        action['domain'] = [('opportunity_id', '=', self.id), ('state', 'not in', ('draft', 'sent', 'cancel'))]
-        orders = self.mapped('order_ids').filtered(lambda l: l.state not in ('draft', 'sent', 'cancel'))
-        if len(orders) == 1:
-            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
-            action['res_id'] = orders.id
-        return action
+    def _merge_get_fields_specific(self):
+        fields_info = super(CrmLead, self)._merge_get_fields_specific()
+        # add all the orders from all lead to merge
+        fields_info['order_ids'] = lambda fname, leads: [(4, order.id) for order in leads.order_ids]
+        return fields_info

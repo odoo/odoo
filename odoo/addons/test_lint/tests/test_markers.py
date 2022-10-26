@@ -31,6 +31,8 @@ class TestConflictMarkers(lint_case.LintCase):
 
         for p in paths:
             for dp, _, file_names in os.walk(p):
+                if 'node_modules' in dp:
+                    continue
                 for fn in file_names:
                     if fn.endswith(EXTENSIONS):
                         self.check_file(os.path.join(dp, fn))

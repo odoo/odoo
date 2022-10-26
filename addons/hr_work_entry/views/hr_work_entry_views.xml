@@ -28,7 +28,7 @@
                 color="color"
                 event_limit="5">
                 <!-- Sidebar favorites filters -->
-                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="image_128"/>
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="avatar_128"/>
                 <field name="state"/>
             </calendar>
         </field>
@@ -61,7 +61,7 @@
                             <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <label for="duration" string="Period"/>
                             <div class="o_row">
-                                <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
+                                <field name="duration" nolabel="1" widget="float_time" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
                         </group>
@@ -78,10 +78,21 @@
             <tree multi_edit="1" sample="1">
                 <field name="name"/>
                 <field name="work_entry_type_id" options="{'no_create': True, 'no_open': True}"/>
-                <field name="duration" readonly="1"/>
+                <field name="duration" widget="float_time" readonly="1"/>
                 <field name="state"/>
                 <field name="date_start" string="Beginning" readonly="1"/>
+                <field name="date_stop" string="End" readonly="1"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_view_pivot" model="ir.ui.view">
+        <field name="name">hr.work.entry.pivot</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <pivot string="Work Entries" sample="1">
+                <field name="duration" widget="float_time" readonly="1"/>
+            </pivot>
         </field>
     </record>
 
@@ -118,7 +129,7 @@
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
             <search string="Search Work Entry Type">
-                <field name="name"/>
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
@@ -137,7 +148,6 @@
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="color" widget="color_picker"/>
@@ -161,9 +171,12 @@
                         <group name="identification">
                             <field name="code"/>
                             <field name="active" invisible="1"/>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                             <field name="color" widget="color_picker"/>
                         </group>
+                    </group>
+                    <group name="other">
+                        <group name="time_off" string="Time Off Options"/>
                     </group>
                 </sheet>
             </form>
@@ -180,7 +193,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">

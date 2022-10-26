@@ -5,7 +5,7 @@ from odoo.tests.common import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 
-class TestSaleStockReports(TestReportsCommon):
+class TestMrpStockReports(TestReportsCommon):
     def test_report_forecast_1_mo_count(self):
         """ Creates and configures a product who could be produce and could be a component.
         Plans some producing and consumming MO and check the report values.
@@ -159,15 +159,21 @@ class TestSaleStockReports(TestReportsCommon):
             'name': 'Banana',
             'type': 'product',
         })
+        product_chocolate = self.env['product.product'].create({
+            'name': 'Chocolate',
+            'type': 'consu',
+        })
 
         # We create 2 identical MO
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product_banana
         mo_form.product_qty = 10
+        with mo_form.move_raw_ids.new() as move:
+            move.product_id = product_chocolate
+
         mo_1 = mo_form.save()
-        mo_1.button_plan()
         mo_2 = mo_1.copy()
-        mo_2.button_plan()
+        (mo_1 | mo_2).action_confirm()
 
         # Check for both MO if the highlight (is_matched) corresponds to the correct MO
         for mo in [mo_1, mo_2]:
@@ -178,3 +184,74 @@ class TestSaleStockReports(TestReportsCommon):
                     self.assertTrue(line['is_matched'], "The corresponding MO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the MO shoud not be matched.")
+
+    def test_subkit_in_delivery_slip(self):
+        """
+        Suppose this structure:
+        Super Kit --|- Compo 01 x1
+                    |- Sub Kit x1 --|- Compo 02 x1
+                    |               |- Compo 03 x1
+
+        This test ensures that, when delivering one Super Kit, one Sub Kit, one Compo 01 and one Compo 02,
+        and when putting in pack the third component of the Super Kit, the delivery report is correct.
+        """
+        compo01, compo02, compo03, subkit, superkit = self.env['product.product'].create([{
+            'name': n,
+            'type': 'consu',
+        } for n in ['Compo 01', 'Compo 02', 'Compo 03', 'Sub Kit', 'Super Kit']])
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': subkit.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
+                (0, 0, {'product_id': compo03.id, 'product_qty': 1}),
+            ],
+        }, {
+            'product_tmpl_id': superkit.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
+                (0, 0, {'product_id': subkit.id, 'product_qty': 1}),
+            ],
+        }])
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.picking_type_out
+        picking_form.partner_id = self.partner
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = superkit
+            move.product_uom_qty = 1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = subkit
+            move.product_uom_qty = 1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = compo01
+            move.product_uom_qty = 1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = compo02
+            move.product_uom_qty = 1
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        picking.move_ids.quantity_done = 1
+        move = picking.move_ids.filtered(lambda m: m.name == "Super Kit" and m.product_id == compo03)
+        move.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Package0001'})
+        picking.button_validate()
+
+        html_report = self.env['ir.actions.report']._render_qweb_html(
+            'stock.report_deliveryslip', picking.ids)[0].decode('utf-8').split('\n')
+        keys = [
+            "Package0001", "Compo 03",
+            "Products with no package assigned", "Compo 01", "Compo 02",
+            "Super Kit", "Compo 01", "Compo 02",
+            "Sub Kit", "Compo 02", "Compo 03",
+        ]
+        for line in html_report:
+            if not keys:
+                break
+            if keys[0] in line:
+                keys = keys[1:]
+        self.assertFalse(keys, "All keys should be in the report with the defined order")

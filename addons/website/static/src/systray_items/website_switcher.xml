@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.WebsiteSwitcherSystray" owl="1">
+    <Dropdown class="'o_menu_systray_item o_website_switcher_container'" hotkey="'w'">
+        <t t-set-slot="toggler">
+            <div class="d-none d-md-block">
+                <span t-esc="websiteService.currentWebsite.name" class="me-2"/>
+                <i class="fa fa-caret-down"/>
+            </div>
+            <div class="d-md-none">
+                <i class="fa fa-globe"/>
+            </div>
+        </t>
+        <t t-foreach="getElements()" t-as="element" t-key="element_index">
+            <DropdownItem
+                t-esc="element.name"
+                onSelected="element.callback"
+                class="element.class"
+            />
+        </t>
+    </Dropdown>
+</t>
+</templates>

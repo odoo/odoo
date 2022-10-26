@@ -16,7 +16,7 @@ The view receiving the `inherit_id` update is either:
 from odoo.tests import standalone
 
 
-@standalone('cow_views_inherit')
+@standalone('cow_views_inherit', 'website_standalone')
 def test_01_cow_views_inherit_on_module_update(env):
     #     A    B                        A    B
     #    / \                   =>           / \
@@ -48,7 +48,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     assert child_cow_view.inherit_id == expected_parent_view, "COW view should also have received the `inherit_id` update."
 
 
-@standalone('cow_views_inherit')
+@standalone('cow_views_inherit', 'website_standalone')
 def test_02_cow_views_inherit_on_module_update(env):
     #     A    B    B'                  A    B   B'
     #    / \                   =>            |   |

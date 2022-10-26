@@ -49,30 +49,62 @@ var VariantMixin = {
      * @returns {Deferred}
      */
     _getCombinationInfo: function (ev) {
-        var self = this;
-
         if ($(ev.target).hasClass('variant_custom_value')) {
             return Promise.resolve();
         }
 
-        var $parent = $(ev.target).closest('.js_product');
-        var qty = $parent.find('input[name="add_qty"]').val();
-        var combination = this.getSelectedVariantValues($parent);
-        var parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
-        var productTemplateId = parseInt($parent.find('.product_template_id').val());
+        const $parent = $(ev.target).closest('.js_product');
+        const combination = this.getSelectedVariantValues($parent);
+        let parentCombination;
 
-        self._checkExclusions($parent, combination);
+        if ($parent.hasClass('main_product')) {
+            parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
+            const $optProducts = $parent.parent().find(`[data-parent-unique-id='${$parent.data('uniqueId')}']`);
+
+            for (const optionalProduct of $optProducts) {
+                const $currentOptionalProduct = $(optionalProduct);
+                const childCombination = this.getSelectedVariantValues($currentOptionalProduct);
+                const productTemplateId = parseInt($currentOptionalProduct.find('.product_template_id').val());
+                ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
+                    'product_template_id': productTemplateId,
+                    'product_id': this._getProductId($currentOptionalProduct),
+                    'combination': childCombination,
+                    'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
+                    'pricelist_id': this.pricelistId || false,
+                    'parent_combination': combination,
+                    ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
+                }).then((combinationData) => {
+                    this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
+                    this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
+                });
+            }
+        } else {
+            parentCombination = this.getSelectedVariantValues(
+                $parent.parent().find('.js_product.in_cart.main_product')
+            );
+        }
 
         return ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
-            'product_template_id': productTemplateId,
+            'product_template_id': parseInt($parent.find('.product_template_id').val()),
             'product_id': this._getProductId($parent),
             'combination': combination,
-            'add_qty': parseInt(qty),
+            'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
-        }).then(function (combinationData) {
-            self._onChangeCombination(ev, $parent, combinationData);
+            ...this._getOptionalCombinationInfoParam($parent),
+        }).then((combinationData) => {
+            this._onChangeCombination(ev, $parent, combinationData);
+            this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
+    },
+
+    /**
+     * Hook to add optional info to the combination info call.
+     *
+     * @param {$.Element} $product
+     */
+    _getOptionalCombinationInfoParam($product) {
+        return {};
     },
 
     /**
@@ -105,6 +137,7 @@ var VariantMixin = {
                               .data('custom_product_template_attribute_value_id') !== parseInt(attributeValueId)) {
                     $variantContainer.find('.variant_custom_value').remove();
 
+                    const previousCustomValue = $customInput.attr("previous_custom_value");
                     var $input = $('<input>', {
                         type: 'text',
                         'data-custom_product_template_attribute_value_id': attributeValueId,
@@ -115,6 +148,9 @@ var VariantMixin = {
                     $input.attr('placeholder', attributeValueName);
                     $input.addClass('custom_value_radio');
                     $variantContainer.append($input);
+                    if (previousCustomValue) {
+                        $input.val(previousCustomValue);
+                    }
                     $input[0].focus();
                 }
             } else {
@@ -153,8 +189,8 @@ var VariantMixin = {
     onChangeAddQuantity: function (ev) {
         var $parent;
 
-        if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
-            $parent = $(ev.currentTarget).closest('.oe_optional_products_modal');
+        if ($(ev.currentTarget).closest('.oe_advanced_configurator_modal').length > 0){
+            $parent = $(ev.currentTarget).closest('.oe_advanced_configurator_modal');
         } else if ($(ev.currentTarget).closest('form').length > 0){
             $parent = $(ev.currentTarget).closest('form');
         }  else {
@@ -170,10 +206,9 @@ var VariantMixin = {
      * @param {$.Element} $container
      */
     triggerVariantChange: function ($container) {
-        var self = this;
         $container.find('ul[data-attribute_exclusions]').trigger('change');
         $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
-            self.handleCustomValues($(this));
+            VariantMixin.handleCustomValues($(this));
         });
     },
 
@@ -224,12 +259,13 @@ var VariantMixin = {
 
         $container.find(variantsValuesSelectors.join(',')).each(function (){
             var $variantValueInput = $(this);
+            var singleNoCustom = $variantValueInput.data('is_single') && !$variantValueInput.data('is_custom');
 
             if ($variantValueInput.is('select')){
                 $variantValueInput = $variantValueInput.find('option[value=' + $variantValueInput.val() + ']');
             }
 
-            if ($variantValueInput.length !== 0){
+            if ($variantValueInput.length !== 0 && !singleNoCustom){
                 noVariantAttributeValues.push({
                     'custom_product_template_attribute_value_id': $variantValueInput.data('value_id'),
                     'attribute_value_name': $variantValueInput.data('value_name'),
@@ -281,7 +317,6 @@ var VariantMixin = {
      * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
     selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
-        var self = this;
         productId = parseInt(productId);
         productTemplateId = parseInt(productTemplateId);
         var productReady = Promise.resolve();
@@ -291,14 +326,17 @@ var VariantMixin = {
             var params = {
                 product_template_id: productTemplateId,
                 product_template_attribute_value_ids:
-                    JSON.stringify(self.getSelectedVariantValues($container)),
+                    JSON.stringify(VariantMixin.getSelectedVariantValues($container)),
             };
 
             var route = '/sale/create_product_variant';
             if (useAjax) {
                 productReady = ajax.jsonRpc(route, 'call', params);
-            } else {
+            } else if (Boolean(this._rpc)) {
+                // HACK to combine owl and non owl calls
                 productReady = this._rpc({route: route, params: params});
+            } else {
+                productReady = this.rpc(route, params);
             }
         }
 
@@ -324,13 +362,18 @@ var VariantMixin = {
      * @private
      * @param {$.Element} $parent the parent container to apply exclusions
      * @param {Array} combination the selected combination of product attribute values
+     * @param {Array} parentExclusions the exclusions induced by the variant selection of the parent product
+     * For example chair cannot have steel legs if the parent Desk doesn't have steel legs
      */
-    _checkExclusions: function ($parent, combination) {
+    _checkExclusions: function ($parent, combination, parentExclusions) {
         var self = this;
         var combinationData = $parent
             .find('ul[data-attribute_exclusions]')
             .data('attribute_exclusions');
 
+        if (parentExclusions && combinationData.parent_exclusions) {
+            combinationData.parent_exclusions = parentExclusions;
+        }
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
@@ -353,6 +396,44 @@ var VariantMixin = {
                             current_ptav,
                             combinationData.mapped_attribute_names
                         );
+                    });
+                }
+            });
+        }
+        // combination exclusions: array of array of ptav
+        // for example a product with 3 variation and one specific variation is disabled (archived)
+        //  requires the first 2 to be selected for the third to be disabled
+        if (combinationData.archived_combinations) {
+            combinationData.archived_combinations.forEach((excludedCombination) => {
+                const ptavCommon = excludedCombination.filter((ptav) => combination.includes(ptav));
+                if (ptavCommon.length === combination.length) {
+                    // Selected combination is archived, all attributes must be disabled from each other
+                    combination.forEach((ptav) => {
+                        combination.forEach((ptavOther) => {
+                            if (ptav === ptavOther) {
+                                return;
+                            }
+                            self._disableInput(
+                                $parent,
+                                ptav,
+                                ptavOther,
+                                combinationData.mapped_attribute_names,
+                            );
+                        })
+                    })
+                } else if (ptavCommon.length === (combination.length - 1)) {
+                    // In this case we only need to disable the remaining ptav
+                    const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
+                    excludedCombination.forEach((ptav) => {
+                        if (ptav === disabledPtav) {
+                            return;
+                        }
+                        self._disableInput(
+                            $parent,
+                            disabledPtav,
+                            ptav,
+                            combinationData.mapped_attribute_names,
+                        )
                     });
                 }
             });
@@ -564,6 +645,11 @@ var VariantMixin = {
      */
     _toggleDisable: function ($parent, isCombinationPossible) {
         $parent.toggleClass('css_not_available', !isCombinationPossible);
+        if ($parent.hasClass('in_cart')) {
+            const primaryButton = $parent.parents('.modal-content').find('.modal-footer .btn-primary');
+            primaryButton.prop('disabled', !isCombinationPossible);
+            primaryButton.toggleClass('disabled', !isCombinationPossible);
+        }
     },
     /**
      * Updates the product image.

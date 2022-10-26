@@ -1,5 +1,4 @@
-odoo.define('mail.emojis', function (require) {
-"use strict";
+/** @odoo-module **/
 
 /**
  * This module exports the list of all available emojis on the client side.
@@ -20,7 +19,7 @@ odoo.define('mail.emojis', function (require) {
  * - value: this is the unicode representation of an emoji, i.e. its "true"
  *          representation in the system.
  */
-var data = {
+const data = {
     ":)":             "😊",
     ":-)":            "😊", // alternative (alt.)
     "=)":             "😊", // alt.
@@ -60,7 +59,6 @@ var data = {
     ":'o":            "😨",
     "3:(":            "😠",
     ">:(":            "😠", // alt.
-    "3:":             "😠", // alt.
     "3:)":            "😈",
     ">:)":            "😈", // alt.
     ":*":             "😘",
@@ -148,8 +146,6 @@ _.each(data, function (unicode, source) {
     }
 });
 
-var emojis = _.values(emojiDict);
+export const emojis = _.values(emojiDict);
 
-return emojis;
-
-});
+export default emojis;

@@ -16,22 +16,6 @@ class MailChatController(BusController):
         return request.session.uid and request.session.uid or SUPERUSER_ID
 
     # --------------------------
-    # Extends BUS Controller Poll
-    # --------------------------
-    def _poll(self, dbname, channels, last, options):
-        if request.session.uid:
-            partner_id = request.env.user.partner_id.id
-
-            if partner_id:
-                channels = list(channels)       # do not alter original list
-                for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
-                    channels.append((request.db, 'mail.channel', mail_channel.id))
-                # personal and needaction channel
-                channels.append((request.db, 'res.partner', partner_id))
-                channels.append((request.db, 'ir.needaction', partner_id))
-        return super(MailChatController, self)._poll(dbname, channels, last, options)
-
-    # --------------------------
     # Anonymous routes (Common Methods)
     # --------------------------
     @route('/mail/chat_post', type="json", auth="public", cors="*")
@@ -65,4 +49,4 @@ class MailChatController(BusController):
         if not channel:
             return []
         else:
-            return channel.channel_fetch_message(last_id, limit)
+            return channel._channel_fetch_message(last_id, limit)

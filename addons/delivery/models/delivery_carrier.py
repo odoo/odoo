@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import psycopg2
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
+from odoo.tools.float_utils import float_round
 
-_logger = logging.getLogger(__name__)
+from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
 
 class DeliveryCarrier(models.Model):
@@ -53,8 +53,12 @@ class DeliveryCarrier(models.Model):
 
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
-    zip_from = fields.Char('Zip From')
-    zip_to = fields.Char('Zip To')
+    zip_prefix_ids = fields.Many2many(
+        'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes')
+    carrier_description = fields.Text(
+        'Carrier Description', translate=True,
+        help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
+             "E.g. instructions for customers to follow.")
 
     margin = fields.Float(help='This percentage will be added to the shipping price.')
     free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False)
@@ -64,14 +68,27 @@ class DeliveryCarrier(models.Model):
     return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
     get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", help="The return label can be downloaded by the customer from the customer portal.")
 
+    supports_shipping_insurance = fields.Boolean(compute="_compute_supports_shipping_insurance")
+    shipping_insurance = fields.Integer(
+        "Insurance Percentage",
+        help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
+        default=0
+    )
+
     _sql_constraints = [
         ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
+        ('shipping_insurance_is_percentage', 'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)', "The shipping insurance must be a percentage between 0 and 100."),
     ]
 
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):
         for carrier in self:
             carrier.can_generate_return = False
+
+    @api.depends('delivery_type')
+    def _compute_supports_shipping_insurance(self):
+        for carrier in self:
+            carrier.supports_shipping_insurance = False
 
     def toggle_prod_environment(self):
         for c in self:
@@ -102,9 +119,7 @@ class DeliveryCarrier(models.Model):
             return False
         if self.state_ids and partner.state_id not in self.state_ids:
             return False
-        if self.zip_from and (partner.zip or '').upper() < self.zip_from.upper():
-            return False
-        if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
+        if self.zip_prefix_ids and not partner.zip.upper().startswith(tuple(self.zip_prefix_ids.mapped('name'))):
             return False
         return True
 
@@ -131,6 +146,15 @@ class DeliveryCarrier(models.Model):
     def onchange_countries(self):
         self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
 
+    def _get_delivery_type(self):
+        """Return the delivery type.
+
+        This method needs to be overridden by a delivery carrier module if the delivery type is not
+        stored on the field `delivery_type`.
+        """
+        self.ensure_one()
+        return self.delivery_type
+
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -148,6 +172,17 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
+            # apply fiscal position
+            company = self.company_id or order.company_id or self.env.company
+            res['price'] = self.product_id._get_tax_included_unit_price(
+                company,
+                company.currency_id,
+                order.date_order,
+                'sale',
+                fiscal_position=order.fiscal_position_id,
+                product_price_unit=res['price'],
+                product_currency=company.currency_id
+            )
             # apply margin on computed price
             res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))
             # save the real price in case a free_over rule overide it to 0
@@ -204,7 +239,7 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
 
         if self.debug_logging:
-            self.flush()
+            self.env.flush_all()
             db_name = self._cr.dbname
 
             # Use a new cursor to avoid rollback that could be caused by an upper method
@@ -256,10 +291,7 @@ class DeliveryCarrier(models.Model):
                     'price': 0.0,
                     'error_message': _('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
-        price = self.fixed_price
-        company = self.company_id or order.company_id or self.env.company
-        if company.currency_id and company.currency_id != order.currency_id:
-            price = company.currency_id._convert(price, order.currency_id, company, fields.Date.today())
+        price = order.pricelist_id._get_product_price(self.product_id, 1.0)
         return {'success': True,
                 'price': price,
                 'error_message': False,
@@ -277,3 +309,84 @@ class DeliveryCarrier(models.Model):
 
     def fixed_cancel_shipment(self, pickings):
         raise NotImplementedError()
+
+    # -------------------------------- #
+    # get default packages/commodities #
+    # -------------------------------- #
+
+    def _get_packages_from_order(self, order, default_package_type):
+        packages = []
+
+        total_cost = 0
+        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
+            total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
+
+        total_weight = order._get_estimated_weight() + default_package_type.base_weight
+        # If max weight == 0 => division by 0. If this happens, we want to have
+        # more in the max weight than in the total weight, so that it only
+        # creates ONE package with everything.
+        max_weight = default_package_type.max_weight or total_weight + 1
+        total_full_packages = int(total_weight / max_weight)
+        last_package_weight = total_weight % max_weight
+
+        package_weights = [max_weight] * total_full_packages + [last_package_weight] if last_package_weight else []
+        partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
+        for weight in package_weights:
+            packages.append(DeliveryPackage(None, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
+        return packages
+
+    def _get_packages_from_picking(self, picking, default_package_type):
+        packages = []
+
+        if picking.is_return_picking:
+            commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
+            weight = picking._get_estimated_weight() + default_package_type.base_weight
+            packages.append(DeliveryPackage(commodities, weight, default_package_type, currency=picking.company_id.currency_id, picking=picking))
+            return packages
+
+        # Create all packages.
+        for package in picking.package_ids:
+            move_lines = picking.move_line_ids.filtered(lambda ml: ml.result_package_id == package)
+            commodities = self._get_commodities_from_stock_move_lines(move_lines)
+            package_total_cost = 0.0
+            for quant in package.quant_ids:
+                package_total_cost += self._product_price_to_company_currency(quant.quantity, quant.product_id, picking.company_id)
+            packages.append(DeliveryPackage(commodities, package.shipping_weight or package.weight, package.package_type_id, name=package.name, total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+
+        # Create one package: either everything is in pack or nothing is.
+        if picking.weight_bulk:
+            commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
+            package_total_cost = 0.0
+            for move_line in picking.move_line_ids:
+                package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
+            packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+
+        return packages
+
+    def _get_commodities_from_order(self, order):
+        commodities = []
+
+        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
+            unit_quantity = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = line.product_id.country_of_origin.code or order.warehouse_id.partner_id.country_id.code
+            commodities.append(DeliveryCommodity(line.product_id, amount=rounded_qty, monetary_value=line.price_reduce_taxinc, country_of_origin=country_of_origin))
+
+        return commodities
+
+    def _get_commodities_from_stock_move_lines(self, move_lines):
+        commodities = []
+
+        for line in move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu']):
+            if line.state == 'done':
+                unit_quantity = line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
+            else:
+                unit_quantity = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = line.product_id.country_of_origin.code or line.picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
+            commodities.append(DeliveryCommodity(line.product_id, amount=rounded_qty, monetary_value=line.sale_price, country_of_origin=country_of_origin))
+
+        return commodities
+
+    def _product_price_to_company_currency(self, quantity, product, company):
+        return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company, fields.Date.today())

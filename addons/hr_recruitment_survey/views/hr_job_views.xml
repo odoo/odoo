@@ -5,14 +5,14 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="before">
+            <field name="interviewer_ids" position="after">
                 <label for="survey_id" groups="survey.group_survey_user"/>
                 <div groups="survey.group_survey_user" class="o_row">
                     <field name="survey_id"
                         context="{'default_access_mode': 'token'}"/>
-                    <button string="Display Interview Form" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
+                    <button string="Display Interview Form" name="action_test_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link pb-1"/>
                 </div>
-            </xpath>
+            </field>
         </field>
     </record>
     <record id="view_hr_job_kanban_inherit" model="ir.ui.view">
@@ -23,9 +23,15 @@
             <xpath expr="//field[@name='manager_id']" position="after">
                 <field name="survey_id"/>
             </xpath>
-            <xpath expr='//a[@name="edit_job"]' position="after">
-                <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Preview Interview</a>
-                <a t-if="!record.survey_id.raw_value" name="action_new_survey" type="object" title="Create Interview Form">Create Interview Form</a>
+            <xpath expr="//div[@name='menu_view_applications']" position="after">
+                <div role="menuitem" t-if="record.survey_id.raw_value">
+                    <a name="action_test_survey" type="object" title="Display Interview Form">Interviews</a>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='menu_new_applications']" position="after">
+                <div role="menuitem" t-if="!record.survey_id.raw_value">
+                    <a name="action_new_survey" type="object" title="Display Interview Form">Interview Form</a>
+                </div>
             </xpath>
         </field>
     </record>

@@ -3,11 +3,11 @@
 
     <t t-name="DebugWidget" owl="1">
         <Draggable limitArea="'.pos'">
-            <div class="debug-widget">
+            <div class="debug-widget" t-att-class="props.className">
                 <header class="drag-handle">
                     <h1>Debug Window</h1>
                 </header>
-                <div class="toggle" t-on-click="trigger('toggle-debug-widget')" title="Dismiss"
+                <div class="toggle" t-on-click="() => this.trigger('toggle-debug-widget')" title="Dismiss"
                      role="img" aria-label="Dismiss"><i class="fa fa-times" /></div>
                 <div class="content">
                     <p class="category">Electronic Scale</p>
@@ -42,7 +42,7 @@
                             Export Paid Orders
                         </li>
                         <a t-else="" t-att-download="paidOrdersFilename" t-att-href="paidOrdersURL"
-                           t-on-click="state.isPaidOrdersReady = !state.isPaidOrdersReady">
+                           t-on-click="() => { state.isPaidOrdersReady = !state.isPaidOrdersReady }">
                             <li class="button">
                                 Download Paid Orders
                             </li>
@@ -53,7 +53,7 @@
                         </li>
                         <a t-else="" t-att-download="unpaidOrdersFilename"
                            t-att-href="unpaidOrdersURL"
-                           t-on-click="state.isUnpaidOrdersReady = !state.isUnpaidOrdersReady">
+                           t-on-click="() => { state.isUnpaidOrdersReady = !state.isUnpaidOrdersReady }">
                             <li class="button">
                                 Download Unpaid Orders
                             </li>

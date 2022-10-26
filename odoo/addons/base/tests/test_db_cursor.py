@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import logging
 from functools import partial
+
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 import odoo
 from odoo.sql_db import TestCursor
 from odoo.tests import common
 from odoo.tests.common import BaseCase
-from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -15,10 +17,8 @@ def registry():
     return odoo.registry(common.get_db_name())
 
 
-class TestExecute(BaseCase):
-    """ Try cr.execute with wrong parameters """
+class TestRealCursor(BaseCase):
 
-    @mute_logger('odoo.sql_db')
     def test_execute_bad_params(self):
         """
         Try to use iterable but non-list or int params in query parameters.
@@ -31,6 +31,20 @@ class TestExecute(BaseCase):
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
 
+    def test_using_closed_cursor(self):
+        with registry().cursor() as cr:
+            cr.close()
+            with self.assertRaises(psycopg2.InterfaceError):
+                cr.execute("SELECT 1")
+
+    def test_multiple_close_call_cursor(self):
+        cr = registry().cursor()
+        cr.close()
+        cr.close()
+
+    def test_transaction_isolation_cursor(self):
+        with registry().cursor() as cr:
+            self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
@@ -48,9 +62,11 @@ class TestTestCursor(common.TransactionCase):
         record.ref = value
 
     def flush(self, record):
-        record.flush(['ref'])
+        record.flush_model(['ref'])
 
     def check(self, record, value):
+        # make sure to fetch the field from the database
+        record.invalidate_recordset()
         self.assertEqual(record.read(['ref'])[0]['ref'], value)
 
     def test_single_cursor(self):
@@ -111,38 +127,62 @@ class TestTestCursor(common.TransactionCase):
         self.cr.rollback()
         self.check(self.record, 'A')
 
+    def test_interleaving(self):
+        """If test cursors are retrieved independently it becomes possible for
+        the savepoint operations to be interleaved (especially as some are lazy
+        e.g. the request cursor, so cursors might be semantically nested but
+        technically interleaved), and for them to commit one another:
+
+        .. code-block:: sql
+
+            SAVEPOINT A
+            SAVEPOINT B
+            RELEASE SAVEPOINT A
+            RELEASE SAVEPOINT B -- "savepoint b does not exist"
+        """
+        a = self.registry.cursor()
+        _b = self.registry.cursor()
+        # `a` should warn that it found un-closed cursor `b` when trying to close itself
+        with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
+            a.close()
+        [msg] = cm.output
+        self.assertIn('WARNING:odoo.sql_db:Found different un-closed cursor', msg)
+        # avoid a warning on teardown (when self.cr finds a still on the stack)
+        # as well as ensure the stack matches our expectations
+        self.assertEqual(a._cursors_stack.pop(), a)
 
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
         super().setUp()
         self.log = []
 
-    def prepare_hooks(self, cr, precommit_msg, postcommit_msg, prerollback_msg, postrollback_msg):
-        cr.precommit.add(partial(self.log.append, precommit_msg))
-        cr.postcommit.add(partial(self.log.append, postcommit_msg))
-        cr.prerollback.add(partial(self.log.append, prerollback_msg))
-        cr.postrollback.add(partial(self.log.append, postrollback_msg))
+    def prepare_hooks(self, cr):
+        self.log.clear()
+        cr.precommit.add(partial(self.log.append, 'preC'))
+        cr.postcommit.add(partial(self.log.append, 'postC'))
+        cr.prerollback.add(partial(self.log.append, 'preR'))
+        cr.postrollback.add(partial(self.log.append, 'postR'))
+        self.assertEqual(self.log, [])
 
-    def test_hooks(self):
+    def test_hooks_on_cursor(self):
         cr = self.registry.cursor()
 
         # check hook on commit()
-        self.prepare_hooks(cr, 'C1a', 'C1b', 'R1a', 'R1b')
-        self.assertEqual(self.log, [])
+        self.prepare_hooks(cr)
         cr.commit()
-        self.assertEqual(self.log, ['C1a', 'C1b'])
+        self.assertEqual(self.log, ['preC', 'postC'])
 
-        # check hook on rollback()
-        self.prepare_hooks(cr, 'C2a', 'C2b', 'R2a', 'R2b')
-        self.assertEqual(self.log, ['C1a', 'C1b'])
+        # check hook on flush(), then on rollback()
+        self.prepare_hooks(cr)
+        cr.flush()
+        self.assertEqual(self.log, ['preC'])
         cr.rollback()
-        self.assertEqual(self.log, ['C1a', 'C1b', 'R2a', 'R2b'])
+        self.assertEqual(self.log, ['preC', 'preR', 'postR'])
 
         # check hook on close()
-        self.prepare_hooks(cr, 'C3a', 'C3b', 'R3a', 'R3b')
-        self.assertEqual(self.log, ['C1a', 'C1b', 'R2a', 'R2b'])
+        self.prepare_hooks(cr)
         cr.close()
-        self.assertEqual(self.log, ['C1a', 'C1b', 'R2a', 'R2b', 'R3a', 'R3b'])
+        self.assertEqual(self.log, ['preR', 'postR'])
 
     def test_hooks_on_testcursor(self):
         self.registry.enter_test_mode(self.cr)
@@ -151,19 +191,18 @@ class TestCursorHooks(common.TransactionCase):
         cr = self.registry.cursor()
 
         # check hook on commit(); post-commit hooks are ignored
-        self.prepare_hooks(cr, 'C1a', 'C1b', 'R1a', 'R1b')
-        self.assertEqual(self.log, [])
+        self.prepare_hooks(cr)
         cr.commit()
-        self.assertEqual(self.log, ['C1a'])
+        self.assertEqual(self.log, ['preC'])
 
-        # check hook on rollback()
-        self.prepare_hooks(cr, 'C2a', 'C2b', 'R2a', 'R2b')
-        self.assertEqual(self.log, ['C1a'])
+        # check hook on flush(), then on rollback()
+        self.prepare_hooks(cr)
+        cr.flush()
+        self.assertEqual(self.log, ['preC'])
         cr.rollback()
-        self.assertEqual(self.log, ['C1a', 'R2a', 'R2b'])
+        self.assertEqual(self.log, ['preC', 'preR', 'postR'])
 
         # check hook on close()
-        self.prepare_hooks(cr, 'C3a', 'C3b', 'R3a', 'R3b')
-        self.assertEqual(self.log, ['C1a', 'R2a', 'R2b'])
+        self.prepare_hooks(cr)
         cr.close()
-        self.assertEqual(self.log, ['C1a', 'R2a', 'R2b', 'R3a', 'R3b'])
+        self.assertEqual(self.log, ['preR', 'postR'])

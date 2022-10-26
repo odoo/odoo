@@ -8,16 +8,11 @@ import odoo
 from odoo.modules import get_modules, get_module_path, initialize_sys_path
 
 commands = {}
-
-class CommandType(type):
-    def __init__(cls, name, bases, attrs):
-        super(CommandType, cls).__init__(name, bases, attrs)
-        name = getattr(cls, name, cls.__name__.lower())
-        cls.name = name
-        if name != 'command':
-            commands[name] = cls
-
-Command = CommandType('Command', (object,), {'run': lambda self, args: None})
+class Command:
+    name = None
+    def __init_subclass__(cls):
+        cls.name = cls.name or cls.__name__.lower()
+        commands[cls.name] = cls
 
 class Help(Command):
     """Display the list of available commands"""

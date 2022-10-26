@@ -201,6 +201,10 @@ class Lang(models.Model):
     def _lang_get_id(self, code):
         return self.with_context(active_test=True).search([('code', '=', code)]).id
 
+    @tools.ormcache('code')
+    def _lang_get_direction(self, code):
+        return self.with_context(active_test=True).search([('code', '=', code)]).direction
+
     @tools.ormcache('url_code')
     def _lang_get_code(self, url_code):
         return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
@@ -211,8 +215,7 @@ class Lang(models.Model):
 
     @tools.ormcache('self.code', 'monetary')
     def _data_get(self, monetary=False):
-        conv = locale.localeconv()
-        thousands_sep = self.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
+        thousands_sep = self.thousands_sep or ''
         decimal_point = self.decimal_point
         grouping = self.grouping
         return grouping, thousands_sep, decimal_point
@@ -286,7 +289,7 @@ class Lang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
-        self.flush()
+        self.env.flush_all()
         self.clear_caches()
         return res
 
@@ -302,8 +305,6 @@ class Lang(models.Model):
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def unlink(self):
-        for language in self:
-            self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()
 
@@ -331,6 +332,22 @@ class Lang(models.Model):
 
         return formatted
 
+    def action_activate_langs(self):
+        """ Activate the selected languages """
+        for lang in self.filtered(lambda l: not l.active):
+            lang.toggle_active()
+        message = _("The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'target': 'new',
+            'params': {
+                'message': message,
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
 def split(l, counts):
     """

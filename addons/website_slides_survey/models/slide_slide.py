@@ -30,30 +30,55 @@ class SlidePartnerRelation(models.Model):
 class Slide(models.Model):
     _inherit = 'slide.slide'
 
-    slide_type = fields.Selection(selection_add=[
+    name = fields.Char(compute='_compute_name', readonly=False, store=True)
+    slide_category = fields.Selection(selection_add=[
         ('certification', 'Certification')
     ], ondelete={'certification': 'set default'})
+    slide_type = fields.Selection(selection_add=[
+        ('certification', 'Certification')
+    ], ondelete={'certification': 'set null'})
     survey_id = fields.Many2one('survey.survey', 'Certification')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
+    # small override of 'is_preview' to uncheck it automatically for slides of type 'certification'
+    is_preview = fields.Boolean(compute='_compute_is_preview', readonly=False, store=True)
 
     _sql_constraints = [
-        ('check_survey_id', "CHECK(slide_type != 'certification' OR survey_id IS NOT NULL)", "A slide of type 'certification' requires a certification."),
-        ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
+        ('check_survey_id', "CHECK(slide_category != 'certification' OR survey_id IS NOT NULL)", "A slide of type 'certification' requires a certification."),
+        ('check_certification_preview', "CHECK(slide_category != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
-    @api.onchange('survey_id')
-    def _on_change_survey_id(self):
-        if self.survey_id:
-            self.slide_type = 'certification'
+    @api.depends('survey_id')
+    def _compute_name(self):
+        for slide in self:
+            if not slide.name and slide.survey_id:
+                slide.name = slide.survey_id.title
 
-    @api.model
-    def create(self, values):
-        rec = super(Slide, self).create(values)
-        if rec.survey_id:
-            rec.slide_type = 'certification'
-        if 'survey_id' in values:
-            rec._ensure_challenge_category()
-        return rec
+    def _compute_mark_complete_actions(self):
+        slides_certification = self.filtered(lambda slide: slide.slide_category == 'certification')
+        slides_certification.can_self_mark_uncompleted = False
+        slides_certification.can_self_mark_completed = False
+        super(Slide, self - slides_certification)._compute_mark_complete_actions()
+
+    @api.depends('slide_category')
+    def _compute_is_preview(self):
+        for slide in self:
+            if slide.slide_category == 'certification' or not slide.is_preview:
+                slide.is_preview = False
+
+    @api.depends('slide_category', 'source_type')
+    def _compute_slide_type(self):
+        super(Slide, self)._compute_slide_type()
+        for slide in self:
+            if slide.slide_category == 'certification':
+                slide.slide_type = 'certification'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        slides = super().create(vals_list)
+        slides_with_survey = slides.filtered('survey_id')
+        slides_with_survey.slide_category = 'certification'
+        slides_with_survey._ensure_challenge_category()
+        return slides
 
     def write(self, values):
         old_surveys = self.mapped('survey_id')
@@ -76,7 +101,7 @@ class Slide(models.Model):
             old_certification_challenges = old_surveys.mapped('certification_badge_id').challenge_ids
             old_certification_challenges.write({'challenge_category': 'certification'})
         if not unlink:
-            certification_challenges = self.mapped('survey_id').mapped('certification_badge_id').challenge_ids
+            certification_challenges = self.survey_id.certification_badge_id.challenge_ids
             certification_challenges.write({'challenge_category': 'slides'})
 
     def _generate_certification_url(self):
@@ -90,7 +115,7 @@ class Slide(models.Model):
             course can be enrolled multiple times.
         """
         certification_urls = {}
-        for slide in self.filtered(lambda slide: slide.slide_type == 'certification' and slide.survey_id):
+        for slide in self.filtered(lambda slide: slide.slide_category == 'certification' and slide.survey_id):
             if slide.channel_id.is_member:
                 user_membership_id_sudo = slide.user_membership_id.sudo()
                 if user_membership_id_sudo.user_input_ids:

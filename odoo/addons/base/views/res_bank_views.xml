@@ -67,9 +67,9 @@
             <field name="search_view_id" ref="res_bank_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new bank
+                Create a Bank
               </p><p>
-                Manage bank records you want to be used in the system.
+                Banks are the financial institutions at which you and your contacts have their accounts.
               </p>
             </field>
         </record>
@@ -79,7 +79,7 @@
             <field name="model">res.partner.bank</field>
             <field name="priority">15</field>
             <field name="arch" type="xml">
-                <form string="Bank account">
+                <form string="Bank account" name="bank_account_form">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
@@ -89,11 +89,12 @@
                             <field name="acc_number"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="partner_id"/>
+                            <field name="acc_holder_name"/>
                         </group>
                         <group>
                             <field name="bank_id"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
-                            <field name="acc_holder_name"/>
+                            <field name="allow_out_payment" widget="boolean_toggle"/>
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
@@ -113,6 +114,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id"/>
                     <field name="acc_holder_name" invisible="1"/>
+                    <field name="allow_out_payment" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
@@ -135,7 +137,9 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a bank account
+                Create a Bank Account
+              </p><p>
+                From here you can manage all bank accounts linked to you and your contacts.
               </p>
             </field>
         </record>

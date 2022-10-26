@@ -9,6 +9,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http, tools, _
 from odoo.addons.iap.tools import iap_tools
+from odoo.exceptions import AccessError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -32,26 +33,100 @@ class MailPluginController(http.Controller):
         it will try to find a company using IAP, if a company is found
         the enriched company will then be created in the database
         """
-        response = {}
 
-        partner = request.env['res.partner'].browse(partner_id)
+        partner = request.env['res.partner'].browse(partner_id).exists()
+
+        if not partner:
+            return {'error': _("This partner does not exist")}
 
         if partner.parent_id:
             return {'error': _("The partner already has a company related to him")}
 
         normalized_email = partner.email_normalized
         if not normalized_email:
-            response = {'error': _('Contact has no valid email')}
-            return response
+            return {'error': _('The email of this contact is not valid and we can not enrich it')}
 
         company, enrichment_info = self._create_company_from_iap(normalized_email)
 
-        response['enrichment_info'] = enrichment_info
-        response['company'] = self._get_company_data(company)
         if company:
             partner.write({'parent_id': company})
 
-        return response
+        return {
+            'enrichment_info': enrichment_info,
+            'company': self._get_company_data(company),
+        }
+
+    @http.route('/mail_plugin/partner/enrich_and_update_company', type='json', auth='outlook', cors='*')
+    def res_partner_enrich_and_update_company(self, partner_id):
+        """
+        Enriches an existing company using IAP
+        """
+        partner = request.env['res.partner'].browse(partner_id).exists()
+
+        if not partner:
+            return {'error': _("This partner does not exist")}
+
+        if not partner.is_company:
+            return {'error': 'Contact must be a company'}
+
+        normalized_email = partner.email_normalized
+        if not normalized_email:
+            return {'error': 'The email of this contact is not valid and we can not enrich it'}
+
+        domain = tools.email_domain_extract(normalized_email)
+        iap_data = self._iap_enrich(domain)
+
+        if 'enrichment_info' in iap_data:  # means that an issue happened with the enrichment request
+            return {
+                'enrichment_info': iap_data['enrichment_info'],
+                'company': self._get_company_data(partner),
+            }
+
+        phone_numbers = iap_data.get('phone_numbers')
+
+        partner_values = {}
+
+        if not partner.phone and phone_numbers:
+            partner_values.update({'phone': phone_numbers[0]})
+
+        if not partner.iap_enrich_info:
+            partner_values.update({'iap_enrich_info': json.dumps(iap_data)})
+
+        if not partner.image_128:
+            logo_url = iap_data.get('logo')
+            if logo_url:
+                try:
+                    response = requests.get(logo_url, timeout=2)
+                    if response.ok:
+                        partner_values.update({'image_1920': base64.b64encode(response.content)})
+                except Exception:
+                    pass
+
+        model_fields_to_iap_mapping = {
+            'street': 'street_name',
+            'city': 'city',
+            'zip': 'postal_code',
+            'website': 'domain',
+        }
+
+        # only update keys for which we dont have values yet
+        partner_values.update({
+            model_field: iap_data.get(iap_key)
+            for model_field, iap_key in model_fields_to_iap_mapping.items() if not partner[model_field]
+        })
+
+        partner.write(partner_values)
+
+        partner.message_post_with_view(
+            'iap_mail.enrich_company',
+            values=iap_data,
+            subtype_id=request.env.ref('mail.mt_note').id,
+        )
+
+        return {
+            'enrichment_info': {'type': 'company_updated'},
+            'company': self._get_company_data(partner),
+        }
 
     @http.route(['/mail_client_extension/partner/get', '/mail_plugin/partner/get']
         , type="json", auth="outlook", cors="*")
@@ -70,7 +145,7 @@ class MailPluginController(http.Controller):
             return {'error': _('You need to specify at least the partner_id or the name and the email')}
 
         if partner_id:
-            partner = request.env['res.partner'].browse(partner_id)
+            partner = request.env['res.partner'].browse(partner_id).exists()
             return self._get_contact_data(partner)
 
         normalized_email = tools.email_normalize(email)
@@ -94,7 +169,10 @@ class MailPluginController(http.Controller):
                 'enrichment_info': None,
             }
             company = self._find_existing_company(normalized_email)
-            if not company:  # create and enrich company
+
+            can_create_partner = request.env['res.partner'].check_access_rights('create', raise_exception=False)
+
+            if not company and can_create_partner:  # create and enrich company
                 company, enrichment_info = self._create_company_from_iap(normalized_email)
                 response['partner']['enrichment_info'] = enrichment_info
             response['partner']['company'] = self._get_company_data(company)
@@ -110,16 +188,10 @@ class MailPluginController(http.Controller):
         search on.
         The method returns an array containing the dicts of the matched contacts.
         """
-
-        #In a multi-company environment, the method may return contacts not belonging to the company that the user
-        #is connected to, this may result in the user not being able to view the contact in Odoo, while this may happen
-        #it is not supported for now and users are encouraged to check if they are connected to the correct company before
-        # clicking on a contact.
-
         normalized_email = tools.email_normalize(search_term)
 
         if normalized_email:
-            filter_domain = [('email_normalized', '=', search_term)]
+            filter_domain = [('email_normalized', 'ilike', search_term)]
         else:
             filter_domain = ['|', '|', ('display_name', 'ilike', search_term), ('ref', '=', search_term),
                              ('email', 'ilike', search_term)]
@@ -160,12 +232,36 @@ class MailPluginController(http.Controller):
         return response
 
     @http.route('/mail_plugin/log_mail_content', type="json", auth="outlook", cors="*")
-    def log_mail_content(self, model, res_id, message):
+    def log_mail_content(self, model, res_id, message, attachments=None):
+        """Log the email on the given record.
+
+        :param model: Model of the record on which we want to log the email
+        :param res_id: ID of the record
+        :param message: Body of the email
+        :param attachments: List of attachments of the email.
+            List of tuple: (filename, base 64 encoded content)
+        """
         if model not in self._mail_content_logging_models_whitelist():
             raise Forbidden()
-        request.env[model].browse(res_id).message_post(body=message)
+
+        if attachments:
+            attachments = [
+                (name, base64.b64decode(content))
+                for name, content in attachments
+            ]
+
+        request.env[model].browse(res_id).message_post(body=message, attachments=attachments)
+        return True
+
+    @http.route('/mail_plugin/get_translations', type="json", auth="outlook", cors="*")
+    def get_translations(self):
+        return self._prepare_translations()
 
     def _iap_enrich(self, domain):
+        """
+        Returns enrichment data for a given domain, in case an error happens the response will
+        contain an enrichment_info key explaining what went wrong
+        """
         enriched_data = {}
         try:
             response = request.env['iap.enrich.api']._request_enrich({domain: domain})  # The key doesn't matter
@@ -267,15 +363,27 @@ class MailPluginController(http.Controller):
 
     def _get_partner_data(self, partner):
 
-        fields_list = ['id', 'name', 'email', 'phone', 'mobile']
+        fields_list = ['id', 'name', 'email', 'phone', 'mobile', 'is_company']
 
         partner_values = dict((fname, partner[fname]) for fname in fields_list)
         partner_values['image'] = partner.image_128
         partner_values['title'] = partner.function
         partner_values['enrichment_info'] = None
 
-        return partner_values
+        try:
+            partner.check_access_rights('write')
+            partner.check_access_rule('write')
+            partner_values['can_write_on_partner'] = True
+        except AccessError:
+            partner_values['can_write_on_partner'] = False
 
+        if not partner_values['name']:
+            # Always ensure that the partner has a name
+            name, email = request.env['res.partner']._parse_partner_name(
+                partner_values['email'])
+            partner_values['name'] = name or email
+
+        return partner_values
 
     def _get_contact_data(self, partner):
         """
@@ -293,7 +401,12 @@ class MailPluginController(http.Controller):
         else:  # no partner found
             partner_response = {}
 
-        return {'partner': partner_response}
+        return {
+            'partner': partner_response,
+            'user_companies': request.env.user.company_ids.ids,
+            'can_create_partner': request.env['res.partner'].check_access_rights(
+                'create', raise_exception=False),
+        }
 
     def _mail_content_logging_models_whitelist(self):
         """
@@ -311,3 +424,22 @@ class MailPluginController(http.Controller):
         """
         domain = tools.email_domain_extract(email)
         return ("@" + domain) if domain not in iap_tools._MAIL_DOMAIN_BLACKLIST else email
+
+    def _translation_modules_whitelist(self):
+        """
+        Returns the list of modules to be translated
+        Other mail plugin modules have to override this method to include their module names
+        """
+        return ['mail_plugin']
+
+    def _prepare_translations(self):
+        lang = request.env['res.users'].browse(request.uid).lang
+        translations_per_module = request.env["ir.http"].get_translations_for_webclient(
+            self._translation_modules_whitelist(), lang)[0]
+        translations_dict = {}
+        for module in self._translation_modules_whitelist():
+            translations = translations_per_module.get(module, {})
+            messages = translations.get('messages', {})
+            for message in messages:
+                translations_dict.update({message['id']: message['string']})
+        return translations_dict

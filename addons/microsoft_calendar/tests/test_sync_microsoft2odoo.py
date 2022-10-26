@@ -24,6 +24,25 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAABlLa4RUBXJToExnebpwea2AAALKrjF"', 'seriesMasterId': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'type': 'occurrence', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX774WtQAAAEYAAAJAcu19N72jSr9Rp1mE2xWABwBlLa4RUBXJToExnebpwea2AAACAQ0AAABlLa4RUBXJToExnebpwea2AAAACyy0xAAAABA=', 'start': {'dateTime': '2020-05-04T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-04T16:00:00.0000000', 'timeZone': 'UTC'}},
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAABlLa4RUBXJToExnebpwea2AAALKrjF"', 'seriesMasterId': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'type': 'occurrence', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX8IdBHsAARgAAAkBy7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAAEA==', 'start': {'dateTime': '2020-05-05T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-05T16:00:00.0000000', 'timeZone': 'UTC'}}
         ]
+        self.single_event = [
+            {
+                '@odata.type': '#microsoft.graph.event',
+                '@odata.etag': 'W/"AAAAA"',
+                'type': 'singleInstance',
+                'id': "CCCCC",
+                'start': {
+                    'dateTime': '2020-05-05T14:30:00.0000000',
+                    'timeZone': 'UTC'
+                },
+                'end': {
+                    'dateTime': '2020-05-05T16:00:00.0000000',
+                    'timeZone': 'UTC'
+                },
+                'location': {
+                    'displayName': "a meeting room at Odoo"
+                }
+            }
+        ]
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
@@ -239,3 +258,88 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         })
         with self.assertRaises(ValidationError):
             event._sync_odoo2microsoft(MicrosoftCal)
+
+    def test_cancel_occurence_of_recurrent_event(self):
+        """ The user is invited to a recurrent event. When synced, all events are present, there are three occurrences:
+            - 07/15/2021, 15:00-15:30
+            - 07/16/2021, 15:00-15:30
+            - 07/17/2021, 15:00-15:30
+        Then, the organizer cancels the second occurrence -> The latter should not be displayed anymore
+        """
+        microsoft_id = 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgBGAAADZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAA='
+        # self.env.user.partner_id.email = "odoo_bf_user01@outlook.com"
+        first_sync_values = [
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"pynKRnkCyUmnqILQHcLZEQAABElcNQ=="', 'createdDateTime': '2021-07-15T14:47:40.2996962Z', 'lastModifiedDateTime': '2021-07-15T14:47:40.3783507Z', 'changeKey': 'pynKRnkCyUmnqILQHcLZEQAABElcNQ==', 'categories': [], 'transactionId': None, 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000B35B3B5A8879D70100000000000000001000000008A0949F4EC0A1479E4ED178D87EF679', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'Recurrent Event 1646', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': False, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'tentative', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgBGAAADZ59RIxdyh0Kt%2FMXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAA%3D&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'allowNewTimeProposals': True, 'OccurrenceId': None, 'isDraft': False, 'hideAttendees': False, 'CalendarEventClassifications': [], 'AutoRoomBookingOptions': None, 'onlineMeeting': None, 'id': microsoft_id, 'responseStatus': {'response': 'notResponded', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2021-07-15T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-15T15:30:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2021-07-15', 'endDate': '2021-07-17', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [{'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'}, 'emailAddress': {'name': 'Odoo02 Outlook02', 'address': 'odoo_bf_user02@outlook.com'}}, {'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'}, 'emailAddress': {'name': 'Odoo01 Outlook01', 'address': 'odoo_bf_user01@outlook.com'}}], 'organizer': {'emailAddress': {'name': 'Odoo02 Outlook02', 'address': 'odoo_bf_user02@outlook.com'}}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAACnKcpGeQLJSaeogtAdwtkRAAAESVw1"', 'seriesMasterId': ('%s' % microsoft_id), 'type': 'occurrence', 'id': 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlHI305wABGAAACZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ', 'start': {'dateTime': '2021-07-15T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-15T15:30:00.0000000', 'timeZone': 'UTC'}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAACnKcpGeQLJSaeogtAdwtkRAAAESVw1"', 'seriesMasterId': microsoft_id, 'type': 'occurrence', 'id': 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlH7KejgABGAAACZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ', 'start': {'dateTime': '2021-07-16T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-16T15:30:00.0000000', 'timeZone': 'UTC'}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAACnKcpGeQLJSaeogtAdwtkRAAAESVw1"', 'seriesMasterId': microsoft_id, 'type': 'occurrence', 'id': 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlItdINQABGAAACZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ', 'start': {'dateTime': '2021-07-17T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-17T15:30:00.0000000', 'timeZone': 'UTC'}}
+        ]
+        second_sync_values = [
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"pynKRnkCyUmnqILQHcLZEQAABElcUw=="', 'createdDateTime': '2021-07-15T14:47:40.2996962Z', 'lastModifiedDateTime': '2021-07-15T14:51:25.2560888Z', 'changeKey': 'pynKRnkCyUmnqILQHcLZEQAABElcUw==', 'categories': [], 'transactionId': None, 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000B35B3B5A8879D70100000000000000001000000008A0949F4EC0A1479E4ED178D87EF679', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'Recurrent Event 1646', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': False, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'tentative', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgBGAAADZ59RIxdyh0Kt%2FMXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAA%3D&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'allowNewTimeProposals': True, 'OccurrenceId': None, 'isDraft': False, 'hideAttendees': False, 'CalendarEventClassifications': [], 'id': microsoft_id, 'responseStatus': {'response': 'notResponded', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2021-07-15T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-15T15:30:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2021-07-15', 'endDate': '2021-07-17', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [{'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'}, 'emailAddress': {'name': 'Odoo02 Outlook02', 'address': 'odoo_bf_user02@outlook.com'}}, {'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'}, 'emailAddress': {'name': 'Odoo01 Outlook01', 'address': 'odoo_bf_user01@outlook.com'}}], 'organizer': {'emailAddress': {'name': 'Odoo02 Outlook02', 'address': 'odoo_bf_user02@outlook.com'}}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAACnKcpGeQLJSaeogtAdwtkRAAAESVxT"', 'seriesMasterId': microsoft_id, 'type': 'occurrence', 'id': 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlHI305wABGAAACZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ', 'start': {'dateTime': '2021-07-15T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-15T15:30:00.0000000', 'timeZone': 'UTC'}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"pynKRnkCyUmnqILQHcLZEQAABElcUw=="', 'createdDateTime': '2021-07-15T14:51:25.1366139Z', 'lastModifiedDateTime': '2021-07-15T14:51:25.136614Z', 'changeKey': 'pynKRnkCyUmnqILQHcLZEQAABElcUw==', 'categories': [], 'transactionId': None, 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00807E50710B35B3B5A8879D70100000000000000001000000008A0949F4EC0A1479E4ED178D87EF679', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'Canceled: Recurrent Event 1646', 'bodyPreview': '', 'importance': 'high', 'sensitivity': 'normal', 'originalStart': '2021-07-16T15:00:00Z', 'isAllDay': False, 'isCancelled': True, 'isOrganizer': False, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': microsoft_id, 'showAs': 'free', 'type': 'exception', 'webLink': 'https://outlook.live.com/owa/?itemid=AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlH7KejgABGAAACZ59RIxdyh0Kt%2FMXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'allowNewTimeProposals': True, 'OccurrenceId': ('OID.%s.2021-07-16' % microsoft_id), 'isDraft': False, 'hideAttendees': False, 'CalendarEventClassifications': [], 'id': 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlH7KejgABGAAACZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ', 'responseStatus': {'response': 'notResponded', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n<meta name="Generator" content="Microsoft Exchange Server">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size="2"><span style="font-size:11pt;"><div class="PlainText">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n'}, 'start': {'dateTime': '2021-07-16T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-16T15:30:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'attendees': [{'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'}, 'emailAddress': {'name': 'Odoo02 Outlook02', 'address': 'odoo_bf_user02@outlook.com'}}, {'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'}, 'emailAddress': {'name': 'Odoo01 Outlook01', 'address': 'odoo_bf_user01@outlook.com'}}], 'organizer': {'emailAddress': {'name': 'Odoo02 Outlook02', 'address': 'odoo_bf_user02@outlook.com'}}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAACnKcpGeQLJSaeogtAdwtkRAAAESVxT"', 'seriesMasterId': microsoft_id, 'type': 'occurrence', 'id': 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgFRAAgIANlItdINQABGAAACZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAAQ', 'start': {'dateTime': '2021-07-17T15:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-07-17T15:30:00.0000000', 'timeZone': 'UTC'}}
+        ]
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(first_sync_values))
+        recurrent_event = self.env['calendar.recurrence'].search([('microsoft_id', '=', 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgBGAAADZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAA=')])
+        self.assertEqual(len(recurrent_event.calendar_event_ids), 3)
+
+        # Need to cheat on the write date, otherwise the second sync won't update the events
+        recurrent_event.write_date = datetime(2021, 7, 15, 14, 00)
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(second_sync_values))
+        self.assertEqual(len(recurrent_event.calendar_event_ids), 2)
+        self.assertEqual(recurrent_event.calendar_event_ids[0].start, datetime(2021, 7, 15, 15, 00))
+        self.assertEqual(recurrent_event.calendar_event_ids[0].stop, datetime(2021, 7, 15, 15, 30))
+        self.assertEqual(recurrent_event.calendar_event_ids[1].start, datetime(2021, 7, 17, 15, 00))
+        self.assertEqual(recurrent_event.calendar_event_ids[1].stop, datetime(2021, 7, 17, 15, 30))
+
+        events = recurrent_event.calendar_event_ids.sorted(key=lambda e: e.start)
+        self.assertEqual(events[0].start, datetime(2021, 7, 15, 15, 00))
+        self.assertEqual(events[0].stop, datetime(2021, 7, 15, 15, 30))
+        self.assertEqual(events[1].start, datetime(2021, 7, 17, 15, 00))
+        self.assertEqual(events[1].stop, datetime(2021, 7, 17, 15, 30))
+
+    def test_use_classic_location(self):
+        ms_event = self.single_event
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.location, ms_event[0]["location"]["displayName"])
+
+    def test_use_url_location(self):
+        ms_event = self.single_event
+        ms_event[0]["location"]["displayName"] = "https://mylocation.com/meeting-room"
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.location, ms_event[0]["location"]["displayName"])
+
+    def test_use_specific_virtual_location(self):
+        """
+        If the location of the Outlook event is a specific virtual location (such as a video Teams meeting),
+        use it as videocall location.
+        """
+        ms_event = self.single_event
+        ms_event[0]["location"]["displayName"] = "https://teams.microsoft.com/l/meeting/1234"
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.location, False)
+        self.assertEqual(event.videocall_location, ms_event[0]["location"]["displayName"])
+
+    def test_outlook_event_has_online_meeting_url(self):
+        ms_event = self.single_event
+        ms_event[0].update({
+            'isOnlineMeeting': True,
+            'onlineMeeting': {'joinUrl': 'https://video-meeting.com/1234'}
+        })
+
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(ms_event))
+
+        event = self.env['calendar.event'].search([("microsoft_id", "=", ms_event[0]["id"])])
+        self.assertEqual(event.videocall_location, ms_event[0]["onlineMeeting"]["joinUrl"])

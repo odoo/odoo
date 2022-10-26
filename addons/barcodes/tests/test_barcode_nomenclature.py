@@ -12,13 +12,6 @@ class TestBarcodeNomenclature(common.TransactionCase):
             'name': 'Barcode Nomenclature Test',
         })
 
-    def test_barcode_check_digit(self):
-        barcode_nomenclature = self.env['barcode.nomenclature']
-        ean8 = "87111125"
-        self.assertEqual(barcode_nomenclature.get_barcode_check_digit("0" * 10 + ean8), int(ean8[-1]))
-        ean13 = "1234567891231"
-        self.assertEqual(barcode_nomenclature.get_barcode_check_digit("0" * 5 + ean13), int(ean13[-1]))
-
     def test_barcode_nomenclature_parse_barcode_ean8_01(self):
         """ Parses some barcodes with a simple EAN-8 barcode rule and checks the result.
         """
@@ -225,7 +218,7 @@ class TestBarcodeNomenclature(common.TransactionCase):
         })
 
         # Invalids the cache to reset the nomenclature barcode rules' order.
-        self.env['barcode.nomenclature'].invalidate_cache()
+        self.nomenclature.invalidate_recordset(['rule_ids'])
 
         # Only fits the second barcode rule.
         res = self.nomenclature.parse_barcode('2012345610255')
@@ -243,9 +236,9 @@ class TestBarcodeNomenclature(common.TransactionCase):
         self.assertEqual(res['base_code'], '2212345600007')
         self.assertEqual(res['value'], 10.25)
 
-        # Invalids the cache to reset the nomenclature barcode rules' order.
         first_created_rule.sequence = 1
-        self.env['barcode.nomenclature'].invalidate_cache()
+        # Invalids the cache to reset the nomenclature barcode rules' order.
+        self.nomenclature.invalidate_recordset(['rule_ids'])
 
         # Should take the first one now (lower sequence).
         res = self.nomenclature.parse_barcode('2212345610259')

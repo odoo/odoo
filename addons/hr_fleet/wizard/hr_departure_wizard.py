@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
-    release_campany_car = fields.Boolean("Release Company Car", default=True)
+    release_campany_car = fields.Boolean("Release Company Car", default=lambda self: self.env.user.user_has_groups('fleet.fleet_group_user'))
 
     def action_register_departure(self):
         super(HrDepartureWizard, self).action_register_departure()
@@ -24,4 +24,4 @@ class HrDepartureWizard(models.TransientModel):
             if self.departure_date and (not assignation.date_end or assignation.date_end > self.departure_date):
                 assignation.write({'date_end': self.departure_date})
         cars = self.env['fleet.vehicle'].search([('driver_id', 'in', drivers.ids)])
-        cars.write({'driver_id': False})
+        cars.write({'driver_id': False, 'driver_employee_id': False})

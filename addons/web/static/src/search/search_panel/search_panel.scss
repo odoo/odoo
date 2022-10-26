@@ -1,0 +1,56 @@
+// ------- View with SearchPanel -------
+
+.o_component_with_search_panel,
+.o_controller_with_searchpanel {
+    display: flex;
+    align-items: flex-start;
+
+    .o_renderer,
+    .o_renderer_with_searchpanel {
+        flex: 1 1 100%;
+        overflow: auto; // make the renderer and search panel scroll individually
+        max-height: 100%;
+        position: relative;
+
+        @include media-breakpoint-down(md) {
+            overflow: visible;
+        }    
+    }
+}
+
+// ------- SearchPanel -------
+
+.o_search_panel {
+    width: var(--SearchPanel-width, #{$o-search-panel-width});
+    font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
+
+    .o_search_panel_category_value,
+    .o_search_panel_filter_value input,
+    .o_search_panel_filter_value .o_search_panel_label_title,
+    .o_search_panel_group_header input,
+    .o_search_panel_group_header .o_search_panel_label_title
+    {
+        cursor: pointer;
+    }
+
+    .o_toggle_fold {
+        width: map-get($spacers, 4);
+    }
+}
+
+.o_mobile_search_content {
+    --SearchPanel-width: 100%;
+    --SearchPanel-fontSize: 1.1em;
+}
+
+@include media-breakpoint-down(md) {
+    .o_component_with_search_panel,
+    .o_controller_with_searchpanel {
+        flex-direction: column;
+        align-items: initial;
+
+        .o_renderer_with_searchpanel.o_list_view {
+            width: 100%;
+        }
+    }
+}

@@ -10,6 +10,8 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
         'click div.oe_cart a[href^="/web?redirect"][href$="/shop/checkout"]': '_onCustomerSignin',
         'click form[action="/shop/confirm_order"] a.a-submit': '_onOrder',
         'click form[target="_self"] button[type=submit]': '_onOrderPayment',
+        'view_item_event': '_onViewItem',
+        'add_to_cart_event': '_onAddToCart',
     },
 
     /**
@@ -18,32 +20,13 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     start: function () {
         var self = this;
 
-        // Watching a product
-        if (this.$el.is('#product_detail')) {
-            var productID = this.$('input[name="product_id"]').attr('value');
-            this._vpv('/stats/ecom/product_view/' + productID);
-        }
-
         // ...
-        if (this.$('div.oe_website_sale_tx_status').length) {
-            this._trackGA('require', 'ecommerce');
-
-            var orderID = this.$('div.oe_website_sale_tx_status').data('order-id');
+        const $confirmation = this.$('div.oe_website_sale_tx_status');
+        if ($confirmation.length) {
+            const orderID = $confirmation.data('order-id');
+            const json = $confirmation.data('order-tracking-info');
             this._vpv('/stats/ecom/order_confirmed/' + orderID);
-
-            this._rpc({
-                route: '/shop/tracking_last_order/',
-            }).then(function (o) {
-                self._trackGA('ecommerce:clear');
-
-                if (o.transaction && o.lines) {
-                    self._trackGA('ecommerce:addTransaction', o.transaction);
-                    _.forEach(o.lines, function (line) {
-                        self._trackGA('ecommerce:addItem', line);
-                    });
-                }
-                self._trackGA('ecommerce:send');
-            });
+            self._trackGA('event', 'purchase', json);
         }
 
         return this._super.apply(this, arguments);
@@ -57,22 +40,45 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _trackGA: function () {
-        var websiteGA = window.ga || function () {};
+        const websiteGA = window.gtag || function () {};
         websiteGA.apply(this, arguments);
     },
     /**
      * @private
      */
     _vpv: function (page) { //virtual page view
-        this._trackGA('send', 'pageview', {
-          'page': page,
-          'title': document.title,
+        this._trackGA('event', 'page_view', {
+            'page_path': page,
         });
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onViewItem(event, productTrackingInfo) {
+        const trackingInfo = {
+            'currency': productTrackingInfo['currency'],
+            'value': productTrackingInfo['price'],
+            'items': [productTrackingInfo],
+        };
+        this._trackGA('event', 'view_item', trackingInfo);
+    },
+
+    /**
+     * @private
+     */
+    _onAddToCart(event, ...productsTrackingInfo) {
+        const trackingInfo = {
+            'currency': productsTrackingInfo[0]['currency'],
+            'value': productsTrackingInfo.reduce((acc, val) => acc + val['price'] * val['quantity'], 0),
+            'items': productsTrackingInfo,
+        };
+        this._trackGA('event', 'add_to_cart', trackingInfo);
+    },
 
     /**
      * @private
@@ -106,8 +112,11 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onOrderPayment: function () {
-        var method = $('#payment_method input[name=acquirer]:checked').nextAll('span:first').text();
+        var method = $('#payment_method input[name=provider]:checked').nextAll('span:first').text();
         this._vpv('/stats/ecom/order_payment/' + method);
     },
 });
+
+return publicWidget.registry.websiteSaleTracking;
+
 });

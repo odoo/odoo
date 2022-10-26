@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -14,5 +13,7 @@ base modules simple.
         'views/http_routing_template.xml',
         'views/res_lang_views.xml',
     ],
+    'post_init_hook': '_post_init_hook',
     'depends': ['web'],
+    'license': 'LGPL-3',
 }

@@ -2,17 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
-        <div class="o_DiscussMobileMailboxSelection">
-            <t t-foreach="orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
-                <button class="o_DiscussMobileMailboxSelection_button btn"
-                    t-att-class="{
-                        'btn-primary': discuss.thread === mailbox,
-                        'btn-secondary': discuss.thread !== mailbox,
-                        'o-active': discuss.thread === mailbox,
-                    }" t-on-click="_onClick" t-att-data-mailbox-local-id="mailbox.localId" type="button"
-                >
-                    <t t-esc="mailbox.name"/>
-                </button>
+        <div class="o_DiscussMobileMailboxSelection d-flex" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="discussMobileMailboxSelectionView.items" t-as="item" t-key="item.localId">
+                <DiscussMobileMailboxSelectionItem record="item"/>
             </t>
         </div>
     </t>

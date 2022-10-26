@@ -25,9 +25,8 @@ class MailMail(models.Model):
         return mails
 
     def _get_tracking_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         token = tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
-        return werkzeug.urls.url_join(base_url, 'mail/track/%s/%s/blank.gif' % (self.id, token))
+        return werkzeug.urls.url_join(self.get_base_url(), 'mail/track/%s/%s/blank.gif' % (self.id, token))
 
     def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
@@ -37,7 +36,7 @@ class MailMail(models.Model):
         body = super(MailMail, self)._send_prepare_body()
 
         if self.mailing_id and body and self.mailing_trace_ids:
-            for match in re.findall(tools.URL_REGEX, self.body_html):
+            for match in set(re.findall(tools.URL_REGEX, self.body_html)):
                 href = match[0]
                 url = match[1]
 
@@ -62,14 +61,14 @@ class MailMail(models.Model):
     def _send_prepare_values(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         res = super(MailMail, self)._send_prepare_values(partner)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url').rstrip('/')
         if self.mailing_id and res.get('body') and res.get('email_to'):
+            base_url = self.mailing_id.get_base_url()
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
 
             urls_to_replace = [
-               (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
-               (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
+                (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
+                (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
             ]
 
             for url_to_replace, new_url in urls_to_replace:
@@ -82,7 +81,7 @@ class MailMail(models.Model):
         for mail in self:
             if mail.mailing_id:
                 if mail_sent is True and mail.mailing_trace_ids:
-                    mail.mailing_trace_ids.write({'sent': fields.Datetime.now(), 'exception': False})
+                    mail.mailing_trace_ids.set_sent()
                 elif mail_sent is False and mail.mailing_trace_ids:
-                    mail.mailing_trace_ids.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
+                    mail.mailing_trace_ids.set_failed(failure_type=failure_type)
         return super(MailMail, self)._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)

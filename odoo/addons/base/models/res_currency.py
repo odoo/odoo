@@ -3,11 +3,12 @@
 
 import logging
 import math
-import re
-import time
 
 from lxml import etree
+
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
+from odoo.tools import parse_date
 
 _logger = logging.getLogger(__name__)
 
@@ -17,12 +18,11 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
-CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
-
 
 class Currency(models.Model):
     _name = "res.currency"
     _description = "Currency"
+    _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
@@ -43,8 +43,8 @@ class Currency(models.Model):
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
         string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     date = fields.Date(compute='_compute_date')
-    currency_unit_label = fields.Char(string="Currency Unit", help="Currency Unit Name")
-    currency_subunit_label = fields.Char(string="Currency Subunit", help="Currency Subunit Name")
+    currency_unit_label = fields.Char(string="Currency Unit")
+    currency_subunit_label = fields.Char(string="Currency Subunit")
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
 
     _sql_constraints = [
@@ -52,10 +52,53 @@ class Currency(models.Model):
         ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self._toggle_group_multi_currency()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self._toggle_group_multi_currency()
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'active' not in vals:
+            return res
+        self._toggle_group_multi_currency()
+        return res
+
+    @api.model
+    def _toggle_group_multi_currency(self):
+        """
+        Automatically activate group_multi_currency if there is more than 1 active currency; deactivate it otherwise
+        """
+        active_currency_count = self.search_count([('active', '=', True)])
+        if active_currency_count > 1:
+            self._activate_group_multi_currency()
+        elif active_currency_count <= 1:
+            self._deactivate_group_multi_currency()
+
+    @api.model
+    def _activate_group_multi_currency(self):
+        group_user = self.env.ref('base.group_user', raise_if_not_found=False)
+        group_mc = self.env.ref('base.group_multi_currency', raise_if_not_found=False)
+        if group_user and group_mc:
+            group_user.sudo()._apply_group(group_mc)
+
+    @api.model
+    def _deactivate_group_multi_currency(self):
+        group_user = self.env.ref('base.group_user', raise_if_not_found=False)
+        group_mc = self.env.ref('base.group_multi_currency', raise_if_not_found=False)
+        if group_user and group_mc:
+            group_user.sudo()._remove_group(group_mc.sudo())
+
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
-        self.env['res.currency.rate'].flush(['rate', 'currency_id', 'company_id', 'name'])
+        self.env['res.currency.rate'].flush_model(['rate', 'currency_id', 'company_id', 'name'])
         query = """SELECT c.id,
                           COALESCE((SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
@@ -75,7 +118,7 @@ class Currency(models.Model):
 
     @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Date.today()
+        date = self._context.get('date') or fields.Date.context_today(self)
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = self._get_rates(company, date)
@@ -84,7 +127,7 @@ class Currency(models.Model):
             currency.rate = (currency_rates.get(currency.id) or 1.0) / last_rate[company]
             currency.inverse_rate = 1 / currency.rate
             if currency != company.currency_id:
-                currency.rate_string = '1 %s = %s %s' % (company.currency_id.name, currency.rate, currency.name)
+                currency.rate_string = '1 %s = %.6f %s' % (company.currency_id.name, currency.rate, currency.name)
             else:
                 currency.rate_string = ''
 
@@ -100,15 +143,6 @@ class Currency(models.Model):
     def _compute_date(self):
         for currency in self:
             currency.date = currency.rate_ids[:1].name
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        results = super(Currency, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-        if not results:
-            name_match = CURRENCY_DISPLAY_PATTERN.match(name)
-            if name_match:
-                results = super(Currency, self)._name_search(name_match.group(1), args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-        return results
 
     def name_get(self):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
@@ -212,8 +246,11 @@ class Currency(models.Model):
         # apply conversion rate
         if self == to_currency:
             to_amount = from_amount
-        else:
+        elif from_amount:
             to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
+        else:
+            return 0.0
+
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
@@ -248,27 +285,26 @@ class Currency(models.Model):
         """
 
     @api.model
-    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(Currency, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
             currency_name = (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name
-            doc = etree.XML(result['arch'])
             for field in [['company_rate', _('Unit per %s', currency_name)],
                           ['inverse_company_rate', _('%s per Unit', currency_name)]]:
-                node = doc.xpath("//tree//field[@name='%s']" % field[0])
+                node = arch.xpath("//tree//field[@name='%s']" % field[0])
                 if node:
                     node[0].set('string', field[1])
-            result['arch'] = etree.tostring(doc, encoding='unicode')
-        return result
+        return arch, view
 
 
 class CurrencyRate(models.Model):
     _name = "res.currency.rate"
     _description = "Currency Rate"
+    _rec_names_search = ['name', 'rate']
     _order = "name desc"
 
     name = fields.Date(string='Date', required=True, index=True,
-                           default=lambda self: fields.Date.today())
+                           default=fields.Date.context_today)
     rate = fields.Float(
         digits=0,
         group_operator="avg",
@@ -287,7 +323,7 @@ class CurrencyRate(models.Model):
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         group_operator="avg",
-        help="The currency of rate 1 to the rate of the currency.",
+        help="The rate of the currency to the currency of rate 1 ",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
@@ -313,7 +349,10 @@ class CurrencyRate(models.Model):
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
 
     def _get_latest_rate(self):
-        return self.currency_id.rate_ids.filtered(lambda x: (
+        # Make sure 'name' is defined when creating a new rate.
+        if not self.name:
+            raise UserError(_("The date for the current rate is empty.\nPlease set it."))
+        return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company)
             and x.name < (self.name or fields.Date.today())
@@ -321,7 +360,7 @@ class CurrencyRate(models.Model):
 
     def _get_last_rates_for_companies(self, companies):
         return {
-            company: company.currency_id.rate_ids.filtered(lambda x: (
+            company: company.currency_id.rate_ids.sudo().filtered(lambda x: (
                 x.rate
                 and x.company_id == company or not x.company_id
             )).sorted('name')[-1:].rate or 1
@@ -376,36 +415,19 @@ class CurrencyRate(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if operator in ['=', '!=']:
-            try:
-                date_format = '%Y-%m-%d'
-                if self._context.get('lang'):
-                    lang_id = self.env['res.lang']._search([('code', '=', self._context['lang'])], access_rights_uid=name_get_uid)
-                    if lang_id:
-                        date_format = self.browse(lang_id).date_format
-                name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
-            except ValueError:
-                try:
-                    args.append(('rate', operator, float(name)))
-                except ValueError:
-                    return []
-                name = ''
-                operator = 'ilike'
-        return super(CurrencyRate, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+        return super()._name_search(parse_date(self.env, name), args, operator, limit, name_get_uid)
 
     @api.model
-    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(CurrencyRate, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree'):
             names = {
                 'company_currency_name': (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name,
                 'rate_currency_name': self.env['res.currency'].browse(self._context.get('active_id')).name or 'Unit',
             }
-            doc = etree.XML(result['arch'])
             for field in [['company_rate', _('%(rate_currency_name)s per %(company_currency_name)s', **names)],
                           ['inverse_company_rate', _('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:
-                node = doc.xpath("//tree//field[@name='%s']" % field[0])
+                node = arch.xpath("//tree//field[@name='%s']" % field[0])
                 if node:
                     node[0].set('string', field[1])
-            result['arch'] = etree.tostring(doc, encoding='unicode')
-        return result
+        return arch, view

@@ -4,13 +4,15 @@ odoo.define('website.s_timeline_options', function (require) {
 const options = require('web_editor.snippets.options');
 
 options.registry.Timeline = options.Class.extend({
+    displayOverlayOptions: true,
+
     /**
      * @override
      */
     start: function () {
-        var $buttons = this.$el.find('we-button');
+        var $buttons = this.$el.find('we-button.o_we_overlay_opt');
         var $overlayArea = this.$overlay.find('.o_overlay_options_wrap');
-        $overlayArea.append($('<div/>').append($buttons));
+        $overlayArea.append($buttons);
 
         return this._super(...arguments);
     },

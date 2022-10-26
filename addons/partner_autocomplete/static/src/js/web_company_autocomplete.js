@@ -1,26 +1,19 @@
-odoo.define('web.company_autocomplete', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const AbstractWebClient = require('web.AbstractWebClient');
-const session = require('web.session');
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
-return AbstractWebClient.include({
+export const companyAutocompleteService = {
+    dependencies: ["orm", "company"],
 
-    start: function () {
+    start(env, { orm, company }) {
         if (session.iap_company_enrich) {
-            const current_company_id = session.user_companies.current_company;
-            this._rpc({
-                model: 'res.company',
-                method: 'iap_enrich_auto',
-                args: [current_company_id],
-            }, {
-                shadow: true,
-            });
+            const currentCompanyId = company.currentCompany.id;
+            orm.silent.call("res.company", "iap_enrich_auto", [currentCompanyId], {});
         }
-
-        return this._super.apply(this, arguments);
     },
+};
 
-});
-
-});
+registry
+    .category("services")
+    .add("partner_autocomplete.companyAutocomplete", companyAutocompleteService);

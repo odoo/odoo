@@ -3,7 +3,13 @@
 
 from collections import OrderedDict
 
-from odoo import models
+from odoo import models, fields
+
+
+class ProductAttribute(models.Model):
+    _inherit = 'product.attribute'
+
+    visibility = fields.Selection([('visible', 'Visible'), ('hidden', 'Hidden')], default='visible')
 
 
 class ProductTemplateAttributeLine(models.Model):

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.ReorderModal" owl="1">
+        <Dialog title="env._t('Re-Order')">
+            <table id="o_wsale_reorder_table" class="table table-sm">
+                <thead class="bg-100">
+                    <tr id="o_wsale_reorder_header">
+                        <!-- Product Image -->
+                        <th class="text-start td-img">Product</th>
+                        <!-- Product name + description -->
+                        <th/>
+                        <!-- Product Quantity Selector -->
+                        <th class="text-center td-qty">Quantity</th>
+                        <!-- Product price (per unit) -->
+                        <th class="text-end td-price">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="o_wsale_reorder_body" class="sale_tbody">
+                    <t t-foreach="content.products" t-as="product" t-key="product">
+                        <tr class="js_product">
+                            <td t-if="product.has_image" class="td-img">
+                                <img class="product_detail_img" t-att-alt="product.name" t-attf-src="/web/image/product.product/{{product.product_id}}/image_128"/>
+                            </td>
+                            <td t-att-colspan="product.has_image ? '1' : '2'">
+                                <h5><t t-esc="product.name"/></h5>
+                                <span class="text-muted d-none d-md-inline-block" t-if="product.description_sale" t-out="product.description_sale"/>
+                            </td>
+                            <t t-if="product.add_to_cart_allowed">
+                                <td class="text-center td-qty">
+                                    <div class="css_quantity input-group input-group-sm justify-content-center">
+                                        <a href="#" class="btn btn-link d-none d-md-inline-block" aria-label="Remove one" title="Remove one" t-on-click.stop.prevent="() => this.changeProductQty(product, product.qty - 1)">
+                                            <i class="fa fa-minus"/>
+                                        </a>
+                                        <input type="text" class="js_quantity text-center form-control quantity" t-on-change="(ev) => this.onChangeProductQtyInput(ev, product)"
+                                            t-att-value="product.qty"/>
+                                        <a href="#" class="btn btn-link d-none d-md-inline-block" aria-label="Add one" title="Add one" t-on-click.stop.prevent="() => this.changeProductQty(product, product.qty + 1)">
+                                            <i class="fa fa-plus"/>
+                                        </a>
+                                    </div>
+                                    <div t-if="product.qty_warning and product.qty_warning !== ''" class="text-warning fw-bold">
+                                        <i class="fa fa-exclamation-triangle"/>
+                                        <span t-esc="product.qty_warning"/>
+                                    </div>
+                                </td>
+                                <td class="text-end td-price">
+                                    <span t-esc="formatMonetary(product.combinationInfo.price, content.currency)"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="text-center" colspan="2">
+                                    <div class="text-warning fw-bold">
+                                        <i class="fa fa-exclamation-triangle"/>
+                                        <span t-esc="getWarningForProduct(product)"/>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <div id="o_wsale_reorder_total" class="row" name="total" style="page-break-inside: avoid;">
+                <div class="col-sm-7 col-md-6 ms-auto">
+                    <table class="table table-sm">
+                        <tr class="border-black o_total">
+                            <td>
+                                <strong>Total</strong>
+                            </td>
+                            <td class="text-end">
+                                <span t-out="formatMonetary(total, content.currency)"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o_wsale_reorder_confirm" t-att-disabled="!hasBuyableProducts" t-on-click="confirmReorder">
+                    Add To Cart
+                </button>
+                <button class="btn btn-secondary o_wsale_reorder_cancel" t-on-click.stop.prevent="props.close">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="website_sale.ReorderConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary" owl="1">
+        <xpath expr="//button[1]" position="replace">
+            <button class="btn btn-primary" t-on-click="_confirm">
+              Yes
+            </button>
+        </xpath>
+        <xpath expr="//button[2]" position="replace">
+            <button class="btn btn-secondary" t-on-click="_cancel">
+              No
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -7,7 +7,7 @@ const options = require('web_editor.snippets.options');
 require('website.editor.snippets.options');
 
 if (!$('.website_blog').length) {
-    return Promise.reject("DOM doesn't contain '.website_blog'");
+    return;
 }
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
@@ -30,7 +30,7 @@ options.registry.many2one.include({
                 var $img = $(this).find('img');
                 var css = window.getComputedStyle($img[0]);
                 $img.css({width: css.width, height: css.height});
-                $img.attr('src', '/web/image/res.partner/' + self.ID + '/image_1024');
+                $img.attr('src', '/web/image/res.partner/' + self.ID + '/avatar_1024');
             });
             setTimeout(function () {
                 $nodes.removeClass('o_dirty');

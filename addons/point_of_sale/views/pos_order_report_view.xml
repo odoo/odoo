@@ -4,7 +4,7 @@
             <field name="name">report.pos.order.pivot</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <pivot string="Point of Sale Analysis" disable_linking="True" sample="1">
+                <pivot string="Point of Sale Analysis" sample="1">
                     <field name="product_categ_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="order_id" type="measure"/>
@@ -18,10 +18,27 @@
             <field name="name">report.pos.order.graph</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <graph string="Point of Sale Analysis" sample="1" disable_linking="1">
-                    <field name="product_categ_id" type="row"/>
+                <graph string="Point of Sale Analysis" sample="1">
+                    <field name="product_categ_id"/>
                     <field name="price_total" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="report_pos_order_view_tree" model="ir.ui.view">
+            <field name="name">report.pos.order.view.tree</field>
+            <field name="model">report.pos.order</field>
+            <field name="arch" type="xml">
+                <tree string="Point of Sale Analysis">
+                    <field name="date" widget="date"/>
+                    <field name="order_id" optional="hide"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="product_categ_id" optional="show"/>
+                    <field name="config_id" optional="hide"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="state" optional="show"/>
+                </tree>
             </field>
         </record>
 

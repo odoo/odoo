@@ -18,7 +18,6 @@ Bridge module adding UX requirements to ease SMS marketing o, event attendees.
         'mass_mailing_sms',
         'sms',
     ],
-    'data': [
-    ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -3,18 +3,6 @@ from odoo.exceptions import UserError
 
 
 class PosPaymentMethod(models.Model):
-    """ Used to classify pos.payment.
-
-    Generic characteristics of a pos.payment is described in this model.
-    E.g. A cash payment can be described by a pos.payment.method with
-    fields: is_cash_count = True and a cash_journal_id set to an
-    `account.journal` (type='cash') record.
-
-    When a pos.payment.method is cash, cash_journal_id is required as
-    it will be the journal where the account.bank.statement.line records
-    will be created.
-    """
-
     _name = "pos.payment.method"
     _description = "Point of Sale Payment Methods"
     _order = "id asc"
@@ -22,37 +10,46 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return []
 
-    name = fields.Char(string="Payment Method", required=True, translate=True)
+    name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
+    outstanding_account_id = fields.Many2one('account.account',
+        string='Outstanding Account',
+        ondelete='restrict',
+        help='Leave empty to use the default account from the company setting.\n'
+             'Account used as outstanding account when creating accounting payment records for bank payments.')
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
-        required=True,
-        domain=[('reconcile', '=', True), ('user_type_id.type', '=', 'receivable')],
-        default=lambda self: self.env.company.account_default_pos_receivable_account_id,
         ondelete='restrict',
-        help='Account used as counterpart of the income account in the accounting entry representing the pos sales.')
-    is_cash_count = fields.Boolean(string='Cash')
-    cash_journal_id = fields.Many2one('account.journal',
-        string='Cash Journal',
-        domain=[('type', '=', 'cash')],
+        domain=[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')],
+        help="Leave empty to use the default account from the company setting.\n"
+             "Overrides the company's receivable account (for Point of Sale) used in the journal entries.")
+    is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
+    journal_id = fields.Many2one('account.journal',
+        string='Journal',
+        domain=[('type', 'in', ('cash', 'bank'))],
         ondelete='restrict',
-        help='The payment method is of type cash. A cash statement will be automatically generated.')
+        help='Leave empty to use the receivable account of customer.\n'
+             'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
+             'For cash journal, we directly write to the default account in the journal via statement lines.\n'
+             'For bank journal, we write to the outstanding account specified in this payment method.\n'
+             'Only cash and bank journals are allowed.')
     split_transactions = fields.Boolean(
-        string='Split Transactions',
+        string='Identify Customer',
         default=False,
-        help='If ticked, each payment will generate a separated journal item. Ticking that option will slow the closing of the PoS.')
+        help='Forces to set a customer when using this payment method and splits the journal entries for each customer. It could slow down the closing process.')
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
     config_ids = fields.Many2many('pos.config', string='Point of Sale Configurations')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
-    hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal', help='Technical field which is used to '
-                                               'hide use_payment_terminal when no payment interfaces are installed.')
+    # used to hide use_payment_terminal when no payment interfaces are installed
+    hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
+    type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
 
-    @api.depends('is_cash_count')
+    @api.depends('type')
     def _compute_hide_use_payment_terminal(self):
         no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
         for payment_method in self:
-            payment_method.hide_use_payment_terminal = no_terminals or payment_method.is_cash_count
+            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type in ('cash', 'pay_later')
 
     @api.onchange('use_payment_terminal')
     def _onchange_use_payment_terminal(self):
@@ -64,12 +61,23 @@ class PosPaymentMethod(models.Model):
         for payment_method in self:
             payment_method.open_session_ids = self.env['pos.session'].search([('config_id', 'in', payment_method.config_ids.ids), ('state', '!=', 'closed')])
 
-    @api.onchange('is_cash_count')
-    def _onchange_is_cash_count(self):
-        if not self.is_cash_count:
-            self.cash_journal_id = False
-        else:
+    @api.depends('journal_id', 'split_transactions')
+    def _compute_type(self):
+        for pm in self:
+            if pm.journal_id.type in {'cash', 'bank'}:
+                pm.type = pm.journal_id.type
+            else:
+                pm.type = 'pay_later'
+
+    @api.onchange('journal_id')
+    def _onchange_journal_id(self):
+        if self.is_cash_count:
             self.use_payment_terminal = False
+
+    @api.depends('type')
+    def _compute_is_cash_count(self):
+        for pm in self:
+            pm.is_cash_count = pm.type == 'cash'
 
     def _is_write_forbidden(self, fields):
         return bool(fields and self.open_session_ids)

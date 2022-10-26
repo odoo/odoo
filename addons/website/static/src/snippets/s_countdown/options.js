@@ -3,7 +3,6 @@ odoo.define('website.s_countdown_options', function (require) {
 
 const core = require('web.core');
 const options = require('web_editor.snippets.options');
-const CountdownWidget = require('website.s_countdown');
 
 const qweb = core.qweb;
 
@@ -11,6 +10,16 @@ options.registry.countdown = options.Class.extend({
     events: _.extend({}, options.Class.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
+
+    /**
+     * Remove any preview classes, if present.
+     *
+     * @override
+     */
+    cleanForSave: async function () {
+        this.$target.find('.s_countdown_canvas_wrapper').removeClass("s_countdown_none");
+        this.$target.find('.s_countdown_end_message').removeClass("s_countdown_enable_preview");
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -31,6 +40,9 @@ options.registry.countdown = options.Class.extend({
             this.$target.toggleClass('hide-countdown', widgetValue === 'message_no_countdown');
         } else {
             const $message = this.$target.find('.s_countdown_end_message').detach();
+            if (this.showEndMessage) {
+                this._onToggleEndMessageClick();
+            }
             if ($message.length) {
                 this.endMessage = $message[0].outerHTML;
             }
@@ -87,9 +99,9 @@ options.registry.countdown = options.Class.extend({
      */
     updateUIEndMessage: function () {
         this.$target.find('.s_countdown_canvas_wrapper')
-            .toggleClass("d-none", this.showEndMessage === true && this.$target.hasClass("hide-countdown"));
+            .toggleClass("s_countdown_none", this.showEndMessage === true && this.$target.hasClass("hide-countdown"));
         this.$target.find('.s_countdown_end_message')
-            .toggleClass("d-none", !this.showEndMessage);
+            .toggleClass("s_countdown_enable_preview", this.showEndMessage === true);
     },
 
     //--------------------------------------------------------------------------
@@ -107,10 +119,7 @@ options.registry.countdown = options.Class.extend({
 
             case 'selectDataAttribute': {
                 if (params.colorNames) {
-                    // In this case, it is a colorpicker controlling a data
-                    // value on the countdown: the default value is determined
-                    // by the countdown public widget.
-                    params.attributeDefaultValue = CountdownWidget.prototype.defaultColor;
+                    params.attributeDefaultValue = 'rgba(0, 0, 0, 255)';
                 }
                 break;
             }

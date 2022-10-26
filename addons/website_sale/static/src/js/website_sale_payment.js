@@ -49,9 +49,9 @@ odoo.define('website_sale.payment', require => {
             'change #checkbox_tc': '_onClickTCCheckbox',
         }),
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // Private
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         /**
          * Verify that the Terms and Condition checkbox is checked.
@@ -92,6 +92,16 @@ odoo.define('website_sale.payment', require => {
             selector: 'div[name="o_website_sale_free_cart"]',
             events: {
                 'change #checkbox_tc': '_onClickTCCheckbox',
+            },
+
+            /**
+             * @override
+             */
+            start: function () {
+                this.$checkbox = this.$('#checkbox_tc');
+                this.$submitButton = this.$('button[name="o_payment_submit_button"]');
+                this._onClickTCCheckbox();
+                return this._super(...arguments);
             },
 
             //--------------------------------------------------------------------------

@@ -17,6 +17,23 @@ class TestQweb(TransactionCaseWithUserDemo):
                            get_module_resource(module, *args),
                            {}, 'init', False, 'test')
 
+    def test_qweb_post_processing_att(self):
+        website = self.env.ref('website.default_website')
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="attr-escaping">
+                <img src="http://test.external.img/img.png"/>
+                <img t-att-src="url"/>
+            </t>'''
+        })
+        result = """
+                <img src="http://test.external.img/img.png" loading="lazy"/>
+                <img src="http://test.external.img/img2.png" loading="lazy"/>
+            """
+        rendered = self.env['ir.qweb']._render(t.id, {'url': 'http://test.external.img/img2.png'}, website_id=website.id)
+        self.assertEqual(rendered.strip(), result.strip())
+
     def test_qweb_cdn(self):
         self._load('website', 'tests', 'template_qweb_test.xml')
 
@@ -38,7 +55,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         asset_xmlid = asset_data.attrib.get('data-asset-bundle')
         asset_version = asset_data.attrib.get('data-asset-version')
 
-        html = html.strip().decode('utf8')
+        html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
         attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/website.test_bundle.%')])
@@ -69,11 +86,11 @@ class TestQweb(TransactionCaseWithUserDemo):
         <img src="http://test.cdn/website/static/img.png" loading="lazy"/>
         <a href="http://test.external.link/link">x</a>
         <a href="http://test.cdn/web/content/local_link">x</a>
-        <span style="background-image: url('http://test.cdn/web/image/2')">xxx</span>
+        <span style="background-image: url(&#39;http://test.cdn/web/image/2&#39;)">xxx</span>
         <div widget="html"><span class="toto">
                 span<span class="fa"></span><img src="http://test.cdn/web/image/1" loading="lazy">
             </span></div>
-        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
+        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/avatar_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
     </body>
 </html>""" % format_data).encode('utf8'))
 
@@ -91,15 +108,15 @@ class TestQwebProcessAtt(TransactionCase):
 
     def _test_att(self, url, expect, tag='a', attribute='href'):
         self.assertEqual(
-            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}, {}),
+            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}),
             expect
         )
 
     def test_process_att_no_request(self):
         # no request so no URL rewriting
         self._test_att('/', {'href': '/'})
-        self._test_att('/en/', {'href': '/en/'})
-        self._test_att('/fr/', {'href': '/fr/'})
+        self._test_att('/en', {'href': '/en'})
+        self._test_att('/fr', {'href': '/fr'})
         # no URL rewritting for CDN
         self._test_att('/a', {'href': '/a'})
 
@@ -107,8 +124,8 @@ class TestQwebProcessAtt(TransactionCase):
         with MockRequest(self.env):
             # no website so URL rewriting
             self._test_att('/', {'href': '/'})
-            self._test_att('/en/', {'href': '/en/'})
-            self._test_att('/fr/', {'href': '/fr/'})
+            self._test_att('/en', {'href': '/en'})
+            self._test_att('/fr', {'href': '/fr'})
             # no URL rewritting for CDN
             self._test_att('/a', {'href': '/a'})
 
@@ -125,12 +142,14 @@ class TestQwebProcessAtt(TransactionCase):
             self._test_att('/', {'href': '/'})
             self._test_att('/en/', {'href': '/'})
             self._test_att('/fr/', {'href': '/fr/'})
+            self._test_att('/fr', {'href': '/fr'})
 
     def test_process_att_with_request_lang(self):
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
             self._test_att('/', {'href': '/fr/'})
             self._test_att('/en/', {'href': '/'})
             self._test_att('/fr/', {'href': '/fr/'})
+            self._test_att('/fr', {'href': '/fr'})
 
     def test_process_att_matching_cdn_and_lang(self):
         with MockRequest(self.env, website=self.website):

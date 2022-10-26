@@ -18,7 +18,7 @@ class PurchaseReport(models.Model):
     _auto = False
     _order = 'date_order desc, price_total desc'
 
-    date_order = fields.Datetime('Order Date', readonly=True, help="Depicts the date when the Quotation should be validated and converted into a purchase order.")
+    date_order = fields.Datetime('Order Date', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft RFQ'),
         ('sent', 'RFQ Sent'),
@@ -34,8 +34,9 @@ class PurchaseReport(models.Model):
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
     user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
-    delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, help="Amount of time between purchase approval and order by date.")
-    delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, help="Amount of time between date planned and order by date for each purchase order line.")
+    delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, group_operator='avg', help="Amount of time between purchase approval and order by date.")
+    delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, group_operator='avg',
+                              help="Amount of time between date planned and order by date for each purchase order line.")
     avg_days_to_purchase = fields.Float(
         'Average Days to Purchase', digits=(16, 2), readonly=True, store=False,  # needs store=False to prevent showing up as a 'measure' option
         help="Amount of time between purchase approval and document creation date. Due to a hack needed to calculate this, \
@@ -47,7 +48,6 @@ class PurchaseReport(models.Model):
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
-    account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
@@ -58,14 +58,10 @@ class PurchaseReport(models.Model):
     qty_billed = fields.Float('Qty Billed', readonly=True)
     qty_to_be_billed = fields.Float('Qty to be Billed', readonly=True)
 
-    def init(self):
-        # self._table = sale_report
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-            %s
-            FROM ( %s )
-            %s
-            )""" % (self._table, self._select(), self._from(), self._group_by()))
+    @property
+    def _table_query(self):
+        ''' Report needs to be dynamic to take into account multi-company selected + multi-currency rates '''
+        return '%s %s %s' % (self._select(), self._from(), self._group_by())
 
     def _select(self):
         select_str = """
@@ -89,14 +85,13 @@ class PurchaseReport(models.Model):
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr_lines,
-                    sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) as price_total,
-                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom.factor),0.0))::decimal(16,2) as price_average,
+                    sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as price_total,
+                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom.factor),0.0))::decimal(16,2) * currency_table.rate as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
-                    analytic_account.id as account_analytic_id,
                     sum(p.weight * l.product_qty/line_uom.factor*product_uom.factor) as weight,
                     sum(p.volume * l.product_qty/line_uom.factor*product_uom.factor) as volume,
-                    sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) as untaxed_total,
+                    sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as untaxed_total,
                     sum(l.product_qty / line_uom.factor * product_uom.factor) as qty_ordered,
                     sum(l.qty_received / line_uom.factor * product_uom.factor) as qty_received,
                     sum(l.qty_invoiced / line_uom.factor * product_uom.factor) as qty_billed,
@@ -109,6 +104,7 @@ class PurchaseReport(models.Model):
 
     def _from(self):
         from_str = """
+            FROM
             purchase_order_line l
                 join purchase_order po on (l.order_id=po.id)
                 join res_partner partner on po.partner_id = partner.id
@@ -116,12 +112,14 @@ class PurchaseReport(models.Model):
                         left join product_template t on (p.product_tmpl_id=t.id)
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
                 left join currency_rate cr on (cr.currency_id = po.currency_id and
                     cr.company_id = po.company_id and
                     cr.date_start <= coalesce(po.date_order, now()) and
                     (cr.date_end is null or cr.date_end > coalesce(po.date_order, now())))
-        """
+                left join {currency_table} ON currency_table.company_id = po.company_id
+        """.format(
+            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
+        )
         return from_str
 
     def _group_by(self):
@@ -151,8 +149,8 @@ class PurchaseReport(models.Model):
                 product_uom.factor,
                 partner.country_id,
                 partner.commercial_partner_id,
-                analytic_account.id,
-                po.id
+                po.id,
+                currency_table.rate
         """
         return group_by_str
 

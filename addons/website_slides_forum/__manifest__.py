@@ -15,18 +15,16 @@
         'security/ir.model.access.csv',
         'security/website_slides_forum_security.xml',
         'views/forum_views.xml',
+        'views/res_config_settings_views.xml',
         'views/slide_channel_views.xml',
         'views/website_slides_menu_views.xml',
+        'views/website_slides_forum_templates.xml',
         'views/website_slides_templates.xml',
-        'views/website_slides_forum_templates.xml'
+        'views/snippets.xml',
     ],
     'demo': [
         'data/slide_channel_demo.xml',
     ],
     'auto_install': True,
-    'assets': {
-        'web.assets_frontend': [
-            'website_slides_forum/static/src/js/**/*',
-        ],
-    }
+    'license': 'LGPL-3',
 }

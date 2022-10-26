@@ -1,9 +1,7 @@
-odoo.define('website_slides.quiz.finish', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var Dialog = require('web.Dialog');
-var core = require('web.core');
-var _t = core._t;
+import Dialog from 'web.Dialog';
+import { _t } from 'web.core';
 
 /**
  * This modal is used when the user finishes the quiz.
@@ -80,7 +78,7 @@ var SlideQuizFinishModal = Dialog.extend({
      */
     _animateProgressBar: function () {
         var self = this;
-        this.$('[data-toggle="tooltip"]').tooltip({
+        this.$('[data-bs-toggle="tooltip"]').tooltip({
             trigger: 'manual',
             container: '.progress-bar-tooltip',
         }).tooltip('show');
@@ -93,7 +91,7 @@ var SlideQuizFinishModal = Dialog.extend({
                 duration: this.quiz.rankProgress.level_up ? 1700 : 800,
                 step: function (newKarma) {
                     self.$('.tooltip-inner').text(Math.ceil(newKarma));
-                    self.$('[data-toggle="tooltip"]').tooltip('update');
+                    self.$('[data-bs-toggle="tooltip"]').tooltip('update');
                 }
             }
         );
@@ -152,6 +150,4 @@ var SlideQuizFinishModal = Dialog.extend({
 
 });
 
-return SlideQuizFinishModal;
-
-});
+export default SlideQuizFinishModal;

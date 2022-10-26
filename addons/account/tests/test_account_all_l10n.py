@@ -13,8 +13,7 @@ def test_all_l10n(env):
     As the module install is not yet fully transactional, the modules will
     remain installed after the test.
     """
-    # Do not install the demo data while installing the modules
-    env.ref('base.module_account').demo = False
+    assert env.ref('base.module_account').demo, "Need the demo to test with data"
     l10n_mods = env['ir.module.module'].search([
         ('name', 'like', 'l10n%'),
         ('state', '=', 'uninstalled'),
@@ -23,12 +22,15 @@ def test_all_l10n(env):
     env.reset()     # clear the set of environments
     env = env()     # get an environment that refers to the new registry
 
-    # Install the demo data when testing
-    env.ref('base.module_account').demo = True
-    coas = env['account.chart.template'].search([])
+    coas = env['account.chart.template'].search([
+        ('id', 'not in', env['res.company'].search([]).chart_template_id.ids)
+    ])
     for coa in coas:
         cname = 'company_%s' % str(coa.id)
-        company = env['res.company'].create({'name': cname})
+        company = env['res.company'].create({
+            'name': cname,
+            'country_id': coa.country_id.id,
+        })
         env.user.company_ids += company
         env.user.company_id = company
         _logger.info('Testing COA: %s (company: %s)' % (coa.name, cname))

@@ -52,8 +52,8 @@ class MailBlackListMixin(models.AbstractModel):
     @api.model
     def _search_is_blacklisted(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
-        self.flush(['email_normalized'])
-        self.env['mail.blacklist'].flush(['email', 'active'])
+        self.flush_model(['email_normalized'])
+        self.env['mail.blacklist'].flush_model(['email', 'active'])
         self._assert_primary_email()
         if operator != '=':
             if operator == '!=' and isinstance(value, bool):
@@ -116,11 +116,19 @@ class MailBlackListMixin(models.AbstractModel):
         can_access = self.env['mail.blacklist'].check_access_rights('write', raise_exception=False)
         if can_access:
             return {
-                'name': 'Are you sure you want to unblacklist this Email Address?',
+                'name': _('Are you sure you want to unblacklist this Email Address?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mail.blacklist.remove',
                 'target': 'new',
             }
         else:
-            raise AccessError("You do not have the access right to unblacklist emails. Please contact your administrator.")
+            raise AccessError(_("You do not have the access right to unblacklist emails. Please contact your administrator."))
+
+    @api.model
+    def _detect_loop_sender_domain(self, email_from_normalized):
+        """Return the domain to be used to detect duplicated records created by alias.
+
+        :param email_from_normalized: FROM of the incoming email, normalized
+        """
+        return [('email_normalized', '=', email_from_normalized)]

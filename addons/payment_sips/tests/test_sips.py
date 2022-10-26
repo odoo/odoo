@@ -1,47 +1,50 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from unittest.mock import patch
 
 from freezegun import freeze_time
+from werkzeug.exceptions import Forbidden
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from .common import SipsCommon
-from ..controllers.main import SipsController
-from ..models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_sips.controllers.main import SipsController
+from odoo.addons.payment_sips.models.payment_provider import SUPPORTED_CURRENCIES
+from odoo.addons.payment_sips.tests.common import SipsCommon
+
 
 @tagged('post_install', '-at_install')
-class SipsTest(SipsCommon):
+class SipsTest(SipsCommon, PaymentHttpCommon):
 
-    def test_compatible_acquirers(self):
+    def test_compatible_providers(self):
         for curr in SUPPORTED_CURRENCIES:
             currency = self._prepare_currency(curr)
-            acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-                partner_id=self.partner.id,
-                company_id=self.company.id,
-                currency_id=currency.id,
+            providers = self.env['payment.provider']._get_compatible_providers(
+                self.company.id, self.partner.id, self.amount, currency_id=currency.id
             )
-            self.assertIn(self.sips, acquirers)
+            self.assertIn(self.sips, providers)
 
         unsupported_currency = self._prepare_currency('VEF')
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            company_id=self.company.id,
-            currency_id=unsupported_currency.id,
+        providers = self.env['payment.provider']._get_compatible_providers(
+            self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
         )
-        self.assertNotIn(self.sips, acquirers)
+        self.assertNotIn(self.sips, providers)
 
     # freeze time for consistent singularize_prefix behavior during the test
     @freeze_time("2011-11-02 12:00:21")
     def test_reference(self):
-        tx = self.create_transaction(flow="redirect", reference="")
+        tx = self._create_transaction(flow="redirect", reference="")
         self.assertEqual(tx.reference, "tx20111102120021",
             "Payulatam: transaction reference wasn't correctly singularized.")
 
     def test_redirect_form_values(self):
-        tx = self.create_transaction(flow="redirect")
+        self.patch(self, 'base_url', lambda: 'http://127.0.0.1:8069')
+        self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://127.0.0.1:8069')
+
+        tx = self._create_transaction(flow="redirect")
 
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
@@ -51,71 +54,87 @@ class SipsTest(SipsCommon):
         self.assertEqual(form_info['action'], self.sips.sips_test_url)
         self.assertEqual(form_inputs['InterfaceVersion'], self.sips.sips_version)
         return_url = self._build_url(SipsController._return_url)
-        notify_url = self._build_url(SipsController._notify_url)
-        self.assertEqual(form_inputs['Data'],
-            f'amount=111111|currencyCode=978|merchantId=dummy_mid|normalReturnUrl={return_url}|' \
-            f'automaticResponseUrl={notify_url}|transactionReference={self.reference}|' \
-            f'statementReference={self.reference}|keyVersion={self.sips.sips_key_version}|' \
-            f'returnContext={json.dumps(dict(reference=self.reference))}'
+        notify_url = self._build_url(SipsController._webhook_url)
+        self.assertEqual(
+            form_inputs['Data'],
+            f'amount=111111|currencyCode=978|merchantId=dummy_mid|normalReturnUrl={return_url}|'
+            f'automaticResponseUrl={notify_url}|transactionReference={self.reference}|'
+            f'statementReference={self.reference}|keyVersion={self.sips.sips_key_version}|'
+            f'returnContext={json.dumps(dict(reference=self.reference))}',
         )
-        self.assertEqual(form_inputs['Seal'],
-            '4d7cc67c0168e8ce11c25fbe1937231c644861e320702ab544022b032b9eb4a2')
+        self.assertEqual(
+            form_inputs['Seal'], '99d1d2d46a841de7fe313ac0b2d13a9e42cad50b444d35bf901879305818d9b2'
+        )
 
     def test_feedback_processing(self):
-        # typical data posted by Sips after client has successfully paid
-        sips_post_data = {
-            'Data': 'captureDay=0|captureMode=AUTHOR_CAPTURE|currencyCode=840|'
-                    'merchantId=002001000000001|orderChannel=INTERNET|'
-                    'responseCode=00|transactionDateTime=2020-04-08T06:15:59+02:00|'
-                    'transactionReference=SO100x1|keyVersion=1|'
-                    'acquirerResponseCode=00|amount=31400|authorisationId=0020000006791167|'
-                    'paymentMeanBrand=IDEAL|paymentMeanType=CREDIT_TRANSFER|'
-                    'customerIpAddress=127.0.0.1|returnContext={"return_url": '
-                    '"/payment/process", "reference": '
-                    '"SO100x1"}|holderAuthentRelegation=N|holderAuthentStatus=|'
-                    'transactionOrigin=INTERNET|paymentPattern=ONE_SHOT|customerMobilePhone=null|'
-                    'mandateAuthentMethod=null|mandateUsage=null|transactionActors=null|'
-                    'mandateId=null|captureLimitDate=20200408|dccStatus=null|dccResponseCode=null|'
-                    'dccAmount=null|dccCurrencyCode=null|dccExchangeRate=null|'
-                    'dccExchangeRateValidity=null|dccProvider=null|'
-                    'statementReference=SO100x1|panEntryMode=MANUAL|walletType=null|'
-                    'holderAuthentMethod=NO_AUTHENT_METHOD',
-            'Encode': '',
-            'InterfaceVersion': 'HP_2.4',
-            'Seal': 'f03f64da6f57c171904d12bf709b1d6d3385131ac914e97a7e1db075ed438f3e',
-            'locale': 'en',
-        }
+        # Unknown transaction
+        with self.assertRaises(ValidationError):
+            self.env['payment.transaction']._handle_notification_data(
+                'sips', self.notification_data
+            )
 
-        with self.assertRaises(ValidationError): # unknown transaction
-            self.env['payment.transaction']._handle_feedback_data('sips', sips_post_data)
+        # Confirmed transaction
+        tx = self._create_transaction('redirect')
+        self.env['payment.transaction']._handle_notification_data('sips', self.notification_data)
+        self.assertEqual(tx.state, 'done')
+        self.assertEqual(tx.provider_reference, self.reference)
 
-        self.amount = 314.0
-        self.reference = 'SO100x1'
+        # Cancelled transaction
+        old_reference = self.reference
+        self.reference = 'Test Transaction 2'
+        tx = self._create_transaction('redirect')
+        payload = dict(
+            self.notification_data,
+            Data=self.notification_data['Data'].replace(old_reference, self.reference)
+                                               .replace('responseCode=00', 'responseCode=12')
+        )
+        self.env['payment.transaction']._handle_notification_data('sips', payload)
+        self.assertEqual(tx.state, 'cancel')
 
-        tx = self.create_transaction(flow="redirect")
+    @mute_logger('odoo.addons.payment_sips.controllers.main')
+    def test_webhook_notification_confirms_transaction(self):
+        """ Test the processing of a webhook notification. """
+        tx = self._create_transaction('redirect')
+        url = self._build_url(SipsController._return_url)
+        with patch(
+            'odoo.addons.payment_sips.controllers.main.SipsController'
+            '._verify_notification_signature'
+        ):
+            self._make_http_post_request(url, data=self.notification_data)
+        self.assertEqual(tx.state, 'done')
 
-        # Validate the transaction
-        self.env['payment.transaction']._handle_feedback_data('sips', sips_post_data)
-        self.assertEqual(tx.state, 'done', 'Sips: validation did not put tx into done state')
-        self.assertEqual(tx.acquirer_reference, self.reference, 'Sips: validation did not update tx id')
+    @mute_logger('odoo.addons.payment_sips.controllers.main')
+    def test_webhook_notification_triggers_signature_check(self):
+        """ Test that receiving a webhook notification triggers a signature check. """
+        self._create_transaction('redirect')
+        url = self._build_url(SipsController._webhook_url)
+        with patch(
+            'odoo.addons.payment_sips.controllers.main.SipsController'
+            '._verify_notification_signature'
+        ) as signature_check_mock, patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ):
+            self._make_http_post_request(url, data=self.notification_data)
+            self.assertEqual(signature_check_mock.call_count, 1)
 
-        # same process for an payment in error on sips's end
-        sips_post_data = {
-            'Data': 'captureDay=0|captureMode=AUTHOR_CAPTURE|currencyCode=840|'
-                    'merchantId=002001000000001|orderChannel=INTERNET|responseCode=12|'
-                    'transactionDateTime=2020-04-08T06:24:08+02:00|transactionReference=SO100x2|'
-                    'keyVersion=1|amount=31400|customerIpAddress=127.0.0.1|returnContext={"return_url": '
-                    '"/payment/process", "reference": '
-                    '"SO100x2"}|paymentPattern=ONE_SHOT|customerMobilePhone=null|mandateAuthentMethod=null|'
-                    'mandateUsage=null|transactionActors=null|mandateId=null|captureLimitDate=null|'
-                    'dccStatus=null|dccResponseCode=null|dccAmount=null|dccCurrencyCode=null|'
-                    'dccExchangeRate=null|dccExchangeRateValidity=null|dccProvider=null|'
-                    'statementReference=SO100x2|panEntryMode=null|walletType=null|holderAuthentMethod=null',
-            'InterfaceVersion': 'HP_2.4',
-            'Seal': '6e1995ea5432580860a04d8515b6eb1507996f97b3c5fa04fb6d9568121a16a2'
-        }
-        self.reference = 'SO100x2'
-        tx2 = self.create_transaction(flow="redirect")
+    def test_accept_notification_with_valid_signature(self):
+        """ Test the verification of a notification with a valid signature. """
+        tx = self._create_transaction('redirect')
+        self._assert_does_not_raise(
+            Forbidden, SipsController._verify_notification_signature, self.notification_data, tx
+        )
 
-        self.env['payment.transaction']._handle_feedback_data('sips', sips_post_data)
-        self.assertEqual(tx2.state, 'cancel', 'Sips: erroneous validation did not put tx into error state')
+    @mute_logger('odoo.addons.payment_sips.controllers.main')
+    def test_reject_notification_with_missing_signature(self):
+        """ Test the verification of a notification with a missing signature. """
+        tx = self._create_transaction('redirect')
+        payload = dict(self.notification_data, Seal=None)
+        self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
+
+    @mute_logger('odoo.addons.payment_sips.controllers.main')
+    def test_reject_notification_with_invalid_signature(self):
+        """ Test the verification of a notification with an invalid signature. """
+        tx = self._create_transaction('redirect')
+        payload = dict(self.notification_data, Seal='dummy')
+        self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)

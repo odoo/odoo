@@ -6,44 +6,45 @@ from odoo.exceptions import UserError
 from odoo.tests import Form
 
 
-class TestWarehouse(common.TestMrpCommon):
-    def setUp(self):
-        super(TestWarehouse, self).setUp()
+class TestWarehouseMrp(common.TestMrpCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        unit = self.env.ref("uom.product_uom_unit")
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.depot_location = self.env['stock.location'].create({
+        unit = cls.env.ref("uom.product_uom_unit")
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.depot_location = cls.env['stock.location'].create({
             'name': 'Depot',
             'usage': 'internal',
-            'location_id': self.stock_location.id,
+            'location_id': cls.stock_location.id,
         })
-        self.env["stock.putaway.rule"].create({
-            "location_in_id": self.stock_location.id,
-            "location_out_id": self.depot_location.id,
-            'category_id': self.env.ref('product.product_category_all').id,
+        cls.env["stock.putaway.rule"].create({
+            "location_in_id": cls.stock_location.id,
+            "location_out_id": cls.depot_location.id,
+            'category_id': cls.env.ref('product.product_category_all').id,
         })
-        mrp_workcenter = self.env['mrp.workcenter'].create({
+        cls.env['mrp.workcenter'].create({
             'name': 'Assembly Line 1',
-            'resource_calendar_id': self.env.ref('resource.resource_calendar_std').id,
+            'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
         })
-        self.env['stock.quant'].create({
-            'location_id': self.stock_location_14.id,
-            'product_id': self.graphics_card.id,
+        cls.env['stock.quant'].create({
+            'location_id': cls.stock_location_14.id,
+            'product_id': cls.graphics_card.id,
             'inventory_quantity': 16.0
         }).action_apply_inventory()
 
-        self.bom_laptop = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.laptop.product_tmpl_id.id,
+        cls.bom_laptop = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.laptop.product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': unit.id,
             'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
-                'product_id': self.graphics_card.id,
+                'product_id': cls.graphics_card.id,
                 'product_qty': 1,
                 'product_uom_id': unit.id
             })],
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
             ],
         })
 
@@ -95,12 +96,12 @@ class TestWarehouse(common.TestMrpCommon):
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
 
         # Create Inventory Adjustment For Stick and Stone Tools with lot.
-        lot_product_4 = self.env['stock.production.lot'].create({
+        lot_product_4 = self.env['stock.lot'].create({
             'name': '0000000000001',
             'product_id': self.product_4.id,
             'company_id': self.env.company.id,
         })
-        lot_product_2 = self.env['stock.production.lot'].create({
+        lot_product_2 = self.env['stock.lot'].create({
             'name': '0000000000002',
             'product_id': self.product_2.id,
             'company_id': self.env.company.id,
@@ -143,7 +144,14 @@ class TestWarehouse(common.TestMrpCommon):
             scrap_id.do_scrap()
 
         # Scrap Product Wood with lot.
-        self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
+        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
+        scrap_id.do_scrap()
+        scrap_move = scrap_id.move_id
+
+        self.assertTrue(scrap_move.raw_material_production_id)
+        self.assertTrue(scrap_move.scrapped)
+        self.assertEqual(scrap_move.location_dest_id, scrap_id.scrap_location_id)
+        self.assertEqual(scrap_move.price_unit, scrap_move.product_id.standard_price)
 
         #Check scrap move is created for this production order.
         #TODO: should check with scrap objects link in between
@@ -158,7 +166,7 @@ class TestWarehouse(common.TestMrpCommon):
         """
         self.laptop.tracking = 'serial'
         mo_laptop = self.new_mo_laptop()
-        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
+        serial = self.env['stock.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
 
         mo_form = Form(mo_laptop)
         mo_form.qty_producing = 1
@@ -173,13 +181,14 @@ class TestWarehouse(common.TestMrpCommon):
         self.assertNotEqual(location_dest.id, self.stock_location.id)
 
 class TestKitPicking(common.TestMrpCommon):
-    def setUp(self):
-        super(TestKitPicking, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         def create_product(name):
-            p = Form(self.env['product.product'])
+            p = Form(cls.env['product.product'])
             p.name = name
-            p.type = 'product'
+            p.detailed_type = 'product'
             return p.save()
 
         # Create a kit 'kit_parent' :
@@ -206,13 +215,13 @@ class TestKitPicking(common.TestMrpCommon):
         kit_1 = create_product('Kit 1')
         kit_2 = create_product('Kit 2')
         kit_3 = create_product('kit 3')
-        self.kit_parent = create_product('Kit Parent')
+        cls.kit_parent = create_product('Kit Parent')
         # Linking the kits and the components via some 'phantom' BoMs
-        bom_kit_1 = self.env['mrp.bom'].create({
+        bom_kit_1 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_1.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
-        BomLine = self.env['mrp.bom.line']
+        BomLine = cls.env['mrp.bom.line']
         BomLine.create({
             'product_id': component_a.id,
             'product_qty': 2.0,
@@ -225,7 +234,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': component_c.id,
             'product_qty': 3.0,
             'bom_id': bom_kit_1.id})
-        bom_kit_2 = self.env['mrp.bom'].create({
+        bom_kit_2 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_2.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
@@ -237,8 +246,8 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': kit_1.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_2.id})
-        bom_kit_parent = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.kit_parent.product_tmpl_id.id,
+        bom_kit_parent = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.kit_parent.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
         BomLine.create({
@@ -249,7 +258,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': kit_2.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
-        bom_kit_3 = self.env['mrp.bom'].create({
+        bom_kit_3 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
@@ -267,16 +276,16 @@ class TestKitPicking(common.TestMrpCommon):
             'bom_id': bom_kit_parent.id})
 
         # We create an 'immediate transfer' receipt for x3 kit_parent
-        self.test_partner = self.env['res.partner'].create({
+        cls.test_partner = cls.env['res.partner'].create({
             'name': 'Notthat Guyagain',
         })
-        self.test_supplier = self.env['stock.location'].create({
+        cls.test_supplier = cls.env['stock.location'].create({
             'name': 'supplier',
             'usage': 'supplier',
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': cls.env.ref('stock.stock_location_stock').id,
         })
 
-        self.expected_quantities = {
+        cls.expected_quantities = {
             component_a: 24,
             component_b: 12,
             component_c: 36,
@@ -310,8 +319,8 @@ class TestKitPicking(common.TestMrpCommon):
         picking.button_validate()
 
         # We check that the picking has the correct quantities after its move were splitted.
-        self.assertEqual(len(picking.move_lines), 7)
-        for move_line in picking.move_lines:
+        self.assertEqual(len(picking.move_ids), 7)
+        for move_line in picking.move_ids:
             self.assertEqual(move_line.quantity_done, self.expected_quantities[move_line.product_id])
 
     def test_kit_planned_transfer(self):
@@ -338,6 +347,6 @@ class TestKitPicking(common.TestMrpCommon):
         picking.action_confirm()
 
         # We check that the picking has the correct quantities after its move were splitted.
-        self.assertEqual(len(picking.move_lines), 7)
-        for move_line in picking.move_lines:
+        self.assertEqual(len(picking.move_ids), 7)
+        for move_line in picking.move_ids:
             self.assertEqual(move_line.product_qty, self.expected_quantities[move_line.product_id])

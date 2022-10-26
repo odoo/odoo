@@ -1,44 +1,65 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 
 
-class SlidesCase(common.TransactionCase):
+class SlidesCase(MailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(SlidesCase, cls).setUpClass()
 
         cls.user_officer = mail_new_test_user(
-            cls.env, name='Ophélie Officer', login='user_officer', email='officer@example.com',
-            groups='base.group_user,website_slides.group_website_slides_officer'
+            cls.env,
+            email='officer@example.com',
+            groups='base.group_user,website_slides.group_website_slides_officer',
+            login='user_officer',
+            name='Ophélie Officer',
+            notification_type='email',
         )
 
         cls.user_manager = mail_new_test_user(
-            cls.env, name='Manuel Manager', login='user_manager', email='manager@example.com',
-            groups='base.group_user,website_slides.group_website_slides_manager'
+            cls.env,
+            email='manager@example.com',
+            login='user_manager',
+            groups='base.group_user,website_slides.group_website_slides_manager',
+            name='Manuel Manager',
+            notification_type='email',
         )
 
         cls.user_emp = mail_new_test_user(
-            cls.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
-            groups='base.group_user'
+            cls.env,
+            email='employee@example.com',
+            groups='base.group_user',
+            login='user_emp',
+            name='Eglantine Employee',
+            notification_type='email',
         )
 
         cls.user_portal = mail_new_test_user(
-            cls.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
-            groups='base.group_portal'
+            cls.env,
+            email='portal@example.com',
+            groups='base.group_portal',
+            login='user_portal',
+            name='Patrick Portal',
+            notification_type='email',
         )
 
         cls.user_public = mail_new_test_user(
-            cls.env, name='Pauline Public', login='user_public', email='public@example.com',
-            groups='base.group_public'
+            cls.env,
+            email='public@example.com',
+            groups='base.group_public',
+            login='user_public',
+            name='Pauline Public',
+            notification_type='email',
         )
 
         cls.customer = cls.env['res.partner'].create({
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'customer@customer.example.com',
+            'mobile': '0456001122',
             'name': 'Caroline Customer',
-            'email': 'customer@example.com',
         })
 
         cls.channel = cls.env['slide.channel'].with_user(cls.user_officer).create({
@@ -55,7 +76,7 @@ class SlidesCase(common.TransactionCase):
         cls.slide = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook Humans',
             'channel_id': cls.channel.id,
-            'slide_type': 'presentation',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 2.0,
             'sequence': 1,
@@ -70,7 +91,7 @@ class SlidesCase(common.TransactionCase):
         cls.slide_2 = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook For Humans',
             'channel_id': cls.channel.id,
-            'slide_type': 'presentation',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 3.0,
             'sequence': 3,
@@ -78,7 +99,7 @@ class SlidesCase(common.TransactionCase):
         cls.slide_3 = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook Humans For Humans',
             'channel_id': cls.channel.id,
-            'slide_type': 'document',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 1.5,
             'sequence': 4,

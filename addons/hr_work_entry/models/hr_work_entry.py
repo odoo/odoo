@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
+import itertools
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools, _
 
 
 class HrWorkEntry(models.Model):
@@ -15,11 +17,11 @@ class HrWorkEntry(models.Model):
 
     name = fields.Char(required=True, compute='_compute_name', store=True, readonly=False)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
-    duration = fields.Float(compute='_compute_duration', store=True, string="Period")
-    work_entry_type_id = fields.Many2one('hr.work.entry.type')
+    duration = fields.Float(compute='_compute_duration', store=True, string="Period", readonly=False)
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True)
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -58,10 +60,16 @@ class HrWorkEntry(models.Model):
         ),
     ]
 
+    def init(self):
+        tools.create_index(self._cr, "hr_work_entry_date_start_date_stop_index", self._table, ["date_start", "date_stop"])
+
     @api.depends('work_entry_type_id', 'employee_id')
     def _compute_name(self):
         for work_entry in self:
-            work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name, work_entry.employee_id.name)
+            if not work_entry.employee_id:
+                work_entry.name = _('Undefined')
+            else:
+                work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name or _('Undefined Type'), work_entry.employee_id.name)
 
     @api.depends('state')
     def _compute_conflict(self):
@@ -70,19 +78,36 @@ class HrWorkEntry(models.Model):
 
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
+        durations = self._get_duration_batch()
         for work_entry in self:
-            work_entry.duration = work_entry._get_duration(work_entry.date_start, work_entry.date_stop)
+            work_entry.duration = durations[work_entry.id]
 
     @api.depends('date_start', 'duration')
     def _compute_date_stop(self):
         for work_entry in self.filtered(lambda w: w.date_start and w.duration):
             work_entry.date_stop = work_entry.date_start + relativedelta(hours=work_entry.duration)
 
+    def _get_duration_batch(self):
+        result = {}
+        cached_periods = defaultdict(float)
+        for work_entry in self:
+            date_start = work_entry.date_start
+            date_stop = work_entry.date_stop
+            if not date_start or not date_stop:
+                result[work_entry.id] = 0.0
+                continue
+            if (date_start, date_stop) in cached_periods:
+                result[work_entry.id] = cached_periods[(date_start, date_stop)]
+            else:
+                dt = date_stop - date_start
+                duration = dt.days * 24 + dt.seconds / 3600  # Number of hours
+                cached_periods[(date_start, date_stop)] = duration
+                result[work_entry.id] = duration
+        return result
+
+    # YTI TODO: Remove me in master: Deprecated, use _get_duration_batch instead
     def _get_duration(self, date_start, date_stop):
-        if not date_start or not date_stop:
-            return 0
-        dt = date_stop - date_start
-        return dt.days * 24 + dt.seconds / 3600  # Number of hours
+        return self._get_duration_batch()[self.id]
 
     def action_validate(self):
         """
@@ -105,11 +130,11 @@ class HrWorkEntry(models.Model):
         conflict = self._mark_conflicting_work_entries(min(self.mapped('date_start')), max(self.mapped('date_stop')))
         return undefined_type or conflict
 
-    @api.model
     def _mark_conflicting_work_entries(self, start, stop):
         """
         Set `state` to `conflict` for overlapping work entries
         between two dates.
+        If `self.ids` is truthy then check conflicts with the corresponding work entries.
         Return True if overlapping work entries were detected.
         """
         # Use the postgresql range type `tsrange` which is a range of timestamp
@@ -117,28 +142,23 @@ class HrWorkEntry(models.Model):
         # use '()' to exlude the lower and upper bounds of the range.
         # Filter on date_start and date_stop (both indexed) in the EXISTS clause to
         # limit the resulting set size and fasten the query.
-        self.flush(['date_start', 'date_stop', 'employee_id', 'active'])
+        self.flush_model(['date_start', 'date_stop', 'employee_id', 'active'])
         query = """
-            SELECT b1.id
-            FROM hr_work_entry b1
-            WHERE
-            b1.date_start <= %s
-            AND b1.date_stop >= %s
-            AND active = TRUE
-            AND EXISTS (
-                SELECT 1
-                FROM hr_work_entry b2
-                WHERE
-                    b2.date_start <= %s
-                    AND b2.date_stop >= %s
-                    AND active = TRUE
-                    AND tsrange(b1.date_start, b1.date_stop, '()') && tsrange(b2.date_start, b2.date_stop, '()')
-                    AND b1.id <> b2.id
-                    AND b1.employee_id = b2.employee_id
-            );
-        """
-        self.env.cr.execute(query, (stop, start, stop, start))
-        conflicts = [res.get('id') for res in self.env.cr.dictfetchall()]
+            SELECT b1.id,
+                   b2.id
+              FROM hr_work_entry b1
+              JOIN hr_work_entry b2
+                ON b1.employee_id = b2.employee_id
+               AND b1.id <> b2.id
+             WHERE b1.date_start <= %(stop)s
+               AND b1.date_stop >= %(start)s
+               AND b1.active = TRUE
+               AND b2.active = TRUE
+               AND tsrange(b1.date_start, b1.date_stop, '()') && tsrange(b2.date_start, b2.date_stop, '()')
+               AND {}
+        """.format("b2.id IN %(ids)s" if self.ids else "b2.date_start <= %(stop)s AND b2.date_stop >= %(start)s")
+        self.env.cr.execute(query, {"stop": stop, "start": start, "ids": tuple(self.ids)})
+        conflicts = set(itertools.chain.from_iterable(self.env.cr.fetchall()))
         self.browse(conflicts).write({
             'state': 'conflict',
         })
@@ -213,7 +233,7 @@ class HrWorkEntryType(models.Model):
     _description = 'HR Work Entry Type'
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(required=True)
+    code = fields.Char(required=True, help="Careful, the Code is used in many references, changing it could lead to unwanted changes.")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(

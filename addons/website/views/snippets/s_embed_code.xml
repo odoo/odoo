@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Embed Code" id="s_embed_code">
+    <section class="s_embed_code text-center pt64 pb64">
+        <div class="s_embed_code_embedded container o_not_editable">
+            <!-- Keep the next line as a one-liner, this is to nicely show the
+            code in the ace editor when the user is replacing it. The `&#10;`
+            acts as line returns. -->
+            <div class="font-monospace pt8 bg-light">&#10;    Click on <b>"Edit"</b> in the right panel to replace this with your own HTML code&#10;</div>
+        </div>
+    </section>
+</template>
+
+<!-- Snippet's Options -->
+<template id="s_embed_code_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-js="EmbedCode" data-selector=".s_embed_code">
+            <we-row string="Code">
+                <we-button data-edit-code="" data-no-preview="true"
+                        class="o_we_edit_code o_we_no_toggle o_we_bg_success active"
+                        title="Edit embedded code">Edit</we-button>
+            </we-row>
+            <we-button-group string="Alignment">
+                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-start"/>
+                <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
+                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-end"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_embed_code_000_scss" model="ir.asset">
+    <field name="name">Embed Code 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_embed_code/000.scss</field>
+</record>
+
+</odoo>

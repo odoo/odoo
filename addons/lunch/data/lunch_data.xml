@@ -53,6 +53,15 @@
         <field name="state">code</field>
         <field name="code">records.action_cancel()</field>
     </record>
+
+    <record id="lunch_order_action_notify" model="ir.actions.server">
+        <field name="name">Lunch: Send notifications</field>
+        <field name="model_id" ref="model_lunch_order"/>
+        <field name="binding_model_id" ref="model_lunch_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_notify()</field>
+    </record>
 </data>
 
 </odoo>

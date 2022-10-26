@@ -1,8 +1,8 @@
+/* global posmodel */
 odoo.define('point_of_sale.tour.pricelist', function (require) {
     "use strict";
 
     var Tour = require('web_tour.tour');
-    var rpc = require('web.rpc');
     var utils = require('web.utils');
     var round_di = utils.round_decimals;
 
@@ -12,35 +12,23 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         }
     }
 
-    function _build_pricelist_context (pricelist, quantity, date) {
-        return {
-            pricelist: pricelist.id,
-            quantity: quantity,
-        };
-    }
-
-    function compare_backend_frontend (product, pricelist_name, quantity) {
+    function assertProductPrice(product, pricelist_name, quantity, expected_price) {
         return function () {
             var pricelist = _.findWhere(posmodel.pricelists, {name: pricelist_name});
             var frontend_price = product.get_price(pricelist, quantity);
-            // ORM applies digits= on non-stored computed field when
-            // reading. It does not however truncate like it does when
-            // storing the field.
             frontend_price = round_di(frontend_price, posmodel.dp['Product Price']);
 
-            var context = _build_pricelist_context(pricelist, quantity);
-            return rpc.query({model: 'product.product', method: 'read', args: [[product.id], ['price']], context: context})
-                .then(function (backend_result) {
-                    var debug_info = _.extend(context, {
-                        product: product.id,
-                        product_display_name: product.display_name,
-                        pricelist_name: pricelist.name,
-                    });
-                    var backend_price = backend_result[0].price;
-                    assert(frontend_price === backend_price,
-                           JSON.stringify(debug_info) + ' DOESN\'T MATCH -> ' + backend_price + ' (backend) != ' + frontend_price + ' (frontend)');
-                    return Promise.resolve();
-                });
+            var diff = Math.abs( expected_price - frontend_price );
+
+            assert(diff < 0.001,
+                JSON.stringify({
+                    product: product.id,
+                    product_display_name: product.display_name,
+                    pricelist_name: pricelist_name,
+                    quantity: quantity
+                }) + ' DOESN\'T MATCH -> ' + expected_price + ' != ' + frontend_price);
+
+            return Promise.resolve();
         };
     }
 
@@ -49,7 +37,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     var steps = [{ // Leave category displayed by default
         content: 'waiting for loading to finish',
         extra_trigger: 'body .pos:not(:has(.loader))', // Pos has finished loading
-        trigger: 'body:not(.oe_wait)', // WebClient has finished Loading
+        trigger: 'body:not(:has(.o_loading_indicator))', // WebClient has finished Loading
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
@@ -59,31 +47,33 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
             var product_letter_tray = posmodel.db.search_product_in_category(0, 'Letter Tray')[0];
             var product_whiteboard = posmodel.db.search_product_in_category(0, 'Whiteboard')[0];
 
-            compare_backend_frontend(product_letter_tray, 'Public Pricelist', 0, undefined)()
-                .then(compare_backend_frontend(product_letter_tray, 'Public Pricelist', 1, undefined))
-                .then(compare_backend_frontend(product_letter_tray, 'Fixed', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'Fixed', 1, undefined))
-                .then(compare_backend_frontend(product_small_shelf, 'Fixed', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'Percentage', 1, undefined))
-                .then(compare_backend_frontend(product_small_shelf, 'Percentage', 1, undefined))
-                .then(compare_backend_frontend(product_magnetic_board, 'Percentage', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_small_shelf, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_magnetic_board, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_monitor_stand, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_desk_pad, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'min_quantity ordering', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'min_quantity ordering', 2, undefined))
-                .then(compare_backend_frontend(product_letter_tray, 'Category vs no category', 1, undefined))
-                .then(compare_backend_frontend(product_letter_tray, 'Category', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'Product template', 1, undefined))
-                .then(compare_backend_frontend(product_wall_shelf, 'Dates', 1, undefined))
-                .then(compare_backend_frontend(product_small_shelf, 'Pricelist base rounding', 1, undefined))
-                .then(compare_backend_frontend(product_whiteboard, 'Public Pricelist', 1, undefined))
+            assertProductPrice(product_letter_tray, 'Public Pricelist', 0, 4.8)()
+                .then(assertProductPrice(product_letter_tray, 'Public Pricelist', 1, 4.8))
+                .then(assertProductPrice(product_letter_tray, 'Fixed', 1, 1))
+                .then(assertProductPrice(product_wall_shelf, 'Fixed', 1, 2))
+                .then(assertProductPrice(product_small_shelf, 'Fixed', 1, 13.95))
+                .then(assertProductPrice(product_wall_shelf, 'Percentage', 1, 0))
+                .then(assertProductPrice(product_small_shelf, 'Percentage', 1, 0.03))
+                .then(assertProductPrice(product_magnetic_board, 'Percentage', 1, 1.98))
+                .then(assertProductPrice(product_wall_shelf, 'Formula', 1, 6.86))
+                .then(assertProductPrice(product_small_shelf, 'Formula', 1, 2.99))
+                .then(assertProductPrice(product_magnetic_board, 'Formula', 1, 11.98))
+                .then(assertProductPrice(product_monitor_stand, 'Formula', 1, 8.19))
+                .then(assertProductPrice(product_desk_pad, 'Formula', 1, 6.98))
+                .then(assertProductPrice(product_wall_shelf, 'min_quantity ordering', 1, 2))
+                .then(assertProductPrice(product_wall_shelf, 'min_quantity ordering', 2, 1))
+                .then(assertProductPrice(product_letter_tray, 'Category vs no category', 1, 2))
+                .then(assertProductPrice(product_letter_tray, 'Category', 1, 2))
+                .then(assertProductPrice(product_wall_shelf, 'Product template', 1, 1))
+                .then(assertProductPrice(product_wall_shelf, 'Dates', 1, 2))
+                .then(assertProductPrice(product_small_shelf, 'Pricelist base rounding', 1, 13.95))
+                .then(assertProductPrice(product_whiteboard, 'Public Pricelist', 1, 3.2))
                 .then(function () {
                     $('.pos').addClass('done-testing');
                 });
         },
+    }, {
+        trigger: '.opening-cash-control .button:contains("Open session")',
     }];
 
     steps = steps.concat([{
@@ -105,14 +95,11 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('Fixed')",
     }, {
-        content: "open customer list",
-        trigger: "button.set-customer",
+        content: "open partner list",
+        trigger: "button.set-partner",
     }, {
         content: "select Deco Addict",
-        trigger: ".client-line:contains('Deco Addict')",
-    }, {
-        content: "confirm selection",
-        trigger: ".clientlist-screen .next",
+        trigger: ".partner-line:contains('Deco Addict')",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -125,14 +112,11 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".button.cancel:visible",
     }, {
         content: "open customer list",
-        trigger: "button.set-customer",
+        trigger: "button.set-partner",
     }, {
         content: "select Lumber Inc",
-        trigger: ".client-line:contains('Lumber Inc')",
+        trigger: ".partner-line:contains('Lumber Inc')",
     },  {
-        content: "confirm selection",
-        trigger: ".clientlist-screen .next",
-    }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     }, {
@@ -247,18 +231,6 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
             run: function () {},
         }];
-    }
-
-    function generate_keypad_steps(amount_str, keypad_selector) {
-        var i, steps = [], current_char;
-        for (i = 0; i < amount_str.length; ++i) {
-            current_char = amount_str[i];
-            steps.push({
-                content: 'press ' + current_char + ' on payment keypad',
-                trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
-            });
-        }
-        return steps;
     }
 
     function press_payment_numpad(val) {
@@ -423,11 +395,11 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     steps = steps.concat(verify_order_total('5.52'));
 
     steps = steps.concat([{
-        content: "close the Point of Sale frontend",
+        content: "open closing the Point of Sale frontend popup",
         trigger: ".header-button",
     }, {
-        content: "confirm closing the frontend",
-        trigger: ".header-button.confirm",
+        content: "close the Point of Sale frontend",
+        trigger: ".close-pos-popup .button:contains('Discard')",
         run: function() {}, //it's a check,
     }]);
 

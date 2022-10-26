@@ -11,6 +11,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import textwrap
 import time
 import traceback
 from xmlrpc import client as xmlrpclib
@@ -23,6 +24,11 @@ from glob import glob
 
 ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 TSTAMP = time.strftime("%Y%m%d", time.gmtime())
+TSEC = time.strftime("%H%M%S", time.gmtime())
+# Get some variables from release.py
+version = ...
+version_info = ...
+nt_service_name = ...
 exec(open(os.path.join(ROOTDIR, 'odoo', 'release.py'), 'rb').read())
 VERSION = version.split('-')[0].replace('saas~', '')
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
@@ -339,7 +345,17 @@ class DockerRpm(Docker):
 
     def build(self):
         logging.info('Start building fedora rpm package')
-        self.run('python3 setup.py --quiet bdist_rpm', self.args.build_dir, 'odoo-rpm-build-%s' % TSTAMP)
+        rpmbuild_dir = '/var/lib/odoo/rpmbuild'
+        cmds = [
+            'cd /data/src',
+            'mkdir -p dist',
+            'rpmdev-setuptree -d',
+            f'cp -a /data/src/setup/rpm/odoo.spec {rpmbuild_dir}/SPECS/',
+            f'tar --transform "s/^\\./odoo-{VERSION}/" -c -z -f {rpmbuild_dir}/SOURCES/odoo-{VERSION}.tar.gz .',
+            f'rpmbuild -bb --define="%version {VERSION}" /data/src/setup/rpm/odoo.spec',
+            f'mv {rpmbuild_dir}/RPMS/noarch/odoo*.rpm /data/src/dist/'
+        ]
+        self.run(' && '.join(cmds), self.args.build_dir, f'odoo-rpm-build-{TSTAMP}')
         os.rename(glob('%s/dist/odoo-*.noarch.rpm' % self.args.build_dir)[0], '%s/odoo_%s.%s.rpm' % (self.args.build_dir, VERSION, TSTAMP))
         logging.info('Finished building fedora rpm package')
 
@@ -360,8 +376,10 @@ class DockerRpm(Docker):
         logging.info('Finished testing rpm package')
 
     def gen_rpm_repo(self, args, rpm_filepath):
+        pub_repodata_path = os.path.join(args.pub, 'rpm', 'repodata')
         # Removes the old repodata
-        shutil.rmtree(os.path.join(args.pub, 'rpm', 'repodata'))
+        if os.path.isdir(pub_repodata_path):
+            shutil.rmtree(pub_repodata_path)
 
         # Copy files to a temp directory (required because the working directory must contain only the
         # files of the last release)
@@ -370,7 +388,7 @@ class DockerRpm(Docker):
 
         logging.info('Start creating rpm repo')
         self.run('createrepo /data/src/', temp_path, 'odoo-rpm-createrepo-%s' % TSTAMP)
-        shutil.copytree(os.path.join(temp_path, "repodata"), os.path.join(args.pub, 'rpm', 'repodata'))
+        shutil.copytree(os.path.join(temp_path, "repodata"), pub_repodata_path)
 
         # Remove temp directory
         shutil.rmtree(temp_path)
@@ -395,7 +413,7 @@ class KVM(object):
             "-net", "nic,model=e1000e,macaddr=52:54:00:d3:38:5e",
             "-net", "user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432",
             "-m", "2048",
-            "-drive", "file=%s,snapshot=on" % self.image,
+            "-drive", f"if=virtio,file={self.image},snapshot=on",
             "-nographic",
             "-serial", "none",
         ]
@@ -450,11 +468,16 @@ class KVM(object):
 class KVMWinBuildExe(KVM):
     def run(self):
         logging.info('Start building Windows package')
-        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
-            f.write("VERSION=%s.%s\n" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP))
-        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
+        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w', encoding='utf-8') as f:
+            win_version = VERSION.replace('~', '_').replace('+', '')
+            f.write(textwrap.dedent(f"""
+                VERSION={win_version}.{TSTAMP}
+                MAJORVERSION={version_info[0]}
+                MINORVERSION={version_info[1]}
+            """))
+        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w', encoding='utf-8') as f:
             f.write("PYTHON_VERSION=%s\n" % self.args.vm_winxp_python_version)
-        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
+        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w', encoding='utf-8') as f:
             f.write("SERVICENAME=%s\n" % nt_service_name)
 
         remote_build_dir = '/cygdrive/c/odoobuild/server/'
@@ -493,7 +516,7 @@ def test_exe(args):
 
 def parse_args():
     ap = argparse.ArgumentParser()
-    build_dir = "%s-%s" % (ROOTDIR, TSTAMP)
+    build_dir = "%s-%s-%s" % (ROOTDIR, TSEC, TSTAMP)
     log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARN, "error": logging.ERROR, "critical": logging.CRITICAL}
 
     ap.add_argument("-b", "--build-dir", default=build_dir, help="build directory (%(default)s)", metavar="DIR")

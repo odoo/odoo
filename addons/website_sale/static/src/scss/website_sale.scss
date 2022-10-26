@@ -4,20 +4,93 @@
 $o-wsale-products-layout-grid-gutter-width: $grid-gutter-width / 2 !default;
 $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale-products-layout-grid-gutter-width);
 
-@mixin wsale-break-table-to-list() {
-    .o_wsale_products_grid_table_wrapper > table,
-    .o_wsale_products_grid_table_wrapper > table > tbody,
-    .o_wsale_products_grid_table_wrapper > table > tbody > tr,
-    .o_wsale_products_grid_table_wrapper > table > tbody > tr > td {
-        display: block;
-        width: 100%;
+@mixin wsale-break-table($-list: false) {
+    .o_wsale_products_grid_table_wrapper {
+        table, tbody {
+            display: block;
+            width: 100%;
+        }
+
+        tr {
+            display: if($-list, block, flex);
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        td {
+            display: if($-list, block, inline-block);
+            width: if($-list, 100%, 50%);
+        }
+    }
+}
+
+@mixin o-wsale-scrollbar-subdle($-vertical: true) {
+    scrollbar-color: currentColor $light;
+    scrollbar#{if($-vertical, -width, -height)}: 2px;
+
+    &::-webkit-scrollbar {
+        #{if($-vertical, width, height)}: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: currentColor;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $light;
     }
 }
 
 .oe_website_sale {
-    ul ul {
-        margin-left: 1.5rem;
+    // ==== Products list designs
+    .o_wsale_design_cards {
+        --o-wsale-card-border-width: 1px;
+        --o-wsale-card-border-radius: #{$card-border-radius};
+        --o-wsale-card-info-padding: #{map-get($spacers, 2)};
+        --o-wsale-card-bg: #{$card-bg};
+
+        $-br-top: calc(#{$card-border-radius} - 1px);
+        --o-wsale-card-thumb-border-radius: #{$-br-top} #{$-br-top} 0 0;
     }
+    .o_wsale_design_thumbs {
+        --o-wsale-card-border-width: 0;
+        --o-wsale-card-info-padding: #{map-get($spacers, 3)} 0;
+        --o-wsale-card-thumb-border-radius: #{$o-wsale-products-layout-grid-gutter-width * .5};
+        --o-wsale-card-thumb-shadow: 0 13px 27px -5px #{scale-color(map-get($theme-colors, 'primary'), $alpha: -90%)},
+                                     0 8px 16px -8px rgba(0, 0, 0, .28);
+    }
+    .o_wsale_design_grid {
+        --o-wsale-grid-border: 1px solid #{$card-border-color};
+        --o-wsale-card-border-width: 0;
+    }
+
+    // ==== Products list thumb options
+    .o_wsale_context_thumb_4_3 {
+        --o-wsale-card-thumb-aspect-ratio: 4/3;
+    }
+    .o_wsale_context_thumb_4_5 {
+        --o-wsale-card-thumb-aspect-ratio: 4/5;
+    }
+    .o_wsale_context_thumb_2_3 {
+        --o-wsale-card-thumb-aspect-ratio: 2/3;
+    }
+    .o_wsale_context_thumb_cover {
+        --o-wsale-card-thumb-fill-mode: cover;
+    }
+
+    .o_wsale_filmstip_wrapper {
+        scroll-snap-type: x mandatory;
+        @include o-wsale-scrollbar-subdle($-vertical: false);
+
+        .o_wsale_filmstip {
+            transform: translateX(0);
+
+            li {
+                scroll-snap-align: start;
+            }
+        }
+    }
+
     .o_payment_form .card {
         border-radius: 4px !important;
     }
@@ -49,7 +122,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         font-weight: $font-weight-bold;
     }
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .td-img {
             display: none;
         }
@@ -68,113 +141,77 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         padding: 0;
     }
 
-    .breadcrumb {
-        background-color: gray('100');
-        padding: 0.6rem 0.75rem;
-        font-size: 0.8rem;
-
-        a {
-            color: theme-color('primary');
-            font-weight: bold;
-        }
-        .breadcrumb-item + .breadcrumb-item::before {
-            font-family: 'FontAwesome';
-            content: "\f105";
-            padding-right: 0.2rem;
-        }
+    .table-striped tbody tr td:nth-of-type(even) {
+        --table-accent-bg: rgba(0, 0, 0, 0.025);
     }
-
-    .o_wsale_products_searchbar_form {
-        flex-grow: 1;
-        @include media-breakpoint-up(md) {
-            max-width: 450px;
-        }
-    }
-
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: rgba(0, 0, 0, 0.025);
-    }
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0);
+    .table-striped tbody tr td:nth-of-type(odd) {
+        --table-accent-bg: rgba(0, 0, 0, 0);
     }
     *:not(#product_attributes_simple) > .table-sm tbody td {
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
     }
+
+    #o_wsale_offcanvas {
+        width: 80%;
+        max-width: $offcanvas-horizontal-width;
+
+        .o_searchbar_form .dropdown-menu {
+            right: 0;
+        }
+
+        #o_wsale_offcanvas_content {
+            @include o-wsale-scrollbar-subdle();
+        }
+
+        .o_wsale_offcanvas_title {
+            &::after, &:not(.collapsed)::after {
+                width: .75rem;
+                height: .75rem;
+                background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$headings-color}'><path transform='#{rotate(45, 8, 8)}' d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>");
+                background-size: .75rem;
+            }
+
+            &:not(.collapsed)::after {
+                transform: rotate(-45deg);
+            }
+
+            // Since this nav is visible on mobile only, remove all visual
+            // effects related to keyboard/mouse navigation.
+            &, &:focus, &:hover {
+                box-shadow: none;
+                z-index: 0;
+            }
+        }
+    }
+
     #products_grid_before {
-        @include media-breakpoint-up(lg) {
-            border-right: 1px solid gray('400');
+        // == Guess the distance with the navbar
+        $-container-top-gap: calc(#{map-get($spacers, 2)} + var(--gutter-x));
+
+        // == Guess the distance with the viewport's top.
+        // Defined using CSS variables to ease custom-headers overrides.
+        --o_ws_sidebar_top_gap: calc(#{$navbar-padding-y * 2} + #{$btn-padding-y-lg * 2} + #{$-container-top-gap});
+
+        @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
+            top: var(--o_ws_sidebar_top_gap);
+        } @else {
+            top: $-container-top-gap;
         }
-        #wsale_products_categories_collapse {
-            label {
-                &:hover {
-                    color: theme-color('primary');
-                    cursor: pointer;
-                }
-            }
-            .nav-hierarchy {
-                padding-left: map-get($spacers, 2);
-            }
-            i.fa {
-                color: gray('500');
-            }
-        }
-        .o_categories_collapse_title, .o_products_attributes_title {
-            font-size: 0.9rem;
-        }
-        .custom-control.custom-checkbox {
-            .custom-control-input {
-                ~ .custom-control-label:before {
-                    outline: none;
-                    border: 0px;
-                    border: 2px solid gray('400');
-                    border-radius: 0px;
-                    cursor: pointer;
-                }
-                &:checked {
-                    ~ .custom-control-label:before {
-                        background-color: theme-color('primary');
-                        border: 2px solid theme-color('primary');
-                    }
-                }
-            }
-            label:hover {
-                color: theme-color('primary');
-                cursor: pointer;
-            }
-        }
+
         .css_attribute_color {
             height: 32px;
             width: 32px;
-            margin-bottom: 0.2rem;
         }
     }
     .o_pricelist_dropdown, .o_sortby_dropdown {
         min-width: fit-content;
-
-        > .btn {
-            &, &:hover, &:focus, &:active {
-                background-color: transparent !important;
-                box-shadow: none !important;
-            }
-        }
-    }
-    .o_wsale_apply_layout > .btn {
-        color: gray('500');
-        background-color: transparent;
-        border-radius: 0%;
-
-        &.active, &:focus {
-            color: gray('600');
-            background-color: gray('200');
-            box-shadow: none !important;
-        }
     }
 }
 
 #product_detail ~ .oe_structure.oe_empty > section:first-child,
 .o_shop_discussion_rating {
-    border-top: 1px solid gray('400');
+    border-top: 1px solid map-get($grays, '400');
 }
 
 .o_alternative_product {
@@ -183,81 +220,48 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 
 // Base style for a product card with image/description
 .oe_product_cart {
+    flex-direction: var(--o-wsale-card-flex-direction, column);
+    border: $card-border-width solid $card-border-color;
+    border-width: var(--o-wsale-card-border-width, 0 0 1px);
+    border-radius: var(--o-wsale-card-border-radius, 0);
+    padding: var(--o-wsale-card-padding, 0);
+    background-color: var(--o-wsale-card-bg);
+
     .oe_product_image {
-        height: 0;
-        text-align: center;
+        min-width: var(--o-wsale-card-thumb-size);
+        width: var(--o-wsale-card-thumb-size);
 
-        img {
-            height: 100%;
-            width: 100%;
-            object-fit: scale-down;
+        .oe_product_image_link {
+            padding-top: calc(100% / (var(--o-wsale-card-thumb-aspect-ratio, 1)));
+
+            .oe_product_image_img_wrapper {
+                @include o-position-absolute(0, 0, 0, 0);
+
+                img {
+                    box-shadow: var(--o-wsale-card-thumb-shadow);
+                    border-radius: var(--o-wsale-card-thumb-border-radius);
+                    object-fit: var(--o-wsale-card-thumb-fill-mode, contain);
+                }
+            }
         }
     }
+
     .o_wsale_product_information {
-        position: relative;
-        flex: 0 0 auto;
-        transition: .3s ease;
+        padding: var(--o-wsale-card-info-padding, #{map-get($spacers, 2)} 0);
     }
-    .oe_subdescription {
-        max-height: 0;
+
+    .oe_subdescription div {
+        min-height: calc(#{$font-size-sm * 1.1} * 2);
         overflow: hidden;
-        font-size: $font-size-sm;
-        margin-bottom: map-get($spacers, 1);
-        opacity: 0;
-        transform: scale(1, 0);
-        transition: all ease 0.3s;
-    }
-    .o_wsale_product_btn {
-        @include o-position-absolute(auto, auto, 100%, 0);
-        padding-bottom: map-get($spacers, 1);
-        z-index: 2;
-
-        .btn {
-            width: 46px;
-            padding: 0.375rem 0.75rem; // prevent default Bootstrap padding from being modified by theme variables
-            line-height: 32px;
-            border-radius: 50%;
-            transform: scale(0);
-            opacity: 0;
-            transition: transform ease 200ms 0s, opacity ease 50ms;
-        }
-
-        &:empty {
-            display: none !important;
-        }
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.1;
     }
 
-    &:hover {
-        .o_wsale_product_information {
-            background-color: white !important;
-        }
-        .oe_subdescription {
-            max-height: $line-height-base * 1em; // Max 1 line
-            @include media-breakpoint-up(lg) {
-                max-height: $line-height-base * 2em; // Max 2 lines
-            }
-            @include media-breakpoint-up(xl) {
-                max-height: $line-height-base * 3em; // Max 3 lines
-            }
-        }
-        .oe_subdescription,
-        .o_wsale_product_btn .btn {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-
-    @include media-breakpoint-down(sm) {
-        &, &:hover {
-            .oe_subdescription {
-                max-height: $line-height-base * 3em; // Max 3 lines
-            }
-        }
-        .oe_subdescription,
-        .o_wsale_product_btn .btn {
-            transform: scale(1);
-            opacity: 1;
-        }
+    .o_wsale_product_btn:empty {
+        display: none !important;
     }
 
     .o_ribbon_left, .o_ribbon_right {
@@ -270,64 +274,17 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     }
 }
 
-// Options relative to where the product card is put
-.oe_product {
-    // Image full option
-    &.oe_image_full {
-        .oe_product_image {
-            @include border-bottom-radius($card-inner-border-radius);
-        }
-        .o_wsale_product_information {
-            @include o-position-absolute(auto, 0, 0, 0); // The wrapper is always relatively positioned
-        }
-    }
-}
-
+// ==== THE GRID
 #products_grid {
-    .o_wsale_products_grid_table_wrapper > .table {
+    .o_wsale_products_grid_table_wrapper .table {
         table-layout: fixed;
 
-        > tbody {
-            > tr > td {
-                margin-top: $o-wsale-products-layout-grid-gutter-width; // For list and mobile design
-                padding: 0;
+        td {
+            padding: $o-wsale-products-layout-grid-gutter-width * .5;
+            border: var(--o-wsale-grid-border, 0);
 
-                @if $o-wsale-products-layout-grid-gutter-width <= 0 {
-                    border: $card-border-width solid $card-border-color;
-                }
-            }
-
-            > tr:first-child > td:first-child {
-                margin-top: 0; // For list and mobile design
-            }
-        }
-
-        .o_wsale_product_grid_wrapper {
-            position: relative;
-
-            @for $x from 1 through 4 {
-                @for $y from 1 through 4 {
-                    &.o_wsale_product_grid_wrapper_#{$x}_#{$y} {
-                        padding-top: 100% * $o-wsale-products-layout-grid-ratio * $y / $x;
-                    }
-                }
-            }
-
-            > * {
-                $-pos: ($o-wsale-products-layout-grid-gutter-width / 2);
-                @include o-position-absolute($-pos, $-pos, $-pos, $-pos);
-
-                &.card {
-                    border: none;
-
-                    @if $o-wsale-products-layout-grid-gutter-width > 0 {
-                        border-bottom: 1px solid gray('400');
-                    }
-
-                    &, .card-body {
-                        border-radius: 0;
-                    }
-                }
+            @if $o-wsale-products-layout-grid-gutter-width <= 0 {
+                border: $card-border-width solid $card-border-color;
             }
         }
     }
@@ -342,82 +299,67 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         // outer border spacing as part of the design.
         margin: (-$o-wsale-products-layout-grid-gutter-width / 2);
     }
+}
 
-    @include media-breakpoint-down(sm) {
-        @include wsale-break-table-to-list();
+#products_grid:not(.o_wsale_layout_list) {
+    @include media-breakpoint-down(lg) {
+        @include wsale-break-table();
+    }
 
-        .table .o_wsale_product_grid_wrapper {
-            padding-top: 100% !important;
+    @include media-breakpoint-up(lg) {
+        td.oe_product {
+            padding-bottom: $o-wsale-products-layout-grid-gutter-width * .5;
+
+            .o_wsale_product_btn {
+                @include o-position-absolute(auto, auto, calc(100% + #{map-get($spacers, 2)}), map-get($spacers, 2));
+                z-index: 2;
+            }
+
+            &:not(:hover) .o_wsale_product_btn {
+                opacity: 0;
+            }
+        }
+
+        // Sliglty increase padding for larger blocks
+        @for $x from 2 through 4 {
+            [class*="o_wsale_product_grid_wrapper_#{$x}_"] {
+                --o-wsale-card-info-padding: #{map-get($spacers, 3)} 0 #{map-get($spacers, 2)};
+            }
+
+            .o_wsale_design_cards [class*="o_wsale_product_grid_wrapper_#{$x}_"] {
+                --o-wsale-card-info-padding: #{map-get($spacers, 3)} #{map-get($spacers, 3)} #{map-get($spacers, 2)};
+            }
+        }
+    }
+}
+
+#products_grid.o_wsale_layout_list {
+    @include wsale-break-table($-list: true);
+
+    .oe_product {
+        --o-wsale-card-border-radius: 0;
+        --o-wsale-card-flex-direction: row;
+        --o-wsale-card-info-padding: 0 #{map-get($spacers, 3)};
+
+        // The more an image is portait, the more its size decreases
+        --o-wsale-card-thumb-size: calc(100px * var(--o-wsale-card-thumb-aspect-ratio, 1));
+
+        @include media-breakpoint-up(lg) {
+            --o-wsale-card-thumb-size: calc(160px * var(--o-wsale-card-thumb-aspect-ratio, 1));
+
+            h6, .h6 {
+                font-size: $font-size-base * 1.3;
+            }
         }
     }
 
-    &.o_wsale_layout_list {
-        @include media-breakpoint-up(sm) {
-            @include wsale-break-table-to-list();
+    .oe_product {
+        --o-wsale-card-padding: #{0 0 $o-wsale-products-layout-grid-gutter-width};
+    }
 
-            .o_wsale_products_grid_table_wrapper {
-                margin: 0;
-            }
-
-            .table .o_wsale_product_grid_wrapper {
-                padding-top: 0 !important;
-
-                > * {
-                    @include o-position-absolute(0, 0, 0, 0);
-                    position: relative;
-                }
-            }
-
-            .oe_product_cart {
-                $-wsale-list-layout-height: 10rem;
-
-                flex-flow: row nowrap;
-                min-height: $-wsale-list-layout-height;
-
-                .oe_product_image {
-                    flex: 0 0 auto;
-                    width: $-wsale-list-layout-height;
-                    max-width: 35%;
-                    min-width: 100px;
-                    height: auto;
-                }
-                .o_wsale_product_information {
-                    position: static;
-                    display: flex;
-                    flex: 1 1 auto;
-                    text-align: left !important;
-                }
-                .o_wsale_product_information_text {
-                    flex: 1 1 auto;
-                }
-                .o_wsale_product_btn {
-                    flex: 0 0 auto;
-                    position: static;
-                    display: flex;
-                    align-items: flex-end;
-                    padding: map-get($spacers, 2);
-
-                    .btn + .btn {
-                        margin-left: map-get($spacers, 2);
-                    }
-                }
-
-                .oe_subdescription {
-                    max-height: none !important;
-                }
-                .oe_subdescription,
-                .o_wsale_product_btn .btn {
-                    transform: scale(1) !important;
-                    opacity: 1;
-                }
-
-                &:hover {
-                    .o_wsale_product_information {
-                        background-color: $white !important;
-                    }
-                }
-            }
-        }
+    .o_wsale_design_cards .oe_product {
+        --o-wsale-card-padding: #{$o-wsale-products-layout-grid-gutter-width * .5};
+        --o-wsale-card-info-padding: #{map-get($spacers, 2)} #{map-get($spacers, 3)};
     }
 }
 
@@ -426,8 +368,8 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     // mt-* / my-* / mb-* utility classes, but here we need to use the shop max
     // grid gutter width to prevent the grid wrapper to overflow because of its
     // negative margins.
-    margin-top: $grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
+    margin-top: $grid-gutter-width / 2;
 }
 
 .oe_cart {
@@ -459,7 +401,7 @@ ul.wizard {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065);
 
     li {
-        border: 1px solid gray('200');
+        border: 1px solid map-get($grays, '200');
         border-right-width: 0;
         position: relative;
         float: left;
@@ -476,7 +418,7 @@ ul.wizard {
             display: block;
             border: 20px solid transparent;
             border-right: 0;
-            border-left: 10px solid gray('200');
+            border-left: 10px solid map-get($grays, '200');
         }
 
         .chevron:before {
@@ -528,26 +470,16 @@ ul.wizard {
     }
 }
 
-#o_shop_collapse_category li {
-    width: 100%;
-
-    a {
-        display: inline-block;
-        width: 80%;
-        padding-left: 3px;
-    }
-
-    i.fa {
-        cursor: pointer;
-    }
-}
-
 .mycart-popover {
     max-width: 500px;
     min-width: 250px;
 
     .cart_line {
         border-bottom: 1px #EEE solid;
+    }
+    .popover-body {
+        max-height: 70vh;
+        overflow-y: auto;
     }
 }
 
@@ -577,9 +509,7 @@ a.no-decoration {
 
         .carousel-inner {
             img {
-                height: 100%;
-                width: 100%;
-                object-fit: scale-down;
+                object-fit: contain;
             }
         }
     }
@@ -608,13 +538,13 @@ a.no-decoration {
             width: 2.5rem;
             height: 2.5rem;
             line-height: 2.5rem;
-            color: gray('900');
+            color: map-get($grays, '900');
             background: white;
             font-size: 1.15rem;
-            border: 1px solid gray('400');
+            border: 1px solid map-get($grays, '400');
             border-radius: 50%;
         }
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             > span {
                 width: 2rem;
                 height: 2rem;
@@ -632,7 +562,11 @@ a.no-decoration {
         }
     }
 
-    .carousel-item, .o_carousel_product_indicators, .carousel-indicators {
+    .carousel-item, .o_carousel_product_indicators {
+        transition: transform 0.2s ease-out;
+    }
+
+    .carousel-indicators {
         transition: transform 0.3s ease-in-out;
     }
 
@@ -647,23 +581,19 @@ a.no-decoration {
                     width: 64px;
                     height: 64px;
                     text-indent: unset;
-                    border: 1px solid gray('500');
-                    opacity: 0.5;
-                    position: relative;
-                    transition: opacity 0.3s;
+                    transition: none;
+                    border: 1px solid map-get($grays, '400');
 
                     .o_product_video_thumb {
                         @include o-position-absolute(0, 0, 0, 0);
-                        background-color: rgba(black, 0.5);
-                        color: #e0e0e0;
-                        text-align: center;
                         line-height: 64px;
                     }
+
                     &.active {
-                        border: 1px solid theme-color('primary');
-                        box-shadow: 0 0 2px 2px rgba(theme-color('primary'), 0.5);
+                        border-color: map-get($theme-colors, 'primary');
                     }
-                    &.active, &:hover {
+
+                    &:hover {
                         opacity: 1;
                     }
                 }
@@ -671,13 +601,12 @@ a.no-decoration {
         }
     }
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         &.o_carousel_product_left_indicators {
             flex-direction: column-reverse;
         }
 
         .carousel-indicators {
-            padding-top: 0px !important;
             justify-content: center;
 
             li {
@@ -685,10 +614,11 @@ a.no-decoration {
                 height: 8px;
                 min-width: 8px;
                 border-radius: 50%;
-                border: 2px solid gray('500');
+                border: 2px solid map-get($grays, '400');
 
                 &.active {
-                    background-color: gray('500');
+                    border-color: map-get($theme-colors, 'primary');
+                    background-color: map-get($theme-colors, 'primary');
                 }
                 > div {
                     display: none;
@@ -696,24 +626,51 @@ a.no-decoration {
             }
         }
     }
+
+    @include media-breakpoint-up(lg) {
+        .carousel-indicators li {
+            margin: 0;
+
+            &:not(:first-child) {
+                margin-left: 10px;
+            }
+        }
+
+        &.o_carousel_product_left_indicators {
+            .carousel-outer {
+                height: 500px;
+            }
+
+            .o_carousel_product_indicators {
+                max-height: 500px;
+            }
+
+            .carousel-indicators li {
+                margin: 0;
+
+                &:not(:first-child) {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
 }
 
 .ecom-zoomable {
-    &:not(.ecom-autozoom) {
-        img[data-zoom] {
+    &[data-ecom-zoom-click] {
+        img.product_detail_img {
             cursor: zoom-in;
         }
     }
-    &.ecom-autozoom {
-        img[data-zoom] {
-            cursor: crosshair;
-        }
+    img[data-zoom] {
+        cursor: zoom-in;
     }
     .o_editable img[data-zoom] {
         cursor: pointer;
     }
     .zoomodoo-flyout {
         box-shadow: 0 0 20px 2px rgba(black, 0.2);
+        z-index: 1050;
     }
 }
 
@@ -730,7 +687,7 @@ a.no-decoration {
 }
 
 .o_red_highlight {
-    background: theme-color('danger') !important;
+    background: map-get($theme-colors, 'danger') !important;
     box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
     transition: all 0.5s linear;
 }
@@ -739,12 +696,17 @@ a.no-decoration {
     box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important;
 }
 
+.o_mycart_zoom_animation {
+    transform: scale(1.4);
+    transition: all 0.3s ease-in-out;
+}
+
 /* product recently viewed snippet */
 
 .o_carousel_product_card {
     .o_carousel_product_card_img_top {
         object-fit: scale-down;
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             height: 12rem;
         }
         @include media-breakpoint-up(md) {
@@ -789,7 +751,7 @@ a.no-decoration {
 .o_product_page_reviews_title {
     .fa {
         font-size: 1.4rem;
-        color: theme-color('primary');
+        color: map-get($theme-colors, 'primary');
 
         &:before {
             content: "\f067";

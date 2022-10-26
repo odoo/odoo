@@ -10,23 +10,29 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    service_policy = fields.Selection([
-        ('ordered_timesheet', 'Prepaid'),
-        ('delivered_timesheet', 'Timesheets on tasks'),
-        ('delivered_manual', 'Milestones (manually set quantities on order)')
-    ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    def _selection_service_policy(self):
+        service_policies = super()._selection_service_policy()
+        service_policies.insert(1, ('delivered_timesheet', 'Based on Timesheets'))
+        return service_policies
+
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
-    ], ondelete={'timesheet': 'set default'})
+    ], ondelete={'timesheet': 'set manual'})
     # override domain
-    project_id = fields.Many2one(domain="[('allow_billable', '=', True), ('pricing_type', '=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
-    project_template_id = fields.Many2one(domain="[('allow_billable', '=', True), ('pricing_type', 'in', ('fixed_rate', 'employee_rate')), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
-    service_upsell_warning = fields.Boolean('Upsell Warning', help="The salesperson in charge will be assigned an activity informing him of an upselling opportunity once the selected threshold is reached.")
-    service_upsell_threshold = fields.Float('Threshold', help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.")
+    project_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('pricing_type', '=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
+    project_template_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
+    service_upsell_threshold = fields.Float('Threshold', default=1, help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.")
+    service_upsell_threshold_ratio = fields.Char(compute='_compute_service_upsell_threshold_ratio')
 
-    def _default_visible_expense_policy(self):
-        visibility = self.user_has_groups('project.group_project_user')
-        return visibility or super(ProductTemplate, self)._default_visible_expense_policy()
+    @api.depends('uom_id')
+    def _compute_service_upsell_threshold_ratio(self):
+        product_uom_hour = self.env.ref('uom.product_uom_hour')
+        for record in self:
+            if not record.uom_id or product_uom_hour.factor == record.uom_id.factor:
+                record.service_upsell_threshold_ratio = False
+                continue
+            if product_uom_hour.factor != record.uom_id.factor:
+                record.service_upsell_threshold_ratio = f"(1 {record.uom_id.name} = {product_uom_hour.factor / record.uom_id.factor:.2f} Hours)"
 
     def _compute_visible_expense_policy(self):
         visibility = self.user_has_groups('project.group_project_user')
@@ -35,54 +41,73 @@ class ProductTemplate(models.Model):
                 product_template.visible_expense_policy = visibility
         return super(ProductTemplate, self)._compute_visible_expense_policy()
 
-    @api.depends('invoice_policy', 'service_type')
-    def _compute_service_policy(self):
-        for product in self:
-            policy = None
-            if product.invoice_policy == 'delivery':
-                policy = 'delivered_manual' if product.service_type == 'manual' else 'delivered_timesheet'
-            elif product.invoice_policy == 'order' and (product.service_type == 'timesheet' or product.type == 'service'):
-                policy = 'ordered_timesheet'
-            product.service_policy = policy
+    @api.depends('service_tracking', 'service_policy', 'type')
+    def _compute_product_tooltip(self):
+        super()._compute_product_tooltip()
+        for record in self.filtered(lambda record: record.type == 'service'):
+            if record.service_policy == 'delivered_timesheet':
+                if record.service_tracking == 'no':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity) on projects or tasks "
+                        "you'll create later on."
+                    )
+                elif record.service_tracking == 'task_global_project':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity), and create a task in "
+                        "an existing project to track the time spent."
+                    )
+                elif record.service_tracking == 'task_in_project':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity), and create a project "
+                        "for the order with a task for each sales order line to track the time "
+                        "spent."
+                    )
+                elif record.service_tracking == 'project_only':
+                    record.product_tooltip = _(
+                        "Invoice based on timesheets (delivered quantity), and create an empty "
+                        "project for the order to track the time spent."
+                    )
 
-    def _inverse_service_policy(self):
-        for product in self:
-            policy = product.service_policy
-            if not policy and not product.invoice_policy =='delivery':
-                product.invoice_policy = 'order'
-                product.service_type = 'manual'
-            elif policy == 'ordered_timesheet':
-                product.invoice_policy = 'order'
-                product.service_type = 'timesheet'
-            else:
-                product.invoice_policy = 'delivery'
-                product.service_type = 'manual' if policy == 'delivered_manual' else 'timesheet'
+    def _get_service_to_general_map(self):
+        return {
+            **super()._get_service_to_general_map(),
+            'delivered_timesheet': ('delivery', 'timesheet'),
+            'ordered_prepaid': ('order', 'timesheet'),
+        }
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        res = super(ProductTemplate, self)._onchange_type()
-        if self.type == 'service' and not self.invoice_policy:
-            self.invoice_policy = 'order'
-            self.service_type = 'timesheet'
-        elif self.type == 'service' and self.invoice_policy == 'order':
-            self.service_policy = 'ordered_timesheet'
-        elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
-            self.invoice_policy = 'order'
-        return res
+    @api.model
+    def _get_onchange_service_policy_updates(self, service_tracking, service_policy, project_id, project_template_id):
+        vals = {}
+        if service_tracking != 'no' and service_policy == 'delivered_timesheet':
+            if project_id and not project_id.allow_timesheets:
+                vals['project_id'] = False
+            elif project_template_id and not project_template_id.allow_timesheets:
+                vals['project_template_id'] = False
+        return vals
+
+    @api.onchange('service_policy')
+    def _onchange_service_policy(self):
+        self._inverse_service_policy()
+        vals = self._get_onchange_service_policy_updates(self.service_tracking,
+                                                        self.service_policy,
+                                                        self.project_id,
+                                                        self.project_template_id)
+        if vals:
+            self.update(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product.product_tmpl_id in self:
-            raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
-                raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
         return super(ProductTemplate, self).write(vals)
 
 
@@ -94,17 +119,27 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.type == 'service' and self.service_policy == 'delivered_timesheet'
 
+    @api.onchange('service_policy')
+    def _onchange_service_policy(self):
+        self.product_tmpl_id._inverse_service_policy()
+        vals = self.product_tmpl_id._get_onchange_service_policy_updates(self.service_tracking,
+                                                                        self.service_policy,
+                                                                        self.project_id,
+                                                                        self.project_template_id)
+        if vals:
+            self.update(vals)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product in self:
-            raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:
-                raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
         return super(ProductProduct, self).write(vals)

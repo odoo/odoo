@@ -2,55 +2,50 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Chatter" owl="1">
-        <div class="o_Chatter">
-            <t t-if="chatter">
+        <t t-if="chatter">
+            <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-view" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="chatter.dropZoneView">
+                    <DropZone
+                        className="'o_Chatter_dropZone'"
+                        record="chatter.dropZoneView"
+                    />
+                </t>
                 <div class="o_Chatter_fixedPanel">
                     <ChatterTopbar
-                        class="o_Chatter_topbar"
-                        chatterLocalId="chatter.localId"
+                        t-if="chatter.topbar"
+                        className="'o_Chatter_topbar'"
+                        record="chatter.topbar"
                     />
-                    <t t-if="chatter.threadView and chatter.isComposerVisible">
+                    <t t-if="chatter.composerView">
                         <Composer
-                            class="o_Chatter_composer"
-                            t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
-                            composerLocalId="chatter.thread.composer.localId"
-                            hasFollowers="true"
-                            hasMentionSuggestionsBelowPosition="true"
-                            isCompact="false"
-                            isExpandable="true"
-                            textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
-                            t-on-o-message-posted="_onComposerMessagePosted"
-                            t-ref="composer"
+                            className="'o_Chatter_composer border-bottom'"
+                            classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
+                            record="chatter.composerView"
                         />
                     </t>
                 </div>
-                <div class="o_Chatter_scrollPanel" t-on-scroll="_onScrollPanelScroll" t-ref="scrollPanel">
-                    <t t-if="chatter.isAttachmentBoxVisible">
+                <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
+                    <t t-if="chatter.attachmentBoxView">
                         <AttachmentBox
-                            class="o_Chatter_attachmentBox"
-                            threadLocalId="chatter.thread.localId"
+                            className="'o_Chatter_attachmentBox'"
+                            record="chatter.attachmentBoxView"
                         />
                     </t>
-                    <t t-if="chatter.thread and chatter.hasActivities and chatter.thread.activities.length > 0">
+                    <t t-if="chatter.activityBoxView">
                         <ActivityBox
-                            class="o_Chatter_activityBox"
-                            chatterLocalId="chatter.localId"
+                            className="'o_Chatter_activityBox'"
+                            record="chatter.activityBoxView"
                         />
                     </t>
                     <t t-if="chatter.threadView">
                         <ThreadView
-                            class="o_Chatter_thread"
-                            getScrollableElement="getScrollableElement"
-                            hasComposer="false"
-                            hasScrollAdjust="chatter.hasMessageListScrollAdjust"
-                            order="'desc'"
-                            threadViewLocalId="chatter.threadView.localId"
-                            t-ref="thread"
+                            className="'o_Chatter_thread'"
+                            record="chatter.threadView"
                         />
                     </t>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>

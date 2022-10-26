@@ -116,3 +116,20 @@ class TestCRMLeadSmartCalendar(TestCrmCommon):
         mode, initial_date = lead_smart_calendar_2._get_opportunity_meeting_view_parameters()
         self.assertEqual(mode, 'week')
         self.assertEqual(initial_date, date(2020, 12, 12))
+
+    @users('user_sales_leads')
+    def test_meeting_creation_from_lead_form(self):
+        """ When going from a lead to the Calendar and adding a meeting, both salesman and customer
+         should be attendees of the event """
+        lead = self.env['crm.lead'].create({
+            'name': 'SuperLead',
+            'partner_id': self.contact_1.id,
+        })
+        calendar_action = lead.action_schedule_meeting()
+        event = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+        })
+        self.assertEqual(len(event.attendee_ids), 2)
+        self.assertIn(self.user_sales_leads.partner_id, event.attendee_ids.partner_id)
+        self.assertIn(self.contact_1, event.attendee_ids.partner_id)

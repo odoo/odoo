@@ -64,7 +64,7 @@ class AccountReconcileModelLine(models.Model):
             """
             domain = [('company_id', '=', company_id)]
             if type:
-                domain += [('internal_type', '=', type)]
+                domain += [('account_type', '=', type)]
             if group:
                 domain += [('internal_group', '=', group)]
             return self.env['account.account'].search(domain)

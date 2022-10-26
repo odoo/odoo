@@ -2,7 +2,6 @@ odoo.define('web.test.constraint', function (require) {
     'use strict';
 
     var tour = require("web_tour.tour");
-    var inc;
 
     tour.register('sql_constaint', {
         url: '/web?debug=1#action=test_new_api.action_categories',
@@ -16,11 +15,11 @@ odoo.define('web.test.constraint', function (require) {
         trigger: 'button.o_list_button_add',
     }, {
         content: "insert content",
-        trigger: 'input.o_required_modifier',
+        trigger: '.o_required_modifier input',
         run: 'text Test Category',
     }, { // try to insert a value that will raise the SQL constraint
         content: "insert invalid value",
-        trigger: 'input[name="color"]',
+        trigger: '.o_field_widget[name="color"] input',
         run: 'text -1',
     }, { // save
         content: "save category",
@@ -28,6 +27,11 @@ odoo.define('web.test.constraint', function (require) {
     }, { // check popup content
         content: "check notification box",
         trigger: '.o_dialog_warning:contains(The color code must be positive !)',
-        run: function () {}, // it's a check
-    }]);
+        run() {}
+    }, {
+        content: "close notification box",
+        trigger: '.modal-footer .btn-primary',
+    },
+    ...tour.stepUtils.discardForm(),
+    ]);
 });

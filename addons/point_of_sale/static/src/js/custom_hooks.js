@@ -1,8 +1,7 @@
 odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
-    const { Component } = owl;
-    const { onMounted, onPatched, onWillUnmount } = owl.hooks;
+    const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
 
     /**
      * Introduce error handlers in the component.
@@ -11,7 +10,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
      * the error when the order failed to sync.
      */
     function useErrorHandlers() {
-        const component = Component.current;
+        const component = useComponent();
 
         component._handlePushOrderError = async function (error) {
             // This error handler receives `error` equivalent to `error.message` of the rpc error.
@@ -38,6 +37,14 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                         error.data.debug ||
                         this.env._t('The server encountered an error while receiving your order.'),
                 });
+            } else if (error.code === 700) {
+                // Fiscal module errors
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('Fiscal data module error'),
+                    body:
+                        error.data.error.status ||
+                        this.env._t('The fiscal data module encountered an error while receiving your order.'),
+                });
             } else {
                 // ???
                 await this.showPopup('ErrorPopup', {
@@ -51,7 +58,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
     }
 
     function useAutoFocusToLast() {
-        const current = Component.current;
+        const current = useComponent();
         let target = null;
         function autofocus() {
             const prevTarget = target;
@@ -66,50 +73,9 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         onPatched(autofocus);
     }
 
-    /**
-     * Use this hook when you want to do something on previously selected and
-     * newly selected order when the order changes.
-     *
-     * Normally, a component is rendered then the current order is changed. When
-     * this happens, we want to rerender the component because the new information
-     * should be reflected in the screen. Additionally, we might want to remove listeners
-     * to the previous order and attach listeners to the new one. This hook is
-     * perfect for the described situation.
-     *
-     * Internally, this hook performs the following:
-     * 1. call newOrderCB on mounted
-     * 2. listen to order changes and perform the following sequence:
-     *    - call prevOrderCB(prevOrder)
-     *    - call newOrderCB(newOrder)
-     * 3. call prevOrderCB on willUnmount
-     *
-     * @param {Function} prevOrderCB apply this callback on the previous order
-     * @param {Function} newOrderCB apply this callback on the new order
-     */
-    function onChangeOrder(prevOrderCB, newOrderCB) {
-        const current = Component.current;
-        prevOrderCB = prevOrderCB ? prevOrderCB.bind(current) : () => {};
-        newOrderCB = newOrderCB ? newOrderCB.bind(current) : () => {};
-        onMounted(() => {
-            current.env.pos.on(
-                'change:selectedOrder',
-                async (pos, newOrder) => {
-                    await prevOrderCB(pos.previous('selectedOrder'));
-                    await newOrderCB(newOrder);
-                },
-                current
-            );
-            newOrderCB(current.env.pos.get_order());
-        });
-        onWillUnmount(() => {
-            current.env.pos.off('change:selectedOrder', null, current);
-            prevOrderCB(current.env.pos.get_order());
-        });
-    }
-
     function useBarcodeReader(callbackMap, exclusive = false) {
-        const current = Component.current;
-        const barcodeReader = current.env.pos.barcode_reader;
+        const current = useComponent();
+        const barcodeReader = current.env.barcode_reader;
         for (let [key, callback] of Object.entries(callbackMap)) {
             callbackMap[key] = callback.bind(current);
         }
@@ -137,5 +103,5 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         });
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, onChangeOrder, useBarcodeReader };
+    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader };
 });

@@ -70,27 +70,28 @@
                             By <field name="author" class="oe_inline" placeholder="Author Name"/>
                         </h3>
                         <div>
-                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary mr-1"/>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-primary mr-1"
+                            <field name="state" invisible="1"/>
+                            <field name="to_buy" invisible="1"/>
+                            <field name="has_iap" invisible="1"/>
+                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-primary me-1"
                                attrs="{'invisible': ['|', ('to_buy','=',False), ('state', 'not in', ('uninstalled', 'uninstallable'))]}" role="button">Upgrade</a>
-                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary mr-1"/>
-                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary mr-1"/>
-                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary mr-1"/>
-                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary mr-1"/>
-                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary mr-1"/>
+                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
+                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary me-1" groups="base.group_system"/>
+                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
+                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
+                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
                         </div>
                         <h6 class="text-muted mt-2" attrs="{'invisible': [('has_iap', '=', False)]}">Contains In-App Purchases</h6>
                     </div>
-                    <div class="oe_clear"/>
+                    <div class="clearfix"/>
                     <notebook groups="base.group_no_one">
                         <page string="Information" name="information">
                             <group>
                                 <group>
-                                    <field name="has_iap" invisible="1"/>
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
-                                    <field name="category_id" widget="selection"/>
+                                    <field name="category_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="summary"/>
-                                    <field name="to_buy" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="name"/>
@@ -143,16 +144,19 @@
             <field name="name">ir.module.module.tree</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state=='to upgrade' or state=='to install'" decoration-danger="state=='uninstalled'" decoration-muted="state=='uninstallable'" create="false" string="Apps">
+                <tree create="false" string="Apps" decoration-info="state == 'uninstalled'" decoration-muted="state == 'uninstallable'">
                     <header>
-                        <button name="button_immediate_install" type="object" string="Install"/>
+                        <button name="button_immediate_install" type="object" string="Install" groups="base.group_system"/>
                     </header>
                     <field name="shortdesc"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>
                     <field name="website"/>
                     <field name="installed_version"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge"
+                        decoration-muted="state == 'uninstallable'"
+                        decoration-info="state  == 'uninstalled'"
+                        decoration-success="state == 'installed'"/>
                     <field name="category_id" invisible="1"/>
                 </tree>
             </field>
@@ -174,14 +178,14 @@
                       <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <div class="o_dropdown_kanban dropdown" tabindex="-1">
-                            <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
+                            <a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-offset="0,-2" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
-                            <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <div class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="dLabel">
                                 <a type="edit" class="dropdown-item">Module Info</a>
-                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
-                                <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item">Upgrade</a>
-                                <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item">Uninstall</a>
+                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
+                                <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
+                                <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Uninstall</a>
                             </div>
                         </div>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon"/>
@@ -193,14 +197,14 @@
                             <field groups="!base.group_no_one" name="summary"/>
                             <code groups="base.group_no_one"><field name="name"/></code>
                           </p>
-                          <div class="oe_module_action">
-                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-right" role="button">Learn More</a>
-                            <a type="edit" class="btn btn-secondary btn-sm float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
-                            <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
-                            <div t-if="installed" class="text-muted float-left">Installed</div>
-                            <button states="to remove" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel">Cancel Uninstall</button>
-                            <button states="to install" type="object" class="btn btn-sm btn-primary" name="button_install_cancel">Cancel Install</button>
+                          <div class="oe_module_action d-flex flex-wrap justify-content-between">
+                            <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value" groups="base.group_system">Activate</button>
+                            <div t-if="installed" class="d-flex align-items-center text-muted float-start">Installed</div>
+                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-end o-hidden-ios" role="button">Learn More</a>
+                            <a type="edit" class="btn btn-secondary btn-sm float-end" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button" groups="base.group_system">Upgrade</a>
+                            <button states="to remove" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel" groups="base.group_system">Cancel Uninstall</button>
+                            <button states="to install" type="object" class="btn btn-sm btn-primary" name="button_install_cancel" groups="base.group_system">Cancel Install</button>
                           </div>
                         </div>
                       </div>

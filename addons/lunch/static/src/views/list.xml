@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="lunch.ListRenderer" owl="1">
+        <div class="o_lunch_content">
+            <LunchDashboard openOrderLine.bind="openOrderLine"/>
+
+            <div class="overflow-auto">
+                <t t-call="web.ListRenderer"/>
+            </div>
+        </div>
+    </t>
+</templates>

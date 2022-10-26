@@ -7,8 +7,10 @@ from odoo import api, fields, models, _
 class SMSTemplate(models.Model):
     "Templates for sending SMS"
     _name = "sms.template"
-    _inherit = ['mail.render.mixin']
+    _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'SMS Templates'
+
+    _unrestricted_rendering = True
 
     @api.model
     def default_get(self, fields):
@@ -28,6 +30,16 @@ class SMSTemplate(models.Model):
     sidebar_action_id = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                         "of the related document model")
+
+    # Overrides of mail.render.mixin
+    @api.depends('model')
+    def _compute_render_model(self):
+        for template in self:
+            template.render_model = template.model
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

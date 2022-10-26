@@ -20,7 +20,7 @@ class MailMessageSubtype(models.Model):
              'change in a process (Stage change). Message subtypes allow to '
              'precisely tune the notifications the user want to receive on its wall.')
     description = fields.Text(
-        'Description', translate=True,
+        'Description', translate=True, prefetch=True,
         help='Description that will be added in the message posted for this '
              'subtype. If void, the name will be added instead.')
     internal = fields.Boolean(
@@ -40,6 +40,8 @@ class MailMessageSubtype(models.Model):
     default = fields.Boolean('Default', default=True, help="Activated by default when subscribing.")
     sequence = fields.Integer('Sequence', default=1, help="Used to order subtypes.")
     hidden = fields.Boolean('Hidden', help="Hide the subtype in the follower options")
+    track_recipients = fields.Boolean('Track Recipients',
+                                      help="Whether to display all the recipients or only the important ones.")
 
     @api.model_create_multi
     def create(self, vals_list):

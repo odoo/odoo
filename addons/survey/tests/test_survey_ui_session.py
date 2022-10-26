@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests.common import tagged, HttpCase
@@ -9,6 +10,7 @@ from odoo.tests.common import tagged, HttpCase
 
 @tagged('post_install', '-at_install')
 class TestUiSession(HttpCase):
+
     def test_admin_survey_session(self):
         """ This method tests a full 'survey session' flow.
         Break down of different steps:
@@ -140,8 +142,18 @@ class TestUiSession(HttpCase):
         # =======================
         # PART 1 : CREATE SESSION
         # =======================
+        def action_open_session_manager_mock(self):
+            """ Mock original method to ensure we are not using another tab
+            as it creates issues with automated tours. """
+            return {
+                'type': 'ir.actions.act_url',
+                'name': "Open Session Manager",
+                'target': 'self',
+                'url': '/survey/session/manage/%s' % self.access_token
+            }
 
-        self.start_tour('/web', 'test_survey_session_create_tour', login='admin')
+        with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
+            self.start_tour('/web', 'test_survey_session_create_tour', login='admin')
 
         # tricky part: we only take into account answers created after the session_start_time
         # the create_date of the answers we just saved is set to the beginning of the test.
@@ -164,7 +176,8 @@ class TestUiSession(HttpCase):
         # PART 2 : OPEN SESSION AND CHECK ATTENDEES
         # =========================================
 
-        self.start_tour('/web', 'test_survey_session_start_tour', login='admin')
+        with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
+            self.start_tour('/web', 'test_survey_session_start_tour', login='admin')
 
         self.assertEqual('in_progress', survey_session.session_state)
         self.assertTrue(bool(survey_session.session_start_time))
@@ -203,7 +216,8 @@ class TestUiSession(HttpCase):
         attendee_3.save_lines(timed_scored_choice_question,
             [timed_scored_choice_answer_2.id])
 
-        self.start_tour('/web', 'test_survey_session_manage_tour', login='admin')
+        with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
+            self.start_tour('/web', 'test_survey_session_manage_tour', login='admin')
 
         self.assertFalse(bool(survey_session.session_state))
         self.assertTrue(all(answer.state == 'done' for answer in all_attendees))

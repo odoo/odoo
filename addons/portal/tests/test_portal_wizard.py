@@ -45,12 +45,8 @@ class TestPortalWizard(MailCommon):
         with self.assertRaises(AccessError, msg='Standard users should not be able to open the portal wizard'):
             self.env['portal.wizard'].with_context(active_ids=[self.partner.id]).with_user(self.user_employee).create({})
 
-        portal_wizard.invalidate_cache()
-
         with self.assertRaises(AccessError, msg='Standard users should not be able to open the portal wizard'):
             portal_wizard.with_user(self.user_employee).welcome_message
-
-        portal_wizard.user_ids.invalidate_cache()
 
         with self.assertRaises(AccessError, msg='Standard users should not be able to open the portal wizard'):
             portal_wizard.user_ids.with_user(self.user_employee).email
@@ -145,16 +141,19 @@ class TestPortalWizard(MailCommon):
         portal_user = portal_wizard.user_ids
 
         self.internal_user.login = 'test_error@example.com'
-        portal_user.email = 'test_error@example.com'
 
+        portal_user.email = 'test_error@example.com'
         with self.assertRaises(UserError, msg='Must detect the already used email.'):
-            portal_user.action_revoke_access()
+            portal_user._assert_user_email_uniqueness()
+        self.assertEqual(portal_user.email_state, 'exist', msg='Must detect the already used email.')
 
         portal_user.email = 'wrong email format'
         with self.assertRaises(UserError, msg='Must detect wrong email format.'):
-            portal_user.action_revoke_access()
+            portal_user._assert_user_email_uniqueness()
+        self.assertEqual(portal_user.email_state, 'ko', msg='Must detect wrong email format.')
 
         portal_wizard = self.env['portal.wizard'].with_context(active_ids=[self.internal_user.partner_id.id]).create({})
+        portal_user = portal_wizard.user_ids
         with self.assertRaises(UserError, msg='Must not be able to change internal user group.'):
             portal_user.action_revoke_access()
 

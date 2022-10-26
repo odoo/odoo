@@ -2,7 +2,7 @@
 This code is what let us use ES6-style modules in odoo.
 Classic Odoo modules are composed of a top-level :samp:`odoo.define({name},{body_function})` call.
 This processor will take files starting with an `@odoo-module` annotation (in a comment) and convert them to classic modules.
-If any file has the /** odoo-module */ on top of it, it will get processed by this class.
+If any file has the ``/** odoo-module */`` on top of it, it will get processed by this class.
 It performs several operations to get from ES6 syntax to the usual odoo one with minimal changes.
 This is done on the fly, this not a pre-processing tool.
 
@@ -12,8 +12,10 @@ the original source need to be supported by the browsers.
 """
 
 import re
+import logging
 from functools import partial
 
+_logger = logging.getLogger(__name__)
 
 def transpile_javascript(url, content):
     """
@@ -30,6 +32,8 @@ def transpile_javascript(url, content):
     steps = [
         convert_legacy_default_import,
         convert_basic_import,
+        convert_default_and_named_import,
+        convert_default_and_star_import,
         convert_default_import,
         convert_star_import,
         convert_unnamed_relative_import,
@@ -37,7 +41,8 @@ def transpile_javascript(url, content):
         convert_star_from_export,
         partial(convert_relative_require, url),
         remove_index,
-        convert_export_function_or_class,
+        convert_export_function,
+        convert_export_class,
         convert_variable_export,
         convert_object_export,
         convert_default_export,
@@ -53,18 +58,18 @@ def transpile_javascript(url, content):
 URL_RE = re.compile(r"""
     /?(?P<module>\S+)    # /module name
     /([\S/]*/)?static/   # ... /static/
-    (?P<type>src|tests)  # src or test file
+    (?P<type>src|tests|lib)  # src, test, or lib file
     (?P<url>/[\S/]*)     # URL (/...)
     """, re.VERBOSE)
 
 
 def url_to_module_path(url):
     """
-    Odoo modules each have a name. (odoo.define("<the name>", function (require) {...});
+    Odoo modules each have a name. (odoo.define("<the name>", async function (require) {...});
     It is used in to be required later. (const { something } = require("<the name>").
     The transpiler transforms the url of the file in the project to this name.
     It takes the module name and add a @ on the start of it, and map it to be the source of the static/src (or
-    static/tests) folder in that module.
+    static/tests, or static/lib) folder in that module.
 
     in: web/static/src/one/two/three.js
     out: @web/one/two/three.js
@@ -82,10 +87,12 @@ def url_to_module_path(url):
             url = url[:-3]
         if match["type"] == "src":
             return "@%s%s" % (match['module'], url)
+        elif match["type"] == "lib":
+            return "@%s/../lib%s" % (match['module'], url)
         else:
             return "@%s/../tests%s" % (match['module'], url)
     else:
-        raise ValueError("The js file %r must be in the folder '/static/src' or '/static/test'" % url)
+        raise ValueError("The js file %r must be in the folder '/static/src' or '/static/lib' or '/static/test'" % url)
 
 
 def wrap_with_odoo_define(module_path, content):
@@ -93,7 +100,7 @@ def wrap_with_odoo_define(module_path, content):
     Wraps the current content (source code) with the odoo.define call.
     Should logically be called once all other operations have been performed.
     """
-    return f"""odoo.define({module_path!r}, function (require) {{
+    return f"""odoo.define({module_path!r}, async function (require) {{
 'use strict';
 let __exports = {{}};
 {content}
@@ -102,30 +109,49 @@ return __exports;
 """
 
 
-EXPORT_FCT_OR_CLASS_RE = re.compile(r"""
+EXPORT_FCT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
     export\s+                               # export
-    (?P<type>(async\s+)?function|class)\s+  # async function or function or class
-    (?P<identifier>\w+)                     # name of the class or the function
+    (?P<type>(async\s+)?function)\s+        # async function or function
+    (?P<identifier>\w+)                     # name the function
     """, re.MULTILINE | re.VERBOSE)
 
 
-def convert_export_function_or_class(content):
+def convert_export_function(content):
     """
-    Transpile functions and classes that are being exported.
+    Transpile functions that are being exported.
 
     .. code-block:: javascript
 
         // before
         export function name
         // after
-        const name = __exports.name = function name
+       __exports.name = name; function name
 
         // before
         export async function name
         // after
-        const name = __exports.name = async function name
+        __exports.name = name; async function name
+
+    """
+    repl = r"\g<space>__exports.\g<identifier> = \g<identifier>; \g<type> \g<identifier>"
+    return EXPORT_FCT_RE.sub(repl, content)
+
+EXPORT_CLASS_RE = re.compile(r"""
+    ^
+    (?P<space>\s*)                          # space and empty line
+    export\s+                               # export
+    (?P<type>class)\s+                      # class
+    (?P<identifier>\w+)                     # name of the class
+    """, re.MULTILINE | re.VERBOSE)
+
+
+def convert_export_class(content):
+    """
+    Transpile classes that are being exported.
+
+    .. code-block:: javascript
 
         // before
         export class name
@@ -134,33 +160,52 @@ def convert_export_function_or_class(content):
 
     """
     repl = r"\g<space>const \g<identifier> = __exports.\g<identifier> = \g<type> \g<identifier>"
-    return EXPORT_FCT_OR_CLASS_RE.sub(repl, content)
+    return EXPORT_CLASS_RE.sub(repl, content)
 
 
-EXPORT_FCT_OR_CLASS_DEFAULT_RE = re.compile(r"""
+EXPORT_FCT_DEFAULT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
     export\s+default\s+                     # export default
-    (?P<type>(async\s+)?function|class)\s+  # async function or function or class
-    (?P<identifier>\w+)                     # name of the class or the function
+    (?P<type>(async\s+)?function)\s+        # async function or function
+    (?P<identifier>\w+)                     # name of the function
     """, re.MULTILINE | re.VERBOSE)
 
 
-def convert_export_function_or_class_default(content):
+def convert_export_function_default(content):
     """
-    Transpile functions and classes that are being exported as default value.
+    Transpile functions that are being exported as default value.
 
     .. code-block:: javascript
 
         // before
         export default function name
         // after
-        const name = __exports[Symbol.for("default")] = function name
+        __exports[Symbol.for("default")] = name; function name
 
         // before
         export default async function name
         // after
-        const name = __exports[Symbol.for("default")] = async function name
+        __exports[Symbol.for("default")] = name; async function name
+
+    """
+    repl = r"""\g<space>__exports[Symbol.for("default")] = \g<identifier>; \g<type> \g<identifier>"""
+    return EXPORT_FCT_DEFAULT_RE.sub(repl, content)
+
+EXPORT_CLASS_DEFAULT_RE = re.compile(r"""
+    ^
+    (?P<space>\s*)                          # space and empty line
+    export\s+default\s+                     # export default
+    (?P<type>class)\s+                      # class
+    (?P<identifier>\w+)                     # name of the class or the function
+    """, re.MULTILINE | re.VERBOSE)
+
+
+def convert_export_class_default(content):
+    """
+    Transpile classes that are being exported as default value.
+
+    .. code-block:: javascript
 
         // before
         export default class name
@@ -169,8 +214,7 @@ def convert_export_function_or_class_default(content):
 
     """
     repl = r"""\g<space>const \g<identifier> = __exports[Symbol.for("default")] = \g<type> \g<identifier>"""
-    return EXPORT_FCT_OR_CLASS_DEFAULT_RE.sub(repl, content)
-
+    return EXPORT_CLASS_DEFAULT_RE.sub(repl, content)
 
 EXPORT_VAR_RE = re.compile(r"""
     ^
@@ -227,7 +271,7 @@ EXPORT_OBJECT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     export\s*                           # export
-    (?P<object>{(\s*\w+\s*,?\s*)*}\s*)  # { a, b, c as x, ... }
+    (?P<object>{[\w\s,]+})              # { a, b, c as x, ... }
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -253,7 +297,7 @@ EXPORT_FROM_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     export\s*                           # export
-    (?P<object>{(\s*\w+\s*,?\s*)*})\s*  # { a, b, c as x, ... }
+    (?P<object>{[\w\s,]+})\s*           # { a, b, c as x, ... }
     from\s*                             # from
     (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path.js")
     """, re.MULTILINE | re.VERBOSE)
@@ -271,7 +315,7 @@ def convert_from_export(content):
         { a, b, c } = {require("some/path.js"); Object.assign(__exports, { a, b, x: c });}
     """
     def repl(matchobj):
-        object_clean = "{" + ", ".join([remove_as(val) for val in matchobj["object"][1:-1].split(",")]) + "}"
+        object_clean = "{" + ",".join([remove_as(val) for val in matchobj["object"][1:-1].split(",")]) + "}"
         object_process = "{" + ", ".join([convert_as(val) for val in matchobj["object"][1:-1].split(",")]) + "}"
         return "%(space)s{const %(object_clean)s = require(%(path)s);Object.assign(__exports, %(object_process)s)}" % {
             'object_clean': object_clean,
@@ -334,7 +378,8 @@ def convert_default_export(content):
         // after
         __exports[Symbol.for("default")] =
     """
-    new_content = convert_export_function_or_class_default(content)
+    new_content = convert_export_function_default(content)
+    new_content = convert_export_class_default(new_content)
     new_content = convert_variable_export_default(new_content)
     repl = r"""\g<space>__exports[Symbol.for("default")] ="""
     return EXPORT_DEFAULT_RE.sub(repl, new_content)
@@ -419,6 +464,44 @@ def convert_default_import(content):
     return IMPORT_DEFAULT.sub(repl, content)
 
 
+IS_PATH_LEGACY_RE = re.compile(r"""(?P<quote>["'`])([^@\."'`][^"'`]*)(?P=quote)""")
+
+IMPORT_DEFAULT_AND_NAMED_RE = re.compile(r"""
+    ^
+    (?P<space>\s*)                                  # space and empty line
+    import\s+                                       # import
+    (?P<default_export>\w+)\s*,\s*                  # default variable name,
+    (?P<named_exports>{(\s*\w+\s*,?\s*)+})\s*       # { a, b, c as x, ... }
+    from\s*                                         # from
+    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
+    """, re.MULTILINE | re.VERBOSE)
+
+
+def convert_default_and_named_import(content):
+    """
+    Transpile default and named import on one line.
+
+    .. code-block:: javascript
+
+        // before
+        import something, { a } from "some/path";
+        import somethingElse, { b } from "legacy.module";
+        // after
+        const { [Symbol.for("default")]: something, a } = require("some/path");
+        const somethingElse = require("legacy.module");
+        const { b } = somethingElse;
+    """
+    def repl(matchobj):
+        is_legacy = IS_PATH_LEGACY_RE.match(matchobj['path'])
+        new_object = matchobj["named_exports"].replace(" as ", ": ")
+        if is_legacy:
+            return f"""{matchobj['space']}const {matchobj['default_export']} = require({matchobj['path']});
+{matchobj['space']}const {new_object} = {matchobj['default_export']}"""
+        new_object = f"""{{ [Symbol.for("default")]: {matchobj['default_export']},{new_object[1:]}"""
+        return f"{matchobj['space']}const {new_object} = require({matchobj['path']})"
+    return IMPORT_DEFAULT_AND_NAMED_RE.sub(repl, content)
+
+
 RELATIVE_REQUIRE_RE = re.compile(r"""
     require\((?P<quote>["'`])([^@"'`]+)(?P=quote)\)  # require("some/path")
     """, re.VERBOSE)
@@ -475,6 +558,34 @@ def convert_star_import(content):
     return IMPORT_STAR.sub(repl, content)
 
 
+IMPORT_DEFAULT_AND_STAR = re.compile(r"""
+    ^(?P<space>\s*)                 # indentation
+    import\s+                       # import
+    (?P<default_export>\w+)\s*,\s*  # default export name,
+    \*\s+as\s+                      # * as
+    (?P<named_exports_alias>\w+)    # alias
+    \s*from\s*                      # from
+    (?P<path>[^;\n]+)               # path
+""", re.MULTILINE | re.VERBOSE)
+
+
+def convert_default_and_star_import(content):
+    """
+    Transpile import star.
+
+    .. code-block:: javascript
+
+        // before
+        import something, * as name from "some/path";
+        // after
+        const name = require("some/path");
+        const something = name[Symbol.for("default")];
+    """
+    repl = r"""\g<space>const \g<named_exports_alias> = require(\g<path>);
+\g<space>const \g<default_export> = \g<named_exports_alias>[Symbol.for("default")]"""
+    return IMPORT_DEFAULT_AND_STAR.sub(repl, content)
+
+
 IMPORT_UNNAMED_RELATIVE_RE = re.compile(r"""
     ^(?P<space>\s*)     # indentation
     import\s+           # import
@@ -519,9 +630,10 @@ def remove_index(content):
 
 
 def relative_path_to_module_path(url, path_rel):
-    """
-    Convert the relative path into a module path, which is more generic and fancy.
+    """Convert the relative path into a module path, which is more generic and
+    fancy.
 
+    :param str url:
     :param path_rel: a relative path to the current url.
     :return: module path (@module/...)
     """
@@ -565,7 +677,7 @@ def get_aliased_odoo_define_content(module_path, content):
     we have a problem when we will have converted to module to ES6: its new name will be more like
     "web/chrome/abstract_action". So the require would fail !
     So we add a second small modules, an alias, as such:
-    > odoo.define("web/chrome/abstract_action", function(require) {
+    > odoo.define("web/chrome/abstract_action", async function(require) {
     >  return require('web.AbstractAction')[Symbol.for("default")];
     > });
 
@@ -595,11 +707,11 @@ def get_aliased_odoo_define_content(module_path, content):
         alias = matchobj['alias']
         if alias:
             if matchobj['default']:
-                return """\nodoo.define(`%s`, function(require) {
+                return """\nodoo.define(`%s`, async function(require) {
                         return require('%s');
                         });\n""" % (alias, module_path)
             else:
-                return """\nodoo.define(`%s`, function(require) {
+                return """\nodoo.define(`%s`, async function(require) {
                         return require('%s')[Symbol.for("default")];
                         });\n""" % (alias, module_path)
 

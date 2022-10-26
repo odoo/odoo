@@ -1,92 +1,94 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
-from odoo.tools import email_re
+from odoo import api, fields, models
 
 
 class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
-    campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign')
-    mass_mailing_name = fields.Char(string='Mass Mailing Name')
+    campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign', ondelete='set null')
+    mass_mailing_name = fields.Char(string='Mass Mailing Name', help='If set, a mass mailing will be created so that you can track its results in the Email Marketing app.')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
+    model_is_thread = fields.Boolean(compute='_compute_model_is_thread')
+
+    @api.depends('model')
+    def _compute_model_is_thread(self):
+        for composer in self:
+            model = self.env['ir.model']._get(composer.model)
+            composer.model_is_thread = model.is_mail_thread
 
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
         mailing.trace values in the o2m of mail_mail, when doing pure
         email mass mailing. """
+        now = fields.Datetime.now()
         self.ensure_one()
         res = super(MailComposeMessage, self).get_mail_values(res_ids)
         # use only for allowed models in mass mailing
         if self.composition_mode == 'mass_mail' and \
                 (self.mass_mailing_name or self.mass_mailing_id) and \
-                self.env['ir.model'].sudo().search([('model', '=', self.model), ('is_mail_thread', '=', True)], limit=1):
+                self.model_is_thread:
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
-                reply_to_mode = 'email' if self.no_auto_thread else 'thread'
-                reply_to = self.reply_to if self.no_auto_thread else False
                 mass_mailing = self.env['mailing.mailing'].create({
-                        'campaign_id': self.campaign_id.id,
-                        'name': self.mass_mailing_name,
-                        'subject': self.subject,
-                        'state': 'done',
-                        'reply_to_mode': reply_to_mode,
-                        'reply_to': reply_to,
-                        'sent_date': fields.Datetime.now(),
-                        'body_html': self.body,
-                        'mailing_model_id': self.env['ir.model']._get(self.model).id,
-                        'mailing_domain': self.active_domain,
-                        'attachment_ids': [(6, 0, self.attachment_ids.ids)],
+                    'campaign_id': self.campaign_id.id,
+                    'name': self.mass_mailing_name,
+                    'subject': self.subject,
+                    'state': 'done',
+                    'reply_to_mode': self.reply_to_mode,
+                    'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
+                    'sent_date': now,
+                    'body_html': self.body,
+                    'mailing_model_id': self.env['ir.model']._get(self.model).id,
+                    'mailing_domain': self.active_domain,
+                    'attachment_ids': [(6, 0, self.attachment_ids.ids)],
                 })
+                self.mass_mailing_id = mass_mailing.id
 
-            # Preprocess res.partners to batch-fetch from db
-            # if recipient_ids is present, it means they are partners
-            # (the only object to fill get_default_recipient this way)
-            recipient_partners_ids = []
-            read_partners = {}
+            recipients_info = self._process_recipient_values(res)
             for res_id in res_ids:
                 mail_values = res[res_id]
-                if mail_values.get('recipient_ids'):
-                    # recipient_ids is a list of x2m command tuples at this point
-                    recipient_partners_ids.append(mail_values.get('recipient_ids')[0][1])
-            read_partners = self.env['res.partner'].browse(recipient_partners_ids)
+                if mail_values.get('body_html'):
+                    body = self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout',
+                                {'body': mail_values['body_html']},
+                                minimal_qcontext=True, raise_if_not_found=False)
+                    if body:
+                        mail_values['body_html'] = body
 
-            partners_email = {p.id: p.email for p in read_partners}
-
-            opt_out_list = self._context.get('mass_mailing_opt_out_list')
-            seen_list = self._context.get('mass_mailing_seen_list')
-            mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
-            for res_id in res_ids:
-                mail_values = res[res_id]
-                if mail_values.get('email_to'):
-                    mail_to = tools.email_normalize(mail_values['email_to'])
-                else:
-                    partner_id = (mail_values.get('recipient_ids') or [(False, '')])[0][1]
-                    mail_to = tools.email_normalize(partners_email.get(partner_id))
-                if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
-                        or (not mail_to or not email_re.findall(mail_to)):
-                    # prevent sending to blocked addresses that were included by mistake
-                    mail_values['state'] = 'cancel'
-                elif seen_list is not None:
-                    seen_list.add(mail_to)
                 trace_vals = {
                     'model': self.model,
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id,
-                    'email': mail_to,
+                    # if mail_to is void, keep falsy values to allow searching / debugging traces
+                    'email': recipients_info[res_id]['mail_to'][0] if recipients_info[res_id]['mail_to'] else '',
                 }
-                if mail_values.get('body_html') and mass_mail_layout:
-                    mail_values['body_html'] = mass_mail_layout._render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
-                # propagate ignored state to trace when still-born
+                # propagate failed states to trace when still-born
                 if mail_values.get('state') == 'cancel':
-                    trace_vals['ignored'] = fields.Datetime.now()
+                    trace_vals['trace_status'] = 'cancel'
+                elif mail_values.get('state') == 'exception':
+                    trace_vals['trace_status'] = 'error'
+                if mail_values.get('failure_type'):
+                    trace_vals['failure_type'] = mail_values['failure_type']
+
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
                     'mailing_trace_ids': [(0, 0, trace_vals)],
                     # email-mode: keep original message for routing
-                    'notification': mass_mailing.reply_to_mode == 'thread',
+                    'is_notification': mass_mailing.reply_to_mode == 'update',
                     'auto_delete': not mass_mailing.keep_archives,
                 })
         return res
+
+    def _get_done_emails(self, mail_values_dict):
+        seen_list = super(MailComposeMessage, self)._get_done_emails(mail_values_dict)
+        if self.mass_mailing_id:
+            seen_list += self.mass_mailing_id._get_seen_list()
+        return seen_list
+
+    def _get_optout_emails(self, mail_values_dict):
+        opt_out_list = super(MailComposeMessage, self)._get_optout_emails(mail_values_dict)
+        if self.mass_mailing_id:
+            opt_out_list += self.mass_mailing_id._get_opt_out_list()
+        return opt_out_list

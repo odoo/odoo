@@ -12,16 +12,15 @@ class SMSComposer(models.TransientModel):
     # mass mode with mass sms
     mass_sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
     mailing_id = fields.Many2one('mailing.mailing', string='Mailing')
-    utm_campaign_id = fields.Many2one('utm.campaign', string='Campaign')
+    utm_campaign_id = fields.Many2one('utm.campaign', string='Campaign', ondelete='set null')
 
     # ------------------------------------------------------------
     # Mass mode specific
     # ------------------------------------------------------------
 
     def _get_unsubscribe_url(self, res_id, trace_code, number):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return werkzeug.urls.url_join(
-            base_url,
+            self.get_base_url(),
             '/sms/%s/%s' % (self.mailing_id.id, trace_code)
         )
 
@@ -36,22 +35,19 @@ class SMSComposer(models.TransientModel):
             'sms_code': trace_code,
         }
         if sms_values['state'] == 'error':
-            if sms_values['error_code'] == 'sms_number_format':
-                trace_values['sent'] = fields.Datetime.now()
-                trace_values['bounced'] = fields.Datetime.now()
-            else:
-                trace_values['exception'] = fields.Datetime.now()
+            trace_values['failure_type'] = sms_values['failure_type']
+            trace_values['trace_status'] = 'error'
         elif sms_values['state'] == 'canceled':
-            trace_values['ignored'] = fields.Datetime.now()
+            trace_values['failure_type'] = sms_values['failure_type']
+            trace_values['trace_status'] = 'cancel'
         else:
             if self.mass_sms_allow_unsubscribe:
                 sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', _('STOP SMS : %s', self._get_unsubscribe_url(record.id, trace_code, sms_values['number'])))
         return trace_values
 
-    def _get_blacklist_record_ids(self, records, recipients_info):
-        """ Consider opt-outed contact as being blacklisted for that specific
-        mailing. """
-        res = super(SMSComposer, self)._get_blacklist_record_ids(records, recipients_info)
+    def _get_optout_record_ids(self, records, recipients_info):
+        """ Fetch opt-out records based on mailing. """
+        res = super(SMSComposer, self)._get_optout_record_ids(records, recipients_info)
         if self.mailing_id:
             optout_res_ids = self.mailing_id._get_opt_out_list_sms()
             res += optout_res_ids

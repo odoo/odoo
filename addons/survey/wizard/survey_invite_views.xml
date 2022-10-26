@@ -5,7 +5,7 @@
             <field name="name">survey.invite.view.form</field>
             <field name="model">survey.invite</field>
             <field name="arch" type="xml">
-                <form string="Compose Email">
+                <form string="Compose Email" class="o_mail_composer_form">
                     <group col="1">
                         <group col="2">
                             <field name="survey_access_mode" invisible="1"/>
@@ -13,6 +13,7 @@
                             <field name="survey_users_can_signup" invisible="1"/>
                             <field name="survey_id" readonly="context.get('default_survey_id')"/>
                             <field name="existing_mode" widget="radio" invisible="1" />
+                            <field name="render_model" invisible="1"/>
                             <field name="survey_start_url" label="Public share URL" readonly="1" widget="CopyClipboardChar"
                                  attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"
                                  class="mb16"/>
@@ -24,7 +25,7 @@
                                 attrs="{
                                     'invisible': [('survey_users_login_required', '=', True)],
                                 }"
-                                placeholder="Add a list of email of recipients (will not be converted into contacts). Separated by commas, semicolons or newline..."/>
+                                placeholder="Add a list of email recipients (separated by commas, semicolons or line breaks). They will not be converted into contacts."/>
                         </group>
                         <div col="2" class="alert alert-warning" role="alert"
                             attrs="{'invisible': ['|', ('survey_access_mode', '=', 'public'), ('existing_text', '=', False)]}">
@@ -43,7 +44,8 @@
                         <group col="2">
                             <field name="subject" placeholder="Subject..."/>
                         </group>
-                        <field name="body" options="{'style-inline': true}"/>
+                        <field name="can_edit_body" invisible="1"/>
+                        <field name="body" class="oe-bordered-editor" options="{'style-inline': true, 'height': 380}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
                         <group>
                             <group>
                                 <field name="attachment_ids" widget="many2many_binary"/>
@@ -55,8 +57,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button string="Send" name="action_invite" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Send" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

@@ -34,6 +34,11 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_stock_lot_print_gs1" model="res.groups">
+        <field name="name">Print GS1 Barcodes for Lot &amp; Serial Numbers</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="group_lot_on_delivery_slip" model="res.groups">
         <field name="name">Display Serial &amp; Lot Number in Delivery Slips</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -68,6 +73,16 @@
         <field name="name">Manage Storage Categories</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+
+    <record id="group_reception_report" model="res.groups">
+        <field name="name">Use Reception Report</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_stock_picking_wave" model="res.groups">
+        <field name="name">Use wave pickings</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 </data>
 <data noupdate="1">
     <record id="base.default_user" model="res.users">
@@ -95,7 +110,7 @@
 
     <record model="ir.rule" id="stock_production_lot_rule">
         <field name="name">Stock Production Lot multi-company</field>
-        <field name="model_id" search="[('model','=','stock.production.lot')]" model="ir.model"/>
+        <field name="model_id" search="[('model','=','stock.lot')]" model="ir.model"/>
         <field name="domain_force">[('company_id','in', company_ids)]</field>
     </record>
 
@@ -142,8 +157,8 @@
     </record>
 
     <record model="ir.rule" id="stock_location_route_comp_rule">
-        <field name="name">stock_location_route multi-company</field>
-        <field name="model_id" ref="model_stock_location_route"/>
+        <field name="name">stock_route multi-company</field>
+        <field name="model_id" ref="model_stock_route"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
@@ -162,6 +177,12 @@
     <record model="ir.rule" id="report_stock_quantity_flow_comp_rule">
         <field name="name">report_stock_quantity_flow multi-company</field>
         <field name="model_id" ref="model_report_stock_quantity"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="stock_storage_category_rule">
+        <field name="name">stock_storage_category multi-company</field>
+        <field name="model_id" ref="model_stock_storage_category"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 

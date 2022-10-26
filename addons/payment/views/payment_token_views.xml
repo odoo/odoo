@@ -5,7 +5,7 @@
         <field name="name">payment.token.form</field>
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
-            <form string="Payment Tokens" create="false" editable="bottom">
+            <form string="Payment Tokens" create="false" edit="false">
                 <sheet>
                     <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
@@ -16,13 +16,15 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
-                        <field name="name"/>
-                        <field name="partner_id" />
-                    </group>
-                    <group>
-                        <field name="acquirer_id"/>
-                        <field name="acquirer_ref"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group name="general_information">
+                            <field name="payment_details"/>
+                            <field name="partner_id" />
+                        </group>
+                        <group name="technical_information">
+                            <field name="provider_id"/>
+                            <field name="provider_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -33,11 +35,11 @@
         <field name="name">payment.token.list</field>
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
-            <tree string="Payment Tokens">
-                <field name="name"/>
+            <tree string="Payment Tokens" create="false">
+                <field name="payment_details"/>
                 <field name="partner_id"/>
-                <field name="acquirer_id" readonly="1"/>
-                <field name="acquirer_ref" readonly="1"/>
+                <field name="provider_id"/>
+                <field name="provider_ref"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
         </field>
@@ -52,7 +54,7 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Acquirer" name="acquirer_id" context="{'group_by': 'acquirer_id'}"/>
+                    <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
                     <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>
@@ -66,14 +68,9 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new payment token
+                There is no token created yet.
             </p>
         </field>
     </record>
-
-    <menuitem action="action_payment_token"
-              id="payment_token_menu"
-              parent="account.root_payment_menu"
-              groups="base.group_no_one"/>
 
 </odoo>

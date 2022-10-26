@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.EmailField" owl="1">
+        <t t-if="props.readonly">
+            <a class="o_form_uri o_text_overflow" t-on-click.stop="" t-att-href="props.value ? 'mailto:'+props.value : undefined" t-esc="props.value || ''"/>
+        </t>
+        <t t-else="">
+            <div class="d-inline-flex w-100">
+                <input
+                    class="o_input"
+                    t-att-id="props.id"
+                    type="email"
+                    t-att-placeholder="props.placeholder"
+                    t-att-required="props.required"
+                    t-ref="input"
+                />
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.FormEmailField" t-inherit="web.EmailField" t-inherit-mode="primary">
+        <xpath expr="//input" position="after">
+            <a
+                t-if="props.value"
+                t-att-href="'mailto:'+props.value"
+                class="ms-3 d-inline-flex align-items-center"
+            >
+                <i class="fa fa-envelope" data-tooltip="Send Email" aria-label="Send Email"></i>
+            </a>
+        </xpath>
+    </t>
+
+</templates>

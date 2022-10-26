@@ -14,7 +14,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
     carrier_id = fields.Many2one(
         'delivery.carrier',
         string="Shipping Method",
-        help="Choose the method to deliver your goods",
         required=True,
     )
     delivery_type = fields.Selection(related='carrier_id.delivery_type')

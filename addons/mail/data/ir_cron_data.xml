@@ -31,19 +31,6 @@
             <field name="domain" eval="[('id','!=', ref('mail.ir_cron_module_update_notification'))]"/>
         </record>
 
-        <record id="ir_cron_mail_notify_channel_moderators" model="ir.cron">
-            <field name="name">Mail: Notify channel moderators</field>
-            <field name="model_id" ref="model_mail_message"/>
-            <field name="state">code</field>
-            <field name="code">model._notify_moderators</field>
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
-            <field name="priority">1000</field>
-        </record>
-
         <record id="ir_cron_delete_notification" model="ir.cron">
             <field name="name">Notification: Delete Notifications older than 6 Month</field>
             <field name="interval_number">1</field>
@@ -55,5 +42,28 @@
             <field name="state">code</field>
         </record>
 
+        <record id="ir_cron_mail_gateway_action" model="ir.cron">
+            <field name="name">Mail: Fetchmail Service</field>
+            <field name="model_id" ref="model_fetchmail_server"/>
+            <field name="state">code</field>
+            <field name="code">model._fetch_mails()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!-- Active flag is set on fetchmail_server.create/write -->
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ir_cron_send_scheduled_message" model="ir.cron">
+            <field name="name">Notification: Send scheduled message notifications</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_mail_message_schedule"/>
+            <field name="code">model._send_notifications_cron()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

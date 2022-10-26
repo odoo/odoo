@@ -27,7 +27,7 @@
     <!-- CONTENT -->
     <tr>
         <td style="min-width: 590px;">
-            <t t-raw="message.body"/>
+            <t t-out="message.body"/>
             <div style="margin: 32px 0px 32px 0px; text-align: center;">
                 <a t-att-href="record.channel_id.website_url"
                     style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
@@ -39,7 +39,7 @@
             </div>
             <div>&amp;nbsp;</div>
             <div t-if="signature" style="font-size: 13px;">
-                <div t-raw="signature"/>
+                <div t-out="signature"/>
             </div>
         </td>
     </tr>

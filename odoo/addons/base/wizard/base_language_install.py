@@ -9,45 +9,58 @@ class BaseLanguageInstall(models.TransientModel):
     _description = "Install Language"
 
     @api.model
-    def _default_language(self):
+    def _default_lang_ids(self):
         """ Display the selected language when using the 'Update Terms' action
             from the language list view
         """
         if self._context.get('active_model') == 'res.lang':
-            lang = self.env['res.lang'].browse(self._context.get('active_id'))
-            return lang.code
+            return self._context.get('active_ids') or [self._context.get('active_id')]
         return False
 
-    @api.model
-    def _get_languages(self):
-        return [[code, name] for code, _, name, *_ in self.env['res.lang'].get_available()]
-
-    lang = fields.Selection(_get_languages, string='Language', required=True,
-                            default=_default_language)
+    # add a context on the field itself, to be sure even inactive langs are displayed
+    lang_ids = fields.Many2many('res.lang', 'res_lang_install_rel',
+                                'language_wizard_id', 'lang_id', 'Languages',
+                                default=_default_lang_ids, context={'active_test': False}, required=True)
     overwrite = fields.Boolean('Overwrite Existing Terms',
                                default=True,
                                help="If you check this box, your customized translations will be overwritten and replaced by the official ones.")
-    state = fields.Selection([('init', 'init'), ('done', 'done')],
-                             string='Status', readonly=True, default='init')
+    first_lang_id = fields.Many2one('res.lang',
+                                    compute='_compute_first_lang_id',
+                                    help="Used when the user only selects one language and is given the option to switch to it")
+
+    def _compute_first_lang_id(self):
+        self.first_lang_id = False
+        for lang_installer in self.filtered('lang_ids'):
+            lang_installer.first_lang_id = lang_installer.lang_ids[0]
 
     def lang_install(self):
         self.ensure_one()
         mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        self.env['res.lang']._activate_lang(self.lang)
-        mods._update_translations(self.lang, self.overwrite)
-        self.state = 'done'
-        self.env.cr.execute('ANALYZE ir_translation')
+        self.lang_ids.active = True
+        mods._update_translations(self.lang_ids.mapped('code'), self.overwrite)
+
+        if len(self.lang_ids) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'base.language.install',
+                'res_id': self.id,
+                'view_mode': 'form',
+                'target': 'new',
+                'views': [[self.env.ref('base.language_install_view_form_lang_switch').id, 'form']],
+            }
 
         return {
-            'name': _('Language Pack'),
-            'view_mode': 'form',
-            'view_id': False,
-            'res_model': 'base.language.install',
-            'domain': [],
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
             'context': dict(self._context, active_ids=self.ids),
-            'type': 'ir.actions.act_window',
             'target': 'new',
-            'res_id': self.id,
+            'params': {
+                'message': _("The languages that you selected have been successfully installed.\
+                            Users can choose their favorite language in their preferences."),
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
         }
 
     def reload(self):
@@ -57,7 +70,7 @@ class BaseLanguageInstall(models.TransientModel):
         }
 
     def switch_lang(self):
-        self.env.user.lang = self.lang
+        self.env.user.lang = self.first_lang_id.code
         return {
             'type': 'ir.actions.client',
             'tag': 'reload_context',

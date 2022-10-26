@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web_tour.ToursDialog" owl="1">
+    <Dialog title="this.constructor.title">
+        <t t-call="web_tour.ToursDialog.Table">
+            <t t-set="caption">Onboarding tours</t>
+            <t t-set="tours" t-value="onboardingTours"/>
+        </t>
+        <t t-if="testingTours.length" t-call="web_tour.ToursDialog.Table">
+            <t t-set="caption">Testing tours</t>
+            <t t-set="tours" t-value="testingTours"/>
+        </t>
+    </Dialog>
+</t>
+
+<t t-name="web_tour.ToursDialog.Table" owl="1">
+    <div class="table-responsive">
+        <table class="table table-sm table-striped">
+            <caption style="caption-side: top; font-size: 14px">
+                <t t-esc="caption"/>
+            </caption>
+            <thead>
+                <tr>
+                    <th>Sequence</th>
+                    <th width="50%">Name</th>
+                    <th width="50%">Path</th>
+                    <th>Start</th>
+                    <th>Test</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="tours" t-as="tour" t-key="tour.name">
+                    <td><t t-esc="tour.sequence"/></td>
+                    <td><t t-esc="tour.name"/></td>
+                    <td><t t-esc="tour.url"/></td>
+                    <td>
+                        <button type="button"
+                            class="btn btn-primary fa fa-play o_start_tour"
+                            t-on-click.prevent="_onStartTour"
+                            t-att-data-name="tour.name"
+                            aria-label="Start tour"
+                            title="Start tour"/>
+                    </td>
+                    <td>
+                        <button type="button"
+                            class="btn btn-primary fa fa-cogs o_test_tour"
+                            t-on-click.prevent="_onTestTour"
+                            t-att-data-name="tour.name"
+                            aria-label="Test tour"
+                            title="Test tour"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</t>
+
+</templates>

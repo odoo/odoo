@@ -10,6 +10,7 @@ class MailingSimple(models.Model):
     _description = 'Simple Mailing'
     _name = 'mailing.test.simple'
     _inherit = ['mail.thread']
+    _primary_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()
@@ -50,6 +51,14 @@ class MailingOptOut(models.Model):
     opt_out = fields.Boolean()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
+
+    def _mailing_get_opt_out_list(self, mailing):
+        res_ids = mailing._get_recipients()
+        opt_out_contacts = set(self.search([
+            ('id', 'in', res_ids),
+            ('opt_out', '=', True)
+        ]).mapped('email_normalized'))
+        return opt_out_contacts
 
 
 class MailingPerformance(models.Model):

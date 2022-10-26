@@ -56,17 +56,17 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
-                                <span class="bg-error">Archived</span>
+                                <span class="bg-odoo">Archived</span>
                             </div>
                             <div class="o_kanban_card_content d-flex">
                                 <div>
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'avatar_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
                                 </div>
-                                <div class="oe_kanban_details d-flex flex-column ml-3">
+                                <div class="oe_kanban_details d-flex flex-column ms-3">
                                     <strong class="o_kanban_record_title oe_partner_heading"><field name="user_id"/></strong>
                                     <a type="open" class="nav-link p-0"><field name="crm_team_id"/></a>
                                     <div class="d-flex align-items-baseline text-break">
-                                        <i class="fa fa-envelope mr-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
+                                        <i class="fa fa-envelope me-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
                                     </div>
                                 </div>
                             </div>
@@ -95,6 +95,7 @@
         <field name="arch" type="xml">
             <form string="Sales Men">
                 <field name="active" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="is_membership_multi" invisible="1"/>
                 <field name="member_warning" invisible="1"/>
                 <field name="user_in_teams_ids" invisible="1"/>
@@ -128,6 +129,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>

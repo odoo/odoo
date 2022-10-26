@@ -1,7 +1,7 @@
 $o-kanban-large-record-width: 400px;
 $o-kanban-medium-record-width: 350px;
 
-.o_kanban_view.o_crm_team_kanban {
+.o_kanban_renderer.o_crm_team_kanban {
     .o_kanban_group:not(.o_column_folded) {
         width: $o-kanban-large-record-width + 2*$o-kanban-group-padding;
     }
@@ -10,12 +10,16 @@ $o-kanban-medium-record-width: 350px;
     }
 }
 
-.o_kanban_view.o_crm_team_member_kanban {
+.o_kanban_renderer.o_crm_team_member_kanban {
     .o_kanban_group:not(.o_column_folded) {
         width: $o-kanban-medium-record-width + 2*$o-kanban-group-padding;
+        min-height: 100px;
     }
     .o_kanban_record {
         width: $o-kanban-medium-record-width;
+        &:not(.o_kanban_ghost){
+            min-height: 100px;
+        }
     }
     .ribbon {
         &::before, &::after {
@@ -23,7 +27,6 @@ $o-kanban-medium-record-width: 350px;
         }
 
         span {
-            background-color: $o-brand-odoo;
             padding: 5px;
             font-size: small;
             height: auto;

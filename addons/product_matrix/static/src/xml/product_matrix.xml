@@ -1,13 +1,13 @@
 <template>
     <div t-name="product_matrix.matrix">
-        <table class="o_matrix_input_table o_product_variant_matrix table table-sm table-striped table-bordered">
+        <table class="o_matrix_input_table o_product_variant_matrix table table-sm table-striped table-bordered cursor-default">
             <thead>
                 <tr>
                     <t t-foreach="header" t-as="column_header">
-                        <th t-attf-class="o_matrix_title_header {{column_header_first?'text-left':'text-center'}}">
+                        <th t-attf-class="o_matrix_title_header {{column_header_first?'text-start':'text-center'}}">
                             <span t-esc="column_header.name"/>
                             <t t-call="product_matrix.extra_price">
-                                <t t-set="price" t-value="column_header.price"/>
+                                <t t-set="cell" t-value="column_header"/>
                             </t>
                         </th>
                     </t>
@@ -16,12 +16,10 @@
             <tbody>
                 <tr t-foreach="rows" t-as="row">
                     <t t-foreach="row" t-as="cell">
-                        <td t-if="cell.name" class="text-left">
+                        <th t-if="cell.name" class="text-start">
                             <strong t-esc="cell.name"/>
-                            <t t-call="product_matrix.extra_price">
-                                <t t-set="price" t-value="cell.price"/>
-                            </t>
-                        </td>
+                            <t t-call="product_matrix.extra_price"/>
+                        </th>
                         <td t-else="">
                             <div t-if="cell.is_possible_combination" class="input-group">
                                 <input type="number"
@@ -36,7 +34,7 @@
             </tbody>
         </table>
     </div>
-    <span t-name="product_matrix.extra_price" t-if="price" class="badge badge-pill badge-secondary">
+    <span t-name="product_matrix.extra_price" t-if="cell.price" class="badge rounded-pill text-bg-secondary">
             <!--
                 price_extra is displayed as catalog price instead of
                 price after pricelist because it is impossible to
@@ -47,7 +45,7 @@
                 accurate to display it.
                 -->
             <span class="variant_price_extra" style="white-space: nowrap;">
-                <t t-raw="price"/>
+                <t t-out="format(cell)"/>
             </span>
         </span>
 </template>

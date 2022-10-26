@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <a type="object" name="action_checks_to_print">
-                                    <t t-esc="dashboard.num_checks_to_print"/>
+                                    <t t-out="dashboard.num_checks_to_print"/>
                                     <t t-if="dashboard.num_checks_to_print == 1">Check to print</t>
                                     <t t-if="dashboard.num_checks_to_print != 1">Checks to print</t>
                                 </a>
@@ -26,10 +26,9 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form" />
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='journal_entries']//group[@name='outgoing_payment']" position="after">
+                <xpath expr="//page[@id='outbound_payment_settings']//group[@name='outgoing_payment']" position="inside">
                     <group string="Check Printing"
-                           attrs="{'invisible': ['|', ('type', '!=', 'bank'), ('check_printing_payment_method_selected', '=', False)]}">
-                        <field name="check_printing_payment_method_selected" invisible="1"/>
+                           attrs="{'invisible': ['|', '!', ('selected_payment_method_codes', 'ilike', ',check_printing,'), ('type', '!=', 'bank')]}">
                         <field name="check_sequence_id" invisible="1"/>
                         <field name="check_manual_sequencing"
                         />

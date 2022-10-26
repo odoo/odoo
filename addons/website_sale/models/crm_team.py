@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 class CrmTeam(models.Model):
     _inherit = "crm.team"
 
-    website_ids = fields.One2many('website', 'salesteam_id', string='Websites', help="Websites using this Sales Team")
+    website_ids = fields.One2many('website', 'salesteam_id', string='Websites')
     abandoned_carts_count = fields.Integer(
         compute='_compute_abandoned_carts',
         string='Number of Abandoned Carts', readonly=True)
@@ -27,7 +27,7 @@ class CrmTeam(models.Model):
         amounts = {}
         website_teams = self.filtered(lambda team: team.website_ids)
         if website_teams:
-            abandoned_carts_data = self.env['sale.order'].read_group([
+            abandoned_carts_data = self.env['sale.order']._read_group([
                 ('is_abandoned_cart', '=', True),
                 ('cart_recovery_email_sent', '=', False),
                 ('team_id', 'in', website_teams.ids),
@@ -45,7 +45,7 @@ class CrmTeam(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,form',
             'domain': [('is_abandoned_cart', '=', True)],
-            'search_view_id': self.env.ref('sale.sale_order_view_search_inherit_sale').id,
+            'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_sale').id],
             'context': {
                 'search_default_team_id': self.id,
                 'default_team_id': self.id,

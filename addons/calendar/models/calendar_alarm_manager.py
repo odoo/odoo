@@ -15,6 +15,10 @@ class AlarmManager(models.AbstractModel):
     _description = 'Event Alarm Manager'
 
     def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partners=None):
+        # flush models before making queries
+        for model_name in ('calendar.alarm', 'calendar.event', 'calendar.recurrence'):
+            self.env[model_name].flush_model()
+
         result = {}
         delta_request = """
             SELECT
@@ -75,7 +79,7 @@ class AlarmManager(models.AbstractModel):
             first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
             tuple_params += (seconds,)
 
-        self.flush()
+        self.env.flush_all()
         self._cr.execute("""
             WITH calcul_delta AS (%s)
             SELECT *
@@ -233,6 +237,6 @@ class AlarmManager(models.AbstractModel):
         users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
         for user in users:
             notif = self.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).get_next_notif()
-            notifications.append([(self._cr.dbname, 'calendar.alarm', user.partner_id.id), notif])
+            notifications.append([user.partner_id, 'calendar.alarm', notif])
         if len(notifications) > 0:
-            self.env['bus.bus'].sendmany(notifications)
+            self.env['bus.bus']._sendmany(notifications)

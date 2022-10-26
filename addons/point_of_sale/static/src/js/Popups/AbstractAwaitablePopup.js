@@ -1,8 +1,8 @@
 odoo.define('point_of_sale.AbstractAwaitablePopup', function (require) {
     'use strict';
 
-    const { useExternalListener } = owl.hooks;
     const PosComponent = require('point_of_sale.PosComponent');
+    const { useBus } = require('@web/core/utils/hooks');
 
     /**
      * Implement this abstract class by extending it like so:
@@ -12,7 +12,7 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function (require) {
      *     return 'result';
      *   }
      * }
-     * ConcretePopup.template = owl.tags.xml`
+     * ConcretePopup.template = xml`
      *   <div>
      *     <button t-on-click="confirm">Okay</button>
      *     <button t-on-click="cancel">Cancel</button>
@@ -30,22 +30,26 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function (require) {
      * ```
      */
     class AbstractAwaitablePopup extends PosComponent {
-        constructor() {
-            super(...arguments);
-            useExternalListener(window, 'keyup', this._cancelAtEscape);
+        setup() {
+            super.setup();
+            if (this.props.confirmKey) {
+                useBus(this.env.posbus, `confirm-popup-${this.props.id}`, this.confirm);
+            }
+            if (this.props.cancelKey) {
+                useBus(this.env.posbus, `cancel-popup-${this.props.id}`, this.cancel);
+            }
         }
         async confirm() {
-            this.props.resolve({ confirmed: true, payload: await this.getPayload() });
-            this.trigger('close-popup');
+            this.env.posbus.trigger('close-popup', {
+                popupId: this.props.id,
+                response: { confirmed: true, payload: await this.getPayload() },
+            });
         }
         cancel() {
-            this.props.resolve({ confirmed: false, payload: null });
-            this.trigger('close-popup');
-        }
-        _cancelAtEscape(event) {
-            if (event.key === 'Escape') {
-                this.cancel();
-            }
+            this.env.posbus.trigger('close-popup', {
+                popupId: this.props.id,
+                response: { confirmed: false, payload: null },
+            });
         }
         /**
          * Override this in the concrete popup implementation to set the

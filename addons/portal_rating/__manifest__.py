@@ -14,7 +14,7 @@ inclusion of rating directly within the customer portal discuss widget.
         'rating',
     ],
     'data': [
-        'views/rating_views.xml',
+        'views/rating_rating_views.xml',
         'views/portal_templates.xml',
         'views/rating_templates.xml',
     ],
@@ -23,8 +23,12 @@ inclusion of rating directly within the customer portal discuss widget.
         'web.assets_frontend': [
             'portal_rating/static/src/scss/portal_rating.scss',
             'portal_rating/static/src/js/portal_chatter.js',
+            'portal_rating/static/src/xml/portal_chatter.xml',
             'portal_rating/static/src/js/portal_composer.js',
             'portal_rating/static/src/js/portal_rating_composer.js',
+            'portal_rating/static/src/xml/portal_rating_composer.xml',
+            'portal_rating/static/src/xml/portal_tools.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

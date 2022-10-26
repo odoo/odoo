@@ -85,7 +85,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
 
         # Employee opens start page
         response = self._access_start(certification)
-        self.assertResponse(response, 200, [certification.title, 'Time limit for this survey', '10 minutes'])
+        self.assertResponse(response, 200, [certification.title, 'Time limit for this certification', '10 minutes'])
 
         # -> this should have generated a new user_input with a token
         user_inputs = self.env['survey.user_input'].search([('survey_id', '=', certification.id)])
@@ -110,9 +110,13 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
             self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
             self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
 
-        user_inputs.invalidate_cache()
+        user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
         self.assertEqual(user_inputs.scoring_percentage, 87.5)
+        self.assertTrue(user_inputs.scoring_success)
+
+        # Check that the certification is still successful even if scoring_success_min of certification is modified
+        certification.write({'scoring_success_min': 90})
         self.assertTrue(user_inputs.scoring_success)
 
         # Check answer correction is taken into account
@@ -190,10 +194,22 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
             # Whatever which question was selected, the correct answer is the first one
             self._answer_question(question_ids, question_ids.suggested_answer_ids.ids[0], answer_token, csrf_token)
 
-        statistics = user_inputs._prepare_statistics()
-        self.assertEqual(statistics, [[
+        statistics = user_inputs._prepare_statistics()[user_inputs]
+        total_statistics = statistics['totals']
+        self.assertEqual(total_statistics, [
             {'text': 'Correct', 'count': 1},
             {'text': 'Partially', 'count': 0},
             {'text': 'Incorrect', 'count': 0},
             {'text': 'Unanswered', 'count': 0},
-        ]], "With the configured randomization, there should be exactly 1 correctly answered question and none skipped.")
+        ], "With the configured randomization, there should be exactly 1 correctly answered question and none skipped.")
+
+        section_statistics = statistics['by_section']
+        self.assertEqual(section_statistics, {
+            'Page 1': {
+                'question_count': 1,
+                'correct': 1,
+                'partial': 0,
+                'incorrect': 0,
+                'skipped': 0,
+            }
+        }, "With the configured randomization, there should be exactly 1 correctly answered question in the 'Page 1' section.")

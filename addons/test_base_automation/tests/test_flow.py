@@ -2,6 +2,7 @@
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+import sys
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import common, tagged
@@ -88,10 +89,11 @@ record['name'] = record.name + 'X'""",
                 'active': True,
             }, {
                 'name': 'Base Automation: test send an email',
+                'mail_post_method': 'email',
                 'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'template_id': self.test_mail_template_automation.id,
                 'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__deadline').id)],
-                'state': 'email',
+                'state': 'mail_post',
                 'code': """
 record = model.browse(env.context['active_id'])
 record['name'] = record.name + 'X'""",
@@ -182,7 +184,7 @@ record['name'] = record.name + 'X'""",
         self.assertEqual(lead.user_id, self.user_root, "Responsible should not change on creation of Lead with state from 'draft' to 'open'.")
         # change partner, recompute on lead should trigger the rule
         partner.write({'employee': True})
-        lead.flush()
+        self.env.flush_all()
         self.assertTrue(lead.employee, "Customer field should updated to True")
         self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on write of Lead when Customer becomes True.")
 
@@ -219,21 +221,19 @@ record['name'] = record.name + 'X'""",
             patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail),
         ]
 
-        patchers[0].start()
+        self.startPatcher(patchers[0])
 
         lead = self.create_lead()
         self.assertFalse(lead.priority)
         self.assertFalse(lead.deadline)
 
-        patchers[1].start()
+        self.startPatcher(patchers[1])
 
         lead.write({'priority': True})
 
         self.assertTrue(lead.priority)
         self.assertTrue(lead.deadline)
 
-        for patcher in patchers:
-            patcher.stop()
 
         self.assertEqual(send_mail_count, 1)
 
@@ -355,7 +355,8 @@ record['name'] = record.name + 'X'""",
         rec4 = Model.with_user(self.user_demo).create({'name': 'again another record'})
         rec4.write({'name': 'another value'})
 
-@common.tagged('post_install','-at_install')
+
+@common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
     def test_inversion(self):
         """ If a stored field B depends on A, an update to the trigger for A
@@ -404,3 +405,58 @@ class TestCompute(common.TransactionCase):
         })
         r.parent_id = company2
         self.assertEqual(r.display_name, 'Awiclo, Bob')
+
+    def test_recursion(self):
+        project = self.env['test_base_automation.project'].create({})
+
+        # this action is executed every time a task is assigned to project
+        self.env['base.automation'].create({
+            'name': 'dummy',
+            'model_id': self.env['ir.model']._get_id('test_base_automation.task'),
+            'state': 'code',
+            'trigger': 'on_create_or_write',
+            'filter_domain': repr([('project_id', '=', project.id)]),
+        })
+
+        # create one task in project with 10 subtasks; all the subtasks are
+        # automatically assigned to project, too
+        task = self.env['test_base_automation.task'].create({'project_id': project.id})
+        subtasks = task.create([{'parent_id': task.id} for _ in range(10)])
+        subtasks.flush_model()
+
+        # This test checks what happens when a stored recursive computed field
+        # is marked to compute on many records, and automated actions are
+        # triggered depending on that field.  In this case, we trigger the
+        # recomputation of 'project_id' on 'subtasks' by deleting their parent
+        # task.
+        #
+        # An issue occurs when the domain of automated actions is evaluated by
+        # method search(), because the latter flushes the fields to search on,
+        # which are also the ones being recomputed.  Combined with the fact
+        # that recursive fields are not computed in batch, this leads to a huge
+        # amount of recursive calls between the automated action and flush().
+        #
+        # The execution of task.unlink() looks like this:
+        # - mark 'project_id' to compute on subtasks
+        # - delete task
+        # - flush()
+        #   - recompute 'project_id' on subtask1
+        #     - call compute on subtask1
+        #     - in action, search([('id', 'in', subtask1.ids), ('project_id', '=', pid)])
+        #       - flush(['id', 'project_id'])
+        #         - recompute 'project_id' on subtask2
+        #           - call compute on subtask2
+        #           - in action search([('id', 'in', subtask2.ids), ('project_id', '=', pid)])
+        #             - flush(['id', 'project_id'])
+        #               - recompute 'project_id' on subtask3
+        #                 - call compute on subtask3
+        #                 - in action, search([('id', 'in', subtask3.ids), ('project_id', '=', pid)])
+        #                   - flush(['id', 'project_id'])
+        #                     - recompute 'project_id' on subtask4
+        #                       ...
+        limit = sys.getrecursionlimit()
+        try:
+            sys.setrecursionlimit(100)
+            task.unlink()
+        finally:
+            sys.setrecursionlimit(limit)

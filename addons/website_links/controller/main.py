@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 
@@ -12,7 +10,7 @@ class WebsiteUrl(http.Controller):
     def create_shorten_url(self, **post):
         if 'url' not in post or post['url'] == '':
             return {'error': 'empty_url'}
-        return request.env['link.tracker'].create(post).read()
+        return request.env['link.tracker'].search_or_create(post).read()
 
     @http.route('/r', type='http', auth='user', website=True)
     def shorten_url(self, **post):
@@ -38,4 +36,4 @@ class WebsiteUrl(http.Controller):
         if code:
             return request.render("website_links.graphs", code.link_id.read()[0])
         else:
-            return werkzeug.utils.redirect('/', 301)
+            return request.redirect('/', code=301)

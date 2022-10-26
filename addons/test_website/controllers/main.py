@@ -16,7 +16,7 @@ class WebsiteTest(Home):
     def test_view(self, **kwargs):
         return request.render('test_website.test_view')
 
-    @http.route('/ignore_args/converteronly/<string:a>/', type='http', auth="public", website=True, sitemap=False)
+    @http.route('/ignore_args/converteronly/<string:a>', type='http', auth="public", website=True, sitemap=False)
     def test_ignore_args_converter_only(self, a):
         return request.make_response(json.dumps(dict(a=a, kw=None)))
 
@@ -32,7 +32,7 @@ class WebsiteTest(Home):
     def test_ignore_args_kw(self, a, **kw):
         return request.make_response(json.dumps(dict(a=a, kw=kw)))
 
-    @http.route('/ignore_args/converter/<string:a>/', type='http', auth="public", website=True, sitemap=False)
+    @http.route('/ignore_args/converter/<string:a>', type='http', auth="public", website=True, sitemap=False)
     def test_ignore_args_converter(self, a, b='youhou', **kw):
         return request.make_response(json.dumps(dict(a=a, b=b, kw=kw)))
 
@@ -43,6 +43,10 @@ class WebsiteTest(Home):
     @http.route('/multi_company_website', type='http', auth="public", website=True, sitemap=False)
     def test_company_context(self):
         return request.make_response(json.dumps(request.context.get('allowed_company_ids')))
+
+    @http.route('/test_lang_url/<model("res.country"):country>', type='http', auth='public', website=True, sitemap=False)
+    def test_lang_url(self, **kwargs):
+        return request.render('test_website.test_view')
 
     # Test Session
 
@@ -134,3 +138,7 @@ class WebsiteTest(Home):
     @http.route(['/test_website/200/<model("test.model"):rec>'], type='http', auth="public", website=True, sitemap=False)
     def test_model_converter_seoname(self, rec, **kw):
         return request.make_response('ok')
+
+    @http.route(['/test_website/test_redirect_view_qs'], type='http', auth="public", website=True, sitemap=False)
+    def test_redirect_view_qs(self, **kw):
+        return request.render('test_website.test_redirect_view_qs')

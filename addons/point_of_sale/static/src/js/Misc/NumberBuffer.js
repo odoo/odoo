@@ -1,15 +1,13 @@
 odoo.define('point_of_sale.NumberBuffer', function(require) {
     'use strict';
 
-    const { Component } = owl;
-    const { EventBus } = owl.core;
-    const { onMounted, onWillUnmount, useExternalListener } = owl.hooks;
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
-    const { BarcodeEvents } = require('barcodes.BarcodeEvents');
+    const { barcodeService } = require('@barcodes/barcode_service');
     const { _t } = require('web.core');
     const { Gui } = require('point_of_sale.Gui');
 
+    const { EventBus, onMounted, onWillUnmount, useComponent, useExternalListener } = owl;
     const INPUT_KEYS = new Set(
         ['Delete', 'Backspace', '+1', '+2', '+5', '+10', '+20', '+50'].concat('0123456789+-.,'.split(''))
     );
@@ -134,7 +132,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
          */
         use(config) {
             this.eventsBuffer = [];
-            const currentComponent = Component.current;
+            const currentComponent = useComponent();
             config = Object.assign(getDefaultConfig(), config);
             onMounted(() => {
                 this.bufferHolderStack.push({
@@ -164,7 +162,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             this.config = config;
             this.decimalPoint = config.decimalPoint || this.defaultDecimalPoint;
             this.maxTimeBetweenKeys = this.config.useWithBarcode
-                ? BarcodeEvents.max_time_between_keys_in_ms
+                ? barcodeService.maxTimeBetweenKeysInMs
                 : 0;
         }
         _onKeyboardInput(event) {
@@ -226,7 +224,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             };
             if (input === undefined || input === null) return;
             let isFirstInput = isEmpty(this.state.buffer);
-            if (input === this.decimalPoint) {
+            if (input === ',' || input === '.') {
                 if (this.state.toStartOver) {
                     this.state.buffer = '';
                 }

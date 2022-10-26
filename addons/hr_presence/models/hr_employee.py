@@ -114,10 +114,16 @@ class Employee(models.AbstractModel):
                         'searchpanel_default_hr_presence_state_display': 'to_define'},
         }
 
-    def action_set_present(self):
+    def _action_set_manual_presence(self, state):
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        self.write({'manually_set_present': True})
+        self.write({'manually_set_present': state})
+
+    def action_set_present(self):
+        self._action_set_manual_presence(True)
+
+    def action_set_absent(self):
+        self._action_set_manual_presence(False)
 
     def write(self, vals):
         if vals.get('hr_presence_state_display') == 'present':
@@ -180,7 +186,7 @@ Do not hesitate to contact your manager or the human resource department.""")
             default_template_id=template.id,
             default_composition_mode='comment',
             default_is_log=True,
-            custom_layout='mail.mail_notification_light',
+            default_email_layout_xmlid='mail.mail_notification_light',
         )
         return {
             'name': _('Compose Email'),

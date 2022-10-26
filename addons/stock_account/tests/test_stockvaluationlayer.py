@@ -3,6 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
@@ -23,25 +24,28 @@ class TestStockValuationCommon(TransactionCase):
         })
         cls.picking_type_in = cls.env.ref('stock.picking_type_in')
         cls.picking_type_out = cls.env.ref('stock.picking_type_out')
+        cls.env.ref('base.EUR').active = True
 
     def setUp(self):
         super(TestStockValuationCommon, self).setUp()
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False):
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
+        loc_dest = loc_dest or self.stock_location
+        pick_type = pick_type or self.picking_type_in
         in_move = self.env['stock.move'].create({
             'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
+            'location_dest_id': loc_dest.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
-            'picking_type_id': self.picking_type_in.id,
+            'picking_type_id': pick_type.id,
         })
 
         if create_picking:
@@ -60,17 +64,19 @@ class TestStockValuationCommon(TransactionCase):
         self.days += 1
         return in_move.with_context(svl=True)
 
-    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False):
+    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None):
         """ Helper to create and validate a delivery move.
         """
+        loc_src = loc_src or self.stock_location
+        pick_type = pick_type or self.picking_type_out
         out_move = self.env['stock.move'].create({
             'name': 'out %s units' % str(quantity),
             'product_id': product.id,
-            'location_id': self.stock_location.id,
+            'location_id': loc_src.id,
             'location_dest_id': self.customer_location.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': quantity,
-            'picking_type_id': self.picking_type_out.id,
+            'picking_type_id': pick_type.id,
         })
 
         if create_picking:
@@ -122,16 +128,17 @@ class TestStockValuationCommon(TransactionCase):
         stock_return_picking.product_return_moves.quantity = quantity_to_return
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_lines[0].move_line_ids[0].qty_done = quantity_to_return
+        return_pick.move_ids[0].move_line_ids[0].qty_done = quantity_to_return
         return_pick._action_done()
-        return return_pick.move_lines
+        return return_pick.move_ids
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
-    def setUp(self):
-        super(TestStockValuationStandard, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.standard_price = 10
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        cls.product1.product_tmpl_id.standard_price = 10
 
     def test_normal_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -299,11 +306,36 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertTrue(product2.stock_valuation_layer_ids)
         self.assertFalse(product1.stock_valuation_layer_ids)
 
+    def test_currency_precision_and_standard_svl_value(self):
+        currency = self.env['res.currency'].create({
+            'name': 'Odoo',
+            'symbol': 'O',
+            'rounding': 1,
+        })
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': currency.id,
+        })
+
+        old_company = self.env.user.company_id
+        try:
+            self.env.user.company_id = new_company
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
+            product = self.product1.with_company(new_company)
+            product.standard_price = 3
+
+            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id)
+            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+
+            self.assertEqual(product.value_svl, 0.0)
+        finally:
+            self.env.user.company_id = old_company
 
 class TestStockValuationAVCO(TestStockValuationCommon):
-    def setUp(self):
-        super(TestStockValuationAVCO, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
     def test_normal_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -515,11 +547,22 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.standard_price, 1.01)
 
+    def test_return_delivery_2(self):
+        self.product1.write({"standard_price": 1})
+        move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
+        self._make_in_move(self.product1, 10, unit_cost=2)
+        self._make_return(move1, 10)
+
+        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.standard_price, 2)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
-    def setUp(self):
-        super(TestStockValuationFIFO, self).setUp()
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
 
     def test_normal_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -673,6 +716,51 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 30)
         self.assertEqual(self.product1.quantity_svl, 2)
         self.assertAlmostEqual(self.product1.standard_price, 10)
+
+    def test_return_delivery_2(self):
+        self._make_in_move(self.product1, 1, unit_cost=10)
+        self.product1.standard_price = 0
+        self._make_in_move(self.product1, 1, unit_cost=0)
+
+        self._make_out_move(self.product1, 1)
+        out_move02 = self._make_out_move(self.product1, 1, create_picking=True)
+
+        returned = self._make_return(out_move02, 1)
+        self.assertEqual(returned.stock_valuation_layer_ids.value, 0)
+
+    def test_return_delivery_3(self):
+        self.product1.write({"standard_price": 1})
+        move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
+        self._make_in_move(self.product1, 10, unit_cost=2)
+        self._make_return(move1, 10)
+
+        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_currency_precision_and_fifo_svl_value(self):
+        currency = self.env['res.currency'].create({
+            'name': 'Odoo',
+            'symbol': 'O',
+            'rounding': 1,
+        })
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': currency.id,
+        })
+
+        old_company = self.env.user.company_id
+        try:
+            self.env.user.company_id = new_company
+            product = self.product1.with_company(new_company)
+            product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
+
+            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id, unit_cost=3)
+            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+
+            self.assertEqual(product.value_svl, 0.0)
+        finally:
+            self.env.user.company_id = old_company
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
@@ -846,9 +934,9 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             'property_stock_journal': self.stock_journal.id,
         })
 
-        # Try to change the product category with a `default_type` key in the context and
+        # Try to change the product category with a `default_detailed_type` key in the context and
         # check it doesn't break the account move generation.
-        self.product1.with_context(default_type='product').categ_id = cat2
+        self.product1.with_context(default_detailed_type='product').categ_id = cat2
         self.assertEqual(self.product1.categ_id, cat2)
 
         self.assertEqual(self.product1.value_svl, 100)
@@ -898,3 +986,156 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
+@tagged('post_install', '-at_install')
+class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env.ref('base.EUR').active = True
+        cls.company_data['company'].anglo_saxon_accounting = True
+        cls.stock_location = cls.env['stock.location'].create({
+            'name': 'stock location',
+            'usage': 'internal',
+        })
+        cls.customer_location = cls.env['stock.location'].create({
+            'name': 'customer location',
+            'usage': 'customer',
+        })
+        cls.supplier_location = cls.env['stock.location'].create({
+            'name': 'supplier location',
+            'usage': 'supplier',
+        })
+        cls.warehouse_in = cls.env['stock.warehouse'].create({
+            'name': 'warehouse in',
+            'company_id': cls.company_data['company'].id,
+            'code': '1',
+        })
+        cls.warehouse_out = cls.env['stock.warehouse'].create({
+            'name': 'warehouse out',
+            'company_id': cls.company_data['company'].id,
+            'code': '2',
+        })
+        cls.picking_type_in = cls.env['stock.picking.type'].create({
+            'name': 'pick type in',
+            'sequence_code': '1',
+            'code': 'incoming',
+            'company_id': cls.company_data['company'].id,
+            'warehouse_id': cls.warehouse_in.id,
+        })
+        cls.picking_type_out = cls.env['stock.picking.type'].create({
+            'name': 'pick type in',
+            'sequence_code': '2',
+            'code': 'outgoing',
+            'company_id': cls.company_data['company'].id,
+            'warehouse_id': cls.warehouse_out.id,
+        })
+        cls.stock_input_account = cls.env['account.account'].create({
+            'name': 'Stock Input',
+            'code': 'StockIn',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+        cls.stock_output_account = cls.env['account.account'].create({
+            'name': 'Stock Output',
+            'code': 'StockOut',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+        cls.stock_valuation_account = cls.env['account.account'].create({
+            'name': 'Stock Valuation',
+            'code': 'StockValuation',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+        cls.expense_account = cls.env['account.account'].create({
+            'name': 'Expense Account',
+            'code': 'ExpenseAccount',
+            'account_type': 'expense',
+            'reconcile': True,
+        })
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product1 = cls.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+            'property_account_expense_id': cls.expense_account.id,
+        })
+        cls.product1.categ_id.write({
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.company_data['default_journal_misc'].id,
+        })
+
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
+        """ Helper to create and validate a receipt move.
+        """
+        unit_cost = unit_cost or product.standard_price
+        loc_dest = loc_dest or self.stock_location
+        pick_type = pick_type or self.picking_type_in
+        in_move = self.env['stock.move'].create({
+            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
+            'product_id': product.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': loc_dest.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': quantity,
+            'price_unit': unit_cost,
+            'picking_type_id': pick_type.id,
+        })
+
+        if create_picking:
+            picking = self.env['stock.picking'].create({
+                'picking_type_id': in_move.picking_type_id.id,
+                'location_id': in_move.location_id.id,
+                'location_dest_id': in_move.location_dest_id.id,
+            })
+            in_move.write({'picking_id': picking.id})
+
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.move_line_ids.qty_done = quantity
+        in_move._action_done()
+
+        return in_move.with_context(svl=True)
+
+    def test_avco_and_credit_note(self):
+        """
+        When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
+        """
+        # Required for `account_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self._make_in_move(self.product1, 2, unit_cost=10)
+
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        invoice_form.partner_id = self.env['res.partner'].create({'name': 'Super Client'})
+        with invoice_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.product_id = self.product1
+            invoice_line_form.quantity = 2
+            invoice_line_form.price_unit = 25
+            invoice_line_form.account_id = self.company_data['default_journal_purchase'].default_account_id
+            invoice_line_form.tax_ids.clear()
+        invoice = invoice_form.save()
+        invoice.action_post()
+
+        self._make_in_move(self.product1, 2, unit_cost=20)
+        self.assertEqual(self.product1.standard_price, 15)
+
+        refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
+            'refund_method': 'refund',
+            'journal_id': invoice.journal_id.id,
+        })
+        action = refund_wizard.reverse_moves()
+        reverse_invoice = self.env['account.move'].browse(action['res_id'])
+        with Form(reverse_invoice) as reverse_invoice_form:
+            with reverse_invoice_form.invoice_line_ids.edit(0) as line:
+                line.quantity = 1
+        reverse_invoice.action_post()
+
+        anglo_lines = reverse_invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertEqual(len(anglo_lines), 2)
+        self.assertEqual(abs(anglo_lines[0].balance), 10)
+        self.assertEqual(abs(anglo_lines[1].balance), 10)

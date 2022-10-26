@@ -21,7 +21,7 @@ class WebsiteSnippetFilter(models.Model):
         samples = super()._get_hardcoded_sample(model)
         if model._name == 'product.product':
             data = [{
-                'image_512': b'/product/static/img/product_chair.png',
+                'image_512': b'/product/static/img/product_chair.jpg',
                 'display_name': _('Chair'),
                 'description_sale': _('Sit comfortably'),
             }, {
@@ -33,7 +33,7 @@ class WebsiteSnippetFilter(models.Model):
                 'display_name': _('Whiteboard'),
                 'description_sale': _('With three feet'),
             }, {
-                'image_512': b'/product/static/img/product_product_27-image.png',
+                'image_512': b'/product/static/img/product_product_27-image.jpg',
                 'display_name': _('Drawer'),
                 'description_sale': _('On wheels'),
             }, {
@@ -41,7 +41,7 @@ class WebsiteSnippetFilter(models.Model):
                 'display_name': _('Box'),
                 'description_sale': _('Reinforced for heavy loads'),
             }, {
-                'image_512': b'/product/static/img/product_product_9-image.png',
+                'image_512': b'/product/static/img/product_product_9-image.jpg',
                 'display_name': _('Bin'),
                 'description_sale': _('Pedal-based opening system'),
             }]
@@ -59,6 +59,8 @@ class WebsiteSnippetFilter(models.Model):
                 product = res_product.get('_record')
                 if not is_sample:
                     res_product.update(product._get_combination_info_variant())
+                    if records.env.context.get('add2cart_rerender'):
+                        res_product['_add2cart_rerender'] = True
         return res_products
 
     @api.model
@@ -70,7 +72,8 @@ class WebsiteSnippetFilter(models.Model):
         limit = context.get('limit')
         domain = expression.AND([
             [('website_published', '=', True)],
-            website.get_current_website().website_domain(),
+            website.website_domain(),
+            [('company_id', 'in', [False, website.company_id.id])],
             search_domain or [],
         ])
         products = handler(website, limit, domain, context)
@@ -99,7 +102,7 @@ class WebsiteSnippetFilter(models.Model):
         visitor = self.env['website.visitor']._get_visitor_from_request()
         if visitor:
             excluded_products = website.sale_get_order().order_line.product_id.ids
-            tracked_products = self.env['website.track'].sudo().read_group(
+            tracked_products = self.env['website.track'].sudo()._read_group(
                 [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id.website_published', '=', True), ('product_id', 'not in', excluded_products)],
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=limit, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in tracked_products]
@@ -108,7 +111,7 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     [('id', 'in', products_ids)],
                 ])
-                products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+                products = self.env['product.product'].with_context(display_default_code=False, add2cart_rerender=True).search(domain, limit=limit)
         return products
 
     def _get_products_recently_sold_with(self, website, limit, domain, context):
@@ -146,7 +149,7 @@ class WebsiteSnippetFilter(models.Model):
             if current_template.exists():
                 excluded_products = website.sale_get_order().order_line.product_id.ids
                 excluded_products.extend(current_template.product_variant_ids.ids)
-                included_products = current_template.product_variant_ids.accessory_product_ids.filtered('website_published').ids
+                included_products = current_template._get_website_accessory_product().ids
                 products_ids = list(set(included_products) - set(excluded_products))
                 if products_ids:
                     domain = expression.AND([
@@ -154,4 +157,23 @@ class WebsiteSnippetFilter(models.Model):
                         [('id', 'in', products_ids)],
                     ])
                     products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+        return products
+
+    def _get_products_alternative_products(self, website, limit, domain, context):
+        products = self.env['product.product']
+        current_id = context.get('product_template_id')
+        if not current_id:
+            return products
+        current_template = self.env['product.template'].browse(int(current_id))
+        if current_template.exists():
+            excluded_products = website.sale_get_order().order_line.product_id
+            excluded_products |= current_template.product_variant_ids
+            included_products = current_template.alternative_product_ids.product_variant_ids
+            products = included_products - excluded_products
+            if products:
+                domain = expression.AND([
+                    domain,
+                    [('id', 'in', products.ids)],
+                ])
+                products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
         return products

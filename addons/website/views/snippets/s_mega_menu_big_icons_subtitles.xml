@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_big_icons_subtitles" name="Menu - Big icons &amp; subtitles" groups="base.group_user">
+    <section class="s_mega_menu_big_icons_subtitles pt24 pb24 o_colored_level o_cc o_cc1" data-oe-shape-data="{'shape':'web_editor/Zigs/03','flip':[]}">
+        <div class="o_we_shape o_web_editor_Zigs_03"/>
+        <div class="container" >
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-user bg-o-color-1"/>
+                            <t t-set="_title">About us</t>
+                            <t t-set="_text">Discover our culture and our values</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-newspaper-o bg-o-color-2"/>
+                            <t t-set="_title">Blog</t>
+                            <t t-set="_text">Latests news and case studies</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-calendar bg-o-color-3"/>
+                            <t t-set="_title">Events</t>
+                            <t t-set="_text">Our seminars and trainings for you</t>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-md-6 col-lg">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-star bg-o-color-5"/>
+                            <t t-set="_title">Customers</t>
+                            <t t-set="_text">They trust us since years</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-handshake-o bg-o-color-3"/>
+                            <t t-set="_title">Services</t>
+                            <t t-set="_text">Find the perfect solution for you</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-paint-brush bg-o-color-2"/>
+                            <t t-set="_title">Portfolio</t>
+                            <t t-set="_text">Discover our realisations</t>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-md-6 col-lg">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-question-circle bg-o-color-1"/>
+                            <t t-set="_title">F.A.Q.</t>
+                            <t t-set="_text">All informations you need</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-shopping-basket bg-o-color-5"/>
+                            <t t-set="_title">Points of sale</t>
+                            <t t-set="_text">Find a store near you</t>
+                        </t>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item">
+                            <t t-set="_icon_classes" t-valuef="fa-legal bg-o-color-3"/>
+                            <t t-set="_title">Legal Notice</t>
+                            <t t-set="_text">Discover our legal notice</t>
+                        </t>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_big_icons_subtitles_item">
+    <a href="#" class="nav-link o_default_snippet_text px-2 my-2 rounded text-wrap" data-name="Menu Item">
+        <div class="d-flex align-items-center">
+            <i t-attf-class="fa rounded rounded-circle me-3 #{_icon_classes}"/>
+            <div class="flex-grow-1">
+                <h4 class="mt-0 mb-0" t-esc="_title"/>
+                <span><font style="font-size: 14px;" t-esc="_text"/></span>
+            </div>
+        </div>
+    </a>
+</template>
+
+</odoo>

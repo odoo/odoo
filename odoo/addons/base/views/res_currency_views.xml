@@ -66,7 +66,13 @@
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
-                    <field name="name" string="Currency"/>
+                    <field name="name" string="Currency" filter_domain="('|','|','|','|',
+                                                                        ('name', 'ilike', self),
+                                                                        ('full_name', 'ilike', self),
+                                                                        ('symbol', 'ilike', self),
+                                                                        ('currency_unit_label', 'ilike', self),
+                                                                        ('currency_subunit_label', 'ilike', self),
+                                                                        )"/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
@@ -106,10 +112,10 @@
                                         <h3><t t-esc="record.name.value"/></h3>
                                     </div>
                                     <div class="col-5">
-                                        <span class="badge badge-pill"><t t-esc="record.symbol.value"/></span>
+                                        <span class="badge rounded-pill"><t t-esc="record.symbol.value"/></span>
                                     </div>
-                                    <div class="col-5 text-right">
-                                        <t t-if="! record.active.raw_value"><span class="badge badge-pill bg-light border">inactive</span></t>
+                                    <div class="col-5 text-end">
+                                        <t t-if="! record.active.raw_value"><span class="badge rounded-pill bg-light border">inactive</span></t>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -182,13 +188,6 @@
         </record>
 
         <record id="action_currency_form" model="ir.actions.act_window">
-            <field name="name">Currencies</field>
-            <field name="res_model">res.currency</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="search_view_id" ref="view_currency_search"/>
-            <field name="context">{'active_test': False}</field>
-        </record>
-        <record id="action_currency_all_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
             <field name="view_mode">tree,kanban,form</field>

@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, tools, _
-
-
-class MailActivityType(models.Model):
-    _inherit = "mail.activity.type"
-
-    category = fields.Selection(selection_add=[('meeting', 'Meeting')])
+from odoo import models, fields, tools, _
+from odoo.tools import is_html_empty
 
 
 class MailActivity(models.Model):
@@ -23,20 +18,23 @@ class MailActivity(models.Model):
             'default_res_id': self.env.context.get('default_res_id'),
             'default_res_model': self.env.context.get('default_res_model'),
             'default_name': self.summary or self.res_name,
-            'default_description': self.note and tools.html2plaintext(self.note).strip() or '',
+            'default_description': self.note if not is_html_empty(self.note) else '',
             'default_activity_ids': [(6, 0, self.ids)],
+            'default_partner_ids': self.user_id.partner_id.ids,
+            'default_user_id': self.user_id.id,
         }
         return action
 
     def _action_done(self, feedback=False, attachment_ids=False):
-        events = self.mapped('calendar_event_id')
-        messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
         if feedback:
-            for event in events:
+            for event in self.calendar_event_id:
                 description = event.description
-                description = '%s\n%s%s' % (description or '', _("Feedback: "), feedback)
+                description = '%s<br />%s' % (
+                    description if not tools.is_html_empty(description) else '',
+                    _('Feedback: %(feedback)s', feedback=tools.plaintext2html(feedback)) if feedback else '',
+                )
                 event.write({'description': description})
-        return messages, activities
+        return super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
 
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')

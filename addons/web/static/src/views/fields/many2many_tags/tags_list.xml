@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TagsList" owl="1">
+        <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
+            <span t-attf-class="{{`o_tag_color_${ tag.colorIndex or 0 } ${props.displayBadge ? 'badge rounded-pill' : ''}`}} o_tag d-inline-flex align-items-center" tabindex="-1" t-att-data-color="tag.colorIndex" t-att-title="tag.text" t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-on-keydown="tag.onKeydown">
+                <img t-if="tag.img" t-att-src="tag.img" class="o_m2m_avatar rounded-circle" t-att-class="tag.className"/>
+                <div t-if="props.displayBadge and props.displayText" class="o_tag_badge_text" t-esc="tag.text" />
+                <t t-elif="props.displayText">
+                    <span />
+                    <div t-esc="tag.text" />
+                </t>
+                <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"></a>
+            </span>
+        </t>
+        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
+            <span t-if="otherTags.length > 9" t-esc="'9+'" />
+            <span t-else="" t-esc="'+' + otherTags.length" />
+        </span>
+    </t>
+
+    <t t-name="web.TagsList.Tooltip" owl="1">
+        <t t-foreach="tags" t-as="tag" t-key="tag.id">
+            <div t-esc="tag.text"/>
+        </t>
+    </t>
+
+</templates>

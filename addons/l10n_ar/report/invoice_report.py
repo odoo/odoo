@@ -6,11 +6,11 @@ class AccountInvoiceReport(models.Model):
 
     _inherit = 'account.invoice.report'
 
-    l10n_ar_state_id = fields.Many2one('res.country.state', 'State', readonly=True)
+    l10n_ar_state_id = fields.Many2one('res.country.state', 'Delivery Province', readonly=True)
     date = fields.Date(readonly=True, string="Accounting Date")
 
     _depends = {
-        'account.move': ['partner_id', 'date'],
+        'account.move': ['partner_shipping_id', 'date'],
         'res.partner': ['state_id'],
     }
 
@@ -18,4 +18,4 @@ class AccountInvoiceReport(models.Model):
         return super()._select() + ", contact_partner.state_id as l10n_ar_state_id, move.date"
 
     def _from(self):
-        return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_id"
+        return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_shipping_id"

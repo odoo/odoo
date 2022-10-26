@@ -2,16 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import functools
 import json
-import logging
 import math
 import re
 
 from werkzeug import urls
 
-from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
-from odoo.exceptions import ValidationError, AccessError, MissingError, UserError, AccessDenied
+from odoo import http, tools, _, SUPERUSER_ID
+from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
 
@@ -19,18 +17,18 @@ from odoo.tools import consteq
 # Misc tools
 # --------------------------------------------------
 
-_logger = logging.getLogger(__name__)
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
-    """ Generate a dict with required value to render `website.pager` template. This method compute
-        url, page range to display, ... in the pager.
-        :param url : base url of the page link
-        :param total : number total of item to be splitted into pages
-        :param page : current page
-        :param step : item per page
-        :param scope : number of page to display on pager
-        :param url_args : additionnal parameters to add as query params to page url
-        :type url_args : dict
-        :returns dict
+    """ Generate a dict with required value to render `website.pager` template.
+
+    This method computes url, page range to display, ... in the pager.
+
+    :param str url : base url of the page link
+    :param int total : number total of item to be splitted into pages
+    :param int page : current page
+    :param int step : item per page
+    :param int scope : number of page to display on pager
+    :param dict url_args : additionnal parameters to add as query params to page url
+    :returns dict
     """
     # Compute Pager
     page_count = int(math.ceil(float(total) / step))
@@ -91,9 +89,26 @@ def get_records_pager(ids, current):
     if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'access_url')):
         attr_name = 'access_url' if hasattr(current, 'access_url') else 'website_url'
         idx = ids.index(current.id)
+        prev_record = idx != 0 and current.browse(ids[idx - 1])
+        next_record = idx < len(ids) - 1 and current.browse(ids[idx + 1])
+
+        if prev_record and prev_record[attr_name] and attr_name == "access_url":
+            prev_url = '%s?access_token=%s' % (prev_record[attr_name], prev_record._portal_ensure_token())
+        elif prev_record and prev_record[attr_name]:
+            prev_url = prev_record[attr_name]
+        else:
+            prev_url = prev_record
+
+        if next_record and next_record[attr_name] and attr_name == "access_url":
+            next_url = '%s?access_token=%s' % (next_record[attr_name], next_record._portal_ensure_token())
+        elif next_record and next_record[attr_name]:
+            next_url = next_record[attr_name]
+        else:
+            next_url = next_record
+
         return {
-            'prev_record': idx != 0 and getattr(current.browse(ids[idx - 1]), attr_name),
-            'next_record': idx < len(ids) - 1 and getattr(current.browse(ids[idx + 1]), attr_name),
+            'prev_record': prev_url,
+            'next_record': next_url,
         }
     return {}
 
@@ -121,7 +136,7 @@ class CustomerPortal(Controller):
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
     OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
 
-    _items_per_page = 20
+    _items_per_page = 80
 
     def _prepare_portal_layout_values(self):
         """Values for /my/* templates rendering.
@@ -129,13 +144,13 @@ class CustomerPortal(Controller):
         Does not include the record counts.
         """
         # get customer sales rep
-        sales_user = False
-        partner = request.env.user.partner_id
-        if partner.user_id and not partner.user_id._is_public():
-            sales_user = partner.user_id
+        sales_user_sudo = request.env['res.users']
+        partner_sudo = request.env.user.partner_id
+        if partner_sudo.user_id and not partner_sudo.user_id._is_public():
+            sales_user_sudo = partner_sudo.user_id
 
         return {
-            'sales_user': sales_user,
+            'sales_user': sales_user_sudo,
             'page_name': 'home',
         }
 
@@ -143,7 +158,7 @@ class CustomerPortal(Controller):
         """Values for /my & /my/home routes template rendering.
 
         Includes the record count for the displayed badges.
-        where 'coutners' is the list of the displayed badges
+        where 'counters' is the list of the displayed badges
         and so the list to compute.
         """
         return {}
@@ -179,6 +194,7 @@ class CustomerPortal(Controller):
                     except:
                         values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
+                self.on_account_update(values, partner)
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
@@ -192,18 +208,25 @@ class CustomerPortal(Controller):
             'countries': countries,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
+            'partner_can_edit_vat': partner.can_edit_vat(),
             'redirect': redirect,
             'page_name': 'my_details',
         })
 
         response = request.render("portal.portal_my_details", values)
-        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
+
+    def on_account_update(self, values, partner):
+        pass
 
     @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def security(self, **post):
         values = self._prepare_portal_layout_values()
         values['get_error'] = get_error
+        values['allow_api_keys'] = bool(request.env['ir.config_parameter'].sudo().get_param('portal.allow_api_keys'))
+        values['open_deactivate_modal'] = False
 
         if request.httprequest.method == 'POST':
             values.update(self._update_password(
@@ -213,7 +236,8 @@ class CustomerPortal(Controller):
             ))
 
         return request.render('portal.portal_my_security', values, headers={
-            'X-Frame-Options': 'DENY'
+            'X-Frame-Options': 'SAMEORIGIN',
+            'Content-Security-Policy': "frame-ancestors 'self'"
         })
 
     def _update_password(self, old, new1, new2):
@@ -226,19 +250,43 @@ class CustomerPortal(Controller):
 
         try:
             request.env['res.users'].change_password(old, new1)
-        except UserError as e:
-            return {'errors': {'password': e.name}}
         except AccessDenied as e:
             msg = e.args[0]
             if msg == AccessDenied().args[0]:
                 msg = _('The old password you provided is incorrect, your password was not changed.')
             return {'errors': {'password': {'old': msg}}}
+        except UserError as e:
+            return {'errors': {'password': e.name}}
 
         # update session token so the user does not get logged out (cache cleared by passwd change)
         new_token = request.env.user._compute_session_token(request.session.sid)
         request.session.session_token = new_token
 
         return {'success': {'password': True}}
+
+    @route('/my/deactivate_account', type='http', auth='user', website=True, methods=['POST'])
+    def deactivate_account(self, validation, password, **post):
+        values = self._prepare_portal_layout_values()
+        values['get_error'] = get_error
+        values['open_deactivate_modal'] = True
+
+        if validation != request.env.user.login:
+            values['errors'] = {'deactivate': 'validation'}
+        else:
+            try:
+                request.env['res.users']._check_credentials(password, {'interactive': True})
+                request.env.user.sudo()._deactivate_portal_user(**post)
+                request.session.logout()
+                return request.redirect('/web/login?message=%s' % urls.url_quote(_('Account deleted!')))
+            except AccessDenied:
+                values['errors'] = {'deactivate': 'password'}
+            except UserError as e:
+                values['errors'] = {'deactivate': {'other': str(e)}}
+
+        return request.render('portal.portal_my_security', values, headers={
+            'X-Frame-Options': 'SAMEORIGIN',
+            'Content-Security-Policy': "frame-ancestors 'self'",
+        })
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
     def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):
@@ -279,7 +327,7 @@ class CustomerPortal(Controller):
 
         # Avoid using sudo or creating access_token when not necessary: internal
         # users can create attachments, as opposed to public and portal users.
-        if not request.env.user.has_group('base.group_user'):
+        if not request.env.user._is_internal():
             IrAttachment = IrAttachment.sudo().with_context(binary_field_real_user=IrAttachment.env.user)
             access_token = IrAttachment._generate_access_token()
 
@@ -319,7 +367,7 @@ class CustomerPortal(Controller):
 
         return attachment_sudo.unlink()
 
-    def details_form_validate(self, data):
+    def details_form_validate(self, data, partner_creation=False):
         error = dict()
         error_message = []
 
@@ -336,7 +384,8 @@ class CustomerPortal(Controller):
         # vat validation
         partner = request.env.user.partner_id
         if data.get("vat") and partner and partner.vat != data.get("vat"):
-            if partner.can_edit_vat():
+            # Check the VAT if it is the public user too.
+            if partner_creation or partner.can_edit_vat():
                 if hasattr(partner, "check_vat"):
                     if data.get("country_id"):
                         data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
@@ -347,8 +396,9 @@ class CustomerPortal(Controller):
                     })
                     try:
                         partner_dummy.check_vat()
-                    except ValidationError:
+                    except ValidationError as e:
                         error["vat"] = 'error'
+                        error_message.append(e.args[0])
             else:
                 error_message.append(_('Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
 
@@ -364,6 +414,15 @@ class CustomerPortal(Controller):
         return error, error_message
 
     def _document_check_access(self, model_name, document_id, access_token=None):
+        """Check if current user is allowed to access the specified record.
+
+        :param str model_name: model of the requested record
+        :param int document_id: id of the requested record
+        :param str access_token: record token to check if user isn't allowed to read requested record
+        :return: expected record, SUDOED, with SUPERUSER context
+        :raise MissingError: record not found in database, might have been deleted
+        :raise AccessError: current user isn't allowed to read requested document (and no valid token was given)
+        """
         document = request.env[model_name].browse([document_id])
         document_sudo = document.with_user(SUPERUSER_ID).exists()
         if not document_sudo:
@@ -377,6 +436,18 @@ class CustomerPortal(Controller):
         return document_sudo
 
     def _get_page_view_values(self, document, access_token, values, session_history, no_breadcrumbs, **kwargs):
+        """Include necessary values for portal chatter & pager setup (see template portal.message_thread).
+
+        :param document: record to display on portal
+        :param str access_token: provided document access token
+        :param dict values: base dict of values where chatter rendering values should be added
+        :param str session_history: key used to store latest records browsed on the portal in the session
+        :param bool no_breadcrumbs:
+        :return: updated values
+        :rtype: dict
+        """
+        values['object'] = document
+
         if access_token:
             # if no_breadcrumbs = False -> force breadcrumbs even if access_token to `invite` users to register if they click on it
             values['no_breadcrumbs'] = no_breadcrumbs
@@ -405,13 +476,15 @@ class CustomerPortal(Controller):
         if report_type not in ('html', 'pdf', 'text'):
             raise UserError(_("Invalid report type: %s", report_type))
 
-        report_sudo = request.env.ref(report_ref).sudo()
+        ReportAction = request.env['ir.actions.report'].sudo()
 
-        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
-            raise UserError(_("%s is not the reference of a report", report_ref))
+        if hasattr(model, 'company_id'):
+            if len(model.company_id) > 1:
+                raise UserError(_('Multi company reports are not supported.'))
+            ReportAction = ReportAction.with_company(model.company_id)
 
         method_name = '_render_qweb_%s' % (report_type)
-        report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
+        report = getattr(ReportAction, method_name)(report_ref, list(model.ids), data={'report_type': report_type})[0]
         reporthttpheaders = [
             ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
             ('Content-Length', len(report)),

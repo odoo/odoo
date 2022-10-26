@@ -29,10 +29,9 @@ class TestOdoobot(TestMailCommon, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_fetch_listener(self):
-        channel = self.env['mail.channel'].with_user(self.user_employee).init_odoobot()
-        partners = self.env['mail.channel'].channel_fetch_listeners(channel.uuid)
+        channel = self.user_employee.with_user(self.user_employee)._init_odoobot()
         odoobot = self.env.ref("base.partner_root")
-        odoobot_in_fetch_listeners = [partner for partner in partners if partner['id'] == odoobot.id]
+        odoobot_in_fetch_listeners = self.env['mail.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', odoobot.id)])
         self.assertEqual(len(odoobot_in_fetch_listeners), 1, 'odoobot should appear only once in channel_fetch_listeners')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -55,7 +54,7 @@ class TestOdoobot(TestMailCommon, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_onboarding_flow(self):
         kwargs = self.message_post_default_kwargs.copy()
-        channel = self.env['mail.channel'].with_user(self.user_employee).init_odoobot()
+        channel = self.user_employee.with_user(self.user_employee)._init_odoobot()
 
         kwargs['body'] = 'tagada 😊'
         last_message = self.assertNextMessage(
@@ -63,14 +62,14 @@ class TestOdoobot(TestMailCommon, TestRecipients):
             sender=self.odoobot,
             answer=("help",)
         )
-        channel.execute_command(command="help")
+        channel.execute_command_help()
         self.assertNextMessage(
             last_message,  # no message will be post with command help, use last odoobot message instead
             sender=self.odoobot,
             answer=("@OdooBot",)
         )
         kwargs['body'] = ''
-        kwargs['partner_ids'] = [self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")]
+        kwargs['partner_ids'] = [self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")]
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,

@@ -22,7 +22,7 @@ class Partner(models.Model):
             'sensor': 'false',
             'key': google_maps_api_key,
         }
-        return '//maps.googleapis.com/maps/api/staticmap?'+werkzeug.urls.url_encode(params)
+        return '//maps.googleapis.com/maps/api/staticmap?' + werkzeug.urls.url_encode(params)
 
     def google_map_link(self, zoom=10):
         params = {

@@ -1,11 +1,13 @@
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
     img, .media_iframe_video, span.fa, i.fa {
-        transform: none !important;
+        &:not(.o_animate) {
+            transform: none !important;
+        }
     }
 }
 
 .o_wysiwyg_loader {
-    @extend .form-control:disabled;
+    @extend :disabled;
     pointer-events: none;
     min-height: 100px;
     color: transparent;
@@ -15,50 +17,7 @@
     transform: translate(-50%, -50%)
 }
 
-.ui-autocomplete {
-    max-height: 50vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    .ui-menu-item {
-        padding: 0;
-        > .ui-state-active {
-            border: none;
-            font-weight: normal;
-            margin: 0;
-        }
-    }
-}
-
-// Background shapes
-.o_we_shape {
-    @extend %o-we-background-layer;
-
-    @each $module, $shapes in $o-bg-shapes {
-        @each $shape, $style in $shapes {
-            $url-params: '';
-            $colors: map-get($style, 'colors');
-            @each $i in $colors {
-                // %23 is the url-encoded form of '#' which doesn't work as is in urls.
-                $color: str-replace("#{map-get($o-color-palette, "o-color-#{$i}")}", '#', '%23');
-                $url-params: '#{$url-params}&c#{$i}=#{$color}';
-            }
-
-            // eg: o_website_shape_bg_1
-            &.o_#{$module}_#{str-replace($shape, '/', '_')} {
-                // When not customized, this URL, built in SCSS, allows for the
-                // shape to be dynamic and adapted if future color changes.
-                background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
-                background-position: map-get($style, 'position');
-                background-size: map-get($style, 'size');
-                @if map-get($style, 'repeat-y') {
-                    background-repeat: repeat-y;
-                }
-            }
-        }
-    }
-}
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
     .o_we_shape {
         display: none;
     }
@@ -71,4 +30,35 @@
 }
 .o_we_flip_x.o_we_flip_y {
     transform: scale(-1);
+}
+
+// GRID LAYOUT
+.o_grid_mode {
+    @include media-breakpoint-up(md) {
+        display: grid !important;
+        grid-auto-rows: 50px;
+        grid-template-columns: repeat(12, 1fr);
+        row-gap: 0px;
+        column-gap: 0px;
+    }
+    --gutter-x: 0px;
+    --grid-item-padding-y: 10px;
+    --grid-item-padding-x: 10px;
+
+    > * {
+        width: 100%;
+        min-width: 0;
+        margin: 0 !important;
+        padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
+    }
+}
+
+.container-fluid > .o_grid_mode {
+    --gutter-x: 30px;
+}
+
+.o_grid_item_image > img:not([data-shape]) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
 }

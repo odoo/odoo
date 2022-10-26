@@ -11,6 +11,8 @@
                        attrs="{'invisible': [('country_code', '!=', 'PE')]}"/>
                 <field name="l10n_pe_edi_unece_category"
                        attrs="{'invisible': [('country_code', '!=', 'PE')]}"/>
+                <field name="l10n_pe_edi_isc_type"
+                       attrs="{'invisible': ['|', ('l10n_pe_edi_tax_code', '!=', '2000'), ('country_code', '!=', 'PE')]}"/>
             </xpath>
         </field>
     </record>

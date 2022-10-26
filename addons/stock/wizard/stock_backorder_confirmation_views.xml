@@ -6,13 +6,18 @@
         <field name="arch" type="xml">
             <form string="Backorder creation">
                 <group>
-                    <p>
-                        You have processed less products than the initial demand.
-                    </p><p class="text-muted">
-                        Create a backorder if you expect to process the remaining
-                        products later. Do not create a backorder if you will not
-                        process the remaining products.
-                    </p>
+                    <group>
+                        <div colspan="2"><p name="explanation-text">
+                            You have processed less products than the initial demand.
+                        </p></div>
+                    </group>
+                    <group>
+                        <div colspan="2" class="text-muted">
+                            Create a backorder if you expect to process the remaining
+                            products later. Do not create a backorder if you will not
+                            process the remaining products.
+                        </div>
+                    </group>
                 </group>
 
                 <!-- Added to ensure a correct default_get behavior
@@ -34,9 +39,9 @@
                 </field>
 
                 <footer>
-                    <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
-                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}"/>
-                    <button string="_Cancel" class="btn-secondary" special="cancel" />
+                    <button name="process" string="Create Backorder" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}" data-hotkey="w"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

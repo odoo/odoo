@@ -29,7 +29,7 @@ class AccountChartTemplate(models.Model):
         ]
         for field in todo_list:
             account = self[field]
-            value = acc_template_ref[account.id] if account else False
+            value = acc_template_ref[account].id if account else False
             PropertyObj._set_default(field, "product.category", value, company)
 
         return res

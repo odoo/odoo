@@ -336,7 +336,7 @@ form: module.record_id""" % (xml_id,)
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
-        warnings.warn("The <act_window> tag is deprecated, use a <record> for {xml_id!r}.", DeprecationWarning)
+        warnings.warn(f"The <act_window> tag is deprecated, use a <record> for {xml_id!r}.", DeprecationWarning)
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(rec.get('view_id'))
@@ -487,7 +487,7 @@ form: module.record_id""" % (xml_id,)
         for child in rec.iterchildren('menuitem'):
             self._tag_menuitem(child, parent=menu.id)
 
-    def _tag_record(self, rec):
+    def _tag_record(self, rec, extra_vals=None):
         rec_model = rec.get("model")
         env = self.get_env(rec)
         rec_id = rec.get("id", '')
@@ -533,6 +533,7 @@ form: module.record_id""" % (xml_id,)
                 raise Exception("Cannot update missing record %r" % xid)
 
         res = {}
+        sub_records = []
         for field in rec.findall('./field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
             f_name = field.get("name")
@@ -577,7 +578,19 @@ form: module.record_id""" % (xml_id,)
                         f_val = float(f_val)
                     elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
+                    elif field_type == 'one2many':
+                        for child in field.findall('./record'):
+                            sub_records.append((child, model._fields[f_name].inverse_name))
+                        if isinstance(f_val, str):
+                            # We do not want to write on the field since we will write
+                            # on the childrens' parents later
+                            continue
+                    elif field_type == 'html':
+                        if field.get('type') == 'xml':
+                            _logger.warning('HTML field %r is declared as `type="xml"`', f_name)
             res[f_name] = f_val
+        if extra_vals:
+            res.update(extra_vals)
 
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         record = model._load_records([data], self.mode == 'update')
@@ -585,6 +598,8 @@ form: module.record_id""" % (xml_id,)
             self.idref[rec_id] = record.id
         if config.get('import_partial'):
             env.cr.commit()
+        for child_rec, inverse_name in sub_records:
+            self._tag_record(child_rec, extra_vals={inverse_name: record.id})
         return rec_model, record.id
 
     def _tag_template(self, el):
@@ -666,7 +681,7 @@ form: module.record_id""" % (xml_id,)
     def model_id_get(self, id_str, raise_if_not_found=True):
         if '.' not in id_str:
             id_str = '%s.%s' % (self.module, id_str)
-        return self.env['ir.model.data'].xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
+        return self.env['ir.model.data']._xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
 
     def _tag_root(self, el):
         for rec in el:
@@ -688,7 +703,7 @@ form: module.record_id""" % (xml_id,)
                     err=err.args[0],
                 )
                 _logger.debug(msg, exc_info=True)
-                raise ParseError(msg) from None  # Restart with "--log_handler odoo.tools.convert:DEBUG" for complete traceback
+                raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
             except Exception as e:
                 raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
                     rec.getroottree().docinfo.URL,
@@ -749,7 +764,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
             raise ValueError("Can't load unknown file type %s.", filename)
 
 def convert_sql_import(cr, fp):
-    cr.execute(fp.read())
+    cr.execute(fp.read()) # pylint: disable=sql-injection
 
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):

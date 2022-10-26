@@ -27,7 +27,7 @@
         <record id="product_cable_management_box" model="product.product">
             <field name="default_code">FURN_5555</field>
             <field name="name">Cable Management Box</field>
-            <field name="type">product</field>
+            <field name="detailed_type">product</field>
             <field name="weight">0.01</field>
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="lst_price">100.0</field>
@@ -39,19 +39,19 @@
             <field name="image_1920" type="base64" file="stock/static/img/cable_management.png"/>
         </record>
 
-        <record id="lot_product_cable_management" model="stock.production.lot">
+        <record id="lot_product_cable_management" model="stock.lot">
             <field name="name">LOT-000001</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record id="lot_product_product_cable_management_box_0" model="stock.production.lot">
+        <record id="lot_product_product_cable_management_box_0" model="stock.lot">
             <field name="name">CM-BOX-00001</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record id="lot_product_product_cable_management_box_1" model="stock.production.lot">
+        <record id="lot_product_product_cable_management_box_1" model="stock.lot">
             <field name="name">CM-BOX-00002</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
             <field name="company_id" ref="base.main_company"/>
@@ -86,7 +86,7 @@
             <field name="scheduled_date" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_27').name,
                 'product_id': ref('product.product_product_27'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -105,7 +105,7 @@
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=15)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_6').name,
                 'product_id': ref('product.product_product_6'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -124,7 +124,7 @@
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=5)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_02').name,
                 'product_id': ref('product.product_delivery_02'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -143,7 +143,7 @@
             <field name="scheduled_date" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_5').name,
                 'product_id': ref('product.product_product_5'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -162,7 +162,7 @@
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=7)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_3').name,
                 'product_id': ref('product.product_product_3'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -181,7 +181,7 @@
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=12)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_3').name,
                 'product_id': ref('product.product_product_3'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -200,7 +200,7 @@
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_6').name,
                 'product_id': ref('product.product_product_6'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -217,7 +217,7 @@
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('stock.product_cable_management_box').name,
                 'product_id': ref('stock.product_cable_management_box'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -235,7 +235,7 @@
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=5)"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_01').name,
                 'product_id': ref('product.product_delivery_01'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -252,7 +252,7 @@
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_22').name,
                 'product_id': ref('product.product_product_22'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -269,7 +269,7 @@
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_10').name,
                 'product_id': ref('product.product_product_10'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -286,7 +286,7 @@
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_02').name,
                 'product_id': ref('product.product_delivery_02'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -306,7 +306,7 @@
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_9').name,
                 'product_id': ref('product.product_product_9'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -325,7 +325,7 @@
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_01').name,
                 'product_id': ref('product.product_delivery_01'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -343,7 +343,7 @@
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_01').name,
                 'product_id': ref('product.product_delivery_01'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -363,7 +363,7 @@
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_22').name,
                 'product_id': ref('product.product_product_22'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -384,7 +384,7 @@
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_27').name,
                 'product_id': ref('product.product_product_27'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -404,7 +404,7 @@
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_6').name,
                 'product_id': ref('product.product_product_6'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -424,7 +424,7 @@
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_delivery_02').name,
                 'product_id': ref('product.product_delivery_02'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -444,7 +444,7 @@
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="company_id" ref="stock.res_company_1"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'name': obj().env.ref('product.product_product_5').name,
                 'product_id': ref('product.product_product_5'),
                 'product_uom': ref('uom.product_uom_unit'),
@@ -477,7 +477,6 @@
         <function model="stock.picking" name="action_assign">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
-                obj().env.ref('stock.outgoing_shipment_main_warehouse4').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
                 obj().env.ref('stock.outgoing_chicago_warehouse1').id,
@@ -488,10 +487,6 @@
         <function model="stock.move.line" name="write">
             <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse1'))]"/>
             <value eval="{'qty_done': 100}"/>
-        </function>
-        <function model="stock.move.line" name="write">
-            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse4'))]"/>
-            <value eval="{'qty_done': 16}"/>
         </function>
         <function model="stock.move.line" name="write">
             <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse5'))]"/>

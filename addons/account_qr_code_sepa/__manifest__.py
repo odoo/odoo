@@ -12,8 +12,6 @@
     # any module necessary for this one to work correctly
     'depends': ['account', 'base_iban'],
 
-    'data': [
-    ],
-
     'auto_install': True,
+    'license': 'LGPL-3',
 }

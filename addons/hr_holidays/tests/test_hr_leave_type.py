@@ -15,8 +15,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         leave_1 = self.env['hr.leave'].create({
@@ -39,5 +38,5 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         with self.assertRaises(AccessError):
             self.env['hr.leave.type'].with_user(self.user_hruser_id).create({
                 'name': 'UserCheats',
-                'allocation_type': 'no',
+                'requires_allocation': 'no',
             })

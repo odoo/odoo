@@ -20,14 +20,14 @@
                                 <div class="col-12 col-lg-6 o_setting_box" id="active_user_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="fa fa-lg fa-users" aria-label="Number of active users"/>
-                                        <field name='active_user_count' class="w-auto pl-3 font-weight-bold"/>
+                                        <field name='active_user_count' class="w-auto ps-3 fw-bold"/>
                                         <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&gt;', '1')]}">
                                             Active User
                                         </span>
                                         <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&lt;=', '1')]}">
                                             Active Users
                                         </span>
-                                        <a href="https://www.odoo.com/documentation/user/14.0/general/odoo_basics/add_user.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                        <a href="https://www.odoo.com/documentation/master/applications/general/users.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                         <br/>
                                         <button name="%(base.action_res_users)d" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
                                     </div>
@@ -42,7 +42,7 @@
                                     <div class='o_setting_right_pane'>
                                         <!-- TODO This is not an ideal solution but it looks ok on the interface -->
                                         <div class="w-50">
-                                            <field name="language_count" class="w-auto pl-1 font-weight-bold"/>
+                                            <field name="language_count" class="w-auto ps-1 fw-bold"/>
                                             <span class='o_form_label' attrs="{'invisible':[('language_count', '&gt;', '1')]}">
                                                 Language
                                             </span>
@@ -51,7 +51,7 @@
                                             </span>
                                         </div>
                                         <div class="mt8">
-                                            <button name="%(base.action_view_base_language_install)d" icon="fa-arrow-right" type="action" string="Add Language" class="btn-link"/>
+                                            <button name="%(base.action_view_base_language_install)d" icon="fa-arrow-right" type="action" string="Add Languages" class="btn-link"/>
                                         </div>
                                         <div class="mt8" groups="base.group_no_one">
                                             <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
@@ -67,7 +67,7 @@
                                 <div class="col-12 col-lg-6 o_setting_box" id="company_details_settings">
                                     <field name="company_id" invisible="1"/>
                                     <div class="o_setting_right_pane">
-                                        <field name="company_name" class="font-weight-bold"/>
+                                        <field name="company_name" class="fw-bold"/>
                                         <br/>
                                         <field name="company_informations" class="text-muted" style="width: 90%;"/>
                                         <br/>
@@ -91,21 +91,6 @@
                                                 <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
                                             </div>
                                         </div>
-                                    </div> 
-                                </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
-                                    <div class="o_setting_right_pane">
-                                        <field name='company_count' class="w-auto pl-1 font-weight-bold"/>
-                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
-                                            Company
-                                        </span>
-                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
-                                            Companies
-                                        </span>
-                                        <br/>
-                                        <div class="mt8">
-                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
-                                        </div>
                                     </div>
                                     <br/>
                                     <div id="inter_company" groups="base.group_multi_company" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.">
@@ -125,6 +110,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
+                                    <div class="o_setting_right_pane">
+                                        <field name='company_count' class="w-auto ps-1 fw-bold"/>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
+                                            Company
+                                        </span>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
+                                            Companies
+                                        </span>
+                                        <br/>
+                                        <div class="mt8">
+                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="emails"/>
@@ -136,7 +136,7 @@
                                         <div class="o_setting_right_pane" id="sms_settings">
                                             <div class="o_form_label">
                                             Send SMS
-                                            <a href="https://www.odoo.com/documentation/user/14.0/sms_marketing/pricing/pricing_and_faq.html" title="Documentation" class="ml-1 o_doc_link" target="_blank"></a>
+                                            <a href="https://www.odoo.com/documentation/master/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" title="Documentation" class="ms-1 o_doc_link" target="_blank"></a>
                                             </div>
                                             <div class="text-muted">
                                                 Send texts to your contacts
@@ -188,7 +188,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label string="Import &amp; Export" for="module_base_import"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/general/base_import/import_faq.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/general/export_import_data.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Allow users to import data from CSV/XLS/XLSX/ODS files
                                 </div>
@@ -215,37 +215,23 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Mail Plugin" for="module_mail_plugin"/>
-                                    <a href="https://www.odoo.com/documentation/user/crm/optimize/outlook_extension.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/master/applications/productivity/mail_plugins.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Integrate with mail client plugins
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="sync_google_calendar_setting">
+                            <div class="col-12 col-lg-6 o_setting_box" id="sync_outlook_calendar_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_microsoft_calendar" />
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Outlook Calendar" for="module_microsoft_calendar"/>
-                                    <a href="https://www.odoo.com/documentation/user/14.0/general/calendars/outlook/outlook_calendar.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/master/applications/general/calendars/outlook/outlook_calendar.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Synchronize your calendar with Outlook
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('module_microsoft_calendar', '=', False)]}" id="msg_module_microsoft_calendar">
-                                        <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="external_pads_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_pad"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_pad"/>
-                                    <div class="text-muted">
-                                        Use external pads in Odoo Notes
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('module_pad','=',False)]}" id="msg_module_pad">
                                         <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                     </div>
                                 </div>
@@ -256,7 +242,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Google Calendar" for="module_google_calendar"/>
-                                    <a href="https://www.odoo.com/documentation/user/14.0/crm/optimize/google_calendar_credentials.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/master/applications/general/calendars/google/google_calendar_credentials.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Synchronize your calendar with Google Calendar
                                     </div>
@@ -265,34 +251,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="google_drive_documents_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_google_drive" />
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Google Drive" for="module_google_drive"/>
-                                    <div class="text-muted">
-                                        Create and attach Google Drive documents to any record
-                                    </div>
-                                    <div class="content-group mt16" attrs="{'invisible': [('module_google_drive','=',False)]}" id="msg_module_google_drive">
-                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="google_spreadsheet_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_google_spreadsheet" />
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_google_spreadsheet"/>
-                                    <div class="text-muted">
-                                        Extract and analyze Odoo data from Google Spreadsheet
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('module_google_spreadsheet','=',False)]}" id="msg_module_google_spreadsheet">
-                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="product_get_pic_setting"/>
                             <div class="col-12 col-lg-6 o_setting_box" id="module_auth_oauth">
                                 <div class="o_setting_left_pane">
                                     <field name="module_auth_oauth" />
@@ -313,7 +272,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="auth_ldap_right_pane">
                                     <label string="LDAP Authentication" for="module_auth_ldap"/>
-                                    <a href="https://www.odoo.com/documentation/user/14.0/general/auth/ldap.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/master/applications/general/auth/ldap.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                        Use LDAP credentials to log in
                                     </div>
@@ -328,7 +287,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" id="web_unsplash_settings">
                                     <label for="module_web_unsplash"/>
-                                    <a href="https://www.odoo.com/documentation/user/14.0/general/unsplash/unsplash_access_key.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/unsplash.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Find free high-resolution images from Unsplash
                                     </div>
@@ -366,6 +325,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <h2 groups="base.group_no_one">Performance</h2>
+                        <div groups="base.group_no_one" class="row mt16 o_settings_container" name="performance">
+                            <div class="col-12 col-lg-6 o_setting_box" id="profiling_enabled_until">
+                            <label for="profiling_enabled_until"/>
+                            <field name="profiling_enabled_until"/>
+                            <div class="text-muted">
+                                Enable the profiling tool. Profiling may impact performance while being active.
+                            </div>
+                            </div>
+                        </div>
+
                         <widget name='res_config_dev_tool'/>
                         <div id='about'>
                             <h2>About</h2>

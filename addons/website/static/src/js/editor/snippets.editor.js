@@ -5,18 +5,22 @@ const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
+const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+const getDeepRange = OdooEditorLib.getDeepRange;
+const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
-weSnippetEditor.SnippetsMenu.include({
-    xmlDependencies: (weSnippetEditor.SnippetsMenu.prototype.xmlDependencies || [])
-        .concat(['/website/static/src/xml/website.editor.xml']),
+const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
+        'click .o_we_animate_text': '_onAnimateTextClick',
+        'click .o_we_highlight_animated_text': '_onHighlightAnimatedTextClick',
     }),
     custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
+        'reload_bundles': '_onReloadBundles',
     }),
     tabs: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
         THEME: 'theme',
@@ -26,6 +30,27 @@ weSnippetEditor.SnippetsMenu.include({
         ['theme-options', _lt("Theme Options")],
         ['website-settings', _lt("Website Settings")],
     ],
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.$currentAnimatedText = $();
+
+        this.__onSelectionChange = ev => {
+            this._toggleAnimatedTextButton();
+        };
+        this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].classList.remove('o_animated_text_highlighted');
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -70,17 +95,45 @@ weSnippetEditor.SnippetsMenu.include({
                 size: 'medium',
                 title: _t("Google Map API Key"),
                 buttons: [
-                    {text: _t("Save"), classes: 'btn-primary', close: true, click: async () => {
-                        const newAPIKey = dialog.$('#api_key_input').val() || false;
-                        await this._rpc({
-                            model: 'website',
-                            method: 'write',
-                            args: [
-                                [websiteId],
-                                {google_maps_api_key: newAPIKey},
-                            ],
-                        });
-                        invalidated = true;
+                    {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
+                        const $apiKeyInput = dialog.$('#api_key_input');
+                        const valueAPIKey = $apiKeyInput.val();
+                        const $apiKeyHelp = dialog.$('#api_key_help');
+                        if (!valueAPIKey) {
+                            $apiKeyInput.addClass('is-invalid');
+                            $apiKeyHelp.text(_t("Enter an API Key"));
+                            return;
+                        }
+                        const $button = $(ev.currentTarget);
+                        $button.prop('disabled', true);
+                        try {
+                            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${valueAPIKey}`);
+                            if (response.status === 200) {
+                                await this._rpc({
+                                    model: 'website',
+                                    method: 'write',
+                                    args: [
+                                        [websiteId],
+                                        {google_maps_api_key: valueAPIKey},
+                                    ],
+                                });
+                                invalidated = true;
+                                dialog.close();
+                            } else {
+                                const text = await response.text();
+                                $apiKeyInput.addClass('is-invalid');
+                                $apiKeyHelp.empty().text(
+                                    _t("Invalid API Key. The following error was returned by Google:")
+                                ).append($('<i/>', {
+                                    text: text,
+                                    class: 'ms-1',
+                                }));
+                            }
+                        } catch (_e) {
+                            $apiKeyHelp.text(_t("Check your connection and try again"));
+                        } finally {
+                            $button.prop("disabled", false);
+                        }
                     }},
                     {text: _t("Cancel"), close: true}
                 ],
@@ -104,6 +157,7 @@ weSnippetEditor.SnippetsMenu.include({
                 finalOptions.offsetElements.$top = $header;
             }
         }
+        finalOptions.jQueryDraggableOptions.iframeFix = true;
         return finalOptions;
     },
     /**
@@ -129,6 +183,64 @@ weSnippetEditor.SnippetsMenu.include({
     _updateRightPanelContent: function ({content, tab}) {
         this._super(...arguments);
         this.$('.o_we_customize_theme_btn').toggleClass('active', tab === this.tabs.THEME);
+    },
+    /**
+     * Returns the animated text element wrapping the selection if it exists.
+     *
+     * @private
+     * @return {Element|false}
+     */
+    _getAnimatedTextElement() {
+        const editable = this.options.wysiwyg.$editable[0];
+        const animatedTextNode = getTraversedNodes(editable).find(n => n.parentElement.closest(".o_animated_text"));
+        return animatedTextNode ? animatedTextNode.parentElement.closest('.o_animated_text') : false;
+    },
+    /**
+     * @override
+     */
+    _addToolbar() {
+        this._super(...arguments);
+        this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
+            <div class="btn fa fa-fw fa-2x o_we_highlight_animated_text d-none
+                ${this.$body.hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
+                title="${_t('Highlight Animated Text')}"
+                aria-label="Highlight Animated Text"/>
+        `));
+        this._toggleAnimatedTextButton();
+        this._toggleHighlightAnimatedTextButton();
+    },
+    /**
+     * Activates the button to animate text if the selection is in an
+     * animated text element or deactivates the button if not.
+     *
+     * @private
+     */
+    _toggleAnimatedTextButton() {
+        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
+        if (!this._isValidSelection(sel)) {
+            return;
+        }
+        const animatedText = this._getAnimatedTextElement();
+        this.$('.o_we_animate_text').toggleClass('active', !!animatedText);
+        this.$currentAnimatedText = animatedText ? $(animatedText) : $();
+    },
+    /**
+     * Displays the button that allows to highlight the animated text if there
+     * is animated text in the page.
+     *
+     * @private
+     */
+    _toggleHighlightAnimatedTextButton() {
+        const $animatedText = this.getEditableArea().find('.o_animated_text');
+        this.$('#o_we_editor_toolbar_container .o_we_highlight_animated_text').toggleClass('d-none', !$animatedText.length);
+    },
+    /**
+     * @private
+     * @param {Node} node
+     * @return {Boolean}
+     */
+    _isValidSelection(sel) {
+        return sel.rangeCount && [...this.getEditableArea()].some(el => el.contains(sel.anchorNode));
     },
 
     //--------------------------------------------------------------------------
@@ -176,7 +288,7 @@ weSnippetEditor.SnippetsMenu.include({
                     el = newEl;
                 }
                 this.bottomFakeOptionEl = el;
-                this.el.appendChild(this.topFakeOptionEl);
+                this.$body[0].appendChild(this.topFakeOptionEl);
             }
 
             // Need all of this in that order so that:
@@ -205,6 +317,120 @@ weSnippetEditor.SnippetsMenu.include({
             throw e;
         }
     },
+    /**
+     * @override
+     */
+    _onOptionsTabClick(ev) {
+        if (!ev.currentTarget.classList.contains('active')) {
+            this._activateSnippet(false);
+            this._mutex.exec(async () => {
+                const switchableViews = await new Promise((resolve, reject) => {
+                    this.trigger_up('get_switchable_related_views', {
+                        onSuccess: resolve,
+                        onFailure: reject,
+                    });
+                });
+                if (switchableViews.length) {
+                    // These do not need to be awaited as we're in teh context
+                    // of the mutex.
+                    this._activateSnippet(this.$body.find('#wrapwrap > main'));
+                    return;
+                }
+                let $pageOptionsTarget = $();
+                let i = 0;
+                const pageOptions = this.templateOptions.filter(template => template.data.pageOptions);
+                while (!$pageOptionsTarget.length && i < pageOptions.length) {
+                    $pageOptionsTarget = pageOptions[i].selector.all();
+                    i++;
+                }
+                if ($pageOptionsTarget.length) {
+                    this._activateSnippet($pageOptionsTarget);
+                } else {
+                    this._activateEmptyOptionsTab();
+                }
+            });
+        }
+    },
+    /**
+     * @private
+     */
+    _onAnimateTextClick(ev) {
+        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
+        if (!this._isValidSelection(sel)) {
+            return;
+        }
+        const editable = this.options.wysiwyg.$editable[0];
+        const range = getDeepRange(editable, { splitText: true, select: true, correctTripleClick: true });
+        if (this.$currentAnimatedText.length) {
+            this.$currentAnimatedText.contents().unwrap();
+            this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
+            this._toggleHighlightAnimatedTextButton();
+            ev.target.classList.remove('active');
+            this.options.wysiwyg.odooEditor.historyStep();
+        } else {
+            if (sel.getRangeAt(0).collapsed) {
+                return;
+            }
+            const animatedTextEl = document.createElement('span');
+            animatedTextEl.classList.add('o_animated_text', 'o_animate', 'o_animate_preview', 'o_anim_fade_in');
+            let $snippet = null;
+            try {
+                range.surroundContents(animatedTextEl);
+                $snippet = $(animatedTextEl);
+            } catch (_e) {
+                // This try catch is needed because 'surroundContents' may
+                // fail when the range has partially selected a non-Text node.
+                if (range.commonAncestorContainer.textContent === range.toString()) {
+                    const $commonAncestor = $(range.commonAncestorContainer);
+                    $commonAncestor.wrapInner(animatedTextEl);
+                    $snippet = $commonAncestor.find('.o_animated_text');
+                }
+            }
+            if ($snippet) {
+                $snippet[0].normalize();
+                this.trigger_up('activate_snippet', {
+                    $snippet: $snippet,
+                    previewMode: false,
+                });
+                this.options.wysiwyg.odooEditor.historyStep();
+            } else {
+                this.displayNotification({
+                    message: _t("The current text selection cannot be animated. Try clearing the format and try again."),
+                    type: 'danger',
+                    sticky: true,
+                });
+            }
+        }
+    },
+    /**
+     * @private
+     */
+    _onHighlightAnimatedTextClick(ev) {
+        this.$body.toggleClass('o_animated_text_highlighted');
+        $(ev.target).toggleClass('fa-eye fa-eye-slash').toggleClass('text-success');
+    },
+    /**
+     * On reload bundles, when it's from the theme tab, destroy any
+     * snippetEditor as they might hold outdated style values. (e.g. color palettes).
+     * We do not destroy the Theme tab editors as they should have the correct
+     * values with their compute widget states.
+     * NOTE: This is a bit janky, _computeWidgetState should modify the
+     * option's widget to reflect the style accordingly. But since
+     * color_palette widget is independent of the UserValueWidget, it's hard to
+     * modify its style using the options events.
+     *
+     * @private
+     */
+    _onReloadBundles(ev) {
+        if (this._currentTab === this.tabs.THEME) {
+            const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
+            for (const editor of this.snippetEditors) {
+                if (!editor.$target[0].matches(excludeSelector)) {
+                    this._mutex.exec(() => editor.destroy());
+                }
+            }
+        }
+    }
 });
 
 weSnippetEditor.SnippetEditor.include({
@@ -213,5 +439,41 @@ weSnippetEditor.SnippetEditor.include({
         '.s_parallax_bg',
         '.o_bg_video_container',
     ].join(','),
+
+    /**
+     * @override
+     */
+    getName() {
+        if (this.$target[0].closest('[data-oe-field=logo]')) {
+            return _t("Logo");
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Changes some behaviors before the drag and drop.
+     *
+     * @private
+     * @override
+     * @returns {Function} a function that restores what was changed when the
+     *  drag and drop is over.
+     */
+    _prepareDrag() {
+        const restore = this._super(...arguments);
+        // Remove the footer scroll effect if it has one (because the footer
+        // dropzone flickers otherwise when it is in grid mode).
+        const wrapwrapEl = this.$body[0].ownerDocument.defaultView.document.body.querySelector('#wrapwrap');
+        const hasFooterScrollEffect = wrapwrapEl && wrapwrapEl.classList.contains('o_footer_effect_enable');
+        if (hasFooterScrollEffect) {
+            wrapwrapEl.classList.remove('o_footer_effect_enable');
+            return () => {
+                wrapwrapEl.classList.add('o_footer_effect_enable');
+                restore();
+            };
+        }
+        return restore;
+    },
 });
+return {
+    SnippetsMenu: wSnippetMenu,
+};
 });

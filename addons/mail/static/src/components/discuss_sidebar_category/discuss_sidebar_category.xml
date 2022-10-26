@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategory" owl="1">
+        <t t-if="category">
+            <t t-set="o_DiscussSidebarCategory_hoverItem" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
+            <div class="o_DiscussSidebarCategory" t-attf-class="{{ className }}" t-att-data-category-local-id="category.localId" t-ref="root">
+                <div class="o_DiscussSidebarCategory_header d-flex align-items-center my-1">
+                    <div t-attf-class="o_DiscussSidebarCategory_title o_DiscussSidebarCategory_headerItem d-flex align-items-baseline mx-1 {{ o_DiscussSidebarCategory_hoverItem }}" t-on-click="category.onClick">
+                        <i class="o_DiscussSidebarCategory_titleIcon small" t-att-class="category.isOpen ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"/>
+                        <span class="o_DiscussSidebarCategory_titleText btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
+                    </div>
+                    <div class="o_DiscussSidebarCategory_headerItem flex-grow-1"/>
+                    <div class="o_DiscussSidebarCategory_commands o_DiscussSidebarCategory_headerItem d-flex me-3">
+                        <t t-if="category.hasViewCommand">
+                            <i t-attf-class="o_DiscussSidebarCategory_command o_DiscussSidebarCategory_commandView fa fa-cog {{ o_DiscussSidebarCategory_hoverItem }}" title="View or join channels" t-on-click="category.onClickCommandView" role="img"/>
+                        </t>
+                        <t t-if="category.hasAddCommand and category.isOpen">
+                            <i t-attf-class="o_DiscussSidebarCategory_command o_DiscussSidebarCategory_commandAdd fa fa-plus {{ o_DiscussSidebarCategory_hoverItem }} ms-1" t-on-click="category.onClickCommandAdd" t-att-title="category.commandAddTitleText" role="img"/>
+                        </t>
+                    </div>
+                    <t t-if="!category.isOpen and category.counter > 0">
+                        <div class="o_DiscussSidebarCategory_counter o_DiscussSidebarCategory_headerItem badge rounded-pill text-bg-primary me-3">
+                            <t t-esc="category.counter"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="o_DiscussSidebarCategory_content">
+                    <t t-if="category.isOpen">
+                        <t t-if="category.addingItemAutocompleteInputView">
+                            <div class="o_DiscussSidebarCategory_addingItem d-flex mb-2">
+                                <AutocompleteInputView
+                                    className="'o_DiscussSidebarCategory_addingItemInput form-control mx-4 rounded'"
+                                    record="category.addingItemAutocompleteInputView"
+                                />
+                            </div>
+                        </t>
+                        <t t-foreach="category.filteredCategoryItems" t-as="item" t-key="item.localId">
+                            <DiscussSidebarCategoryItem
+                                className="'o_DiscussSidebarCategory_item'"
+                                record="item"
+                            />
+                        </t>
+                    </t>
+                    <t t-if="!category.isOpen and category.activeItem">
+                        <DiscussSidebarCategoryItem
+                            className="'o_DiscussSidebarCategory_item'"
+                            record="category.activeItem"
+                        />
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

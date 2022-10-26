@@ -2,22 +2,12 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_Dialog {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: $zindex-modal;
+.o_Dialog_componentLargeSize {
+    min-width: Min(95vw, $o-modal-lg);
+    max-width: 95vw;
 }
 
-// ------------------------------------------------------------------
-// Style
-// ------------------------------------------------------------------
-
-.o_Dialog {
-    background-color: rgba(0, 0, 0, 0.7);
+.o_Dialog_componentMediumSize {
+    min-width: Min(95vw, $o-modal-md);
+    max-width: 95vw;
 }

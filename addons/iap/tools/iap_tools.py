@@ -6,13 +6,33 @@ import logging
 import json
 import requests
 import uuid
+from unittest.mock import patch
 
 from odoo import exceptions, _
-from odoo.tools import pycompat
+from odoo.tests.common import BaseCase
+from odoo.tools import email_normalize, pycompat
 
 _logger = logging.getLogger(__name__)
 
 DEFAULT_ENDPOINT = 'https://iap.odoo.com'
+
+
+# We need to mock iap_jsonrpc during tests as we don't want to perform real calls to RPC endpoints
+def iap_jsonrpc_mocked(*args, **kwargs):
+    raise exceptions.AccessError("Unavailable during tests.")
+
+
+iap_patch = patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked)
+
+
+def setUp(self):
+    old_setup_func(self)
+    iap_patch.start()
+    self.addCleanup(iap_patch.stop)
+
+
+old_setup_func = BaseCase.setUp
+BaseCase.setUp = setUp
 
 #----------------------------------------------------------
 # Tools globals
@@ -46,6 +66,44 @@ _MAIL_DOMAIN_BLACKLIST = set([
     # Dummy entries
     'example.com',
 ])
+
+# List of country codes for which we should offer state filtering when mining new leads.
+# See crm.iap.lead.mining.request#_compute_available_state_ids() or task-2471703 for more details.
+_STATES_FILTER_COUNTRIES_WHITELIST = set([
+    'AR', 'AU', 'BR', 'CA', 'IN', 'MY', 'MX', 'NZ', 'AE', 'US'
+])
+
+
+#----------------------------------------------------------
+# Tools
+#----------------------------------------------------------
+
+def mail_prepare_for_domain_search(email, min_email_length=0):
+    """ Return an email address to use for a domain-based search. For generic
+    email providers like gmail (see ``_MAIL_DOMAIN_BLACKLIST``) we consider
+    each email as being independant (and return the whole email). Otherwise
+    we return only the right-part of the email (aka "mydomain.com" if email is
+    "Raoul Lachignole" <raoul@mydomain.com>).
+
+    :param integer min_email_length: skip if email has not the sufficient minimal
+      length, indicating a probably fake / wrong value (skip if 0);
+    """
+    if not email:
+        return False
+    email_tocheck = email_normalize(email, strict=False)
+    if not email_tocheck:
+        email_tocheck = email.casefold()
+
+    if email_tocheck and min_email_length and len(email_tocheck) < min_email_length:
+        return False
+
+    parts = email_tocheck.rsplit('@', maxsplit=1)
+    if len(parts) == 1:
+        return email_tocheck
+    email_domain = parts[1]
+    if email_domain not in _MAIL_DOMAIN_BLACKLIST:
+        return '@' + email_domain
+    return email_tocheck
 
 
 #----------------------------------------------------------
@@ -111,13 +169,14 @@ class IapTransaction(object):
         self.credit = None
 
 
-def iap_authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+def iap_authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None, ttl=4320):
     endpoint = iap_get_endpoint(env)
     params = {
         'account_token': account_token,
         'credit': credit,
         'key': key,
         'description': description,
+        'ttl': ttl,
     }
     if dbuuid:
         params.update({'dbuuid': dbuuid})
@@ -154,7 +213,7 @@ def iap_capture(env, transaction_token, key, credit):
 
 
 @contextlib.contextmanager
-def iap_charge(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+def iap_charge(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None, ttl=4320):
     """
     Account charge context manager: takes a hold for ``credit``
     amount before executing the body, then captures it if there
@@ -170,9 +229,12 @@ def iap_charge(env, key, account_token, credit, dbuuid=False, description=None, 
     :param credit_template: a QWeb template to render and show to the
                             user if their account does not have enough
                             credits for the requested operation
+    :param int ttl: transaction time to live in hours.
+                    If the credit are not captured when the transaction
+                    expires, the transaction is canceled
     :type credit_template: str
     """
-    transaction_token = iap_authorize(env, key, account_token, credit, dbuuid, description, credit_template)
+    transaction_token = iap_authorize(env, key, account_token, credit, dbuuid, description, credit_template, ttl)
     try:
         transaction = IapTransaction()
         transaction.credit = credit

@@ -17,7 +17,7 @@
                         <div class="o_row">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('carrier_id','=', False)]}"/>
                             <button name="update_price" type="object" attrs="{'invisible': [('delivery_type','in', ('fixed', 'base_on_rule'))]}">
-                                <i class="fa fa-arrow-right mr-1"/>Get rate
+                                <i class="fa fa-arrow-right me-1"/>Get rate
                             </button>
                         </div>
                     </group>
@@ -29,9 +29,9 @@
                     <field name="delivery_message" nolabel="1"/>
                 </div>
                 <footer>
-                    <button name="button_confirm" invisible="not context.get('carrier_recompute')" type="object" string="Update" class="btn-primary"/>
-                    <button name="button_confirm" invisible="context.get('carrier_recompute')" type="object" string="Add" class="btn-primary"/>
-                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                    <button name="button_confirm" invisible="not context.get('carrier_recompute')" type="object" string="Update" class="btn-primary" data-hotkey="q"/>
+                    <button name="button_confirm" invisible="context.get('carrier_recompute')" type="object" string="Add" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="z" class="btn-secondary"/>
                 </footer>
             </form>
         </field>

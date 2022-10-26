@@ -5,14 +5,14 @@ from odoo.tests.common import tagged, HttpCase
 from odoo import Command
 
 
-@tagged('-at_install', 'post_install')
+@tagged('-at_install', 'post_install', 'mail_composer')
 class TestMailFullComposer(HttpCase):
 
     def test_full_composer_tour(self):
         self.env['mail.template'].create({
             'name': 'Test template',
-            'partner_to': '${object.id}',
-            'lang': '${object.lang}',
+            'partner_to': '{{ object.id }}',
+            'lang': '{{ object.lang }}',
             'auto_delete': True,
             'model_id': self.ref('base.model_res_partner'),
         })

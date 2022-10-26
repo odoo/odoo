@@ -10,7 +10,6 @@
 The kernel of Odoo, needed for all installation.
 ===================================================
 """,
-    'depends': [],
     'data': [
         'data/res_bank.xml',
         'data/res.lang.csv',
@@ -22,6 +21,7 @@ The kernel of Odoo, needed for all installation.
         'data/res_currency_data.xml',
         'data/res_country_data.xml',
         'data/ir_demo_data.xml',
+        'data/ir_config_parameter_data.xml',
         'security/base_groups.xml',
         'security/base_security.xml',
         'views/base_menus.xml',
@@ -39,7 +39,6 @@ The kernel of Odoo, needed for all installation.
         'views/ir_attachment_views.xml',
         'views/ir_rule_views.xml',
         'views/ir_sequence_views.xml',
-        'views/ir_translation_views.xml',
         'views/ir_ui_menu_views.xml',
         'views/ir_ui_view_views.xml',
         'views/ir_default_views.xml',
@@ -59,10 +58,10 @@ The kernel of Odoo, needed for all installation.
         'wizard/base_module_upgrade_views.xml',
         'wizard/base_module_uninstall_views.xml',
         'wizard/base_export_language_views.xml',
-        'wizard/base_update_translations_views.xml',
         'wizard/base_partner_merge_views.xml',
         'data/ir_actions_data.xml',
         'data/ir_demo_failure_data.xml',
+        'views/ir_profile_views.xml',
         'views/res_company_views.xml',
         'views/res_lang_views.xml',
         'views/res_partner_views.xml',
@@ -85,8 +84,8 @@ The kernel of Odoo, needed for all installation.
         'data/res_partner_demo.xml',
         'data/res_partner_image_demo.xml',
     ],
-    'test': [],
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',
+    'license': 'LGPL-3',
 }

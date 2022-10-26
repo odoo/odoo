@@ -3,20 +3,22 @@ odoo.define('website.s_popup', function (require) {
 
 const config = require('web.config');
 const publicWidget = require('web.public.widget');
-const utils = require('web.utils');
+const {getCookie, setCookie} = require('web.utils.cookies');
 
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
     events: {
         'click .js_close_popup': '_onCloseClick',
         'hide.bs.modal': '_onHideModal',
+        'show.bs.modal': '_onShowModal',
     },
+    cookieValue: true,
 
     /**
      * @override
      */
     start: function () {
-        this._popupAlreadyShown = !!utils.get_cookie(this.$el.attr('id'));
+        this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
         if (!this._popupAlreadyShown) {
             this._bindPopup();
         }
@@ -28,6 +30,7 @@ const PopupWidget = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
+        this.$target.find('.modal').modal('hide');
         clearTimeout(this.timeout);
     },
 
@@ -49,7 +52,6 @@ const PopupWidget = publicWidget.Widget.extend({
                 display = 'afterDelay';
                 delay = 5000;
             }
-            this.$('.modal').removeClass('s_popup_middle').addClass('s_popup_bottom');
         }
 
         if (display === 'afterDelay') {
@@ -61,6 +63,12 @@ const PopupWidget = publicWidget.Widget.extend({
     /**
      * @private
      */
+    _canShowPopup() {
+        return true;
+    },
+    /**
+     * @private
+     */
     _hidePopup: function () {
         this.$target.find('.modal').modal('hide');
     },
@@ -68,7 +76,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _showPopup: function () {
-        if (this._popupAlreadyShown) {
+        if (this._popupAlreadyShown || !this._canShowPopup()) {
             return;
         }
         this.$target.find('.modal').modal('show');
@@ -89,30 +97,48 @@ const PopupWidget = publicWidget.Widget.extend({
      */
     _onHideModal: function () {
         const nbDays = this.$el.find('.modal').data('consentsDuration');
-        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
+        setCookie(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, 'required');
         this._popupAlreadyShown = true;
+
+        this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
+            iframe.src = '';
+        });
+    },
+    /**
+     * @private
+     */
+    _onShowModal() {
+        this.el.querySelectorAll('.media_iframe_video').forEach(media => {
+            const iframe = media.querySelector('iframe');
+            iframe.src = media.dataset.oeExpression || media.dataset.src; // TODO still oeExpression to remove someday
+        });
     },
 });
 
 publicWidget.registry.popup = PopupWidget;
 
-// Prevent bootstrap to prevent scrolling and to add the strange body
-// padding-right they add if the popup does not use a backdrop (especially
-// important for default cookie bar).
-const _baseSetScrollbar = $.fn.modal.Constructor.prototype._setScrollbar;
-$.fn.modal.Constructor.prototype._setScrollbar = function () {
-    if (this._element.classList.contains('s_popup_no_backdrop')) {
-        return;
-    }
-    return _baseSetScrollbar.apply(this, ...arguments);
-};
-const _baseGetScrollbarWidth = $.fn.modal.Constructor.prototype._getScrollbarWidth;
-$.fn.modal.Constructor.prototype._getScrollbarWidth = function () {
-    if (this._element.classList.contains('s_popup_no_backdrop')) {
-        return 0;
-    }
-    return _baseGetScrollbarWidth.apply(this, ...arguments);
-};
+// Extending the popup widget with cookiebar functionality.
+// This allows for refusing optional cookies for now and can be
+// extended to picking which cookies categories are accepted.
+publicWidget.registry.cookies_bar = PopupWidget.extend({
+    selector: '#website_cookies_bar',
+    events: Object.assign({}, PopupWidget.prototype.events, {
+        'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param ev
+     */
+    _onAcceptClick(ev) {
+        this.cookieValue = `{"required": true, "optional": ${ev.target.id === 'cookies-consent-all'}}`;
+        this._onHideModal();
+    },
+});
 
 return PopupWidget;
 });

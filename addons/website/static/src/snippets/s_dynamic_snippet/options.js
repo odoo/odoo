@@ -4,9 +4,22 @@ odoo.define('website.s_dynamic_snippet_options', function (require) {
 const options = require('web_editor.snippets.options');
 
 const dynamicSnippetOptions = options.Class.extend({
+    /**
+     * This type defines the template infos retrieved from
+     * @see /website/snippet/filter_templates
+     * Used for
+     * @see this.dynamicFilterTemplates
+     * @typedef {Object} Template - definition of a dynamic snippet template
+     * @property {string} key - key of the template
+     * @property {string} numOfEl - number of elements on desktop
+     * @property {string} numOfElSm - number of elements on mobile
+     * @property {string} numOfElFetch - number of elements to fetch
+     * @property {string} rowPerSlide - number of rows per slide
+     * @property {string} arrowPosition - position of the arrows
+     * @property {string} extraClasses - classes to be added to the <section>
+     */
 
     /**
-     *
      * @override
      */
     init: function () {
@@ -17,14 +30,31 @@ const dynamicSnippetOptions = options.Class.extend({
         this.dynamicFilters = {};
         // name of the model of the currently selected filter, used to fetch templates
         this.currentModelName = undefined;
+        /** @type {Object.<string, Template>} - key is the key of the template */
         this.dynamicFilterTemplates = {};
+        // Indicates that some current options are a default selection.
+        this.isOptionDefault = {};
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        const _super = this._super.bind(this);
+        await this._fetchDynamicFilters();
+        await this._fetchDynamicFilterTemplates();
+        return _super(...arguments);
     },
     /**
      *
      * @override
      */
-    onBuilt: function () {
-        this._setOptionsDefaultValues();
+    async onBuilt() {
+        // Default values depend on the templates and filters available.
+        // Therefore, they cannot be computed prior the start of the option.
+        await this._setOptionsDefaultValues();
+        // The target needs to be restarted when the correct
+        // template values are applied (numberOfElements, rowPerSlide, etc.)
+        return this._refreshPublicWidgets();
     },
 
     //--------------------------------------------------------------------------
@@ -40,7 +70,7 @@ const dynamicSnippetOptions = options.Class.extend({
         if (params.attributeName === 'filterId' && previewMode === false) {
             const filter = this.dynamicFilters[parseInt(widgetValue)];
             this.$target.get(0).dataset.numberOfRecords = filter.limit;
-            this._filterUpdated(filter);
+            return this._filterUpdated(filter);
         }
         if (params.attributeName === 'templateKey' && previewMode === false) {
             this._templateUpdated(widgetValue, params.activeValue);
@@ -48,8 +78,34 @@ const dynamicSnippetOptions = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * See from updateUI in s_website_form
+     *
+     * @override
+     */
+    async updateUI() {
+        if (this.rerender) {
+            this.rerender = false;
+            await this._rerenderXML();
+            return;
+        }
+        await this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {Template}
+     */
+    _getCurrentTemplate: function () {
+        return this.dynamicFilterTemplates[this.$target.get(0).dataset['templateKey']];
+    },
 
     _getTemplateClass: function (templateKey) {
         return templateKey.replace(/.*\.dynamic_filter_template_/, "s_");
@@ -65,6 +121,12 @@ const dynamicSnippetOptions = options.Class.extend({
             // Hide if exaclty one is available: show when none to help understand what is missing
             return Object.keys(this.dynamicFilters).length !== 1;
         }
+
+        if (widgetName === 'number_of_records_opt') {
+            const template = this._getCurrentTemplate();
+            return template && !template.numOfElFetch;
+        }
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -74,34 +136,48 @@ const dynamicSnippetOptions = options.Class.extend({
      */
     _refreshPublicWidgets: function () {
         return this._super.apply(this, arguments).then(() => {
-            const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
+            const template = this._getCurrentTemplate();
             this.$target.find('.missing_option_warning').toggleClass(
                 'd-none',
-                !!this.dynamicFilterTemplates[selectedTemplateId]
+                !!template
             );
         });
     },
     /**
-     * Fetches dynamic filters.
+     * Fetches dynamic filters and set them in {@link this.dynamicFilters}.
+     *
      * @private
      * @returns {Promise}
      */
-    _fetchDynamicFilters: function () {
-        return this._rpc({route: '/website/snippet/options_filters', params: {
+    async _fetchDynamicFilters() {
+        const dynamicFilters = await this._rpc({route: '/website/snippet/options_filters', params: {
             model_name: this.modelNameFilter,
             search_domain: this.contextualFilterDomain,
         }});
+        for (let index in dynamicFilters) {
+            this.dynamicFilters[dynamicFilters[index].id] = dynamicFilters[index];
+        }
+        this._defaultFilterId = dynamicFilters[0].id;
     },
     /**
-     * Fetch dynamic filters templates.
+     * Fetch dynamic filters templates and set them  in {@link this.dynamicFilterTemplates}.
+     *
      * @private
      * @returns {Promise}
      */
-    _fetchDynamicFilterTemplates: function () {
-        const filter = this.dynamicFilters[this.$target.get(0).dataset['filterId']];
-        return filter ? this._rpc({route: '/website/snippet/filter_templates', params: {
+    async _fetchDynamicFilterTemplates() {
+        const filter = this.dynamicFilters[this.$target.get(0).dataset['filterId']] || this.dynamicFilters[this._defaultFilterId];
+        this.dynamicFilterTemplates = {};
+        if (!filter) {
+            return [];
+        }
+        const dynamicFilterTemplates = await this._rpc({route: '/website/snippet/filter_templates', params: {
             filter_name: filter.model_name.replaceAll('.', '_'),
-        }}) : [];
+        }});
+        for (let index in dynamicFilterTemplates) {
+            this.dynamicFilterTemplates[dynamicFilterTemplates[index].key] = dynamicFilterTemplates[index];
+        }
+        this._defaultTemplateKey = dynamicFilterTemplates[0].key;
     },
     /**
      *
@@ -118,18 +194,6 @@ const dynamicSnippetOptions = options.Class.extend({
      * @private
      */
     _renderDynamicFiltersSelector: async function (uiFragment) {
-        if (!Object.keys(this.dynamicFilters).length) {
-            const dynamicFilters = await this._fetchDynamicFilters();
-            for (let index in dynamicFilters) {
-                this.dynamicFilters[dynamicFilters[index].id] = dynamicFilters[index];
-            }
-            if (dynamicFilters.length > 0) {
-                const selectedFilterId = this.$target.get(0).dataset['filterId'];
-                if (!this.dynamicFilters[selectedFilterId]) {
-                    this.$target.get(0).dataset['filterId'] = dynamicFilters[0].id;
-                }
-            }
-        }
         const filtersSelectorEl = uiFragment.querySelector('[data-name="filter_opt"]');
         return this._renderSelectUserValueWidgetButtons(filtersSelectorEl, this.dynamicFilters);
     },
@@ -137,14 +201,18 @@ const dynamicSnippetOptions = options.Class.extend({
      * Renders we-buttons into a SelectUserValueWidget element according to provided data.
      * @param {HTMLElement} selectUserValueWidgetElement the SelectUserValueWidget buttons
      *   have to be created into.
-     * @param {JSON} data
+     * @param {Object} data
      * @private
      */
     _renderSelectUserValueWidgetButtons: async function (selectUserValueWidgetElement, data) {
         for (let id in data) {
             const button = document.createElement('we-button');
             button.dataset.selectDataAttribute = id;
-            button.innerHTML = data[id].name;
+            if (data[id].thumb) {
+                button.dataset.img = data[id].thumb;
+            } else {
+                button.innerText = data[id].name;
+            }
             selectUserValueWidgetElement.appendChild(button);
         }
     },
@@ -154,23 +222,6 @@ const dynamicSnippetOptions = options.Class.extend({
      * @private
      */
     _renderDynamicFilterTemplatesSelector: async function (uiFragment) {
-        const dynamicFilterTemplates = await this._fetchDynamicFilterTemplates();
-        this.dynamicFilterTemplates = {};
-        for (let index in dynamicFilterTemplates) {
-            this.dynamicFilterTemplates[dynamicFilterTemplates[index].key] = dynamicFilterTemplates[index];
-        }
-        if (dynamicFilterTemplates.length > 0) {
-            const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
-            if (!this.dynamicFilterTemplates[selectedTemplateId]) {
-                this.$target.get(0).dataset['templateKey'] = dynamicFilterTemplates[0].key;
-                setTimeout(() => {
-                    this._templateUpdated(dynamicFilterTemplates[0].key, selectedTemplateId);
-                    this._refreshPublicWidgets();
-                });
-            }
-        } else {
-            this._refreshPublicWidgets();
-        }
         const templatesSelectorEl = uiFragment.querySelector('[data-name="template_opt"]');
         return this._renderSelectUserValueWidgetButtons(templatesSelectorEl, this.dynamicFilterTemplates);
     },
@@ -180,21 +231,29 @@ const dynamicSnippetOptions = options.Class.extend({
      * options default values.
      * @private
      */
-    _setOptionsDefaultValues: function () {
+    async _setOptionsDefaultValues() {
         // Unactive the editor observer, otherwise, undo of the editor will undo
         // the attribute being changed. In some case of undo, a race condition
         // with the public widget that use following property (eg.
         // numberOfElements or numberOfElementsSmallDevices) might throw an
         // exception by not finding the attribute on the element.
         this.options.wysiwyg.odooEditor.observerUnactive();
-        this._setOptionValue('numberOfElements', 4);
-        this._setOptionValue('numberOfElementsSmallDevices', 1);
         const filterKeys = this.$el.find("we-select[data-attribute-name='filterId'] we-selection-items we-button");
         if (filterKeys.length > 0) {
             this._setOptionValue('numberOfRecords', this.dynamicFilters[Object.keys(this.dynamicFilters)[0]].limit);
         }
-        const filter = this.dynamicFilters[this.$target.get(0).dataset['filterId']];
-        this._filterUpdated(filter);
+        let selectedFilterId = this.$target.get(0).dataset['filterId'];
+        if (Object.keys(this.dynamicFilters).length > 0) {
+            if (!this.dynamicFilters[selectedFilterId]) {
+                this.$target.get(0).dataset['filterId'] = this._defaultFilterId;
+                this.isOptionDefault['filterId'] = true;
+                selectedFilterId = this._defaultFilterId;
+            }
+        }
+        if (this.dynamicFilters[selectedFilterId] &&
+                !this.dynamicFilterTemplates[this.$target.get(0).dataset['templateKey']]) {
+            this._setDefaultTemplate();
+        }
         this.options.wysiwyg.odooEditor.observerActive();
     },
     /**
@@ -202,23 +261,62 @@ const dynamicSnippetOptions = options.Class.extend({
      * @param filter
      * @private
      */
-    _filterUpdated: function (filter) {
+    async _filterUpdated(filter) {
         if (filter && this.currentModelName !== filter.model_name) {
             this.currentModelName = filter.model_name;
-            this._rerenderXML();
+            await this._fetchDynamicFilterTemplates();
+            if (Object.keys(this.dynamicFilterTemplates).length > 0) {
+                const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
+                if (!this.dynamicFilterTemplates[selectedTemplateId]) {
+                    this._setDefaultTemplate();
+                }
+            }
+            this.rerender = true;
         }
     },
     /**
-     * Take the new template selection into account
-     * @param newTemplate
-     * @param oldTemplate
+     * Sets the default filter template.
      * @private
      */
-    _templateUpdated: function (newTemplate, oldTemplate) {
-        if (oldTemplate) {
-            this.$target.removeClass(this._getTemplateClass(oldTemplate));
+    _setDefaultTemplate() {
+        if (Object.keys(this.dynamicFilterTemplates).length) {
+            this.$target.get(0).dataset['templateKey'] = this._defaultTemplateKey;
+            this.isOptionDefault['templateKey'] = true;
+            this._templateUpdated(this._defaultTemplateKey);
         }
-        this.$target.addClass(this._getTemplateClass(newTemplate));
+    },
+
+    /**
+     * Take the new template selection into account
+     * @param {String} newTemplateKey
+     * @param {String} [oldTemplateKey]
+     * @private
+     */
+    _templateUpdated(newTemplateKey, oldTemplateKey) {
+        if (oldTemplateKey) {
+            this.$target.removeClass(this._getTemplateClass(oldTemplateKey));
+        }
+        this.$target.addClass(this._getTemplateClass(newTemplateKey));
+
+        const template = this.dynamicFilterTemplates[newTemplateKey];
+        if (template.numOfEl) {
+            this.$target[0].dataset.numberOfElements = template.numOfEl;
+        } else {
+            delete this.$target[0].dataset.numberOfElements;
+        }
+        if (template.numOfElSm) {
+            this.$target[0].dataset.numberOfElementsSmallDevices = template.numOfElSm;
+        } else {
+            delete this.$target[0].dataset.numberOfElementsSmallDevices;
+        }
+        if (template.numOfElFetch) {
+            this.$target[0].dataset.numberOfRecords = template.numOfElFetch;
+        }
+        if (template.extraClasses) {
+            this.$target[0].dataset.extraClasses = template.extraClasses;
+        } else {
+            delete this.$target[0].dataset.extraClasses;
+        }
     },
     /**
      * Sets the option value.
@@ -227,8 +325,13 @@ const dynamicSnippetOptions = options.Class.extend({
      * @private
      */
     _setOptionValue: function (optionName, value) {
-        if (this.$target.get(0).dataset[optionName] === undefined) {
+        const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
+        if (this.$target.get(0).dataset[optionName] === undefined || this.isOptionDefault[optionName]) {
             this.$target.get(0).dataset[optionName] = value;
+            this.isOptionDefault[optionName] = false;
+        }
+        if (optionName === 'templateKey') {
+            this._templateUpdated(value, selectedTemplateId);
         }
     },
 });

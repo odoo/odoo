@@ -1,0 +1,60 @@
+.s_process_steps[data-vcss='001']  {
+    $process-step-icon-size: 5rem;
+
+    .s_process_step {
+        position: relative;
+
+        .s_process_step_icon {
+            position: relative;
+            margin: $grid-gutter-width 0;
+
+            .fa {
+                display: block;
+                height: $process-step-icon-size;
+                width: $process-step-icon-size;
+                line-height: $process-step-icon-size;
+            }
+        }
+
+        .s_process_step_content {
+            padding: 0 $grid-gutter-width/2;
+            text-align: center;
+        }
+
+        .s_process_step_connector {
+            position: absolute;
+            z-index: 1;
+            height: $process-step-icon-size;
+            width: calc(100% - #{$process-step-icon-size});
+            left: calc(50% + #{$process-step-icon-size / 2});
+            margin: $grid-gutter-width 0;
+
+            path {
+                stroke: map-get($grays, '600');
+                stroke-width: 2;
+                fill: transparent;
+            }
+        }
+
+        &:last-child .s_process_step_connector {
+            display: none;
+        }
+    }
+
+    &.s_process_steps_connector_curved_arrow {
+        .s_process_step:nth-child(odd) .s_process_step_connector {
+            transform: scale(1, -1);
+        }
+    }
+
+    .s_process_steps_arrow_head path {
+        fill: map-get($grays, '600');
+        stroke: transparent;
+    }
+
+    @include media-breakpoint-down(lg) {
+        .s_process_step_connector {
+            display: none;
+        }
+    }
+}

@@ -58,7 +58,17 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {jQuery} $carrierInput
      */
     _showLoading: function ($carrierInput) {
-        $carrierInput.siblings('.o_wsale_delivery_badge_price').html('<span class="fa fa-spinner fa-spin"/>');
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').empty();
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').append('<span class="fa fa-circle-o-notch fa-spin"/>');
+    },
+    /**
+     * Update the total cost according to the selected shipping method
+     * 
+     * @private
+     * @param {float} amount : The new total amount of to be paid
+     */
+    _updateShippingCost: function(amount){
+        core.bus.trigger('update_shipping_cost', amount);
     },
     /**
      * @private
@@ -86,6 +96,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             $amountUntaxed.html(result.new_amount_untaxed);
             $amountTax.html(result.new_amount_tax);
             $amountTotal.html(result.new_amount_total);
+        }
+        if (result.new_amount_total_raw !== undefined) {
+            this._updateShippingCost(result.new_amount_total_raw);
         }
     },
     /**

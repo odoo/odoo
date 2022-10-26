@@ -12,15 +12,16 @@ This is the latest basic Israelian localisation necessary to run Odoo in Israel:
 This module consists of:
  - Generic Israel Chart of Accounts
  - Taxes and tax report
- - Fiscal position for Palestina
+ - Multiple Fiscal positions
  """,
     'website': 'http://www.odoo.com/accounting',
     'depends': ['l10n_multilang'],
     'data': [
         'data/account_chart_template_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_account_tag.xml',
         'data/account.account.template.csv',
-        'data/account_data.xml',
+        'data/account.group.template.csv',
         'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/fiscal_templates_data.xml',
@@ -30,4 +31,5 @@ This module consists of:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

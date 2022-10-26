@@ -3,7 +3,7 @@
 
 {
     'name': 'SMS gateway',
-    'version': '2.1',
+    'version': '2.4',
     'category': 'Hidden/Tools',
     'summary': 'SMS Text Messaging',
     'description': """
@@ -20,11 +20,11 @@ The service is provided by the In App Purchase Odoo platform.
     ],
     'data': [
         'data/ir_cron_data.xml',
-        'wizard/sms_cancel_views.xml',
         'wizard/sms_composer_views.xml',
         'wizard/sms_template_preview_views.xml',
         'wizard/sms_resend_views.xml',
-        'views/ir_actions_views.xml',
+        'wizard/sms_template_reset_views.xml',
+        'views/ir_actions_server_views.xml',
         'views/mail_notification_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
@@ -40,25 +40,20 @@ The service is provided by the In App Purchase Odoo platform.
     'installable': True,
     'auto_install': True,
     'assets': {
+        'mail.assets_messaging': [
+            'sms/static/src/models/*.js',
+        ],
+        'mail.assets_discuss_public': [
+            'sms/static/src/components/sms_button/*',
+        ],
         'web.assets_backend': [
             'sms/static/src/js/fields_phone_widget.js',
-            'sms/static/src/js/fields_sms_widget.js',
-            'sms/static/src/bugfix/bugfix.js',
-            'sms/static/src/components/notification_group/notification_group.js',
-            'sms/static/src/models/message/message.js',
-            'sms/static/src/models/notification_group/notification_group.js',
-            'sms/static/src/bugfix/bugfix.scss',
+            'sms/static/src/components/*/*',
         ],
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',
-            'sms/static/src/bugfix/bugfix_tests.js',
-            'sms/static/src/components/message/message_tests.js',
-            'sms/static/src/components/notification_list/notification_list_notification_group_tests.js',
+            'sms/static/tests/qunit_suite_tests/**/*.js',
         ],
-        'web.assets_qweb': [
-            'sms/static/src/bugfix/bugfix.xml',
-            'sms/static/src/components/notification_group/notification_group.xml',
-            'sms/static/src/components/message/message.xml',
-        ],
-    }
+    },
+    'license': 'LGPL-3',
 }

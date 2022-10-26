@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from random import randint
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -20,7 +22,7 @@ class ProductAttribute(models.Model):
     create_variant = fields.Selection([
         ('always', 'Instantly'),
         ('dynamic', 'Dynamically'),
-        ('no_variant', 'Never')],
+        ('no_variant', 'Never (option)')],
         default='always',
         string="Variants Creation Mode",
         help="""- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.
@@ -28,7 +30,7 @@ class ProductAttribute(models.Model):
         - Never: Variants are never created for the attribute.
         Note: the variants creation mode cannot be changed once the attribute is used on at least one product.""",
         required=True)
-    is_used_on_products = fields.Boolean('Used on Products', compute='_compute_is_used_on_products')
+    number_related_products = fields.Integer(compute='_compute_number_related_products')
     product_tmpl_ids = fields.Many2many('product.template', string="Related Products", compute='_compute_products', store=True)
     display_type = fields.Selection([
         ('radio', 'Radio'),
@@ -37,14 +39,14 @@ class ProductAttribute(models.Model):
         ('color', 'Color')], default='radio', required=True, help="The display type used in the Product Configurator.")
 
     @api.depends('product_tmpl_ids')
-    def _compute_is_used_on_products(self):
+    def _compute_number_related_products(self):
         for pa in self:
-            pa.is_used_on_products = bool(pa.product_tmpl_ids)
+            pa.number_related_products = len(pa.product_tmpl_ids)
 
     @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
     def _compute_products(self):
         for pa in self:
-            pa.product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
+            pa.with_context(active_test=False).product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pa: pa.create_variant != 'no_variant')
@@ -59,28 +61,37 @@ class ProductAttribute(models.Model):
         the user knowing about it."""
         if 'create_variant' in vals:
             for pa in self:
-                if vals['create_variant'] != pa.create_variant and pa.is_used_on_products:
+                if vals['create_variant'] != pa.create_variant and pa.number_related_products:
                     raise UserError(
                         _("You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n%s") %
                         (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                     )
-        invalidate_cache = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        invalidate = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
         res = super(ProductAttribute, self).write(vals)
-        if invalidate_cache:
+        if invalidate:
             # prefetched o2m have to be resequenced
             # (eg. product.template: attribute_line_ids)
-            self.flush()
-            self.invalidate_cache()
+            self.env.flush_all()
+            self.env.invalidate_all()
         return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_on_product(self):
         for pa in self:
-            if pa.is_used_on_products:
+            if pa.number_related_products:
                 raise UserError(
                     _("You cannot delete the attribute %s because it is used on the following products:\n%s") %
                     (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                 )
+
+    def action_open_related_products(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Related Products"),
+            'res_model': 'product.template',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', self.product_tmpl_ids.ids)],
+        }
 
 
 class ProductAttributeValue(models.Model):
@@ -89,6 +100,9 @@ class ProductAttributeValue(models.Model):
     # `_sort_key_variant` in `product.template'
     _order = 'attribute_id, sequence, id'
     _description = 'Attribute Value'
+
+    def _get_default_color(self):
+        return randint(1, 11)
 
     name = fields.Char(string='Value', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', help="Determine the display order", index=True)
@@ -104,6 +118,7 @@ class ProductAttributeValue(models.Model):
         string='Color',
         help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'.")
     display_type = fields.Selection(related='attribute_id.display_type', readonly=True)
+    color = fields.Integer('Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('value_company_uniq', 'unique (name, attribute_id)', "You cannot create two values with the same name for the same attribute.")
@@ -136,13 +151,13 @@ class ProductAttributeValue(models.Model):
                         (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
                     )
 
-        invalidate_cache = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
+        invalidate = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
         res = super(ProductAttributeValue, self).write(values)
-        if invalidate_cache:
+        if invalidate:
             # prefetched o2m have to be resequenced
             # (eg. product.template.attribute.line: value_ids)
-            self.flush()
-            self.invalidate_cache()
+            self.env.flush_all()
+            self.env.invalidate_all()
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -164,6 +179,7 @@ class ProductTemplateAttributeLine(models.Model):
 
     _name = "product.template.attribute.line"
     _rec_name = 'attribute_id'
+    _rec_names_search = ['attribute_id', 'value_ids']
     _description = 'Product Template Attribute Line'
     _order = 'attribute_id, id'
 
@@ -171,8 +187,14 @@ class ProductTemplateAttributeLine(models.Model):
     product_tmpl_id = fields.Many2one('product.template', string="Product Template", ondelete='cascade', required=True, index=True)
     attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='restrict', required=True, index=True)
     value_ids = fields.Many2many('product.attribute.value', string="Values", domain="[('attribute_id', '=', attribute_id)]",
-        relation='product_attribute_value_product_template_attribute_line_rel', ondelete='restrict')
+                                 relation='product_attribute_value_product_template_attribute_line_rel', ondelete='restrict')
+    value_count = fields.Integer(compute='_compute_value_count', store=True, readonly=True)
     product_template_value_ids = fields.One2many('product.template.attribute.value', 'attribute_line_id', string="Product Attribute Values")
+
+    @api.depends('value_ids')
+    def _compute_value_count(self):
+        for record in self:
+            record.value_count = len(record.value_ids)
 
     @api.onchange('attribute_id')
     def _onchange_attribute_id(self):
@@ -258,8 +280,8 @@ class ProductTemplateAttributeLine(models.Model):
             values['value_ids'] = [(5, 0, 0)]
         res = super(ProductTemplateAttributeLine, self).write(values)
         if 'active' in values:
-            self.flush()
-            self.env['product.template'].invalidate_cache(fnames=['attribute_line_ids'])
+            self.env.flush_all()
+            self.env['product.template'].invalidate_model(['attribute_line_ids'])
         # If coming from `create`, no need to update the values and the variants
         # before all lines are created.
         if self.env.context.get('update_product_template_attribute_values', True):
@@ -293,7 +315,7 @@ class ProductTemplateAttributeLine(models.Model):
                 # We catch all kind of exceptions to be sure that the operation
                 # doesn't fail.
                 ptal_to_archive += ptal
-        ptal_to_archive.write({'active': False})
+        ptal_to_archive.action_archive()  # only calls write if there are records
         # For archived lines `_update_product_template_attribute_values` is
         # implicitly called during the `write` above, but for products that used
         # unlinked lines `_create_variant_ids` has to be called manually.
@@ -360,23 +382,29 @@ class ProductTemplateAttributeLine(models.Model):
             # re-use a value that was archived at a previous step.
             ptav_to_activate.write({'ptav_active': True})
             ptav_to_unlink.write({'ptav_active': False})
-        ptav_to_unlink.unlink()
+        if ptav_to_unlink:
+            ptav_to_unlink.unlink()
         ProductTemplateAttributeValue.create(ptav_to_create)
         self.product_tmpl_id._create_variant_ids()
 
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        # TDE FIXME: currently overriding the domain; however as it includes a
-        # search on a m2o and one on a m2m, probably this will quickly become
-        # difficult to compute - check if performance optimization is required
-        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            args = args or []
-            domain = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-
     def _without_no_variant_attributes(self):
         return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant')
+
+    def action_open_attribute_values(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Product Variant Values"),
+            'res_model': 'product.template.attribute.value',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', self.product_template_value_ids.ids)],
+            'views': [
+                (self.env.ref('product.product_template_attribute_value_view_tree').id, 'list'),
+                (self.env.ref('product.product_template_attribute_value_view_form').id, 'form'),
+            ],
+            'context': {
+                'search_default_active': 1,
+            },
+        }
 
 
 class ProductTemplateAttributeValue(models.Model):
@@ -386,6 +414,9 @@ class ProductTemplateAttributeValue(models.Model):
     _name = "product.template.attribute.value"
     _description = "Product Template Attribute Value"
     _order = 'attribute_line_id, product_attribute_value_id, id'
+
+    def _get_default_color(self):
+        return randint(1, 11)
 
     # Not just `active` because we always want to show the values except in
     # specific case, as opposed to `active_test`.
@@ -397,7 +428,6 @@ class ProductTemplateAttributeValue(models.Model):
         'product.attribute.value', string='Attribute Value',
         required=True, ondelete='cascade', index=True)
     attribute_line_id = fields.Many2one('product.template.attribute.line', required=True, ondelete='cascade', index=True)
-
     # configuration fields: the price_extra and the exclusion rules
     price_extra = fields.Float(
         string="Value Price Extra",
@@ -421,6 +451,7 @@ class ProductTemplateAttributeValue(models.Model):
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
     is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
     display_type = fields.Selection(related='product_attribute_value_id.display_type', readonly=True)
+    color = fields.Integer('Color', default=_get_default_color)
 
     _sql_constraints = [
         ('attribute_value_unique', 'unique(attribute_line_id, product_attribute_value_id)', "Each value should be defined only once per attribute per product."),
@@ -462,7 +493,10 @@ class ProductTemplateAttributeValue(models.Model):
                         _("You cannot change the product of the value %s set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
-        return super(ProductTemplateAttributeValue, self).write(values)
+        res = super(ProductTemplateAttributeValue, self).write(values)
+        if 'exclude_for' in values:
+            self.product_tmpl_id._create_variant_ids()
+        return res
 
     def unlink(self):
         """Override to:
@@ -514,7 +548,9 @@ class ProductTemplateAttributeValue(models.Model):
 
     def _get_combination_name(self):
         """Exclude values from single value lines or from no_variant attributes."""
-        return ", ".join([ptav.name for ptav in self._without_no_variant_attributes()._filter_single_value_lines()])
+        ptavs = self._without_no_variant_attributes().with_prefetch(self._prefetch_ids)
+        ptavs = ptavs._filter_single_value_lines().with_prefetch(self._prefetch_ids)
+        return ", ".join([ptav.name for ptav in ptavs])
 
     def _filter_single_value_lines(self):
         """Return `self` with values from single value lines filtered out

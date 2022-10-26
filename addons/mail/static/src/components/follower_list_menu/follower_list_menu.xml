@@ -2,34 +2,41 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.FollowerListMenu" owl="1">
-        <div class="o_FollowerListMenu" t-on-keydown="_onKeydown">
-            <div class="o_FollowerListMenu_followers" t-ref="dropdown">
-                <button class="o_FollowerListMenu_buttonFollowers btn btn-link" t-att-disabled="props.isDisabled" t-on-click="_onClickFollowersButton" title="Show Followers">
-                    <i class="fa fa-user"/>
-                    <span class="o_FollowerListMenu_buttonFollowersCount pl-1" t-esc="thread.followers.length"/>
-                </button>
+        <t t-if="followerListMenuView">
+            <div class="o_FollowerListMenu position-relative d-flex" t-attf-class="{{ className }}" t-on-keydown="followerListMenuView.onKeydown" t-ref="root">
+                <div class="o_FollowerListMenu_followers d-flex" t-ref="dropdown">
+                    <button class="o_FollowerListMenu_buttonFollowers o_ChatterTopbar_button btn btn-light" t-att-disabled="followerListMenuView.isDisabled" t-att-aria-expanded="followerListMenuView.isDropdownOpen ? 'true' : 'false'" t-on-click="followerListMenuView.onClickFollowersButton" aria-label="Show Followers">
+                        <i class="fa fa-user-o" role="img"/>
+                        <span class="o_FollowerListMenu_buttonFollowersCount ps-1" t-esc="followerListMenuView.followerViews.length"/>
+                    </button>
 
-                <t t-if="state.isDropdownOpen">
-                    <div class="o_FollowerListMenu_dropdown dropdown-menu dropdown-menu-right" role="menu">
-                        <t t-if="thread.channel_type !== 'chat'">
-                            <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddFollowers">
-                                Add Followers
-                            </a>
-                        </t>
-                        <t t-if="thread.followers.length > 0">
-                            <div role="separator" class="dropdown-divider"/>
-                            <t t-foreach="thread.followers" t-as="follower" t-key="follower.localId">
+                    <t t-if="followerListMenuView.isDropdownOpen">
+                        <div class="o_FollowerListMenu_dropdown o-dropdown-menu dropdown-menu-end flex-column d-flex" role="menu">
+                            <t t-if="followerListMenuView.chatterOwner.thread.model !== 'channel' and followerListMenuView.chatterOwner.thread.hasWriteAccess">
+                                <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="followerListMenuView.onClickAddFollowers">
+                                    Add Followers
+                                </a>
+                                <t t-if="followerListMenuView.followerViews.length > 0">
+                                    <div role="separator" class="dropdown-divider"/>
+                                </t>
+                            </t>
+                            <t t-if="followerListMenuView.followerViews.length > 0">
                                 <Follower
-                                    class="o_FollowerMenu_follower dropdown-item"
-                                    followerLocalId="follower.localId"
-                                    t-on-click="_onClickFollower"
+                                    t-foreach="followerListMenuView.followerViews" t-as="followerView" t-key="followerView.localId"
+                                    className="'o_FollowerMenu_follower dropdown-item'"
+                                    record="followerView"
                                 />
                             </t>
-                        </t>
-                    </div>
-                </t>
+                            <t t-elif="!followerListMenuView.chatterOwner.thread.hasWriteAccess">
+                                <div class="o_FollowerListMenu_noFollowers dropdown-item disabled">
+                                    No Followers
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
             </div>
-        </div>
+        </t>
     </t>
 
 </templates>

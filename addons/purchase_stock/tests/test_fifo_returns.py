@@ -81,7 +81,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         # Important to pass through confirmation and assignation
         return_picking = self.env['stock.picking'].browse(return_picking_id)
         return_picking.action_confirm()
-        return_picking.move_lines[0].quantity_done = return_picking.move_lines[0].product_uom_qty
+        return_picking.move_ids[0].quantity_done = return_picking.move_ids[0].product_uom_qty
         return_picking._action_done()
 
         #  After the return only 10 of the second purchase order should still be in stock as it applies fifo on the return too

@@ -160,6 +160,9 @@
                     <rng:empty/>
                 </rng:group>
                 <rng:text/>
+                <rng:zeroOrMore>
+                    <rng:ref name="record" />
+                </rng:zeroOrMore>
             </rng:choice>
         </rng:element>
     </rng:define>

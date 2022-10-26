@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import float_is_zero
 
 
@@ -15,11 +15,14 @@ class EventRegistration(models.Model):
     payment_status = fields.Selection(string="Payment Status", selection=[
             ('to_pay', 'Not Paid'),
             ('paid', 'Paid'),
-            ('free', 'Free Admission'),
+            ('free', 'Free'),
         ], compute="_compute_payment_status", compute_sudo=True)
-    utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
-    utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
-    utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False, store=True)
+    utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
+        store=True, ondelete="set null")
+    utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False,
+        store=True, ondelete="set null")
+    utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False,
+        store=True, ondelete="set null")
 
     @api.depends('is_paid', 'sale_order_id.currency_id', 'sale_order_line_id.price_total')
     def _compute_payment_status(self):
@@ -97,7 +100,7 @@ class EventRegistration(models.Model):
     def _synchronize_so_line_values(self, so_line):
         if so_line:
             return {
-                'partner_id': so_line.order_id.partner_id.id,
+                'partner_id': False if self.env.user._is_public() else so_line.order_id.partner_id.id,
                 'event_id': so_line.event_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
                 'sale_order_id': so_line.order_id.id,

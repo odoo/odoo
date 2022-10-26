@@ -24,19 +24,27 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
-                                                 'user_type_id': env.ref('account.data_account_type_receivable').id,
+                                                 'account_type': 'asset_receivable',
                                                  'reconcile': True})
         env.company.account_default_pos_receivable_account_id = account_receivable
         env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
         # Pricelists are set below, do not take demo data into account
         env['ir.property'].sudo().search([('name', '=', 'property_product_pricelist')]).unlink()
 
+        cls.bank_journal = journal_obj.create({
+            'name': 'Bank Test',
+            'type': 'bank',
+            'company_id': main_company.id,
+            'code': 'BNK',
+            'sequence': 10,
+        })
+
         env['pos.payment.method'].create({
             'name': 'Bank',
+            'journal_id': cls.bank_journal.id,
         })
         cls.main_pos_config = env['pos.config'].create({
             'name': 'Shop',
-            'barcode_nomenclature_id': env.ref('barcodes.default_barcode_nomenclature').id,
         })
 
         env['res.partner'].create({
@@ -452,14 +460,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, { 'name': 'Cash',
-                                            'is_cash_count': True,
-                                            'cash_journal_id': cash_journal.id,
+                                            'journal_id': cash_journal.id,
                                             'receivable_account_id': account_receivable.id,
             })],
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
-            'module_pos_loyalty': False,
         })
 
         # Change the default sale pricelist of customers,
@@ -481,7 +487,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_ui()
 
         # needed because tests are run before the module is marked as
         # installed. In js web will only load qweb coming from modules
@@ -503,25 +509,71 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="accountman")
         n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
-    def test_03_order_management(self):
-        if hasattr(self.main_pos_config, 'module_pos_restaurant'):
-            self.main_pos_config.module_pos_restaurant = False
-        self.main_pos_config.write({ 'manage_orders': True, 'module_account': True })
-        self.main_pos_config.open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="accountman")
-
     def test_04_product_configurator(self):
-        self.main_pos_config.write({ 'product_configurator': True })
-        self.main_pos_config.open_session_cb(check_coa=False)
+
+        self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="accountman")
 
     def test_05_ticket_screen(self):
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="accountman")
+
+    def test_fixed_tax_negative_qty(self):
+        """ Assert the negative amount of a negative-quantity orderline
+            with zero-amount product with fixed tax.
+        """
+
+        # setup the zero-amount product
+        tax_received_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'account_type': 'asset_current',
+            'company_id': self.env.company.id,
+        })
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'fixed amount tax',
+            'amount_type': 'fixed',
+            'amount': 1,
+            'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base'}),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_received_account.id,
+                }),
+            ],
+        })
+        zero_amount_product = self.env['product.product'].create({
+            'name': 'Zero Amount Product',
+            'available_in_pos': True,
+            'list_price': 0,
+            'taxes_id': [(6, 0, [fixed_tax.id])],
+        })
+
+        # Make an order with the zero-amount product from the frontend.
+        # We need to do this because of the fix in the "compute_all" port.
+        self.main_pos_config.write({'iface_tax_included': 'total'})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FixedTaxNegativeQty', login="accountman")
+        pos_session = self.main_pos_config.current_session_id
+
+        # Close the session and check the session journal entry.
+        pos_session.action_pos_session_validate()
+
+        lines = pos_session.move_id.line_ids.sorted('balance')
+
+        # order in the tour is paid using the bank payment method.
+        bank_pm = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.name == 'Bank')
+
+        self.assertEqual(lines[0].account_id, bank_pm.receivable_account_id or self.env.company.account_default_pos_receivable_account_id)
+        self.assertAlmostEqual(lines[0].balance, -1)
+        self.assertEqual(lines[1].account_id, zero_amount_product.categ_id.property_account_income_categ_id)
+        self.assertAlmostEqual(lines[1].balance, 0)
+        self.assertEqual(lines[2].account_id, tax_received_account)
+        self.assertAlmostEqual(lines[2].balance, 1)

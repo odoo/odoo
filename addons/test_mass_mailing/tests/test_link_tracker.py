@@ -10,7 +10,7 @@ class TestLinkTracker(common.TestMassMailCommon):
     def setUp(self):
         super(TestLinkTracker, self).setUp()
 
-        self.link = self.env['link.tracker'].create({
+        self.link = self.env['link.tracker'].search_or_create({
             'url': 'https://www.example.com'
         })
 
@@ -45,21 +45,26 @@ class TestLinkTracker(common.TestMassMailCommon):
 
     @users('user_marketing')
     def test_add_link_mail_stat(self):
-        mailing = self.env['mailing.mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
+        record = self.env['mailing.test.blacklist'].create({})
         code = self.link.code
         self.assertEqual(self.link.count, 1)
-        stat = self.env['mailing.trace'].create({'mass_mailing_id': mailing.id})
-        self.assertFalse(stat.opened)
-        self.assertFalse(stat.clicked)
+        trace = self.env['mailing.trace'].create({
+            'mass_mailing_id': self.mailing_bl.id,
+            'model': record._name,
+            'res_id': record.id,
+        })
+        self.assertEqual(trace.trace_status, 'outgoing')
+        self.assertFalse(trace.links_click_datetime)
 
         # click from a new IP should create a new entry and update stat when provided
         click = self.env['link.tracker.click'].sudo().add_click(
             code,
             ip='100.00.00.01',
             country_code='BEL',
-            mailing_trace_id=stat.id
+            mailing_trace_id=trace.id
         )
         self.assertEqual(self.link.count, 2)
-        self.assertEqual(click.mass_mailing_id, mailing)
-        self.assertTrue(stat.opened)
-        self.assertTrue(stat.clicked)
+        self.assertEqual(click.mass_mailing_id, self.mailing_bl)
+        self.assertTrue(trace.trace_status, 'open')
+        self.assertTrue(trace.links_click_datetime)
+        self.assertEqual(trace.links_click_ids, click)

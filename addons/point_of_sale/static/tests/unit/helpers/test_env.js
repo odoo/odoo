@@ -2,29 +2,23 @@ odoo.define('point_of_sale.test_env', async function (require) {
     'use strict';
 
     /**
-     * Many components in PoS are dependent on the PosModel instance (pos).
+     * Many components in PoS are dependent on the PosGlobalState instance (pos).
      * Therefore, for unit tests that require pos in the Components' env, we
      * prepared here a test env maker (makePosTestEnv) based on
      * makeTestEnvironment of web.
      */
 
     const makeTestEnvironment = require('web.test_env');
-    const env = require('web.env');
-    const models = require('point_of_sale.models');
-    const Registries = require('point_of_sale.Registries');
+    const env = require('point_of_sale.env');
+    const { PosGlobalState } = require('point_of_sale.models');
+    const cleanup = require("@web/../tests/helpers/cleanup");
 
-    Registries.Component.add(owl.misc.Portal);
+    // We override this method in the pos unit tests to prevent the unnecessary error in the web tests.
+    cleanup.registerCleanup = () => {}
 
     await env.session.is_bound;
-    const pos = new models.PosModel({
-        rpc: env.services.rpc,
-        session: env.session,
-        do_action: async () => {},
-        setLoadingMessage: () => {},
-        setLoadingProgress: () => {},
-        showLoadingSkip: () => {},
-    });
-    await pos.ready;
+    const pos = PosGlobalState.create({ env });
+    await pos.load_server_data();
 
     /**
      * @param {Object} env default env
@@ -33,13 +27,7 @@ odoo.define('point_of_sale.test_env', async function (require) {
      */
     function makePosTestEnv(env = {}, providedRPC = null, providedDoAction = null) {
         env = Object.assign(env, { pos });
-        let posEnv = makeTestEnvironment(env, providedRPC);
-        // Replace rpc in the PosModel instance after loading
-        // data from the server so that every succeeding rpc calls
-        // made by pos are mocked by the providedRPC.
-        pos.rpc = posEnv.rpc;
-        pos.do_action = providedDoAction;
-        return posEnv;
+        return makeTestEnvironment(env, providedRPC);
     }
 
     return makePosTestEnv;

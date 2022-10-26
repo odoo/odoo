@@ -10,16 +10,12 @@
                     <field name="res_model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}"/>
-                </group>
-                <group>
                     <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to share the document..."/>
-                </group>
-                <group>
                     <field name="note" placeholder="Add a note"/>
                 </group>
                 <footer>
-                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-default" special="cancel" />
+                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-default" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

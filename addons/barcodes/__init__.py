@@ -15,4 +15,3 @@ def _assign_default_nomeclature_id(cr, registry):
         company_ids_without_default_nomenclature_id.write({
             'nomenclature_id': default_nomenclature_id.id,
         })
-

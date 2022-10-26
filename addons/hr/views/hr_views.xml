@@ -6,8 +6,8 @@
             id="menu_hr_root"
             name="Employees"
             groups="group_hr_manager,group_hr_user,base.group_user"
-            web_icon="hr,static/description/icon.png"
-            sequence="75"/>
+            web_icon="hr,static/description/icon.svg"
+            sequence="185"/>
 
         <menuitem
             id="menu_hr_main"
@@ -57,31 +57,17 @@
             sequence="100"/>
 
             <menuitem
-                id="menu_view_hr_job"
-                action="action_hr_job"
-                parent="menu_human_resources_configuration"
-                sequence="1"/>
-
-            <menuitem
-                id="menu_human_resources_configuration_employee"
+                id="menu_config_employee"
                 name="Employee"
                 parent="menu_human_resources_configuration"
-                groups="base.group_no_one"
-                sequence="1"/>
-
-                <menuitem
-                    id="menu_view_employee_category_form"
-                    name="Tags"
-                    action="open_view_categ_form"
-                    parent="menu_human_resources_configuration_employee"
-                    groups="base.group_no_one"
-                    sequence="1"/>
+                groups="group_hr_user"
+                sequence="10"/>
 
             <menuitem
                 id="menu_hr_department_tree"
                 action="hr_department_tree_action"
-                parent="menu_human_resources_configuration"
-                sequence="2"
+                parent="menu_config_employee"
+                sequence="4"
                 groups="group_hr_user"/>
 
             <menuitem
@@ -93,38 +79,58 @@
             <menuitem
                 id="menu_hr_work_location_tree"
                 action="hr_work_location_action"
-                parent="menu_human_resources_configuration"
+                parent="menu_config_employee"
                 sequence="5"
                 groups="group_hr_user"/>
 
             <menuitem
                 id="menu_hr_departure_reason_tree"
                 action="hr_departure_reason_action"
-                parent="menu_human_resources_configuration"
+                parent="menu_config_employee"
                 sequence="5"
                 groups="group_hr_user"/>
+
+            <menuitem
+                id="menu_view_employee_category_form"
+                name="Tags"
+                action="open_view_categ_form"
+                parent="menu_config_employee"
+                groups="base.group_no_one"
+                sequence="10"/>
+
+            <menuitem
+                id="menu_config_recruitment"
+                name="Recruitment"
+                parent="menu_human_resources_configuration"
+                groups="group_hr_user"
+                sequence="20"/>
+
+                <menuitem
+                    id="menu_view_hr_job"
+                    action="action_hr_job"
+                    parent="menu_config_recruitment"
+                    sequence="1"/>
+
+                <menuitem
+                    id="menu_view_hr_contract_type"
+                    action="hr_contract_type_action"
+                    parent="menu_config_recruitment"
+                    sequence="2"
+                    groups="group_hr_user"/>
 
             <menuitem
                 id="menu_config_plan"
                 name="Activity Planning"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_manager"
+                groups="group_hr_user"
                 sequence="100"/>
 
                 <menuitem
-                    id="menu_config_plan_types"
-                    name="Planning Types"
-                    action="hr_plan_activity_type_action"
-                    parent="menu_config_plan"
-                    groups="base.group_no_one"
-                    sequence="99"/>
-
-                <menuitem
                     id="menu_config_plan_plan"
-                    name="Plans"
+                    name="On/Offboarding Plans"
                     action="hr_plan_action"
                     parent="menu_config_plan"
-                    groups="group_hr_manager"
+                    groups="group_hr_user"
                     sequence="100"/>
 
     </data>

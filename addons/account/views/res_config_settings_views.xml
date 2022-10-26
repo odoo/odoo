@@ -19,13 +19,13 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <field name="country_code" invisible="1"/>
+                    <field name="country_code" invisible="1" groups="account.group_account_manager"/>
                     <div class="app_settings_block" data-string="Invoicing" string="Invoicing" data-key="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
                         <h2 attrs="{'invisible': [('has_accounting_entries','!=',False)]}">Fiscal Localization</h2>
-                        <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container">
-                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                        <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                            <div class="col-12 o_setting_box">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Fiscal Localization</span>
@@ -35,8 +35,8 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label for="chart_template_id" string="Package" class="col-lg-3 o_light_label"/>
-                                            <field name="chart_template_id" widget="selection"/>
+                                            <label for="chart_template_id" string="Package" class="col-2 o_light_label"/>
+                                            <field name="chart_template_id" options="{'no_open': True, 'no_create': True}"/>
                                         </div>
                                         <div class="mt8">
                                             <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" discard="0" class="btn-link"/>
@@ -82,6 +82,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Cash Discount Tax Reduction</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        When will the tax be reduced when offering a cash discount
+                                    </div>
+                                    <div class="content-group">
+                                        <field name="early_pay_discount_computation"/>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="taxcloud_settings">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_taxcloud" widget="upgrade_boolean"/>
@@ -93,14 +106,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
+                            <div class="col-12 col-lg-6 o_setting_box" id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_l10n_eu_service"/>
+                                    <field name="module_l10n_eu_oss"/>
                                 </div>
-                                <div class="o_setting_right_pane" name="l10n_eu_service_right_pane">
-                                    <label for="module_l10n_eu_service"/>
+                                <div class="o_setting_right_pane" name="l10n_eu_oss_right_pane">
+                                    <label for="module_l10n_eu_oss"/>
+                                    <a href="https://www.odoo.com/documentation/master/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Apply right VAT rates for digital products sold in EU
+                                        Apply VAT of the EU country to which goods and services are delivered.
                                     </div>
                                 </div>
                             </div>
@@ -129,6 +143,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="tax_fiscal_country_234">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Fiscal Country</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Domestic country of your accounting
+                                    </div>
+                                    <div class="text-muted">
+                                        <field name="account_fiscal_country_id" options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Currencies</h2>
                         <div class="row mt16 o_settings_container" name="main_currency_setting_container">
@@ -144,23 +171,11 @@
                                         <div class="row mt16">
                                             <label for="currency_id" class="col-lg-3 o_light_label"/>
                                             <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
+                                            <field name="group_multi_currency" invisible="1"/>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="record_transactions">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_multi_currency"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Multi-Currencies" for="group_multi_currency"/>
-                                    <div class="text-muted">
-                                        Record transactions in foreign currencies
-                                    </div>
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                    <div class="mt8">
-                                        <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
+                                        <div class="mt8">
+                                            <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -190,13 +205,13 @@
                                     </div>
                                     <div class="mt16">
                                         <div class="content-group" id="send_default">
-                                            <div class="row">
-                                                <field name="invoice_is_print" class="col-lg-1 ml16"/>
+                                            <div>
+                                                <field name="invoice_is_print"/>
                                                 <label for="invoice_is_print"/>
                                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
                                             </div>
-                                            <div class="row">
-                                                <field name="invoice_is_email" class="col-lg-1 ml16"/>
+                                            <div>
+                                                <field name="invoice_is_email"/>
                                                 <label for="invoice_is_email"/>
                                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
                                             </div>
@@ -212,6 +227,18 @@
                                     <label for="module_snailmail_account"/>
                                     <div class="text-muted">
                                         Send invoices and payment follow-ups by post
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="invoice_delivery_addresses">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_sale_delivery_address"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_sale_delivery_address"/>
+                                    <a href="https://www.odoo.com/documentation/master/applications/sales/sales/send_quotations/different_addresses.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Select specific invoice and delivery addresses
                                     </div>
                                 </div>
                             </div>
@@ -287,7 +314,7 @@
                                 <div class="o_setting_right_pane" name="show_sale_receipts_right_pane">
                                     <label for="group_show_sale_receipts"/>
                                     <div class="text-muted">
-                                        Active to create sale receipt
+                                        Activate to create sale receipt
                                     </div>
                                 </div>
                             </div>
@@ -299,28 +326,45 @@
                                     <label for="use_invoice_terms"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
-                                        Show standard terms &amp; conditions on invoices/orders
+                                        Add your terms &amp; conditions at the bottom of invoices/orders/quotations
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
                                         <div class="mt16">
                                             <field name="terms_type" class="o_light_label" widget="radio"/>
-                                            <div class="d-flex">
+                                            <div>
                                                 <field name="invoice_terms"
                                                        attrs="{'invisible': [('terms_type', '=', 'html')]}"
-                                                       class="oe_account_terms"
-                                                       placeholder="Insert your terms &amp; conditions here..."/>
-                                                <field name="invoice_terms_html"
-                                                       attrs="{'invisible': [('terms_type', '=', 'plain')]}"
-                                                       class="oe_account_terms"
+                                                       class="oe_account_terms mt-5 w-100"
                                                        placeholder="Insert your terms &amp; conditions here..."/>
                                             </div>
+                                            <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
+                                                <button name="action_update_terms" icon="fa-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                            </div>
                                             <field name="preview_ready" invisible="1"/>
-                                            <div attrs="{'invisible': [('preview_ready', '=', False)]}">
-                                                <a href="/terms">
+                                            <div class="mt4 ms-1" attrs="{'invisible': [('preview_ready', '=', False)]}">
+                                                <a class="btn-link" href="/terms" role="button">
                                                     <i class="fa fa-arrow-right"></i>
                                                     Preview
                                                 </a>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="account_use_credit_limit"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="account_use_credit_limit"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." role="img"/>
+                                    <div class="text-muted">
+                                        Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.
+                                    </div>
+                                    <div class="content-group mt-2" attrs="{'invisible': [('account_use_credit_limit', '=', False)]}">
+                                        <div class="row">
+                                            <label for="account_default_credit_limit" class="col-lg-4 o_light_label"/>
+                                            <field name="account_default_credit_limit"/>
                                         </div>
                                     </div>
                                 </div>
@@ -339,9 +383,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="account_batch_payment"
-                                groups="account.group_account_user">
+                            <div class="col-12 col-lg-6 o_setting_box" id="account_batch_payment">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_batch_payment" widget="upgrade_boolean"/>
                                 </div>
@@ -388,22 +430,6 @@
                         </div>
                         <h2>Vendor Bills</h2>
                         <div class="row mt16 o_settings_container" id="account_vendor_bills">
-                            <div class="col-12 col-lg-6 o_setting_box" id="account_ocr_settings">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_invoice_extract" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane" id="digitalizeocr">
-                                    <label for="module_account_invoice_extract"/>
-                                    <div class="text-muted">
-                                        Digitalize your scanned or PDF vendor bills with OCR and Artificial Intelligence
-                                    </div>
-                                    <div id="msg_invoice_extract" class="content-group" attrs="{'invisible': [('module_account_invoice_extract', '=', False)]}">
-                                        <div class="text-warning mt16 mb4">
-                                            Save this page and come back here to set up the feature.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" id="show_purchase_receipts">
                                 <div class="o_setting_left_pane">
                                     <field name="group_show_purchase_receipts" widget="upgrade_boolean"/>
@@ -420,7 +446,7 @@
                         <div class="row mt16 o_settings_container" id="print_vendor_checks_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box" id="print_checks" groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_check_printing" widget="upgrade_boolean"/>
+                                    <field name="module_account_check_printing"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Checks" for="module_account_check_printing"/>
@@ -446,7 +472,27 @@
                             </div>
                         </div>
 
-                        <t groups="account.group_account_user" attrs="{'invisible': [('chart_template_id','=',False)]}">
+                        <h2>Digitization</h2>
+                        <div class="row mt16 o_settings_container" id="account_digitalization">
+                            <div class="col-12 col-lg-6 o_setting_box" id="account_ocr_settings">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_invoice_extract" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="digitalizeocr">
+                                    <label for="module_account_invoice_extract"/>
+                                    <div class="text-muted">
+                                        Digitize your PDF or scanned documents with OCR and Artificial Intelligence
+                                    </div>
+                                    <div id="msg_invoice_extract" class="content-group" attrs="{'invisible': [('module_account_invoice_extract', '=', False)]}">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <t groups="account.group_account_user">
                             <h2>Default Accounts</h2>
                             <div class="row mt16 o_settings_container" id="default_accounts">
                                 <div class="col-12 col-lg-6 o_setting_box"
@@ -475,7 +521,7 @@
                                 <div class="col-12 col-lg-6 o_setting_box">
                                     <div class="o_setting_left_panel"></div>
                                     <div class="o_setting_right_pane">
-                                        <span class="o_form_label">Post Payments and Money Transfers in:</span>
+                                        <span class="o_form_label">The following default accounts are used with certain features.</span>
                                         <div class="content-group">
                                             <div class="row mt8">
                                                 <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
@@ -490,8 +536,12 @@
                                                 <field name="account_journal_payment_credit_account_id"/>
                                             </div>
                                             <div class="row mt8">
-                                                <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
-                                                <field name="transfer_account_id"/>
+                                                <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="account_journal_early_pay_discount_gain_account_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="account_journal_early_pay_discount_loss_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="account_journal_early_pay_discount_loss_account_id"/>
                                             </div>
                                         </div>
                                     </div>
@@ -552,6 +602,7 @@
                                 </div>
                             </div>
                         </t>
+
                         <t groups="account.group_account_user">
                             <h2>Fiscal Periods</h2>
                             <div class="row mt16 o_settings_container" id="accounting_reports">
@@ -585,19 +636,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="tag_analytic_entries"
-                                groups="account.group_account_user">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_analytic_tags"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_analytic_tags"/>
-                                    <div class="text-muted">
-                                        Allows to tag analytic entries and to manage analytic distributions
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_budget" widget="upgrade_boolean"/>
@@ -617,6 +655,41 @@
                                     <label for="module_product_margin" string="Margin Analysis"/>
                                     <div class="text-muted">
                                         Monitor your product margins from invoices
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Storno Accounting</h2>
+                        <div class="row mt16 o_settings_container" id="storno">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="enable_storno_accounting"
+                                title="Allows you to use Storno accounting.">
+                                <div class="o_setting_left_pane">
+                                    <field name="account_storno"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="account_storno"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Use Storno accounting
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Accounting Firms mode</h2>
+                        <div class="row mt16 o_settings_container" id="quick_edit_mode">
+                            <div class="col-12 col-lg-12 o_setting_box">
+                                <div class="text-muted">
+                                    <p style="margin-bottom: 0">Accounting firm mode will change invoice/bill encoding:</p>
+                                    <p style="margin-bottom: 0"> - The document's sequence becomes editable on all documents.</p>
+                                    <p style="margin-bottom: 0"> - A new field « Total (tax inc.) » to speed up and control the encoding by automating line creation with the right account &amp; tax.</p>
+                                    <p style="margin-bottom: 0"> - A default Customer Invoice / Vendor Bill date will be suggested.</p>
+                                </div>
+                                <div class="o_setting_right_pane mt16">
+                                    <label for="quick_edit_mode"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div>
+                                        <field name="quick_edit_mode" placeholder="Disabled"/>
                                     </div>
                                 </div>
                             </div>

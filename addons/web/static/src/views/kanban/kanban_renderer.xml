@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanRenderer" owl="1">
+        <div class="o_kanban_renderer o_renderer d-flex"
+            t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }} {{ props.archInfo.className or '' }}"
+            t-ref="root"
+        >
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
+                <t t-if="groupOrRecord.group">
+                    <t t-set="group" t-value="groupOrRecord.group" />
+                    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0"
+                        t-att-class="getGroupClasses(group)"
+                        t-att-data-id="(canResequenceRecords or canResequenceGroups) and group.id"
+                        t-on-click="(ev) => this.onGroupClick(group, ev)"
+                    >
+                        <div class="o_kanban_header top-0" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-3' : 'py-3' }}">
+                            <div class="o_kanban_header_title position-relative d-flex align-items-center lh-lg text-900" t-att="tooltipAttributes(group)">
+                                <span class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top" t-att-class="{ 'overflow-visible': !env.isSmall and group.isFolded }" t-esc="getGroupName(group)"/>
+                                <t t-if="env.isSmall or !group.isFolded">
+                                    <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0 border-0'">
+                                        <t t-set-slot="toggler">
+                                            <i class="fa fa-gear fa-stack d-block text-center text-700 small opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Settings" title="Settings" />
+                                        </t>
+                                        <DropdownItem t-if="!env.isSmall" class="{
+                                                'o_kanban_toggle_fold': true,
+                                                'disabled': props.list.model.useSampleModel,
+                                            }" onSelected="() => this.toggleGroup(group)">
+                                            Fold
+                                        </DropdownItem>
+                                        <t t-if="canEditGroup(group)">
+                                            <DropdownItem class="'o_column_edit'" onSelected="() => this.editGroup(group)">
+                                                Edit Stage
+                                            </DropdownItem>
+                                        </t>
+                                        <t t-if="canDeleteGroup(group)">
+                                            <DropdownItem class="'o_column_delete'" onSelected="() => this.deleteGroup(group)">
+                                                Delete
+                                            </DropdownItem>
+                                        </t>
+                                        <t t-if="canArchiveGroup(group)">
+                                            <DropdownItem class="'o_column_archive_records'" onSelected="() => this.archiveGroup(group)">
+                                                Archive All
+                                            </DropdownItem>
+                                            <DropdownItem class="'o_column_unarchive_records'" onSelected="() => this.unarchiveGroup(group)">
+                                                Unarchive All
+                                            </DropdownItem>
+                                        </t>
+                                    </Dropdown>
+                                    <button t-if="canQuickCreate()" class="o_kanban_quick_add btn p-0 border-0 fs-6 shadow-none" t-on-click="() => this.quickCreate(group)">
+                                        <i class="fa fa-plus fa-stack d-block small text-end text-700 opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Quick add" title="Quick add" />
+                                    </button>
+                                </t>
+                                <button t-else="" class="o_column_unfold btn btn-link d-block mt-0 mt-md-2 p-0 border-0 small text-center text-700 cursor-pointer">
+                                    <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
+                                </button>
+                            </div>
+                            <div t-if="(env.isSmall or !group.isFolded) and group.progressBars.length" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
+                                <div class="o_kanban_counter_progress progress w-75 bg-300">
+                                    <t t-foreach="group.progressBars" t-as="progressBar" t-key="progressBar.value">
+                                        <div t-if="progressBar.count"
+                                            role="progressbar"
+                                            class="progress-bar o_bar_has_records cursor-pointer"
+                                            t-att-class="{ 'progress-bar-animated progress-bar-striped': group.progressValue.active === progressBar.value, 'border border-white': !group.isFolded and group.hasActiveProgressValue }"
+                                            t-attf-class="bg-{{ progressBar.color }}"
+                                            t-attf-style="width: {{ progressBar.count / (group.count or 1) * 100 }}%;"
+                                            aria-valuemin="0"
+                                            t-att-aria-valuemax="group.count"
+                                            t-att-aria-valuenow="progressBar.count"
+                                            t-attf-data-tooltip="{{ progressBar.count }} {{ progressBar.string }}"
+                                            data-tooltip-delay="0"
+                                            t-on-click="() => group.filterProgressValue(progressBar.value)"
+                                        />
+                                    </t>
+                                </div>
+                                <t t-set="aggregate" t-value="getGroupAggregate(group)" />
+                                <KanbanAnimatedNumber
+                                    value="aggregate.value"
+                                    title="aggregate.title"
+                                    duration="1000"
+                                    currency="aggregate.currency"
+                                    animationClass="aggregate.value > 999 ? 'o_kanban_grow' : 'o_kanban_grow_huge'"
+                                />
+                            </div>
+                        </div>
+                        <t t-if="!group.isFolded">
+                            <t t-foreach="group.list.records" t-as="record" t-key="record.id">
+                                <t t-if="record.isInQuickCreation and props.list.quickCreateInfo">
+                                    <KanbanRecordQuickCreate
+                                        record="record"
+                                        archInfo="props.list.quickCreateInfo"
+                                        onCancel="force => group.list.cancelQuickCreate(force)"
+                                        onValidate="mode => this.validateQuickCreate(mode, group)"
+                                        listIsGrouped="props.list.isGrouped"
+                                    />
+                                </t>
+                                <t t-else="">
+                                    <KanbanRecord
+                                        archInfo="props.archInfo"
+                                        canResequence="canResequenceRecords"
+                                        forceGlobalClick="props.forceGlobalClick"
+                                        group="group"
+                                        list="props.list"
+                                        openRecord="props.openRecord"
+                                        readonly="props.readonly"
+                                        record="record"
+                                        templates="props.archInfo.templateDocs"
+                                    />
+                                </t>
+                            </t>
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            </div>
+                        </t>
+                        <t t-elif="env.isSmall">
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <KanbanRecord
+                        archInfo="props.archInfo"
+                        canResequence="canResequenceRecords"
+                        forceGlobalClick="props.forceGlobalClick"
+                        list="props.list"
+                        openRecord="props.openRecord"
+                        readonly="props.readonly"
+                        record="groupOrRecord.record"
+                        templates="props.archInfo.templateDocs"
+                    />
+                </t>
+            </t>
+            <t t-if="props.list.isGrouped">
+                <t t-if="canCreateGroup()">
+                    <KanbanColumnQuickCreate
+                        folded="state.columnQuickCreateIsFolded"
+                        onFoldChange="folded => state.columnQuickCreateIsFolded = props.list.groups.length > 0 and folded"
+                        onValidate="name => props.list.createGroup(name)"
+                        exampleData="exampleData"
+                        groupByFieldString="props.list.groupByField.string"
+                    />
+                    <!-- Kanban Example Background -->
+                    <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">
+                        <div class="o_kanban_example_background flex-grow-1">
+                            <div class="o_kanban_examples d-flex p-2">
+                                <div t-foreach="ghostColumns" t-as="column" t-key="column.name" class="o_kanban_examples_group flex-grow-1 m-3">
+                                    <h6><b t-esc="column.name"/></h6>
+                                    <div t-foreach="column.cards" t-as="card" t-key="card_index" class="o_kanban_examples_ghost d-flex flex-wrap justify-content-between mb-3 p-2 border bg-white">
+                                        <div class="o_ghost_content w-100 pb-3 bg-300"/>
+                                        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
+                                        <span class="mt-2 rounded-circle bg-300">
+                                            <img class="o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <!-- kanban ghost cards are used to properly space last elements. -->
+                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0" />
+            </t>
+            <t t-if="showNoContentHelper">
+                <t t-if="props.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.NoContentHelper"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanColorPicker" owl="1">
+        <ul class="oe_kanban_colorpicker">
+            <t t-foreach="props.colors" t-as="color" t-key="color">
+                <li role="menuitem" t-on-click="() => this.selectColor(color_index)" t-att-title="color" t-att-aria-label="color">
+                    <a href="#" t-attf-class="oe_kanban_color_{{ color_index }}" />
+                </li>
+            </t>
+        </ul>
+    </t>
+
+    <t t-name="web.KanbanGroupTooltip" owl="1">
+        <div>
+            <t t-foreach="entries" t-as="entry" t-key="entry_index">
+                <t t-esc="entry.title"/>
+                <br/>
+                <t t-esc="entry.value"/>
+                <br t-if="!field_last"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanDropdownMenuWrapper" owl="1">
+        <div t-on-click="onClick" style="display:contents">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+</templates>

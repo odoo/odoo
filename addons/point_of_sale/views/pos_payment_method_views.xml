@@ -8,21 +8,32 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
+                    <field name="type" invisible="1" />
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
                     </div>
                     <group name="Payment methods">
+                        <field name="hide_use_payment_terminal" invisible="1"/>
                         <group>
-                            <field name="hide_use_payment_terminal" invisible="1"/>
-                            <field name="receivable_account_id" groups="account.group_account_readonly" />
-                            <field name="is_cash_count" />
-                            <field name="cash_journal_id" attrs="{'invisible': [('is_cash_count', '=', False)], 'required': [('is_cash_count', '=', True)]}" />
-                            <field name="split_transactions" groups="base.group_no_one" />
+                            <field name="split_transactions"/>
+                            <field name="journal_id" attrs="{'required': [('split_transactions', '=', False)]}" placeholder="Leave empty to use the receivable account of customer" />
+                            <field name="outstanding_account_id" groups="account.group_account_readonly" attrs="{'invisible': [('type', '!=', 'bank')]}" placeholder="Leave empty to use the default account from the company setting" />
+                            <field name="receivable_account_id" groups="account.group_account_readonly" attrs="{'invisible': [('split_transactions', '=', True)]}" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                         </group>
-                        <group>
-                            <field name="use_payment_terminal" attrs="{'invisible': [('hide_use_payment_terminal', '=', True)]}" />
+                        <group attrs="{'invisible': ['|', ('hide_use_payment_terminal', '=', False), ('type', 'in', ['cash', 'pay_later'])]}">
+                            <div colspan="2">
+                                <h2>Tips:</h2>
+                                <p>
+                                    Go to <a href="#" name="%(action_pos_configuration)d" type="action" class="btn-link o_form_uri" role="button">Configurations > Settings</a>
+                                    <strong> > Payment Terminals</strong>
+                                    in order to install a Payment Terminal and make a fully integrated payment method.
+                                </p>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('hide_use_payment_terminal', '=', True)]}">
+                            <field name="use_payment_terminal" />
                         </group>
                     </group>
                 </sheet>
@@ -34,13 +45,13 @@
         <field name="name">pos.payment.method.tree</field>
         <field name="model">pos.payment.method</field>
         <field name="arch" type="xml">
-            <tree string="Payment Methods">
-                <field name="hide_use_payment_terminal" invisible="1"/>
+            <tree string="Payment Methods" create="1" delete="1">
+                <field name="type" invisible="1"/>
                 <field name="name" />
-                <field name="receivable_account_id" groups="account.group_account_readonly"/>
-                <field name="is_cash_count" />
-                <field name="split_transactions" groups="base.group_no_one" />
-                <field name="use_payment_terminal" attrs="{'invisible': [('hide_use_payment_terminal', '=', True)]}" />
+                <field name="split_transactions" optional="hide" />
+                <field name="journal_id" attrs="{'required': [('split_transactions', '=', False)]}" />
+                <field name="outstanding_account_id" groups="account.group_account_readonly" optional="hide" attrs="{'invisible': [('type', '!=', 'bank')]}" />
+                <field name="receivable_account_id" groups="account.group_account_readonly" optional="hide" attrs="{'invisible': [('split_transactions', '=', True)]}" />
                 <field name="company_id" groups="base.group_multi_company" />
             </tree>
         </field>

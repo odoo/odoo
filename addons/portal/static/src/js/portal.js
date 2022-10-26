@@ -4,7 +4,7 @@ odoo.define('portal.portal', function (require) {
 var publicWidget = require('web.public.widget');
 const Dialog = require('web.Dialog');
 const {_t, qweb} = require('web.core');
-const ajax = require('web.ajax');
+const session = require('web.session');
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
@@ -70,35 +70,58 @@ publicWidget.registry.PortalHomeCounters = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Return a list of counters name linked to a line that we want to keep
+     * regardless of the number of documents present
+     * @private
+     * @returns {Array}
+     */
+    _getCountersAlwaysDisplayed() {
+        return [];
+    },
+
+    /**
      * @private
      */
     async _updateCounters(elem) {
         const numberRpc = 3;
-        const needed = this.$('[data-placeholder_count]')
-                                .map((i, o) => $(o).data('placeholder_count'))
-                                .toArray();
+        const needed = Object.values(this.el.querySelectorAll('[data-placeholder_count]'))
+                                .map(documentsCounterEl => documentsCounterEl.dataset['placeholder_count']);
         const counterByRpc = Math.ceil(needed.length / numberRpc);  // max counter, last can be less
+        const countersAlwaysDisplayed = this._getCountersAlwaysDisplayed();
 
         const proms = [...Array(Math.min(numberRpc, needed.length)).keys()].map(async i => {
-            await this._rpc({
+            const documentsCountersData = await this._rpc({
                 route: "/my/counters",
                 params: {
                     counters: needed.slice(i * counterByRpc, (i + 1) * counterByRpc)
                 },
-            }).then(data => {
-                Object.keys(data).map(k => this.$("[data-placeholder_count='" + k + "']").text(data[k]));
             });
+            Object.keys(documentsCountersData).forEach(counterName => {
+                const documentsCounterEl = this.el.querySelector(`[data-placeholder_count='${counterName}']`);
+                documentsCounterEl.textContent = documentsCountersData[counterName];
+                // The element is hidden by default, only show it if its counter is > 0 or if it's in the list of counters always shown
+                if (documentsCountersData[counterName] !== 0 || countersAlwaysDisplayed.includes(counterName)) {
+                    documentsCounterEl.parentElement.classList.remove('d-none');
+                }
+            });
+            return documentsCountersData;
         });
-        return Promise.all(proms);
+        return Promise.all(proms).then((results) => {
+            const counters = results.reduce((prev, current) => Object.assign({...prev, ...current}), {});
+            this.el.querySelector('.o_portal_doc_spinner').remove();
+            // Display a message when there are no documents available if there are no counters > 0 and no counters always shown
+            if (!countersAlwaysDisplayed.length && !Object.values(counters).filter((val) => val > 0).length) {
+                this.el.querySelector('.o_portal_no_doc_message').classList.remove('d-none');
+            }
+        });
     },
 });
 
 publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     selector: '.o_portal_search_panel',
     events: {
-        'click .search-submit': '_onSearchSubmitClick',
         'click .dropdown-item': '_onDropdownItemClick',
-        'keyup input[name="search"]': '_onSearchInputKeyup',
+        'submit': '_onSubmit',
     },
 
     /**
@@ -139,12 +162,6 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onSearchSubmitClick: function () {
-        this._search();
-    },
-    /**
-     * @private
-     */
     _onDropdownItemClick: function (ev) {
         ev.preventDefault();
         var $item = $(ev.currentTarget);
@@ -156,11 +173,114 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onSearchInputKeyup: function (ev) {
-        if (ev.keyCode === $.ui.keyCode.ENTER) {
-            this._search();
-        }
+    _onSubmit: function (ev) {
+        ev.preventDefault();
+        this._search();
     },
+});
+
+publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
+    selector: '.o_portal_new_api_key',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        // This call is done just so it asks for the password confirmation before starting displaying the
+        // dialog forms, to mimic the behavior from the backend, in which it asks for the password before
+        // displaying the wizard.
+        // The result of the call is unused. But it's required to call a method with the decorator `@check_identity`
+        // in order to use `handleCheckIdentity`.
+        await handleCheckIdentity(this.proxy('_rpc'), this._rpc({
+            model: 'res.users',
+            method: 'api_key_wizard',
+            args: [session.user_id],
+        }));
+        const self = this;
+        const d_description = new Dialog(self, {
+            title: _t('New API Key'),
+            $content: qweb.render('portal.keydescription'),
+            buttons: [{text: _t('Confirm'), classes: 'btn-primary', close: true, click: async () => {
+                var description = d_description.el.querySelector('[name="description"]').value;
+                var wizard_id = await this._rpc({
+                    model: 'res.users.apikeys.description',
+                    method: 'create',
+                    args: [{name: description}],
+                });
+                var res = await handleCheckIdentity(
+                    this.proxy('_rpc'),
+                    this._rpc({
+                        model: 'res.users.apikeys.description',
+                        method: 'make_key',
+                        args: [wizard_id],
+                    })
+                );
+                const d_show = new Dialog(self, {
+                    title: _t('API Key Ready'),
+                    $content: qweb.render('portal.keyshow', {key: res.context.default_key}),
+                    buttons: [{text: _t('Close'), clases: 'btn-primary', close: true}],
+                });
+                d_show.on('closed', this, () => {
+                    window.location = window.location;
+                });
+                d_show.open();
+            }}, {text: _t('Discard'), close: true}],
+        });
+        d_description.opened(() => {
+            const input = d_description.el.querySelector('[name="description"]');
+            input.focus();
+            d_description.el.addEventListener('submit', (e) => {
+                e.preventDefault();
+                d_description.$footer.find('.btn-primary').click();
+            });
+        });
+        d_description.open();
+    }
+});
+
+publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
+    selector: '.o_portal_remove_api_key',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        await handleCheckIdentity(
+            this.proxy('_rpc'),
+            this._rpc({
+                model: 'res.users.apikeys',
+                method: 'remove',
+                args: [parseInt(this.target.id)]
+            })
+        );
+        window.location = window.location;
+    }
+});
+
+publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
+    selector: '.o_portal_security_body',
+
+    /**
+     * @override
+     */
+    init: function () {
+        // Show the "deactivate your account" modal if needed
+        $('.modal.show#portal_deactivate_account_modal').removeClass('d-block').modal('show');
+
+        // Remove the error messages when we close the modal,
+        // so when we re-open it again we get a fresh new form
+        $('.modal#portal_deactivate_account_modal').on('hide.bs.modal', (event) => {
+            const $target = $(event.currentTarget);
+            $target.find('.alert').remove();
+            $target.find('.invalid-feedback').remove();
+            $target.find('.is-invalid').removeClass('is-invalid');
+        });
+
+        return this._super(...arguments);
+    },
+
 });
 
 /**
@@ -182,7 +302,7 @@ function handleCheckIdentity(rpc, wrapped) {
             return r;
         }
         const check_id = r.res_id;
-        return ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb).then(() => new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const d = new Dialog(null, {
                 title: _t("Security Control"),
                 $content: qweb.render('portal.identitycheck'),
@@ -215,9 +335,6 @@ function handleCheckIdentity(rpc, wrapped) {
                     }
                 }, {
                     text: _t('Cancel'), close: true
-                }, {
-                    text: _t('Forgot password?'), classes: 'btn btn-link',
-                    click() { window.location.href = "/web/reset_password/"; }
                 }]
             }).on('close', null, () => {
                 // unlink wizard object?
@@ -236,7 +353,7 @@ function handleCheckIdentity(rpc, wrapped) {
                 });
             });
             d.open();
-        }));
+        });
     });
 }
 return {

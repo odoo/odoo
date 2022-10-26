@@ -41,16 +41,24 @@ class Track(models.Model):
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
         required=True, tracking=True)
-    is_accepted = fields.Boolean('Is Accepted', related='stage_id.is_accepted', readonly=True)
+    legend_blocked = fields.Char(related='stage_id.legend_blocked',
+        string='Kanban Blocked Explanation', readonly=True)
+    legend_done = fields.Char(related='stage_id.legend_done',
+        string='Kanban Valid Explanation', readonly=True)
+    legend_normal = fields.Char(related='stage_id.legend_normal',
+        string='Kanban Ongoing Explanation', readonly=True)
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True, tracking=True,
+        copy=False, default='normal', required=True,
         help="A track's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
+    kanban_state_label = fields.Char(
+        string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
+        tracking=True)
     partner_id = fields.Many2one('res.partner', 'Contact', help="Contact of the track, may be different from speaker.")
     # speaker information
     partner_name = fields.Char(
@@ -74,8 +82,11 @@ class Track(models.Model):
     partner_company_name = fields.Char(
         'Company Name', compute='_compute_partner_company_name',
         readonly=False, store=True)
+    partner_tag_line = fields.Char(
+        'Tag Line', compute='_compute_partner_tag_line',
+        help='Description of the partner (name, function and company name)')
     image = fields.Image(
-        string="Speaker Photo", compute="_compute_speaker_image",
+        string="Speaker Photo", compute="_compute_partner_image",
         readonly=False, store=True,
         max_width=256, max_height=256)
     # contact information
@@ -91,22 +102,17 @@ class Track(models.Model):
     # time information
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
-    duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
+    duration = fields.Float('Duration', default=0.5, help="Track duration in hours.")
     is_track_live = fields.Boolean(
-        'Is Track Live', compute='_compute_track_time_data',
-        help="Track has started and is ongoing")
+        'Is Track Live', compute='_compute_track_time_data')
     is_track_soon = fields.Boolean(
-        'Is Track Soon', compute='_compute_track_time_data',
-        help="Track begins soon")
+        'Is Track Soon', compute='_compute_track_time_data')
     is_track_today = fields.Boolean(
-        'Is Track Today', compute='_compute_track_time_data',
-        help="Track begins today")
+        'Is Track Today', compute='_compute_track_time_data')
     is_track_upcoming = fields.Boolean(
-        'Is Track Upcoming', compute='_compute_track_time_data',
-        help="Track is not yet started")
+        'Is Track Upcoming', compute='_compute_track_time_data')
     is_track_done = fields.Boolean(
-        'Is Track Done', compute='_compute_track_time_data',
-        help="Track is finished")
+        'Is Track Done', compute='_compute_track_time_data')
     track_start_remaining = fields.Integer(
         'Minutes before track starts', compute='_compute_track_time_data',
         help="Remaining time before track starts (seconds)")
@@ -134,7 +140,7 @@ class Track(models.Model):
         groups="event.group_event_user")
     wishlisted_by_default = fields.Boolean(
         string='Always Wishlisted',
-        help="""If set, the talk will be starred for each attendee registered to the event. The attendee won't be able to un-star this talk.""")
+        help="""If set, the talk will be set as favorite for each attendee registered to the event.""")
     # Call to action
     website_cta = fields.Boolean('Magic Button',
                                  help="Display a Call to Action button to your Attendees while they watch your Track.")
@@ -155,6 +161,18 @@ class Track(models.Model):
         for track in self:
             if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+
+    # STAGES
+
+    @api.depends('stage_id', 'kanban_state')
+    def _compute_kanban_state_label(self):
+        for track in self:
+            if track.kanban_state == 'normal':
+                track.kanban_state_label = track.stage_id.legend_normal
+            elif track.kanban_state == 'blocked':
+                track.kanban_state_label = track.stage_id.legend_blocked
+            else:
+                track.kanban_state_label = track.stage_id.legend_done
 
     # SPEAKER
 
@@ -199,8 +217,32 @@ class Track(models.Model):
             elif not track.partner_company_name:
                 track.partner_company_name = track.partner_id.parent_id.name
 
+    @api.depends('partner_name', 'partner_function', 'partner_company_name')
+    def _compute_partner_tag_line(self):
+        for track in self:
+            if not track.partner_name:
+                track.partner_tag_line = False
+                continue
+
+            tag_line = track.partner_name
+            if track.partner_function:
+                if track.partner_company_name:
+                    tag_line = _('%(name)s, %(function)s at %(company)s',
+                                 name=track.partner_name,
+                                 function=track.partner_function,
+                                 company=track.partner_company_name
+                                )
+                else:
+                    tag_line = '%s, %s' % (track.partner_name, track.partner_function)
+            elif track.partner_company_name:
+                tag_line = _('%(name)s from %(company)s',
+                             name=tag_line,
+                             company=track.partner_company_name
+                            )
+            track.partner_tag_line = tag_line
+
     @api.depends('partner_id')
-    def _compute_speaker_image(self):
+    def _compute_partner_image(self):
         for track in self:
             if not track.image:
                 track.image = track.partner_id.image_256
@@ -285,7 +327,7 @@ class Track(models.Model):
 
     @api.depends('event_track_visitor_ids.visitor_id', 'event_track_visitor_ids.is_wishlisted')
     def _compute_wishlist_visitor_ids(self):
-        results = self.env['event.track.visitor'].read_group(
+        results = self.env['event.track.visitor']._read_group(
             [('track_id', 'in', self.ids), ('is_wishlisted', '=', True)],
             ['track_id', 'visitor_id:array_agg'],
             ['track_id']
@@ -363,11 +405,15 @@ class Track(models.Model):
         tracks = super(Track, self).create(vals_list)
 
         for track in tracks:
+            email_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
             track.event_id.message_post_with_view(
                 'website_event_track.event_track_template_new',
-                values={'track': track},
-                subject=track.name,
+                values={
+                    'track': track,
+                    'is_html_empty': is_html_empty,
+                },
                 subtype_id=self.env.ref('website_event_track.mt_event_track').id,
+                **email_values,
             )
             track._synchronize_with_stage(track.stage_id)
 
@@ -390,7 +436,7 @@ class Track(models.Model):
         return stages.search([], order=order)
 
     def _synchronize_with_stage(self, stage):
-        if stage.is_done:
+        if stage.is_fully_accessible:
             self.is_published = True
         elif stage.is_cancel:
             self.is_published = False
@@ -448,7 +494,7 @@ class Track(models.Model):
             res['stage_id'] = (track.stage_id.mail_template_id, {
                 'composition_mode': 'comment',
                 'auto_delete_message': True,
-                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+                'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                 'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res

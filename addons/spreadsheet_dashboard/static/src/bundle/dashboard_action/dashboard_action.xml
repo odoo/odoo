@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_dashboard.DashboardAction" owl="1" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
+        <ControlPanel display="controlPanelDisplay">
+            <t t-set-slot="control-panel-top-right">
+                <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
+                <FilterValue
+                    t-if="status === Status.Loaded"
+                    filter="filter"
+                    model="state.activeDashboard.model"
+                    t-as="filter"
+                    t-foreach="filters"
+                    t-key="filter.id"
+                />
+            </t>
+        </ControlPanel>
+        <t t-set="dashboard" t-value="state.activeDashboard"/>
+        <div class="o_content o_component_with_search_panel" t-att-class="{ o_mobile_dashboard: env.isSmall }">
+            <!-- Dashboard selection -->
+            <t t-if="env.isSmall">
+                <DashboardMobileSearchPanel
+                    onDashboardSelected="(dashboardId) => this.openDashboard(dashboardId)"
+                    activeDashboard="dashboard"
+                    groups="getDashboardGroups()"/>
+            </t>
+            <t t-else="">
+                <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto">
+                    <section t-foreach="getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
+                        <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default user-select-none">
+                            <b t-esc="group.name"/>
+                        </header>
+                        <ul class="list-group d-block o_search_panel_field">
+                            <li t-foreach="group.dashboards" t-as="dashboard" t-key="dashboard.id"
+                                t-on-click="() => this.openDashboard(dashboard.id)"
+                                t-esc="dashboard.displayName"
+                                t-att-data-name="dashboard.displayName"
+                                class="o_search_panel_category_value list-group-item o_cursor_pointer border-0"
+                                t-att-class="{'active': dashboard.id === state.activeDashboard.id}"/>
+                        </ul>
+                    </section>
+                </div>
+            </t>
+            <!-- Main content -->
+            <h3 t-if="!dashboard" class="dashboard-loading-status">No available dashboard</h3>
+            <t t-else="">
+                <t t-set="status" t-value="dashboard.status"/>
+                <h3 t-if="status === Status.Loading" class="dashboard-loading-status">Loading...</h3>
+                <div t-elif="status === Status.Error" class="dashboard-loading-status error">
+                    An error occured while loading the dashboard
+                </div>
+                <t t-else="">
+                    <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
+                    <div t-else="" class="o_renderer">
+                        <Spreadsheet
+                            model="dashboard.model"
+                            t-key="dashboard.id"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </div>
+</templates>

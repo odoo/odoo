@@ -86,6 +86,46 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self._make_out_move(self.product1, 1)
         self.assertEqual(self.product1.value_svl, 15)
 
+    def test_fifo_byproduct(self):
+        """ Check that a MO byproduct with a cost share calculates correct svl """
+        self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+
+        self._make_in_move(self.component, 1, 10)
+        self._make_in_move(self.component, 1, 20)
+
+        # add byproduct
+        byproduct_cost_share = 10
+        byproduct = self.env['product.product'].create({
+            'name': 'byproduct',
+            'type': 'product',
+            'categ_id': self.product1.product_tmpl_id.categ_id.id,
+        })
+        self.bom.write({
+            'byproduct_ids': [(0, 0, {'product_id': byproduct.id, 'product_uom_id': self.uom_unit.id, 'product_qty': 1, 'cost_share': byproduct_cost_share})]
+        })
+
+        mo = self._make_mo(self.bom, 2)
+        self._produce(mo, 1)
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(self.component.value_svl, 20)
+        self.assertEqual(self.product1.value_svl, 10 * (100 - byproduct_cost_share) / 100)
+        self.assertEqual(byproduct.value_svl, 10 * byproduct_cost_share / 100)
+        self.assertEqual(self.component.quantity_svl, 1)
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(byproduct.quantity_svl, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+        self.assertEqual(self.component.value_svl, 0)
+        self.assertEqual(self.product1.value_svl, 30 * (100 - byproduct_cost_share) / 100)
+        self.assertEqual(byproduct.value_svl, 30 * byproduct_cost_share / 100)
+        self.assertEqual(self.component.quantity_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 2)
+        self.assertEqual(byproduct.quantity_svl, 2)
+
     def test_fifo_avco_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'

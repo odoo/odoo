@@ -4,7 +4,6 @@
     'name': 'Accounting/Fleet bridge',
     'category': 'Accounting/Accounting',
     'summary': 'Manage accounting with fleets',
-    'description': "",
     'version': '1.0',
     'depends': ['fleet', 'account'],
     'data': [
@@ -14,6 +13,5 @@
     ],
     'installable': True,
     'auto_install': True,
-    'application': False,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }

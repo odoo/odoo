@@ -6,8 +6,7 @@ from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounti
 from odoo.tests.common import tagged, Form
 
 
-@tagged("post_install", "-at_install")
-class TestAccountMove(AccountTestInvoicingCommon):
+class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -45,6 +44,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             }
         )
 
+
+@tagged("post_install", "-at_install")
+class TestAccountMove(TestAccountMoveStockCommon):
     def test_standard_perpetual_01_mc_01(self):
         rate = self.currency_data["rates"].sorted()[0].rate
 
@@ -57,7 +59,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
 
@@ -66,7 +67,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered("is_anglo_saxon_line")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
 
     def test_fifo_perpetual_01_mc_01(self):
@@ -82,7 +83,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
 
@@ -91,7 +91,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered("is_anglo_saxon_line")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
 
     def test_average_perpetual_01_mc_01(self):
@@ -107,7 +107,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
 
@@ -116,5 +115,5 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered("is_anglo_saxon_line")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)

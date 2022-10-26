@@ -4,7 +4,8 @@ import datetime
 
 from datetime import datetime, timedelta, time
 
-from odoo import fields
+from odoo import fields, Command
+from odoo.tests import Form
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
 import re
@@ -123,7 +124,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
 
         # update event with a description that have a special character and a new line
-        test_description3 = 'Test & \n Description'
+        test_description3 = 'Test & <br> Description'
         test_note3 = '<p>Test &amp; <br> Description</p>'
         test_event.write({
             'description': test_description3,
@@ -150,6 +151,32 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
 
+    def test_event_activity_user_sync(self):
+        # ensure phonecall activity type exists
+        activty_type = self.env['mail.activity.type'].create({
+            'name': 'Call',
+            'category': 'phonecall'
+        })
+        activity = self.env['mail.activity'].create({
+            'summary': 'Call with Demo',
+            'activity_type_id': activty_type.id,
+            'note': 'Schedule call with Admin',
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'user_id': self.user_demo.id,
+        })
+        action_context = activity.action_create_calendar_event().get('context', {})
+        event_from_activity = self.env['calendar.event'].with_context(action_context).create({
+            'start': '2022-07-27 14:30:00',
+            'stop': '2022-07-27 16:30:00',
+        })
+        # Check that assignation of the activity hasn't changed, and event is having
+        # correct values set in attendee and organizer related fields
+        self.assertEqual(activity.user_id, self.user_demo)
+        self.assertEqual(event_from_activity.partner_ids, activity.user_id.partner_id)
+        self.assertEqual(event_from_activity.attendee_ids.partner_id, activity.user_id.partner_id)
+        self.assertEqual(event_from_activity.user_id, activity.user_id)
+
     def test_event_allday(self):
         self.env.user.tz = 'Pacific/Honolulu'
 
@@ -161,7 +188,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'stop_date': "2018-10-18",
             'allday': True,
         })
-        event.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(str(event.start), '2018-10-16 08:00:00')
         self.assertEqual(str(event.stop), '2018-10-18 18:00:00')
 
@@ -186,6 +213,20 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 self.assertEqual(d.hour, 15)
             self.assertEqual(d.minute, 30)
 
+    def test_recurring_ny(self):
+        self.env.user.tz = 'US/Eastern'
+        f = Form(self.CalendarEvent.with_context(tz='US/Eastern'))
+        f.name = 'test'
+        f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
+        f.recurrency = True
+        self.assertEqual(f.weekday, 'WED')
+        self.assertEqual(f.event_tz, 'US/Eastern', "The value should correspond to the user tz")
+        self.assertEqual(f.count, 1, "The default value should be displayed")
+        self.assertEqual(f.interval, 1, "The default value should be displayed")
+        self.assertEqual(f.month_by, "date", "The default value should be displayed")
+        self.assertEqual(f.end_type, "count", "The default value should be displayed")
+        self.assertEqual(f.rrule_type, "weekly", "The default value should be displayed")
+
     def test_event_activity_timezone(self):
         activty_type = self.env['mail.activity.type'].create({
             'name': 'Meeting',
@@ -195,7 +236,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         activity_id = self.env['mail.activity'].create({
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
             'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
         })
 
@@ -228,7 +269,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         activity_id = self.env['mail.activity'].create({
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
             'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
         })
 
@@ -346,3 +387,32 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'start': fields.Datetime.to_string(now + timedelta(hours=5)),
             'stop': fields.Datetime.to_string(now + timedelta(hours=6)),
         })
+
+    def test_meeting_creation_from_partner_form(self):
+        """ When going from a partner to the Calendar and adding a meeting, both current user and partner
+         should be attendees of the event """
+        calendar_action = self.partner_demo.schedule_meeting()
+        event = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Super Meeting',
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+        })
+        self.assertEqual(len(event.attendee_ids), 2)
+        self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))
+        self.assertTrue(self.env.user.partner_id in event.attendee_ids.mapped('partner_id'))
+
+    def test_discuss_videocall(self):
+        self.event_tech_presentation._set_discuss_videocall_location()
+        self.assertFalse(self.event_tech_presentation.videocall_channel_id.id, 'No channel should be set before the route is accessed')
+        # create the first channel
+        self.event_tech_presentation._create_videocall_channel()
+        self.assertNotEqual(self.event_tech_presentation.videocall_channel_id.id, False)
+
+        partner1 = self.env['res.partner'].create({'name': 'Bob', 'email': u'bob@gm.co'})
+        partner2 = self.env['res.partner'].create({'name': 'Jack', 'email': u'jack@gm.co'})
+        new_partners = [partner1.id, partner2.id]
+        # invite partners to meeting
+        self.event_tech_presentation.write({
+            'partner_ids': [Command.link(new_partner) for new_partner in new_partners]
+        })
+        self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')

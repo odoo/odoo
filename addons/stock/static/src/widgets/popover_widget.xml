@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="stock.popoverButton" owl="1">
+        <a tabindex="0" t-on-click.stop="showPopup" t-attf-class="p-1 fa #{ icon || 'fa-info-circle'} #{ color || 'text-primary'}"/>
+    </t>
+
+    <div t-name="stock.popoverContent" owl="1" class="m-3">
+        <h6 t-out="props.title"/>
+        <t t-out="props.msg"/>
+    </div>
+</templates>

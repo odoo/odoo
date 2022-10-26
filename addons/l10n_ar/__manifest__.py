@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentina - Accounting',
-    'version': "3.2",
+    'icon': '/base/static/img/country_flags/ar.png',
+    'version': "3.5",
     'description': """
 Functional
 ----------
@@ -79,11 +80,12 @@ Master Data:
         'data/account.group.template.csv',
         'data/account.account.template.csv',
         'data/account_chart_template_data2.xml',
-        'data/account_tax_group.xml',
+        'data/account_tax_group_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_fiscal_template.xml',
         'data/uom_uom_data.xml',
         'data/l10n_latam.document.type.csv',
+        'data/l10n_latam.document.type.xml',
         'data/res_partner_data.xml',
         'data/res.currency.csv',
         'data/res.country.csv',
@@ -99,6 +101,7 @@ Master Data:
         'views/account_journal_view.xml',
         'views/l10n_latam_document_type_view.xml',
         'views/report_invoice.xml',
+        'views/res_config_settings_view.xml',
         'report/invoice_report_view.xml',
         'data/account_chart_template_configure_data.xml',
     ],
@@ -115,15 +118,12 @@ Master Data:
         'demo/account_customer_refund_demo.xml',
         'demo/account_supplier_invoice_demo.xml',
         'demo/account_supplier_refund_demo.xml',
-        # restore
-        'demo/res_users_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
-    'application': False,
     'assets': {
         'web.assets_backend': [
             'l10n_ar/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

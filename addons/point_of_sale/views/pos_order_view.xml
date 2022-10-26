@@ -8,13 +8,16 @@
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
-                            attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
+                            attrs="{'invisible': [('state','!=','paid')]}"/>
                     <button name="refund" string="Return Products" type="object"
-                        attrs="{'invisible':[('state','=','draft')]}"/>
+                        attrs="{'invisible':['|', ('state','=','draft'), ('has_refundable_lines', '=', False)]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
+                    <field name="has_refundable_lines" invisible="1" />
+                    <field name="refunded_orders_count" invisible="1" />
                 </header>
                 <sheet>
                 <field name="failed_pickings" invisible="1"/>
+                <field name="is_refunded" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_stock_picking"
                         type="object"
@@ -31,6 +34,20 @@
                         icon="fa-pencil-square-o"
                         attrs="{'invisible':[('state','!=','invoiced')]}">
                     </button>
+                    <button name="action_view_refund_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-undo"
+                        attrs="{'invisible':[('is_refunded', '=', False)]}">
+                        <field name="refund_orders_count" widget="statinfo" string="Refunds" />
+                    </button>
+                    <button name="action_view_refunded_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart "
+                        attrs="{'invisible':[('refunded_orders_count', '=', 0)]}">
+                        <field name="refunded_orders_count" widget="statinfo" string="Refunded Orders" />
+                    </button>
                 </div>
                 <group col="4" colspan="4" name="order_fields">
                     <field name="name"/>
@@ -39,7 +56,6 @@
                     <field string="User" name="user_id"/>
                     <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                    <field name="invoice_group" invisible="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
@@ -48,20 +64,26 @@
                                 <field name="full_product_name"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
+                                <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
                                 <field name="price_unit" widget="monetary"/>
-                                <field name="discount" string="Disc.%" widget="monetary"/>
+                                <field name="is_total_cost_computed" invisible="1"/>
+                                <field name="total_cost" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                                <field name="margin" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                                <field name="margin_percent" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="percentage"/>
+                                <field name="discount" string="Disc.%"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="refunded_qty" optional="hide" />
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
                                     <field name="full_product_name"/>
                                     <field name="qty"/>
-                                    <field name="discount" widget="monetary"/>
+                                    <field name="discount"/>
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
@@ -92,9 +114,18 @@
                                 class="oe_subtotal_footer_separator"
                                 widget="monetary"
                                 attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
+                            <label for="margin"/>
+                            <div class="text-nowrap">
+                                <field name="margin" class="oe_inline" attrs="{'invisible': [('is_total_cost_computed','=', False)]}"/>
+                                <span class="oe_inline" attrs="{'invisible': [('is_total_cost_computed','=', False)]}">
+                                    (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
+                                </span>
+                                <span attrs="{'invisible': [('is_total_cost_computed','=', True)]}">TBD</span>
+                            </div>
+                            <field name="is_total_cost_computed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
-                        <div class="oe_clear"/>
+                        <div class="clearfix"/>
                     </page>
                     <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1">
@@ -170,7 +201,7 @@
                                     <span><t t-esc="record.date_order.value"/></span>
                                 </div>
                                 <div class="col-4">
-                                    <span class="float-right text-right">
+                                    <span class="float-end text-end">
                                         <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
                                         'invoiced': 'success', 'cancel': 'danger'}}"/>
                                     </span>
@@ -188,6 +219,8 @@
         <field name="arch" type="xml">
             <pivot string="PoS Orders" sample="1">
                 <field name="date_order" type="row"/>
+                <field name="margin"/>
+                <field name="margin_percent" invisible="1"/>
                 <field name="amount_total" type="measure"/>
             </pivot>
         </field>
@@ -228,7 +261,7 @@
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" create="0" sample="1">
+            <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                 <field name="currency_id" invisible="1"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id" />
@@ -272,7 +305,7 @@
             <tree string="POS Order lines">
                 <field name="product_id" readonly="1"/>
                 <field name="qty" readonly="1" sum="Total qty"/>
-                <field name="discount" readonly="1" widget="monetary"/>
+                <field name="discount" readonly="1"/>
                 <field name="price_unit" readonly="1" widget="monetary"/>
                 <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
@@ -290,7 +323,7 @@
                 <group col="4">
                     <field name="product_id" />
                     <field name="qty" />
-                    <field name="discount" widget="monetary"/>
+                    <field name="discount"/>
                     <field name="price_unit" widget="monetary"/>
                     <field name="create_date" />
                     <field name="currency_id"/>

@@ -35,8 +35,7 @@ return {
                 // document.styleSheets[].cssRules[] for cross-domain
                 // stylesheets.
                 rules = sheets[i].rules || sheets[i].cssRules;
-            } catch (e) {
-                console.warn("Can't read the css rules of: " + sheets[i].href, e);
+            } catch (_e) {
                 continue;
             }
             if (!rules) {

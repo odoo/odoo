@@ -3,7 +3,7 @@
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import TestMailCommon, TestMailMultiCompanyCommon
+from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests.common import tagged
 from odoo.tests import Form
 
@@ -144,7 +144,7 @@ class TestTracking(TestMailCommon):
             'name': 'AutoTemplate',
             'subject': 'autoresponse',
             'email_from': self.env.user.email_formatted,
-            'email_to': "${object.email_from}",
+            'email_to': "{{ object.email_from }}",
             'body_html': "<div>A nice body</div>",
         })
 
@@ -164,6 +164,37 @@ class TestTracking(TestMailCommon):
         new_partner = Partner.search([('email', '=', email_new_partner)])
         self.assertTrue(new_partner)
         self.assertEqual(new_partner.company_id, company1)
+
+    def test_track_invalid_selection(self):
+        # Test: Check that initial invalid selection values are allowed when tracking
+        # Create a record with an initially invalid selection value
+        invalid_value = 'I love writing tests!'
+        record = self.env['mail.test.track.selection'].create({
+            'name': 'Test Invalid Selection Values',
+            'selection_type': 'first',
+        })
+
+        self.flush_tracking()
+        self.env.cr.execute(
+            """
+            UPDATE mail_test_track_selection
+               SET selection_type = %s
+             WHERE id = %s
+            """,
+            [invalid_value, record.id]
+        )
+
+        record.invalidate_recordset()
+
+        self.assertEqual(record.selection_type, invalid_value)
+
+        # Write a valid selection value
+        record.selection_type = "second"
+
+        self.flush_tracking()
+        self.assertTracking(record.message_ids, [
+            ('selection_type', 'char', invalid_value, 'Second'),
+        ])
 
     def test_track_template(self):
         # Test: Check that default_* keys are not taken into account in _message_track_post_template
@@ -284,10 +315,12 @@ class TestTracking(TestMailCommon):
         ])
 
 @tagged('mail_track')
-class TestTrackingMonetary(TestMailMultiCompanyCommon):
+class TestTrackingMonetary(TestMailCommon):
 
     def setUp(self):
         super(TestTrackingMonetary, self).setUp()
+
+        self._activate_multi_company()
 
         record = self.env['mail.test.track.monetary'].with_user(self.user_employee).with_context(self._test_context).create({
             'company_id': self.user_employee.company_id.id,
@@ -344,20 +377,35 @@ class TestTrackingInternals(TestMailCommon):
 
         msg_emp = self.record.message_ids.message_format()
         msg_sudo = self.record.sudo().message_ids.message_format()
-        self.assertFalse(msg_emp[0].get('tracking_value_ids'), "should not have protected tracking values")
-        self.assertTrue(msg_sudo[0].get('tracking_value_ids'), "should have protected tracking values")
+        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
+        formattedTrackingValues = [{
+            'changedField': 'Email From',
+            'id': tracking_values[0]['id'],
+            'newValue': {
+                'currencyId': False,
+                'fieldType': 'char',
+                'value': 'X',
+            },
+            'oldValue': {
+                'currencyId': False,
+                'fieldType': 'char',
+                'value': False,
+            },
+        }]
+        self.assertEqual(msg_emp[0].get('trackingValues'), [], "should not have protected tracking values")
+        self.assertEqual(msg_sudo[0].get('trackingValues'), formattedTrackingValues, "should have protected tracking values")
 
-        msg_emp = self.record._notify_prepare_template_context(self.record.message_ids, {})
-        msg_sudo = self.record.sudo()._notify_prepare_template_context(self.record.message_ids, {})
+        msg_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids, {})
+        msg_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids, {})
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
 
         # test editing the record with user not in the group of the field
-        self.record.invalidate_cache()
+        self.env.invalidate_all()
         self.record.clear_caches()
         record_form = Form(self.record.with_user(self.user_employee))
         record_form.name = 'TestDoNoCrash'
-        # the employee user must be able to save the fields on which he can write
+        # the employee user must be able to save the fields on which they can write
         # if we fetch all the tracked fields, ignoring the group of the current user
         # it will crash and it shouldn't
         record = record_form.save()

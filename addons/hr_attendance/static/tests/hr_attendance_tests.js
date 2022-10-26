@@ -24,6 +24,7 @@ QUnit.module('HR Attendance', {
                     user_id: {string: 'user ID', type: 'integer'},
                     barcode: {string:'barcode', type: 'integer'},
                     hours_today: {string:'Hours today', type: 'float'},
+                    overtime: {string: 'Overtime', type: 'float'},
                 },
                 records: [{
                     id: 1,
@@ -43,10 +44,14 @@ QUnit.module('HR Attendance', {
             'res.company': {
                 fields: {
                     name: {string: 'Name', type: 'char'},
+                    attendance_kiosk_mode: {type: 'char'},
+                    attendance_barcode_source: {type: 'char'},
                 },
                 records: [{
                     id: 1,
                     name: "Company A",
+                    attendance_kiosk_mode: 'barcode_manual',
+                    attendance_barcode_source: 'front',
                 }],
             },
         };
@@ -84,7 +89,9 @@ QUnit.module('HR Attendance', {
             data: this.data,
             session: {
                 uid: 1,
-                company_id: 1,
+                user_context: {
+                    allowed_company_ids: [1],
+                }
             },
             mockRPC: function(route, args) {
                 if (args.method === 'attendance_scan' && args.model === 'hr.employee') {
@@ -114,6 +121,7 @@ QUnit.module('HR Attendance', {
         var rpcCount = 0;
 
         var clientActions = [];
+        let greetingMessageCreated;
         async function createGreetingMessage (target, barcode){
             var action = {
                 attendance: {
@@ -138,7 +146,7 @@ QUnit.module('HR Attendance', {
                             if rpc have been made, a new instance is created to simulate the same behaviour
                             as functional flow.
                         */
-                        createGreetingMessage (target, args.args[0]);
+                        greetingMessageCreated = createGreetingMessage (target, args.args[0]);
                         return Promise.resolve({action: action});
                     }
                     return this._super(route, args);
@@ -163,7 +171,7 @@ QUnit.module('HR Attendance', {
         assert.strictEqual(rpcCount, 0, 'RPC call should not have been done.');
 
         core.bus.trigger('barcode_scanned', 2);
-        await testUtils.nextTick();
+        await greetingMessageCreated;
         assert.strictEqual(clientActions.length, 2, 'Number of clientActions must = 2.');
         assert.strictEqual(rpcCount, 1, 'RPC call should have been done only once.');
         core.bus.trigger('barcode_scanned', 2);
@@ -172,7 +180,7 @@ QUnit.module('HR Attendance', {
         assert.strictEqual(rpcCount, 1, 'RPC call should have been done only once.');
 
         core.bus.trigger('barcode_scanned', 1);
-        await testUtils.nextTick();
+        await greetingMessageCreated;
         assert.strictEqual(clientActions.length, 3, 'Number of clientActions must = 3.');
         core.bus.trigger('barcode_scanned', 1);
         await testUtils.nextMicrotaskTick();

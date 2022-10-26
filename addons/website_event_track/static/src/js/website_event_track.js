@@ -14,6 +14,15 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    start: function () {
+        this._super.apply(this, arguments).then(() => {
+            this.$el.find('[data-bs-toggle="popover"]').popover()
+        })
+    },
+
+    /**
      * @private
      * @param {Event} ev
      */

@@ -27,7 +27,7 @@ class Event(models.Model):
 
     @api.depends("meeting_room_ids")
     def _compute_meeting_room_count(self):
-        meeting_room_count = self.env["event.meeting.room"].sudo().read_group(
+        meeting_room_count = self.env["event.meeting.room"].sudo()._read_group(
             domain=[("event_id", "in", self.ids)],
             fields=["id:count"],
             groupby=["event_id"],

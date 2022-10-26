@@ -19,9 +19,10 @@ class EventQuestion(models.Model):
     event_id = fields.Many2one('event.event', 'Event', ondelete='cascade')
     answer_ids = fields.One2many('event.question.answer', 'question_id', "Answers", copy=True)
     sequence = fields.Integer(default=10)
-    once_per_order = fields.Boolean('Ask only once per order',
+    once_per_order = fields.Boolean('Ask once per order',
                                     help="If True, this question will be asked only once and its value will be propagated to every attendees."
                                          "If not it will be asked for every attendee of a reservation.")
+    is_mandatory_answer = fields.Boolean('Mandatory Answer')
 
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):
@@ -39,6 +40,11 @@ class EventQuestion(models.Model):
                 if answer_count > 0:
                     raise UserError(_("You cannot change the question type of a question that already has answers!"))
         return super(EventQuestion, self).write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_answered_question(self):
+        if self.env['event.registration.answer'].search_count([('question_id', 'in', self.ids)]):
+            raise UserError(_('You cannot delete a question that has already been answered by attendees.'))
 
     def action_view_question_answers(self):
         """ Allow analyzing the attendees answers to event questions in a convenient way:
@@ -63,3 +69,8 @@ class EventQuestionAnswer(models.Model):
     name = fields.Char('Answer', required=True, translate=True)
     question_id = fields.Many2one('event.question', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_selected_answer(self):
+        if self.env['event.registration.answer'].search_count([('value_answer_id', 'in', self.ids)]):
+            raise UserError(_('You cannot delete an answer that has already been selected by attendees.'))

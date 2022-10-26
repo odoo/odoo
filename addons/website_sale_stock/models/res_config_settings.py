@@ -7,30 +7,37 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    inventory_availability = fields.Selection([
-        ('never', 'Sell regardless of inventory'),
-        ('always', 'Show inventory on website and prevent sales if not enough stock'),
-        ('threshold', 'Show inventory when below the threshold and prevent sales if not enough stock'),
-        ('custom', 'Show product-specific notifications'),
-    ], string='Inventory Availability', default='never')
-    available_threshold = fields.Float(string='Availability Threshold')
-    website_warehouse_id = fields.Many2one('stock.warehouse', related='website_id.warehouse_id', domain="[('company_id', '=', website_company_id)]", readonly=False)
+    allow_out_of_stock_order = fields.Boolean(
+        string='Continue selling when out-of-stock',
+        default=True)
+    available_threshold = fields.Float(
+        string='Show Threshold',
+        default=5.0)
+    show_availability = fields.Boolean(
+        string='Show availability Qty',
+        default=False)
+    website_warehouse_id = fields.Many2one(
+        'stock.warehouse',
+        related='website_id.warehouse_id',
+        domain="[('company_id', '=', website_company_id)]",
+        readonly=False)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         IrDefault = self.env['ir.default'].sudo()
-        IrDefault.set('product.template', 'inventory_availability', self.inventory_availability)
-        IrDefault.set('product.template', 'available_threshold', self.available_threshold if self.inventory_availability == 'threshold' else None)
+
+        IrDefault.set('product.template', 'allow_out_of_stock_order', self.allow_out_of_stock_order)
+        IrDefault.set('product.template', 'available_threshold', self.available_threshold)
+        IrDefault.set('product.template', 'show_availability', self.show_availability)
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         IrDefault = self.env['ir.default'].sudo()
-        res.update(inventory_availability=IrDefault.get('product.template', 'inventory_availability') or 'never',
-                   available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0)
-        return res
+        allow_out_of_stock_order = IrDefault.get('product.template', 'allow_out_of_stock_order')
 
-    @api.onchange('website_company_id')
-    def _onchange_website_company_id(self):
-        if self.website_warehouse_id.company_id != self.website_company_id:
-            return {'value': {'website_warehouse_id': False}}
+        res.update(
+            allow_out_of_stock_order=allow_out_of_stock_order if allow_out_of_stock_order is not None else True,
+            available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0,
+            show_availability=IrDefault.get('product.template', 'show_availability') or False)
+        return res

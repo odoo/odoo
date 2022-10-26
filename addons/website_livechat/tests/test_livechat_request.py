@@ -43,7 +43,7 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
                                                    ('livechat_active', '=', True)])
 
         # Check that the chat request has been canceled.
-        chat_request.invalidate_cache()
+        chat_request.invalidate_recordset()
         self.assertEqual(chat_request.livechat_active, False, "The livechat request must be inactive as the visitor started himself a livechat session.")
         self.assertEqual(len(channel), 1)
         self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Operator for active livechat session must be Michel Operator")

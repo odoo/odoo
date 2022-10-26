@@ -1,49 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
-from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
+from odoo.tests import Form
 
 
 class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
-
-    def test_01_purchase_requisition_stock(self):
-        date_planned = fields.Datetime.now()
-        warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
-        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
-            self.product_13,
-            14,
-            self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')),
-            warehouse.lot_stock_id,
-            '/',
-            '/',
-            self.env.company,
-            {
-                'warehouse_id': warehouse,
-                'date_planned': date_planned,
-            }
-        )])
-        # Check requisition details which created after run procurement.
-        line = self.env['purchase.requisition.line'].search([('product_id', '=', self.product_13.id), ('product_qty', '=', 14.0)])
-        requisition = line[0].requisition_id
-        self.assertEqual(requisition.date_end, date_planned, "End date does not correspond.")
-        self.assertEqual(len(requisition.line_ids), 1, "Requisition Lines should be one.")
-        self.assertEqual(line.product_uom_id.id, self.ref('uom.product_uom_unit'), "UOM is not correspond.")
-
-        # Give access rights of Purchase Requisition User to open requisition
-        # Set tender state to choose tendering line.
-        self.requisition1.with_user(self.user_purchase_requisition_user).action_in_progress()
-        self.requisition1.with_user(self.user_purchase_requisition_user).action_open()
-
-        # Vendor send one RFQ so I create a RfQ of that agreement.
-        PurchaseOrder = self.env['purchase.order']
-        purchase_order = PurchaseOrder.new({'partner_id': self.res_partner_1, 'requisition_id': self.requisition1.id})
-        purchase_order._onchange_requisition_id()
-        po_dict = purchase_order._convert_to_write({name: purchase_order[name] for name in purchase_order._cache})
-        self.po_requisition = PurchaseOrder.create(po_dict)
-        self.assertEqual(len(self.po_requisition.order_line), 1, 'Purchase order should have one line')
 
     def test_02_purchase_requisition_stock(self):
         """Plays with the sequence of regular supplier infos and one created by blanket orders."""
@@ -55,7 +17,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'BBB', 'email': 'from.test2@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
         })
         product_test = self.env['product.product'].create({
@@ -96,7 +58,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'line_ids': [line1],
             'type_id': requisition_type.id,
             'vendor_id': vendor2.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_blanket.action_in_progress()
 
@@ -119,7 +81,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Update the sequence of the blanket order's supplier info.
         supplier_info1.sequence = 2
         requisition_blanket.line_ids.supplier_info_ids.sequence = 1
-        # In [13]: [(x.sequence, x.min_qty, x.price, x.name.name) for x in supplier_info1 + requisition_blanket.line_ids.supplier_info_ids]
+        # In [13]: [(x.sequence, x.min_qty, x.price, x.partner_id.name) for x in supplier_info1 + requisition_blanket.line_ids.supplier_info_ids]
         # Out[13]: [(2, 0.0, 50.0, 'AAA'), (1, 0.0, 50.0, 'BBB')]
 
         # Second stock move
@@ -152,7 +114,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
         })
         product_1 = self.env['product.product'].create({
@@ -182,13 +144,13 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'line_ids': [line1],
             'type_id': requisition_type.id,
             'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_2 = self.env['purchase.requisition'].create({
             'line_ids': [line2],
             'type_id': requisition_type.id,
             'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_1.action_in_progress()
         requisition_2.action_in_progress()
@@ -227,13 +189,57 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'product_id': product_2.id,
                 'product_qty': 5.0,
                 'product_uom': product_2.uom_po_id.id,
-                'price_unit': 0,
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             })
         ]})
         order_line = self.env['purchase.order.line'].search([
             ('product_id', '=', product_2.id),
             ('product_qty', '=', 5.0),
         ])
-        order_line._onchange_quantity()
         self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')
+
+    def test_04_purchase_requisition_stock(self):
+        """Check that alt PO correctly copies the original PO values"""
+        # create original PO
+        orig_po = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'picking_type_id': self.env['stock.picking.type'].search([['code', '=', 'outgoing']], limit=1).id,
+            'dest_address_id': self.env['res.partner'].create({'name': 'delivery_partner'}).id,
+        })
+        unit_price = 50
+        po_form = Form(orig_po)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+            line.price_unit = unit_price
+        po_form.save()
+
+        # create an alt PO
+        action = orig_po.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wiz.partner_id = self.res_partner_1
+        alt_po_wiz.copy_products = True
+        alt_po_wiz = alt_po_wiz.save()
+        alt_po_wiz.action_create_alternative()
+
+        # check alt PO was created with correct values
+        alt_po = orig_po.alternative_po_ids.filtered(lambda po: po.id != orig_po.id)
+        self.assertEqual(orig_po.picking_type_id, alt_po.picking_type_id,
+                         "Alternative PO should have copied the picking type from original PO")
+        self.assertEqual(orig_po.dest_address_id, alt_po.dest_address_id,
+                         "Alternative PO should have copied the destination address from original PO")
+        self.assertEqual(orig_po.order_line.product_id, alt_po.order_line.product_id,
+                         "Alternative PO should have copied the product to purchase from original PO")
+        self.assertEqual(orig_po.order_line.product_qty, alt_po.order_line.product_qty,
+                         "Alternative PO should have copied the qty to purchase from original PO")
+        self.assertEqual(len(alt_po.alternative_po_ids), 2,
+                         "Newly created PO should be auto-linked to itself and original PO")
+
+        # confirm the alt PO, original PO should be cancelled
+        action = alt_po.button_confirm()
+        warning_wiz = Form(
+            self.env['purchase.requisition.alternative.warning'].with_context(**action['context']))
+        warning_wiz = warning_wiz.save()
+        self.assertEqual(warning_wiz.alternative_po_count, 1,
+                         "POs not in a RFQ status should not be listed as possible to cancel")
+        warning_wiz.action_cancel_alternatives()
+        self.assertEqual(orig_po.state, 'cancel', "Original PO should have been cancelled")

@@ -1,0 +1,34 @@
+//
+// This file regroups all the rules which apply to field widgets wherever they
+// are in the DOM, in the community version.
+//
+
+//------------------------------------------------------------------------------
+// Fields
+//------------------------------------------------------------------------------
+
+.o_field_widget {
+    &.o_field_many2manytags {
+        .o_dropdown_button {
+            top: 0;
+            right: 0;
+        }
+
+        &.avatar .o_dropdown_button {
+            top: $o-input-padding-y;
+        }
+    }
+
+    // Many2one
+    &.o_field_many2one .o_external_button {
+        flex: 0 0 auto;
+        padding: 0;
+        margin-left: 2px;
+        font-size: 19px;
+        color: #7C7BAD;
+        border: none;
+        &:hover {
+            background-color: transparent;
+        }
+    }
+}

@@ -13,7 +13,6 @@ class TestWebsiteSaleMail(HttpCase):
 
     def test_01_shop_mail_tour(self):
         """The goal of this test is to make sure sending SO by email works."""
-
         self.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'list_price': 2950.0,
@@ -26,6 +25,8 @@ class TestWebsiteSaleMail(HttpCase):
 
         # we override unlink because we don't want the email to be auto deleted
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
+        # as we check some link content, avoid mobile doing its link management
+        self.env['ir.config_parameter'].sudo().set_param('mail_mobile.disable_redirect_firebase_dynamic_link', True)
 
         with patch.object(MailMail, 'unlink', lambda self: None):
             self.start_tour("/", 'shop_mail', login="admin")

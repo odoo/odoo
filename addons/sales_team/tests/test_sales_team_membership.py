@@ -62,7 +62,7 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads | new_user)
         self.user_sales_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
 
-        new_team.flush()
+        self.env.flush_all()
         memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_sales_leads.id)])
         self.assertEqual(len(memberships), 3)  # subscribed twice to new_team + subscribed to sales_team_1
         self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
@@ -104,7 +104,7 @@ class TestMembership(TestSalesCommon):
         self.assertTrue(len(new_user))
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads | new_user)
         self.user_sales_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
-        new_team.flush()
+        self.env.flush_all()
 
         # still avoid duplicated team / user entries
         with self.assertRaises(exceptions.UserError):
@@ -127,7 +127,7 @@ class TestMembership(TestSalesCommon):
         ]})
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads)
         self.assertEqual(sales_team_1.member_ids, self.user_admin)
-        new_team.flush()
+        self.env.flush_all()
 
         memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_sales_leads.id)])
         self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
@@ -182,7 +182,7 @@ class TestMembership(TestSalesCommon):
         ]})
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads)
         self.assertEqual(sales_team_1.member_ids, self.user_sales_leads | self.user_admin)
-        new_team.flush()
+        self.env.flush_all()
 
         memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_sales_leads.id)])
         self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
@@ -265,7 +265,7 @@ class TestMembership(TestSalesCommon):
         })
         admin_original.write({'crm_team_id': new_team.id})
         # send to db as errors may pop at that step (like trying to set NULL on a m2o inverse of o2m)
-        self.new_team.flush()
+        self.env.flush_all()
         self.assertTrue(self.user_admin in new_team.member_ids)
         self.assertTrue(admin_original.active)
         self.assertTrue(admin_archived.exists())
@@ -274,7 +274,6 @@ class TestMembership(TestSalesCommon):
         # change team of membership should raise unicity constraint
         with self.assertRaises(exceptions.UserError), mute_logger('odoo.sql_db'):
             added.write({'crm_team_id': sales_team_1.id})
-            self.new_team.flush()
 
     def test_users_sale_team_id(self):
         self.assertTrue(self.sales_team_1.sequence < self.new_team.sequence)

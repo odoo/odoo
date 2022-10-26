@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.osv import expression
 
 
 class WebsiteVisitor(models.Model):
@@ -18,7 +19,6 @@ class WebsiteVisitor(models.Model):
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'lead_ids.email_normalized', 'lead_ids.mobile')
     def _compute_email_phone(self):
         super(WebsiteVisitor, self)._compute_email_phone()
-        self.flush()
 
         left_visitors = self.filtered(lambda visitor: not visitor.email or not visitor.mobile)
         leads = left_visitors.mapped('lead_ids').sorted('create_date', reverse=True)
@@ -42,6 +42,20 @@ class WebsiteVisitor(models.Model):
                 self.partner_id = main_lead.partner_id.id
             return True
         return check
+
+    def _inactive_visitors_domain(self):
+        """ Visitors tied to leads are considered always active and should not be deleted. """
+        domain = super()._inactive_visitors_domain()
+        return expression.AND([domain, [('lead_ids', '=', False)]])
+
+    def _merge_visitor(self, target):
+        """ Link the leads to the main visitor to avoid them being lost. """
+        if self.lead_ids:
+            target.write({
+                'lead_ids': [(4, lead.id) for lead in self.lead_ids]
+            })
+
+        return super()._merge_visitor(target)
 
     def _prepare_message_composer_context(self):
         if not self.partner_id and self.lead_ids:

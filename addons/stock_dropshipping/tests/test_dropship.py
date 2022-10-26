@@ -16,7 +16,7 @@ class TestDropship(common.TransactionCase):
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
         seller1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 8,
         })
         prod.write({'seller_ids': [(6, 0, [seller1.id])]})
@@ -41,6 +41,10 @@ class TestDropship(common.TransactionCase):
         po = self.env['purchase.order'].search([('group_id', '=', so.procurement_group_id.id)])
         po_line = po.order_line
 
+        # Check dropship count on SO and PO
+        self.assertEqual(po.incoming_picking_count, 0)
+        self.assertEqual(so.delivery_count, 0)
+
         # Check the qty on the P0
         self.assertAlmostEqual(po_line.product_qty, 1.00)
 
@@ -51,10 +55,8 @@ class TestDropship(common.TransactionCase):
         # Create a new so line
         sol2 = self.env['sale.order.line'].create({
             'order_id': so.id,
-            'name': prod.name,
             'product_id': prod.id,
             'product_uom_qty': 3.00,
-            'product_uom': prod.uom_id.id,
             'price_unit': 12,
         })
         # there is a new line
@@ -65,6 +67,8 @@ class TestDropship(common.TransactionCase):
         self.assertAlmostEqual(pol2.product_qty, sol2.product_uom_qty)
 
     def test_00_dropship(self):
+        # Required for `route_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
         # Create a vendor
         supplier_dropship = self.env['res.partner'].create({'name': 'Vendor of Dropshipping test'})
@@ -80,7 +84,7 @@ class TestDropship(common.TransactionCase):
             'uom_po_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [(0, 0, {
                 'delay': 1,
-                'name': supplier_dropship.id,
+                'partner_id': supplier_dropship.id,
                 'min_qty': 2.0
             })]
         })
@@ -110,10 +114,15 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         purchase.button_confirm()
         self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
-        self.assertEqual(len(purchase.ids), 1, 'There should be one picking')
+
+        # Check dropship count on SO and PO
+        self.assertEqual(purchase.incoming_picking_count, 0)
+        self.assertEqual(sale_order_drp_shpng.delivery_count, 0)
+        self.assertEqual(sale_order_drp_shpng.dropship_picking_count, 1)
+        self.assertEqual(purchase.dropship_picking_count, 1)
 
         # Send the 200 pieces
-        purchase.picking_ids.move_lines.quantity_done = purchase.picking_ids.move_lines.product_qty
+        purchase.picking_ids.move_ids.quantity_done = purchase.picking_ids.move_ids.product_qty
         purchase.picking_ids.button_validate()
 
         # Check one move line was created in Customers location with 200 pieces

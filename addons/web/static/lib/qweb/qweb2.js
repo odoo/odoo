@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,tag,esc,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,tag,out,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -65,15 +65,14 @@ var QWeb2 = {
         js_escape: function(s, noquotes) {
             return (noquotes ? '' : "'") + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + (noquotes ? '' : "'");
         },
-        html_escape: function(s, attribute) {
+        html_escape: function(s) {
             if (s == null) {
                 return '';
             }
-            s = String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            if (attribute) {
-                s = s.replace(/"/g, '&quot;');
-            }
-            return s;
+            return _.escape(s);
+        },
+        markup(s) {
+            return new _Markup(s);
         },
         gen_attribute: function(o) {
             if (o !== null && o !== undefined) {
@@ -94,7 +93,10 @@ var QWeb2 = {
             return '';
         },
         format_attribute: function(name, value) {
-            return ' ' + name + '="' + this.html_escape(value, true) + '"';
+            // we want to ensure `value` is *not* a `Markup`, because markup-safe
+            // strings are not necessarily attributes-safe.
+            const attrvalue = value == null ? '' : this.html_escape(String(value));
+            return ` ${name}="${attrvalue}"`;
         },
         extend: function(dst, src, exclude) {
             for (var p in src) {
@@ -149,9 +151,9 @@ var QWeb2 = {
             var new_dict = this.extend({}, old_dict);
             new_dict['__caller__'] = old_dict['__template__'];
             if (callback) {
-                new_dict[0] = callback(context, new_dict);
+                new_dict[0] = this.markup(callback(context, new_dict));
             }
-            return context.engine._render(template, new_dict);
+            return this.markup(context.engine._render(template, new_dict));
         },
         foreach: function(context, enu, as, old_dict, callback) {
             if (enu != null) {
@@ -265,7 +267,7 @@ QWeb2.Engine = (function() {
                     if (name && extend) {
                         // Clone template and extend it
                         if (!this.templates[extend]) {
-                            return this.tools.exception("Can't clone undefined template " + extend);
+                            return this.tools.exception("Can't clone undefined template '" + extend + "' to create '" + name + "'");
                         }
                         this.templates[name] = this.templates[extend].cloneNode(true);
                         this.extend_templates[name] = (this.extend_templates[extend] || []).slice();
@@ -499,7 +501,7 @@ QWeb2.Engine = (function() {
                     if (jquery) {
                         target = jQuery(jquery, template_dest);
                         if (!target.length && window.console) {
-                            console.debug('Can\'t find "'+jquery+'" when extending template '+template);
+                            console.error("Can't find '" + jquery + "' when extending template " + template);
                         }
                     } else {
                         this.tools.exception(error_msg + "No expression given");
@@ -689,7 +691,7 @@ QWeb2.Element = (function() {
                 s && r.push(_this.engine.tools.js_escape(s));
             }
 
-            var re = /(?:#{(.+?)}|{{(.+?)}})/g, start = 0, r = [], m;
+            var re = /#{(.+?)}|{{(.+?)}}/g, start = 0, r = [], m;
             while (m = re.exec(s)) {
                 // extract literal string between previous and current match
                 append_literal(s.slice(start, re.lastIndex - m[0].length));
@@ -800,7 +802,7 @@ QWeb2.Element = (function() {
                 this.bottom("}));");
                 this.indent();
                 this.top("var r = [];");
-                return this.bottom("return r.join('');");
+                return this.bottom("return context.engine.tools.markup(r.join(''));");
             }
         },
         compile_action_set : function(value) {
@@ -822,11 +824,14 @@ QWeb2.Element = (function() {
                     this.bottom("})(dict);");
                     this.indent();
                     this.top("var r = [];");
-                    this.bottom("return r.join('');");
+                    this.bottom("return context.engine.tools.markup(r.join(''));");
                 }
             }
         },
         compile_action_esc : function(value) {
+            return this.compile_action_out(value);
+        },
+        compile_action_out(value) {
             this.top("var t = " + this.format_str(value) + ";");
             this.top("if (t != null) r.push(context.engine.tools.html_escape(t));");
             this.top("else {");
@@ -834,6 +839,14 @@ QWeb2.Element = (function() {
             this.indent();
         },
         compile_action_raw : function(value) {
+            let e = this.node;
+            while (e.parentElement && !e.getAttribute('t-name')) {
+                e = e.parentElement;
+            }
+            console.warn(
+                "Found deprecated directive '@t-raw=\"%s\"' in "
+              + "template '%s'. Replace by @t-out, and explicitely wrap content in "
+              + "utils.Markup if necessary.", value, e.getAttribute('t-name'));
             this.top("var t = " + this.format_str(value) + ";");
             this.top("if (t != null) r.push(t);");
             this.top("else {");

@@ -14,8 +14,7 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         HolidayStatusManagerGroup = self.env['hr.leave.type'].with_user(self.user_hrmanager_id)
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
-            'allocation_type': 'no',
-            'validity_start': False,
+            'requires_allocation': 'no',
         })
 
         def create_holiday(name, start, end):

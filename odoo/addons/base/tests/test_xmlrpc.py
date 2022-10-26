@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
+from xmlrpc.client import Binary
 
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
@@ -17,6 +18,12 @@ class TestXMLRPC(common.HttpCase):
     def setUp(self):
         super(TestXMLRPC, self).setUp()
         self.admin_uid = self.env.ref('base.user_admin').id
+
+    def xmlrpc(self, model, method, *args, **kwargs):
+        return self.xmlrpc_object.execute_kw(
+            common.get_db_name(), self.admin_uid, 'admin',
+            model, method, args, kwargs
+        )
 
     def test_01_xmlrpc_login(self):
         """ Try to login on the common service. """
@@ -45,6 +52,26 @@ class TestXMLRPC(common.HttpCase):
             'res.partner', 'name_search', "admin"
         )
 
+    def test_xmlrpc_html_field(self):
+        sig = '<p>bork bork bork <span style="font-weight: bork">bork</span><br></p>'
+        r = self.env['res.users'].create({
+            'name': 'bob',
+            'login': 'bob',
+            'signature': sig
+        })
+        self.assertEqual(str(r.signature), sig)
+        [x] = self.xmlrpc('res.users', 'read', r.id, ['signature'])
+        self.assertEqual(x['signature'], sig)
+
+    def test_xmlrpc_frozendict_marshalling(self):
+        """ Test that the marshalling of a frozendict object works properly over XMLRPC """
+        ctx = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'res.users', 'context_get',
+        )
+        self.assertEqual(ctx['lang'], 'en_US')
+        self.assertEqual(ctx['tz'], 'Europe/Brussels')
+
     def test_jsonrpc_read_group(self):
         self._json_call(
             common.get_db_name(), self.admin_uid, 'admin',
@@ -71,6 +98,13 @@ class TestXMLRPC(common.HttpCase):
             }
         })
 
+    def test_xmlrpc_attachment_raw(self):
+        ids = self.env['ir.attachment'].create({'name': 'n', 'raw': b'\x01\02\03'}).ids
+        [att] = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'ir.attachment', 'read', ids, ['raw'])
+        self.assertEqual(att['raw'], '', "actual binary data should be blanked out on read")
+
 # really just for the test cursor
 @common.tagged('post_install', '-at_install')
 class TestAPIKeys(common.HttpCase):
@@ -94,7 +128,8 @@ class TestAPIKeys(common.HttpCase):
                 'cookies': {},
             }),
             # bypass check_identity flow
-            'session': {'identity-check-last': time.time()}
+            'session': {'identity-check-last': time.time()},
+            'geoip': {},
         })
         _request_stack.push(fake_req)
         self.addCleanup(_request_stack.pop)

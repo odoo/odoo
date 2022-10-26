@@ -34,6 +34,7 @@ class PurchaseRequisitionType(models.Model):
     line_copy = fields.Selection([
         ('copy', 'Use lines of agreement'), ('none', 'Do not create RfQ lines automatically')],
         string='Lines', required=True, default='copy')
+    active = fields.Boolean(default=True, help="Set active to false to hide the Purchase Agreement Types without removing it.")
 
 
 class PurchaseRequisition(models.Model):
@@ -56,7 +57,7 @@ class PurchaseRequisition(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Purchase Representative',
         default=lambda self: self.env.user, check_company=True)
-    description = fields.Text()
+    description = fields.Html()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
@@ -128,10 +129,7 @@ class PurchaseRequisition(models.Model):
             self.write({'state': 'in_progress'})
         # Set the sequence number regarding the requisition type
         if self.name == 'New':
-            if self.is_quantity_copy != 'none':
-                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
-            else:
-                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
+            self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
     def action_open(self):
         self.write({'state': 'open'})
@@ -165,6 +163,7 @@ class PurchaseRequisition(models.Model):
 
 class PurchaseRequisitionLine(models.Model):
     _name = "purchase.requisition.line"
+    _inherit = 'analytic.mixin'
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
 
@@ -176,25 +175,24 @@ class PurchaseRequisitionLine(models.Model):
     price_unit = fields.Float(string='Unit Price', digits='Product Price')
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
-    company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env.company)
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
     schedule_date = fields.Date(string='Scheduled Date')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
-    @api.model
-    def create(self,vals):
-        res = super(PurchaseRequisitionLine, self).create(vals)
-        if res.requisition_id.state not in ['draft', 'cancel', 'done'] and res.requisition_id.is_quantity_copy == 'none':
-            supplier_infos = self.env['product.supplierinfo'].search([
-                ('product_id', '=', vals.get('product_id')),
-                ('name', '=', res.requisition_id.vendor_id.id),
-            ])
-            if not any(s.purchase_requisition_id for s in supplier_infos):
-                res.create_supplier_info()
-            if vals['price_unit'] <= 0.0:
-                raise UserError(_('You cannot confirm the blanket order without price.'))
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line, vals in zip(lines, vals_list):
+            if line.requisition_id.state not in ['draft', 'cancel', 'done'] and line.requisition_id.is_quantity_copy == 'none':
+                supplier_infos = self.env['product.supplierinfo'].search([
+                    ('product_id', '=', vals.get('product_id')),
+                    ('partner_id', '=', line.requisition_id.vendor_id.id),
+                ])
+                if not any(s.purchase_requisition_id for s in supplier_infos):
+                    line.create_supplier_info()
+                if vals['price_unit'] <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without price.'))
+        return lines
 
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
@@ -217,7 +215,7 @@ class PurchaseRequisitionLine(models.Model):
         if purchase_requisition.type_id.quantity_copy == 'none' and purchase_requisition.vendor_id:
             # create a supplier_info only in case of blanket order
             self.env['product.supplierinfo'].create({
-                'name': purchase_requisition.vendor_id.id,
+                'partner_id': purchase_requisition.vendor_id.id,
                 'product_id': self.product_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
                 'price': self.price_unit,
@@ -227,6 +225,7 @@ class PurchaseRequisitionLine(models.Model):
 
     @api.depends('requisition_id.purchase_ids.state')
     def _compute_ordered_qty(self):
+        line_found = set()
         for line in self:
             total = 0.0
             for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state in ['purchase', 'done']):
@@ -235,7 +234,11 @@ class PurchaseRequisitionLine(models.Model):
                         total += po_line.product_uom._compute_quantity(po_line.product_qty, line.product_uom_id)
                     else:
                         total += po_line.product_qty
-            line.qty_ordered = total
+            if line.product_id not in line_found:
+                line.qty_ordered = total
+                line_found.add(line.product_id)
+            else:
+                line.qty_ordered = 0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -262,6 +265,5 @@ class PurchaseRequisitionLine(models.Model):
             'price_unit': price_unit,
             'taxes_id': [(6, 0, taxes_ids)],
             'date_planned': date_planned,
-            'account_analytic_id': self.account_analytic_id.id,
-            'analytic_tag_ids': self.analytic_tag_ids.ids,
+            'analytic_distribution': self.analytic_distribution,
         }

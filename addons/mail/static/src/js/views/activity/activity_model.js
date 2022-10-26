@@ -1,8 +1,7 @@
-odoo.define('mail.ActivityModel', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const BasicModel = require('web.BasicModel');
-const session = require('web.session');
+import BasicModel from 'web.BasicModel';
+import session from 'web.session';
 
 const ActivityModel = BasicModel.extend({
 
@@ -119,6 +118,4 @@ const ActivityModel = BasicModel.extend({
     },
 });
 
-return ActivityModel;
-
-});
+export default ActivityModel;

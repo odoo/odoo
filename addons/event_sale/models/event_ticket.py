@@ -18,7 +18,7 @@ class EventTemplateTicket(models.Model):
     # product
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
-        domain=[("event_ok", "=", True)], default=_default_product_id)
+        domain=[("detailed_type", "=", "event")], default=_default_product_id)
     price = fields.Float(
         string='Price', compute='_compute_price',
         digits='Product Price', readonly=False, store=True)
@@ -43,11 +43,20 @@ class EventTemplateTicket(models.Model):
             if not ticket.description:
                 ticket.description = False
 
+    # TODO clean this feature in master
+    # Feature broken by design, depending on the hacky `_get_contextual_price` field on products
+    # context_dependent, core part of the pricelist mess
+    # This field usage should be restricted to the UX, and any use in effective
+    # price computation should be replaced by clear calls to the pricelist API
+    @api.depends_context('uom', 'qty', 'pricelist') # Cf product.price context dependencies
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for ticket in self:
             product = ticket.product_id
-            discount = (product.lst_price - product.price) / product.lst_price if product.lst_price else 0.0
+            # seems strange to not apply pricelist logic but still use pricelist discount...
+            discount = (
+                product.lst_price - product._get_contextual_price()
+            ) / product.lst_price if product.lst_price else 0.0
             ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):

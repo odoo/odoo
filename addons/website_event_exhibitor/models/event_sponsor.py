@@ -25,18 +25,24 @@ class Sponsor(models.Model):
         'chat.room.mixin'
     ]
 
+    def _default_sponsor_type_id(self):
+        return self.env['event.sponsor.type'].search([], order="sequence desc", limit=1).id
+
     event_id = fields.Many2one('event.event', 'Event', required=True)
-    sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Level', required=True)
+    sponsor_type_id = fields.Many2one(
+        'event.sponsor.type', 'Sponsorship Level',
+        default=lambda self: self._default_sponsor_type_id(), required=True, auto_join=True)
     url = fields.Char('Sponsor Website', compute='_compute_url', readonly=False, store=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean(default=True)
     # description
-    subtitle = fields.Char('Slogan', help='Catchy marketing sentence for promote')
+    subtitle = fields.Char('Slogan')
     exhibitor_type = fields.Selection(
-        [('sponsor', 'Sponsor'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
+        [('sponsor', 'Footer Logo Only'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
         string="Sponsor Type", default="sponsor")
     website_description = fields.Html(
         'Description', compute='_compute_website_description',
+        sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=True, translate=html_translate,
         readonly=False, store=True)
     # contact information
@@ -101,10 +107,11 @@ class Sponsor(models.Model):
     def _compute_image_512(self):
         self._synchronize_with_partner('image_512')
 
-    @api.depends('image_256', 'partner_id.image_256')
+    @api.depends('image_512', 'partner_id.image_256')
     def _compute_website_image_url(self):
         for sponsor in self:
-            if sponsor.image_256:
+            if sponsor.image_512:
+                # image_512 is stored, image_256 is derived from it dynamically
                 sponsor.website_image_url = self.env['website'].image_url(sponsor, 'image_256', size=256)
             elif sponsor.partner_id.image_256:
                 sponsor.website_image_url = self.env['website'].image_url(sponsor.partner_id, 'image_256', size=256)

@@ -107,8 +107,8 @@ class TestACLFeedback(Feedback):
         })
         self.record = self.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
-        ACL.flush()
-        ACL.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
     def test_no_groups(self):
         """ Operation is never allowed
@@ -303,9 +303,10 @@ This restriction is due to the following rules:
 Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
-    def test_warn_company(self):
+    def test_warn_company_no_access(self):
         """ If one of the failing rules mentions company_id, add a note that
-        this might be a multi-company issue.
+        this might be a multi-company issue, but the user doesn't access to this company
+        then no information about the company is showed.
         """
         self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
         self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
@@ -328,35 +329,69 @@ Note: this might be a multi-company issue.
 Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
-    def test_read(self):
-        """ because of prefetching, read() goes through a different codepath
-        to apply rules
+    def test_warn_company_no_company_field(self):
+        """ If one of the failing rules mentions company_id, add a note that
+        this might be a multi-company issue, but the record doesn't have company_id field
+        then no information about the company is showed.
         """
         self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
         self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
-        self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
-        self._make_rule('rule 1', '[("val", "=", 1)]', global_=True, attr='read')
+        ChildModel = self.env['test_access_right.child'].sudo()
+        self.env['ir.rule'].create({
+            'name': 'rule 0',
+            'model_id': self.env['ir.model'].search([('model', '=', ChildModel._name)]).id,
+            'groups': [],
+            'domain_force': '[("parent_id.company_id", "=", user.company_id.id)]',
+            'perm_read': True,
+        })
+        self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
+        self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
+        child_record = ChildModel.create({'parent_id': self.record.id}).with_user(self.user)
         with self.assertRaises(AccessError) as ctx:
-            _ = self.record.val
+            _ = child_record.parent_id
         self.assertEqual(
             ctx.exception.args[0],
-            """Due to security restrictions, you are not allowed to access 'Object For Test Access Right' (test_access_right.some_obj) records.
+            """Due to security restrictions, you are not allowed to access 'Object for testing company ir rule' (test_access_right.child) records.
 
 Records: %s (id=%s)
 User: %s (id=%s)
 
 This restriction is due to the following rules:
 - rule 0
-- rule 1
 
 Note: this might be a multi-company issue.
 
-Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (child_record.display_name, child_record.id, self.user.name, self.user.id)
         )
 
+    def test_warn_company_access(self):
+        """ because of prefetching, read() goes through a different codepath
+        to apply rules
+        """
+        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
+        self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
+        self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
+        self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
+        with self.assertRaises(AccessError) as ctx:
+            _ = self.record.val
+        self.assertEqual(
+            ctx.exception.args[0],
+            """Due to security restrictions, you are not allowed to access 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s, company=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
+- rule 0
+
+Note: this might be a multi-company issue.
+
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.record.sudo().company_id.display_name, self.user.name, self.user.id)
+        )
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        p.flush()
-        p.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         with self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.parent\)\.",

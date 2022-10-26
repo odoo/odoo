@@ -15,5 +15,5 @@ tests independently to functional aspects of other models.""",
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'application': False,
+    'license': 'LGPL-3',
 }

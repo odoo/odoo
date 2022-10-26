@@ -22,14 +22,20 @@ class TestMultiCompany(TransactionCase):
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
-            'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
+            'groups_id': [(6, 0, [
+                group_user.id,
+                group_stock_manager.id,
+            ])],
             'company_id': cls.company_a.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
         cls.user_b = cls.env['res.users'].create({
             'name': 'user company b with access to company a',
             'login': 'user b',
-            'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
+            'groups_id': [(6, 0, [
+                group_user.id,
+                group_stock_manager.id,
+            ])],
             'company_id': cls.company_b.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
@@ -166,12 +172,12 @@ class TestMultiCompany(TransactionCase):
             'tracking': 'lot',
             'name': 'product lot',
         })
-        self.env['stock.production.lot'].create({
+        self.env['stock.lot'].create({
             'name': 'lotA',
             'company_id': self.company_a.id,
             'product_id': product_lot.id,
         })
-        self.env['stock.production.lot'].create({
+        self.env['stock.lot'].create({
             'name': 'lotA',
             'company_id': self.company_b.id,
             'product_id': product_lot.id,
@@ -210,7 +216,7 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(move1.move_line_ids[0].company_id, self.company_a)
         picking.with_user(self.user_b).button_validate()
         self.assertEqual(picking.state, 'done')
-        created_serial = self.env['stock.production.lot'].search([
+        created_serial = self.env['stock.lot'].search([
             ('name', '=', 'receipt_serial')
         ])
         self.assertEqual(created_serial.company_id, self.company_a)
@@ -218,6 +224,8 @@ class TestMultiCompany(TransactionCase):
     def test_orderpoint_1(self):
         """As a user of company A, create an orderpoint for company B. Check itsn't possible to
         use a warehouse of companny A"""
+        # Required for `warehouse_id` and `location_id` to be visible in the view
+        self.user_a.groups_id += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
             'type': 'product',
             'name': 'shared product',
@@ -237,6 +245,8 @@ class TestMultiCompany(TransactionCase):
         """As a user of Company A, check it is not possible to change the company on an existing
         orderpoint to Company B.
         """
+        # Required for `warehouse_id` and `location_id` to be visible in the view
+        self.user_a.groups_id += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
             'type': 'product',
             'name': 'shared product',
@@ -250,6 +260,30 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(orderpoint.company_id, self.company_a)
         with self.assertRaises(UserError):
             orderpoint.company_id = self.company_b.id
+
+    def test_orderpoint_3(self):
+        warehouse_a1 = self.warehouse_a
+        # Create a second warehouse the company A
+        # to test the change of location when changing of warehouse within a same company
+        warehouse_a2 = self.env['stock.warehouse'].with_user(self.user_a).sudo().create({'name': 'foo', 'code': 'foo'})
+        product = self.env['product.product'].create({
+            'type': 'product',
+            'name': 'shared product',
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.user_a).create({
+            'product_id': product.id,
+        })
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a1)
+        self.assertEqual(orderpoint.location_id, warehouse_a1.lot_stock_id)
+
+        orderpoint.warehouse_id = warehouse_a2
+        self.assertEqual(orderpoint.location_id, warehouse_a2.lot_stock_id)
+
+        orderpoint.location_id = warehouse_a1.lot_stock_id
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a1)
+
+        orderpoint.location_id = warehouse_a2.lot_stock_id
+        self.assertEqual(orderpoint.warehouse_id, warehouse_a2)
 
     def test_product_1(self):
         """ As an user of Company A, checks we can or cannot create new product
@@ -403,14 +437,14 @@ class TestMultiCompany(TransactionCase):
             }).id,
         })
 
-        route = self.env['stock.location.route'].create({
+        route = self.env['stock.route'].create({
             'name': 'Push',
             'company_id': False,
             'rule_ids': [(0, False, {
                 'name': 'create a move to company b',
                 'company_id': self.company_b.id,
                 'location_src_id': intercom_location.id,
-                'location_id': self.stock_location_b.id,
+                'location_dest_id': self.stock_location_b.id,
                 'action': 'push',
                 'auto': 'manual',
                 'picking_type_id': self.warehouse_b.in_type_id.id,
@@ -487,7 +521,7 @@ class TestMultiCompany(TransactionCase):
         intercom_location.write({'active': True})
         partner = self.env['res.partner'].create({'name': 'Deco Addict'})
         self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
-        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
+        resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
                                                                   ('supplied_wh_id', '=', self.warehouse_a.id)])
         self.assertTrue(resupply_route, "Resupply route not found")
 

@@ -1,0 +1,80 @@
+$o-rightpanel-p: $o-horizontal-padding;
+$o-rightpanel-p-small: $o-horizontal-padding*0.5;
+$o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
+
+.o_controller_with_rightpanel .o_content {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+
+    .o_renderer {
+        flex: 1 1 auto;
+        overflow-x: hidden;
+        overflow-y: auto; // make the renderer and search panel scroll individually
+        max-height: 100%;
+        position: relative;
+        padding: 0;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0;
+            border-top: 0;
+            border-right: 0;
+        }
+    }
+}
+
+.o_rightpanel {
+    flex: 0 0 37%;
+    padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
+    min-width: 400px;
+    max-width: 1140px;
+
+    .o_rightpanel_section {
+        &:nth-child(n+3) {
+            border-top: 1px solid $border-color;
+        }
+
+        .o_form_view {
+            .oe_button_box {
+                margin: -1px (-$o-rightpanel-p) 0;
+
+                .oe_stat_button {
+                    flex-basis: 25%;
+
+                    &:nth-child(4n):not(:last-child) {
+                        border-right-width: 0;
+                    }
+
+                    .o_stat_text {
+                        white-space: normal;
+                    }
+                }
+
+                @media screen and (max-width: 1600px) {
+                    .oe_stat_button {
+                        flex-basis: 33.33%;
+
+                        &:nth-child(3n):not(:last-child) {
+                            border-right-width: 0px !important;
+                        }
+
+                        &:nth-child(4n):not(:last-child){
+                            border-right-width: 1px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .o_rightpanel_header {
+            @include media-breakpoint-down(md) {
+                cursor: pointer;
+            }
+        }
+
+        tr th:not(:first-child) {
+            width: 20%;
+        }
+    }
+}

@@ -10,9 +10,13 @@ weWidgets.LinkDialog.include({
      *
      * @override
      */
-    start: function () {
-        wUtils.autocompleteWithPages(this, this.$('input[name="url"]'));
-        return this._super.apply(this, arguments);
+    start: async function () {
+        const options = {
+            body: this.linkWidget.$link && this.linkWidget.$link[0].ownerDocument.body,
+        };
+        const result = await this._super.apply(this, arguments);
+        wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
+        return result;
     },
 });
 });

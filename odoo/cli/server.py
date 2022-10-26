@@ -99,13 +99,15 @@ def export_translation():
         config["translate_out"])
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
+    # .pot is the same fileformat as .po
+    if fileformat == "pot":
+        fileformat = "po"
 
     with open(config["translate_out"], "wb") as buf:
         registry = odoo.modules.registry.Registry.new(dbname)
-        with odoo.api.Environment.manage():
-            with registry.cursor() as cr:
-                odoo.tools.trans_export(config["language"],
-                    config["translate_modules"] or ["all"], buf, fileformat, cr)
+        with registry.cursor() as cr:
+            odoo.tools.trans_export(config["language"],
+                config["translate_modules"] or ["all"], buf, fileformat, cr)
 
     _logger.info('translation file written successfully')
 
@@ -115,11 +117,10 @@ def import_translation():
     dbname = config['db_name']
 
     registry = odoo.modules.registry.Registry.new(dbname)
-    with odoo.api.Environment.manage():
-        with registry.cursor() as cr:
-            odoo.tools.trans_load(
-                cr, config["translate_in"], config["language"], overwrite=overwrite,
-            )
+    with registry.cursor() as cr:
+        odoo.tools.trans_load(
+            cr, config["translate_in"], config["language"], overwrite=overwrite,
+        )
 
 def main(args):
     check_root_user()

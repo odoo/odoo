@@ -6,7 +6,7 @@ const ajax = require('web.ajax');
 
 tour.register('apikeys_tour_setup', {
     test: true,
-    url: '/web',
+    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
 }, [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .oe_topbar_name',
@@ -24,11 +24,11 @@ tour.register('apikeys_tour_setup', {
     trigger: 'button:contains("New API Key")',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("confirm your password")',
+    trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "Confirm",
@@ -39,7 +39,7 @@ tour.register('apikeys_tour_setup', {
     run: () => {},
 }, {
     content: "Enter description",
-    trigger: 'input[name=name]',
+    trigger: '[name=name] input',
     run: 'text my key',
 }, {
     content: "Confirm key creation",
@@ -48,10 +48,11 @@ tour.register('apikeys_tour_setup', {
     content: "Check that we're on the last step & grab key",
     trigger: 'p:contains("Here is your new API key")',
     run: async () => {
-        const key = $('code span[name=key]').text();
-        await ajax.jsonRpc('/web/dataset/call', 'call', {
+        const key = $('code [name=key] span').text();
+        await ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.logging', method: 'send_key',
             args: [key],
+            kwargs: {},
         });
         $('button:contains("Done")').click();
     }
@@ -72,7 +73,7 @@ tour.register('apikeys_tour_setup', {
 // deletes the previously created key
 tour.register('apikeys_tour_teardown', {
     test: true,
-    url: '/web',
+    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
 }, [{
     content: 'Open preferences',
     trigger: '.o_user_menu .oe_topbar_name',
@@ -88,7 +89,7 @@ tour.register('apikeys_tour_teardown', {
     run: 'click',
 }, {
     content: "Input password for security mode again",
-    trigger: '[name=password]',
+    trigger: '[name=password] input',
     run: 'text demo', // FIXME: better way to do this?
 }, {
     content: "And confirm",

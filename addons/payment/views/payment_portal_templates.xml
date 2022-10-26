@@ -5,11 +5,11 @@
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
-            <t t-set="acquirers_allowing_tokenization"
-               t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, allow_tokenization=True)"/>
+            <t t-set="providers_allowing_tokenization"
+               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
             <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
             <!-- Only show the link if a token can be created or if one already exists -->
-            <div t-if="acquirers_allowing_tokenization or existing_tokens"
+            <div t-if="providers_allowing_tokenization or existing_tokens"
                  class='manage_payment_method mt16'>
                 <a href="/my/payment_method">Manage payment methods</a>
             </div>
@@ -40,7 +40,7 @@
                             <div t-elif="not partner_id" class="alert alert-warning">
                                 <strong>Warning</strong> You must be logged in to pay.
                             </div>
-                            <div t-elif="not acquirers and not tokens" class="alert alert-warning">
+                            <div t-elif="not providers and not tokens" class="alert alert-warning">
                                 <strong>No suitable payment option could be found.</strong><br/>
                                 If you believe that it is an error, please contact the website administrator.
                             </div>
@@ -76,9 +76,9 @@
                     <!-- Manage page -->
                     <div class="row">
                         <div class="col-lg-7">
-                            <t t-if="acquirers" t-call="payment.manage"/>
+                            <t t-if="providers or tokens" t-call="payment.manage"/>
                             <div t-else="" class="alert alert-warning">
-                                <p><strong>No suitable payment acquirer could be found.</strong></p>
+                                <p><strong>No suitable payment provider could be found.</strong></p>
                                 <p>If you believe that it is an error, please contact the website administrator.</p>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                     <!-- Status page -->
                     <div name="o_payment_status">
                         <div name="o_payment_status_content"
-                             class="col-sm-6 col-sm-offset-3">
+                             class="col-sm-6 offset-sm-3">
                             <!-- The content is generated in JavaScript -->
                         </div>
                     </div>
@@ -113,8 +113,6 @@
     <template id="confirm">
         <!-- Variables description:
             - 'tx' - The transaction to display
-            - 'message' - The acquirer message configured for the given transaction state
-            - 'status' - The alert class to use for the message
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Confirmation'"/>
@@ -127,51 +125,42 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div>
-                                <!-- message is the content of either the HTML field describing the
-                                transaction state computed while processing feedback data, or the
-                                HTML field associated with the transaction state, defined on the
-                                acquirer.  -->
-                                <div t-attf-class="alert alert-#{status}"
-                                     t-raw="message"
-                                     role="status"/>
-                                <div class="form-group row">
+                                <t t-call="payment.transaction_status"/>
+                                <div class="mb-3 row">
                                     <label for="form_partner_name" class="col-md-3 col-form-label">
                                         From
                                     </label>
-                                    <div class="col-md-9">
-                                        <span name="form_partner_name"
-                                              class="form-control"
-                                              t-esc="tx.partner_name"/>
-                                    </div>
+                                    <span name="form_partner_name"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.partner_name"/>
                                 </div>
-                                <div class="form-group row">
+                                <hr/>
+                                <div class="mb-3 row">
                                     <label for="form_reference" class="col-md-3 col-form-label">
                                         Reference
                                     </label>
-                                    <div class="col-md-9">
-                                        <span name="form_reference"
-                                              class="form-control"
-                                              t-esc="tx.reference"/>
-                                    </div>
+                                    <span name="form_reference"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.reference"/>
                                 </div>
-                                <div class="form-group row">
+                                <hr/>
+                                <div class="mb-3 row">
                                     <label for="form_amount" class="col-md-3 col-form-label">
                                         Amount
                                     </label>
-                                    <div class="col-md-9">
-                                        <span name="form_amount"
-                                              class="form-control"
-                                              t-esc="tx.amount"
-                                              t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
-                                    </div>
+                                    <span name="form_amount"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                 </div>
+                                <hr/>
                                 <div class="row">
-                                    <div class="col-md-5 offset-md-3 text-muted">
-                                        Processed by <t t-esc="tx.acquirer_id.sudo().name"/>
+                                    <div class="col-md-5 text-muted">
+                                        Processed by <t t-esc="tx.provider_id.sudo().name"/>
                                     </div>
-                                    <div class="col-md-4 mt-2 pl-0">
+                                    <div class="col-md-4 offset-md-3 mt-2 ps-0">
                                         <a role="button"
-                                           t-attf-class="btn btn-#{status} float-right"
+                                           t-attf-class="btn btn-primary float-end"
                                            href="/my/home">
                                             <i class="fa fa-arrow-circle-right"/> Back to My Account
                                         </a>

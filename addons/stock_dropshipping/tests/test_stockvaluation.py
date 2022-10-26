@@ -30,7 +30,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
         seller1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 8,
         })
         self.product1.write({'seller_ids': [(6, 0, [seller1.id])]})
@@ -68,7 +68,8 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         # create the vendor bill
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = vendor1
-        move_form.purchase_id = self.purchase_order1
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-self.purchase_order1.id)
+        move_form.invoice_date = move_form.date
         for i in range(len(self.purchase_order1.order_line)):
             with move_form.invoice_line_ids.edit(i) as line_form:
                 line_form.tax_ids.clear()
@@ -80,8 +81,8 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.customer_invoice1.action_post()
 
         all_amls = self.vendor_bill1.line_ids + self.customer_invoice1.line_ids
-        if self.sale_order1.picking_ids.move_lines.account_move_ids:
-            all_amls |= self.sale_order1.picking_ids.move_lines.account_move_ids.line_ids
+        if self.sale_order1.picking_ids.move_ids.account_move_ids:
+            all_amls |= self.sale_order1.picking_ids.move_ids.account_move_ids.line_ids
         return all_amls
 
     def _check_results(self, expected_aml, expected_aml_count, all_amls):
@@ -282,13 +283,13 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick.move_ids[0].move_line_ids[0].qty_done = 1.0
         return_pick._action_done()
-        self.assertEqual(return_pick.move_lines._is_dropshipped_returned(), True)
+        self.assertEqual(return_pick.move_ids._is_dropshipped_returned(), True)
 
         all_amls_return = self.vendor_bill1.line_ids + self.customer_invoice1.line_ids
-        if self.sale_order1.picking_ids.mapped('move_lines.account_move_ids'):
-            all_amls_return |= self.sale_order1.picking_ids.mapped('move_lines.account_move_ids.line_ids')
+        if self.sale_order1.picking_ids.mapped('move_ids.account_move_ids'):
+            all_amls_return |= self.sale_order1.picking_ids.mapped('move_ids.account_move_ids.line_ids')
 
         # Two extra AML should have been created for the return
         expected_aml = {

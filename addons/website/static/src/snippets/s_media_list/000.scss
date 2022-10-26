@@ -8,16 +8,16 @@
     }
     .s_media_list_body {
         padding: $grid-gutter-width;
-        background-color: gray('white');
+        background-color: map-get($grays, 'white');
     }
     .s_media_list_options {
         @include o-position-absolute(auto,0,0,0);
         display: flex;
-        border-top: 1px solid gray('400');
+        border-top: 1px solid map-get($grays, '400');
         .s_media_list_option {
             flex: 1 1 auto;
             padding: $grid-gutter-width/3 0;
-            border-right: 1px solid gray('400');
+            border-right: 1px solid map-get($grays, '400');
             text-align: center;
             &:last-child {
                 border-right: 0;

@@ -1,19 +1,13 @@
 odoo.define('website.s_dynamic_snippet_carousel', function (require) {
 'use strict';
 
-const config = require('web.config');
-const core = require('web.core');
 const publicWidget = require('web.public.widget');
 const DynamicSnippet = require('website.s_dynamic_snippet');
+const config = require('web.config');
 
 const DynamicSnippetCarousel = DynamicSnippet.extend({
     selector: '.s_dynamic_snippet_carousel',
-    xmlDependencies: (DynamicSnippet.prototype.xmlDependencies || []).concat(
-        ['/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml']
-    ),
-
     /**
-     *
      * @override
      */
     init: function () {
@@ -26,19 +20,18 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Method to be overridden in child components in order to prepare QWeb
-     * options
-     * @private
+     * @override
      */
-    _getQWebRenderParams: function () {
+    _getQWebRenderOptions: function () {
         return Object.assign(
             this._super.apply(this, arguments),
             {
-                interval : parseInt(this.$target[0].dataset.carouselInterval),
+                interval: parseInt(this.$target[0].dataset.carouselInterval),
+                rowPerSlide: parseInt(config.device.isMobile ? 1 : this.$target[0].dataset.rowPerSlide || 1),
+                arrowPosition: this.$target[0].dataset.arrowPosition || '',
             },
         );
     },
-
 });
 publicWidget.registry.dynamic_snippet_carousel = DynamicSnippetCarousel;
 

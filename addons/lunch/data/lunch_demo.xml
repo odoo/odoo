@@ -13,6 +13,7 @@
             <field name="street">975 Bullock Orchard</field>
             <field name="zip">02155</field>
             <field name="email">cynthiasanchez@gmail.com</field>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="product_bacon_0" model="lunch.product">
@@ -22,6 +23,7 @@
             <field name="supplier_id" ref="supplier_hungry_dog"/>
             <field name="description">Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce</field>
             <field name="image_1920" type="base64" file="lunch/static/img/bacon_burger.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="product_cheese_burger_0" model="lunch.product">
@@ -31,6 +33,7 @@
             <field name="supplier_id" ref="supplier_hungry_dog"/>
             <field name="description">Beef, Cheddar, Salad, Fried Onions, BBQ Sauce</field>
             <field name="image_1920" type="base64" file="lunch/static/img/cheeseburger.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="product_club_0" model="lunch.product">
@@ -40,13 +43,16 @@
             <field name="supplier_id" ref="supplier_hungry_dog"/>
             <field name="description">Ham, Cheese, Vegetables</field>
             <field name="image_1920" type="base64" file="lunch/static/img/club.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="product_coke_0" model="lunch.product">
             <field name="name">Coca Cola</field>
             <field name="category_id" ref="categ_drinks"/>
             <field name="price">2.9</field>
+            <field name="description"></field>
             <field name="supplier_id" ref="supplier_hungry_dog"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="product_pizza_0" model="lunch.product">
@@ -55,6 +61,7 @@
             <field name="price">6.90</field>
             <field name="supplier_id" ref="supplier_hungry_dog"/>
             <field name="description">Tomatoes, Mozzarella</field>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
 
@@ -68,6 +75,13 @@
 
         <record id="location_office_3" model="lunch.location">
             <field name="name">Office 3</field>
+        </record>
+
+        <record id="alert_office_3" model="lunch.alert">
+            <field name="name">Alert for Office 3</field>
+            <field name="message">Please order</field>
+            <field name="location_ids" eval="[(4, ref('location_office_3'))]" />
+            <field name="mode">chat</field>
         </record>
 
         <record id="base.user_admin" model="res.users">
@@ -174,6 +188,7 @@
             <field name="description">Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce</field>
             <field name="image_1920" type="base64" file="lunch/static/img/bacon_burger.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_cheeseburger">
@@ -183,6 +198,7 @@
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Beef, Cheddar, Salad, Fried Onions, BBQ Sauce</field>
             <field name="image_1920" type="base64" file="lunch/static/img/cheeseburger.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_chicken_curry">
@@ -191,6 +207,7 @@
             <field name="price">3.0</field>
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="image_1920" type="base64" file="lunch/static/img/chicken_curry.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_spicy_tuna">
@@ -198,7 +215,9 @@
             <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.0</field>
             <field name="supplier_id" ref="supplier_corner"/>
+            <field name="description"></field>
             <field name="image_1920" type="base64" file="lunch/static/img/chicken_curry.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_mozzarella">
@@ -208,6 +227,7 @@
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Mozzarella, Pesto, Tomatoes</field>
             <field name="image_1920" type="base64" file="lunch/static/img/mozza.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_club">
@@ -217,6 +237,7 @@
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Ham, Cheese, Vegetables</field>
             <field name="image_1920" type="base64" file="lunch/static/img/club.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_maki">
@@ -227,6 +248,7 @@
             <field name="description">6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado</field>
             <field name="image_1920" type="base64" file="lunch/static/img/maki.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_salmon">
@@ -237,6 +259,7 @@
             <field name="description">4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon </field>
             <field name="image_1920" type="base64" file="lunch/static/img/salmon_sushi.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_temaki">
@@ -247,6 +270,7 @@
             <field name="description">1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna</field>
             <field name="image_1920" type="base64" file="lunch/static/img/temaki.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_chirashi">
@@ -257,6 +281,7 @@
             <field name="description">2 Tempuras, Cabbages, Onions, Sesame Sauce</field>
             <field name="image_1920" type="base64" file="lunch/static/img/chirashi.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_cheese_ham">
@@ -266,6 +291,7 @@
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description">Cheese, Ham, Salad, Tomatoes, cucumbers, eggs</field>
             <field name="image_1920" type="base64" file="lunch/static/img/club.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_country">
@@ -275,6 +301,7 @@
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description">Brie, Honey, Walnut Kernels</field>
             <field name="image_1920" type="base64" file="lunch/static/img/brie.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_tuna">
@@ -284,6 +311,7 @@
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description">Tuna, Mayonnaise</field>
             <field name="image_1920" type="base64" file="lunch/static/img/tuna_sandwich.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_gouda">
@@ -293,6 +321,7 @@
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description"></field>
             <field name="image_1920" type="base64" file="lunch/static/img/gouda.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_chicken_curry">
@@ -302,6 +331,7 @@
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description"></field>
             <field name="image_1920" type="base64" file="lunch/static/img/chicken_curry.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_margherita">
@@ -311,6 +341,7 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Mozzarella</field>
             <field name="image_1920" type="base64" file="lunch/static/img/pizza_margherita.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_funghi">
@@ -320,6 +351,7 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Mushrooms, Mozzarella</field>
             <field name="image_1920" type="base64" file="lunch/static/img/pizza_funghi.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_vege">
@@ -329,6 +361,7 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Mozzarella, Mushrooms, Peppers, Olives</field>
             <field name="image_1920" type="base64" file="lunch/static/img/pizza_veggie.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_italiana">
@@ -338,6 +371,7 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Fresh Tomatoes, Basil, Mozzarella</field>
             <field name="image_1920" type="base64" file="lunch/static/img/italiana.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.product" id="product_Bolognese">
@@ -347,6 +381,7 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description"></field>
             <field name="image_1920" type="base64" file="lunch/static/img/pasta_bolognese.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
          <record model="lunch.product" id="product_Napoli">
@@ -356,12 +391,13 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Basil</field>
             <field name="image_1920" type="base64" file="lunch/static/img/napoli.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.topping" id="product_olives">
             <field name="name">Olives</field>
             <field name="price">0.30</field>
-            <field name="category_id" ref="categ_pizza"/>
+            <field name="supplier_id" ref="supplier_pizza_inn"/>
         </record>
 
          <record model="lunch.product" id="product_4formaggi">
@@ -371,6 +407,7 @@
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan</field>
             <field name="image_1920" type="base64" file="lunch/static/img/4formaggio.png"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record model="lunch.cashmove" id="cashmove_1">
@@ -395,6 +432,7 @@
             <field name="state">new</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_2">
@@ -405,6 +443,7 @@
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_3">
@@ -415,6 +454,7 @@
             <field name="state">cancelled</field>
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_4">
@@ -425,6 +465,7 @@
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_5">
@@ -434,6 +475,7 @@
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
+            <field name="lunch_location_id" ref="location_office_2"/>
         </record>
     </data>
 </odoo>

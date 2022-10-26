@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-06-09 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,30 +24,14 @@ msgid ""
 msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:0
+#: code:addons/payment_paypal/models/payment_acquirer.py:0
 #, python-format
-msgid "Add your Paypal account to Odoo"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
-msgid "Display Name"
+msgid "Add your PayPal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Email"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
-msgid "Fixed domestic fees"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
-msgid "Fixed international fees"
 msgstr ""
 
 #. module: payment_paypal
@@ -61,20 +45,8 @@ msgid ""
 msgstr ""
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
 msgid "How to configure your paypal account?"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
-msgid "ID"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: payment_paypal
@@ -83,8 +55,25 @@ msgid "Merchant Account ID"
 msgstr ""
 
 #. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "PDT Identity Token"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
 msgstr ""
 
 #. module: payment_paypal
@@ -93,10 +82,8 @@ msgid "Payment Acquirer"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid ""
-"Payment Data Transfer allows you to receive notification of successful "
-"payments as they are made."
+#: model:ir.model,name:payment_paypal.model_account_payment_method
+msgid "Payment Methods"
 msgstr ""
 
 #. module: payment_paypal
@@ -105,6 +92,7 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_paypal
+#: model:account.payment.method,name:payment_paypal.payment_method_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
 msgstr ""
@@ -115,14 +103,14 @@ msgid "Paypal Instant Payment Notification"
 msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:0
-#, python-format
-msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
-msgid "Provider"
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
 msgstr ""
 
 #. module: payment_paypal
@@ -131,28 +119,22 @@ msgid "Set Paypal credentials"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid ""
-"The Merchant ID is used to ensure communications coming from Paypal are "
-"valid and secured."
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
-msgid "Transaction type"
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type
+msgid "This has no use in Odoo except for debugging."
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
-msgid "Variable domestic fees (in percents)"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
-msgid "Variable international fees (in percents)"
 msgstr ""

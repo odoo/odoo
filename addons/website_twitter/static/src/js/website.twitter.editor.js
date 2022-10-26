@@ -20,7 +20,9 @@ sOptions.registry.twitter = sOptions.Class.extend({
             },
             text: _t("Reload"),
         });
-        $configuration.appendTo(document.body).on('click', function (ev) {
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        $configuration.appendTo(div).on('click', function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
             self._rpc({route: '/website_twitter/reload'});

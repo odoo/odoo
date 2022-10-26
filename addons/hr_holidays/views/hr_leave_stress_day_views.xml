@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_stress_day_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.stress.day</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <label for="start_date" string="Dates"/>
+                            <div class="o_row">
+                                <field name="start_date" nolabel="1" class="oe_inline" widget="daterange" options="{'related_end_date': 'end_date'}"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="To"/>
+                                <field name="end_date" nolabel="1" class="oe_inline" widget="daterange" options="{'related_start_date': 'start_date'}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leave_stress_day_view_list" model="ir.ui.view">
+        <field name="model">hr.leave.stress.day</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="company_id" invisible="1"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="color" widget="color_picker" width="1"/>
+                <field name="department_ids" widget="many2many_tags"/>
+                <field name="resource_calendar_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_leave_stress_day_view_search" model="ir.ui.view">
+        <field name="model">hr.leave.stress.day</field>
+        <field name="arch" type="xml">
+            <search string="Stress Days">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <separator />
+                <filter name="filter_date" date="start_date" default_period="this_year" string="Period"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_stress_day_action" model="ir.actions.act_window">
+        <field name="name">Stress Days</field>
+        <field name="res_model">hr.leave.stress.day</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr_leave_stress_day_view_search"/>
+        <field name="context">{'search_default_filter_date': True}</field>
+    </record>
+</odoo>

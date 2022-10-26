@@ -5,7 +5,7 @@ from odoo.tests import tagged
 from odoo.exceptions import ValidationError
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class ISRTest(AccountTestInvoicingCommon):
 
     @classmethod
@@ -14,7 +14,7 @@ class ISRTest(AccountTestInvoicingCommon):
 
     def print_isr(self, invoice):
         try:
-            invoice.isr_print()
+            invoice.action_invoice_sent()
             return True
         except ValidationError:
             return False
@@ -33,9 +33,14 @@ class ISRTest(AccountTestInvoicingCommon):
             self.assertRecordValues(partner_bank, [expected_vals])
 
         assertBankAccountValid('010391391', 'postal', expected_postal='010391391')
-        assertBankAccountValid('010391394', 'bank')
         assertBankAccountValid('CH6309000000250097798', 'iban', expected_postal='25-9779-8')
         assertBankAccountValid('GR1601101250000000012300695', 'iban', expected_postal=False)
+
+        partner_bank = self.env['res.partner.bank'].create({
+            'acc_number': '010391394',
+            'partner_id': self.partner_a.id,
+        })
+        self.assertNotEqual(partner_bank.acc_type, 'postal')
 
     def test_isr(self):
         isr_bank_account = self.env['res.partner.bank'].create({
@@ -54,7 +59,7 @@ class ISRTest(AccountTestInvoicingCommon):
         })
         invoice_chf.action_post()
         self.assertTrue(self.print_isr(invoice_chf))
-
+        self.env.ref('base.EUR').active = True
         invoice_eur = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -64,4 +69,7 @@ class ISRTest(AccountTestInvoicingCommon):
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
         })
         invoice_eur.action_post()
-        self.assertFalse(self.print_isr(invoice_eur))
+        #a normal invoice will still get printed
+        self.assertTrue(self.print_isr(invoice_eur))
+        # However, a isr bill can't be printed with those infos
+        self.assertFalse(invoice_eur.l10n_ch_isr_valid)

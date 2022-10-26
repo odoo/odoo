@@ -17,14 +17,14 @@
         </xpath>
         <xpath expr="//div[hasclass('o_report_stock_rule_rule_name')]/span" position="before">
             <t t-if="rule[0].action == 'buy'">
-                <i class="fa fa-shopping-cart fa-fw" t-attf-style="color: #{color};"/>
+                <i class="fa fa-credit-card fa-fw" t-attf-style="color: #{color};"/>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('o_report_stock_rule_legend')]" position="inside">
             <div class="o_report_stock_rule_legend_line">
                 <div class="o_report_stock_rule_legend_label">Buy</div>
                 <div class="o_report_stock_rule_legend_symbol">
-                    <div class="fa fa-shopping-cart fa-fw" t-attf-style="color: #{color};"/>
+                    <div class="fa fa-credit-card fa-fw" t-attf-style="color: #{color};"/>
                 </div>
             </div>
         </xpath>

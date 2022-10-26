@@ -1,20 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
 
+from odoo.addons.uom.tests.common import UomCommon
 
-class TestUom(TransactionCase):
 
-    def setUp(self):
-        super(TestUom, self).setUp()
-        self.uom_gram = self.env.ref('uom.product_uom_gram')
-        self.uom_kgm = self.env.ref('uom.product_uom_kgm')
-        self.uom_ton = self.env.ref('uom.product_uom_ton')
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
-        self.categ_unit_id = self.ref('uom.product_uom_categ_unit')
+class TestUom(UomCommon):
 
     def test_10_conversion(self):
         qty = self.uom_gram._compute_quantity(1020000, self.uom_ton)
@@ -43,7 +35,7 @@ class TestUom(TransactionCase):
             'factor_inv': 20,
             'uom_type': 'bigger',
             'rounding': 1.0,
-            'category_id': self.categ_unit_id
+            'category_id': self.env.ref('uom.product_uom_categ_unit').id
         })
 
         qty = self.uom_unit._compute_quantity(2, product_uom)

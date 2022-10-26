@@ -4,66 +4,15 @@
 import datetime
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.event.tests.common import EventCase
 from odoo.exceptions import ValidationError
-from odoo.tests.common import Form
+from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-class TestEventUI(TestEventCommon):
-
-    def test_event_registration_partner_sync(self):
-        """ Ensure onchange on partner_id is kept for interface, not for computed
-        fields. """
-        registration_form = Form(self.env['event.registration'].with_context(
-            default_name='WrongName',
-            default_event_id=self.event_0.id
-        ))
-        self.assertEqual(registration_form.event_id, self.event_0)
-        self.assertEqual(registration_form.name, 'WrongName')
-        self.assertFalse(registration_form.email)
-        self.assertFalse(registration_form.phone)
-        self.assertFalse(registration_form.mobile)
-
-        # trigger onchange
-        registration_form.partner_id = self.event_customer
-        self.assertEqual(registration_form.name, self.event_customer.name)
-        self.assertEqual(registration_form.email, self.event_customer.email)
-        self.assertEqual(registration_form.phone, self.event_customer.phone)
-        self.assertEqual(registration_form.mobile, self.event_customer.mobile)
-
-        # save, check record matches Form values
-        registration = registration_form.save()
-        self.assertEqual(registration.partner_id, self.event_customer)
-        self.assertEqual(registration.name, self.event_customer.name)
-        self.assertEqual(registration.email, self.event_customer.email)
-        self.assertEqual(registration.phone, self.event_customer.phone)
-        self.assertEqual(registration.mobile, self.event_customer.mobile)
-
-        # allow writing on some fields independently from customer config
-        registration.write({'phone': False, 'mobile': False})
-        self.assertFalse(registration.phone)
-        self.assertFalse(registration.mobile)
-
-        # reset partner should not reset other fields
-        registration.write({'partner_id': False})
-        self.assertEqual(registration.partner_id, self.env['res.partner'])
-        self.assertEqual(registration.name, self.event_customer.name)
-        self.assertEqual(registration.email, self.event_customer.email)
-        self.assertFalse(registration.phone)
-        self.assertFalse(registration.mobile)
-
-        # update to a new partner not through UI -> update only void feilds
-        registration.write({'partner_id': self.event_customer2.id})
-        self.assertEqual(registration.partner_id, self.event_customer2)
-        self.assertEqual(registration.name, self.event_customer.name)
-        self.assertEqual(registration.email, self.event_customer.email)
-        self.assertEqual(registration.phone, self.event_customer2.phone)
-        self.assertEqual(registration.mobile, self.event_customer2.mobile)
-
-
-class TestEventFlow(TestEventCommon):
+class TestEventFlow(EventCase):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_auto_confirm(self):
@@ -107,6 +56,32 @@ class TestEventFlow(TestEventCommon):
         test_reg2.action_set_done()
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
         self.assertEqual(test_event.seats_used, 2, 'Event: incorrect number of attendees after closing registration')
+
+    @users('user_eventmanager')
+    def test_event_default_datetime(self):
+        """ Check that the default date_begin and date_end are correctly set """
+
+        # Should apply default datetimes
+        with freeze_time(self.reference_now):
+            default_event = self.env['event.event'].create({
+                'name': 'Test Default Event',
+            })
+        self.assertEqual(default_event.date_begin, datetime.datetime.strptime('2022-09-05 15:30:00', '%Y-%m-%d %H:%M:%S'))
+        self.assertEqual(default_event.date_end, datetime.datetime.strptime('2022-09-06 15:30:00', '%Y-%m-%d %H:%M:%S'))
+
+        specific_datetimes = {
+            'date_begin': self.reference_now + relativedelta(days=1),
+            'date_end': self.reference_now + relativedelta(days=3),
+        }
+
+        # Should not apply default datetimes if values are set manually
+        with freeze_time(self.reference_now):
+            event = self.env['event.event'].create({
+                'name': 'Test Event',
+                **specific_datetimes,
+            })
+        self.assertEqual(event.date_begin, specific_datetimes['date_begin'])
+        self.assertEqual(event.date_end, specific_datetimes['date_end'])
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_flow(self):

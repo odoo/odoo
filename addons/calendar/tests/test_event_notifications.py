@@ -31,6 +31,20 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         }):
             self.event.partner_ids = self.partner
 
+    def test_message_invite_allday(self):
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
+            self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
+                'name': 'Meeting',
+                'allday': True,
+                'start_date': fields.Date.today() + relativedelta(days=7),
+                'stop_date': fields.Date.today() + relativedelta(days=8),
+                'partner_ids': [(4, self.partner.id)],
+            }])
+
+
     def test_message_invite_self(self):
         with self.assertNoNotifications():
             self.event.with_user(self.user).partner_ids = self.partner
@@ -124,23 +138,25 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         })
         now = fields.Datetime.now()
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus([(self.env.cr.dbname, 'calendar.alarm', self.partner.id)]):
+            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
+                {
+                    "type": "calendar.alarm",
+                    "payload": [{
+                        "alarm_id": alarm.id,
+                        "event_id": self.event.id,
+                        "title": "Doom's day",
+                        "message": self.event.display_time,
+                        "timer": 20 * 60,
+                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                    }],
+                },
+            ]):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
                     'alarm_ids': [(4, alarm.id)]
                 })
-            bus_message = [{
-                "alarm_id": alarm.id,
-                "event_id": self.event.id,
-                "title": "Doom's day",
-                "message": self.event.display_time,
-                "timer": 20*60,
-                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-            }]
-            notif = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
-            self.assertEqual(notif, bus_message)
 
     def test_email_alarm(self):
         now = fields.Datetime.now()
@@ -152,11 +168,13 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'duration': 20,
             })
             self.event.write({
+                'name': 'test event',
                 'start': now + relativedelta(minutes=15),
                 'stop': now + relativedelta(minutes=18),
                 'partner_ids': [fields.Command.link(self.partner.id)],
                 'alarm_ids': [fields.Command.link(alarm.id)],
             })
+            self.env.flush_all()  # flush is required to make partner_ids be present in the event
 
         capt.records.ensure_one()
         self.assertLessEqual(capt.records.call_at, now)

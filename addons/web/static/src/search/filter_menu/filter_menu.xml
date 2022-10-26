@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FilterMenu" owl="1">
+        <Dropdown class="'o_filter_menu btn-group ' + props.class" togglerClass="'btn btn-light'">
+            <t t-set-slot="toggler">
+                <i class="me-1" t-att-class="icon"/>
+                <span class="o_dropdown_title">Filters</span>
+            </t>
+            <t t-set="currentGroup" t-value="null"/>
+            <t t-foreach="items" t-as="item" t-key="item.id">
+                <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                    <div class="dropdown-divider" role="separator"/>
+                </t>
+                <t t-if="item.options">
+                    <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
+                        <t t-set-slot="toggler">
+                            <t t-esc="item.description"/>
+                        </t>
+                        <t t-set="subGroup" t-value="null"/>
+                        <t t-foreach="item.options" t-as="option" t-key="option.id">
+                            <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                <div class="dropdown-divider" role="separator"/>
+                            </t>
+                            <DropdownItem class="{ o_item_option: true, selected: option.isActive }"
+                                t-esc="option.description"
+                                parentClosingMode="'none'"
+                                onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
+                            />
+                            <t t-set="subGroup" t-value="option.groupNumber"/>
+                        </t>
+                    </Dropdown>
+                </t>
+                <t t-else="">
+                    <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                        parentClosingMode="'none'"
+                        t-esc="item.description"
+                        onSelected="() => this.onFilterSelected({ itemId: item.id })"
+                    />
+                </t>
+                <t t-set="currentGroup" t-value="item.groupNumber"/>
+            </t>
+            <t t-if="items.length">
+                <div role="separator" class="dropdown-divider"/>
+            </t>
+            <CustomFilterItem/>
+        </Dropdown>
+    </t>
+
+</templates>

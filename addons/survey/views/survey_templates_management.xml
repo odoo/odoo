@@ -80,9 +80,9 @@
     <template id="survey_button_form_view" name="Survey: back to form view">
         <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden mb-0">
             <div t-ignore="true" class="text-center">
-                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey</a>
+                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><span t-if="answer and answer.test_entry">This is a Test Survey. </span><i class="fa fa-fw fa-arrow-right"/>Edit Survey</a>
             </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </template>
 
@@ -92,14 +92,14 @@
                 <t t-if="survey.is_attempts_limited">
                     <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
                     <t t-if="attempts_left > 0">
-                        <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
+                        <p><span>Number of attempts left</span>: <span t-esc="attempts_left"></span></p>
                         <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
                         Retry</a></p>
                     </t>
                 </t>
                 <t t-else="">
                     <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
-                        Retry</a></p>
+                        Take Again</a></p>
                 </t>
             </t>
         </div>
@@ -118,16 +118,20 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-4 offset-md-4 text-center">
-                                    <input id="session_code" type="text" placeholder="4812"
-                                           class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
+                                    <input id="session_code"
+                                        type="text" placeholder="e.g. 4812"
+                                        autocomplete="off"
+                                        t-attf-value="{{session_code if session_code else ''}}"
+                                        class="form-control o_survey_question_text_box fw-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
                                 </div>
-                                <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger pt-2" role="alert">
-                                    <span class="o_survey_session_error_invalid_code d-none">Code is incorrect.</span>
-                                    <span class="o_survey_session_error_closed d-none">Session is finished.</span>
+                                <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger h4 pt-2 px-0" role="alert">
+                                    <span t-attf-class="o_survey_session_error_invalid_code {{'d-none' if error != 'survey_wrong' else ''}}">Oops! No survey matches this code.</span>
+                                    <span t-attf-class="o_survey_session_error_not_launched {{'d-none' if error != 'survey_session_not_launched' else ''}}">The session did not start yet.</span>
                                 </div>
                             </div>
                             <div class="text-center mt32 p-2">
-                                <button type="submit" class="btn btn-primary">Join Session</button>
+                                <button groups="survey.group_survey_user" type="button" t-attf-class="o_survey_launch_session btn btn-primary {{'d-none' if error != 'survey_session_not_launched' else ''}}" t-att-data-survey-id="survey_id">Launch Session</button>
+                                <button type="submit" t-attf-class="btn btn-primary {{'d-none' if error == 'survey_session_not_launched' and request.env.user.has_group('survey.group_survey_user') else ''}}">Join Session</button>
                             </div>
                         </div>
                     </div>
@@ -137,14 +141,21 @@
     </template>
 
     <template id="survey_navigation" name="Survey: Navigation">
-        <button t-if="can_go_back"
-            type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
-            <i class="border-left fa fa-chevron-left p-2" />
-        </button>
-        <button t-if="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"
-            type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
-            <i class="border-left fa fa-chevron-right p-2" />
-        </button>
+        <div class="d-inline-block">
+            <button
+                t-if="survey and survey.users_can_go_back"
+                t-att-disabled="not can_go_back"
+                type="submit" class="btn border-start p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
+                <i class="fa fa-chevron-left p-2" />
+            </button>
+            <t t-set="can_go_forward"
+                t-value="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"/>
+            <button
+                t-att-disabled="not can_go_forward"
+                type="submit" class="btn border-start p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
+                <i class="fa fa-chevron-right p-2" />
+            </button>
+        </div>
     </template>
 
 </data>

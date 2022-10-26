@@ -1,7 +1,32 @@
 odoo.define('website_crm.tour', function(require) {
     'use strict';
 
-    var tour = require('web_tour.tour');
+    const tour = require('web_tour.tour');
+    const wTourUtils = require('website.tour_utils');
+
+    wTourUtils.registerWebsitePreviewTour('website_crm_pre_tour', {
+        test: true,
+        url: '/contactus',
+        edition: true,
+    }, [{
+        content: "Select contact form",
+        trigger: "iframe #wrap.o_editable section.s_website_form",
+        extra_trigger: "iframe body.editor_enable",
+    }, {
+        content: "Open action select",
+        trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
+        extra_trigger: "#oe_snippets .o_we_customize_snippet_btn.active",
+    }, {
+        content: "Select 'Create an Opportunity' as form action",
+        trigger: "we-select we-button:contains('Create an Opportunity')",
+    }, {
+        content: "Save the settings",
+        trigger: "button[data-action=save]",
+    }, {
+        content: "Ensure form model has changed and page reload is done after save",
+        trigger: "iframe section.s_website_form form[data-model_name='crm.lead']",
+        extra_trigger: "iframe body:not(.editor_enable)",
+    }]);
 
     tour.register('website_crm_tour', {
         test: true,

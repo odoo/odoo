@@ -9,51 +9,47 @@ from odoo.tests.common import Form
 
 
 class TestVirtualAvailable(TestStockCommon):
-    def setUp(self):
-        super(TestVirtualAvailable, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Make `product3` a storable product for this test. Indeed, creating quants
         # and playing with owners is not possible for consumables.
-        self.product_3.type = 'product'
-        self.env['stock.picking.type'].browse(self.ref('stock.picking_type_out')).reservation_method = 'manual'
+        cls.product_3.type = 'product'
+        cls.env['stock.picking.type'].browse(cls.env.ref('stock.picking_type_out').id).reservation_method = 'manual'
 
-        self.env['stock.quant'].create({
-            'product_id': self.product_3.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+        cls.env['stock.quant'].create({
+            'product_id': cls.product_3.id,
+            'location_id': cls.env.ref('stock.stock_location_stock').id,
             'quantity': 30.0})
 
-        self.env['stock.quant'].create({
-            'product_id': self.product_3.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+        cls.env['stock.quant'].create({
+            'product_id': cls.product_3.id,
+            'location_id': cls.env.ref('stock.stock_location_stock').id,
             'quantity': 10.0,
-            'owner_id': self.user_stock_user.partner_id.id})
+            'owner_id': cls.user_stock_user.partner_id.id})
 
-        self.picking_out = self.env['stock.picking'].create({
-            'picking_type_id': self.ref('stock.picking_type_out'),
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id})
-        self.env['stock.move'].create({
+        cls.picking_out = cls.env['stock.picking'].create({'picking_type_id': cls.env.ref('stock.picking_type_out').id})
+        cls.env['stock.move'].create({
             'name': 'a move',
-            'product_id': self.product_3.id,
+            'product_id': cls.product_3.id,
             'product_uom_qty': 3.0,
-            'product_uom': self.product_3.uom_id.id,
-            'picking_id': self.picking_out.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id})
+            'product_uom': cls.product_3.uom_id.id,
+            'picking_id': cls.picking_out.id,
+            'location_id': cls.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
 
-        self.picking_out_2 = self.env['stock.picking'].create({
-            'picking_type_id': self.ref('stock.picking_type_out'),
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id})
-        self.env['stock.move'].create({
-            'restrict_partner_id': self.user_stock_user.partner_id.id,
+        cls.picking_out_2 = cls.env['stock.picking'].create({
+            'picking_type_id': cls.env.ref('stock.picking_type_out').id})
+        cls.env['stock.move'].create({
+            'restrict_partner_id': cls.user_stock_user.partner_id.id,
             'name': 'another move',
-            'product_id': self.product_3.id,
+            'product_id': cls.product_3.id,
             'product_uom_qty': 5.0,
-            'product_uom': self.product_3.uom_id.id,
-            'picking_id': self.picking_out_2.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id})
+            'product_uom': cls.product_3.uom_id.id,
+            'picking_id': cls.picking_out_2.id,
+            'location_id': cls.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
 
     def test_without_owner(self):
         self.assertAlmostEqual(40.0, self.product_3.virtual_available)
@@ -116,3 +112,63 @@ class TestVirtualAvailable(TestStockCommon):
             ('id', 'in', product.ids),
         ])
         self.assertEqual(product, result)
+
+    def test_search_product_template(self):
+        """
+        Suppose a variant V01 that can not be deleted because it is used by a
+        lot [1]. Then, the variant's template T is changed: we add a dynamic
+        attribute. Because of [1], V01 is archived. This test ensures that
+        `name_search` still finds T.
+        Then, we create a new variant V02 of T. This test also ensures that
+        calling `name_search` with a negative operator will exclude T from the
+        result.
+        """
+        template = self.env['product.template'].create({
+            'name': 'Super Product',
+        })
+        product01 = template.product_variant_id
+
+        self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': product01.id,
+            'company_id': self.env.company.id,
+        })
+
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'PA',
+            'create_variant': 'dynamic'
+        })
+
+        self.env['product.attribute.value'].create([{
+            'name': 'PAV' + str(i),
+            'attribute_id': product_attribute.id
+        } for i in range(2)])
+
+        tmpl_attr_lines = self.env['product.template.attribute.line'].create({
+            'attribute_id': product_attribute.id,
+            'product_tmpl_id': product01.product_tmpl_id.id,
+            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
+        })
+
+        self.assertFalse(product01.active)
+        self.assertTrue(template.active)
+        self.assertFalse(template.product_variant_ids)
+
+        res = self.env['product.template'].name_search(name='super', operator='ilike')
+        res_ids = [r[0] for r in res]
+        self.assertIn(template.id, res_ids)
+
+        product02 = self.env['product.product'].create({
+            'default_code': '123',
+            'product_tmpl_id': template.id,
+            'product_template_attribute_value_ids': [(6, 0, tmpl_attr_lines.product_template_value_ids[0].ids)]
+        })
+
+        self.assertFalse(product01.active)
+        self.assertTrue(product02.active)
+        self.assertTrue(template)
+        self.assertEqual(template.product_variant_ids, product02)
+
+        res = self.env['product.template'].name_search(name='123', operator='not ilike')
+        res_ids = [r[0] for r in res]
+        self.assertNotIn(template.id, res_ids)

@@ -9,11 +9,8 @@ tour.register('test_tickets_questions', {
     content: "Click on the Design Fair event",
     trigger: 'article:contains("Design Fair New York")',
 }, {
-    content: "Click on Buy tickets button",
-    trigger: 'a:contains("Tickets")',
-}, {
     content: "Select 2 'Free' tickets to buy",
-    trigger: 'div.row:contains("Free") select.custom-select',
+    trigger: 'div.row:contains("Free") select.form-select',
     run: 'text 2'
 }, {
     content: "Click on Register tickets button",

@@ -5,7 +5,6 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import fields, models, _
-from odoo.osv import expression
 
 
 class EventLeadRule(models.Model):
@@ -105,7 +104,9 @@ class EventLeadRule(models.Model):
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], string="Lead Type", required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Default lead type when this rule is applied.")
-    lead_sales_team_id = fields.Many2one('crm.team', string='Sales Team', help="Automatically assign the created leads to this Sales Team.")
+    lead_sales_team_id = fields.Many2one(
+        'crm.team', string='Sales Team', ondelete="set null",
+        help="Automatically assign the created leads to this Sales Team.")
     lead_user_id = fields.Many2one('res.users', string='Salesperson', help="Automatically assign the created leads to this Salesperson.")
     lead_tag_ids = fields.Many2many('crm.tag', string='Tags', help="Automatically add these tags to the created leads.")
 
@@ -177,10 +178,10 @@ class EventLeadRule(models.Model):
                         additionnal_description = group_registrations._get_lead_description(_("New registrations"), line_counter=True)
                         for lead in toupdate_leads:
                             lead.write({
-                                'description': "%s\n%s" % (lead.description, additionnal_description),
+                                'description': "%s<br/>%s" % (lead.description, additionnal_description),
                                 'registration_ids': [(4, reg.id) for reg in group_registrations],
                             })
-                    else:
+                    elif group_registrations:
                         lead_vals_list.append(group_registrations._get_lead_values(rule))
 
         return self.env['crm.lead'].create(lead_vals_list)
@@ -203,10 +204,7 @@ class EventLeadRule(models.Model):
         """
         self.ensure_one()
         if self.event_registration_filter and self.event_registration_filter != '[]':
-            registrations = registrations.search(expression.AND([
-                [('id', 'in', registrations.ids)],
-                literal_eval(self.event_registration_filter)
-            ]))
+            registrations = registrations.filtered_domain(literal_eval(self.event_registration_filter))
 
         # check from direct m2o to linked m2o / o2m to filter first without inner search
         company_ok = lambda registration: registration.company_id == self.company_id if self.company_id else True

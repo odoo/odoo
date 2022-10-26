@@ -14,14 +14,14 @@ class TestJsTranspiler(TransactionCase):
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function(require) {
+odoo.define(`test_assetsbundle.Alias`, async function(require) {
                         return require('@test_assetsbundle/alias')[Symbol.for("default")];
                         });
 """
@@ -32,14 +32,14 @@ odoo.define(`test_assetsbundle.Alias`, function(require) {
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=False **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias default=False **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function(require) {
+odoo.define(`test_assetsbundle.Alias`, async function(require) {
                         return require('@test_assetsbundle/alias');
                         });
 """
@@ -49,14 +49,14 @@ odoo.define(`test_assetsbundle.Alias`, function(require) {
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=0 **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias default=0 **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function(require) {
+odoo.define(`test_assetsbundle.Alias`, async function(require) {
                         return require('@test_assetsbundle/alias');
                         });
 """
@@ -66,14 +66,14 @@ odoo.define(`test_assetsbundle.Alias`, function(require) {
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=false **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias default=false **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function(require) {
+odoo.define(`test_assetsbundle.Alias`, async function(require) {
                         return require('@test_assetsbundle/alias');
                         });
 """
@@ -93,7 +93,7 @@ export const Ferrari = class Ferrari extends Car {};
 """
         result = transpile_javascript("/test_assetsbundle/static/src/classes.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/classes', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/classes', async function (require) {
 'use strict';
 let __exports = {};
 const Nice = __exports[Symbol.for("default")] = class Nice {}
@@ -146,7 +146,7 @@ const aaa = "keep!";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/comments.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/comments', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/comments', async function (require) {
 'use strict';
 let __exports = {};
 /**
@@ -206,23 +206,23 @@ export default function sayHelloDefault() {
 """
         result = transpile_javascript("/test_assetsbundle/static/src/functions.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/functions', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/functions', async function (require) {
 'use strict';
 let __exports = {};
-const sayHello = __exports.sayHello = function sayHello() {
+__exports.sayHello = sayHello; function sayHello() {
   console.log("Hello");
 }
 
-const sayHelloWorld = __exports.sayHelloWorld = function sayHelloWorld() {
+__exports.sayHelloWorld = sayHelloWorld; function sayHelloWorld() {
   console.log("Hello world");
 }
 
-const sayAsyncHello = __exports.sayAsyncHello = async function sayAsyncHello() {
+__exports.sayAsyncHello = sayAsyncHello; async function sayAsyncHello() {
   console.log("Hello Async");
 }
 
 
-const sayHelloDefault = __exports[Symbol.for("default")] = function sayHelloDefault() {
+__exports[Symbol.for("default")] = sayHelloDefault; function sayHelloDefault() {
   console.log("Hello Default");
 }
 
@@ -249,6 +249,12 @@ import Line9  from "test.Dialog";
 import  { Line10, Notification }  from 'test.Dialog2';
 
 import * as Line11 from "test.Dialog";
+import Default1, { Named1 } from "legacy.module";
+import Default1, { Named1 } from "@new_module/file";
+import Default1, {
+    Named1,
+} from "@new_module/file";
+import Default2, * as Star1 from "test.Dialog";
 import "test.Dialog";
 
 import Line12  from "@test.Dialog"; //HELLO
@@ -262,7 +268,7 @@ import Line16 from "test.Dialog.error";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/import.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/import', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/import', async function (require) {
 'use strict';
 let __exports = {};
 /**
@@ -281,6 +287,14 @@ const Line9 = require("test.Dialog");
 const { Line10, Notification } = require('test.Dialog2');
 
 const Line11 = require("test.Dialog");
+const Default1 = require("legacy.module");
+const { Named1 } = Default1;
+const { [Symbol.for("default")]: Default1, Named1 } = require("@new_module/file");
+const { [Symbol.for("default")]: Default1,
+    Named1,
+} = require("@new_module/file");
+const Star1 = require("test.Dialog");
+const Default2 = Star1[Symbol.for("default")];
 require("test.Dialog");
 
 const Line12 = require("@test.Dialog")[Symbol.for("default")]; //HELLO
@@ -308,7 +322,7 @@ import c from "@tests/dir/index/";
 import d from "@tests";"""
         result = transpile_javascript("/test_assetsbundle/static/src/index.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle', async function (require) {
 'use strict';
 let __exports = {};
 const a = __exports.a = 5;
@@ -328,6 +342,18 @@ return __exports;
         input_content = """export {a, b};
 
 export {a as aa, b, c as cc};
+export {a, aReallyVeryLongNameWithSomeExtra}
+export {
+        a,
+        aReallyVeryLongNameWithSomeExtra,
+        }
+export {
+        a,
+        aReallyVeryLongNameWithSomeExtra
+        }
+
+
+export {a, aReallyVeryLongNameWithSomeExtra /* a comment must not cause catastrophic backtracking, even if not supported */};
 
 export {c, d} from "@tests/Dialog";
 export {e} from "../src/Dialog";
@@ -338,17 +364,29 @@ export * from "@tests/Dialog";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/list.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/list', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/list', async function (require) {
 'use strict';
 let __exports = {};
 Object.assign(__exports, {a,  b});
 
 Object.assign(__exports, {aa: a,  b, cc:  c});
+Object.assign(__exports, {a,  aReallyVeryLongNameWithSomeExtra})
+Object.assign(__exports, {
+        a, 
+        aReallyVeryLongNameWithSomeExtra, 
+        })
+Object.assign(__exports, {
+        a, 
+        aReallyVeryLongNameWithSomeExtra
+        })
 
-{const {c,  d} = require("@tests/Dialog");Object.assign(__exports, {c,  d})};
+
+export {a, aReallyVeryLongNameWithSomeExtra /* a comment must not cause catastrophic backtracking, even if not supported */};
+
+{const {c, d} = require("@tests/Dialog");Object.assign(__exports, {c,  d})};
 {const {e} = require("@test_assetsbundle/Dialog");Object.assign(__exports, {e})};
 
-{const {c,  d,  e} = require("@tests/Dialog");Object.assign(__exports, {cc: c,  d, ee:  e})};
+{const {c, d, e} = require("@tests/Dialog");Object.assign(__exports, {cc: c,  d, ee:  e})};
 
 Object.assign(__exports, require("@tests/Dialog"));
 
@@ -373,7 +411,7 @@ export default a;
 """
         result = transpile_javascript("/test_assetsbundle/static/src/variables.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/variables', function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/variables', async function (require) {
 'use strict';
 let __exports = {};
 const v = __exports.v = 5;

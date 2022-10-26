@@ -82,7 +82,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="crm_use_auto_assignment"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/crm/track_leads/lead_scoring.html#assign-leads"
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/crm/track_leads/lead_scoring.html#assign-leads"
                                     title="Assign Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     <span>Periodically assign leads based on rules</span><br />
@@ -91,18 +91,18 @@
                                         specified otherwise.
                                     </span>
                                 </div>
-                                <div class="row mt16" attrs="{'invisible': [('crm_use_auto_assignment', '=', False)]}">
+                                <div class="row flex-row flex-nowrap mt16" attrs="{'invisible': [('crm_use_auto_assignment', '=', False)]}">
                                     <label string="Running" for="crm_auto_assignment_action" class="col-lg-3 o_light_label"/>
                                     <field name="crm_auto_assignment_action"
                                         attrs="{'required': [('crm_use_auto_assignment', '=', True)]}"/>
-                                    <button name="action_crm_assign_leads" type="object" class="btn-link">
+                                    <button name="action_crm_assign_leads" type="object" class="btn-link w-auto">
                                         <i title="Update now" role="img" aria-label="Update now" class="fa fa-fw fa-refresh"></i>
                                     </button>
                                 </div>
                                 <div class="row mt16" attrs="{'invisible': ['|', ('crm_use_auto_assignment', '=', False), ('crm_auto_assignment_action', '=', 'manual')]}">
                                     <label string="Repeat every" for="crm_auto_assignment_interval_type" class="col-lg-3 o_light_label"/>
                                     <field name="crm_auto_assignment_interval_number"
-                                        class="oe_inline mr-2"
+                                        class="oe_inline me-2"
                                         attrs="{'required': [('crm_use_auto_assignment', '=', True), ('crm_auto_assignment_action', '=', 'auto')]}"/>
                                     <field name="crm_auto_assignment_interval_type"
                                         class="oe_inline"
@@ -121,43 +121,43 @@
                     <div class="row mt16 o_settings_container" name="convert_visitor_setting_container">
                         <div class="col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="module_crm_iap_lead_enrich"/>
+                                <field name="module_crm_iap_enrich"/>
                             </div>
 
-                            <div class="o_setting_right_pane" id="crm_iap_lead_enrich">
-                                <label string="Lead Enrichment" for="module_crm_iap_lead_enrich"/>
+                            <div class="o_setting_right_pane" id="crm_iap_enrich_settings">
+                                <label string="Lead Enrichment" for="module_crm_iap_enrich"/>
                                 <div class="text-muted">
-                                    Enrich your leads automatically with company data based on their email address
+                                    Enrich your leads with company data based on their email addresses
                                 </div>
-                                <div id="crm_iap_lead_enrich">
-                                    <div class="mt8" attrs="{'invisible': [('module_crm_iap_lead_enrich','=',False)]}">
-                                        <field name="lead_enrich_auto" class="o_light_label" widget="radio" required="True"/>
-                                    </div>
+                                <div class="mt8" attrs="{'invisible': [('module_crm_iap_enrich','=',False)]}">
+                                    <field name="lead_enrich_auto" class="o_light_label" widget="radio" required="True"/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt16 o_settings_container" name="generate_lead_setting_container">
+
                         <div class="col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="module_crm_iap_lead"/>
+                                <field name="module_crm_iap_mine"/>
                             </div>
 
-                            <div class="o_setting_right_pane" id="crm_iap_lead_settings">
-                                <label string="Lead Mining" for="module_crm_iap_lead"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/crm/acquire_leads/lead_mining.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                            <div class="o_setting_right_pane" id="crm_iap_mine_settings">
+                                <label string="Lead Mining" for="module_crm_iap_mine"/>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/crm/acquire_leads/lead_mining.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Generate new leads based on their country, industry, size, etc.
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row mt16 o_settings_container" name="generate_lead_setting_container">
                         <div class="col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="module_crm_iap_lead_website"/>
+                                <field name="module_website_crm_iap_reveal"/>
                             </div>
 
-                            <div class="o_setting_right_pane" id="crm_iap_lead_website_settings">
-                                <label string="Visits to Leads" for="module_crm_iap_lead_website"/>
+                            <div class="o_setting_right_pane" id="website_crm_iap_reveal_settings">
+                                <label string="Visits to Leads" for="module_website_crm_iap_reveal"/>
                                 <div class="text-muted">
                                     Convert visitors of your website into leads and perform data enrichment based on their IP address
                                 </div>
@@ -177,10 +177,6 @@
         <field name="view_mode">form</field>
         <field name="target">inline</field>
         <field name="context">{'module' : 'crm', 'bin_size': False}</field>
-    </record>
-
-    <record id="crm_config_settings_menu" model="ir.ui.menu">
-        <field name="action" ref="crm.crm_config_settings_action"/>
     </record>
 
 </odoo>

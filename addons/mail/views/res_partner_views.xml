@@ -36,7 +36,7 @@
                 <field name="type" position="after">
                     <field name="activity_state"/>
                 </field>
-                <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="after">
+                <xpath expr="//div[hasclass('oe_kanban_bottom_right')]" position="inside">
                     <field name="activity_ids" widget="kanban_activity"/>
                 </xpath>
             </field>
@@ -49,12 +49,12 @@
             <field name="arch" type="xml">
                     <filter name="inactive" position="after">
                         <filter invisible="1" string="Late Activities" name="activities_overdue"
-                                domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                                domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                                 help="Show all records which has next action date is before today"/>
                         <filter invisible="1" string="Today Activities" name="activities_today"
-                                domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                                domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                                domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                                domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                         <separator/>
                     </filter>
             </field>
@@ -79,7 +79,7 @@
                     <field name="id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('res.partner', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <img t-att-src="activity_image('res.partner', 'avatar_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="parent_id" muted="1" display="full"/>
@@ -109,9 +109,9 @@
             <field name="target">new</field>
             <field name="context" eval="{
                 'default_composition_mode': 'mass_mail',
-                'default_partner_to': '${object.id or \'\'}',
+                'default_partner_to': '{{ object.id or \'\' }}',
                 'default_use_template': False,
-                'default_no_auto_thread': True,
+                'default_reply_to_force_new': True,
             }"/>
             <field name="binding_model_id" ref="base.model_res_partner"/>
             <field name="binding_view_types">list</field>

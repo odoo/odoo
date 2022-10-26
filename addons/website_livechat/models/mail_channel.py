@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import AccessError
 
 
 class MailChannel(models.Model):
@@ -9,39 +10,42 @@ class MailChannel(models.Model):
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor')
 
-    def _execute_channel_pin(self, pinned=False):
+    def channel_pin(self, pinned=False):
         """ Override to clean an empty livechat channel.
          This is typically called when the operator send a chat request to a website.visitor
-         but don't speak to him and closes the chatter.
+         but don't speak to them and closes the chatter.
          This allows operators to send the visitor a new chat request.
          If active empty livechat channel,
          delete mail_channel as not useful to keep empty chat
          """
-        super(MailChannel, self)._execute_channel_pin(pinned)
+        super().channel_pin(pinned=pinned)
         if self.livechat_active and not self.message_ids:
-            self.unlink()
+            self.sudo().unlink()
 
-    def channel_info(self, extra_info=False):
+    def channel_info(self):
         """
         Override to add visitor information on the mail channel infos.
         This will be used to display a banner with visitor informations
         at the top of the livechat channel discussion view in discuss module.
         """
-        channel_infos = super(MailChannel, self).channel_info(extra_info)
+        channel_infos = super().channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
-        for channel in self:
+        for channel in self.filtered('livechat_visitor_id'):
             visitor = channel.livechat_visitor_id
-            if visitor:
+            try:
                 channel_infos_dict[channel.id]['visitor'] = {
                     'display_name': visitor.display_name,
                     'country_code': visitor.country_id.code.lower() if visitor.country_id else False,
                     'country_id': visitor.country_id.id,
+                    'id': visitor.id,
                     'is_connected': visitor.is_connected,
                     'history': self.sudo()._get_visitor_history(visitor),
                     'website_name': visitor.website_id.name,
                     'lang_name': visitor.lang_id.name,
                     'partner_id': visitor.partner_id.id,
                 }
+            except AccessError:
+                pass
         return list(channel_infos_dict.values())
 
     def _get_visitor_history(self, visitor):

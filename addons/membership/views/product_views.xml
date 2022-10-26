@@ -55,7 +55,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><span class="mt4"><field name="name"/></span></strong>
                                     </div>
-                                    <span class="badge badge-pill"><i class="fa fa-money" role="img" aria-label="Price" title="Price"/> <field name="list_price"/></span>
+                                    <span class="badge rounded-pill"><i class="fa fa-money" role="img" aria-label="Price" title="Price"/> <field name="list_price"/></span>
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <i class="fa fa-clock-o" role="img" aria-label="Period" title="Period"></i><strong> From: </strong><field name="membership_date_from"/><strong> To:</strong> <field name="membership_date_to"/>
@@ -113,7 +113,7 @@
             <field name="name">Membership Products</field>
             <field name="res_model">product.template</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
-            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_type': 'service'}</field>
+            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_detailed_type': 'service'}</field>
             <field name="search_view_id" ref="membership_product_search_form_view"/>
         </record>
 
@@ -138,7 +138,7 @@
             <field name="act_window_id" ref="action_membership_products"/>
         </record>
 
-        <menuitem name="Members" id="menu_association" sequence="15" web_icon="membership,static/description/icon.png"/>
+        <menuitem name="Members" id="menu_association" sequence="15" web_icon="membership,static/description/icon.svg"/>
         <menuitem name="Configuration" id="menu_marketing_config_association"
             parent="menu_association" sequence="100"/>
         <menuitem name="Membership Products" id="menu_membership_products" parent="menu_marketing_config_association"

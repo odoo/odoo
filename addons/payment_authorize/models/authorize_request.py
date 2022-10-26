@@ -24,19 +24,20 @@ class AuthorizeAPI:
 
     AUTH_ERROR_STATUS = '3'
 
-    def __init__(self, acquirer):
-        """Initiate the environment with the acquirer data.
+    def __init__(self, provider):
+        """Initiate the environment with the provider data.
 
-        :param recordset acquirer: payment.acquirer account that will be contacted
+        :param recordset provider: payment.provider account that will be contacted
         """
-        if acquirer.state == 'test':
-            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
-        else:
+        if provider.state == 'enabled':
             self.url = 'https://api.authorize.net/xml/v1/request.api'
+        else:
+            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
 
-        self.state = acquirer.state
-        self.name = acquirer.authorize_login
-        self.transaction_key = acquirer.authorize_transaction_key
+        self.state = provider.state
+        self.name = provider.authorize_login
+        self.transaction_key = provider.authorize_transaction_key
+        self.payment_method_type = provider.authorize_payment_method_type
 
     def _make_request(self, operation, data=None):
         request = {
@@ -57,9 +58,17 @@ class AuthorizeAPI:
 
         messages = response.get('messages')
         if messages and messages.get('resultCode') == 'Error':
+            err_msg = messages.get('message')[0]['text']
+
+            tx_errors = response.get('transactionResponse', {}).get('errors')
+            if tx_errors:
+                if err_msg:
+                    err_msg += '\n'
+                err_msg += '\n'.join([e.get('errorText', '') for e in tx_errors])
+
             return {
                 'err_code': messages.get('message')[0].get('code'),
-                'err_msg': messages.get('message')[0].get('text')
+                'err_msg': err_msg,
             }
 
         return response
@@ -108,8 +117,12 @@ class AuthorizeAPI:
 
         if not response.get('customerProfileId'):
             _logger.warning(
-                'Unable to create customer payment profile, data missing from transaction. Transaction_id: %s - Partner_id: %s',
-                transaction_id, partner,
+                "unable to create customer payment profile, data missing from transaction with "
+                "id %(tx_id)s, partner id: %(partner_id)s",
+                {
+                    'tx_id': transaction_id,
+                    'partner_id': partner,
+                },
             )
             return False
 
@@ -123,7 +136,12 @@ class AuthorizeAPI:
             'customerPaymentProfileId': res['payment_profile_id'],
         })
 
-        res['name'] = response.get('paymentProfile', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
+        payment = response.get('paymentProfile', {}).get('payment', {})
+        if self.payment_method_type == 'credit_card':
+            # Authorize.net pads the card and account numbers with X's.
+            res['payment_details'] = payment.get('creditCard', {}).get('cardNumber')[-4:]
+        else:
+            res['payment_details'] = payment.get('bankAccount', {}).get('accountNumber')[-4:]
         return res
 
     def delete_customer_profile(self, profile_id):
@@ -138,12 +156,49 @@ class AuthorizeAPI:
         return self._format_response(response, 'deleteCustomerProfile')
 
     #=== Transaction management ===#
+    def _prepare_authorization_transaction_request(self, transaction_type, tx_data, tx):
+        # The billTo parameter is required for new ACH transactions (transactions without a payment.token),
+        # but is not allowed for transactions with a payment.token.
+        bill_to = {}
+        if 'profile' not in tx_data:
+            split_name = payment_utils.split_partner_name(tx.partner_name)
+            # max lengths are defined by the Authorize API
+            bill_to = {
+                'billTo': {
+                    'firstName': '' if tx.partner_id.is_company else split_name[0][:50],
+                    'lastName': split_name[1][:50],  # lastName is always required
+                    'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
+                    'address': tx.partner_address,
+                    'city': tx.partner_city,
+                    'state': tx.partner_state_id.name or '',
+                    'zip': tx.partner_zip,
+                    'country': tx.partner_country_id.name or '',
+                }
+            }
 
-    def authorize(self, amount, reference, token=None, opaque_data=None):
+        # These keys have to be in the order defined in
+        # https://apitest.authorize.net/xml/v1/schema/AnetApiSchema.xsd
+        return {
+            'transactionRequest': {
+                'transactionType': transaction_type,
+                'amount': str(tx.amount),
+                **tx_data,
+                'order': {
+                    'invoiceNumber': tx.reference[:20],
+                    'description': tx.reference[:255],
+                },
+                'customer': {
+                    'email': tx.partner_email or '',
+                },
+                **bill_to,
+                'customerIP': payment_utils.get_customer_ip_address(),
+            }
+        }
+
+    def authorize(self, tx, token=None, opaque_data=None):
         """ Authorize (without capture) a payment for the given amount.
 
-        :param float amount: The amount to pay
-        :param str reference: The "invoiceNumber" in Authorize.net backend
+        :param recordset tx: The transaction of the payment, as a `payment.transaction` record
         :param recordset token: The token of the payment method to charge, as a `payment.token`
                                 record
         :param dict opaque_data: The payment details obfuscated by Authorize.Net
@@ -151,28 +206,19 @@ class AuthorizeAPI:
         :rtype: dict
         """
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
-        response = self._make_request('createTransactionRequest', {
-            'transactionRequest': {
-                'transactionType': 'authOnlyTransaction',
-                'amount': str(amount),
-                **tx_data,
-                'order': {
-                    'invoiceNumber': reference[:20],
-                    'description': reference[:255],
-                },
-                'customerIP': payment_utils.get_customer_ip_address(),
-            }
-        })
+        response = self._make_request(
+            'createTransactionRequest',
+            self._prepare_authorization_transaction_request('authOnlyTransaction', tx_data, tx)
+        )
         return self._format_response(response, 'auth_only')
 
-    def auth_and_capture(self, amount, reference, token=None, opaque_data=None):
+    def auth_and_capture(self, tx, token=None, opaque_data=None):
         """Authorize and capture a payment for the given amount.
 
         Authorize and immediately capture a payment for the given payment.token
         record for the specified amount with reference as communication.
 
-        :param str amount: transaction amount (up to 15 digits with decimal point)
-        :param str reference: used as "invoiceNumber" in the Authorize.net backend
+        :param recordset tx: The transaction of the payment, as a `payment.transaction` record
         :param record token: the payment.token record that must be charged
         :param str opaque_data: the transaction opaque_data obtained from Authorize.net
 
@@ -180,18 +226,10 @@ class AuthorizeAPI:
         :rtype: dict
         """
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
-        response = self._make_request('createTransactionRequest', {
-            'transactionRequest': {
-                'transactionType': 'authCaptureTransaction',
-                'amount': str(amount),
-                **tx_data,
-                'order': {
-                    'invoiceNumber': reference[:20],
-                    'description': reference[:255],
-                },
-                'customerIP': payment_utils.get_customer_ip_address(),
-            }
-        })
+        response = self._make_request(
+            'createTransactionRequest',
+            self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, tx)
+        )
 
         result = self._format_response(response, 'auth_capture')
         errors = response.get('transactionResponse', {}).get('errors')
@@ -211,7 +249,7 @@ class AuthorizeAPI:
                 'profile': {
                     'customerProfileId': token.authorize_profile,
                     'paymentProfile': {
-                        'paymentProfileId': token.acquirer_ref,
+                        'paymentProfileId': token.provider_ref,
                     }
                 },
             }
@@ -222,7 +260,7 @@ class AuthorizeAPI:
                 }
             }
 
-    def _get_transaction_details(self, transaction_id):
+    def get_transaction_details(self, transaction_id):
         """ Return detailed information about a specific transaction. Useful to issue refunds.
 
         :param str transaction_id: transaction id
@@ -234,7 +272,7 @@ class AuthorizeAPI:
     def capture(self, transaction_id, amount):
         """Capture a previously authorized payment for the given amount.
 
-        Capture a previsouly authorized payment. Note that the amount is required
+        Capture a previously authorized payment. Note that the amount is required
         even though we do not support partial capture.
 
         :param str transaction_id: id of the authorized transaction in the
@@ -269,29 +307,17 @@ class AuthorizeAPI:
         })
         return self._format_response(response, 'void')
 
-    def refund(self, transaction_id, amount):
+    def refund(self, transaction_id, amount, tx_details):
         """Refund a previously authorized payment. If the transaction is not settled
             yet, it will be voided.
 
         :param str transaction_id: the id of the authorized transaction in the
                                    Authorize.net backend
         :param float amount: transaction amount to refund
+        :param dict tx_details: The transaction details from `get_transaction_details()`.
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        tx_details = self._get_transaction_details(transaction_id)
-
-        if tx_details and tx_details.get('err_code'):
-            return {
-                'x_response_code': self.AUTH_ERROR_STATUS,
-                'x_response_reason_text': tx_details.get('err_msg')
-            }
-
-        # Void transaction not yet settled instead of issuing a refund
-        # (spoiler alert: a refund on a non settled transaction will throw an error)
-        if tx_details.get('transaction', {}).get('transactionStatus') in ['authorizedPendingCapture', 'capturedPendingSettlement']:
-            return self.void(transaction_id)
-
         card = tx_details.get('transaction', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
         response = self._make_request('createTransactionRequest', {
             'transactionRequest': {
@@ -308,7 +334,7 @@ class AuthorizeAPI:
         })
         return self._format_response(response, 'refund')
 
-    # Acquirer configuration: fetch authorize_client_key & currencies
+    # Provider configuration: fetch authorize_client_key & currencies
     def merchant_details(self):
         """ Retrieves the merchant details and generate a new public client key if none exists.
 

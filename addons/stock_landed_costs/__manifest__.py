@@ -13,8 +13,6 @@ This module allows you to easily add extra costs on pickings and decide the spli
     'depends': ['stock_account', 'purchase_stock'],
     'category': 'Inventory/Inventory',
     'sequence': 16,
-    'demo': [
-    ],
     'data': [
         'security/ir.model.access.csv',
         'security/stock_landed_cost_security.xml',
@@ -26,5 +24,5 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'views/res_config_settings_views.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

@@ -11,14 +11,15 @@
                     <group>
                         <label for="mode" string="Add to"/>
                         <field name="mode" widget="radio" nolabel="1"/>
-                        <field name="batch_id" options="{'no_create_edit': True, 'no_open': True}" attrs="{'invisible': [('mode', '=', 'new')], 'required': [('mode', '=', 'existing')]}"/>
-                        <field name="user_id" options="{'no_create_edit': True}" attrs="{'invisible': [('mode', '=', 'existing')]}"/>
+                        <field name="batch_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('mode', '=', 'new')], 'required': [('mode', '=', 'existing')]}"/>
+                        <field name="user_id" options="{'no_create': True}" attrs="{'invisible': [('mode', '=', 'existing')]}"/>
+                        <field name="is_create_draft"  attrs="{'invisible': [('mode', '!=', 'new')]}"/>
                     </group>
                 </group>
 
                 <footer>
-                    <button name="attach_pickings" type="object" string="Confirm" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button name="attach_pickings" type="object" string="Confirm" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

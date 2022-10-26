@@ -16,21 +16,21 @@ class LunchController(http.Controller):
 
         infos = self._make_infos(user, order=False)
 
-        lines = self._get_current_lines(user.id)
+        lines = self._get_current_lines(user)
         if lines:
+            translated_states = dict(request.env['lunch.order']._fields['state']._description_selection(request.env))
             lines = [{'id': line.id,
-                      'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.product_id.price, 2), 2)),
+                      'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.price, 2), 2)),
                       'toppings': [(topping.name, float_repr(float_round(topping.price, 2), 2))
                                    for topping in line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3],
                       'quantity': line.quantity,
                       'price': line.price,
-                      'state': line.state, # Only used for _get_state
-                      'note': line.note} for line in lines]
-            raw_state, state = self._get_state(lines)
+                      'raw_state': line.state,
+                      'state': translated_states[line.state],
+                      'note': line.note} for line in lines.sorted('date')]
             infos.update({
                 'total': float_repr(float_round(sum(line['price'] for line in lines), 2), 2),
-                'raw_state': raw_state,
-                'state': state,
+                'raw_state': self._get_state(lines),
                 'lines': lines,
             })
         return infos
@@ -40,7 +40,8 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        lines = self._get_current_lines(user.id)
+        lines = self._get_current_lines(user)
+        lines = lines.filtered_domain([('state', 'not in', ['sent', 'confirmed'])])
         lines.action_cancel()
         lines.unlink()
 
@@ -49,7 +50,7 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        lines = self._get_current_lines(user.id)
+        lines = self._get_current_lines(user)
         if lines:
             lines = lines.filtered(lambda line: line.state == 'new')
 
@@ -75,11 +76,12 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
+        company_ids = request.env.context.get('allowed_company_ids', request.env.company.ids)
         user_location = user.last_lunch_location_id
-        has_multi_company_access = not user_location.company_id or user_location.company_id.id in request._context.get('allowed_company_ids', request.env.company.ids)
+        has_multi_company_access = not user_location.company_id or user_location.company_id.id in company_ids
 
         if not user_location or not has_multi_company_access:
-            return request.env['lunch.location'].search([], limit=1).id
+            return request.env['lunch.location'].search([('company_id', 'in', [False] + company_ids)], limit=1).id
         return user_location.id
 
     def _make_infos(self, user, **kwargs):
@@ -91,18 +93,19 @@ class LunchController(http.Controller):
 
         res.update({
             'username': user.sudo().name,
-            'userimage': '/web/image?model=res.users&id=%s&field=image_128' % user.id,
+            'userimage': '/web/image?model=res.users&id=%s&field=avatar_128' % user.id,
             'wallet': request.env['lunch.cashmove'].get_wallet_balance(user, False),
             'is_manager': is_manager,
+            'group_portal_id': request.env.ref('base.group_portal').id,
             'locations': request.env['lunch.location'].search_read([], ['name']),
             'currency': {'symbol': currency.symbol, 'position': currency.position},
         })
 
         user_location = user.last_lunch_location_id
-        has_multi_company_access = not user_location.company_id or user_location.company_id.id in request._context.get('allowed_company_ids', request.env.company.ids)
+        has_multi_company_access = not user_location.company_id or user_location.company_id.id in request.env.context.get('allowed_company_ids', request.env.company.ids)
 
         if not user_location or not has_multi_company_access:
-            user.last_lunch_location_id = user_location = request.env['lunch.location'].search([], limit=1)
+            user.last_lunch_location_id = user_location = request.env['lunch.location'].search([], limit=1) or user_location
 
         alert_domain = expression.AND([
             [('available_today', '=', True)],
@@ -121,8 +124,10 @@ class LunchController(http.Controller):
         if (user_id and request.env.uid != user_id and not request.env.user.has_group('lunch.group_lunch_manager')):
             raise AccessError(_('You are trying to impersonate another user, but this can only be done by a lunch manager'))
 
-    def _get_current_lines(self, user_id):
-        return request.env['lunch.order'].search([('user_id', '=', user_id), ('date', '=', fields.Date.today()), ('state', '!=', 'cancelled')])
+    def _get_current_lines(self, user):
+        return request.env['lunch.order'].search(
+            [('user_id', '=', user.id), ('date', '=', fields.Date.context_today(user)), ('state', '!=', 'cancelled')]
+            )
 
     def _get_state(self, lines):
         """
@@ -130,10 +135,7 @@ class LunchController(http.Controller):
 
             eg: [confirmed, confirmed, new] will return ('new', 'To Order')
         """
-        states_to_int = {'new': 0, 'ordered': 1, 'confirmed': 2, 'cancelled': 3}
-        int_to_states = ['new', 'ordered', 'confirmed', 'cancelled']
-        translated_states = dict(request.env['lunch.order']._fields['state']._description_selection(request.env))
+        states_to_int = {'new': 0, 'ordered': 1, 'sent': 2, 'confirmed': 3, 'cancelled': 4}
+        int_to_states = ['new', 'ordered', 'sent', 'confirmed', 'cancelled']
 
-        state = int_to_states[min(states_to_int[line['state']] for line in lines)]
-
-        return (state, translated_states[state])
+        return int_to_states[min(states_to_int[line['raw_state']] for line in lines)]

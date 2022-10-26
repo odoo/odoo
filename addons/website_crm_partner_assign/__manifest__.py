@@ -5,7 +5,7 @@
     'name': 'Resellers',
     'category': 'Website/Website',
     'summary': 'Publish your resellers/partners and forward leads to them',
-    'version': '1.0',
+    'version': '1.2',
     'description': """
 This module allows to publish your resellers/partners on your website and to forward incoming leads/opportunities to them.
 
@@ -24,15 +24,22 @@ The automatic assignment is figured from the weight of partner levels and the ge
     'depends': ['base_geolocalize', 'crm', 'account',
                 'website_partner', 'website_google_map', 'portal'],
     'data': [
+        'data/crm_lead_merge_template.xml',
         'data/crm_tag_data.xml',
         'data/mail_template_data.xml',
+        'data/res_partner_activation_data.xml',
+        'data/res_partner_grade_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'views/res_partner_views.xml',
+        'views/res_partner_activation_views.xml',
+        'views/res_partner_grade_views.xml',
         'views/crm_lead_views.xml',
         'views/website_crm_partner_assign_templates.xml',
+        'views/partner_assign_menus.xml',
         'report/crm_partner_report_view.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/res_partner_demo.xml',
@@ -44,5 +51,6 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'web.assets_frontend': [
             'website_crm_partner_assign/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

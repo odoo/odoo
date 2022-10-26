@@ -8,10 +8,98 @@ from werkzeug.urls import url_parse, url_decode
 from odoo import exceptions
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
+@tagged('mail_thread')
+class TestAPI(TestMailCommon, TestRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestAPI, cls).setUpClass()
+        cls.ticket_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create({
+            'email_from': '"Paulette Vachette" <paulette@test.example.com>',
+            'name': 'Test',
+            'user_id': cls.user_employee.id,
+        })
+
+    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @users('employee')
+    def test_message_update_content(self):
+        """ Test updating message content. """
+        ticket_record = self.ticket_record.with_env(self.env)
+        attachments = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+
+        # post a note
+        message = ticket_record.message_post(
+            attachment_ids=attachments.ids,
+            body="<p>Initial Body</p>",
+            message_type="comment",
+            partner_ids=self.partner_1.ids,
+        )
+        self.assertEqual(message.attachment_ids, attachments)
+        self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
+        self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
+        self.assertEqual(message.body, "<p>Initial Body</p>")
+        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+
+        # update the content with new attachments
+        new_attachments = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+        ticket_record._message_update_content(
+            message, "<p>New Body</p>",
+            attachment_ids=new_attachments.ids
+        )
+        self.assertEqual(message.attachment_ids, attachments + new_attachments)
+        self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
+        self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
+        self.assertEqual(message.body, "<p>New Body</p>")
+
+        # void attachments
+        ticket_record._message_update_content(
+            message, "<p>Another Body, void attachments</p>",
+            attachment_ids=[]
+        )
+        self.assertFalse(message.attachment_ids)
+        self.assertFalse((attachments + new_attachments).exists())
+        self.assertEqual(message.body, "<p>Another Body, void attachments</p>")
+
+    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @users('employee')
+    def test_message_update_content_check(self):
+        """ Test cases where updating content should be prevented """
+        ticket_record = self.ticket_record.with_env(self.env)
+
+        # cannot edit user comments (subtype)
+        message = ticket_record.message_post(
+            body="<p>Initial Body</p>",
+            message_type="comment",
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        with self.assertRaises(exceptions.UserError):
+            ticket_record._message_update_content(
+                message, "<p>New Body</p>"
+            )
+
+        message.sudo().write({'subtype_id': self.env.ref('mail.mt_note')})
+        ticket_record._message_update_content(
+            message, "<p>New Body</p>"
+        )
+
+        # cannot edit notifications
+        for message_type in ['notification', 'user_notification', 'email']:
+            message.sudo().write({'message_type': message_type})
+            with self.assertRaises(exceptions.UserError):
+                ticket_record._message_update_content(
+                    message, "<p>New Body</p>"
+                )
+
+
+@tagged('mail_thread')
 class TestChatterTweaks(TestMailCommon, TestRecipients):
 
     @classmethod
@@ -38,6 +126,14 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_chatter_context_cleaning(self):
+        """ Test default keys are not propagated to message creation as it may
+        induce wrong values for some fields, like parent_id. """
+        parent = self.env['res.partner'].create({'name': 'Parent'})
+        partner = self.env['res.partner'].with_context(default_parent_id=parent.id).create({'name': 'Contact'})
+        self.assertFalse(partner.message_ids[-1].parent_id)
 
     def test_chatter_mail_create_nolog(self):
         """ Test disable of automatic chatter message at create """
@@ -103,6 +199,7 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
         self.assertTrue(record.name)
 
 
+@tagged('mail_thread')
 class TestDiscuss(TestMailCommon, TestRecipients):
 
     @classmethod
@@ -116,7 +213,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mark_all_as_read(self):
         def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
+            """ If employee is test employee, consider they have no access on document """
             recordset = args[0]
             if recordset.env.uid == self.user_employee.id and not recordset.env.su:
                 if kwargs.get('raise_exception', True):
@@ -135,13 +232,15 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             self._reset_bus()
             with self.assertBus(
                     [(self.cr.dbname, 'res.partner', employee_partner.id)],
-                    message_items=[
-                        {'type': 'mark_as_read',
-                         'message_ids': [msg1.id],
-                         'needaction_inbox_counter': 0}
-                    ]):
+                    message_items=[{
+                        'type': 'mail.message/mark_as_read',
+                        'payload': {
+                            'message_ids': [msg1.id],
+                            'needaction_inbox_counter': 0,
+                        },
+                    }]):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            na_count = employee_partner.get_needaction_count()
+            na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
             # mark all as read also clear inaccessible needactions
@@ -154,19 +253,21 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             needaction_length = len(employee_partner.env['mail.message'].search([['needaction', '=', True]]))
             self.assertEqual(needaction_length, 1, "message should still be readable when notified")
 
-            na_count = employee_partner.get_needaction_count()
+            na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
             self._reset_bus()
             with self.assertBus(
                     [(self.cr.dbname, 'res.partner', employee_partner.id)],
-                    message_items=[
-                        {'type': 'mark_as_read',
-                         'message_ids': [msg2.id],
-                         'needaction_inbox_counter': 0}
-                    ]):
+                    message_items=[{
+                        'type': 'mail.message/mark_as_read',
+                        'payload': {
+                            'message_ids': [msg2.id],
+                            'needaction_inbox_counter': 0,
+                        },
+                    }]):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            na_count = employee_partner.get_needaction_count()
+            na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 
     def test_set_message_done_user(self):
@@ -200,9 +301,9 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         record = self.env['mail.test.cc'].create({'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>'})
         suggestions = record._message_get_suggested_recipients()[record.id]
         self.assertEqual(sorted(suggestions), [
-            (False, '"cc3" <cc3@example.com>', 'CC Email'),
-            (False, 'cc1@example.com', 'CC Email'),
-            (False, 'cc2@example.com', 'CC Email'),
+            (False, '"cc3" <cc3@example.com>', None, 'CC Email'),
+            (False, 'cc1@example.com', None, 'CC Email'),
+            (False, 'cc2@example.com', None, 'CC Email'),
         ], 'cc should be in suggestions')
 
     def test_inbox_message_fetch_needaction(self):
@@ -214,17 +315,17 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         message2 = self.test_record.with_user(self.user_admin).message_post(body='Message 2', partner_ids=[user1.partner_id.id, user2.partner_id.id])
 
         # both notified users should have the 2 messages in Inbox initially
-        messages = self.env['mail.message'].with_user(user1).message_fetch(domain=[['needaction', '=', True]])
+        messages = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 2)
-        messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
+        messages = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 2)
 
         # first user is marking one message as done: the other message is still Inbox, while the other user still has the 2 messages in Inbox
         message1.with_user(user1).set_message_done()
-        messages = self.env['mail.message'].with_user(user1).message_fetch(domain=[['needaction', '=', True]])
+        messages = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(messages[0].get('id'), message2.id)
-        messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(messages[0].id, message2.id)
+        messages = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 2)
 
     def test_notification_has_error_filter(self):
@@ -235,7 +336,12 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             partner_ids=[self.user_employee.partner_id.id]
         )
         self.assertFalse(message.has_error)
-        with self.mock_mail_gateway(sim_error='connect_smtp_notfound'):
+
+        with self.mock_mail_gateway():
+            def _connect(*args, **kwargs):
+                raise Exception("Some exception")
+            self.connect_mocked.side_effect = _connect
+
             self.user_admin.notification_type = 'email'
             message2 = self.test_record.with_user(self.user_employee).message_post(
                 body='Test', message_type='comment', subtype_xmlid='mail.mt_comment',
@@ -249,6 +355,25 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         # and the failure from employee's message should not be taken into account for admin
         threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
         self.assertEqual(len(threads_admin), 0)
+
+    @users("employee")
+    def test_unlink_notification_message(self):
+        channel = self.env['mail.channel'].create({'name': 'testChannel'})
+        notification_msg = channel.with_user(self.user_admin).message_notify(
+            body='test',
+            message_type='user_notification',
+            partner_ids=[self.partner_2.id],
+        )
+
+        with self.assertRaises(exceptions.AccessError):
+            notification_msg.with_env(self.env)._message_format(['id', 'body', 'date', 'author_id', 'email_from'])
+
+        channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
+        self.assertEqual(len(channel_message), 1, "Test message should have been posted")
+
+        channel.sudo().unlink()
+        remaining_message = channel_message.exists()
+        self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
 @tagged('-at_install', 'post_install')
@@ -311,3 +436,37 @@ class TestMultiCompany(HttpCase):
         action = url_decode(fragment)['action']
 
         self.assertEqual(action, 'mail.action_discuss')
+
+
+@tagged('mail_thread')
+class TestNoThread(TestMailCommon, TestRecipients):
+    """ Specific tests for cross models thread features """
+
+    @users('employee')
+    def test_message_notify(self):
+        test_record = self.env['mail.test.nothread'].create({
+            'customer_id': self.partner_1.id,
+            'name': 'Not A Thread',
+        })
+        with self.assertPostNotifications([{
+                'content': 'Hello Paulo',
+                'email_values': {
+                    'reply_to': self.company_admin.catchall_formatted,
+                },
+                'message_type': 'user_notification',
+                'notif': [{
+                    'check_send': True,
+                    'is_read': True,
+                    'partner': self.partner_2,
+                    'status': 'sent',
+                    'type': 'email',
+                }],
+                'subtype': 'mail.mt_note',
+            }]):
+            _message = self.env['mail.thread'].message_notify(
+                body='<p>Hello Paulo</p>',
+                model=test_record._name,
+                res_id=test_record.id,
+                subject='Test Notify',
+                partner_ids=self.partner_2.ids
+            )

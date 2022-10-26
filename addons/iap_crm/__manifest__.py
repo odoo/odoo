@@ -12,9 +12,7 @@
         'crm',
         'iap_mail',
     ],
-    'application': False,
     'installable': True,
     'auto_install': True,
-    'data': [
-    ],
+    'license': 'LGPL-3',
 }

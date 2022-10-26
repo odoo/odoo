@@ -23,8 +23,8 @@ class BaseModuleUpgrade(models.TransientModel):
     module_info = fields.Text('Apps to Update', readonly=True, default=_default_module_info)
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(BaseModuleUpgrade, self).fields_view_get(view_id, view_type, toolbar=toolbar,submenu=False)
+    def get_view(self, view_id=None, view_type='form', **options):
+        res = super().get_view(view_id, view_type, **options)
         if view_type != 'form':
             return res
 
@@ -35,8 +35,8 @@ class BaseModuleUpgrade(models.TransientModel):
             res['arch'] = '''<form string="Upgrade Completed">
                                 <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
-                                    <button name="config" string="Start Configuration" type="object" class="btn-primary"/>
-                                    <button special="cancel" string="Close" class="btn-secondary"/>
+                                    <button name="config" string="Start Configuration" type="object" class="btn-primary" data-hotkey="q"/>
+                                    <button special="cancel" data-hotkey="z" string="Close" class="btn-secondary"/>
                                 </footer>
                              </form>'''
 
@@ -70,8 +70,8 @@ class BaseModuleUpgrade(models.TransientModel):
 
         # terminate transaction before re-creating cursor below
         self._cr.commit()
-        api.Environment.reset()
         odoo.modules.registry.Registry.new(self._cr.dbname, update_module=True)
+        self._cr.reset()
 
         return {'type': 'ir.actions.act_window_close'}
 

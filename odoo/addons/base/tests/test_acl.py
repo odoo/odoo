@@ -48,7 +48,13 @@ class TestACL(TransactionCaseWithUserDemo):
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        with self.debug_mode():
+            # <group groups="base.group_no_one">
+            #     <group string="Price Accuracy">
+            #         <field name="rounding"/>
+            #         <field name="decimal_places"/>
+            #     </group>
+            form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
@@ -62,7 +68,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self._set_field_groups(currency, 'decimal_places', GROUP_SYSTEM)
 
         fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertNotIn('decimal_places', fields, "'decimal_places' field should be gone")
         self.assertEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
@@ -74,7 +80,8 @@ class TestACL(TransactionCaseWithUserDemo):
         self.erp_system_group.users += self.user_demo
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        with self.debug_mode():
+            form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
         self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")
@@ -114,7 +121,7 @@ class TestACL(TransactionCaseWithUserDemo):
         """Test access to records having restricted fields"""
         # Invalidate cache to avoid restricted value to be available
         # in the cache
-        self.user_demo.invalidate_cache()
+        self.env.invalidate_all()
         partner = self.env['res.partner'].with_user(self.user_demo)
         self._set_field_groups(partner, 'email', GROUP_SYSTEM)
 
@@ -126,47 +133,55 @@ class TestACL(TransactionCaseWithUserDemo):
             with mute_logger('odoo.models'):
                 partner.email
 
-    def test_view_create_edit_button_invisibility(self):
-        """ Test form view Create, Edit, Delete button visibility based on access right of model"""
+    def test_view_create_edit_button(self):
+        """ Test form view Create, Edit, Delete button visibility based on access right of model.
+        Test the user with and without access in the same unit test / transaction
+        to test the views cache is properly working """
         methods = ['create', 'edit', 'delete']
         company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
+
+        # demo not part of the group_system, create edit and delete must be False
         for method in methods:
             self.assertEqual(view_arch.get(method), 'false')
 
-    def test_view_create_edit_button_visibility(self):
-        """ Test form view Create, Edit, Delete button visibility based on access right of model"""
-        self.erp_system_group.users += self.user_demo
-        methods = ['create', 'edit', 'delete']
-        company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        # demo part of the group_system, create edit and delete must not be specified
+        company = self.env['res.company'].with_user(self.env.ref("base.user_admin"))
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
             self.assertIsNone(view_arch.get(method))
 
-    def test_m2o_field_create_edit_invisibility(self):
-        """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
+    def test_m2o_field_create_edit(self):
+        """ Test many2one field Create and Edit option visibility based on access rights of relation field
+        Test the user with and without access in the same unit test / transaction
+        to test the views cache is properly working """
         methods = ['create', 'write']
         company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
         self.assertTrue(len(field_node), "currency_id field should be in company from view")
         for method in methods:
             self.assertEqual(field_node[0].get('can_' + method), 'false')
 
-    def test_m2o_field_create_edit_visibility(self):
-        """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
-        self.erp_system_group.users += self.user_demo
-        methods = ['create', 'write']
-        company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company = self.env['res.company'].with_user(self.env.ref("base.user_admin"))
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
-        self.assertTrue(len(field_node), "currency_id field should be in company from view")
         for method in methods:
             self.assertEqual(field_node[0].get('can_' + method), 'true')
+
+    def test_get_views_fields(self):
+        """ Tests fields restricted to group_system are not passed when calling `get_views` as demo
+        but the same fields are well passed when calling `get_views` as admin"""
+        Partner = self.env['res.partner']
+        self._set_field_groups(Partner, 'email', GROUP_SYSTEM)
+        views = Partner.with_user(self.user_demo).get_views([(False, 'form')])
+        self.assertFalse('email' in views['models']['res.partner'])
+        views = Partner.with_user(self.env.ref("base.user_admin")).get_views([(False, 'form')])
+        self.assertTrue('email' in views['models']['res.partner'])
 
 
 class TestIrRule(TransactionCaseWithUserDemo):

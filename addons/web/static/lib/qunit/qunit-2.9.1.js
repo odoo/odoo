@@ -14,6 +14,8 @@
 
   global$1 = global$1 && global$1.hasOwnProperty('default') ? global$1['default'] : global$1;
 
+  const debug = odoo.debug;
+
   var window$1 = global$1.window;
   var self$1 = global$1.self;
   var console = global$1.console;
@@ -2979,6 +2981,7 @@
   }
 
   Test.prototype = {
+  	get moduleName() { return this.module.name; },
   	before: function before() {
   		var _this = this;
 
@@ -3145,7 +3148,7 @@
   			this.pushFailure("Expected at least one assertion, but none were run - call " + "expect(0) to accept zero assertions.", this.stack);
   		}
 
-        emit("OdooAfterTestHook", { moduleName: this.module.name, testName: this.testName }); // Odoo customization
+        emit("OdooAfterTestHook", this); // Odoo customization
 
   		var i,
   		    module = this.module,
@@ -5337,12 +5340,12 @@
   		assertList.appendChild(assertLi);
 
       // Odoo Customisation!!!
-      // Crappy hack to display traceback with sourcemaps if debug=assets
-      if (lastError && QUnit.annotateTraceback && odoo && odoo.debug && odoo.debug.includes("assets")) {
+      // Crappy hack to display full tracebacks (with sourcemaps if debug=assets)
+      if (lastError && QUnit.annotateTraceback) {
           const pre = assertLi.querySelector("pre");
-
-          QUnit.annotateTraceback(lastError).then(traceback => {
+          details.annotateProm = QUnit.annotateTraceback(lastError).then(traceback => {
             pre.innerText = traceback;
+            details.source = traceback;
           });
           lastError = null;
       }

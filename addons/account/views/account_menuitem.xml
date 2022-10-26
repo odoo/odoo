@@ -5,7 +5,7 @@
         id="menu_finance"
         groups="account.group_account_readonly,account.group_account_invoice"
         web_icon="account,static/description/icon.png"
-        sequence="40">
+        sequence="55">
         <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_dashboard_kanban" groups="account.group_account_readonly" sequence="1"/>
         <menuitem id="menu_finance_receivables" name="Customers" sequence="2">
             <menuitem id="menu_action_move_out_invoice_type" action="action_move_out_invoice_type" sequence="1"/>
@@ -26,29 +26,19 @@
         <menuitem id="menu_finance_entries" name="Accounting" sequence="4" groups="account.group_account_readonly">
             <menuitem id="menu_finance_entries_accounting_miscellaneous" name="Miscellaneous" sequence="1">
                 <menuitem id="menu_action_move_journal_line_form" action="action_move_journal_line" groups="account.group_account_readonly" sequence="1"/>
-                <menuitem id="menu_action_account_moves_all" action="action_account_moves_all" groups="base.group_no_one" sequence="10"/>
+                <menuitem id="menu_action_account_moves_all" action="action_account_moves_all" groups="account.group_account_readonly" sequence="10"/>
             </menuitem>
-            <menuitem id="menu_finance_entries_accounting_journals" name="Journals" sequence="2">
-                <menuitem id="menu_action_account_moves_journal_sales" action="action_account_moves_journal_sales" groups="account.group_account_readonly" sequence="1"/>
-                <menuitem id="menu_action_account_moves_journal_purchase" action="action_account_moves_journal_purchase" groups="account.group_account_readonly" sequence="2"/>
-                <menuitem id="menu_action_account_moves_journal_bank_cash" action="action_account_moves_journal_bank_cash" groups="account.group_account_readonly" sequence="3"/>
-                <menuitem id="menu_action_account_moves_journal_misc" action="action_account_moves_journal_misc" groups="account.group_account_readonly" sequence="4"/>
+            <menuitem id="menu_finance_entries_management" name="Management" sequence="10" groups="account.group_account_invoice,account.group_account_readonly">
+                <menuitem id="menu_action_analytic_lines_tree" name="Analytic Items" action="analytic.account_analytic_line_action_entries" groups="analytic.group_analytic_accounting" sequence="50"/>
             </menuitem>
-            <menuitem id="menu_finance_entries_accounting_ledgers" name="Ledgers" sequence="3">
-                <menuitem id="menu_action_account_moves_ledger_general" action="action_account_moves_ledger_general" groups="account.group_account_readonly" sequence="1"/>
-                <menuitem id="menu_action_account_moves_ledger_partner" action="action_account_moves_ledger_partner" groups="account.group_account_readonly" sequence="2"/>
-            </menuitem>
-            <menuitem id="menu_finance_entries_management" name="Management" sequence="10" groups="account.group_account_invoice,account.group_account_readonly"/>
             <menuitem id="menu_finance_entries_generate_entries" name="Generate Entries"/>
-            <menuitem id="menu_finance_entries_actions" name="Actions" sequence="11" groups="account.group_account_user">
-                <menuitem id="menu_action_tax_adjustment" action="tax_adjustments_form" groups="base.group_no_one" sequence="45"/>
-            </menuitem>
+            <menuitem id="menu_finance_entries_actions" name="Actions" sequence="11" groups="account.group_account_user"/>
         </menuitem>
         <menuitem id="menu_finance_reports" name="Reporting" sequence="20" groups="account.group_account_readonly,account.group_account_invoice">
             <menuitem id="account_reports_management_menu" name="Management" sequence="4">
                 <menuitem id="menu_action_account_invoice_report_all" name="Invoice Analysis" action="action_account_invoice_report_all" sequence="1"/>
             </menuitem>
-            <menuitem id="account_reports_legal_statements_menu" name="Generic Statements" sequence="1" groups="account.group_account_readonly"/>
+            <menuitem id="account_reports_legal_statements_menu" name="Statement Reports" sequence="1" groups="account.group_account_readonly"/>
         </menuitem>
         <menuitem id="menu_finance_configuration" name="Configuration" sequence="35" groups="account.group_account_manager">
             <menuitem id="menu_account_config" name="Settings" action="action_account_config" groups="base.group_system" sequence="0"/>
@@ -65,21 +55,20 @@
                 <menuitem id="menu_action_tax_form" action="action_tax_form" sequence="2"/>
                 <menuitem id="menu_action_account_journal_form" action="action_account_journal_form" groups="account.group_account_manager" sequence="3"/>
                 <menuitem id="account_report_folder" name="Reporting" groups="account.group_account_readonly" sequence="4"/>
-                <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" groups="base.group_multi_currency" sequence="4"/>
+                <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" sequence="4"/>
                 <menuitem id="menu_action_account_fiscal_position_form" action="action_account_fiscal_position_form" sequence="5"/>
                 <menuitem id="menu_action_account_journal_group_list" action="action_account_journal_group_list" groups="account.group_account_manager" sequence="7"/>
+                <menuitem id="menu_action_tax_group" action="action_tax_group" sequence="8" groups="base.group_no_one"/>
             </menuitem>
             <menuitem id="root_payment_menu" name="Payments" groups="account.group_account_manager" sequence="4"/>
             <menuitem id="account_management_menu" name="Management" groups="account.group_account_manager" sequence="5">
                 <menuitem id="menu_product_product_categories" action="product.product_category_action_form" sequence="3"/>
                 <menuitem id="menu_action_rounding_form_view" action="rounding_list_action" groups="account.group_cash_rounding" sequence="4"/>
-                <menuitem id="menu_configure_tax_report" name="Tax Report" action="account.action_configure_tax_report" groups="base.group_no_one" sequence="5"/>
-                <menuitem id="menu_action_analytic_lines_tree" name="Analytic Items" action="analytic.account_analytic_line_action_entries" groups="analytic.group_analytic_accounting" sequence="35"/>
             </menuitem>
-            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags" sequence="6">
+            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" groups="analytic.group_analytic_accounting" sequence="6">
+                <menuitem id="menu_analytic__distribution_model" name="Analytic Distribution Models" action="analytic.action_analytic_distribution_model" groups="analytic.group_analytic_accounting" sequence="1"/>
                 <menuitem id="account_analytic_def_account" action="analytic.action_account_analytic_account_form" groups="analytic.group_analytic_accounting" sequence="1"/>
-                <menuitem id="account_analytic_group_menu" name="Analytic Account Groups" action="analytic.account_analytic_group_action" groups="analytic.group_analytic_accounting" sequence="2"/>
-                <menuitem id="account_analytic_tag_menu" name="Analytic Tags" action="analytic.account_analytic_tag_action" groups="analytic.group_analytic_tags"/>
+                <menuitem id="account_analytic_plan_menu" name="Analytic Plans" action="analytic.account_analytic_plan_action" groups="analytic.group_analytic_accounting" sequence="2"/>
             </menuitem>
         </menuitem>
     </menuitem>

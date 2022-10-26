@@ -9,58 +9,7 @@
                 <xpath expr="//field[@name='is_move_sent']" position="after">
                     <field name="l10n_ch_isr_sent" invisible="1"/>
                     <field name="l10n_ch_currency_name" invisible="1" readonly="1"/>
-                </xpath>
-
-                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
-                    <button id="l10n_ch_btn_isr_print_highlight"
-                        name="isr_print"
-                        string="Print ISR"
-                        type="object"
-                        attrs="{'invisible':['|', '|', '|', '|',
-                            ('move_type', 'not in', ('out_invoice', 'out_refund')),
-                            ('l10n_ch_isr_sent', '=', True),
-                            ('state', '!=', 'posted'),
-                            ('payment_state', 'not in', ('not_paid', 'partial')),
-                            ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
-                        class="oe_highlight"
-                        groups="base.group_user"
-                        />
-                </xpath>
-
-                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
-                    <button id="btn_isr_print_normal"
-                        name="isr_print"
-                        string="Print ISR"
-                        type="object"
-                        attrs="{'invisible':['|', '|', '|', '|',
-                            ('move_type', 'not in', ('out_invoice', 'out_refund')),
-                            ('l10n_ch_isr_sent', '=', False),
-                            ('state', '!=', 'posted'),
-                            ('payment_state', 'not in', ('not_paid', 'partial')),
-                            ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
-                        groups="base.group_user"
-                        />
-                    <button
-                        name="print_ch_qr_bill"
-                        string="Print QR-bill"
-                        type="object"
-                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
-                                             '|', ('l10n_ch_isr_sent', '=', True),
-                                             '|', ('move_type', '!=', 'out_invoice'),
-                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
-                        groups="base.group_user"
-                        class="oe_highlight"
-                        />
-                    <button
-                        name="print_ch_qr_bill"
-                        string="Print QR-bill"
-                        type="object"
-                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
-                                             '|', ('l10n_ch_isr_sent', '=', False),
-                                             '|', ('move_type', '!=', 'out_invoice'),
-                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
-                        groups="base.group_user"
-                        />
+                    <field name="l10n_ch_is_qr_valid" invisible="1"/>
                 </xpath>
                 <header position="after">
                     <field name="l10n_ch_isr_needs_fixing" invisible="1"/>
@@ -89,6 +38,18 @@
             <field name="name">Customer Invoices</field>
             <field name="res_model">account.move</field>
             <field name="search_view_id" ref="isr_invoice_search_view"/>
+        </record>
+
+        <record id="l10n_ch_qr_server_action" model="ir.actions.server">
+            <field name="name">Print QR Invoices</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.l10n_ch_action_print_qr()
+            </field>
         </record>
     </data>
 </odoo>

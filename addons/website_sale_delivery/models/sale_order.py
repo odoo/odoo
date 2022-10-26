@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
 
 from odoo import api, fields, models
-
-_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -15,11 +12,6 @@ class SaleOrder(models.Model):
         string='Delivery Amount',
         help="The amount without tax.", store=True, tracking=True)
 
-    def _compute_website_order_line(self):
-        super(SaleOrder, self)._compute_website_order_line()
-        for order in self:
-            order.website_order_line = order.website_order_line.filtered(lambda l: not l.is_delivery)
-
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):
         for order in self:
@@ -28,18 +20,17 @@ class SaleOrder(models.Model):
             else:
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
 
-    def _check_carrier_quotation(self, force_carrier_id=None):
+    def _check_carrier_quotation(self, force_carrier_id=None, keep_carrier=False):
         self.ensure_one()
         DeliveryCarrier = self.env['delivery.carrier']
 
         if self.only_services:
-            self.write({'carrier_id': None})
             self._remove_delivery_line()
             return True
         else:
             self = self.with_company(self.company_id)
             # attempt to use partner's preferred carrier
-            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id:
+            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id and not keep_carrier:
                 force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
 
             carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
@@ -77,17 +68,7 @@ class SaleOrder(models.Model):
         # searching on website_published will also search for available website (_search method on computed field)
         return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
 
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
+    def _cart_update(self, *args, **kwargs):
         """ Override to update carrier quotation if quantity changed """
-
         self._remove_delivery_line()
-
-        # When you update a cart, it is not enouf to remove the "delivery cost" line
-        # The carrier might also be invalid, eg: if you bought things that are too heavy
-        # -> this may cause a bug if you go to the checkout screen, choose a carrier,
-        #    then update your cart (the cart becomes uneditable)
-        self.write({'carrier_id': False})
-
-        values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
-
-        return values
+        return super()._cart_update(*args, **kwargs)

@@ -1,0 +1,75 @@
+.o_pupdate_kanban {
+    overflow: auto;
+    &.o_kanban_ungrouped {
+        padding:0px;
+        .o_pupdate_kanban_card {
+            width: 100%;
+            margin: 0px;
+            border-right: 0px;
+            border-top: 0px;
+            overflow: hidden;
+            .o_kanban_detail_ungrouped {
+                padding-left: $o-horizontal-padding - $o-kanban-color-border-width - $o-kanban-record-margin;
+                > div {
+                    display: grid;
+                    align-items: center;
+                }
+                .o_pupdate_kanban_image {
+                    width: 56px;
+                    height: 56px;
+                    top: 0px;
+                    position: absolute;
+                }
+                .o_pupdate_name {
+                    overflow-wrap: break-word;
+                }
+                .o_pupdate_kanban_actions_ungrouped {
+                    button {
+                        float: right;
+                        margin: 4px;
+                    }
+                }
+                .o_country_flag {
+                    margin-right: 8px;
+                }
+
+                .o_field_status_with_color {
+                    .o_status_label {
+                        display: none;
+                    }
+
+                    @include media-breakpoint-up(sm) {
+                        .o_status_label {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .oe_kanban_color_20 {
+        border-left-color: $o-success;
+        &:after {
+            background-color: $o-success;
+        }
+    }
+    .oe_kanban_color_21 {
+        border-left-color: $o-info;
+        &:after {
+            background-color: $o-info;
+        }
+    }
+    .oe_kanban_color_22 {
+        border-left-color: $o-warning;
+        &:after {
+            background-color: $o-warning;
+        }
+    }
+    .oe_kanban_color_23 {
+        border-left-color: $o-danger;
+        &:after {
+            background-color: $o-danger;
+        }
+    }
+}

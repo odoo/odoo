@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- Add a shortcut to wishlist / talks after registration -->
+<!-- Add a shortcut to favorites / tracks after registration -->
 <template id="registration_complete" inherit_id="website_event.registration_complete">
     <xpath expr="//div[hasclass('row')][last()]" position="after">
         <div t-if="event.website_track" class="row mt-5 mb256">
@@ -19,7 +19,7 @@
     <xpath expr='//t[@t-call="website.layout"]' position="inside">
         <t t-set="pageName" t-value="'event'"/>
         <t t-set="head">
-            <t t-raw="head"/>
+            <t t-out="head"/>
             <t t-call="website_event_track.pwa_manifest"/>
         </t>
     </xpath>
@@ -29,7 +29,7 @@
     <xpath expr='//t[@t-call="website.layout"]' position="inside">
         <t t-set="pageName" t-value="'event'"/>
         <t t-set="head">
-            <t t-raw="head"/>
+            <t t-out="head"/>
             <t t-call="website_event_track.pwa_manifest"/>
         </t>
     </xpath>

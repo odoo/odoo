@@ -7,11 +7,11 @@ from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
 
-class TestStockProductionLot(TestStockCommon):
+class TestStockLot(TestStockCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestStockProductionLot, cls).setUpClass()
+        super().setUpClass()
         # Creates a tracked product using expiration dates.
         cls.product_apple = cls.ProductObj.create({
             'name': 'Apple',
@@ -60,7 +60,7 @@ class TestStockProductionLot(TestStockCommon):
         # Creation of a routing
         cls.workcenter = cls.env['mrp.workcenter'].create({
             'name': 'Bakery',
-            'capacity': 2,
+            'default_capacity': 2,
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
@@ -112,4 +112,3 @@ class TestStockProductionLot(TestStockCommon):
         # Producing must return a confirmation wizard.
         self.assertNotEqual(res, None)
         self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
-

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorSelectionField" owl="1">
+        <div class="o_ds_value_cell">
+            <select class="o_input o_domain_leaf_value_input" t-on-change="onChange">
+                <t t-foreach="props.field.selection" t-as="option" t-key="option[0]">
+                    <option
+                        t-att-value="option[0]"
+                        t-att-selected="option[0] === props.value"
+                        t-esc="option[1]"
+                    />
+                </t>
+            </select>
+        </div>
+    </t>
+
+</templates>

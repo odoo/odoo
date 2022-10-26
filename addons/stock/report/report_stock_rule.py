@@ -11,6 +11,10 @@ class ReportStockRule(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        # Overriding data values here since used also in _get_routes.
+        data['product_id'] = data.get('product_id', docids)
+        data['warehouse_ids'] = data.get('warehouse_ids', [])
+
         product = self.env['product.product'].browse(data['product_id'])
         warehouses = self.env['stock.warehouse'].browse(data['warehouse_ids'])
 
@@ -82,7 +86,7 @@ class ReportStockRule(models.AbstractModel):
     @api.model
     def _get_rule_loc(self, rule, product):
         rule.ensure_one()
-        return {'rule': rule, 'source': rule.location_src_id, 'destination': rule.location_id}
+        return {'rule': rule, 'source': rule.location_src_id, 'destination': rule.location_dest_id}
 
     @api.model
     def _sort_locations(self, rules_and_loc, warehouses):

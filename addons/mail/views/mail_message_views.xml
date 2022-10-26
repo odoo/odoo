@@ -12,7 +12,7 @@
                     <field name="subject"/>
                     <field name="author_id"/>
                     <field name="model"/>
-                    <field name="res_id" widget="integer"/>
+                    <field name="res_id"/>
                 </tree>
             </field>
         </record>
@@ -23,8 +23,13 @@
             <field name="model">mail.message</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Message">
+                <form string="Message" duplicate="0">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_document" string="Open Document"
+                                type="object" class="oe_link" icon="fa-file-text-o"
+                                attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', 0)]}"/>
+                        </div>
                         <group>
                             <group>
                                 <field name="subject"/>
@@ -37,11 +42,9 @@
                             </group>
                             <group>
                                 <field name="model"/>
-                                <field name="res_id" widget="integer"/>
+                                <field name="res_id"/>
                                 <field name="record_name"/>
                                 <field name="parent_id"/>
-                                <field name="moderation_status"/>
-                                <field name="moderator_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -52,7 +55,7 @@
                                 <group>
                                     <group>
                                         <field name="reply_to"/>
-                                        <field name="no_auto_thread"/>
+                                        <field name="reply_to_force_new"/>
                                     </group>
                                     <group>
                                         <field name="message_id"/>
@@ -142,10 +145,11 @@
                                 <div class="row">
                                     <div class="offset-10">
                                         <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                                 <span class="fa fa-ellipsis-v"/>
                                             </a>
                                             <div class="dropdown-menu" role="menu">
+                                                <a t-attf-href="/web/content/ir.attachment/#{record.id.raw_value}/datas?download=true" download="" class="dropdown-item">Download</a>
                                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                             </div>
                                         </div>

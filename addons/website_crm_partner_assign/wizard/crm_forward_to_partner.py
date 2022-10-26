@@ -27,7 +27,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 'lead_location': ", ".join(lead_location),
                 'partner_assigned_id': partner and partner.id or False,
                 'partner_location': ", ".join(partner_location),
-                'lead_link': self.get_lead_portal_url(lead.id, lead.type),
+                'lead_link': self.get_lead_portal_url(lead),
                 }
 
     @api.model
@@ -103,18 +103,14 @@ class CrmLeadForwardToPartner(models.TransientModel):
             self.env['crm.lead'].message_subscribe([partner_id])
         return True
 
-    def get_lead_portal_url(self, lead_id, type):
-        action = type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
+    def get_lead_portal_url(self, lead):
+        action = lead.type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
         action_ref = self.env.ref('website_crm_partner_assign.%s' % (action,), False)
         portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (
-            self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+            lead.get_base_url(),
             self.env.cr.dbname,
-            lead_id,
+            lead.id,
             action_ref and action_ref.id or False)
-        return portal_link
-
-    def get_portal_url(self):
-        portal_link = "%s/?db=%s" % (self.env['ir.config_parameter'].sudo().get_param('web.base.url'), self.env.cr.dbname)
         return portal_link
 
     forward_type = fields.Selection([

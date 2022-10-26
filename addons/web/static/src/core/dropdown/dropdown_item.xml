@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.DropdownItem" owl="1">
+    <t
+      t-tag="props.href ? 'a' : 'span'"
+      t-att-href="props.href"
+      class="dropdown-item"
+      t-att-class="props.class"
+      t-on-click.stop="onClick"
+      t-att-title="props.title"
+      t-att-data-hotkey="props.hotkey"
+      t-att="dataAttributes"
+    >
+      <t t-slot="default" />
+    </t>
+  </t>
+
+</templates>

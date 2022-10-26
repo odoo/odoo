@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import _, Command, fields, models
 from odoo.exceptions import UserError
 
 
@@ -10,6 +10,10 @@ class MassMailingList(models.Model):
     _name = 'mailing.list'
     _order = 'name'
     _description = 'Mailing List'
+    _mailing_enabled = True
+    _order = 'create_date DESC'
+    # As this model has their own data merge, avoid to enable the generic data_merge on that model.
+    _disable_data_merge = True
 
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
@@ -24,11 +28,17 @@ class MassMailingList(models.Model):
         'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
         string='Mailing Lists', copy=False)
     mailing_count = fields.Integer(compute="_compute_mailing_list_count", string="Number of Mailing")
-    mailing_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mass Mailings', copy=False)
-    subscription_ids = fields.One2many('mailing.contact.subscription', 'list_id',
-        string='Subscription Information', copy=True)
-    is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
-                                                  " page to allows him to update his subscription preferences.")
+    mailing_ids = fields.Many2many(
+        'mailing.mailing', 'mail_mass_mailing_list_rel',
+        string='Mass Mailings', copy=False)
+    subscription_ids = fields.One2many(
+        'mailing.contact.subscription', 'list_id',
+        string='Subscription Information',
+        copy=True, depends=['contact_ids'])
+    is_public = fields.Boolean(
+        string='Show In Preferences', default=True,
+        help='The mailing list can be accessible by recipients in the subscription '
+             'management page to allows them to update their preferences.')
 
     # ------------------------------------------------------
     # COMPUTE / ONCHANGE
@@ -44,7 +54,7 @@ class MassMailingList(models.Model):
                 GROUP BY mailing_list_id''', (tuple(self.ids),))
             data = dict(self.env.cr.fetchall())
         for mailing_list in self:
-            mailing_list.mailing_count = data.get(mailing_list.id, 0)
+            mailing_list.mailing_count = data.get(mailing_list._origin.id, 0)
 
     def _compute_mailing_list_statistics(self):
         """ Computes various statistics for this mailing.list that allow users
@@ -120,6 +130,36 @@ class MassMailingList(models.Model):
     # ACTIONS
     # ------------------------------------------------------
 
+    def action_open_import(self):
+        """Open the mailing list contact import wizard."""
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.mailing_contact_import_action')
+        action['context'] = {
+            **self.env.context,
+            'default_mailing_list_ids': self.ids,
+            'default_subscription_list_ids': [
+                Command.create({'list_id': mailing_list.id})
+                for mailing_list in self
+            ],
+        }
+        return action
+
+    def action_send_mailing(self):
+        """Open the mailing form view, with the current lists set as recipients."""
+        view = self.env.ref('mass_mailing.mailing_mailing_view_form_full_width')
+        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.mailing_mailing_action_mail')
+
+        action.update({
+            'context': {
+                **self.env.context,
+                'default_contact_list_ids': self.ids,
+            },
+            'target': 'current',
+            'view_type': 'form',
+            'views': [(view.id, 'form')],
+        })
+
+        return action
+
     def action_view_contacts(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_view_mass_mailing_contacts")
         action['domain'] = [('list_ids', 'in', self.ids)]
@@ -182,8 +222,7 @@ class MassMailingList(models.Model):
         self.ensure_one()
         # Put destination is sources lists if not already the case
         src_lists |= self
-        self.env['mailing.contact'].flush(['email', 'email_normalized'])
-        self.env['mailing.contact.subscription'].flush(['contact_id', 'opt_out', 'list_id'])
+        self.env.flush_all()
         self.env.cr.execute("""
             INSERT INTO mailing_contact_list_rel (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
@@ -215,13 +254,30 @@ class MassMailingList(models.Model):
                     )
                 ) st
             WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
-        self.flush()
-        self.invalidate_cache()
+        self.env.invalidate_all()
         if archive:
             (src_lists - self).action_archive()
 
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    # ------------------------------------------------------
+    # MAILING
+    # ------------------------------------------------------
+
+    def _mailing_get_default_domain(self, mailing):
+        return [('list_ids', 'in', mailing.contact_list_ids.ids)]
+
+    def _mailing_get_opt_out_list(self, mailing):
+        """ Check subscription on all involved mailing lists. If user is opt_out
+        on one list but not on another if two users with same email address, one
+        opted in and the other one opted out, send the mail anyway. """
+        # TODO DBE Fixme : Optimize the following to get real opt_out and opt_in
+        subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
+        opt_out_contacts = subscriptions.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
+        opt_in_contacts = subscriptions.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
+        opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
+        return opt_out
 
     # ------------------------------------------------------
     # UTILITY
@@ -266,7 +322,7 @@ class MassMailingList(models.Model):
             if mass_mailing.id not in contact_counts:
                 contact_counts[mass_mailing.id] = {
                     field: 0
-                    for field in self._get_contact_statistics_fields().keys()
+                    for field in mass_mailing._get_contact_statistics_fields()
                 }
 
         return contact_counts
@@ -293,7 +349,7 @@ class MassMailingList(models.Model):
             'contact_count_opt_out': '''
                 SUM(CASE WHEN COALESCE(r.opt_out,FALSE) = TRUE
                     THEN 1 ELSE 0 END) AS contact_count_opt_out''',
-            'contact_count_blacklisted': f'''
+            'contact_count_blacklisted': '''
                 SUM(CASE WHEN bl.id IS NOT NULL
                 THEN 1 ELSE 0 END) AS contact_count_blacklisted'''
         }

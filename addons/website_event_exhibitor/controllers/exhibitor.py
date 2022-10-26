@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import OrderedDict
 from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
@@ -19,7 +20,7 @@ class ExhibitorController(WebsiteEventController):
             ('event_id', '=', event.id),
             ('exhibitor_type', 'in', ['exhibitor', 'online']),
         ]
-        if not request.env.user.has_group('event.group_event_user'):
+        if not request.env.user.has_group('event.group_event_registration_desk'):
             search_domain_base = expression.AND([search_domain_base, [('is_published', '=', True)]])
         return search_domain_base
 
@@ -32,7 +33,7 @@ class ExhibitorController(WebsiteEventController):
         '/event/<model("event.event"):event>/exhibitors',
         # TDE BACKWARD: matches event/event-1/exhibitor/exhib-1 sub domain
         '/event/<model("event.event"):event>/exhibitor'
-    ], type='http', auth="public", website=True, sitemap=False)
+    ], type='http', auth="public", website=True, sitemap=False, methods=['GET', 'POST'])
     def event_exhibitors(self, event, **searches):
         return request.render(
             "website_event_exhibitor.event_exhibitors",
@@ -72,21 +73,33 @@ class ExhibitorController(WebsiteEventController):
 
         # fetch data to display; use sudo to allow reading partner info, be sure domain is correct
         event = event.with_context(tz=event.date_tz or 'UTC')
-        sponsors = request.env['event.sponsor'].sudo().search(search_domain)
+        sponsors = request.env['event.sponsor'].sudo().search(
+            search_domain
+        ).sorted(lambda sponsor: (sponsor.sponsor_type_id.sequence, sponsor.sequence))
         sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
         sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
-        sponsor_categories = dict()
+        sponsor_categories_dict = OrderedDict()
+        sponsor_categories = []
+        is_event_user = request.env.user.has_group('event.group_event_registration_desk')
         for sponsor in sponsors:
-            if not sponsor_categories.get(sponsor.sponsor_type_id):
-                sponsor_categories[sponsor.sponsor_type_id] = request.env['event.sponsor'].sudo()
-            sponsor_categories[sponsor.sponsor_type_id] |= sponsor
-        sponsor_categories = [
-            dict({
+            if not sponsor_categories_dict.get(sponsor.sponsor_type_id):
+                sponsor_categories_dict[sponsor.sponsor_type_id] = request.env['event.sponsor'].sudo()
+            sponsor_categories_dict[sponsor.sponsor_type_id] |= sponsor
+
+        for sponsor_category, sponsors in sponsor_categories_dict.items():
+            # To display random published sponsors first and random unpublished sponsors last
+            if is_event_user:
+                published_sponsors = sponsors.filtered(lambda s: s.website_published)
+                unpublished_sponsors = sponsors - published_sponsors
+                random_sponsors = sample(published_sponsors, len(published_sponsors)) + sample(unpublished_sponsors, len(unpublished_sponsors))
+            else:
+                random_sponsors = sample(sponsors, len(sponsors))
+            sponsor_categories.append({
                 'sponsorship': sponsor_category,
-                'sponsors': sample(sponsors, len(sponsors)),
-            }) for sponsor_category, sponsors in sponsor_categories.items()]
+                'sponsors': random_sponsors,
+            })
 
         # return rendering values
         return {
@@ -104,7 +117,7 @@ class ExhibitorController(WebsiteEventController):
             'sponsor_countries': sponsor_countries,
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'is_event_user': is_event_user,
         }
 
     # ------------------------------------------------------------
@@ -139,6 +152,7 @@ class ExhibitorController(WebsiteEventController):
         current_country = sponsor.partner_id.country_id
 
         sponsors_other = sponsors_other.sorted(key=lambda sponsor: (
+            sponsor.website_published,
             sponsor.is_in_opening_hours,
             sponsor.partner_id.country_id == current_country,
             -1 * sponsor.sponsor_type_id.sequence,
@@ -161,7 +175,7 @@ class ExhibitorController(WebsiteEventController):
             'option_can_edit': request.env.user.has_group('event.group_event_user'),
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
         }
 
     # ------------------------------------------------------------
@@ -209,22 +223,20 @@ class ExhibitorController(WebsiteEventController):
 
     def _get_search_countries(self, country_search):
         # TDE FIXME: make me generic (slides, event, ...)
+        country_ids = set(request.httprequest.form.getlist('sponsor_country'))
         try:
-            country_ids = literal_eval(country_search)
+            country_ids.update(literal_eval(country_search))
         except Exception:
-            countries = request.env['res.country'].sudo()
-        else:
-            # perform a search to filter on existing / valid tags implicitly
-            countries = request.env['res.country'].sudo().search([('id', 'in', country_ids)])
-        return countries
+            pass
+        # perform a search to filter on existing / valid tags implicitly
+        return request.env['res.country'].sudo().search([('id', 'in', list(country_ids))])
 
     def _get_search_sponsorships(self, sponsorship_search):
         # TDE FIXME: make me generic (slides, event, ...)
+        sponsorship_ids = set(request.httprequest.form.getlist('sponsor_type'))
         try:
-            sponsorship_ids = literal_eval(sponsorship_search)
+            sponsorship_ids.update(literal_eval(sponsorship_search))
         except Exception:
-            sponsorships = request.env['event.sponsor.type'].sudo()
-        else:
-            # perform a search to filter on existing / valid tags implicitly
-            sponsorships = request.env['event.sponsor.type'].sudo().search([('id', 'in', sponsorship_ids)])
-        return sponsorships
+            pass
+        # perform a search to filter on existing / valid tags implicitly
+        return request.env['event.sponsor.type'].sudo().search([('id', 'in', list(sponsorship_ids))])

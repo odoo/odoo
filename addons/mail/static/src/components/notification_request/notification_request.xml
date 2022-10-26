@@ -2,30 +2,33 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationRequest" owl="1">
-        <div class="o_NotificationRequest" t-on-click="_onClick">
-            <div class="o_NotificationRequest_sidebar">
-                <div class="o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem">
-                    <img class="o_NotificationRequest_image rounded-circle" src="/mail/static/src/img/odoobot.png" alt="Avatar of OdooBot"/>
-                    <PartnerImStatusIcon
-                        class="o_NotificationRequest_partnerImStatusIcon"
-                        t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
-                        partnerLocalId="env.messaging.partnerRoot.localId"
-                    />
+        <t t-if="notificationRequestView">
+            <div class="o_NotificationListItem o_NotificationRequest d-flex flex-shrink-0 align-items-center p-1 cursor-pointer" t-attf-class="{{ className }}" t-on-click="notificationRequestView.onClick" t-ref="root">
+                <div class="o_NotificationListItem_sidebar o_NotificationRequest_sidebar m-1">
+                    <div class="o_NotificationListItem_imageContainer o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem position-relative">
+                        <img class="o_NotificationListItem_image o_NotificationRequest_image w-100 h-100 rounded-circle" t-att-src="messaging.partnerRoot.avatarUrl" alt="Avatar of OdooBot"/>
+                        <PersonaImStatusIcon
+                            t-if="notificationRequestView.personaImStatusIconView"
+                            className="'o_NotificationListItem_personaImStatusIcon o_NotificationRequest_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
+                            classNameObj="{ 'o-isDeviceSmall': messaging.device.isSmall, 'small': !messaging.device.isSmall }"
+                            record="notificationRequestView.personaImStatusIconView"
+                        />
+                    </div>
+                </div>
+                <div class="o_NotificationListItem_content o_NotificationRequest_content d-flex flex-column flex-grow-1 align-self-start m-2">
+                    <div class="o_NotificationListItem_header o_NotificationRequest_header d-flex">
+                        <span class="o_NotificationListItem_name o_NotificationRequest_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': messaging.device.isSmall }">
+                            <t t-esc="notificationRequestView.headerText"/>
+                        </span>
+                    </div>
+                    <div class="o_NotificationRequest_core">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_NotificationRequest_coreItem o_NotificationRequest_inlineText text-truncate">
+                            Enable desktop notifications to chat.
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="o_NotificationRequest_content">
-                <div class="o_NotificationRequest_header">
-                    <span class="o_NotificationRequest_name" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
-                        <t t-esc="getHeaderText()"/>
-                    </span>
-                </div>
-                <div class="o_NotificationRequest_core">
-                    <span class="o_NotificationRequest_coreItem o_NotificationRequest_inlineText">
-                        Enable desktop notifications to chat.
-                    </span>
-                </div>
-            </div>
-        </div>
+        </t>
     </t>
 
 </templates>

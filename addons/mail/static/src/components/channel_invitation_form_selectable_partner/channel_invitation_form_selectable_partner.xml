@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelInvitationFormSelectablePartner" owl="1">
+        <div class="o_ChannelInvitationFormSelectablePartner d-flex align-items-center px-3 py-1 btn-light" t-on-click="() => channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.onClickSelectablePartner(channelInvitationFormSelectablePartnerView.partner)" t-att-data-partner-id="channelInvitationFormSelectablePartnerView.partner.id" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_ChannelInvitationFormSelectablePartner_avatarContainer position-relative flex-shrink-0">
+                <img class="o_ChannelInvitationFormSelectablePartner_avatar w-100 h-100 rounded-circle" t-att-src="channelInvitationFormSelectablePartnerView.partner.avatarUrl" alt="Avatar"/>
+                <t t-if="channelInvitationFormSelectablePartnerView.personaImStatusIconView">
+                    <PersonaImStatusIcon
+                        className="'o_ChannelInvitationFormSelectablePartner_imStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"
+                        classNameObj="{
+                            'o_ChannelInvitationFormSelectablePartner_imStatusIcon-mobile': messaging.device.isSmall,
+                            'small' : !messaging.device.isSmall,
+                        }"
+                        record="channelInvitationFormSelectablePartnerView.personaImStatusIconView"
+                    />
+                </t>
+            </div>
+            <span class="o_ChannelInvitationFormSelectablePartner_name flex-grow-1 mx-2 text-truncate">
+                <t t-esc="channelInvitationFormSelectablePartnerView.partner.nameOrDisplayName"/>
+            </span>
+            <input class="o_ChannelInvitationFormSelectablePartner_checkbox form-check-input flex-shrink-0" type="checkbox" t-att-checked="channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.selectedPartners.includes(channelInvitationFormSelectablePartnerView.partner) ? 'checked' : undefined" t-on-input="ev => channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.onInputPartnerCheckbox(channelInvitationFormSelectablePartnerView.partner, ev)" t-ref="selection-status"/>
+        </div>
+    </t>
+
+</templates>

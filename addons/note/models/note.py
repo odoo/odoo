@@ -12,8 +12,8 @@ class Stage(models.Model):
     _order = 'sequence'
 
     name = fields.Char('Stage Name', translate=True, required=True)
-    sequence = fields.Integer(help="Used to order the note stages", default=1)
-    user_id = fields.Many2one('res.users', string='Owner', required=True, ondelete='cascade', default=lambda self: self.env.uid, help="Owner of the note stage")
+    sequence = fields.Integer(default=1)
+    user_id = fields.Many2one('res.users', string='Owner', required=True, ondelete='cascade', default=lambda self: self.env.uid)
     fold = fields.Boolean('Folded by Default')
 
 
@@ -35,15 +35,17 @@ class Note(models.Model):
     _name = 'note.note'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Note"
-    _order = 'sequence'
+    _order = 'sequence, id desc'
 
     def _get_default_stage_id(self):
         return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    name = fields.Text(compute='_compute_name', string='Note Summary', store=True)
+    name = fields.Text(
+        compute='_compute_name', string='Note Summary', store=True, readonly=False)
+    company_id = fields.Many2one('res.company')
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
     memo = fields.Html('Note Content')
-    sequence = fields.Integer('Sequence')
+    sequence = fields.Integer('Sequence', default=0)
     stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
         inverse='_inverse_stage_id', string='Stage', default=_get_default_stage_id)
     stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id',
@@ -52,15 +54,15 @@ class Note(models.Model):
     date_done = fields.Date('Date done')
     color = fields.Integer(string='Color Index')
     tag_ids = fields.Many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', string='Tags')
-    message_partner_ids = fields.Many2many(
-        comodel_name='res.partner', string='Followers (Partners)',
-        compute='_get_followers', search='_search_follower_partners',
-        compute_sudo=True)
+    # modifying property of ``mail.thread`` field
+    message_partner_ids = fields.Many2many(compute_sudo=True)
 
     @api.depends('memo')
     def _compute_name(self):
         """ Read the first line of the memo to determine the note name """
         for note in self:
+            if note.name:
+                continue
             text = html2plaintext(note.memo) if note.memo else ''
             note.name = text.strip().replace('*', '').split("\n")[0]
 
@@ -83,7 +85,7 @@ class Note(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if groupby and groupby[0] == "stage_id":
+        if groupby and groupby[0] == "stage_id" and (len(groupby) == 1 or lazy):
             stages = self.env['note.stage'].search([('user_id', '=', self.env.uid)])
             if stages:  # if the user has some stages
                 result = [{  # notes by stage for stages user

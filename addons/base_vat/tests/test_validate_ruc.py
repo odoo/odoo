@@ -46,11 +46,6 @@ class TestStructure(TransactionCase):
             "vat": "ATU12345675",
             "company_type": "company",
         })
-        contact = self.env["res.partner"].create({
-            "name": "Sylvestre",
-            "parent_id": company.id,
-            "company_type": "person",
-        })
 
         # reactivate it and correct the vat number
         with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):
@@ -81,9 +76,16 @@ class TestStructure(TransactionCase):
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': '42', 'country_id': self.env.ref('base.be').id})
 
-        # If no country can be guessed: VAT number cannot be validated
-        with self.assertRaises(ValidationError):
-            test_partner.write({'vat': '0477472701', 'country_id': None})
+        # If no country can be guessed: VAT number should always be considered valid
+        # (for technical reasons due to ORM and res.company making related fields towards res.partner for country_id and vat)
+        test_partner.write({'vat': '0477472701', 'country_id': None})
+
+    def test_vat_eu(self):
+        """ Foreign companies that trade with non-enterprises in the EU may have a VATIN starting with "EU" instead of
+        a country code.
+        """
+        test_partner = self.env['res.partner'].create({'name': "Turlututu", 'country_id': self.env.ref('base.fr').id})
+        test_partner.write({'vat': "EU528003646", 'country_id': None})
 
 
 @tagged('-standard', 'external')

@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
+from unittest import TestCase
 
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.exceptions import ValidationError
-from odoo.service.model import check
 from odoo.tools import mute_logger
+from odoo.service.model import retrying
 
 
 class TestWebsiteResUsers(TransactionCase):
@@ -47,14 +47,20 @@ class TestWebsiteResUsers(TransactionCase):
             user_belle.login = 'Pou'
 
     def test_same_website_message(self):
+        # Use a test cursor because retrying() does commit.
+        self.env.registry.enter_test_mode(self.env.cr)
+        self.addCleanup(self.env.registry.leave_test_mode)
+        env = self.env(context={'lang': 'en_US'}, cr=self.env.registry.cursor())
 
-        @check # Check decorator, otherwise translation is not applied
-        def check_new_test_user(dbname):
-            new_test_user(self.env(context={'land': 'en_US'}), login='Pou', website_id=self.website_1.id)
+        def create_user_pou():
+            return new_test_user(env, login='Pou', website_id=self.website_1.id)
 
-        new_test_user(self.env, login='Pou', website_id=self.website_1.id)
+        # First user creation works.
+        create_user_pou()
 
-        # Should be a ValidationError (with a nice translated error message),
-        # not an IntegrityError
-        with self.assertRaises(ValidationError), mute_logger('odoo.sql_db'):
-            check_new_test_user(self.env.registry._db.dbname)
+        # Second user creation fails with ValidationError instead of
+        # IntegrityError. Do not use self.assertRaises as it would try
+        # to create and rollback to a savepoint that is removed by the
+        # rollback in retrying().
+        with TestCase.assertRaises(self, ValidationError), mute_logger('odoo.sql_db'):
+            retrying(create_user_pou, env)

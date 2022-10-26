@@ -2,7 +2,7 @@ odoo.define('survey.result', function (require) {
 'use strict';
 
 var _t = require('web.core')._t;
-var ajax = require('web.ajax');
+const { loadJS } = require('@web/core/assets');
 var publicWidget = require('web.public.widget');
 
 // The given colors are the same as those used by D3
@@ -93,23 +93,29 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
 
         return this._super.apply(this, arguments).then(function () {
             self.graphData = self.$el.data("graphData");
+            self.rightAnswers = self.$el.data("rightAnswers") || [];
 
-            switch (self.$el.data("graphType")) {
-                case 'multi_bar':
-                    self.chartConfig = self._getMultibarChartConfig();
-                    break;
-                case 'bar':
-                    self.chartConfig = self._getBarChartConfig();
-                    break;
-                case 'pie':
-                    self.chartConfig = self._getPieChartConfig();
-                    break;
-                case 'doughnut':
-                    self.chartConfig = self._getDoughnutChartConfig();
-                    break;
+            if (self.graphData && self.graphData.length !== 0) {
+                switch (self.$el.data("graphType")) {
+                    case 'multi_bar':
+                        self.chartConfig = self._getMultibarChartConfig();
+                        break;
+                    case 'bar':
+                        self.chartConfig = self._getBarChartConfig();
+                        break;
+                    case 'pie':
+                        self.chartConfig = self._getPieChartConfig();
+                        break;
+                    case 'doughnut':
+                        self.chartConfig = self._getDoughnutChartConfig();
+                        break;
+                    case 'by_section':
+                        self.chartConfig = self._getSectionResultsChartConfig();
+                        break;
+                }
+
+                self._loadChart();
             }
-
-            self._loadChart();
         });
     },
 
@@ -126,9 +132,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'bar',
             data: {
-                labels: this.graphData[0].values.map(function (value) {
-                    return value.text;
-                }),
+                labels: this.graphData[0].values.map(this._markIfCorrect, this),
                 datasets: this.graphData.map(function (group, index) {
                     var data = group.values.map(function (value) {
                         return value.count;
@@ -173,9 +177,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'bar',
             data: {
-                labels: this.graphData[0].values.map(function (value) {
-                    return value.text;
-                }),
+                labels: this.graphData[0].values.map(this._markIfCorrect, this),
                 datasets: this.graphData.map(function (group) {
                     var data = group.values.map(function (value) {
                         return value.count;
@@ -225,9 +227,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'pie',
             data: {
-                labels: this.graphData.map(function (point) {
-                    return point.text;
-                }),
+                labels: this.graphData.map(this._markIfCorrect, this),
                 datasets: [{
                     label: '',
                     data: counts,
@@ -240,31 +240,128 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     },
 
     _getDoughnutChartConfig: function () {
-        var scoring_percentage = this.$el.data("scoring_percentage") || 0.0;
-        var counts = this.graphData.map(function (point) {
+        var totalsGraphData = this.graphData.totals;
+        var counts = totalsGraphData.map(function (point) {
             return point.count;
         });
 
         return {
             type: 'doughnut',
             data: {
-                labels: this.graphData.map(function (point) {
-                    return point.text;
-                }),
+                labels: totalsGraphData.map(this._markIfCorrect, this),
                 datasets: [{
                     label: '',
                     data: counts,
                     backgroundColor: counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
+                    borderColor: 'rgba(0, 0, 0, 0.1)'
                 }]
             },
             options: {
                 title: {
                     display: true,
-                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(scoring_percentage), '%'),
+                    text: _t("Overall Performance"),
                 },
             }
+        };
+    },
+
+    /**
+     * Displays the survey results grouped by section.
+     * For each section, user can see the percentage of answers
+     * - Correct
+     * - Partially correct (multiple choices and not all correct answers ticked)
+     * - Incorrect
+     * - Unanswered
+     *
+     * e.g:
+     *
+     * Mathematics:
+     * - Correct 75%
+     * - Incorrect 25%
+     * - Partially correct 0%
+     * - Unanswered 0%
+     *
+     * Geography:
+     * - Correct 0%
+     * - Incorrect 0%
+     * - Partially correct 50%
+     * - Unanswered 50%
+     *
+     *
+     * @private
+     */
+    _getSectionResultsChartConfig: function () {
+        var sectionGraphData = this.graphData.by_section;
+
+        var resultKeys = {
+            'correct': _t('Correct'),
+            'partial': _t('Partially'),
+            'incorrect': _t('Incorrect'),
+            'skipped': _t('Unanswered'),
+        };
+        var resultColorIndex = 0;
+        var datasets = [];
+        for (var resultKey in resultKeys) {
+            var data = [];
+            for (var section in sectionGraphData) {
+                data.push((sectionGraphData[section][resultKey]) / sectionGraphData[section]['question_count'] * 100);
+            }
+            datasets.push({
+                label: resultKeys[resultKey],
+                data: data,
+                backgroundColor: D3_COLORS[resultColorIndex % 20],
+            });
+            resultColorIndex++;
+        }
+
+        return {
+            type: 'bar',
+            data: {
+                labels: Object.keys(sectionGraphData),
+                datasets: datasets
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: _t("Performance by Section"),
+                },
+                legend: {
+                    display: true,
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            callback: this._customTick(20),
+                        },
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        },
+                        ticks: {
+                            precision: 0,
+                            callback: function (label) {
+                                return label + '%';
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            maxTicksLimit: 5,
+                            stepSize: 25
+                        },
+                    }],
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var roundedValue = Math.round(tooltipItem.yLabel * 100) / 100;
+                            return `${datasetLabel}: ${roundedValue}%`;
+                        }
+                    }
+                }
+            },
         };
     },
 
@@ -294,16 +391,31 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         var $canvas = this.$('canvas');
         var ctx = $canvas.get(0).getContext('2d');
         return new Chart(ctx, this.chartConfig);
-    }
+    },
+
+    /**
+     * Adds a unicode 'check' mark if the answer's text is among the question's right answers.
+     * @private
+     * @param  {Object} value
+     * @param  {String} value.text The original text of the answer
+     */
+    _markIfCorrect: function (value) {
+        return `${value.text}${this.rightAnswers.indexOf(value.text) >= 0 ? " \u2713": ''}`;
+    },
+
 });
 
 publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
-        'click td.survey_answer i.fa-filter': '_onSurveyAnswerFilterClick',
-        'click .clear_survey_filter': '_onClearFilterClick',
-        'click span.filter-all': '_onFilterAllClick',
-        'click span.filter-finished': '_onFilterFinishedClick',
+        'click .o_survey_results_topbar_clear_filters': '_onClearFiltersClick',
+        'click i.filter-add-answer': '_onFilterAddAnswerClick',
+        'click i.filter-remove-answer': '_onFilterRemoveAnswerClick',
+        'click a.filter-finished-or-not': '_onFilterFinishedOrNotClick',
+        'click a.filter-finished': '_onFilterFinishedClick',
+        'click a.filter-failed': '_onFilterFailedClick',
+        'click a.filter-passed': '_onFilterPassedClick',
+        'click a.filter-passed-and-failed': '_onFilterPassedAndFailedClick',
     },
 
     //--------------------------------------------------------------------------
@@ -315,7 +427,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     */
     willStart: function () {
         var url = '/web/webclient/locale/' + (document.documentElement.getAttribute('lang') || 'en_US').replace('-', '_');
-        var localeReady = ajax.loadJS(url);
+        var localeReady = loadJS(url);
         return Promise.all([this._super.apply(this, arguments), localeReady]);
     },
 
@@ -351,19 +463,30 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-    /**
+     /**
+     * Add an answer filter by updating the URL and redirecting.
      * @private
      * @param {Event} ev
      */
-    _onSurveyAnswerFilterClick: function (ev) {
-        var cell = $(ev.target);
-        var row_id = cell.data('row_id') | 0;
-        var answer_id = cell.data('answer_id');
+    _onFilterAddAnswerClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.set('filters', this._prepareAnswersFilters(params.get('filters'), 'add', ev));
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
 
-        var params = new URLSearchParams(window.location.search);
-        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id;
-        params.set('filters', filters);
-
+    /**
+     * Remove an answer filter by updating the URL and redirecting.
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterRemoveAnswerClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        let filters = this._prepareAnswersFilters(params.get('filters'), 'remove', ev);
+        if (filters) {
+            params.set('filters', filters);
+        } else {
+            params.delete('filters')
+        }
         window.location.href = window.location.pathname + '?' + params.toString();
     },
 
@@ -371,10 +494,12 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onClearFilterClick: function (ev) {
-        var params = new URLSearchParams(window.location.search);
+    _onClearFiltersClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
         params.delete('filters');
         params.delete('finished');
+        params.delete('failed');
+        params.delete('passed');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
 
@@ -382,8 +507,8 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onFilterAllClick: function (ev) {
-        var params = new URLSearchParams(window.location.search);
+    _onFilterFinishedOrNotClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
         params.delete('finished');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
@@ -393,10 +518,70 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterFinishedClick: function (ev) {
-        var params = new URLSearchParams(window.location.search);
-        params.set('finished', true);
+        let params = new URLSearchParams(window.location.search);
+        params.set('finished', 'true');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterFailedClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.set('failed', 'true');
+        params.delete('passed');
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterPassedClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.set('passed', 'true');
+        params.delete('failed');
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterPassedAndFailedClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.delete('failed');
+        params.delete('passed');
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * Returns the modified pathname string for filters after adding or removing an
+     * answer filter (from click event). Filters are formatted as `"rowX,ansX", where
+     * the row is used for matrix-type questions and set to 0 otherwise.
+     * @private
+     * @param {String} filters Existing answer filters, formatted as `rowX,ansX|rowY,ansY...`.
+     * @param {"add" | "remove"} operation Whether to add or remove the filter.
+     * @param {Event} ev Event defining the filter.
+     * @returns {String} Updated filters.
+     */
+    _prepareAnswersFilters(filters, operation, ev) {
+        const cell = $(ev.target);
+        const eventFilter = `${cell.data('rowId') || 0},${cell.data('answerId')}`;
+
+        if (operation === 'add') {
+            filters = filters ? filters + `|${eventFilter}` : eventFilter;
+        } else if (operation === 'remove') {
+            filters = filters
+                .split("|")
+                .filter(filterItem => filterItem !== eventFilter)
+                .join("|");
+        } else {
+            throw new Error('`operation` parameter for `_prepareAnswersFilters` must be either "add" or "remove".')
+        }
+        return filters;
+    }
 });
 
 return {

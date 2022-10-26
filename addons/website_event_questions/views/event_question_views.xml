@@ -6,14 +6,14 @@
         <field name="arch" type="xml">
             <form string="Question">
                 <sheet>
-                    <h1><field name="title" /></h1>
+                    <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
                     <group>
                         <group>
-                            <div colspan="2">
-                                <field name="once_per_order"/>
-                                <label for="once_per_order"/>
-                            </div>
-                            <field name="question_type" widget="radio" options="{'horizontal': true}" />
+                            <field name="is_mandatory_answer"/>
+                            <field name="question_type" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <field name="once_per_order"/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}">

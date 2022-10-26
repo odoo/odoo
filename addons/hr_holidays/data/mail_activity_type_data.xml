@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Leave specific activities -->
+        <record id="mail_act_leave_approval" model="mail.activity.type">
+            <field name="name">Time Off Approval</field>
+            <field name="icon">fa-sun-o</field>
+            <field name="res_model">hr.leave</field>
+        </record>
+        <record id="mail_act_leave_second_approval" model="mail.activity.type">
+            <field name="name">Time Off Second Approve</field>
+            <field name="icon">fa-sun-o</field>
+            <field name="res_model">hr.leave</field>
+        </record>
+
+        <!-- Leave specific activities -->
+        <record id="mail_act_leave_allocation_approval" model="mail.activity.type">
+            <field name="name">Allocation Approval</field>
+            <field name="icon">fa-sun-o</field>
+            <field name="res_model">hr.leave.allocation</field>
+        </record>
+        <record id="mail_act_leave_allocation_second_approval" model="mail.activity.type">
+            <field name="name">Allocation Second Approve</field>
+            <field name="icon">fa-sun-o</field>
+            <field name="res_model">hr.leave.allocation</field>
+        </record>
+    </data>
+</odoo>

@@ -5,25 +5,22 @@ var AbstractService = require('web.AbstractService');
 var core = require("web.core");
 
 var SnailmailAccountNotificationManager =  AbstractService.extend({
-    dependencies: ['bus_service'],
-
     /**
      * @override
      */
     start: function () {
         this._super.apply(this, arguments);
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        core.bus.on('web_client_ready', null, () => {
+            this.call('bus_service', 'addEventListener', 'notification', this._onNotification.bind(this));
+        });
     },
 
-    _onNotification: function (notifs) {
-        var self = this;
-        _.each(notifs, function (notif) {
-            var model = notif[0][1];
-            var type = notif[1].type;
-            if (model === 'res.partner' && type === 'snailmail_invalid_address') {
-                self.do_warn(notif[1].title,  notif[1].message);
+    _onNotification: function({ detail: notifications }) {
+        for (const { payload, type } of notifications) {
+            if (type === "snailmail_invalid_address") {
+                this.displayNotification({ title: payload.title, message: payload.message, type: 'danger' });
             }
-        });
+        }
     }
 
 });

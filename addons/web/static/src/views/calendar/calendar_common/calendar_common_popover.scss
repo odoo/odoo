@@ -1,0 +1,71 @@
+// Variables
+$o-cw-popup-avatar-size: 16px;
+
+.o_cw_popover {
+    min-width: 256px;
+    max-width: 328px;
+    font-size: $font-size-base;
+
+    .card-header,
+    .card-header .popover-header {
+        font-size: 1.05em;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .card-footer {
+        background: none;
+    }
+
+    .o_footer_shrink {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+    .o_cw_popover_close {
+        cursor: pointer;
+    }
+
+    .o_calendar_avatars {
+        line-height: 1;
+    }
+
+    .o_calendar_avatars img {
+        margin-right: 0.4rem;
+        width: $o-cw-popup-avatar-size;
+        height: $o-cw-popup-avatar-size;
+        border-radius: 100%;
+    }
+
+    .list-group-item {
+        padding: 0.5rem 1rem;
+        border: none;
+    }
+
+    .o_cw_popover_fields_secondary {
+        max-height: 170px; // Fallback for old browsers
+        max-height: 25vh;
+        overflow: auto;
+        padding-bottom: 1px; // prevents the scrollbar to show when not needed
+
+        &::-webkit-scrollbar {
+            background: map-get($grays, "200");
+            width: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: map-get($grays, "500");
+        }
+    }
+
+    .fc-rtl & {
+        text-align: right;
+        .o_calendar_avatars {
+            > div {
+                justify-content: flex-end;
+            }
+            img {
+                order: 2;
+                margin: 0 0 0 0.4rem;
+            }
+        }
+    }
+}

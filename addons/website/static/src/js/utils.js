@@ -1,7 +1,6 @@
 odoo.define('website.utils', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 
 const { qweb, _t } = core;
@@ -10,19 +9,25 @@ const { qweb, _t } = core;
  * Allows to load anchors from a page.
  *
  * @param {string} url
+ * @param {Node} body the editable for which to recover anchors
  * @returns {Deferred<string[]>}
  */
-function loadAnchors(url) {
+function loadAnchors(url, body) {
     return new Promise(function (resolve, reject) {
-        if (url !== window.location.pathname && url[0] !== '#') {
+        if (url === window.location.pathname || url[0] === '#') {
+            resolve(body ? body : document.body.outerHTML);
+        } else if (url.length && !url.startsWith("http")) {
             $.get(window.location.origin + url).then(resolve, reject);
-        } else {
-            resolve(document.body.outerHTML);
+        } else { // avoid useless query
+            resolve();
         }
     }).then(function (response) {
         return _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });
+    }).catch(error => {
+        console.debug(error);
+        return [];
     });
 }
 
@@ -51,7 +56,7 @@ function autocompleteWithPages(self, $input, options) {
             });
         },
         _renderSeparator: function (ul, item) {
-            return $("<li class='ui-autocomplete-category font-weight-bold text-capitalize p-2'>")
+            return $("<li class='ui-autocomplete-category fw-bold text-capitalize p-2'>")
                    .append(`<div>${item.separator}</div>`)
                    .appendTo(ul);
         },
@@ -65,9 +70,12 @@ function autocompleteWithPages(self, $input, options) {
     $input.urlcomplete({
         source: function (request, response) {
             if (request.term[0] === '#') {
-                loadAnchors(request.term).then(function (anchors) {
+                loadAnchors(request.term, options && options.body).then(function (anchors) {
                     response(anchors);
                 });
+            } else if (request.term.startsWith('http') || request.term.length === 0) {
+                // avoid useless call to /website/get_suggested_links
+                response();
             } else {
                 return self._rpc({
                     route: '/website/get_suggested_links',
@@ -90,6 +98,8 @@ function autocompleteWithPages(self, $input, options) {
             }
         },
         select: function (ev, ui) {
+            // choose url in dropdown with arrow change ev.target.value without trigger_up
+            // so cannot check here if value has been updated
             ev.target.value = ui.item.value;
             self.trigger_up('website_url_chosen');
             ev.preventDefault();
@@ -154,10 +164,8 @@ function prompt(options, _qweb) {
             text: options
         };
     }
-    var xmlDef;
     if (_.isUndefined(_qweb)) {
         _qweb = 'website.prompt';
-        xmlDef = ajax.loadXML('/website/static/src/xml/website.xml', core.qweb);
     }
     options = _.extend({
         window_title: '',
@@ -174,50 +182,48 @@ function prompt(options, _qweb) {
     options.field_name = options.field_name || options[type];
 
     var def = new Promise(function (resolve, reject) {
-        Promise.resolve(xmlDef).then(function () {
-            var dialog = $(qweb.render(_qweb, options)).appendTo('body');
-            options.$dialog = dialog;
-            var field = dialog.find(options.field_type).first();
-            field.val(options['default']); // dict notation for IE<9
-            field.fillWith = function (data) {
-                if (field.is('select')) {
-                    var select = field[0];
-                    data.forEach(function (item) {
-                        select.options[select.options.length] = new window.Option(item[1], item[0]);
-                    });
-                } else {
-                    field.val(data);
-                }
-            };
-            var init = options.init(field, dialog);
-            Promise.resolve(init).then(function (fill) {
-                if (fill) {
-                    field.fillWith(fill);
-                }
-                dialog.modal('show');
-                field.focus();
-                dialog.on('click', '.btn-primary', function () {
-                    var backdrop = $('.modal-backdrop');
-                    resolve({ val: field.val(), field: field, dialog: dialog });
-                    dialog.modal('hide').remove();
-                        backdrop.remove();
+        var dialog = $(qweb.render(_qweb, options)).appendTo('body');
+        options.$dialog = dialog;
+        var field = dialog.find(options.field_type).first();
+        field.val(options['default']); // dict notation for IE<9
+        field.fillWith = function (data) {
+            if (field.is('select')) {
+                var select = field[0];
+                data.forEach(function (item) {
+                    select.options[select.options.length] = new window.Option(item[1], item[0]);
                 });
-            });
-            dialog.on('hidden.bs.modal', function () {
-                    var backdrop = $('.modal-backdrop');
-                reject();
-                dialog.remove();
+            } else {
+                field.val(data);
+            }
+        };
+        var init = options.init(field, dialog);
+        Promise.resolve(init).then(function (fill) {
+            if (fill) {
+                field.fillWith(fill);
+            }
+            dialog.modal('show');
+            field.focus();
+            dialog.on('click', '.btn-primary', function () {
+                var backdrop = $('.modal-backdrop');
+                resolve({ val: field.val(), field: field, dialog: dialog });
+                dialog.modal('hide').remove();
                     backdrop.remove();
             });
-            if (field.is('input[type="text"], select')) {
-                field.keypress(function (e) {
-                    if (e.which === 13) {
-                        e.preventDefault();
-                        dialog.find('.btn-primary').trigger('click');
-                    }
-                });
-            }
         });
+        dialog.on('hidden.bs.modal', function () {
+                var backdrop = $('.modal-backdrop');
+            reject();
+            dialog.remove();
+                backdrop.remove();
+        });
+        if (field.is('input[type="text"], select')) {
+            field.keypress(function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    dialog.find('.btn-primary').trigger('click');
+                }
+            });
+        }
     });
 
     return def;
@@ -245,6 +251,10 @@ function sendRequest(route, params) {
     let form = document.createElement('form');
     form.setAttribute('action', route);
     form.setAttribute('method', params.method || 'POST');
+    const isInIframe = window.frameElement && window.frameElement.classList.contains('o_iframe');
+    if (isInIframe) {
+        form.setAttribute('target', '_top');
+    }
 
     if (core.csrf_token) {
         _addInput(form, 'csrf_token', core.csrf_token);
@@ -265,6 +275,113 @@ function sendRequest(route, params) {
     form.submit();
 }
 
+/**
+ * Converts a base64 SVG into a base64 PNG.
+ *
+ * @param {string|HTMLImageElement} src - an URL to a SVG or a *loaded* image
+ *      with such an URL. This allows the call to potentially be a bit more
+ *      efficient in that second case.
+ * @returns {Promise<string>} a base64 PNG (as result of a Promise)
+ */
+async function svgToPNG(src) {
+    function checkImg(imgEl) {
+        // Firefox does not support drawing SVG to canvas unless it has width
+        // and height attributes set on the root <svg>.
+        return (imgEl.naturalHeight !== 0);
+    }
+    function toPNGViaCanvas(imgEl) {
+        const canvas = document.createElement('canvas');
+        canvas.width = imgEl.width;
+        canvas.height = imgEl.height;
+        canvas.getContext('2d').drawImage(imgEl, 0, 0);
+        return canvas.toDataURL('image/png');
+    }
+
+    // In case we receive a loaded image and that this image is not problematic,
+    // we can convert it to PNG directly.
+    if (src instanceof HTMLImageElement) {
+        const loadedImgEl = src;
+        if (checkImg(loadedImgEl)) {
+            return toPNGViaCanvas(loadedImgEl);
+        }
+        src = loadedImgEl.src;
+    }
+
+    // At this point, we either did not receive a loaded image or the received
+    // loaded image is problematic => we have to do some asynchronous code.
+    return new Promise(resolve => {
+        const imgEl = new Image();
+        imgEl.onload = () => {
+            if (checkImg(imgEl)) {
+                resolve(imgEl);
+                return;
+            }
+
+            // Set arbitrary height on image and attach it to the DOM to force
+            // width computation.
+            imgEl.height = 1000;
+            imgEl.style.opacity = 0;
+            document.body.appendChild(imgEl);
+
+            const request = new XMLHttpRequest();
+            request.open('GET', imgEl.src, true);
+            request.onload = () => {
+                // Convert the data URI to a SVG element
+                const parser = new DOMParser();
+                const result = parser.parseFromString(request.responseText, 'text/xml');
+                const svgEl = result.getElementsByTagName("svg")[0];
+
+                // Add the attributes Firefox needs and remove the image from
+                // the DOM.
+                svgEl.setAttribute('width', imgEl.width);
+                svgEl.setAttribute('height', imgEl.height);
+                imgEl.remove();
+
+                // Convert the SVG element to a data URI
+                const svg64 = btoa(new XMLSerializer().serializeToString(svgEl));
+                const finalImg = new Image();
+                finalImg.onload = () => {
+                    resolve(finalImg);
+                };
+                finalImg.src = `data:image/svg+xml;base64,${svg64}`;
+            };
+            request.send();
+        };
+        imgEl.src = src;
+    }).then(loadedImgEl => toPNGViaCanvas(loadedImgEl));
+}
+
+/**
+ * Bootstraps an "empty" Google Maps iframe.
+ *
+ * @returns {HTMLIframeElement}
+ */
+function generateGMapIframe() {
+    const iframeEl = document.createElement('iframe');
+    iframeEl.classList.add('s_map_embedded', 'o_not_editable');
+    iframeEl.setAttribute('width', '100%');
+    iframeEl.setAttribute('height', '100%');
+    iframeEl.setAttribute('frameborder', '0');
+    iframeEl.setAttribute('scrolling', 'no');
+    iframeEl.setAttribute('marginheight', '0');
+    iframeEl.setAttribute('marginwidth', '0');
+    iframeEl.setAttribute('src', 'about:blank');
+    return iframeEl;
+}
+
+/**
+ * Generates a Google Maps URL based on the given parameter.
+ *
+ * @param {DOMStringMap} dataset
+ * @returns {string} a Google Maps URL
+ */
+function generateGMapLink(dataset) {
+    return 'https://maps.google.com/maps?q=' + encodeURIComponent(dataset.mapAddress)
+        + '&t=' + encodeURIComponent(dataset.mapType)
+        + '&z=' + encodeURIComponent(dataset.mapZoom)
+        + '&ie=UTF8&iwloc=&output=embed';
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -272,5 +389,8 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
+    svgToPNG: svgToPNG,
+    generateGMapIframe: generateGMapIframe,
+    generateGMapLink: generateGMapLink,
 };
 });

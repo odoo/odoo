@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"PO-Revision-Date: 2022-10-04 09:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,9 +18,8 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    Dear ${object.name},<br/><br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
 "                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
@@ -68,22 +67,10 @@ msgid "Create Uid"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__display_name
-#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
-#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
-msgstr ""
-
-#. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
-msgid "Employee Presence"
 msgstr ""
 
 #. module: hr_presence
@@ -107,6 +94,18 @@ msgid ""
 msgstr ""
 
 #. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+#: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
+#: model:ir.cron,name:hr_presence.ir_cron_presence_control
+msgid "HR Presence: cron"
+msgstr ""
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "HR: Employee Absence email"
+msgstr ""
+
+#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
 msgstr ""
@@ -116,13 +115,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr ""
-
-#. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__id
-#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
-#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
-msgid "ID"
 msgstr ""
 
 #. module: hr_presence
@@ -138,15 +130,8 @@ msgid "Ip Connected"
 msgstr ""
 
 #. module: hr_presence
-#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base____last_update
-#: model:ir.model.fields,field_description:hr_presence.field_res_company____last_update
-#: model:ir.model.fields,field_description:hr_presence.field_res_users_log____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Mail"
+msgid "Log"
 msgstr ""
 
 #. module: hr_presence
@@ -157,6 +142,7 @@ msgid "Manually Set Present"
 msgstr ""
 
 #. module: hr_presence
+#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
@@ -172,6 +158,18 @@ msgstr ""
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "SMS"
+msgstr ""
+
+#. module: hr_presence
+#: model:mail.template,description:hr_presence.mail_template_presence
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as absent"
 msgstr ""
 
 #. module: hr_presence
@@ -219,4 +217,9 @@ msgstr ""
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
+msgstr ""
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+msgid "websocket message handling"
 msgstr ""

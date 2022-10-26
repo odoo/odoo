@@ -4,7 +4,7 @@
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
                 <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
@@ -16,9 +16,9 @@
                 <filter string="From Website" name="from_website" domain="[('website_id', '!=', False)]"/>
                 <separator/>
                 <!-- Dashboard filter - used by context -->
-                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%Y-%m-%d'))]"/>
             </xpath>
         </field>
     </record>
@@ -27,7 +27,7 @@
         <field name="name">sale.order.ecommerce.search.unpaid.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
@@ -54,7 +54,7 @@
                 <attribute name="attrs">{'invisible': ['|','&amp;',('is_abandoned_cart', '=', True), ('cart_recovery_email_sent', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="after">
-                <button name="action_recovery_email_send"
+                <button name="action_recovery_email_send" data-hotkey="l"
                     string="Send a Recovery Email"
                     type="object"
                     class="btn-primary"
@@ -109,9 +109,9 @@
                     <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
                 </group>
                 <!-- Dashboard filter - used by context -->
-                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%Y-%m-%d'))]"/>
             </search>
         </field>
     </record>
@@ -183,22 +183,17 @@
     </record>
 
     <!-- Main website sale menu items -->
+    <menuitem id="menu_ecommerce" name="eCommerce"
+        parent="website.menu_website_configuration" sequence="20"
+        groups="sales_team.group_sale_salesman"/>
     <menuitem id="menu_orders" name="Orders"
-        parent="website.menu_website_configuration" sequence="2"
+        parent="menu_ecommerce" sequence="2"
         groups="sales_team.group_sale_salesman"/>
     <menuitem id="menu_catalog" name="Products"
-        parent="website.menu_website_configuration" sequence="3"
+        parent="menu_ecommerce" sequence="3"
         groups="sales_team.group_sale_salesman"/>
-    <menuitem id="menu_reporting" name="Reporting"
-        parent="website.menu_website_configuration" sequence="99"
-        groups="sales_team.group_sale_manager"/>
-    <menuitem id="website.menu_website_global_configuration" name="Configuration"
-        parent="website.menu_website_configuration" sequence="100"
-        groups="base.group_system,sales_team.group_sale_manager"/>
 
     <menuitem id="menu_ecommerce_settings" name="eCommerce" sequence="50"
-        parent="website.menu_website_global_configuration"/>
-    <menuitem id="menu_product_settings" name="Products" sequence="80"
         parent="website.menu_website_global_configuration"/>
 
     <!-- Orders sub-menus -->
@@ -220,22 +215,32 @@
     <menuitem id="menu_catalog_products" name="Products"
         action="product_template_action_website"
         parent="menu_catalog" sequence="1"/>
-    <menuitem id="product_catalog_variants" name="Product Variants"
-        action="product.product_normal_action"
-        parent="menu_catalog" groups="product.group_product_variant" sequence="2"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists"
         action="product.product_pricelist_action2"
-        parent="menu_catalog" groups="product.group_product_pricelist" sequence="4"/>
+        parent="menu_catalog" groups="product.group_product_pricelist" sequence="3"/>
+    <menuitem id="menu_catalog_categories"
+        action="product_public_category_action"
+        parent="menu_catalog" sequence="4"/>
+    <menuitem id="menu_product_attribute_action"
+        action="product.attribute_action"
+        parent="menu_catalog"  groups="product.group_product_variant" sequence="5"/>
+    <menuitem id="product_catalog_product_tags"
+              name="Product Tags"
+              action="product_public_tags_action"
+              parent="menu_catalog"
+              groups="base.group_no_one"
+    />
 
     <!-- Reporting sub-menus -->
     <menuitem id="menu_report_sales" name="Online Sales"
         action="sale_report_action_dashboard"
-        parent="menu_reporting" sequence="1"/>
+        parent="website.menu_reporting" sequence="30"
+        groups="sales_team.group_sale_manager"/>
 
     <!-- Configuration sub-menus -->
-    <menuitem id="menu_ecommerce_payment_acquirers"
-        action="payment.action_payment_acquirer"
-        parent="menu_ecommerce_settings" name="Payment Acquirers"/>
+    <menuitem id="menu_ecommerce_payment_providers"
+        action="payment.action_payment_provider"
+        parent="menu_ecommerce_settings" name="Payment Providers"/>
     <menuitem id="menu_ecommerce_payment_tokens"
         action="payment.action_payment_token"
         groups="base.group_no_one"
@@ -248,12 +253,6 @@
         action="payment.action_payment_transaction"
         groups="base.group_no_one"
         parent="menu_ecommerce_settings"/>
-    <menuitem id="menu_catalog_categories"
-        action="product_public_category_action"
-        parent="menu_product_settings" sequence="1"/>
-    <menuitem id="menu_product_attribute_action"
-        action="product.attribute_action"
-        parent="menu_product_settings"  groups="product.group_product_variant" sequence="2"/>
 
     <record id="sale_order_view_form" model="ir.ui.view">
         <field name="name">sale.order.form</field>

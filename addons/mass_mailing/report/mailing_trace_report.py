@@ -19,12 +19,15 @@ class MailingTraceReport(models.Model):
         string='Status', readonly=True)
     email_from = fields.Char('From', readonly=True)
     # traces
+    scheduled = fields.Integer(readonly=True)
     sent = fields.Integer(readonly=True)
     delivered = fields.Integer(readonly=True)
+    error = fields.Integer(readonly=True)
     opened = fields.Integer(readonly=True)
     replied = fields.Integer(readonly=True)
-    clicked = fields.Integer(readonly=True)
     bounced = fields.Integer(readonly=True)
+    canceled = fields.Integer(readonly=True)
+    clicked = fields.Integer(readonly=True)
 
     def init(self):
         """Mass Mail Statistical Report: based on mailing.trace that models the various
@@ -52,23 +55,26 @@ class MailingTraceReport(models.Model):
             'utm_source.name as name',
             'mailing.mailing_type',
             'utm_campaign.name as campaign',
-            'trace.scheduled as scheduled_date',
+            'trace.create_date as scheduled_date',
             'mailing.state',
             'mailing.email_from',
-            'count(trace.sent) as sent',
-            '(count(trace.sent) - count(trace.bounced)) as delivered',
-            'count(trace.opened) as opened',
-            'count(trace.replied) as replied',
-            'count(trace.clicked) as clicked',
-            'count(trace.bounced) as bounced'
+            "COUNT(trace.id) as scheduled",
+            'COUNT(trace.sent_datetime) as sent',
+            "(COUNT(trace.id) - COUNT(trace.trace_status) FILTER (WHERE trace.trace_status IN ('error', 'bounce', 'cancel'))) as delivered",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'error') as error",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'bounce') as bounced",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'cancel') as canceled",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'open') as opened",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'reply') as replied",
+            "COUNT(trace.links_click_datetime) as clicked",
         ]
 
     def _report_get_request_from_items(self):
         return [
             'mailing_trace as trace',
-            'left join mailing_mailing as mailing ON (trace.mass_mailing_id=mailing.id)',
-            'left join utm_campaign as utm_campaign ON (mailing.campaign_id = utm_campaign.id)',
-            'left join utm_source as utm_source ON (mailing.source_id = utm_source.id)'
+            'LEFT JOIN mailing_mailing as mailing ON (trace.mass_mailing_id=mailing.id)',
+            'LEFT JOIN utm_campaign as utm_campaign ON (mailing.campaign_id = utm_campaign.id)',
+            'LEFT JOIN utm_source as utm_source ON (mailing.source_id = utm_source.id)'
         ]
 
     def _report_get_request_where_items(self):
@@ -76,7 +82,7 @@ class MailingTraceReport(models.Model):
 
     def _report_get_request_group_by_items(self):
         return [
-            'trace.scheduled',
+            'trace.create_date',
             'utm_source.name',
             'utm_campaign.name',
             'mailing.mailing_type',

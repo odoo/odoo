@@ -1,6 +1,7 @@
 odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
+const {_t} = require('web.core');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
 
@@ -15,7 +16,8 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         'click .new_opp_confirm': '_onNewOppConfirm',
         'click .edit_opp_confirm': '_onEditOppConfirm',
         'change .edit_opp_form .next_activity': '_onChangeNextActivity',
-        'click div.input-group span.fa-calendar': '_onCalendarIconClick',
+        'change #new-opp-dialog .contact_name': '_onChangeContactName',
+        'click div.input-group.date[data-target-input="nearest"]': '_onCalendarInputGroupClick',
     },
 
     //--------------------------------------------------------------------------
@@ -93,7 +95,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _editContact: function () {
         return this._rpc({
             model: 'crm.lead',
-            method: 'write',
+            method: 'update_contact_details_from_portal',
             args: [[parseInt($('.edit_contact_form .opportunity_id').val())], {
                 partner_name: $('.edit_contact_form .partner_name').val(),
                 phone: $('.edit_contact_form .phone').val(),
@@ -227,8 +229,17 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _onEditOppConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if ($(".edit_opp_form")[0].checkValidity()) {
-            this._buttonExec($(ev.currentTarget), this._editOpportunity);
+        this._buttonExec($(ev.currentTarget), this._editOpportunity);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeContactName: function (ev) {
+        const contactName = ev.currentTarget.value.trim();
+        let titleEl = this.el.querySelector('.title');
+        if (!titleEl.value.trim()) {
+            titleEl.value = contactName ? _.str.sprintf(_t("%s's Opportunity"), contactName) : '';
         }
     },
     /**
@@ -250,8 +261,9 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onCalendarIconClick: function (ev) {
-        $(ev.currentTarget).closest('div.date').datetimepicker({
+    _onCalendarInputGroupClick: function (ev) {
+        const $calendarInputGroup = $(ev.currentTarget);
+        const calendarOptions = {
             format : time.getLangDateFormat(),
             icons: {
                 time: 'fa fa-clock-o',
@@ -259,13 +271,14 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down',
             },
-        });
+        };
+        $calendarInputGroup.datetimepicker(calendarOptions);
     },
 
     _parse_date: function (value) {
         console.log(value);
-        var date = moment(value, "YYYY-MM-DD", true);
-        if (date.isValid()) {
+        var date = moment(value, time.getLangDateFormat(), true);
+        if (date.isValid() && date.year() >= 1900) {
             return time.date_to_str(date.toDate());
         }
         else {

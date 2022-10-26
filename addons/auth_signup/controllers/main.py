@@ -2,15 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import werkzeug
+from werkzeug.urls import url_encode
 
-from odoo import http, _
+from odoo import http, tools, _
 from odoo.addons.auth_signup.models.res_users import SignupError
-from odoo.addons.web.controllers.main import ensure_db, Home
+from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PARAMS, LOGIN_SUCCESSFUL_PARAMS
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+
+LOGIN_SUCCESSFUL_PARAMS.add('account_created')
 
 
 class AuthSignupHome(Home):
@@ -18,11 +21,15 @@ class AuthSignupHome(Home):
     @http.route()
     def web_login(self, *args, **kw):
         ensure_db()
-        response = super(AuthSignupHome, self).web_login(*args, **kw)
+        response = super().web_login(*args, **kw)
         response.qcontext.update(self.get_auth_signup_config())
-        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
-            # Redirect if already logged in and redirect param is present
-            return http.redirect_with_hash(request.params.get('redirect'))
+        if request.session.uid:
+            if request.httprequest.method == 'GET' and request.params.get('redirect'):
+                # Redirect if already logged in and redirect param is present
+                return request.redirect(request.params.get('redirect'))
+            # Add message for non-internal user account without redirect if account was just created
+            if response.location == '/web/login_successful' and kw.get('confirm_password'):
+                return request.redirect_query('/web/login_successful', query={'account_created': True})
         return response
 
     @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False)
@@ -54,8 +61,14 @@ class AuthSignupHome(Home):
                     _logger.error("%s", e)
                     qcontext['error'] = _("Could not create a new account.")
 
+        elif 'signup_email' in qcontext:
+            user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
+            if user:
+                return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
+
         response = request.render('auth_signup.signup', qcontext)
-        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
     @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False)
@@ -77,7 +90,7 @@ class AuthSignupHome(Home):
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
-                    qcontext['message'] = _("An email has been sent with credentials to reset your password")
+                    qcontext['message'] = _("Password reset instructions sent to your email")
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except SignupError:
@@ -86,8 +99,14 @@ class AuthSignupHome(Home):
             except Exception as e:
                 qcontext['error'] = str(e)
 
+        elif 'signup_email' in qcontext:
+            user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
+            if user:
+                return request.redirect('/web/login?%s' % url_encode({'login': user.login, 'redirect': '/web'}))
+
         response = request.render('auth_signup.reset_password', qcontext)
-        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
     def get_auth_signup_config(self):
@@ -95,13 +114,14 @@ class AuthSignupHome(Home):
 
         get_param = request.env['ir.config_parameter'].sudo().get_param
         return {
+            'disable_database_manager': not tools.config['list_db'],
             'signup_enabled': request.env['res.users']._get_signup_invitation_scope() == 'b2c',
             'reset_password_enabled': get_param('auth_signup.reset_password') == 'True',
         }
 
     def get_auth_signup_qcontext(self):
         """ Shared helper returning the rendering context for signup and reset password """
-        qcontext = request.params.copy()
+        qcontext = {k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         qcontext.update(self.get_auth_signup_config())
         if not qcontext.get('token') and request.session.get('auth_signup_token'):
             qcontext['token'] = request.session.get('auth_signup_token')
@@ -116,8 +136,7 @@ class AuthSignupHome(Home):
                 qcontext['invalid_token'] = True
         return qcontext
 
-    def do_signup(self, qcontext):
-        """ Shared helper that creates a res.partner out of a token """
+    def _prepare_signup_values(self, qcontext):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
         if not values:
             raise UserError(_("The form was not properly filled in."))
@@ -127,14 +146,19 @@ class AuthSignupHome(Home):
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
             values['lang'] = lang
+        return values
+
+    def do_signup(self, qcontext):
+        """ Shared helper that creates a res.partner out of a token """
+        values = self._prepare_signup_values(qcontext)
         self._signup_with_values(qcontext.get('token'), values)
         request.env.cr.commit()
 
     def _signup_with_values(self, token, values):
-        db, login, password = request.env['res.users'].sudo().signup(values, token)
+        login, password = request.env['res.users'].sudo().signup(values, token)
         request.env.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
-        uid = request.session.authenticate(db, login, password)
-        if not uid:
+        pre_uid = request.session.authenticate(request.db, login, password)
+        if not pre_uid:
             raise SignupError(_('Authentication Failed.'))
 
 class AuthBaseSetup(BaseSetup):

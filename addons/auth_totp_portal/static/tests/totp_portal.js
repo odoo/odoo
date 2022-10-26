@@ -12,7 +12,7 @@ tour.register('totportal_tour_setup', {
     trigger: 'button#auth_totp_portal_enable',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("confirm your password")',
+    trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -23,18 +23,18 @@ tour.register('totportal_tour_setup', {
     trigger: "button:contains(Confirm Password)",
 }, {
     content: "Check the wizard has opened",
-    trigger: 'div:contains("Scan the image below")',
+    trigger: 'li:contains("scan the barcode below")',
     run: () => {}
 }, {
     content: "Get secret from collapsed div",
-    trigger: 'a:contains("show the code")',
+    trigger: 'a:contains("Cannot scan it?")',
     run: async function(helpers) {
-        const secret = this.$anchor.closest('div').find('code').text();
+        const secret = this.$anchor.closest('div').find('span[name="secret"]').text();
         const token = await ajax.jsonRpc('/totphook', 'call', {
             secret
         });
         helpers._text(helpers._get_action_values('input[name=code]'), token);
-        helpers._click(helpers._get_action_values('button.btn-primary:contains(Enable)'));
+        helpers._click(helpers._get_action_values('button.btn-primary:contains(Activate)'));
     }
 }, {
     content: "Check that the button has changed",
@@ -70,7 +70,7 @@ tour.register('totportal_login_enabled', {
         helpers._text(helpers._get_action_values(), token);
         // FIXME: is there a way to put the button as its own step trigger without
         //        the tour straight blowing through and not waiting for this?
-        helpers._click(helpers._get_action_values('button:contains("Verify")'));
+        helpers._click(helpers._get_action_values('button:contains("Log in")'));
     }
 }, {
     content: "check we're logged in",
@@ -84,7 +84,7 @@ tour.register('totportal_login_enabled', {
     trigger: 'button#auth_totp_portal_disable',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("confirm your password")',
+    trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",

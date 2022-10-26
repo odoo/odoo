@@ -353,7 +353,7 @@ Andrew</p>]]></field>
             <field name="street">Kensington Road 189</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=4)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
@@ -379,7 +379,7 @@ Andrew</p>]]></field>
             <field name="phone">+32 10 588 558</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="priority">2</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
@@ -402,7 +402,7 @@ Andrew</p>]]></field>
             <field name="phone">+32 10 588 558</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
@@ -495,7 +495,7 @@ Andrew</p>]]></field>
             <field name="street">Union Road</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor5')])]"/>
             <field name="priority">2</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
@@ -520,7 +520,7 @@ Andrew</p>]]></field>
             <field name="street">Rue des Palais 51, bte 33</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3'),ref('sales_team.categ_oppor4')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
@@ -545,7 +545,7 @@ Andrew</p>]]></field>
             <field eval="35000" name="expected_revenue"/>
             <field eval="25.0" name="probability"/>
             <field name="contact_name">Leland Martinez</field>
-            <field name="email_from">info@deltapc.com</field>
+            <field name="email_from">info@deltapc.example.com</field>
             <field name="partner_name">Delta PC</field>
             <field name="city">London</field>
             <field name="street">3661 Station Street</field>
@@ -553,7 +553,7 @@ Andrew</p>]]></field>
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'),ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
@@ -628,6 +628,7 @@ Andrew</p>]]></field>
             <field name="phone">+1 312 349 2324</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'),ref('sales_team.categ_oppor8')])]"/>
             <field name="priority">2</field>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -684,6 +685,7 @@ Andrew</p>]]></field>
             <field name="partner_id" ref="base.res_partner_18"/>
             <field name="priority">0</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -702,6 +704,7 @@ Andrew</p>]]></field>
             <field name="country_id" ref="base.pe"/>
             <field name="city">Lima</field>
             <field name="priority">0</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor7')])]"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -750,7 +753,6 @@ Andrew</p>]]></field>
             <field name="zip">1300</field>
             <field name="priority">2</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -774,7 +776,7 @@ Andrew</p>]]></field>
             <field name="street">Rue de Namur 69</field>
             <field name="priority">2</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -865,7 +867,7 @@ Andrew</p>]]></field>
             <field name="street">1920 Del Dew Drive</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
@@ -887,7 +889,7 @@ Andrew</p>]]></field>
             <field name="street">1920 Del Dew Drive</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead2"/>

@@ -4,24 +4,8 @@
 import functools
 
 from odoo.tests.common import BaseCase
-from odoo.tools import frozendict
-from odoo.tools.func import compose
+from odoo.tools import frozendict, lazy
 from odoo import Command
-
-
-class TestCompose(BaseCase):
-    def test_basic(self):
-        str_add = compose(str, lambda a, b: a + b)
-        self.assertEqual(str_add(1, 2), "3")
-
-    def test_decorator(self):
-        """ ensure compose() can be partially applied as a decorator
-        """
-        @functools.partial(compose, str)
-        def mul(a, b):
-            return a * b
-
-        self.assertEqual(mul(5, 42), u"210")
 
 
 class TestFrozendict(BaseCase):
@@ -64,3 +48,29 @@ class TestFrozendict(BaseCase):
             'user_id': (42, 'Joe'),
             'line_ids': [Command.create({'values': [42]})],
         }))
+
+
+class TestLazy(BaseCase):
+    def test_lazy_compare(self):
+        """ Ensure that a lazy can be compared with an other lazy. """
+        self.assertEqual(lazy(lambda: 1) <= lazy(lambda: 42), True)
+        self.assertEqual(lazy(lambda: 42) <= lazy(lambda: 1), False)
+        self.assertEqual(lazy(lambda: 42) == lazy(lambda: 42), True)
+        self.assertEqual(lazy(lambda: 1) == lazy(lambda: 42), False)
+        self.assertEqual(lazy(lambda: 42) != lazy(lambda: 42), False)
+        self.assertEqual(lazy(lambda: 1) != lazy(lambda: 42), True)
+
+        # Object like recordset implement __eq__
+        class Obj:
+            def __init__(self, num):
+                self.num = num
+
+            def __eq__(self, other):
+                if isinstance(other, Obj):
+                    return self.num == other.num
+                raise ValueError('Object does not have the correct type')
+
+        self.assertEqual(lazy(lambda: Obj(42)) == lazy(lambda: Obj(42)), True)
+        self.assertEqual(lazy(lambda: Obj(1)) == lazy(lambda: Obj(42)), False)
+        self.assertEqual(lazy(lambda: Obj(42)) != lazy(lambda: Obj(42)), False)
+        self.assertEqual(lazy(lambda: Obj(1)) != lazy(lambda: Obj(42)), True)

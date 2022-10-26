@@ -10,7 +10,9 @@
             <div class="text-center">
                 <h2>Sales Details</h2>
 
-                <strong><t t-esc="date_start" t-options="{'widget': 'datetime'}"/> - <t t-esc="date_stop" t-options="{'widget': 'datetime'}"/></strong>
+                <t t-if="date_start and date_stop">
+                    <strong><t t-esc="date_start" t-options="{'widget': 'datetime'}"/> - <t t-esc="date_stop" t-options="{'widget': 'datetime'}"/></strong>
+                </t>
             </div>
 
             <!-- Orderlines -->

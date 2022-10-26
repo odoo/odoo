@@ -2,14 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DialogManager" owl="1">
-        <div class="o_DialogManager">
-            <t t-if="env.messaging">
-                <t t-foreach="env.messaging.dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
-                    <Dialog
-                        class="o_DialogManager_dialog"
-                        dialogLocalId="dialog.localId"
-                    />
-                </t>
+        <div class="o_DialogManager" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
+                <Dialog
+                    className="'o_DialogManager_dialog'"
+                    record="dialog"
+                />
             </t>
         </div>
     </t>

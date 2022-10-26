@@ -8,7 +8,8 @@ import psycopg2
 import pytz
 
 from odoo import api, Command, fields, models, _
-from odoo.tools import ustr
+from odoo.tools import ustr, OrderedSet
+from odoo.tools.translate import code_translations, _lt
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
@@ -16,6 +17,13 @@ def only_ref_fields(record):
 def exclude_ref_fields(record):
     return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
+# these lazy translations promise translations for ['yes', 'no', 'true', 'false']
+BOOLEAN_TRANSLATIONS = (
+    _lt('yes'),
+    _lt('no'),
+    _lt('true'),
+    _lt('false')
+)
 
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
@@ -23,7 +31,6 @@ class ImportWarning(Warning):
 
 class ConversionNotFound(ValueError):
     pass
-
 
 class IrFieldsConverter(models.AbstractModel):
     _name = 'ir.fields.converter'
@@ -85,6 +92,7 @@ class IrFieldsConverter(models.AbstractModel):
         records matching what :meth:`odoo.osv.orm.Model.write` expects.
 
         :param model: :class:`odoo.osv.orm.Model` for the conversion base
+        :param fromtype:
         :returns: a converter callable
         :rtype: (record: dict, logger: (field, error) -> None) -> dict
         """
@@ -113,6 +121,8 @@ class IrFieldsConverter(models.AbstractModel):
                             # uniform handling
                             w = ImportWarning(w)
                         log(field, w)
+                except (UnicodeEncodeError, UnicodeDecodeError) as e:
+                    log(field, ValueError(str(e)))
                 except ValueError as e:
                     if import_file_context:
                         # if the error is linked to a matching error, the error is a tuple
@@ -166,11 +176,11 @@ class IrFieldsConverter(models.AbstractModel):
         it returns. The handling of a warning at the upper levels is the same
         as ``ValueError`` above.
 
+        :param model:
         :param field: field object to generate a value for
         :type field: :class:`odoo.fields.Field`
         :param fromtype: type to convert to something fitting for ``field``
         :type fromtype: type | str
-        :param context: odoo request context
         :return: a function (fromtype -> field.write_type), if a converter is found
         :rtype: Callable | None
         """
@@ -188,8 +198,8 @@ class IrFieldsConverter(models.AbstractModel):
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
             [u'1', u"true", u"yes"], # don't use potentially translated values
-            self._get_translations(['code'], u"true"),
-            self._get_translations(['code'], u"yes"),
+            self._get_boolean_translations(u"true"),
+            self._get_boolean_translations(u"yes"),
         ))
         if value.lower() in trues:
             return True, []
@@ -197,11 +207,14 @@ class IrFieldsConverter(models.AbstractModel):
         # potentially broken casefolding? What about locales?
         falses = set(word.lower() for word in itertools.chain(
             [u'', u"0", u"false", u"no"],
-            self._get_translations(['code'], u"false"),
-            self._get_translations(['code'], u"no"),
+            self._get_boolean_translations(u"false"),
+            self._get_boolean_translations(u"no"),
         ))
         if value.lower() in falses:
             return False, []
+
+        if field.name in self._context.get('import_skip_records', []):
+            return None, []
 
         return True, [self._format_import_error(
             ValueError,
@@ -291,17 +304,46 @@ class IrFieldsConverter(models.AbstractModel):
         return fields.Datetime.to_string(dt.astimezone(pytz.UTC)), []
 
     @api.model
-    def _get_translations(self, types, src):
-        types = tuple(types)
+    def _get_boolean_translations(self, src):
         # Cache translations so they don't have to be reloaded from scratch on
         # every row of the file
         tnx_cache = self._cr.cache.setdefault(self._name, {})
-        if tnx_cache.setdefault(types, {}) and src in tnx_cache[types]:
-            return tnx_cache[types][src]
+        if src in tnx_cache:
+            return tnx_cache[src]
 
-        Translations = self.env['ir.translation']
-        tnx = Translations.search([('type', 'in', types), ('src', '=', src)])
-        result = tnx_cache[types][src] = [t.value for t in tnx if t.value is not False]
+        values = OrderedSet()
+        for lang, __ in self.env['res.lang'].get_installed():
+            translations = code_translations.get_python_translations('base', lang)
+            if src in translations:
+                values.add(translations[src])
+
+        result = tnx_cache[src] = list(values)
+        return result
+
+    @api.model
+    def _get_selection_translations(self, field, src):
+        if not src:
+            return []
+        # Cache translations so they don't have to be reloaded from scratch on
+        # every row of the file
+        tnx_cache = self._cr.cache.setdefault(self._name, {})
+        if src in tnx_cache:
+            return tnx_cache[src]
+
+        values = OrderedSet()
+        self.env['ir.model.fields.selection'].flush_model()
+        query = """
+            SELECT s.name
+            FROM ir_model_fields_selection s
+            JOIN ir_model_fields f ON s.field_id = f.id
+            WHERE f.model = %s AND f.name = %s AND s.name->>'en_US' = %s
+        """
+        self.env.cr.execute(query, [field.model_name, field.name, src])
+        for (name,) in self.env.cr.fetchall():
+            name.pop('en_US')
+            values.update(name.values())
+
+        result = tnx_cache[src] = list(values)
         return result
 
     @api.model
@@ -312,12 +354,23 @@ class IrFieldsConverter(models.AbstractModel):
 
         for item, label in selection:
             label = ustr(label)
-            labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
+            if callable(field.selection):
+                labels = [label]
+                for item2, label2 in field._description_selection(self.env):
+                    if item2 == item:
+                        labels.append(label2)
+                        break
+            else:
+                labels = [label] + self._get_selection_translations(field, label)
             # case insensitive comparaison of string to allow to set the value even if the given 'value' param is not
             # exactly (case sensitive) the same as one of the selection item.
             if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
                 return item, []
 
+        if field.name in self._context.get('import_skip_records', []):
+            return None, []
+        elif field.name in self._context.get('import_set_empty_fields', []):
+            return False, []
         raise self._format_import_error(
             ValueError,
             _(u"Value '%s' not found in selection field '%%(field)s'"),
@@ -337,7 +390,6 @@ class IrFieldsConverter(models.AbstractModel):
                          ``id`` for an external id and ``.id`` for a database
                          id
         :param value: value of the reference to match to an actual record
-        :param context: OpenERP request context
         :return: a pair of the matched database identifier (if any), the
                  translated user-readable name for the field and the list of
                  warnings
@@ -400,7 +452,7 @@ class IrFieldsConverter(models.AbstractModel):
                 if len(ids) > 1:
                     warnings.append(ImportWarning(
                         _(u"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)")
-                        % (value, len(ids))))
+                        %(str(value).replace('%', '%%'), len(ids))))
                 id, _name = ids[0]
             else:
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
@@ -416,12 +468,14 @@ class IrFieldsConverter(models.AbstractModel):
                 subfield
             )
 
-        import_skip = False
+        set_empty = False
+        skip_record = False
         if self.env.context.get('import_file'):
-            import_skip_fields = self.env.context.get('import_skip_fields') or []
+            import_set_empty_fields = self.env.context.get('import_set_empty_fields') or []
             field_path = "/".join((self.env.context.get('parent_fields_hierarchy', []) + [field.name]))
-            import_skip = field_path in import_skip_fields
-        if id is None and not import_skip:
+            set_empty = field_path in import_set_empty_fields
+            skip_record = field_path in self.env.context.get('import_skip_records', [])
+        if id is None and not set_empty and not skip_record:
             if error_msg:
                 message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
             else:
@@ -514,6 +568,11 @@ class IrFieldsConverter(models.AbstractModel):
             id, _, ws = self.db_id_for(model, field, subfield, reference)
             ids.append(id)
             warnings.extend(ws)
+
+        if field.name in self._context.get('import_set_empty_fields', []) and any([id is None for id in ids]):
+            ids = [id for id in ids if id]
+        elif field.name in self._context.get('import_skip_records', []) and any([id is None for id in ids]):
+            return None, warnings
 
         if self._context.get('update_many2many'):
             return [Command.link(id) for id in ids], warnings

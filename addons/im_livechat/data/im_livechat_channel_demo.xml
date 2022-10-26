@@ -25,13 +25,15 @@
             <field name="anonymous_name">Visitor #234, Mitchell Admin</field>
         </record>
         <record id="im_livechat_rating_1" model="rating.rating">
+            <field name="access_token">LIVECHAT_1</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_0"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_0')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_0')], 5, 'LIVECHAT_1', None, 'Good Job')"/>
         <record id="im_livechat_mail_message_5_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_0"/>
@@ -81,13 +83,15 @@
             <field name="anonymous_name">Visitor #323, Marc Demo</field>
         </record>
         <record id="im_livechat_rating_2" model="rating.rating">
+            <field name="access_token">LIVECHAT_2</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_1"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_1')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_1')], 5, 'LIVECHAT_2', None, 'Super Job')"/>
         <record id="im_livechat_mail_message_10_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_1"/>
@@ -137,13 +141,16 @@
             <field name="anonymous_name">Joel Willis, Mitchell Admin</field>
         </record>
         <record id="im_livechat_rating_3" model="rating.rating">
+            <field name="access_token">LIVECHAT_3</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_2"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_2')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_2')], 5, 'LIVECHAT_3', None, 'Mega Job')"/>
+
         <record id="im_livechat_mail_message_14_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_2"/>
@@ -185,13 +192,16 @@
             <field name="anonymous_name">Joel Willis, Marc Demo</field>
         </record>
         <record id="im_livechat_rating_4" model="rating.rating">
+            <field name="access_token">LIVECHAT_4</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_3"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_3')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_3')], 5, 'LIVECHAT_4', None, 'Good Job')"/>
+
         <record id="im_livechat_mail_message_17_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_3"/>
@@ -225,13 +235,15 @@
             <field name="anonymous_name">Visitor #532, Mitchell Admin</field>
         </record>
         <record id="im_livechat_rating_5" model="rating.rating">
+            <field name="access_token">LIVECHAT_5</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_4"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_4')], 1)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_4')], 5, 'LIVECHAT_5', None, 'Super Job')"/>
         <record id="im_livechat_mail_message_21_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_4"/>
@@ -273,13 +285,15 @@
             <field name="anonymous_name">Visitor #649, Mitchell Admin</field>
         </record>
         <record id="im_livechat_rating_6" model="rating.rating">
+            <field name="access_token">LIVECHAT_6</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_5')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_5')], 5, 'LIVECHAT_6', None, 'Good Job')"/>
         <record id="im_livechat_mail_message_25_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
@@ -293,7 +307,7 @@
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
             <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_admin"/>
-            <field name="body">Yes, of course, you can find it here: https://www.odoo.com/documentation/user/14.0/</field>
+            <field name="body">Yes, of course, you can find it here: https://www.odoo.com/documentation/master/</field>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=24)" name="date"/>
         </record>
         <record id="im_livechat_mail_message_23_data" model="mail.message">
@@ -321,13 +335,15 @@
             <field name="anonymous_name">Joel Willis, Mitchell Admin</field>
         </record>
         <record id="im_livechat_rating_7" model="rating.rating">
+            <field name="access_token">LIVECHAT_7</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_6')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_6')], 5, 'LIVECHAT_7', None, 'Super Job')"/>
         <record id="im_livechat_mail_message_29_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
@@ -369,13 +385,15 @@
             <field name="anonymous_name">Visitor #722, Marc Demo</field>
         </record>
         <record id="im_livechat_rating_8" model="rating.rating">
+            <field name="access_token">LIVECHAT_8</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_7"/>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function eval="([ref('im_livechat.im_livechat_mail_channel_data_7')], 5)" model="mail.channel" name="rating_apply"/>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.im_livechat_mail_channel_data_7')], 5, 'LIVECHAT_8', None, 'Super Job')"/>
         <record id="im_livechat_mail_message_33_data" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_7"/>
@@ -470,14 +488,15 @@
             <field name="model">mail.channel</field>
         </record>
         <record id="rating_rating_livechat_1" model="rating.rating">
+            <field name="access_token">LIVECHAT_9</field>
             <field name="res_model_id" ref="mail.model_mail_channel"/>
             <field name="rated_partner_id" ref="base.partner_admin"/>
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
             <field name="res_id" ref="im_livechat.mail_channel_livechat_1"/>
-            <field name="rating" eval="5"/>
-            <field name="consumed" eval="True"/>
         </record>
+        <function model="mail.channel" name="rating_apply"
+            eval="([ref('im_livechat.mail_channel_livechat_1')], 5, 'LIVECHAT_9', None, 'Super Job')"/>
 
     </data>
 </odoo>

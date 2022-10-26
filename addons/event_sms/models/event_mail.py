@@ -7,29 +7,35 @@ from odoo import api, fields, models
 class EventTypeMail(models.Model):
     _inherit = 'event.type.mail'
 
-    notification_type = fields.Selection(selection_add=[
-        ('sms', 'SMS')
-    ], ondelete={'sms': 'set default'})
-    sms_template_id = fields.Many2one(
-        'sms.template', string='SMS Template',
-        domain=[('model', '=', 'event.registration')], ondelete='restrict',
-        help='This field contains the template of the SMS that will be automatically sent')
-
     @api.model
-    def _get_event_mail_fields_whitelist(self):
-        return super(EventTypeMail, self)._get_event_mail_fields_whitelist() + ['sms_template_id']
+    def _selection_template_model(self):
+        return super(EventTypeMail, self)._selection_template_model() + [('sms.template', 'SMS')]
+
+    notification_type = fields.Selection(selection_add=[('sms', 'SMS')], ondelete={'sms': 'set default'})
+
+    @api.depends('notification_type')
+    def _compute_template_model_id(self):
+        sms_model = self.env['ir.model']._get('sms.template')
+        sms_mails = self.filtered(lambda mail: mail.notification_type == 'sms')
+        sms_mails.template_model_id = sms_model
+        super(EventTypeMail, self - sms_mails)._compute_template_model_id()
 
 
 class EventMailScheduler(models.Model):
     _inherit = 'event.mail'
 
-    notification_type = fields.Selection(selection_add=[
-        ('sms', 'SMS')
-    ], ondelete={'sms': 'set default'})
-    sms_template_id = fields.Many2one(
-        'sms.template', string='SMS Template',
-        domain=[('model', '=', 'event.registration')], ondelete='restrict',
-        help='This field contains the template of the SMS that will be automatically sent')
+    @api.model
+    def _selection_template_model(self):
+        return super(EventMailScheduler, self)._selection_template_model() + [('sms.template', 'SMS')]
+
+    notification_type = fields.Selection(selection_add=[('sms', 'SMS')], ondelete={'sms': 'set default'})
+
+    @api.depends('notification_type')
+    def _compute_template_model_id(self):
+        sms_model = self.env['ir.model']._get('sms.template')
+        sms_mails = self.filtered(lambda mail: mail.notification_type == 'sms')
+        sms_mails.template_model_id = sms_model
+        super(EventMailScheduler, self - sms_mails)._compute_template_model_id()
 
     def execute(self):
         for scheduler in self:
@@ -39,13 +45,12 @@ class EventMailScheduler(models.Model):
                 if scheduler.mail_done:
                     continue
                 # no template -> ill configured, skip and avoid crash
-                if not scheduler.sms_template_id:
+                if not scheduler.template_ref:
                     continue
                 # Do not send SMS if the communication was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    self.env['event.registration']._message_sms_schedule_mass(
-                        template=scheduler.sms_template_id,
-                        active_domain=[('event_id', '=', scheduler.event_id.id), ('state', '!=', 'cancel')],
+                    scheduler.event_id.registration_ids.filtered(lambda registration: registration.state != 'cancel')._message_sms_schedule_mass(
+                        template=scheduler.template_ref,
                         mass_keep_log=True
                     )
                     scheduler.update({
@@ -69,7 +74,7 @@ class EventMailRegistration(models.Model):
         )
         for reg_mail in todo:
             reg_mail.registration_id._message_sms_schedule_mass(
-                template=reg_mail.scheduler_id.sms_template_id,
+                template=reg_mail.scheduler_id.template_ref,
                 mass_keep_log=True
             )
         todo.write({'mail_sent': True})

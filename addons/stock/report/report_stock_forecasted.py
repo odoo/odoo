@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, models
-from odoo.tools import float_is_zero, format_datetime, format_date
+from odoo.tools import float_is_zero, format_date, float_round
 
 
 class ReplenishmentReport(models.AbstractModel):
@@ -45,8 +45,8 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_variant_ids, wh_location_ids)
-        incoming_moves = self.env['stock.move'].read_group(in_domain, ['product_qty:sum'], 'product_id')
-        outgoing_moves = self.env['stock.move'].read_group(out_domain, ['product_qty:sum'], 'product_id')
+        incoming_moves = self.env['stock.move']._read_group(in_domain, ['product_qty:sum'], 'product_id')
+        outgoing_moves = self.env['stock.move']._read_group(out_domain, ['product_qty:sum'], 'product_id')
         in_sum = sum(move['product_qty'] for move in incoming_moves)
         out_sum = sum(move['product_qty'] for move in outgoing_moves)
         return {
@@ -93,6 +93,8 @@ class ReplenishmentReport(models.AbstractModel):
             res['uom'] = product_templates[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_templates.mapped('qty_available'))
             res['virtual_available'] = sum(product_templates.mapped('virtual_available'))
+            res['incoming_qty'] = sum(product_templates.mapped('incoming_qty'))
+            res['outgoing_qty'] = sum(product_templates.mapped('outgoing_qty'))
         elif product_variant_ids:
             product_variants = self.env['product.product'].browse(product_variant_ids)
             res['product_templates'] = False
@@ -101,13 +103,14 @@ class ReplenishmentReport(models.AbstractModel):
             res['uom'] = product_variants[:1].uom_id.display_name
             res['quantity_on_hand'] = sum(product_variants.mapped('qty_available'))
             res['virtual_available'] = sum(product_variants.mapped('virtual_available'))
+            res['incoming_qty'] = sum(product_variants.mapped('incoming_qty'))
+            res['outgoing_qty'] = sum(product_variants.mapped('outgoing_qty'))
         res.update(self._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids))
 
         res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
-        timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
 
@@ -127,7 +130,7 @@ class ReplenishmentReport(models.AbstractModel):
             'receipt_date': format_date(self.env, move_in.date) if move_in else False,
             'delivery_date': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
-            'quantity': quantity,
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
             'move_out': move_out,
             'move_in': move_in,
             'reservation': reservation,
@@ -135,17 +138,12 @@ class ReplenishmentReport(models.AbstractModel):
         }
 
     def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):
-        def _rollup_move_dests(move, seen):
-            for dst in move.move_dest_ids:
-                if dst.id not in seen:
-                    seen.add(dst.id)
-                    _rollup_move_dests(dst, seen)
-            return seen
 
-        def _reconcile_out_with_ins(lines, out, ins, demand, only_matching_move_dest=True):
+        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True):
             index_to_remove = []
             for index, in_ in enumerate(ins):
-                if float_is_zero(in_['qty'], precision_rounding=out.product_id.uom_id.rounding):
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
+                    index_to_remove.append(index)
                     continue
                 if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
                     continue
@@ -155,10 +153,10 @@ class ReplenishmentReport(models.AbstractModel):
                 in_['qty'] -= taken_from_in
                 if in_['qty'] <= 0:
                     index_to_remove.append(index)
-                if float_is_zero(demand, precision_rounding=out.product_id.uom_id.rounding):
+                if float_is_zero(demand, precision_rounding=product_rounding):
                     break
-            for index in index_to_remove[::-1]:
-                ins.pop(index)
+            for index in reversed(index_to_remove):
+                del ins[index]
             return demand
 
         in_domain, out_domain = self._move_confirmed_domain(
@@ -168,62 +166,62 @@ class ReplenishmentReport(models.AbstractModel):
         reserved_outs = self.env['stock.move'].search(
             out_domain + [('state', 'in', ('partially_available', 'assigned'))],
             order='priority desc, date, id')
-        outs_per_product = defaultdict(lambda: [])
-        reserved_outs_per_product = defaultdict(lambda: [])
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
-        for out in reserved_outs:
-            reserved_outs_per_product[out.product_id.id].append(out)
+        outs_per_product = outs.grouped('product_id')
+        reserved_outs_per_product = reserved_outs.grouped('product_id')
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
-        ins_per_product = defaultdict(lambda: [])
+        ins_per_product = defaultdict(list)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
                 'move': in_,
-                'move_dests': _rollup_move_dests(in_, set())
+                'move_dests': in_._rollup_move_dests(set())
             })
-        currents = {c['id']: c['qty_available'] for c in outs.product_id.read(['qty_available'])}
+        currents = outs.product_id._get_only_qty_available()
 
         lines = []
         for product in (ins | outs).product_id:
-            for out in reserved_outs_per_product[product.id]:
-                current = currents[out.product_id.id]
+            product_rounding = product.uom_id.rounding
+            for out in reserved_outs_per_product.get(product, []):
+                # Reconcile with reserved stock.
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
 
             unreconciled_outs = []
-            for out in outs_per_product[product.id]:
+            for out in outs_per_product.get(product, []):
                 # Reconcile with the current stock.
-                current = currents[out.product_id.id]
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):
                     reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 demand = out.product_qty - reserved
+
+                if float_is_zero(demand, precision_rounding=product_rounding):
+                    continue
+                current = currents[product.id]
                 taken_from_stock = min(demand, current)
-                if not float_is_zero(taken_from_stock, precision_rounding=product.uom_id.rounding):
+                if not float_is_zero(taken_from_stock, precision_rounding=product_rounding):
                     currents[product.id] -= taken_from_stock
                     demand -= taken_from_stock
                     lines.append(self._prepare_report_line(taken_from_stock, move_out=out))
                 # Reconcile with the ins.
-                if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
-                    demand = _reconcile_out_with_ins(lines, out, ins_per_product[out.product_id.id], demand, only_matching_move_dest=True)
-                if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=True)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
                     unreconciled_outs.append((demand, out))
-            if unreconciled_outs:
-                for (demand, out) in unreconciled_outs:
-                    # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
-                    demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, only_matching_move_dest=False)
-                    if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
-                        # Not reconciled
-                        lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False))
+
+            # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
+            for (demand, out) in unreconciled_outs:
+                demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    # Not reconciled
+                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False))
             # Unused remaining stock.
             free_stock = currents.get(product.id, 0)
-            if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding):
+            if not float_is_zero(free_stock, precision_rounding=product_rounding):
                 lines.append(self._prepare_report_line(free_stock, product=product))
             # In moves not used.
             for in_ in ins_per_product[product.id]:
-                if float_is_zero(in_['qty'], precision_rounding=product.uom_id.rounding):
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
                     continue
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move']))
         return lines

@@ -19,7 +19,6 @@ speakers..
         'sms',
         'website_event_track'
     ],
-    'data': [
-    ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

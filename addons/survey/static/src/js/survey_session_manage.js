@@ -2,13 +2,14 @@ odoo.define('survey.session_manage', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
 var SurveySessionChart = require('survey.session_chart');
 var SurveySessionTextAnswers = require('survey.session_text_answers');
 var SurveySessionLeaderBoard = require('survey.session_leaderboard');
 var core = require('web.core');
 var _t = core._t;
 
-publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
+publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
     selector: '.o_survey_session_manage',
     events: {
         'click .o_survey_session_copy': '_onCopySessionLink',
@@ -28,10 +29,16 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
         var self = this;
         this.fadeInOutTime = 500;
         return this._super.apply(this, arguments).then(function () {
+            if (self.$el.data('isSessionClosed')) {
+                self._displaySessionClosedPage();
+                self.$el.removeClass('invisible');
+                return;
+            }
             // general survey props
             self.surveyId = self.$el.data('surveyId');
             self.surveyAccessToken = self.$el.data('surveyAccessToken');
             self.isStartScreen = self.$el.data('isStartScreen');
+            self.isFirstQuestion = self.$el.data('isFirstQuestion');
             self.isLastQuestion = self.$el.data('isLastQuestion');
             // scoring props
             self.isScoredQuestion = self.$el.data('isScoredQuestion');
@@ -40,6 +47,12 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             // display props
             self.showBarChart = self.$el.data('showBarChart');
             self.showTextAnswers = self.$el.data('showTextAnswers');
+            // Question transition
+            self.stopNextQuestion = false;
+            // Background Management
+            self.refreshBackground = self.$el.data('refreshBackground');
+            // Copy link tooltip
+            self.$('.o_survey_session_copy').tooltip({delay: 0, title: 'Click to copy link', placement: 'right'});
 
             var isRpcCall = self.$el.data('isRpcCall');
             if (!isRpcCall) {
@@ -54,6 +67,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             setupPromises.push(self._setupChart());
             setupPromises.push(self._setupLeaderboard());
 
+            self.$el.removeClass('invisible');
             return Promise.all(setupPromises);
         });
     },
@@ -148,26 +162,19 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
 
         if (screenToDisplay === 'userInputs') {
             this._setShowInputs(true);
-            this.$('.o_survey_session_navigation_previous').removeClass('d-none');
         } else if (screenToDisplay === 'results') {
             this._setShowAnswers(true);
             // when showing results, stop refreshing answers
             clearInterval(this.resultsRefreshInterval);
             delete this.resultsRefreshInterval;
-            this.$('.o_survey_session_navigation_previous').removeClass('d-none');
         } else if (['leaderboard', 'leaderboardFinal'].includes(screenToDisplay)
                    && !['leaderboard', 'leaderboardFinal'].includes(this.currentScreen)) {
             if (this.isLastQuestion) {
                 this.$('.o_survey_session_navigation_next').addClass('d-none');
             }
             this.leaderBoard.showLeaderboard(true, this.isScoredQuestion);
-        } else {
-            if (!this.isLastQuestion) {
-                this._nextQuestion();
-            } else if (!this.sessionShowLeaderboard) {
-                // If we have no leaderboard to show, directly end the session
-                this.$('.o_survey_session_close').click();
-            }
+        } else if (!this.isLastQuestion || !this.sessionShowLeaderboard) {
+            this._nextQuestion();
         }
 
         this.currentScreen = screenToDisplay;
@@ -185,7 +192,6 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
 
         if (screenToDisplay === 'question') {
             this._setShowInputs(false);
-            this.$('.o_survey_session_navigation_previous').addClass('d-none');
         } else if (screenToDisplay === 'userInputs') {
             this._setShowAnswers(false);
             // resume refreshing answers if necessary
@@ -193,10 +199,17 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 this.resultsRefreshInterval = setInterval(this._refreshResults.bind(this), 2000);
             }
         } else if (screenToDisplay === 'results') {
-            this.leaderBoard.hideLeaderboard();
+            if (this.leaderBoard) {
+                this.leaderBoard.hideLeaderboard();
+            }
             // when showing results, stop refreshing answers
             clearInterval(this.resultsRefreshInterval);
             delete this.resultsRefreshInterval;
+        } else if (screenToDisplay === 'previousQuestion') {
+            if (this.isFirstQuestion) {
+                return;  // nothing to go back to, we're on the first question
+            }
+            this._nextQuestion(true);
         }
 
         this.currentScreen = screenToDisplay;
@@ -272,14 +285,16 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
     _getPreviousScreen: function () {
         if (this.currentScreen === 'userInputs' && this.isScoredQuestion) {
             return 'question';
-        } else if (this.currentScreen === 'results' ||
-                  (this.currentScreen === 'leaderboard' && !this.isScoredQuestion)) {
+        } else if ((this.currentScreen === 'results' && this.isScoredQuestion) ||
+                  (this.currentScreen === 'leaderboard' && !this.isScoredQuestion) ||
+                  (this.currentScreen === 'leaderboardFinal' && this.isScoredQuestion)) {
             return 'userInputs';
-        } else if (this.currentScreen === 'leaderboard' && this.isScoredQuestion) {
+        } else if ((this.currentScreen === 'leaderboard' && this.isScoredQuestion) ||
+                  (this.currentScreen === 'leaderboardFinal' && !this.isScoredQuestion)){
             return 'results';
         }
 
-        return this.currentScreen;
+        return 'previousQuestion';
     },
 
     /**
@@ -294,8 +309,14 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
     * @param {MouseEvent} ev
     * @private
     */
-    _nextQuestion: function () {
+    _nextQuestion: function (goBack) {
         var self = this;
+
+        // stop calling multiple times "get next question" process until next question is fully loaded.
+        if (this.stopNextQuestion) {
+            return;
+        }
+        this.stopNextQuestion = true;
 
         this.isStartScreen = false;
         if (this.surveyTimerWidget) {
@@ -308,9 +329,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             resolveFadeOut();
         });
 
-        var nextQuestionPromise = this._rpc({
-            route: _.str.sprintf('/survey/session/next_question/%s', self.surveyAccessToken)
-        });
+        if (this.refreshBackground) {
+            $('div.o_survey_background').addClass('o_survey_background_transition');
+        }
 
         // avoid refreshing results while transitioning
         if (this.resultsRefreshInterval) {
@@ -318,27 +339,80 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             delete this.resultsRefreshInterval;
         }
 
-        Promise.all([fadeOutPromise, nextQuestionPromise]).then(function (results) {
-            if (results[1]) {
-                var $renderedTemplate = $(results[1]);
-                self.$el.replaceWith($renderedTemplate);
-                self.attachTo($renderedTemplate);
-                self.$el.fadeIn(self.fadeInOutTime, function () {
-                    self._startTimer();
-                });
-            } else if (self.sessionShowLeaderboard) {
-                // Display last screen if leaderboard activated
-                self.isLastQuestion = true;
-                self._setupLeaderboard().then(function () {
-                    self.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
-                    self.$('.o_survey_session_navigation_next').addClass('d-none');
-                    self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
-                    self.leaderBoard.showLeaderboard(false, false);
-                });
+        var nextQuestionPromise = this._rpc({
+            route: _.str.sprintf('/survey/session/next_question/%s', self.surveyAccessToken),
+            params: {
+                'go_back': goBack,
+            }
+        }).then(function (result) {
+            self.nextQuestion = result;
+            if (self.refreshBackground && result.background_image_url) {
+                return self._preloadBackground(result.background_image_url);
             } else {
-                self.$('.o_survey_session_close').click();
+                return Promise.resolve();
             }
         });
+
+        Promise.all([fadeOutPromise, nextQuestionPromise]).then(function () {
+            return self._onNextQuestionDone(goBack);
+        });
+    },
+
+    _displaySessionClosedPage:function () {
+        this.$('.o_survey_question_header').addClass('invisible');
+        this.$('.o_survey_session_results, .o_survey_session_navigation_previous, .o_survey_session_navigation_next')
+            .addClass('d-none');
+        this.$('.o_survey_session_description_done').removeClass('d-none');
+    },
+
+    /**
+     * Refresh the screen with the next question's rendered template.
+     *
+     * @param {boolean} goBack Whether we are going back to the previous question or not
+     */
+    _onNextQuestionDone: async function (goBack) {
+        var self = this;
+
+        if (this.nextQuestion.question_html) {
+            var $renderedTemplate = $(this.nextQuestion.question_html);
+            this.$el.replaceWith($renderedTemplate);
+
+            // Ensure new question is fully loaded before force loading previous question screen.
+            await this.attachTo($renderedTemplate);
+            if (goBack) {
+                // As we arrive on "question" screen, simulate going to the results screen or leaderboard.
+                this._setShowInputs(true);
+                this._setShowAnswers(true);
+                if (this.sessionShowLeaderboard && this.isScoredQuestion) {
+                    this.currentScreen = 'leaderboard';
+                    this.leaderBoard.showLeaderboard(false, this.isScoredQuestion);
+                } else {
+                    this.currentScreen = 'results';
+                    this._refreshResults();
+                }
+            } else {
+                this._startTimer();
+            }
+            this.$el.fadeIn(this.fadeInOutTime);
+        } else if (this.sessionShowLeaderboard) {
+            // Display last screen if leaderboard activated
+            this.isLastQuestion = true;
+            this._setupLeaderboard().then(function () {
+                self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
+                self.$('.o_survey_session_navigation_next').addClass('d-none');
+                self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
+                self.leaderBoard.showLeaderboard(false, false);
+            });
+        } else {
+            self.$('.o_survey_session_close').first().click();
+            self._displaySessionClosedPage();
+        }
+
+        // Background Management
+        if (this.refreshBackground) {
+            $('div.o_survey_background').css("background-image", "url(" + this.nextQuestion.background_image_url + ")");
+            $('div.o_survey_background').removeClass('o_survey_background_transition');
+        }
     },
 
     /**
@@ -545,6 +619,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
         } else {
             this.currentScreen = 'question';
         }
+
+        this.$('.o_survey_session_navigation_previous').toggleClass('d-none', !!this.isFirstQuestion);
 
         this._setShowInputs(this.currentScreen === 'userInputs');
     },

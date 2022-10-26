@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormControlPanel" owl="1">
+        <div class="o_control_panel" t-ref="root">
+            <div t-if="display['top']" class="o_cp_top">
+                <div class="o_cp_top_left w-auto d-flex flex-grow-1 align-items-center">
+                    <t t-if="display['top-left']">
+                        <t t-slot="control-panel-breadcrumb">
+                            <t t-if="env.isSmall">
+                                <t t-call="web.Breadcrumbs.Small" t-if="!env.config.noBreadcrumbs"/>
+                            </t>
+                            <t t-else="">
+                                <t t-call="web.Breadcrumbs" t-if="!env.config.noBreadcrumbs"/>
+                            </t>
+                        </t>
+                        <t t-slot="control-panel-status-indicator" />
+                    </t>
+                </div>
+                <div class="o_cp_bottom_right w-auto flex-shrink-0">
+                    <t t-slot="control-panel-action-menu" t-if="display['bottom-left']"/>
+                    <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager" role="search">
+                        <Pager t-props="pagerProps"/>
+                    </div>
+                    <t t-slot="control-panel-create-button" />
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

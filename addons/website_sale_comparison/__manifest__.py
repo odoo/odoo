@@ -18,6 +18,7 @@ Finally, the module comes with an option to display an attribute summary table i
         'security/ir.model.access.csv',
         'views/website_sale_comparison_template.xml',
         'views/website_sale_comparison_view.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/website_sale_comparison_data.xml',
@@ -27,10 +28,12 @@ Finally, the module comes with an option to display an attribute summary table i
     'assets': {
         'web.assets_frontend': [
             'website_sale_comparison/static/src/scss/website_sale_comparison.scss',
-            'website_sale_comparison/static/src/js/website_sale_comparison.js',
+            'website_sale_comparison/static/src/js/**/*.js',
+            'website_sale_comparison/static/src/xml/comparison.xml',
         ],
         'web.assets_tests': [
             'website_sale_comparison/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 
+import base64
 import werkzeug
 
 from odoo import _, exceptions, http, tools
 from odoo.http import request
 from odoo.tools import consteq
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 
 class MassMailController(http.Controller):
@@ -23,10 +23,9 @@ class MassMailController(http.Controller):
         model_display = mailing.mailing_model_id.display_name
         blacklist_entry._message_log(body=description + " ({})".format(model_display))
 
-    @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
-    def unsubscribe_placeholder_link(self, **post):
-        """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
-        raise werkzeug.exceptions.NotFound()
+    # ------------------------------------------------------------
+    # SUBSCRIPTION MANAGEMENT
+    # ------------------------------------------------------------
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
@@ -37,7 +36,7 @@ class MassMailController(http.Controller):
                 raise exceptions.AccessDenied()
 
             if mailing.mailing_model_real == 'mailing.contact':
-                # Unsubscribe directly + Let the user choose his subscriptions
+                # Unsubscribe directly + Let the user choose their subscriptions
                 mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
 
                 contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
@@ -92,18 +91,73 @@ class MassMailController(http.Controller):
             return True
         return 'error'
 
+    @http.route('/mailing/feedback', type='json', auth='public')
+    def send_feedback(self, mailing_id, res_id, email, feedback, token):
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        if mailing.exists() and email:
+            if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
+                return 'unauthorized'
+            model = request.env[mailing.mailing_model_real]
+            records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
+            for record in records:
+                record.sudo().message_post(body=_("Feedback from %(email)s: %(feedback)s", email=email, feedback=feedback))
+            return bool(records)
+        return 'error'
+
+    @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
+    def unsubscribe_placeholder_link(self, **post):
+        """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
+        raise werkzeug.exceptions.NotFound()
+
+    # ------------------------------------------------------------
+    # TRACKING
+    # ------------------------------------------------------------
+
     @http.route('/mail/track/<int:mail_id>/<string:token>/blank.gif', type='http', auth='public')
     def track_mail_open(self, mail_id, token, **post):
         """ Email tracking. """
         if not consteq(token, tools.hmac(request.env(su=True), 'mass_mailing-mail_mail-open', mail_id)):
             raise BadRequest()
 
-        request.env['mailing.trace'].sudo().set_opened(mail_mail_ids=[mail_id])
+        request.env['mailing.trace'].sudo().set_opened(domain=[('mail_mail_id_int', 'in', [mail_id])])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
 
         return response
+
+    @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
+    def full_url_redirect(self, code, mailing_trace_id, **post):
+        # don't assume geoip is set, it is part of the website module
+        # which mass_mailing doesn't depend on
+        country_code = request.geoip.get('country_code')
+
+        request.env['link.tracker.click'].sudo().add_click(
+            code,
+            ip=request.httprequest.remote_addr,
+            country_code=country_code,
+            mailing_trace_id=mailing_trace_id
+        )
+        return request.redirect(request.env['link.tracker'].get_url_from_code(code), code=301, local=False)
+
+    # ------------------------------------------------------------
+    # MAILING MANAGEMENT
+    # ------------------------------------------------------------
+
+    @http.route('/mailing/report/unsubscribe', type='http', website=True, auth='public')
+    def turn_off_mailing_reports(self, token, user_id):
+        if not token or not user_id:
+            raise werkzeug.exceptions.NotFound()
+        user_id = int(user_id)
+        correct_token = consteq(token, request.env['mailing.mailing']._get_unsubscribe_token(user_id))
+        user = request.env['res.users'].sudo().browse(user_id)
+        if correct_token and user.has_group('mass_mailing.group_mass_mailing_user'):
+            request.env['ir.config_parameter'].sudo().set_param('mass_mailing.mass_mailing_reports', False)
+            if user.has_group('base.group_system'):
+                menu_id = request.env.ref('mass_mailing.menu_mass_mailing_global_settings').id
+                return request.render('mass_mailing.mailing_report_deactivated', {'menu_id': menu_id})
+            return request.render('mass_mailing.mailing_report_deactivated')
+        raise werkzeug.exceptions.NotFound()
 
     @http.route(['/mailing/<int:mailing_id>/view'], type='http', website=True, auth='public')
     def view(self, mailing_id, email=None, res_id=None, token=""):
@@ -113,40 +167,20 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)) and not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
                 raise exceptions.AccessDenied()
 
-            res = mailing.convert_links()
-            base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url').rstrip('/')
-            urls_to_replace = [
-               (base_url + '/unsubscribe_from_list', mailing._get_unsubscribe_url(email, res_id)),
-               (base_url + '/view', mailing._get_view_url(email, res_id))
-            ]
-            for url_to_replace, new_url in urls_to_replace:
-                if url_to_replace in res[mailing_id]:
-                    res[mailing_id] = res[mailing_id].replace(url_to_replace, new_url if new_url else '#')
-
-            res[mailing_id] = res[mailing_id].replace(
-                'class="o_snippet_view_in_browser"',
-                'class="o_snippet_view_in_browser" style="display: none;"'
-            )
+            html_markupsafe = mailing._render_field('body_html', [res_id])[res_id]
+            # Update generic URLs (without parameters) to final ones
+            html_markupsafe = html_markupsafe.replace('/unsubscribe_from_list',
+                                                      mailing._get_unsubscribe_url(email, res_id))
 
             return request.render('mass_mailing.view', {
-                    'body': res[mailing_id],
+                    'body': html_markupsafe,
                 })
 
         return request.redirect('/web')
 
-    @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
-    def full_url_redirect(self, code, mailing_trace_id, **post):
-        # don't assume geoip is set, it is part of the website module
-        # which mass_mailing doesn't depend on
-        country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
-
-        request.env['link.tracker.click'].sudo().add_click(
-            code,
-            ip=request.httprequest.remote_addr,
-            country_code=country_code,
-            mailing_trace_id=mailing_trace_id
-        )
-        return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
+    # ------------------------------------------------------------
+    # BLACKLIST
+    # ------------------------------------------------------------
 
     @http.route('/mailing/blacklist/check', type='json', auth='public')
     def blacklist_check(self, mailing_id, res_id, email, token):
@@ -183,15 +217,14 @@ class MassMailController(http.Controller):
             return True
         return 'error'
 
-    @http.route('/mailing/feedback', type='json', auth='public')
-    def send_feedback(self, mailing_id, res_id, email, feedback, token):
-        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
-        if mailing.exists() and email:
-            if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
-                return 'unauthorized'
-            model = request.env[mailing.mailing_model_real]
-            records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
-            for record in records:
-                record.sudo().message_post(body=_("Feedback from %(email)s: %(feedback)s", email=email, feedback=feedback))
-            return bool(records)
-        return 'error'
+    # ------------------------------------------------------------
+    # MISCELLANEOUS
+    # ------------------------------------------------------------
+
+    @http.route('/mailing/get_preview_assets', type='json', auth='user')
+    def get_mobile_preview_styling(self):
+        """ This route allows a rpc call to get the styling needed for email template conversion.
+        We do this to avoid duplicating the template."""
+        if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise NotFound
+        return request.env['ir.qweb']._render('mass_mailing.iframe_css_assets_edit')

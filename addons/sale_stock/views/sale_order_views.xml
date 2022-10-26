@@ -7,12 +7,11 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_view_invoice']" position="before">
-                    <field name="picking_ids" invisible="1"/>
                     <button type="object"
                         name="action_view_delivery"
                         class="oe_stat_button"
                         icon="fa-truck"
-                        attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
+                        attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="stock.group_stock_user">
                         <field name="delivery_count" widget="statinfo" string="Delivery"/>
                     </button>
                 </xpath>
@@ -21,8 +20,10 @@
                     <attribute name="string">Delivery</attribute>
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
+                    <field name="warehouse_id" invisible="1"/>  <!-- needed for js logic -->
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                    <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
+                    <field name="incoterm" options="{'no_open': True, 'no_create': True}" groups="sale_stock.group_display_incoterm"/>
+                    <field name="incoterm_location" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
                 <xpath expr="//span[@name='expected_date_span']" position="attributes">
@@ -33,24 +34,21 @@
                 <xpath expr="//div[@name='commitment_date_div']" position="replace">
                     <div class="o_row">
                         <field name="commitment_date"/>
-                        <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
+                        <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
                     </div>
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
                 </xpath>
+                <field name="effective_date" position="after">
+                    <field name="delivery_status" attrs="{'invisible': [('state', 'not in', ['sale', 'done'])]}"/>
+                </field>
                 <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
                     <field name="show_json_popover" invisible="1"/>
                     <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                 </xpath>
-                <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
-                    <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
-                </xpath>
-                <xpath expr="//page/field[@name='order_line']/tree/field[@name='price_unit']" position="before">
-                    <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" optional="show"/>
-                </xpath>
-                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="before">
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_distribution']" position="before">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_tag_ids']" position="after">
+                <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_distribution']" position="after">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
                 </xpath>
            </field>
@@ -75,6 +73,13 @@
                 <xpath expr="//field[@name='team_id']" position="after">
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 </xpath>
+                <field name="invoice_status" position="before">
+                    <field name="effective_date" invisible="1"/>
+                    <field name="delivery_status" optional="hide" widget="badge"
+                        decoration-success="commitment_date and (commitment_date &gt; datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') or delivery_status=='full' and effective_date &lt;= commitment_date)"
+                        decoration-danger="commitment_date and (commitment_date &lt; effective_date or commitment_date &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full' and effective_date &lt;= commitment_date)"
+                        decoration-warning="commitment_date and commitment_date &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and commitment_date &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full'"/>
+                </field>
             </field>
         </record>
 
@@ -96,13 +101,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
-                    <field name="product_type" invisible="1"/>
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>
                     <field name="free_qty_today" invisible="1"/>
                     <field name="scheduled_date" invisible="1"/>
                     <field name="forecast_expected_date" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
+                    <field name="move_ids" invisible="1"/>
                     <field name="qty_to_deliver" invisible="1"/>
                     <field name="is_mto" invisible="1"/>
                     <field name="display_qty_widget" invisible="1"/>
@@ -110,7 +115,6 @@
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
-                    <field name="product_type" invisible="1"/>
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>
                     <field name="free_qty_today" invisible="1"/>

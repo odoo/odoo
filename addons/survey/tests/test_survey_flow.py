@@ -31,6 +31,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
             # First page is about customer data
             page_0 = self.env['survey.question'].create({
                 'is_page': True,
+                'question_type': False,
                 'sequence': 1,
                 'title': 'Page1: Your Data',
                 'survey_id': survey.id,
@@ -47,6 +48,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
             # Second page is about tarte al djotte
             page_1 = self.env['survey.question'].create({
                 'is_page': True,
+                'question_type': False,
                 'sequence': 4,
                 'title': 'Page2: Tarte Al Djotte',
                 'survey_id': survey.id,
@@ -95,7 +97,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         post_data = self._format_submission_data(page_0, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
         r = self._access_submit(survey, answer_token, post_data)
         self.assertResponse(r, 200)
-        answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
+        answers.invalidate_recordset()  # TDE note: necessary as lots of sudo in controllers messing with cache
 
         # -> this should have generated answer lines
         self.assertAnswer(answers, 'in_progress', page_0)
@@ -113,7 +115,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         post_data = self._format_submission_data(page_1, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
         r = self._access_submit(survey, answer_token, post_data)
         self.assertResponse(r, 200)
-        answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
+        answers.invalidate_recordset()  # TDE note: necessary as lots of sudo in controllers messing with cache
 
         # -> this should have generated answer lines and closed the answer
         self.assertAnswer(answers, 'done', page_1)

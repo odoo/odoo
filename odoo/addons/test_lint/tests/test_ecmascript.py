@@ -36,10 +36,11 @@ class TestECMAScriptVersion(lint_case.LintCase):
             if 'static/lib/qweb/qweb.js' not in p   # because this file is not bundled at all
             if 'py.js/lib/py.js' not in p           # because it is not "strict" compliant
             if 'static/lib/epos-2.12.0.js' not in p # same
+            if 'static/lib/pdfjs/web' not in p      # debugging tools use too modern JS, even in compat form
         ]
 
         _logger.info('Testing %s js files', len(files_to_check))
-        cmd = [es_check, MAX_ES_VERSION, '--module'] + files_to_check
+        cmd = [es_check, MAX_ES_VERSION] + files_to_check + ['--module']
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
         self.assertEqual(process.returncode, 0, msg=out.decode())

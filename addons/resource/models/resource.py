@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import itertools
 import math
 from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
@@ -138,6 +139,12 @@ class Intervals(object):
 
         return result
 
+def sum_intervals(intervals):
+    """ Sum the intervals duration (unit : hour)"""
+    return sum(
+        (stop - start).total_seconds() / 3600
+        for start, stop, meta in intervals
+    )
 
 class ResourceCalendar(models.Model):
     """ Calendar model for a resource. It has
@@ -208,8 +215,9 @@ class ResourceCalendar(models.Model):
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
+        default=lambda self: self._context.get('tz') or self.env.user.tz or self.env.ref('base.user_admin').tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
 
@@ -232,6 +240,11 @@ class ResourceCalendar(models.Model):
                 'global_leave_ids': [(5, 0, 0)] + [
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
+
+    @api.depends('tz')
+    def _compute_tz_offset(self):
+        for calendar in self:
+            calendar.tz_offset = datetime.now(timezone(calendar.tz or 'GMT')).strftime('%z')
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -372,17 +385,16 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
+
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
-        """ Return the attendance intervals in the given datetime range.
-            The returned intervals are expressed in specified tz or in the resource's timezone.
-        """
-        self.ensure_one()
-        resources = self.env['resource.resource'] if not resources else resources
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
-        combine = datetime.combine
 
-        resources_list = list(resources) + [self.env['resource.resource']]
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         domain = domain if domain is not None else []
         domain = expression.AND([domain, [
@@ -391,61 +403,82 @@ class ResourceCalendar(models.Model):
             ('display_type', '=', False),
         ]])
 
-        # for each attendance spec, generate the intervals in the date range
-        cache_dates = defaultdict(dict)
-        cache_deltas = defaultdict(dict)
-        result = defaultdict(list)
-        for attendance in self.env['resource.calendar.attendance'].search(domain):
-            for resource in resources_list:
-                # express all dates and times in specified tz or in the resource's timezone
-                tz = tz if tz else timezone((resource or self).tz)
-                if (tz, start_dt) in cache_dates:
-                    start = cache_dates[(tz, start_dt)]
+        attendances = self.env['resource.calendar.attendance'].search(domain)
+        # Since we only have one calendar to take in account
+        # Group resources per tz they will all have the same result
+        resources_per_tz = defaultdict(list)
+        for resource in resources_list:
+            resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
+        # Resource specific attendances
+        attendance_per_resource = defaultdict(lambda: self.env['resource.calendar.attendance'])
+        # Calendar attendances per day of the week
+        # * 7 days per week * 2 for two week calendars
+        attendances_per_day = [self.env['resource.calendar.attendance']] * 7 * 2
+        weekdays = set()
+        for attendance in attendances:
+            if attendance.resource_id:
+                attendance_per_resource[attendance.resource_id] |= attendance
+            weekday = int(attendance.dayofweek)
+            weekdays.add(weekday)
+            if self.two_weeks_calendar:
+                weektype = int(attendance.week_type)
+                attendances_per_day[weekday + 7 * weektype] |= attendance
+            else:
+                attendances_per_day[weekday] |= attendance
+                attendances_per_day[weekday + 7] |= attendance
+
+        start = start_dt.astimezone(utc)
+        end = end_dt.astimezone(utc)
+        bounds_per_tz = {
+            tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
+            for tz in resources_per_tz.keys()
+        }
+        # Use the outer bounds from the requested timezones
+        for tz, bounds in bounds_per_tz.items():
+            start = min(start, bounds[0].replace(tzinfo=utc))
+            end = max(end, bounds[1].replace(tzinfo=utc))
+        # Generate once with utc as timezone
+        days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
+        ResourceCalendarAttendance = self.env['resource.calendar.attendance']
+        base_result = []
+        per_resource_result = defaultdict(list)
+        for day in days:
+            week_type = ResourceCalendarAttendance.get_week_type(day)
+            attendances = attendances_per_day[day.weekday() + 7 * week_type]
+            for attendance in attendances:
+                if (attendance.date_from and day.date() < attendance.date_from) or\
+                    (attendance.date_to and attendance.date_to < day.date()):
+                    continue
+                day_from = datetime.combine(day, float_to_time(attendance.hour_from))
+                day_to = datetime.combine(day, float_to_time(attendance.hour_to))
+                if attendance.resource_id:
+                    per_resource_result[attendance.resource_id].append((day_from, day_to, attendance))
                 else:
-                    start = start_dt.astimezone(tz)
-                    cache_dates[(tz, start_dt)] = start
-                if (tz, end_dt) in cache_dates:
-                    end = cache_dates[(tz, end_dt)]
+                    base_result.append((day_from, day_to, attendance))
+
+        # Copy the result localized once per necessary timezone
+        # Strictly speaking comparing start_dt < time or start_dt.astimezone(tz) < time
+        # should always yield the same result. however while working with dates it is easier
+        # if all dates have the same format
+        result_per_tz = {
+            tz: [(max(bounds_per_tz[tz][0], tz.localize(val[0])),
+                min(bounds_per_tz[tz][1], tz.localize(val[1])),
+                val[2])
+                    for val in base_result]
+            for tz in resources_per_tz.keys()
+        }
+        result_per_resource_id = dict()
+        for tz, resources in resources_per_tz.items():
+            res = result_per_tz[tz]
+            res_intervals = Intervals(res)
+            for resource in resources:
+                if resource in per_resource_result:
+                    resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
+                        for val in per_resource_result[resource]]
+                    result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result))
                 else:
-                    end = end_dt.astimezone(tz)
-                    cache_dates[(tz, end_dt)] = end
-
-                start = start.date()
-                if attendance.date_from:
-                    start = max(start, attendance.date_from)
-                until = end.date()
-                if attendance.date_to:
-                    until = min(until, attendance.date_to)
-                if attendance.week_type:
-                    start_week_type = self.env['resource.calendar.attendance'].get_week_type(start)
-                    if start_week_type != int(attendance.week_type):
-                        # start must be the week of the attendance
-                        # if it's not the case, we must remove one week
-                        start = start + relativedelta(weeks=-1)
-                weekday = int(attendance.dayofweek)
-
-                if self.two_weeks_calendar and attendance.week_type:
-                    days = rrule(WEEKLY, start, interval=2, until=until, byweekday=weekday)
-                else:
-                    days = rrule(DAILY, start, until=until, byweekday=weekday)
-
-                for day in days:
-                    # attendance hours are interpreted in the resource's timezone
-                    hour_from = attendance.hour_from
-                    if (tz, day, hour_from) in cache_deltas:
-                        dt0 = cache_deltas[(tz, day, hour_from)]
-                    else:
-                        dt0 = tz.localize(combine(day, float_to_time(hour_from)))
-                        cache_deltas[(tz, day, hour_from)] = dt0
-
-                    hour_to = attendance.hour_to
-                    if (tz, day, hour_to) in cache_deltas:
-                        dt1 = cache_deltas[(tz, day, hour_to)]
-                    else:
-                        dt1 = tz.localize(combine(day, float_to_time(hour_to)))
-                        cache_deltas[(tz, day, hour_to)] = dt1
-                    result[resource.id].append((max(cache_dates[(tz, start_dt)], dt0), min(cache_dates[(tz, end_dt)], dt1), attendance))
-        return {r.id: Intervals(result[r.id]) for r in resources_list}
+                    result_per_resource_id[resource.id] = res_intervals
+        return result_per_resource_id
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
@@ -454,21 +487,25 @@ class ResourceCalendar(models.Model):
             start_dt, end_dt, resources=resource, domain=domain, tz=tz
         )[resource.id]
 
-    def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, any_calendar=False):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
-        resources = self.env['resource.resource'] if not resources else resources
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
 
-        # for the computation, express all datetimes in UTC
-        resources_list = list(resources) + [self.env['resource.resource']]
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         if domain is None:
             domain = [('time_type', '=', 'leave')]
+        if not any_calendar:
+            domain = domain + [('calendar_id', 'in', [False, self.id])]
+        # for the computation, express all datetimes in UTC
         domain = domain + [
-            ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
             ('date_from', '<=', datetime_to_string(end_dt)),
             ('date_to', '>=', datetime_to_string(start_dt)),
@@ -498,19 +535,24 @@ class ResourceCalendar(models.Model):
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
-    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
             resources = self.env['resource.resource']
             resources_list = [resources]
         else:
-            resources_list = list(resources)
+            resources_list = list(resources) + [self.env['resource.resource']]
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz)
-        leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
-        return {
-            r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
-        }
+        if compute_leaves:
+            leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
+            return {
+                r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
+            }
+        else:
+            return {
+                r.id: attendance_intervals[r.id] for r in resources_list
+            }
 
     def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
@@ -569,8 +611,11 @@ class ResourceCalendar(models.Model):
         @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
         self.ensure_one()
-        resources = self.env['resource.resource'] if not resources else resources
-        resources_list = list(resources) + [self.env['resource.resource']]
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
@@ -584,7 +629,7 @@ class ResourceCalendar(models.Model):
                 day_total[start.date()] += (stop - start).total_seconds() / 3600
         return result
 
-    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None):
+    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):
         """Return the closest work interval boundary within the search range.
         Consider only starts of intervals unless `match_end` is True. It will then only consider
         ends of intervals.
@@ -596,12 +641,14 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
+        tz = resource.tz if resource else self.tz
         if resource is None:
             resource = self.env['resource.resource']
 
         if not dt.tzinfo or search_range and not (search_range[0].tzinfo and search_range[1].tzinfo):
             raise ValueError('Provided datetimes needs to be timezoned')
-        dt = dt.astimezone(timezone(self.tz))
+
+        dt = dt.astimezone(timezone(tz))
 
         if not search_range:
             range_start = dt + relativedelta(hour=0, minute=0, second=0)
@@ -612,10 +659,22 @@ class ResourceCalendar(models.Model):
         if not range_start <= dt <= range_end:
             return None
         work_intervals = sorted(
-            self._work_intervals_batch(range_start, range_end, resource)[resource.id],
+            self._work_intervals_batch(range_start, range_end, resource, compute_leaves=compute_leaves)[resource.id],
             key=lambda i: abs(interval_dt(i) - dt),
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
+
+    def _get_unusual_days(self, start_dt, end_dt):
+        if not self:
+            return {}
+        self.ensure_one()
+        if not start_dt.tzinfo:
+            start_dt = start_dt.replace(tzinfo=utc)
+        if not end_dt.tzinfo:
+            end_dt = end_dt.replace(tzinfo=utc)
+
+        works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt)[False]}
+        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
 
     # --------------------------------------------------
     # External API
@@ -812,7 +871,7 @@ class ResourceCalendarAttendance(models.Model):
         # avoid negative or after midnight
         self.hour_from = min(self.hour_from, 23.99)
         self.hour_from = max(self.hour_from, 0.0)
-        self.hour_to = min(self.hour_to, 23.99)
+        self.hour_to = min(self.hour_to, 24)
         self.hour_to = max(self.hour_to, 0.0)
 
         # avoid wrong order
@@ -856,6 +915,7 @@ class ResourceCalendarAttendance(models.Model):
 class ResourceResource(models.Model):
     _name = "resource.resource"
     _description = "Resources"
+    _order = "name"
 
     @api.model
     def default_get(self, fields):
@@ -872,7 +932,7 @@ class ResourceResource(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([
         ('user', 'Human'),
-        ('material', 'Material')], string='Resource Type',
+        ('material', 'Material')], string='Type',
         default='user', required=True)
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
     time_efficiency = fields.Float(
@@ -881,12 +941,10 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        required=True,
-        help="Define the schedule of resource")
+        required=True, domain="[('company_id', '=', company_id)]")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
-        help="This field is used in order to define in which timezone the resources will work.")
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
 
     _sql_constraints = [
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
@@ -914,6 +972,17 @@ class ResourceResource(models.Model):
             default.update(name=_('%s (copy)') % (self.name))
         return super(ResourceResource, self).copy(default)
 
+    def write(self, values):
+        if self.env.context.get('check_idempotence') and len(self) == 1:
+            values = {
+                fname: value
+                for fname, value in values.items()
+                if self._fields[fname].convert_to_write(self[fname], self) != value
+            }
+        if not values:
+            return True
+        return super().write(values)
+
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self.company_id:
@@ -928,7 +997,7 @@ class ResourceResource(models.Model):
         # Deprecated method. Use `_adjust_to_calendar` instead
         return self._adjust_to_calendar(start, end)
 
-    def _adjust_to_calendar(self, start, end):
+    def _adjust_to_calendar(self, start, end, compute_leaves=True):
         """Adjust the given start and end datetimes to the closest effective hours encoded
         in the resource calendar. Only attendances in the same day as `start` and `end` are
         considered (respectively). If no attendance is found during that day, the closest hour
@@ -944,22 +1013,23 @@ class ResourceResource(models.Model):
         end, revert_end_tz = make_aware(end)
         result = {}
         for resource in self:
-            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource)
-            search_range = None
-            tz = timezone(resource.tz)
-            if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
-                # Make sure to only search end after start
-                search_range = (
-                    start,
-                    end + relativedelta(days=1, hour=0, minute=0, second=0),
-                )
-            calendar_end = resource.calendar_id._get_closest_work_time(end, match_end=True, resource=resource, search_range=search_range)
+            resource_tz = timezone(resource.tz)
+            start, end = start.astimezone(resource_tz), end.astimezone(resource_tz)
+            search_range = [
+                start + relativedelta(hour=0, minute=0, second=0),
+                end + relativedelta(days=1, hour=0, minute=0, second=0),
+            ]
+            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource, search_range=search_range,
+                                                                         compute_leaves=compute_leaves)
+            search_range[0] = start
+            calendar_end = resource.calendar_id._get_closest_work_time(end if end > start else start, match_end=True,
+                                                                       resource=resource, search_range=search_range,
+                                                                       compute_leaves=compute_leaves)
             result[resource] = (
                 calendar_start and revert_start_tz(calendar_start),
                 calendar_end and revert_end_tz(calendar_end),
             )
         return result
-
 
     def _get_unavailable_intervals(self, start, end):
         """ Compute the intervals during which employee is unavailable with hour granularity between start and end
@@ -974,21 +1044,86 @@ class ResourceResource(models.Model):
             calendar_mapping[resource.calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources)
+            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
+    def _get_calendars_validity_within_period(self, start, end, default_company=None):
+        """ Gets a dict of dict with resource's id as first key and resource's calendar as secondary key
+            The value is the validity interval of the calendar for the given resource.
+
+            Here the validity interval for each calendar is the whole interval but it's meant to be overriden in further modules
+            handling resource's employee contracts.
+        """
+        assert start.tzinfo and end.tzinfo
+        resource_calendars_within_period = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
+        default_calendar = default_company and default_company.resource_calendar_id or self.env.company.resource_calendar_id
+        if not self:
+            # if no resource, add the company resource calendar.
+            resource_calendars_within_period[False][default_calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
+        for resource in self:
+            calendar = resource.calendar_id or resource.company_id.resource_calendar_id or default_calendar
+            resource_calendars_within_period[resource.id][calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
+        return resource_calendars_within_period
+
+    def _get_valid_work_intervals(self, start, end, calendars=None):
+        """ Gets the valid work intervals of the resource following their calendars between ``start`` and ``end``
+
+            This methods handle the eventuality of a resource having multiple resource calendars, see _get_calendars_validity_within_period method
+            for further explanation.
+        """
+        assert start.tzinfo and end.tzinfo
+        resource_calendar_validity_intervals = {}
+        calendar_resources = defaultdict(lambda: self.env['resource.resource'])
+        resource_work_intervals = defaultdict(Intervals)
+        calendar_work_intervals = dict()
+
+        resource_calendar_validity_intervals = self._get_calendars_validity_within_period(start, end)
+        for resource in self:
+            # For each resource, retrieve its calendar and their validity intervals
+            for calendar in resource_calendar_validity_intervals[resource.id]:
+                calendar_resources[calendar] |= resource
+        for calendar in (calendars or []):
+            calendar_resources[calendar] |= self.env['resource.resource']
+        for calendar, resources in calendar_resources.items():
+            # For each calendar used by the resources, retrieve the work intervals for every resources using it
+            work_intervals_batch = calendar._work_intervals_batch(start, end, resources=resources)
+            for resource in resources:
+                # Make the conjunction between work intervals and calendar validity
+                resource_work_intervals[resource.id] |= work_intervals_batch[resource.id] & resource_calendar_validity_intervals[resource.id][calendar]
+            calendar_work_intervals[calendar.id] = work_intervals_batch[False]
+
+        return resource_work_intervals, calendar_work_intervals
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
     _description = "Resource Time Off Detail"
     _order = "date_from"
 
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'date_from' in fields_list and 'date_to' in fields_list and not res.get('date_from') and not res.get('date_to'):
+            # Then we give the current day and we search the begin and end hours for this day in resource.calendar of the current company
+            today = fields.Datetime.now()
+            user_tz = timezone(self.env.user.tz or self._context.get('tz') or self.company_id.resource_calendar_id.tz or 'UTC')
+            date_from = user_tz.localize(datetime.combine(today, time.min))
+            date_to = user_tz.localize(datetime.combine(today, time.max))
+            intervals = self.env.company.resource_calendar_id._work_intervals_batch(date_from.replace(tzinfo=utc), date_to.replace(tzinfo=utc))[False]
+            if intervals:  # Then we stop and return the dates given in parameter
+                list_intervals = [(start, stop) for start, stop, records in intervals]  # Convert intervals in interval list
+                date_from = list_intervals[0][0]  # We take the first date in the interval list
+                date_to = list_intervals[-1][1]  # We take the last date in the interval list
+            res.update(
+                date_from=date_from.astimezone(utc).replace(tzinfo=None),
+                date_to=date_to.astimezone(utc).replace(tzinfo=None)
+            )
+        return res
+
     name = fields.Char('Reason')
     company_id = fields.Many2one(
-        'res.company', related='calendar_id.company_id', string="Company",
-        readonly=True, store=True)
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', index=True)
+        'res.company', string="Company", readonly=True, store=True,
+        default=lambda self: self.env.company, compute='_compute_company_id')
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', '=', company_id)]", index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
@@ -996,6 +1131,11 @@ class ResourceCalendarLeaves(models.Model):
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
                                  help="Whether this should be computed as a time off or as work time (eg: formation)")
+
+    @api.depends('calendar_id')
+    def _compute_company_id(self):
+        for leave in self:
+            leave.company_id = leave.calendar_id.company_id or self.env.company
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

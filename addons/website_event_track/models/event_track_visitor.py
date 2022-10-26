@@ -21,7 +21,7 @@ class TrackVisitor(models.Model):
         'event.track', string='Track',
         index=True, required=True, ondelete='cascade')
     is_wishlisted = fields.Boolean(string="Is Wishlisted")
-    is_blacklisted = fields.Boolean(string="Is reminder off", help="As key track cannot be un-wishlisted, this field store the partner choice to remove the reminder for key tracks.")
+    is_blacklisted = fields.Boolean(string="Is reminder off", help="As key track cannot be un-favorited, this field store the partner choice to remove the reminder for key tracks.")
 
     @api.depends('visitor_id')
     def _compute_partner_id(self):

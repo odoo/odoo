@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="CategoryButton" owl="1">
-        <span class="category-button" t-on-click="trigger('switch-category', props.category.id)">
+        <span class="category-button" t-on-click="() => this.trigger('switch-category', props.category.id)">
             <div class="category-img">
                 <img t-att-src="imageUrl" alt="Category" />
             </div>

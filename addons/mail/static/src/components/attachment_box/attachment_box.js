@@ -1,46 +1,18 @@
-odoo.define('mail/static/src/components/attachment_box/attachment_box.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    AttachmentList: require('mail/static/src/components/attachment_list/attachment_list.js'),
-    DropZone: require('mail/static/src/components/drop_zone/drop_zone.js'),
-    FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
-};
-const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const { link } = require('mail/static/src/model/model_field_command.js');
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
-class AttachmentBox extends Component {
+export class AttachmentBox extends Component {
 
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
-        this.isDropZoneVisible = useDragVisibleDropZone();
-        useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            return {
-                thread,
-                threadAllAttachments: thread ? thread.allAttachments : [],
-                threadId: thread && thread.id,
-                threadModel: thread && thread.model,
-            };
-        }, {
-            compareDepth: {
-                threadAllAttachments: 1,
-            },
-        });
-        /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
+    setup() {
+        super.setup();
+        useComponentToModel({ fieldName: 'component' });
     }
 
     //--------------------------------------------------------------------------
@@ -48,78 +20,17 @@ class AttachmentBox extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Get an object which is passed to FileUploader component to be used when
-     * creating attachment.
-     *
-     * @returns {Object}
+     * @returns {AttachmentBoxView|undefined}
      */
-    get newAttachmentExtraData() {
-        return {
-            originThread: link(this.thread),
-        };
-    }
-
-    /**
-     * @returns {mail.thread|undefined}
-     */
-    get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAttachmentCreated(ev) {
-        // FIXME Could be changed by spying attachments count (task-2252858)
-        this.trigger('o-attachments-changed');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAttachmentRemoved(ev) {
-        // FIXME Could be changed by spying attachments count (task-2252858)
-        this.trigger('o-attachments-changed');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickAdd(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this._fileUploaderRef.comp.openBrowserFileUploader();
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {FileList} ev.detail.files
-     */
-    async _onDropZoneFilesDropped(ev) {
-        ev.stopPropagation();
-        await this._fileUploaderRef.comp.uploadFiles(ev.detail.files);
-        this.isDropZoneVisible.value = false;
+    get attachmentBoxView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(AttachmentBox, {
-    components,
-    props: {
-        threadLocalId: String,
-    },
+    props: { record: Object },
     template: 'mail.AttachmentBox',
 });
 
-return AttachmentBox;
-
-});
+registerMessagingComponent(AttachmentBox);

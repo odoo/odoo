@@ -1,0 +1,21 @@
+<templates>
+    <t t-name="purchase.RfqNoContent" t-inherit="web.ActionHelper" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_view_nocontent')]" position="attributes">
+            <attribute name="class" add="o_rfq_no_content" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="purchase.PurchaseListView" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ActionHelper']" position="replace">
+            <PurchaseDashBoard />
+            <t t-if="showNoContentHelper">
+                <t t-if="!showTable" t-call="purchase.RfqNoContent">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

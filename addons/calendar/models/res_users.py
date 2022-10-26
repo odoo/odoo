@@ -44,6 +44,7 @@ class Users(models.Model):
         if meetings_lines:
             meeting_label = _("Today's Meetings")
             meetings_systray = {
+                'id': self.env['ir.model']._get('calendar.event').id,
                 'type': 'meeting',
                 'name': meeting_label,
                 'model': 'calendar.event',

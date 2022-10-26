@@ -101,7 +101,8 @@ class LunchAlert(models.Model):
             sendat_tz = pytz.timezone(alert.tz).localize(datetime.combine(
                 fields.Date.context_today(alert, fields.Datetime.now()),
                 float_to_time(alert.notification_time, alert.notification_moment)))
-            lc = alert.cron_id.lastcall
+            cron = alert.cron_id.sudo()
+            lc = cron.lastcall
             if ((
                 lc and sendat_tz.date() <= fields.Datetime.context_timestamp(alert, lc).date()
             ) or (
@@ -110,10 +111,10 @@ class LunchAlert(models.Model):
                 sendat_tz += timedelta(days=1)
             sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-            alert.cron_id.name = f"Lunch: alert chat notification ({alert.name})"
-            alert.cron_id.active = cron_required
-            alert.cron_id.nextcall = sendat_utc
-            alert.cron_id.code = dedent(f"""\
+            cron.name = f"Lunch: alert chat notification ({alert.name})"
+            cron.active = cron_required
+            cron.nextcall = sendat_utc
+            cron.code = dedent(f"""\
                 # This cron is dynamically controlled by {self._description}.
                 # Do NOT modify this cron, modify the related record instead.
                 env['{self._name}'].browse([{alert.id}])._notify_chat()""")
@@ -135,6 +136,14 @@ class LunchAlert(models.Model):
             }
             for _ in range(len(vals_list))
         ])
+        self.env['ir.model.data'].sudo().create([{
+            'name': f'lunch_alert_cron_sa_{cron.ir_actions_server_id.id}',
+            'module': 'lunch',
+            'res_id': cron.ir_actions_server_id.id,
+            'model': 'ir.actions.server',
+            # noupdate is set to true to avoid to delete record at module update
+            'noupdate': True,
+        } for cron in crons])
         for vals, cron in zip(vals_list, crons):
             vals['cron_id'] = cron.id
 
@@ -148,9 +157,11 @@ class LunchAlert(models.Model):
             self._sync_cron()
 
     def unlink(self):
-        crons = self.cron_id
+        crons = self.cron_id.sudo()
+        server_actions = crons.ir_actions_server_id
         super().unlink()
         crons.unlink()
+        server_actions.unlink()
 
     def _notify_chat(self):
         # Called daily by cron
@@ -181,4 +192,7 @@ class LunchAlert(models.Model):
 
         partners = self.env['lunch.order'].search(order_domain).user_id.partner_id
         if partners:
-            self.env['mail.thread'].message_notify(body=self.message, partner_ids=partners.ids)
+            self.env['mail.thread'].message_notify(
+                body=self.message,
+                partner_ids=partners.ids
+            )

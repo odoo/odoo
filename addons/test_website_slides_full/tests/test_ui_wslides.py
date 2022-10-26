@@ -11,7 +11,6 @@ class TestUi(TestUICommon):
 
     def test_course_certification_employee(self):
         user_demo = self.user_demo
-        user_demo.flush()
         # Avoid Billing/Shipping address page
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)],
@@ -26,17 +25,20 @@ class TestUi(TestUICommon):
 
         # Specify Accounting Data
         cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env['payment.acquirer'].search([('journal_id', '=', False)]).journal_id = cash_journal
+        self.env['payment.provider'].search([('code', '=', 'demo')]).write({
+            'journal_id': cash_journal.id,
+            'state': 'test'
+        })
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',
             'reconcile': True,
-            'user_type_id': self.env.ref('account.data_account_type_receivable').id,
+            'account_type': 'asset_receivable',
         })
         a_pay = self.env['account.account'].create({
             'code': 'X1111',
             'name': 'Creditors - (test)',
-            'user_type_id': self.env.ref('account.data_account_type_payable').id,
+            'account_type': 'liability_payable',
             'reconcile': True,
         })
 
@@ -55,6 +57,7 @@ class TestUi(TestUICommon):
             'title': 'Furniture Creation Certification',
             'access_token': '5632a4d7-48cf-aaaa-8c52-2174d58cf50b',
             'access_mode': 'public',
+            'questions_layout': 'one_page',
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
@@ -68,6 +71,7 @@ class TestUi(TestUICommon):
                     'title': 'Furniture',
                     'sequence': 1,
                     'is_page': True,
+                    'question_type': False,
                     'description': "&lt;p&gt;Test your furniture knowledge!&lt;/p&gt",
                 }), (0, 0, {
                     'title': 'What type of wood is the best for furniture?',
@@ -95,7 +99,6 @@ class TestUi(TestUICommon):
                     'title': 'Select all the furniture shown in the video',
                     'sequence': 3,
                     'question_type': 'multiple_choice',
-                    'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair',
@@ -145,7 +148,7 @@ class TestUi(TestUICommon):
                 (0, 0, {
                     'name': 'DIY Furniture Certification',
                     'sequence': 1,
-                    'slide_type': 'certification',
+                    'slide_category': 'certification',
                     'category_id': False,
                     'is_published': True,
                     'is_preview': False,

@@ -25,10 +25,9 @@ class TestExpensesMailImport(TestExpenseCommon):
         }
 
         expense = self.env['hr.expense'].message_new(message_parsed)
-
         self.assertRecordValues(expense, [{
             'product_id': self.product_a.id,
-            'total_amount': 920.0,
+            'total_amount': 800.0,
             'employee_id': self.expense_employee.id,
         }])
 

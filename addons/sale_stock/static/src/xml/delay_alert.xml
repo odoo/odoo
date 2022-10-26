@@ -1,0 +1,9 @@
+<templates>
+    <div t-name="sale_stock.DelayAlertWidget" owl="1" class="m-1">
+        <p>The delivery
+            <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
+                <a t-esc="late_element.name" href="#" t-on-click="openElement" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
+            </t> will be late.
+        </p>
+    </div>
+</templates>

@@ -37,7 +37,7 @@ __all__ = ['test_expr', 'safe_eval', 'const_eval']
 # lp:703841), does import time.
 _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
-_UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
+_UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame', 'gi_code',
                       'co_code', 'func_globals']
 
 def to_opcodes(opnames, _opmap=opmap):
@@ -86,6 +86,8 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # specialised comparisons
     'IS_OP', 'CONTAINS_OP',
     'DICT_MERGE', 'DICT_UPDATE',
+    # Basically used in any "generator literal"
+    'GEN_START',  # added in 3.10 but already removed from 3.11.
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
@@ -169,19 +171,23 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
-def test_expr(expr, allowed_codes, mode="eval"):
-    """test_expr(expression, allowed_codes[, mode]) -> code_object
+def test_expr(expr, allowed_codes, mode="eval", filename=None):
+    """test_expr(expression, allowed_codes[, mode[, filename]]) -> code_object
 
     Test that the expression contains only the allowed opcodes.
     If the expression is valid and contains only allowed codes,
     return the compiled code object.
     Otherwise raise a ValueError, a Syntax Error or TypeError accordingly.
+
+    :param filename: optional pseudo-filename for the compiled expression,
+                 displayed for example in traceback frames
+    :type filename: string
     """
     try:
         if mode == 'eval':
             # eval() does not like leading/trailing whitespace
             expr = expr.strip()
-        code_obj = compile(expr, "", mode)
+        code_obj = compile(expr, filename or "", mode)
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
@@ -280,7 +286,7 @@ _BUILTINS = {
     'zip': zip,
     'Exception': Exception,
 }
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False, filename=None):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
     System-restricted Python expression evaluation
@@ -292,6 +298,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     This can be used to e.g. evaluate
     an OpenERP domain expression from an untrusted source.
 
+    :param filename: optional pseudo-filename for the compiled expression,
+                     displayed for example in traceback frames
+    :type filename: string
     :throws TypeError: If the expression provided is a code object
     :throws SyntaxError: If the expression provided is not valid Python
     :throws NameError: If the expression provided accesses forbidden names
@@ -325,7 +334,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         if locals_dict is None:
             locals_dict = {}
         locals_dict.update(_BUILTINS)
-    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
+    c = test_expr(expr, _SAFE_OPCODES, mode=mode, filename=filename)
     try:
         return unsafe_eval(c, globals_dict, locals_dict)
     except odoo.exceptions.UserError:
@@ -333,8 +342,6 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except odoo.exceptions.RedirectWarning:
         raise
     except werkzeug.exceptions.HTTPException:
-        raise
-    except odoo.http.AuthenticationError:
         raise
     except OperationalError:
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
@@ -413,7 +420,7 @@ dateutil = wrap_module(dateutil, {
     for mod in mods
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
-time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime'])
+time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])

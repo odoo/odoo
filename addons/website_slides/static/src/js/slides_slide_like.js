@@ -1,11 +1,9 @@
-odoo.define('website_slides.slides.slide.like', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-require('website_slides.slides');
-
-var _t = core._t;
+import { sprintf } from '@web/core/utils/strings';
+import { _t } from 'web.core';
+import publicWidget from 'web.public.widget';
+import '@website_slides/js/slides';
 
 var SlideLikeWidget = publicWidget.Widget.extend({
     events: {
@@ -25,6 +23,7 @@ var SlideLikeWidget = publicWidget.Widget.extend({
     _popoverAlert: function ($el, message) {
         $el.popover({
             trigger: 'focus',
+            delay: {'hide': 300},
             placement: 'bottom',
             container: 'body',
             html: true,
@@ -51,18 +50,27 @@ var SlideLikeWidget = publicWidget.Widget.extend({
             },
         }).then(function (data) {
             if (! data.error) {
-                self.$el.find('span.o_wslides_js_slide_like_up span').text(data.likes);
-                self.$el.find('span.o_wslides_js_slide_like_down span').text(data.dislikes);
+                const $likesBtn = self.$('span.o_wslides_js_slide_like_up');
+                const $likesIcon = $likesBtn.find('i.fa');
+                const $dislikesBtn = self.$('span.o_wslides_js_slide_like_down');
+                const $dislikesIcon = $dislikesBtn.find('i.fa');
+
+                // update 'thumbs-up' button with latest state
+                $likesBtn.data('user-vote', data.user_vote);
+                $likesBtn.find('span').text(data.likes);
+                $likesIcon.toggleClass("fa-thumbs-up", data.user_vote === 1);
+                $likesIcon.toggleClass("fa-thumbs-o-up", data.user_vote !== 1);
+                // update 'thumbs-down' button with latest state
+                $dislikesBtn.data('user-vote', data.user_vote);
+                $dislikesBtn.find('span').text(data.dislikes);
+                $dislikesIcon.toggleClass("fa-thumbs-down", data.user_vote === -1);
+                $dislikesIcon.toggleClass("fa-thumbs-o-down", data.user_vote !== -1);
             } else {
                 if (data.error === 'public_user') {
-                    var message = _t('Please <a href="/web/login?redirect=%s">login</a> to vote this lesson');
-                    var signupAllowed = data.error_signup_allowed || false;
-                    if (signupAllowed) {
-                        message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to vote this lesson');
-                    }
-                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
-                } else if (data.error === 'vote_done') {
-                    self._popoverAlert(self.$el, _t('You have already voted for this lesson'));
+                    const message = data.error_signup_allowed ?
+                        _t('Please <a href="/web/login?redirect=%s">login</a> or <a href="/web/signup?redirect=%s">create an account</a> to vote for this lesson') :
+                        _t('Please <a href="/web/login?redirect=%s">login</a> to vote for this lesson');
+                    self._popoverAlert(self.$el, sprintf(message, document.URL, document.URL));
                 } else if (data.error === 'slide_access') {
                     self._popoverAlert(self.$el, _t('You don\'t have access to this lesson'));
                 } else if (data.error === 'channel_membership_required') {
@@ -106,9 +114,7 @@ publicWidget.registry.websiteSlidesSlideLike = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     slideLikeWidget: SlideLikeWidget,
     websiteSlidesSlideLike: publicWidget.registry.websiteSlidesSlideLike
 };
-
-});

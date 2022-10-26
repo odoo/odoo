@@ -94,8 +94,8 @@ odoo.define('pos_mercury.PaymentScreen', function (require) {
 
     const PosMercuryPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 if (this.env.pos.getOnlinePaymentMethods().length !== 0) {
                     useBarcodeReader({
                         credit: this.credit_code_action,
@@ -108,6 +108,39 @@ odoo.define('pos_mercury.PaymentScreen', function (require) {
                 // How many Vantiv transactions we send without receiving a
                 // response
                 this.server_retries = 3;
+            }
+
+            /**
+             * The card reader acts as a barcode scanner. This sets up
+             * the NumberBuffer to not immediately act on keyboard
+             * input.
+             *
+             * @override
+             */
+            get _getNumberBufferConfig() {
+                const res = super._getNumberBufferConfig;
+                res['useWithBarcode'] = true;
+                return res;
+            }
+
+            /**
+             * Finish any pending input before trying to validate.
+             *
+             * @override
+             */
+            async validateOrder(isForceValidate) {
+                NumberBuffer.capture();
+                return super.validateOrder(...arguments);
+            }
+
+            /**
+             * Finish any pending input before sending a request to a terminal.
+             *
+             * @override
+             */
+            async _sendPaymentRequest({ detail: line }) {
+                NumberBuffer.capture();
+                return super._sendPaymentRequest(...arguments);
             }
 
             _get_swipe_pending_line() {

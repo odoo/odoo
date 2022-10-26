@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import models, _
 
 
 class SaleOrder(models.Model):
@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
         )
         products = so_lines.mapped('product_id')
         related_channels = self.env['slide.channel'].search(
-            [('product_id', 'in', products.ids)]
+            [('product_id', 'in', products.ids), ('enroll', '=', 'payment')],
         )
         channel_products = related_channels.mapped('product_id')
 
@@ -29,6 +29,13 @@ class SaleOrder(models.Model):
                         channels_per_so[so_line.order_id] = channels_per_so[so_line.order_id] | related_channel
 
         for sale_order, channels in channels_per_so.items():
-            channels._action_add_members(sale_order.partner_id)
+            channels.sudo()._action_add_members(sale_order.partner_id)
 
         return result
+
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+        """Forbid quantity updates on courses lines."""
+        product = self.env['product.product'].browse(product_id)
+        if product.detailed_type == 'course' and new_qty > 1:
+            return 1, _('You can only add a course once in your cart.')
+        return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)

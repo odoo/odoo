@@ -1,0 +1,80 @@
+@keyframes kanban-counter-grow {
+    30% {
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+}
+
+@keyframes kanban-counter-grow-huge {
+    30% {
+        transform: scale3d(1.3, 1.3, 1.3);
+    }
+}
+
+@mixin o-kanban-css-filter($class, $accent-color) {
+    // Provide CSS reordering and highlight
+    &.o_kanban_group_show_#{$class} {
+        $mix-soft: mix($accent-color, $o-webclient-background-color, 5%);
+        $mix-full: mix($accent-color, $o-webclient-background-color);
+
+        &,
+        .o_kanban_header {
+            background-color: $mix-soft;
+            border-color: $mix-full;
+        }
+
+        .oe_kanban_card_#{$class} {
+            order: 1;
+        }
+
+        .o_kanban_load_more {
+            order: 2;
+            padding: var(--KanbanRecord-padding-v) 0;
+        }
+
+        .o_kanban_record:not(.oe_kanban_card_#{$class}) {
+            order: 3;
+            @include o-hover-opacity(0.5);
+            box-shadow: none;
+        }
+    }
+}
+
+.o_kanban_renderer {
+
+    .o_kanban_counter {
+        transition: opacity 0.3s ease 0s;
+
+        > .o_kanban_counter_progress {
+            height: $font-size-sm;
+        }
+
+        > .o_kanban_counter_side {
+            transform-origin: right center;
+
+            &.o_kanban_grow {
+                animation: kanban-counter-grow 1s ease 0s 1 normal none running;
+            }
+
+            &.o_kanban_grow_huge {
+                animation: kanban-counter-grow-huge 1s ease 0s 1 normal none running;
+            }
+        }
+    }
+
+    .o_kanban_group {
+        @include o-kanban-css-filter(success, map-get($theme-colors, "success"));
+        @include o-kanban-css-filter(warning, map-get($theme-colors, "warning"));
+        @include o-kanban-css-filter(danger, map-get($theme-colors, "danger"));
+        @include o-kanban-css-filter(muted, map-get($theme-colors, "dark"));
+        @include o-kanban-css-filter(info, map-get($theme-colors, "info"));
+
+        &.o_kanban_group_show {
+            display: flex;
+            flex-flow: column nowrap;
+
+            > * {
+                flex: 0 0 auto;
+            }
+        }
+    }
+}

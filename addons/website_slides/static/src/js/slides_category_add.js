@@ -1,10 +1,8 @@
-odoo.define('website_slides.category.add', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var Dialog = require('web.Dialog');
-var core = require('web.core');
-var _t = core._t;
+import publicWidget from 'web.public.widget';
+import Dialog from 'web.Dialog';
+import { _t } from 'web.core';
 
 var CategoryAddDialog = Dialog.extend({
     template: 'slides.category.add',
@@ -21,7 +19,7 @@ var CategoryAddDialog = Dialog.extend({
                 classes: 'btn-primary',
                 click: this._onClickFormSubmit.bind(this)
             }, {
-                text: _t('Discard'),
+                text: _t('Back'),
                 close: true
             }]
         });
@@ -49,7 +47,6 @@ var CategoryAddDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_section_add',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onAddSectionClick',
     },
@@ -76,9 +73,7 @@ publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     categoryAddDialog: CategoryAddDialog,
     websiteSlidesCategoryAdd: publicWidget.registry.websiteSlidesCategoryAdd
 };
-
-});

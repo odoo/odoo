@@ -2,11 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from ast import literal_eval
 
 
 class Company(models.Model):
     _inherit = "res.company"
+
+    website_id = fields.Many2one('website', compute='_compute_website_id', store=True)
+
+    def _compute_website_id(self):
+        for company in self:
+            company.website_id = self.env['website'].search([('company_id', '=', company.id)], limit=1)
 
     @api.model
     def action_open_website_theme_selector(self):

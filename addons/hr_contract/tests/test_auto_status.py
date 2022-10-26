@@ -67,3 +67,12 @@ class TestHrContracts(TestContractCommon):
         self.contract = self.contracts.create(self.test_contract)
         self.apply_cron()
         self.assertEqual(self.contract.state, 'open')
+
+    def test_contract_auto_expire(self):
+        self.test_contract.update(dict(date_start=date.today() - relativedelta(days=10), state='open'))
+        self.contract = self.contracts.create(self.test_contract)
+        self.apply_cron()
+        self.assertEqual(self.contract.state, 'open')
+
+        self.contract.date_end = date.today() - relativedelta(days=3)
+        self.assertEqual(self.contract.state, 'close')

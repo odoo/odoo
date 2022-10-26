@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -282,3 +282,99 @@ class TestRepair(AccountTestInvoicingCommon):
         repair.action_repair_cancel_draft()
         # Linked invoice should be unlinked
         self.assertEqual(len(repair.invoice_id), 0, "No invoice should be exists for this repair order")
+
+    def test_03_repair_multicompany(self):
+        """ This test ensures that the correct taxes are selected when the user fills in the RO form """
+
+        company01 = self.env.company
+        company02 = self.env['res.company'].create({
+            'name': 'SuperCompany',
+        })
+
+        tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "0.00",
+            "company_id": company01.id
+        })
+        tax02 = self.env["account.tax"].create({
+            "name": "C02 Tax",
+            "amount": "0.00",
+            "company_id": company02.id
+        })
+
+        super_product = self.env['product.template'].create({
+            "name": "SuperProduct",
+            "taxes_id": [(4, tax01.id), (4, tax02.id)],
+        })
+        super_variant = super_product.product_variant_id
+        self.assertEqual(super_variant.taxes_id, tax01 | tax02)
+
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = super_variant
+        ro_form.partner_id = company01.partner_id
+        with ro_form.operations.new() as ro_line:
+            ro_line.product_id = super_variant
+        with ro_form.fees_lines.new() as fee_line:
+            fee_line.product_id = super_variant
+        repair_order = ro_form.save()
+
+        # tax02 should not be present since it belongs to the second company.
+        self.assertEqual(repair_order.operations.tax_id, tax01)
+        self.assertEqual(repair_order.fees_lines.tax_id, tax01)
+
+    def test_repair_return(self):
+        """Tests functionality of creating a repair directly from a return picking,
+        i.e. repair can be made and defaults to appropriate return values. """
+        # test return
+        # Required for `location_dest_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.stock_warehouse.return_type_id
+        picking_form.partner_id = self.res_partner_1
+        picking_form.location_dest_id = self.stock_location_14
+        return_picking = picking_form.save()
+
+        # create repair
+        res_dict = return_picking.action_repair_return()
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+        repair_form.product_id = self.product_product_3
+        repair = repair_form.save()
+
+        # test that the resulting repairs are correctly created
+        self.assertEqual(len(return_picking.repair_ids), 1, "A repair order should have been created and linked to original return.")
+        for repair in return_picking.repair_ids:
+            self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
+            self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
+
+    def test_repair_compute_product_uom(self):
+        repair = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'operations': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': self.product_product_11.id,
+                    'price_unit': 50.0,
+                })
+            ],
+        })
+        self.assertEqual(repair.product_uom, self.product_product_3.uom_id)
+        self.assertEqual(repair.operations[0].product_uom, self.product_product_11.uom_id)
+
+    def test_repair_compute_location(self):
+        repair = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'operations': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': self.product_product_11.id,
+                    'price_unit': 50.0,
+                })
+            ],
+        })
+        self.assertEqual(repair.location_id, self.stock_warehouse.lot_stock_id)
+        self.assertEqual(repair.operations[0].location_id, self.stock_warehouse.lot_stock_id)
+        location_dest_id = self.env['stock.location'].search([
+            ('usage', '=', 'production'),
+            ('company_id', '=', repair.company_id.id),
+        ], limit=1)
+        self.assertEqual(repair.operations[0].location_dest_id, location_dest_id)

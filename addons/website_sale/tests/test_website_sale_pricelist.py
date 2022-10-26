@@ -3,6 +3,7 @@
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.website.tools import MockRequest
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 from odoo.tools import DotDict
@@ -28,10 +29,6 @@ Try to keep one call to `get_pricelist_available` by test method.
 
 @tagged('post_install', '-at_install')
 class TestWebsitePriceList(TransactionCase):
-
-    # Mock nedded because request.session doesn't exist during test
-    def _get_pricelist_available(self, show_visible=False):
-        return self.get_pl(self.args.get('show'), self.args.get('current_pl'), self.args.get('country'))
 
     def setUp(self):
         super(TestWebsitePriceList, self).setUp()
@@ -106,17 +103,19 @@ class TestWebsitePriceList(TransactionCase):
             'current_pl': False,
         }
         patcher = patch('odoo.addons.website_sale.models.website.Website.get_pricelist_available', wraps=self._get_pricelist_available)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
-    def get_pl(self, show, current_pl, country):
-        self.website.invalidate_cache(['pricelist_ids'], [self.website.id])
+    # Mock nedded because request.session doesn't exist during test
+    def _get_pricelist_available(self, show_visible=False):
+        return self.get_pl(self.args.get('show'), self.args.get('current_pl'), self.args.get('country'))
+
+    def get_pl(self, show_visible, current_pl_id, country_code):
+        self.website.invalidate_recordset(['pricelist_ids'])
         pl_ids = self.website._get_pl_partner_order(
-            country,
-            show,
-            self.website.pricelist_id.id,
-            current_pl,
-            self.website.pricelist_ids
+            country_code,
+            show_visible,
+            current_pl_id=current_pl_id,
+            website_pricelist_ids=tuple(self.website.pricelist_ids.ids),
         )
         return self.env['product.pricelist'].browse(pl_ids)
 
@@ -190,31 +189,105 @@ class TestWebsitePriceList(TransactionCase):
             self.assertEqual(len(set(pls.mapped('name')) & set(result)), len(pls), 'Test failed for %s (%s %s vs %s %s)'
                               % (country, len(pls), pls.mapped('name'), len(result), result))
 
+    def test_pricelist_combination(self):
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 100,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist.write({
+            'discount_policy': 'with_discount',
+            'item_ids': [(5, 0, 0), (0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'min_quantity': 500,
+                'compute_price': 'percentage',
+                'percent_price': 63,
+            })]
+        })
+        promo_pricelist = self.env['product.pricelist'].create({
+            'name': 'Super Pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'base': 'pricelist',
+                'base_pricelist_id': website_pricelist.id,
+                'compute_price': 'formula',
+                'price_discount': 25
+            })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price,
+                'tax_id': False,
+            })]
+        })
+        sol = so.order_line
+        self.assertEqual(sol.price_total, 100.0)
+        so.pricelist_id = promo_pricelist
+        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
+        self.assertEqual(sol.price_unit, 37.0, 'Both reductions should be applied')
+        self.assertEqual(sol.discount, 25.0, 'Both reductions should be applied')
+        self.assertEqual(sol.price_total, 13875)
+
+    def test_pricelist_with_no_list_price(self):
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 0,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist.write({
+            'discount_policy': 'without_discount',
+            'item_ids': [(5, 0, 0), (0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'min_quantity': 0,
+                'compute_price': 'fixed',
+                'fixed_price': 10,
+            })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price,
+                'tax_id': False,
+            })]
+        })
+        sol = so.order_line
+        self.assertEqual(sol.price_total, 0)
+        so.pricelist_id = website_pricelist
+        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
+        self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
+        self.assertEqual(sol.discount, 0, 'Pricelist price should be applied')
+        self.assertEqual(sol.price_total, 60.0)
+
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
     def get_request_website():
         return self.env['website'].browse(website_id)
     patcher = patch('odoo.addons.website.models.ir_http.get_request_website', wraps=get_request_website)
-    patcher.start()
-    self.addCleanup(patcher.stop)
+    self.startPatcher(patcher)
 
 
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailable(TransactionCase):
-    # This is enough to avoid a mock (request.session/website do not exist during test)
-    def get_pricelist_available(self, show_visible=False, website_id=1, country_code=None, website_sale_current_pl=None):
-        request = DotDict({
-            'website': self.env['website'].browse(website_id),
-            'session': {
-                'geoip': {
-                    'country_code': country_code,
-                },
-                'website_sale_current_pl': website_sale_current_pl,
-            },
-        })
-        return self.env['website']._get_pricelist_available(request, show_visible)
-
     def setUp(self):
         super(TestWebsitePriceListAvailable, self).setUp()
         Pricelist = self.env['product.pricelist']
@@ -272,6 +345,8 @@ class TestWebsitePriceListAvailable(TransactionCase):
         })
         existing_pricelists.write({'active': False})
 
+        self.website = self.env['website'].browse(1)
+
         simulate_frontend_context(self)
 
     def test_get_pricelist_available(self):
@@ -279,12 +354,12 @@ class TestWebsitePriceListAvailable(TransactionCase):
 
         # Test get all available pricelists
         pls_to_return = self.generic_pl_select + self.generic_pl_code + self.generic_pl_code_select + self.w1_pl + self.w1_pl_select + self.w1_pl_code + self.w1_pl_code_select
-        pls = self.get_pricelist_available()
+        pls = self.website.get_pricelist_available()
         self.assertEqual(pls, pls_to_return, "Every pricelist having the correct website_id set or (no website_id but a code or selectable) should be returned")
 
         # Test get all available and visible pricelists
         pls_to_return = self.generic_pl_select + self.generic_pl_code_select + self.w1_pl_select + self.w1_pl_code_select
-        pls = self.get_pricelist_available(show_visible=True)
+        pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return, "Only selectable pricelists website compliant (website_id False or current website) should be returned")
 
     def test_property_product_pricelist_for_inactive_partner(self):
@@ -343,19 +418,22 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # property_product_pricelist will also be returned in the available pricelists
         self.website1_be_pl += self.env.user.partner_id.property_product_pricelist
 
-        pls = self.get_pricelist_available(country_code=self.BE.code)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
+            pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, and the partner pl")
 
     def test_get_pricelist_available_geoip2(self):
         # Test get all available pricelists with geoip and a partner pricelist (ir.property) not website compliant
         self.env.user.partner_id.property_product_pricelist = self.backend_pl
-        pls = self.get_pricelist_available(country_code=self.BE.code)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
+            pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned as partner pl is not website compliant")
 
     def test_get_pricelist_available_geoip3(self):
         # Test get all available pricelists with geoip and a partner pricelist (ir.property) website compliant (but not geoip compliant)
         self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
-        pls = self.get_pricelist_available(country_code=self.BE.code)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
+            pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, but not the partner pricelist as it is website compliant but not GeoIP compliant.")
 
     def test_get_pricelist_available_geoip4(self):
@@ -365,7 +443,9 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         pls_to_return += self.env.user.partner_id.property_product_pricelist
 
         current_pl = self.w1_pl_code
-        pls = self.get_pricelist_available(country_code=self.BE.code, show_visible=True, website_sale_current_pl=current_pl.id)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code), \
+            patch('odoo.addons.website_sale.models.website.Website._get_cached_pricelist_id', return_value=current_pl.id):
+            pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
 
@@ -381,7 +461,7 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
             reading that `property_product_pricelist`.
         '''
         test_company = self.env['res.company'].create({'name': 'Test Company'})
-        test_company.flush()
+        test_company.flush_recordset()
         self.env['product.pricelist'].create({
             'name': 'Backend Pricelist For "Test Company"',
             'website_id': False,
@@ -413,13 +493,23 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.company2 = self.env['res.company'].create({'name': 'Test Company'})
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
+        Website = self.env['website']
         self.website = self.env.ref('website.default_website')
         self.website.company_id = self.company2
+        # Delete unused website, it will make PL manipulation easier, avoiding
+        # UserError being thrown when a website wouldn't have any PL left.
+        Website.search([('id', '!=', self.website.id)]).unlink()
+        self.website2 = Website.create({
+            'name': 'Website 2',
+            'company_id': self.company1.id,
+        })
 
         # Create a company pricelist for each company and set it to demo user
         self.c1_pl = self.env['product.pricelist'].create({
             'name': 'Company 1 Pricelist',
             'company_id': self.company1.id,
+            # The `website_id` field will default to the company's website,
+            # in this case `self.website2`.
         })
         self.c2_pl = self.env['product.pricelist'].create({
             'name': 'Company 2 Pricelist',
@@ -435,7 +525,6 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         irp1 = self.env['ir.property'].with_company(self.company1)._get("property_product_pricelist", "res.partner", self.demo_user.partner_id.id)
         irp2 = self.env['ir.property'].with_company(self.company2)._get("property_product_pricelist", "res.partner", self.demo_user.partner_id.id)
         self.assertEqual((irp1, irp2), (self.c1_pl, self.c2_pl), "Ensure there is an `ir.property` for demo partner for every company, and that the pricelist is the company specific one.")
-        simulate_frontend_context(self)
         # ---------------------------------- IR.PROPERTY -------------------------------------
         # id |            name              |     res_id    | company_id |   value_reference
         # ------------------------------------------------------------------------------------
@@ -455,6 +544,8 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
             for the company1 as we should get the website's company pricelist
             and not the demo user's current company pricelist.
         '''
+        simulate_frontend_context(self, self.website.id)
+
         # First check: It should return ir.property,4 as company_id is
         # website.company_id and not env.user.company_id
         company_id = self.website.company_id.id
@@ -467,3 +558,28 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # also read a pricelist from another company if that company is the one
         # from the currently visited website.
         self.env(user=self.user_demo)['product.pricelist'].browse(demo_pl.id).name
+
+    def test_archive_pricelist_1(self):
+        ''' Test that when a pricelist is archived, the check that verify that
+            all website have at least one pricelist have access to all
+            pricelists (considering all companies).
+        '''
+
+        self.c2_pl.website_id = self.website
+        c2_pl2 = self.c2_pl.copy({'name': 'Copy of c2_pl'})
+        self.env['product.pricelist'].search([
+            ('id', 'not in', (self.c2_pl + self.c1_pl + c2_pl2).ids)
+        ]).write({'active': False})
+
+        # ---------------- PRICELISTS ----------------
+        #    name    |   website_id  |  company_id   |
+        # --------------------------------------------
+        # self.c1_pl | self.website2 | self.company1 |
+        # self.c2_pl | self.website  | self.company2 |
+        # c2_pl2     | self.website  | self.company2 |
+
+        self.demo_user.groups_id += self.env.ref('sales_team.group_sale_manager')
+
+        # The test is here: while having access only to self.company2 records,
+        # archive should not raise an error
+        self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})

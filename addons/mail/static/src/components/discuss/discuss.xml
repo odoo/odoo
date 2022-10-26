@@ -2,102 +2,68 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Discuss" owl="1">
-        <div class="o_Discuss"
-            t-att-class="{
-                'o-adding-item': discuss ? discuss.isAddingChannel or discuss.isAddingChat : false,
-                'o-mobile': env.messaging ? env.messaging.device.isMobile : false,
-            }"
-        >
-            <t t-if="!env.isMessagingInitialized()">
-                <div class="o_Discuss_messagingNotInitialized"><i class="o_Discuss_messagingNotInitializedIcon fa fa-spinner fa-spin"/>Please wait...</div>
-            </t>
-            <t t-else="">
-                <t t-if="!env.messaging.device.isMobile">
-                    <DiscussSidebar class="o_Discuss_sidebar"/>
+        <t t-if="discussView">
+            <div class="o_Discuss d-flex h-100" t-attf-class="{{ className }}"
+                t-att-class="{ 'o-isDeviceSmall flex-column align-items-center bg-view': messaging.device.isSmall }"
+                t-ref="root"
+            >
+                <t t-if="discussView.sidebar">
+                    <DiscussSidebar className="'o_Discuss_sidebar flex-shrink-0 h-100 pt-3 border-end bg-light'" record="discussView.sidebar"/>
                 </t>
-                <t t-if="env.messaging.device.isMobile" t-call="mail.Discuss.content"/>
+                <t t-if="messaging.device.isSmall" t-call="mail.Discuss.content"/>
                 <t t-else="">
-                    <div class="o_Discuss_content">
+                    <div class="o_Discuss_content d-flex flex-column flex-grow-1 h-100 overflow-auto">
                         <t t-call="mail.Discuss.content"/>
                     </div>
                 </t>
-                <t t-if="discuss.hasModerationDiscardDialog">
-                    <ModerationDiscardDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
-                </t>
-                <t t-if="discuss.hasModerationRejectDialog">
-                    <ModerationRejectDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
-                </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
     <t t-name="mail.Discuss.content" owl="1">
-        <t t-if="env.messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox'">
-            <DiscussMobileMailboxSelection class="o_Discuss_mobileMailboxSelection"/>
+        <t t-if="discussView.mobileMailboxSelectionView">
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection w-100 border-bottom'" record="discussView.mobileMailboxSelectionView"/>
         </t>
-        <t t-if="env.messaging.device.isMobile and (discuss.isAddingChannel or discuss.isAddingChat)">
-            <div class="o_Discuss_mobileAddItemHeader">
-                <AutocompleteInput
-                    class="o_Discuss_mobileAddItemHeaderInput"
-                    isFocusOnMount="true"
-                    isHtml="discuss.isAddingChannel"
-                    placeholder="discuss.isAddingChannel ? addChannelInputPlaceholder : addChatInputPlaceholder"
-                    select="_onMobileAddItemHeaderInputSelect"
-                    source="_onMobileAddItemHeaderInputSource"
-                    t-on-o-hide="_onHideMobileAddItemHeader"
+        <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
+            <div class="o_Discuss_mobileAddItemHeader d-flex justify-content-center w-100 p-3 border-bottom bg-light">
+                <AutocompleteInputView
+                    className="'o_Discuss_mobileAddItemHeaderInput flex-grow-1 mb-3 p-2 rounded border'"
+                    record="discussView.mobileAddItemHeaderAutocompleteInputView"
                 />
             </div>
         </t>
-        <t t-if="discuss.threadView">
+        <t t-if="discussView.discuss.threadView">
+            <t name="beforeThread"/>
             <ThreadView
-                class="o_Discuss_thread"
-                t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
-                composerAttachmentsDetailsMode="'card'"
-                hasComposer="discuss.thread.model !== 'mail.box'"
-                hasComposerCurrentPartnerAvatar="!env.messaging.device.isMobile"
-                hasComposerThreadTyping="true"
-                hasMessageCheckbox="true"
-                hasSquashCloseMessages="discuss.thread.model !== 'mail.box'"
-                haveMessagesMarkAsReadIcon="discuss.thread === env.messaging.inbox"
-                haveMessagesReplyIcon="discuss.thread === env.messaging.inbox"
-                isDoFocus="discuss.isDoFocus"
-                threadViewLocalId="discuss.threadView.localId"
-                t-on-o-focusin-composer="_onFocusinComposer"
-                t-on-o-rendered="_onThreadRendered"
-                t-ref="threadView"
+                className="'o_Discuss_thread'"
+                classNameObj="{ 'o-isDeviceSmall w-100': messaging.device.isSmall }"
+                record="discussView.discuss.threadView"
             />
         </t>
-        <t t-if="!discuss.thread and (!env.messaging.device.isMobile or discuss.activeMobileNavbarTabId === 'mailbox')">
-            <div class="o_Discuss_noThread">
-                No conversation selected.
+        <t t-if="!discussView.discuss.activeThread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
+            <div class="o_Discuss_noThread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+                <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
             </div>
         </t>
-        <t t-if="env.messaging.device.isMobile and discuss.activeMobileNavbarTabId !== 'mailbox'">
-            <NotificationList
-                class="o_Discuss_notificationList"
-                filter="discuss.activeMobileNavbarTabId"
-            />
+        <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId !== 'mailbox'">
+            <t t-if="discussView.discuss.activeMobileNavbarTabId === 'chat'">
+                <button class="o_Discuss_mobileNewChatButton w-100 p-2 btn btn-secondary border-bottom bg-light" t-on-click="discussView.onClickMobileNewChatButton">
+                    Start a conversation
+                </button>
+            </t>
+            <t t-if="discussView.discuss.activeMobileNavbarTabId === 'channel'">
+                <button class="o_Discuss_mobileNewChannelButton w-100 p-2 btn btn-secondary border-bottom bg-light" t-on-click="discussView.onClickMobileNewChannelButton">
+                    New Channel
+                </button>
+            </t>
         </t>
-        <t t-if="env.messaging.device.isMobile and !discuss.isReplyingToMessage">
+        <t t-if="discussView.discuss.notificationListView">
+            <NotificationList className="'o_Discuss_notificationList flex-grow-1 w-100'" record="discussView.discuss.notificationListView"/>
+        </t>
+        <t t-if="discussView.discuss.mobileMessagingNavbarView">
             <MobileMessagingNavbar
-                class="o_Discuss_mobileNavbar"
-                activeTabId="discuss.activeMobileNavbarTabId"
-                tabs="mobileNavbarTabs()"
-                t-on-o-select-mobile-messaging-navbar-tab="_onSelectMobileNavbarTab"
-            />
-        </t>
-        <t t-if="discuss.isReplyingToMessage">
-            <Composer
-                class="o_Discuss_replyingToMessageComposer"
-                composerLocalId="discuss.replyingToMessage.originThread.composer.localId"
-                hasCurrentPartnerAvatar="!env.messaging.device.isMobile"
-                hasDiscardButton="true"
-                hasThreadName="true"
-                isDoFocus="discuss.isDoFocus"
-                textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
-                t-on-o-focusin-composer="_onFocusinComposer"
-                t-on-o-message-posted="_onReplyingToMessageMessagePosted"
-                t-ref="composer"
+                className="'o_Discuss_mobileNavbar w-100'"
+                record="discussView.discuss.mobileMessagingNavbarView"
             />
         </t>
     </t>

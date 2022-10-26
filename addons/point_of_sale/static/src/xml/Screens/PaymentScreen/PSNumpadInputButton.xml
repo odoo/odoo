@@ -3,7 +3,7 @@
 
     <t t-name="PSNumpadInputButton" owl="1">
         <button t-attf-class="{{ _class }}"
-                t-on-click="trigger('input-from-numpad', { key: props.value })">
+                t-on-click="() => this.trigger('input-from-numpad', { key: props.value })">
             <t t-slot="default">
                 <t t-if="props.text">
                     <t t-esc="props.text" />

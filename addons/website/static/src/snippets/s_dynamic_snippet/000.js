@@ -4,10 +4,12 @@ odoo.define('website.s_dynamic_snippet', function (require) {
 const core = require('web.core');
 const config = require('web.config');
 const publicWidget = require('web.public.widget');
+const {Markup} = require('web.utils');
+const DEFAULT_NUMBER_OF_ELEMENTS = 4;
+const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 
 const DynamicSnippet = publicWidget.Widget.extend({
     selector: '.s_dynamic_snippet',
-    xmlDependencies: ['/website/static/src/snippets/s_dynamic_snippet/000.xml'],
     read_events: {
         'click [data-url]': '_onCallToAction',
     },
@@ -74,14 +76,14 @@ const DynamicSnippet = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     *
      * @private
      */
     _clearContent: function () {
-        const $dynamicSnippetTemplate = this.$el.find('.dynamic_snippet_template');
-        if ($dynamicSnippetTemplate) {
-            $dynamicSnippetTemplate.html('');
-        }
+        const $templateArea = this.$el.find('.dynamic_snippet_template');
+        this.trigger_up('widgets_stop_request', {
+            $target: $templateArea,
+        });
+        $templateArea.html('');
     },
     /**
      * Method to be overridden in child components if additional configuration elements
@@ -110,29 +112,22 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * Fetches the data.
      * @private
      */
-    _fetchData: function () {
+    async _fetchData() {
         if (this._isConfigComplete()) {
-            return this._rpc(
-                {
-                    'route': '/website/snippet/filters',
-                    'params': Object.assign({
-                        'filter_id': parseInt(this.$el.get(0).dataset.filterId),
-                        'template_key': this.$el.get(0).dataset.templateKey,
-                        'limit': parseInt(this.$el.get(0).dataset.numberOfRecords),
-                        'search_domain': this._getSearchDomain(),
-                        'with_sample': this.editableMode,
-                    }, this._getRpcParameters()),
-                })
-                .then(
-                    (data) => {
-                        this.data = data;
-                    }
-                );
-        } else {
-            return new Promise((resolve) => {
-                this.data = [];
-                resolve();
+            const nodeData = this.el.dataset;
+            const filterFragments = await this._rpc({
+                'route': '/website/snippet/filters',
+                'params': Object.assign({
+                    'filter_id': parseInt(nodeData.filterId),
+                    'template_key': nodeData.templateKey,
+                    'limit': parseInt(nodeData.numberOfRecords),
+                    'search_domain': this._getSearchDomain(),
+                    'with_sample': this.editableMode,
+                }, this._getRpcParameters()),
             });
+            this.data = filterFragments.map(Markup);
+        } else {
+            this.data = [];
         }
     },
     /**
@@ -141,28 +136,31 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _prepareContent: function () {
-        if (this.$target[0].dataset.numberOfElements && this.$target[0].dataset.numberOfElementsSmallDevices) {
-            this.renderedContent = core.qweb.render(
-                this.template_key,
-                this._getQWebRenderOptions());
-        } else {
-            this.renderedContent = '';
-        }
+        this.renderedContent = core.qweb.render(
+            this.template_key,
+            this._getQWebRenderOptions()
+        );
     },
     /**
      * Method to be overridden in child components in order to prepare QWeb
      * options.
      * @private
      */
-    _getQWebRenderOptions: function () {
+     _getQWebRenderOptions: function () {
+        const dataset = this.$target[0].dataset;
+        const numberOfRecords = parseInt(dataset.numberOfRecords);
+        let numberOfElements;
+        if (config.device.isMobile) {
+            numberOfElements = parseInt(dataset.numberOfElementsSmallDevices) || DEFAULT_NUMBER_OF_ELEMENTS_SM;
+        } else {
+            numberOfElements = parseInt(dataset.numberOfElements) || DEFAULT_NUMBER_OF_ELEMENTS;
+        }
+        const chunkSize = numberOfRecords < numberOfElements ? numberOfRecords : numberOfElements;
         return {
-            chunkSize: parseInt(
-                config.device.isMobile
-                    ? this.$target[0].dataset.numberOfElementsSmallDevices
-                    : this.$target[0].dataset.numberOfElements
-            ),
+            chunkSize: chunkSize,
             data: this.data,
-            uniqueId: this.uniqueId
+            uniqueId: this.uniqueId,
+            extraClasses: dataset.extraClasses || '',
         };
     },
     /**
@@ -171,20 +169,31 @@ const DynamicSnippet = publicWidget.Widget.extend({
      */
     _render: function () {
         if (this.data.length > 0 || this.editableMode) {
-            this.$el.removeClass('d-none');
+            this.$el.removeClass('o_dynamic_empty');
             this._prepareContent();
         } else {
-            this.$el.addClass('d-none');
+            this.$el.addClass('o_dynamic_empty');
             this.renderedContent = '';
         }
         this._renderContent();
+        this.trigger_up('widgets_start_request', {$target: this.$el.children(), options: {parent: this}});
     },
     /**
-     *
      * @private
      */
     _renderContent: function () {
-        this.$el.find('.dynamic_snippet_template').html(this.renderedContent);
+        const $templateArea = this.$el.find('.dynamic_snippet_template');
+        this.trigger_up('widgets_stop_request', {
+            $target: $templateArea,
+        });
+        $templateArea.html(this.renderedContent);
+        // TODO this is probably not the only public widget which creates DOM
+        // which should be attached to another public widget. Maybe a generic
+        // method could be added to properly do this operation of DOM addition.
+        this.trigger_up('widgets_start_request', {
+            $target: $templateArea,
+            editableMode: this.editableMode,
+        });
     },
     /**
      *
@@ -204,7 +213,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _toggleVisibility: function (visible) {
-        this.$el.toggleClass('d-none', !visible);
+        this.$el.toggleClass('o_dynamic_empty', !visible);
     },
 
     //------------------------------------- -------------------------------------

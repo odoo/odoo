@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_form_view_container')]" position="after">
+            <t t-if="mailTemplate">
+                <t t-call="{{ mailTemplate }}" />
+            </t>
+        </xpath>
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="chatter">chatter</attribute>
+            <attribute name="hasAttachmentViewerInArch">hasAttachmentViewerInArch</attribute>
+            <attribute name="hasAttachmentViewer">hasAttachmentViewer()</attribute>
+        </xpath>
+    </t>
+
+</templates>

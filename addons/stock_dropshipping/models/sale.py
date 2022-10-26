@@ -1,7 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields, api
+
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    dropship_picking_count = fields.Integer("Dropship Count", compute='_compute_picking_ids')
+
+    @api.depends('picking_ids.is_dropship')
+    def _compute_picking_ids(self):
+        super()._compute_picking_ids()
+        for order in self:
+            dropship_count = len(order.picking_ids.filtered(lambda p: p.is_dropship))
+            order.delivery_count -= dropship_count
+            order.dropship_picking_count = dropship_count
+
+    def action_view_delivery(self):
+        return self._get_action_view_picking(self.picking_ids.filtered(lambda p: not p.is_dropship))
+
+    def action_view_dropship(self):
+        return self._get_action_view_picking(self.picking_ids.filtered(lambda p: p.is_dropship))
 
 
 class SaleOrderLine(models.Model):
@@ -29,3 +49,11 @@ class SaleOrderLine(models.Model):
             return qty
         else:
             return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+
+    @api.depends('purchase_line_count')
+    def _compute_product_updatable(self):
+        super()._compute_product_updatable()
+        if self.env.user.has_group('purchase.group_purchase_user'):
+            for line in self:
+                if line.purchase_line_count > 0:
+                    line.product_updatable = False

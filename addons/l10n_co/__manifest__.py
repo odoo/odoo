@@ -17,7 +17,6 @@
     'website': 'https://www.odoo.com/colombia',
     'depends': [
         'account',
-        'base_address_city',
         'account_debit_note',
         'l10n_latam_base',
     ],
@@ -33,4 +32,5 @@
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -8,6 +8,21 @@ from odoo.tools.misc import formatLang, format_date
 INV_LINES_PER_STUB = 9
 
 
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
+
+    @api.depends('payment_type', 'journal_id', 'partner_id')
+    def _compute_payment_method_line_id(self):
+        super()._compute_payment_method_line_id()
+        for record in self:
+            preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
+            method_line = record.journal_id.outbound_payment_method_line_ids.filtered(
+                lambda l: l.payment_method_id == preferred
+            )
+            if record.payment_type == 'outbound' and method_line:
+                record.payment_method_line_id = method_line[0]
+
+
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
@@ -27,17 +42,17 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
-    payment_method_id = fields.Many2one(index=True)
+    payment_method_line_id = fields.Many2one(index=True)
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
-        if not self:
+        payment_checks = self.filtered('check_number')
+        if not payment_checks:
             return
-        try:
-            self.mapped(lambda p: str(int(p.check_number)))
-        except ValueError:
-            raise ValidationError(_('Check numbers can only consist of digits'))
-        self.flush()
+        for payment_check in payment_checks:
+            if not payment_check.check_number.isdecimal():
+                raise ValidationError(_('Check numbers can only consist of digits'))
+        self.env.flush_all()
         self.env.cr.execute("""
             SELECT payment.check_number, move.journal_id
               FROM account_payment payment
@@ -51,8 +66,10 @@ class AccountPayment(models.Model):
                AND payment.id IN %(ids)s
                AND move.state = 'posted'
                AND other_move.state = 'posted'
+               AND payment.check_number IS NOT NULL
+               AND other_payment.check_number IS NOT NULL
         """, {
-            'ids': tuple(self.ids),
+            'ids': tuple(payment_checks.ids),
         })
         res = self.env.cr.dictfetchall()
         if res:
@@ -65,7 +82,7 @@ class AccountPayment(models.Model):
                 ) for r in res)
             ))
 
-    @api.depends('payment_method_id', 'currency_id', 'amount')
+    @api.depends('payment_method_line_id', 'currency_id', 'amount')
     def _compute_check_amount_in_words(self):
         for pay in self:
             if pay.currency_id:
@@ -85,29 +102,39 @@ class AccountPayment(models.Model):
     def _inverse_check_number(self):
         for payment in self:
             if payment.check_number:
-                sequence = payment.journal_id.check_sequence_id
+                sequence = payment.journal_id.check_sequence_id.sudo()
                 sequence.padding = len(payment.check_number)
 
     @api.depends('payment_type', 'journal_id', 'partner_id')
-    def _compute_payment_method_id(self):
-        super()._compute_payment_method_id()
+    def _compute_payment_method_line_id(self):
+        super()._compute_payment_method_line_id()
         for record in self:
             preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
-            if record.payment_type == 'outbound' and preferred in record.journal_id.outbound_payment_method_ids:
-                record.payment_method_id = preferred
+            method_line = record.journal_id.outbound_payment_method_line_ids\
+                .filtered(lambda l: l.payment_method_id == preferred)
+            if record.payment_type == 'outbound' and method_line:
+                record.payment_method_line_id = method_line[0]
+
+    def _get_aml_default_display_name_list(self):
+        # Extends 'account'
+        values = super()._get_aml_default_display_name_list()
+        if self.check_number:
+            date_index = [i for i, value in enumerate(values) if value[0] == 'date'][0]
+            values.insert(date_index - 1, ('check_number', self.check_number))
+            values.insert(date_index - 1, ('sep', ' - '))
+        return values
 
     def action_post(self):
-        res = super(AccountPayment, self).action_post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
         for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
             sequence = payment.journal_id.check_sequence_id
             payment.check_number = sequence.next_by_id()
-        return res
+        return super(AccountPayment, self).action_post()
 
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
-        self = self.filtered(lambda r: r.payment_method_id.code == 'check_printing' and r.state != 'reconciled')
+        self = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and r.state != 'reconciled')
 
         if len(self) == 0:
             raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
@@ -123,8 +150,8 @@ class AccountPayment(models.Model):
                     FROM account_payment payment
                     JOIN account_move move ON movE.id = payment.move_id
                    WHERE journal_id = %(journal_id)s
-                   AND check_number IS NOT NULL
-                ORDER BY check_number::INTEGER DESC
+                   AND payment.check_number IS NOT NULL
+                ORDER BY payment.check_number::INTEGER DESC
                    LIMIT 1
             """, {
                 'journal_id': self.journal_id.id,
@@ -232,7 +259,7 @@ class AccountPayment(models.Model):
             }
 
         # Decode the reconciliation to keep only invoices.
-        term_lines = self.line_ids.filtered(lambda line: line.account_id.internal_type in ('receivable', 'payable'))
+        term_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
             .filtered(lambda x: x.is_outbound())
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)

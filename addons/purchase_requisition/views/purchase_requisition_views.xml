@@ -44,10 +44,12 @@
         <field name="arch" type="xml">
             <form string="Purchase Agreement Types">
             <sheet>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <group>
                     <group string="Agreement Type">
                         <field name="name"/>
                         <field name="exclusive" widget="radio"/>
+                        <field name="active" invisible="1"/>
                     </group>
                     <group string="Data for new quotations">
                         <field name="line_copy" widget="radio"/>
@@ -58,17 +60,17 @@
             </form>
         </field>
     </record>
-    <record id="tender_type_action" model="ir.actions.act_window">
-        <field name="name">Purchase Agreement Types</field>
-        <field name="res_model">purchase.requisition.type</field>
-        <field name="context">{}</field>
-        <field name="view_mode">tree,kanban,form</field>
+    <record model="ir.ui.view" id="view_purchase_requisition_type_search">
+        <field name="name">purchase.requisition.type.search</field>
+        <field name="model">purchase.requisition.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
     </record>
-    <menuitem
-        id="menu_purchase_requisition_type"
-        sequence="2"
-        parent="purchase.menu_purchase_config"
-        action="tender_type_action"/>
 
     <!-- Purchase Orders -->
 
@@ -102,6 +104,7 @@
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form string="Purchase Agreements">
+            <field name="company_id" invisible="1"/>
             <header>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation"
@@ -124,7 +127,7 @@
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>
-                <div class="float-left">
+                <div class="float-start">
                     <label for="name" class="oe_inline"/>
                     <h1>
                         <field name="name"/>
@@ -150,34 +153,38 @@
                     <page string="Products" name="products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                <field name="product_id"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', '')], 'readonly': [('parent.state', '!=', 'draft')]}"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" attrs="{'required': [('product_id', '!=', False)]}"/>
-                                <field name="schedule_date" groups="base.group_no_one"/>
-                                <field name="account_analytic_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                <field name="analytic_tag_ids" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                <field name="schedule_date" optional="hide"/>
+                                <field name="analytic_distribution" widget="analytic_distribution"
+                                       optional="hide"
+                                       groups="analytic.group_analytic_accounting"
+                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                 <field name="price_unit"/>
                             </tree>
                             <form string="Products">
                                 <group>
-                                    <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                    <field name="product_id"
                                            domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
-                                    <field name="account_analytic_id"  domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_distribution" widget="analytic_distribution"
+                                           groups="analytic.group_analytic_accounting"
+                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </form>
                         </field>
                         <separator string="Terms and Conditions"/>
-                        <field name="description" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                        <field name="description" class="oe-bordered-editor" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
                     </page>
                 </notebook>
             </sheet>
@@ -259,12 +266,12 @@
                     <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
@@ -276,7 +283,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Purchase Agreements</field>
+        <field name="name">Blanket Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_mode">tree,kanban,form</field>
@@ -286,15 +293,10 @@
           <p class="o_view_nocontent_smiling_face">
             Start a new purchase agreement
           </p><p>
-            Example of purchase agreements include call for tenders and blanket orders.
+            An example of a purchase agreement is a blanket order.
           </p><p>
-            In a call for tenders, you can record the products you need to buy
-            and generate the creation of RfQs to vendors. Once the tenders have
-            been registered, you can review and compare them and you can
-            validate some and cancel others.
-          </p><p>
-            For a blanket order, you can record an agreement for a specifc period
-            (e.g. a year) and you order products within this agreement, benefiting
+            For a blanket order, you can record an agreement for a specific period
+            (e.g. a year) and you order products within this agreement to benefit
             from the negotiated prices.
           </p>
         </field>

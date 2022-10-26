@@ -7,4 +7,3 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     siret = fields.Char(string='SIRET', size=14)
-

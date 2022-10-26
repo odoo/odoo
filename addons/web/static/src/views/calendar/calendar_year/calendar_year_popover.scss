@@ -1,0 +1,14 @@
+.o_cw_popover_link {
+    border: solid 2px;
+    padding-left: 5px;
+    margin-top: 2px;
+    color: black;
+    @for $i from 1 through length($o-filter_colors) {
+        $color: nth($o-filter_colors, $i);
+        
+        &.o_calendar_color_#{$i - 1} {
+            border-color: $color;
+            background: $color;
+        }
+    }
+}

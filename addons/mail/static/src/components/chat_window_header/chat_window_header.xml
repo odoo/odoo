@@ -2,57 +2,82 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHeader" owl="1">
-        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClick">
-            <t t-if="chatWindow">
-                <t t-if="props.hasCloseAsBackButton">
-                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickClose" title="Close conversation">
+        <t t-if="chatWindowHeaderView">
+            <div class="o_ChatWindowHeader d-flex align-items-center" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'cursor-pointer': !messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="chatWindowHeaderView.onClick" t-ref="root">
+                <t t-if="chatWindowHeaderView.chatWindowOwner.hasCloseAsBackButton">
+                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickClose" title="Close conversation">
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
-                <t t-if="chatWindow.thread and chatWindow.thread.model === 'mail.channel'">
+                <t t-if="chatWindowHeaderView.threadIconView">
                     <ThreadIcon
-                        class="o_ChatWindowHeader_icon o_ChatWindowHeader_item"
-                        threadLocalId="chatWindow.thread.localId"
+                        className="'o_ChatWindowHeader_icon o_ChatWindowHeader_item ms-3 me-1 my-0'"
+                        record="chatWindowHeaderView.threadIconView"
                     />
                 </t>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.name">
-                    <t t-esc="chatWindow.name"/>
+                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name mh-100 mx-1 my-0 text-truncate" t-att-class="{'ms-3':!chatWindowHeaderView.chatWindowOwner.thread or !chatWindowHeaderView.chatWindowOwner.thread.channel}" t-att-title="chatWindowHeaderView.chatWindowOwner.name">
+                    <t t-esc="chatWindowHeaderView.chatWindowOwner.name"/>
                 </div>
-                <t t-if="chatWindow.thread and chatWindow.thread.mass_mailing">
-                    <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
-                </t>
-                <t t-if="chatWindow.thread and chatWindow.thread.localMessageUnreadCounter > 0">
-                    <div class="o_ChatWindowHeader_counter o_ChatWindowHeader_item">
-                        (<t t-esc="chatWindow.thread.localMessageUnreadCounter"/>)
+                <t t-if="chatWindowHeaderView.chatWindowOwner.thread and chatWindowHeaderView.chatWindowOwner.thread.channel and chatWindowHeaderView.chatWindowOwner.thread.channel.localMessageUnreadCounter > 0">
+                    <div class="o_ChatWindowHeader_counter o_ChatWindowHeader_item mx-1 my-0">
+                        (<t t-esc="chatWindowHeaderView.chatWindowOwner.thread.channel.localMessageUnreadCounter"/>)
                     </div>
                 </t>
-                <div class="o-autogrow"/>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
-                    <t t-if="chatWindow.hasShiftPrev">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftPrev" t-att-title="shiftPrevText">
-                            <!-- this is reversed automatically when language is rtl -->
-                            <i class="fa fa-angle-left"/>
+                <div class="flex-grow-1"/>
+                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea d-flex align-items-center h-100 ms-1 me-0 my-0" t-att-class="{'opacity-75 opacity-100-hover': !messaging.device.isSmall }">
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.hasCallButtons">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-att-disabled="chatWindowHeaderView.chatWindowOwner.thread.hasPendingRtcRequest" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickCamera" title="Start a Video Call">
+                            <i class="fa fa-video-camera"/>
+                        </div>
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-att-disabled="chatWindowHeaderView.chatWindowOwner.thread.hasPendingRtcRequest" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickPhone" title="Start a Call">
+                            <i class="fa fa-phone"/>
                         </div>
                     </t>
-                    <t t-if="chatWindow.hasShiftNext">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftNext" t-att-title="shiftNextText">
-                            <!-- this is reversed automatically when language is rtl -->
-                            <i class="fa fa-angle-right"/>
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.hasInviteFeature">
+                        <t t-if="!chatWindowHeaderView.chatWindowOwner.channelInvitationForm">
+                            <div class="o_ChatWindowHeader_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Add users" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickShowInviteForm">
+                                <i class="fa fa-lg fa-user-plus"/>
+                            </div>
+                        </t>
+                        <t t-if="chatWindowHeaderView.chatWindowOwner.channelInvitationForm">
+                            <div class="o_ChatWindowHeader_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Stop adding users" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickHideInviteForm">
+                                <i class="fa fa-lg fa-user-plus"/>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.thread and chatWindowHeaderView.chatWindowOwner.thread.hasMemberListFeature and !chatWindowHeaderView.chatWindowOwner.isMemberListOpened">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickShowMemberList">
+                            <i class="fa fa-users"/>
                         </div>
                     </t>
-                    <t t-if="props.isExpandable">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickExpand" title="Open in Discuss">
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.thread and chatWindowHeaderView.chatWindowOwner.thread.hasMemberListFeature and chatWindowHeaderView.chatWindowOwner.isMemberListOpened">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickHideMemberList">
+                            <i class="fa fa-users"/>
+                        </div>
+                    </t>
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.thread and chatWindowHeaderView.chatWindowOwner.thread.hasCallFeature and !chatWindowHeaderView.chatWindowOwner.isCallSettingsMenuOpen">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowCallSettingsMenu cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickShowCallSettingsMenu">
+                            <i class="fa fa-gear"/>
+                        </div>
+                    </t>
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.thread and chatWindowHeaderView.chatWindowOwner.thread.hasCallFeature and chatWindowHeaderView.chatWindowOwner.isCallSettingsMenuOpen">
+                        <div class="o_ChatWindowHeader_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickHideCallSettingsMenu">
+                            <i class="fa fa-gear"/>
+                        </div>
+                    </t>
+                    <t t-if="chatWindowHeaderView.chatWindowOwner.isExpandable">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
                         </div>
                     </t>
-                    <t t-if="!props.hasCloseAsBackButton">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickClose" title="Close chat window">
+                    <t t-if="!chatWindowHeaderView.chatWindowOwner.hasCloseAsBackButton">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindowHeaderView.chatWindowOwner.onClickClose" title="Close chat window">
                             <i class="fa fa-close"/>
                         </div>
                     </t>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>

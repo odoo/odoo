@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
+
 import logging
 import mimetypes
 import requests
 import werkzeug.utils
+from werkzeug.urls import url_encode
 
 from odoo import http, tools, _
 from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
-from werkzeug.urls import url_encode
+
+from odoo.addons.web_editor.controllers.main import Web_Editor
 
 logger = logging.getLogger(__name__)
 
@@ -17,9 +19,8 @@ logger = logging.getLogger(__name__)
 class Web_Unsplash(http.Controller):
 
     def _get_access_key(self):
-        if request.env.user._has_unsplash_key_rights():
-            return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
-        raise werkzeug.exceptions.NotFound()
+        """ Use this method to get the key, needed for internal reason """
+        return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
 
     def _notify_download(self, url):
         ''' Notifies Unsplash from an image download. (API requirement)
@@ -30,7 +31,7 @@ class Web_Unsplash(http.Controller):
             view counter.
         '''
         try:
-            if not url.startswith('https://api.unsplash.com/photos/'):
+            if not url.startswith('https://api.unsplash.com/photos/') and not request.env.registry.in_test_mode():
                 raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
             access_key = self._get_access_key()
             requests.get(url, params=url_encode({'client_id': access_key}))
@@ -67,7 +68,6 @@ class Web_Unsplash(http.Controller):
             return []
 
         uploads = []
-        Attachments = request.env['ir.attachment']
 
         query = kwargs.get('query', '')
         query = slugify(query)
@@ -81,15 +81,16 @@ class Web_Unsplash(http.Controller):
         for key, value in unsplashurls.items():
             url = value.get('url')
             try:
-                if not url.startswith('https://images.unsplash.com/'):
+                if not url.startswith('https://images.unsplash.com/') and not request.env.registry.in_test_mode():
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
                     raise Exception(_("ERROR: Unknown Unsplash URL!"))
+
                 req = requests.get(url)
                 if req.status_code != requests.codes.ok:
                     continue
 
                 # get mime-type of image url because unsplash url dosn't contains mime-types in url
-                image_base64 = base64.b64encode(req.content)
+                image = req.content
             except requests.exceptions.ConnectionError as e:
                 logger.exception("Connection Error: " + str(e))
                 continue
@@ -97,24 +98,24 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            image_base64 = tools.image_process(image_base64, verify_resolution=True)
-            mimetype = guess_mimetype(base64.b64decode(image_base64))
+            image = tools.image_process(image, verify_resolution=True)
+            mimetype = guess_mimetype(image)
             # append image extension in name
             query += mimetypes.guess_extension(mimetype) or ''
 
             # /unsplash/5gR788gfd/lion
             url_frags = ['unsplash', key, query]
 
-            attachment = Attachments.create({
+            attachment_data = {
                 'name': '_'.join(url_frags),
                 'url': '/' + '/'.join(url_frags),
-                'mimetype': mimetype,
-                'datas': image_base64,
-                'public': res_model == 'ir.ui.view',
+                'data': image,
                 'res_id': res_id,
                 'res_model': res_model,
-                'description': value.get('description'),
-            })
+            }
+            attachment = Web_Editor._attachment_create(self, **attachment_data)
+            if value.get('description'):
+                attachment.description = value.get('description')
             attachment.generate_access_token()
             uploads.append(attachment._get_media_info())
 
@@ -128,12 +129,16 @@ class Web_Unsplash(http.Controller):
         access_key = self._get_access_key()
         app_id = self.get_unsplash_app_id()
         if not access_key or not app_id:
+            if not request.env.user._can_manage_unsplash_settings():
+                return {'error': 'no_access'}
             return {'error': 'key_not_found'}
         post['client_id'] = access_key
         response = requests.get('https://api.unsplash.com/search/photos/', params=url_encode(post))
         if response.status_code == requests.codes.ok:
             return response.json()
         else:
+            if not request.env.user._can_manage_unsplash_settings():
+                return {'error': 'no_access'}
             return {'error': response.status_code}
 
     @http.route("/web_unsplash/get_app_id", type='json', auth="public")
@@ -142,7 +147,7 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/save_unsplash", type='json', auth="user")
     def save_unsplash(self, **post):
-        if request.env.user._has_unsplash_key_rights():
+        if request.env.user._can_manage_unsplash_settings():
             request.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', post.get('appId'))
             request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', post.get('key'))
             return True

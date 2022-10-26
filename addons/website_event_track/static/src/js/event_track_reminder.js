@@ -3,7 +3,6 @@ odoo.define('website_event_track.website_event_track_reminder', function (requir
 
 var core = require('web.core');
 var _t = core._t;
-var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
@@ -63,9 +62,13 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                     type: 'info',
                     title: message
                 });
-            }
-            if (result.visitor_uuid) {
-                utils.set_cookie('visitor_uuid', result.visitor_uuid);
+                if (self.reminderOn) {
+                    core.bus.trigger('open_notification_request', 'add_track_to_favorite', {
+                        title: _t('Allow push notifications?'),
+                        body: _t('You have to enable push notifications to get reminders for your favorite tracks.'),
+                        delay: 0
+                    });
+                }
             }
         });
     },

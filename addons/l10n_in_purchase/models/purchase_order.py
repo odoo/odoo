@@ -17,20 +17,27 @@ class PurchaseOrder(models.Model):
             ('consumer', 'Consumer'),
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
-            ('deemed_export', 'Deemed Export')
-        ], string="GST Treatment", states=Purchase.READONLY_STATES)
-    l10n_in_company_country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
+            ('deemed_export', 'Deemed Export'),
+            ('uin_holders', 'UIN Holders'),
+        ], string="GST Treatment", states=Purchase.READONLY_STATES, compute="_compute_l10n_in_gst_treatment", store=True)
 
     @api.onchange('company_id')
     def l10n_in_onchange_company_id(self):
-        if self.l10n_in_company_country_code == 'IN':
+        if self.country_code == 'IN':
             domain = [('company_id', '=', self.company_id.id), ('type', '=', 'purchase')]
             journal = self.env['account.journal'].search(domain, limit=1)
             if journal:
                 self.l10n_in_journal_id = journal.id
 
-    @api.onchange('partner_id', 'company_id')
-    def onchange_partner_id(self):
-        if self.l10n_in_company_country_code == 'IN':
-            self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
-        return super().onchange_partner_id()
+    @api.depends('partner_id')
+    def _compute_l10n_in_gst_treatment(self):
+        for order in self:
+            # set default value as False so CacheMiss error never occurs for this field.
+            order.l10n_in_gst_treatment = False
+            if order.country_code == 'IN':
+                l10n_in_gst_treatment = order.partner_id.l10n_in_gst_treatment
+                if not l10n_in_gst_treatment and order.partner_id.country_id and order.partner_id.country_id.code != 'IN':
+                    l10n_in_gst_treatment = 'overseas'
+                if not l10n_in_gst_treatment:
+                    l10n_in_gst_treatment = order.partner_id.vat and 'regular' or 'consumer'
+                order.l10n_in_gst_treatment = l10n_in_gst_treatment

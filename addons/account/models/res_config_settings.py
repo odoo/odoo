@@ -21,16 +21,15 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.income_currency_exchange_account_id",
         string="Gain Account",
         readonly=False,
-        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
-                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
-                                                             self.env.ref('account.data_account_type_other_income').id])
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
+                ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
         string="Loss Account",
         readonly=False,
-        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
+                ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
         domain="[('visible','=', True)]")
@@ -40,33 +39,37 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     account_journal_suspense_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Suspense Account',
+        string='Bank Suspense Account',
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_liabilities').id,
-        help='Account used as automatic counterpart to bank/cash transactions')
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('asset_current', 'liability_current'))]",
+        help='Bank Transactions are posted immediately after import or synchronization. '
+             'Their counterparty is the bank suspense account.\n'
+             'Reconciliation replaces the latter by the definitive account(s).')
     account_journal_payment_debit_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Outstanding Receipts Account',
         readonly=False,
         related='company_id.account_journal_payment_debit_account_id',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id,
-        help='Account used as automatic counterpart account to payments received')
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
+        help='Incoming payments are posted on an Outstanding Receipts Account. '
+             'In the bank reconciliation widget, they appear as blue lines.\n'
+             'Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable '
+             'Account.')
     account_journal_payment_credit_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Outstanding Payments Account',
         readonly=False,
         related='company_id.account_journal_payment_credit_account_id',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id,
-        help='Account used as automatic counterpart account to payments sent')
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
+        help='Outgoing Payments are posted on an Outstanding Payments Account. '
+             'In the bank reconciliation widget, they appear as blue lines.\n'
+             'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer Account",
         related='company_id.transfer_account_id', readonly=False,
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
-        help="Intermediary account used to transfer money from one bank/cash account to another bank/cash account")
+        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
+        help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
-    group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
-        implied_group='analytic.group_analytic_accounting')
-    group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,
@@ -75,18 +78,20 @@ class ResConfigSettings(models.TransientModel):
     group_show_line_subtotals_tax_excluded = fields.Boolean(
         "Show line subtotals without taxes (B2B)",
         implied_group='account.group_show_line_subtotals_tax_excluded',
-        group='base.group_portal,base.group_user,base.group_public')
+        group='base.group_portal,base.group_user,base.group_public',
+        compute='_compute_group_show_line_subtotals', store=True, readonly=False)
     group_show_line_subtotals_tax_included = fields.Boolean(
         "Show line subtotals with taxes (B2C)",
         implied_group='account.group_show_line_subtotals_tax_included',
-        group='base.group_portal,base.group_user,base.group_public')
+        group='base.group_portal,base.group_user,base.group_public',
+        compute='_compute_group_show_line_subtotals', store=True, readonly=False)
     group_show_sale_receipts = fields.Boolean(string='Sale Receipt',
         implied_group='account.group_sale_receipts')
     group_show_purchase_receipts = fields.Boolean(string='Purchase Receipt',
         implied_group='account.group_purchase_receipts')
     show_line_subtotals_tax_selection = fields.Selection([
-        ('tax_excluded', 'Tax-Excluded'),
-        ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
+        ('tax_excluded', 'Tax Excluded'),
+        ('tax_included', 'Tax Included')], string="Line Subtotals Tax Display",
         required=True, default='tax_excluded',
         config_parameter='account.show_line_subtotals_tax_selection')
     module_account_budget = fields.Boolean(string='Budget Management')
@@ -105,9 +110,9 @@ class ResConfigSettings(models.TransientModel):
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_account_intrastat = fields.Boolean(string='Intrastat')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
-    module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
+    module_l10n_eu_oss = fields.Boolean(string="EU Intra-community Distance Selling")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
-    module_account_invoice_extract = fields.Boolean(string="Bill Digitalization")
+    module_account_invoice_extract = fields.Boolean(string="Document Digitization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
@@ -117,12 +122,13 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_cash_basis_base_account_id',
         domain=[('deprecated', '=', False)])
+    account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
-    invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    invoice_terms = fields.Html(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
     invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
                                      readonly=False)
     terms_type = fields.Selection(
@@ -132,35 +138,76 @@ class ResConfigSettings(models.TransientModel):
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
+    account_use_credit_limit = fields.Boolean(
+        string="Sales Credit Limit", related="company_id.account_use_credit_limit", readonly=False,
+        help="Enable the use of credit limit on partners.")
+    account_default_credit_limit = fields.Monetary(
+        string="Default Credit Limit", readonly=False,
+        help='This is the default credit limit that will be used on partners that do not have a specific limit on them.',
+        compute="_compute_account_default_credit_limit", inverse="_inverse_account_default_credit_limit")
 
     # Technical field to hide country specific fields from accounting configuration
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
+    # Storno Accounting
+    account_storno = fields.Boolean(string="Storno accounting", readonly=False, related='company_id.account_storno')
+
+    # Allows for the use of a different delivery address
+    group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
+
+    # Quick encoding (fiduciary mode)
+    quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
+
+    early_pay_discount_computation = fields.Selection(related='company_id.early_pay_discount_computation', string='Tax setting', readonly=False)
+    account_journal_early_pay_discount_loss_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Cash Discount Loss account',
+        help='Account for the difference amount after the expense discount has been granted',
+        readonly=False,
+        related='company_id.account_journal_early_pay_discount_loss_account_id',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
+    )
+    account_journal_early_pay_discount_gain_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Cash Discount Gain account',
+        help='Account for the difference amount after the income discount has been granted',
+        readonly=False,
+        related='company_id.account_journal_early_pay_discount_gain_account_id',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
+    )
+
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        if self.group_multi_currency:
-            self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
+        super().set_values()
         # install a chart of accounts for the given company (if required)
-        if self.env.company == self.company_id and self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-            self.chart_template_id._load(15.0, 15.0, self.env.company)
+        if self.env.company == self.company_id \
+                and self.chart_template_id \
+                and self.chart_template_id != self.company_id.chart_template_id:
+            self.chart_template_id._load(self.env.company)
+
+    @api.depends('company_id')
+    def _compute_account_default_credit_limit(self):
+        for setting in self:
+            setting.account_default_credit_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
+
+    def _inverse_account_default_credit_limit(self):
+        for setting in self:
+            self.env['ir.property']._set_default(
+                'credit_limit',
+                'res.partner',
+                setting.account_default_credit_limit,
+                self.company_id.id
+            )
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
         self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
 
-    @api.onchange('show_line_subtotals_tax_selection')
-    def _onchange_sale_tax(self):
-        if self.show_line_subtotals_tax_selection == "tax_excluded":
-            self.update({
-                'group_show_line_subtotals_tax_included': False,
-                'group_show_line_subtotals_tax_excluded': True,
-            })
-        else:
-            self.update({
-                'group_show_line_subtotals_tax_included': True,
-                'group_show_line_subtotals_tax_excluded': False,
-            })
+    @api.depends('show_line_subtotals_tax_selection')
+    def _compute_group_show_line_subtotals(self):
+        for wizard in self:
+            wizard.group_show_line_subtotals_tax_included = wizard.show_line_subtotals_tax_selection == "tax_included"
+            wizard.group_show_line_subtotals_tax_excluded = wizard.show_line_subtotals_tax_selection == "tax_excluded"
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
@@ -193,3 +240,15 @@ class ResConfigSettings(models.TransientModel):
             # We display the preview button only if the terms_type is html in the setting but also on the company
             # to avoid landing on an error page (see terms.py controller)
             setting.preview_ready = self.env.company.terms_type == 'html' and setting.terms_type == 'html'
+
+    def action_update_terms(self):
+        self.ensure_one()
+        return {
+            'name': _('Update Terms & Conditions'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'view_id': self.env.ref("account.res_company_view_form_terms", False).id,
+            'target': 'new',
+            'res_id': self.company_id.id,
+        }

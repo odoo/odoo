@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models
 
 
@@ -13,11 +12,11 @@ class AuthOAuthProvider(models.Model):
 
     name = fields.Char(string='Provider name', required=True)  # Name of the OAuth2 entity, Google, etc
     client_id = fields.Char(string='Client ID')  # Our identifier
-    auth_endpoint = fields.Char(string='Authentication URL', required=True)  # OAuth provider URL to authenticate users
-    scope = fields.Char()  # OAUth user data desired to access
-    validation_endpoint = fields.Char(string='Validation URL', required=True)  # OAuth provider URL to validate tokens
-    data_endpoint = fields.Char(string='Data URL')
+    auth_endpoint = fields.Char(string='Authorization URL', required=True)  # OAuth provider URL to authenticate users
+    scope = fields.Char(default='openid profile email')  # OAUth user data desired to access
+    validation_endpoint = fields.Char(string='UserInfo URL', required=True)  # OAuth provider URL to get user information
+    data_endpoint = fields.Char()
     enabled = fields.Boolean(string='Allowed')
     css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
-    body = fields.Char(required=True, help='Link text in Login Dialog', translate=True)
+    body = fields.Char(required=True, string="Login button label", help='Link text in Login Dialog', translate=True)
     sequence = fields.Integer(default=10)

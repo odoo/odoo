@@ -36,13 +36,13 @@ class ResConfigSettings(models.TransientModel):
         string="Auto Assignment Next Execution Date", compute='_compute_crm_auto_assignment_data',
         readonly=False, store=True)
     # IAP
-    module_crm_iap_lead = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
-    module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
-    module_crm_iap_lead_enrich = fields.Boolean("Enrich your leads automatically with company data based on their email address.")
+    module_crm_iap_mine = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
+    module_crm_iap_enrich = fields.Boolean("Enrich your leads automatically with company data based on their email address.")
+    module_website_crm_iap_reveal = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     lead_enrich_auto = fields.Selection([
         ('manual', 'Enrich leads on demand only'),
         ('auto', 'Enrich all leads automatically'),
-    ], string='Enrich lead automatically', default='manual', config_parameter='crm.iap.lead.enrich.setting')
+    ], string='Enrich lead automatically', default='auto', config_parameter='crm.iap.lead.enrich.setting')
     lead_mining_in_pipeline = fields.Boolean("Create a lead mining request directly from the opportunity pipeline.", config_parameter='crm.lead_mining_in_pipeline')
     predictive_lead_scoring_start_date = fields.Date(string='Lead Scoring Starting Date', compute="_compute_pls_start_date", inverse="_inverse_pls_start_date_str")
     predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', config_parameter='crm.pls_start_date')
@@ -130,23 +130,32 @@ class ResConfigSettings(models.TransientModel):
                 setting.predictive_lead_scoring_field_labels = _('Stage')
 
     def set_values(self):
-        group_lead_before = self.env.ref('crm.group_use_lead') in self.env.user.groups_id
+        group_use_lead_id = self.env['ir.model.data']._xmlid_to_res_id('crm.group_use_lead')
+        has_group_lead_before = group_use_lead_id in self.env.user.groups_id.ids
         super(ResConfigSettings, self).set_values()
         # update use leads / opportunities setting on all teams according to settings update
-        group_lead_after = self.env.ref('crm.group_use_lead') in self.env.user.groups_id
-        if group_lead_before != group_lead_after:
+        has_group_lead_after = group_use_lead_id in self.env.user.groups_id.ids
+        if has_group_lead_before != has_group_lead_after:
             teams = self.env['crm.team'].search([])
-            teams.filtered('use_opportunities').use_leads = group_lead_after
+            teams.filtered('use_opportunities').use_leads = has_group_lead_after
             for team in teams:
                 team.alias_id.write(team._alias_get_creation_values())
         # synchronize cron with settings
         assign_cron = self.sudo().env.ref('crm.ir_cron_crm_lead_assign', raise_if_not_found=False)
         if assign_cron:
-            assign_cron.active = self.crm_use_auto_assignment and self.crm_auto_assignment_action == 'auto'
-            assign_cron.interval_type = self.crm_auto_assignment_interval_type
-            assign_cron.interval_number = self.crm_auto_assignment_interval_number
-            # keep nextcall on cron as it is required whatever the setting
-            assign_cron.nextcall = self.crm_auto_assignment_run_datetime if self.crm_auto_assignment_run_datetime else assign_cron.nextcall
+            # Writing on a cron tries to grab a write-lock on the table. This
+            # could be avoided when saving a res.config without modifying this specific
+            # configuration
+            cron_vals = {
+                'active': self.crm_use_auto_assignment and self.crm_auto_assignment_action == 'auto',
+                'interval_type': self.crm_auto_assignment_interval_type,
+                'interval_number': self.crm_auto_assignment_interval_number,
+                # keep nextcall on cron as it is required whatever the setting
+                'nextcall': self.crm_auto_assignment_run_datetime if self.crm_auto_assignment_run_datetime else assign_cron.nextcall,
+            }
+            cron_vals = {field_name: value for field_name, value in cron_vals.items() if assign_cron[field_name] != value}
+            if cron_vals:
+                assign_cron.write(cron_vals)
         # TDE FIXME: re create cron if not found ?
 
     def _get_crm_auto_assignmment_run_datetime(self, run_datetime, run_interval, run_interval_number):

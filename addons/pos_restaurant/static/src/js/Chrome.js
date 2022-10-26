@@ -38,18 +38,6 @@ odoo.define('pos_restaurant.chrome', function (require) {
                     return super.startScreen;
                 }
             }
-            /**
-             * @override
-             * Order is set to null when table is selected. There is no saved
-             * screen for null order so show `FloorScreen` instead.
-             */
-            _showSavedScreen(pos, newSelectedOrder) {
-                if (!newSelectedOrder) {
-                    this.showScreen('FloorScreen', { floor: pos.table ? pos.table.floor : null });
-                } else {
-                    super._showSavedScreen(pos, newSelectedOrder);
-                }
-            }
             _setActivityListeners() {
                 IDLE_TIMER_SETTER = this._setIdleTimer.bind(this);
                 for (const event of NON_IDLE_EVENTS) {
@@ -57,8 +45,8 @@ odoo.define('pos_restaurant.chrome', function (require) {
                 }
             }
             _setIdleTimer() {
+                clearTimeout(this.idleTimer);
                 if (this._shouldResetIdleTimer()) {
-                    clearTimeout(this.idleTimer);
                     this.idleTimer = setTimeout(() => {
                         this._actionAfterIdle();
                     }, 60000);
@@ -69,10 +57,17 @@ odoo.define('pos_restaurant.chrome', function (require) {
                     this.trigger('close-temp-screen');
                 }
                 const table = this.env.pos.table;
+                const order = this.env.pos.get_order();
+                if (order && order.get_screen_data().name === 'ReceiptScreen') {
+                    // When the order is finalized, we can safely remove it from the memory
+                    // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
+                    this.env.pos.removeOrder(order);
+                }
                 this.showScreen('FloorScreen', { floor: table ? table.floor : null });
             }
             _shouldResetIdleTimer() {
-                return this.env.pos.config.iface_floorplan && this.mainScreen.name !== 'FloorScreen';
+                const stayPaymentScreen = this.mainScreen.name === 'PaymentScreen' && this.env.pos.get_order().paymentlines.length > 0;
+                return this.env.pos.config.iface_floorplan && !stayPaymentScreen && this.mainScreen.name !== 'FloorScreen';
             }
             __showScreen() {
                 super.__showScreen(...arguments);

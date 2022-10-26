@@ -10,7 +10,7 @@
 Using this application you can manage Sales Teams with CRM and/or Sales
 =======================================================================
  """,
-    'website': 'https://www.odoo.com/page/crm',
+    'website': 'https://www.odoo.com/app/crm',
     'depends': ['base', 'mail'],
     'data': [
         'security/sales_team_security.xml',
@@ -27,10 +27,10 @@ Using this application you can manage Sales Teams with CRM and/or Sales
         'data/crm_tag_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'sales_team/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

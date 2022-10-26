@@ -7,7 +7,6 @@ from odoo import api, fields, models
 class EventType(models.Model):
     _inherit = 'event.type'
 
-    use_questions = fields.Boolean('Questions to Attendees')
     question_ids = fields.One2many(
         'event.question', 'event_type_id',
         string='Questions', copy=True)
@@ -37,7 +36,7 @@ class EventEvent(models.Model):
           * type lines are added;
         """
         if self._origin.question_ids:
-            # lines to keep: those with already sent emails or registrations
+            # lines to keep: those with already given answers
             questions_tokeep_ids = self.env['event.registration.answer'].search(
                 [('question_id', 'in', self._origin.question_ids.ids)]
             ).question_id.ids
@@ -53,13 +52,14 @@ class EventEvent(models.Model):
                 command = [(3, question.id) for question in questions_toremove]
             else:
                 command = [(5, 0)]
-            if event.event_type_id.use_mail_schedule:
+            if event.event_type_id.question_ids:
                 command += [
                     (0, 0, {
                         'title': question.title,
                         'question_type': question.question_type,
                         'sequence': question.sequence,
                         'once_per_order': question.once_per_order,
+                        'is_mandatory_answer': question.is_mandatory_answer,
                         'answer_ids': [(0, 0, {
                             'name': answer.name,
                             'sequence': answer.sequence

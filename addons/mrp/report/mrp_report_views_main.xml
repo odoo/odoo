@@ -12,12 +12,12 @@
             <field name="binding_type">report</field>
         </record>
         <record id="action_report_bom_structure" model="ir.actions.report">
-            <field name="name">BoM Structure</field>
+            <field name="name">BoM Overview</field>
             <field name="model">mrp.bom</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">mrp.report_bom_structure</field>
             <field name="report_file">mrp.report_bom_structure</field>
-            <field name="print_report_name">'Bom Structure - %s' % object.display_name</field>
+            <field name="print_report_name">'Bom Overview - %s' % object.display_name</field>
             <field name="binding_model_id" ref="model_mrp_bom"/>
             <field name="binding_type">report</field>
         </record>
@@ -36,9 +36,21 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">mrp.label_production_view_pdf</field>
             <field name="report_file">mrp.label_production_view_pdf</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Finished products - %s' % object.name</field>
             <field name="binding_model_id" ref="model_mrp_production"/>
             <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_workorder" model="ir.actions.report">
+            <field name="name">Work Order</field>
+            <field name="model">mrp.workorder</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp.report_mrp_workorder</field>
+            <field name="report_file">mrp.report.mrp_workorder</field>
+            <field name="print_report_name">'Work Order - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_mrp_workorder"/>
+            <field name="binding_type">report</field>
+            <field name="multi">True</field>
         </record>
     </data>
 </odoo>

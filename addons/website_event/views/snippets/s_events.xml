@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+<template id="s_events" name="Events">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="snippet_name" t-value="'s_events'"/>
+        <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet'"/>
+    </t>
+</template>
+
+<!--TEMPLATES-->
+
+<template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5">
+    <figure t-foreach="records" t-as="data" class="w-100 s_events_event">
+        <t t-set="record" t-value="data['_record']._set_tz_context()"/>
+        <a class="s_events_event_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none"
+           t-att-href="data['call_to_action_url']">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
+            </t>
+
+            <figcaption class="text-center w-100 h-100 px-3 d-flex flex-column flex-grow-1">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <div class="s_events_event_title text-white" t-field="record.name"/>
+                <time itemprop="startDate" t-att-datetime="record.date_begin" class="text-white">
+                    <span t-out="record.date_begin"
+                          t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long'}"/> -
+                    <span t-out="record.date_begin"
+                          t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short'}"/>
+                </time>
+            </figcaption>
+        </a>
+    </figure>
+</template>
+
+<template id="dynamic_filter_template_event_event_card" name="Card Layout" priority="10">
+    <div t-foreach="records" t-as="data" class="pb32 w-100 s_events_event">
+        <t t-set="record" t-value="data['_record']._set_tz_context()"/>
+        <div class="card shadow-sm">
+            <a class="s_events_event_cover" t-att-href="data['call_to_action_url']">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="record"/>
+                    <t t-set="_resize_height" t-value="256"/>
+                    <t t-set="_resize_width" t-value="256"/>
+
+                    <div class="s_events_event_date o_wevent_theme_bg_base position-absolute shadow-sm text-dark">
+                        <span t-field="record.date_begin" t-options="{'format': 'LLL'}" class="s_events_event_month"/>
+                        <span t-field="record.date_begin" t-options="{'format': 'dd'}" class="s_events_event_day"/>
+                    </div>
+                </t>
+            </a>
+            <div class="o_wevent_theme_bg_base card-body p-3">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <h5 class="mb-0 text-truncate" t-field="record.name"/>
+                <time itemprop="startDate" t-att-datetime="record.date_begin">
+                    <span t-field="record.date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
+                    <span t-field="record.date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                </time>
+                <div itemprop="location" t-field="record.address_id"
+                     t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--SNIPPET OPTIONS -->
+
+<template id="s_events_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <t t-call="website_event.s_dynamic_snippet_options_template">
+            <t t-set="snippet_name" t-value="'event_upcoming_snippet'"/>
+            <t t-set="snippet_selector" t-value="'.s_event_upcoming_snippet'"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="s_dynamic_snippet_options_template" inherit_id="website.s_dynamic_snippet_options_template">
+    <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+        <we-many2many t-if="snippet_name == 'event_upcoming_snippet'"
+                      string="Event Tags"
+                      data-name="event_tag_opt"
+                      data-model="event.event"
+                      data-m2o-field="tag_ids"
+                      data-domain='[["category_id.website_published", "=", true], ["color", "not in", ["0", false]]]'
+                      data-limit="10"
+                      data-set-tags=""
+                      data-attribute-name="filterByTagIds"
+                      data-no-preview="true"/>
+    </xpath>
+</template>
+
+<!--ASSETS-->
+
+<record id="website_event.s_events_000_scss" model="ir.asset">
+    <field name="name">Event 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_event/static/src/snippets/s_events/000.scss</field>
+</record>
+
+<record id="website_event.s_events_000_js" model="ir.asset">
+    <field name="name">Event 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_event/static/src/snippets/s_events/000.js</field>
+</record>
+
+</odoo>

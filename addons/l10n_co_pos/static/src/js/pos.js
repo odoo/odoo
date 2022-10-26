@@ -1,32 +1,34 @@
 odoo.define('l10n_co_pos.pos', function (require) {
 "use strict";
 
-var models = require('point_of_sale.models');
+var { PosGlobalState, Order } = require('point_of_sale.models');
+const Registries = require('point_of_sale.Registries');
 
-models.PosModel = models.PosModel.extend({
-    is_colombian_country: function () {
+const L10nCoPosGlobalState = (PosGlobalState) => class L10nCoPosGlobalState extends PosGlobalState {
+    is_colombian_country() {
         return this.company.country.code === 'CO';
-    },
-});
+    }
+}
+Registries.Model.extend(PosGlobalState, L10nCoPosGlobalState);
 
-var _super_order = models.Order.prototype;
-models.Order = models.Order.extend({
-    export_for_printing: function () {
-        var result = _super_order.export_for_printing.apply(this, arguments);
+const L10nCoPosOrder = (Order) => class L10nCoPosOrder extends Order {
+    export_for_printing() {
+        var result = super.export_for_printing(...arguments);
         result.l10n_co_dian = this.get_l10n_co_dian();
         return result;
-    },
-    set_l10n_co_dian: function (l10n_co_dian) {
+    }
+    set_l10n_co_dian(l10n_co_dian) {
         this.l10n_co_dian = l10n_co_dian;
-    },
-    get_l10n_co_dian: function () {
+    }
+    get_l10n_co_dian() {
         return this.l10n_co_dian;
-    },
-    wait_for_push_order: function () {
-        var result = _super_order.wait_for_push_order.apply(this, arguments);
+    }
+    wait_for_push_order() {
+        var result = super.wait_for_push_order(...arguments);
         result = Boolean(result || this.pos.is_colombian_country());
         return result;
     }
-});
+}
+Registries.Model.extend(Order, L10nCoPosOrder);
 
 });

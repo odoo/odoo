@@ -5,6 +5,7 @@ import base64
 
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
+from odoo.exceptions import AccessError
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -100,6 +101,7 @@ class SnailmailLetter(models.Model):
         notification_vals = []
         for letter in letters:
             notification_vals.append({
+                'author_id': letter.message_id.author_id.id,
                 'mail_message_id': letter.message_id.id,
                 'res_partner_id': letter.partner_id.id,
                 'notification_type': 'snail',
@@ -136,7 +138,7 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
-            pdf_bin, _ = report.with_context(snailmail_layout=not self.cover)._render_qweb_pdf(self.res_id)
+            pdf_bin, _ = self.env['ir.actions.report'].with_context(snailmail_layout=not self.cover)._render_qweb_pdf(report, self.res_id)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.b64encode(pdf_bin),
@@ -341,9 +343,19 @@ class SnailmailLetter(models.Model):
         endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
         timeout = int(self.env['ir.config_parameter'].sudo().get_param('snailmail.timeout', DEFAULT_TIMEOUT))
         params = self._snailmail_create('print')
-        response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
+        try:
+            response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
+        except AccessError as ae:
+            for doc in params['documents']:
+                letter = self.browse(doc['letter_id'])
+                letter.state = 'error'
+                letter.error_code = 'UNKNOWN_ERROR'
+            raise ae
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
+                self.env['iap.account']._send_iap_bus_notification(
+                    service_name='snailmail',
+                    title=_("Snail Mails are successfully sent"))
                 note = _('The document was correctly sent by post.<br>The tracking id is %s', doc['send_id'])
                 letter_data = {'info_msg': note, 'state': 'sent', 'error_code': False}
                 notification_data = {
@@ -354,7 +366,12 @@ class SnailmailLetter(models.Model):
             else:
                 error = doc['error'] if response['request_code'] == 200 else response['reason']
 
-                note = _('An error occured when sending the document by post.<br>Error: %s', self._get_error_message(error))
+                if error == 'CREDIT_ERROR':
+                    self.env['iap.account']._send_iap_bus_notification(
+                        service_name='snailmail',
+                        title=_("Not enough credits for Snail Mail"),
+                        error_type="credit")
+                note = _('An error occurred when sending the document by post.<br>Error: %s', self._get_error_message(error))
                 letter_data = {
                     'info_msg': note,
                     'state': 'error',
@@ -400,6 +417,8 @@ class SnailmailLetter(models.Model):
         ])
         for letter in letters_send:
             letter._snailmail_print()
+            if letter.error_code == 'CREDIT_ERROR':
+                break  # avoid spam
             # Commit after every letter sent to avoid to send it again in case of a rollback
             if autocommit:
                 self.env.cr.commit()

@@ -2,8 +2,8 @@ odoo.define('payment.post_processing', function (require) {
     'use strict';
 
     var publicWidget = require('web.public.widget');
-    var ajax = require('web.ajax');
     var core = require('web.core');
+    const {Markup} = require('web.utils');
 
     var _t = core._t;
 
@@ -13,7 +13,6 @@ odoo.define('payment.post_processing', function (require) {
 
     publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
         selector: 'div[name="o_payment_status"]',
-        xmlDependencies: ['/payment/static/src/xml/payment_post_processing.xml'],
 
         _pollCount: 0,
 
@@ -76,22 +75,13 @@ odoo.define('payment.post_processing', function (require) {
                 'tx_error': [],
             };
 
-            if (display_values_list.length > 0) {
-                // In almost every cases there will be a single transaction to display. If there are
-                // more than one transaction, the last one will most likely be the one that was
-                // confirmed. We use this one to redirect the user to the final page.
-                if (display_values_list[0].is_validation) {
-                    window.location = display_values_list[0].validation_route;
-                } else {
-                    window.location = display_values_list[0].landing_route;
-                }
-                return;
-            }
-
             // group the transaction according to their state
             display_values_list.forEach(function (display_values) {
                 var key = 'tx_' + display_values.state;
                 if(key in render_values) {
+                    if (display_values["display_message"]) {
+                        display_values.display_message = Markup(display_values.display_message)
+                    }
                     render_values[key].push(display_values);
                 }
             });
@@ -105,9 +95,26 @@ odoo.define('payment.post_processing', function (require) {
                 }
                 return nbTx;
             }
-            // if there's only one tx to manage
+                       
+            /*
+            * When the server sends the list of monitored transactions, it tries to post-process 
+            * all the successful ones. If it succeeds or if the post-process has already been made, 
+            * the transaction is removed from the list of monitored transactions and won't be 
+            * included in the next response. We assume that successful and post-process 
+            * transactions should always prevail on others, regardless of their number or state.
+            */
+            if (render_values['tx_done'].length === 1 &&
+                render_values['tx_done'][0].is_post_processed) {
+                    window.location = render_values['tx_done'][0].landing_route;
+                    return;
+            }
+            // If there are multiple transactions monitored, display them all to the customer. If
+            // there is only one transaction monitored, redirect directly the customer to the
+            // landing route.
             if(countTxInState(['tx_done', 'tx_error', 'tx_pending', 'tx_authorized']) === 1) {
-                var tx = render_values['tx_done'][0] || render_values['tx_authorized'][0] || render_values['tx_error'][0];
+                // We don't want to redirect customers to the landing page when they have a pending
+                // transaction. The successful transactions are dealt with before.
+                var tx = render_values['tx_authorized'][0] || render_values['tx_error'][0];
                 if (tx) {
                     window.location = tx.landing_route;
                     return;
@@ -124,10 +131,12 @@ odoo.define('payment.post_processing', function (require) {
         displayLoading: function () {
             var msg = _t("We are processing your payment, please wait ...");
             $.blockUI({
-                'message': '<h2 class="text-white"><img src="/web/static/src/img/spin.png" class="fa-pulse"/>' +
+                'message': '<h2 class="text-white"><img src="/web/static/img/spin.png" class="fa-pulse"/>' +
                     '    <br />' + msg +
                     '</h2>'
             });
         },
     });
+
+    return publicWidget.registry.PaymentPostProcessing;
 });

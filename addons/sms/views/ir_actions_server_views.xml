@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="ir_actions_server_view_form"  model="ir.ui.view">
+        <field name="name">ir.actions.server.view.form.inherit.sms</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='link_field_id']" position="after">
+                <field name="sms_template_id"
+                    context="{'default_model': model_name}"
+                    attrs="{'invisible': [('state', '!=', 'sms')],
+                            'required': [('state', '=', 'sms')]}"/>
+                <field name="sms_method"
+                       string="Send as"
+                       attrs="{'invisible': [('state', '!=', 'sms')],
+                               'required': [('state', '=', 'sms')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>

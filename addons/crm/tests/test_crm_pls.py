@@ -3,13 +3,34 @@
 
 from datetime import timedelta
 
-from odoo.tests.common import TransactionCase
-from odoo.tests import Form
 from odoo import tools
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Date
+from odoo.tests import Form, tagged, users
+from odoo.tests.common import TransactionCase
 
 
+@tagged('crm_lead_pls')
 class TestCRMPLS(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        """ Keep a limited setup to ensure tests are not impacted by other
+        records created in CRM common. """
+        super(TestCRMPLS, cls).setUpClass()
+
+        cls.company_main = cls.env.user.company_id
+        cls.user_sales_manager = mail_new_test_user(
+            cls.env, login='user_sales_manager',
+            name='Martin PLS Sales Manager', email='crm_manager@test.example.com',
+            company_id=cls.company_main.id,
+            notification_type='inbox',
+            groups='sales_team.group_sale_manager,base.group_partner_manager',
+        )
+
+        cls.pls_team = cls.env['crm.team'].create({
+            'name': 'PLS Team',
+        })
 
     def _get_lead_values(self, team_id, name_suffix, country_id, state_id, email_state, phone_state, source_id, stage_id):
         return {
@@ -109,7 +130,7 @@ class TestCRMPLS(TransactionCase):
         country_ids = self.env['res.country'].search([], limit=3).ids
         stage_ids = self.env['crm.stage'].search([], limit=3).ids
         won_stage_id = self.env['crm.stage'].search([('is_won', '=', True)], limit=1).id
-        team_ids = self.env['crm.team'].create([{'name': 'Team Test 1'}, {'name': 'Team Test 2'}]).ids
+        team_ids = self.env['crm.team'].create([{'name': 'Team Test 1'}, {'name': 'Team Test 2'}, {'name': 'Team Test 3'}]).ids
         # create bunch of lost and won crm_lead
         leads_to_create = []
         #   for team 1
@@ -132,7 +153,21 @@ class TestCRMPLS(TransactionCase):
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(9), country_ids[1], state_ids[0], state_values[1], state_values[0], source_ids[1], stage_ids[1]))
 
+        #   for leads with no team
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(10), country_ids[1], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(11), country_ids[0], state_ids[1], state_values[1], state_values[1], source_ids[0], stage_ids[0]))
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(12), country_ids[1], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(13), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+
         leads = Lead.create(leads_to_create)
+
+        # assign team 3 to all leads with no teams (also take data into account).
+        leads_with_no_team = self.env['crm.lead'].sudo().search([('team_id', '=', False)])
+        leads_with_no_team.write({'team_id': team_ids[2]})
 
         # Set the PLS config
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
@@ -147,16 +182,31 @@ class TestCRMPLS(TransactionCase):
         leads[5].action_set_lost()
         leads[6].action_set_lost()
         leads[7].action_set_won()
+        # Leads with no team
+        leads[10].action_set_won()
+        leads[11].action_set_lost()
+        leads[12].action_set_lost()
 
         # A. Test Full Rebuild
         # rebuild frequencies table and recompute automated_probability for all leads.
         Lead._cron_update_automated_probabilities()
 
         # As the cron is computing and writing in SQL queries, we need to invalidate the cache
-        leads.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 7.74, 2), 0)
+        lead_13_team_3_proba = leads[13].automated_probability
+        self.assertEqual(tools.float_compare(lead_13_team_3_proba, 35.09, 2), 0)
+
+        # Probability for Lead with no teams should be based on all the leads no matter their team.
+        # De-assign team 3 and rebuilt frequency table and recompute.
+        # Proba should be different as "no team" is not considered as a separated team.
+        leads_with_no_team.write({'team_id': False})
+        Lead._cron_update_automated_probabilities()
+        lead_13_no_team_proba = leads[13].automated_probability
+        self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
+        self.assertEqual(tools.float_compare(lead_13_no_team_proba, 36.65, 2), 0)
 
         # Test frequencies
         lead_4_stage_0_freq = LeadScoringFrequency.search([('team_id', '=', leads[4].team_id.id), ('variable', '=', 'stage_id'), ('value', '=', stage_ids[0])])
@@ -356,7 +406,7 @@ class TestCRMPLS(TransactionCase):
 
         # Force recompute - A priori, no need to do this as, for each won / lost, we increment tag frequency.
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
+        self.env.invalidate_all()
 
         lead_tag_1 = leads_with_tags[30]
         lead_tag_2 = leads_with_tags[90]
@@ -394,7 +444,7 @@ class TestCRMPLS(TransactionCase):
         leads.filtered(lambda lead: lead.id % 2 == 0).email_state = 'correct'
         leads.filtered(lambda lead: lead.id % 2 == 1).email_state = 'incorrect'
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
@@ -402,7 +452,7 @@ class TestCRMPLS(TransactionCase):
         # remove all pls fields
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", False)
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 34.38, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 50.0, 2), 0)
@@ -410,7 +460,7 @@ class TestCRMPLS(TransactionCase):
         # check if the probabilities are the same with the old param
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id")
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
@@ -448,3 +498,76 @@ class TestCRMPLS(TransactionCase):
         res_config_new = resConfig.new()
         self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date),
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
+
+    def test_pls_no_share_stage(self):
+        """ We test here the situation where all stages are team specific, as there is
+            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
+            the first stage (used to know how many lost and won there is) that requires
+            to have no team assigned to it."""
+        Lead = self.env['crm.lead']
+        team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
+        self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
+        lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
+        Lead._cron_update_automated_probabilities()
+        self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
+        self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
+
+    @users('user_sales_manager')
+    def test_team_unlink(self):
+        """ Test that frequencies are sent to "no team" when unlinking a team
+        in order to avoid losing too much informations. """
+        pls_team = self.env["crm.team"].browse(self.pls_team.ids)
+
+        # clean existing data
+        self.env["crm.lead.scoring.frequency"].sudo().search([('team_id', '=', False)]).unlink()
+
+        # existing no-team data
+        no_team = [
+            ('stage_id', '1', 20, 10),
+            ('stage_id', '2', 0.1, 0.1),
+            ('stage_id', '3', 10, 0),
+            ('country_id', '1', 10, 0.1),
+        ]
+        self.env["crm.lead.scoring.frequency"].sudo().create([
+            {'variable': variable, 'value': value,
+             'won_count': won_count, 'lost_count': lost_count,
+             'team_id': False,
+            } for variable, value, won_count, lost_count in no_team
+        ])
+
+        # add some frequencies to team to unlink
+        team = [
+            ('stage_id', '1', 20, 10),  # existing noteam
+            ('country_id', '1', 0.1, 10),  # existing noteam
+            ('country_id', '2', 0.1, 0),  # new but void
+            ('country_id', '3', 30, 30),  # new
+        ]
+        existing_plsteam = self.env["crm.lead.scoring.frequency"].sudo().create([
+            {'variable': variable, 'value': value,
+             'won_count': won_count, 'lost_count': lost_count,
+             'team_id': pls_team.id,
+            } for variable, value, won_count, lost_count in team
+        ])
+
+        pls_team.unlink()
+
+        final_noteam = [
+            ('stage_id', '1', 40, 20),
+            ('stage_id', '2', 0.1, 0.1),
+            ('stage_id', '3', 10, 0),
+            ('country_id', '1', 10, 10),
+            ('country_id', '3', 30, 30),
+
+        ]
+        self.assertEqual(
+            existing_plsteam.exists(), self.env["crm.lead.scoring.frequency"],
+            'Frequencies of unlinked teams should be unlinked (cascade)')
+        existing_noteam = self.env["crm.lead.scoring.frequency"].sudo().search([
+            ('team_id', '=', False),
+            ('variable', 'in', ['stage_id', 'country_id']),
+        ])
+        for frequency in existing_noteam:
+            stat = next(item for item in final_noteam if item[0] == frequency.variable and item[1] == frequency.value)
+            self.assertEqual(frequency.won_count, stat[2])
+            self.assertEqual(frequency.lost_count, stat[3])
+        self.assertEqual(len(existing_noteam), len(final_noteam))

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_group_member_view_tree" model="ir.ui.view">
+        <field name="name">mail.group.member.view.tree</field>
+        <field name="model">mail.group.member</field>
+        <field name="arch" type="xml">
+            <tree editable="top" sample="1">
+                <field name="email"
+                    required="1" force_save="1"
+                    attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                <field name="email_normalized" invisible="1" force_save="1"/>
+                <field name="partner_id"/>
+                <field name="mail_group_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mail_group_member_view_search" model="ir.ui.view">
+        <field name="name">mail.group.member.view.search</field>
+        <field name="model">mail.group.member</field>
+        <field name="arch" type="xml">
+            <search string="Search Mail Group Member">
+                <field name="email" required="1" />
+                <field name="partner_id"/>
+                <field name="mail_group_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="mail_group_member_action" model="ir.actions.act_window">
+        <field name="name">Members</field>
+        <field name="res_model">mail.group.member</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Members in this list yet!</p>
+            <p>Let people subscribe to your list online or manually add them here.</p>
+        </field>
+    </record>
+</odoo>

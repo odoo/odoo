@@ -8,7 +8,7 @@ odoo.define('point_of_sale.tour.ProductConfiguratorTourMethods', function (requi
             return [
                 {
                     content: `picking radio attribute with name ${name}`,
-                    trigger: `.product-configurator-popup .radio_attribute_label:contains('${name}')`,
+                    trigger: `.product-configurator-popup .attribute-name-cell label:contains('${name}')`,
                 },
             ];
         }

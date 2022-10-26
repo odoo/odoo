@@ -4,37 +4,37 @@
             <field name="model">ir.ui.menu</field>
             <field name="arch" type="xml">
                 <form string="Menu">
-                  <sheet>
-                    <group>
+                    <sheet>
+                        <field name="active" invisible="1"/>
                         <group>
-                            <field name="name"/>
-                            <field name="parent_id" groups="base.group_no_one"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_id" groups="base.group_no_one"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                            <group groups="base.group_no_one">
+                                <field name="complete_name"/>
+                                <field name="action"/>
+                                <field name="web_icon"/>
+                                <field name="web_icon_data"/>
+                            </group>
                         </group>
-                        <group groups="base.group_no_one">
-                            <field name="complete_name"/>
-                            <field name="action"/>
-                            <field name="web_icon"/>
-                            <field name="web_icon_data"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Access Rights" name="access_rights">
-                            <field name="groups_id"/>
-                        </page>
-                        <page string="Submenus" name="submenus" groups="base.group_no_one">
-                            <!-- Note: make sure you have 'ir.ui.menu.full_list'
-                                 in the context to see all submenus! -->
-                            <field name="child_id"
-                                    context="{'default_parent_id': active_id}">
-                                <tree string="Menu">
-                                    <field name="sequence"/>
-                                    <field icon="icon" name="name" string="Menu"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                   </sheet> 
+                        <notebook>
+                            <page string="Access Rights" name="access_rights">
+                                <field name="groups_id"/>
+                            </page>
+                            <page string="Submenus" name="submenus" groups="base.group_no_one">
+                                <!-- Note: make sure you have 'ir.ui.menu.full_list'
+                                    in the context to see all submenus! -->
+                                <field name="child_id" context="{'default_parent_id': active_id}">
+                                    <tree string="Menu">
+                                        <field name="sequence"/>
+                                        <field icon="icon" name="name" string="Menu"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>

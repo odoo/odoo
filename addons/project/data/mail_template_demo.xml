@@ -1,0 +1,25 @@
+<odoo>
+    <data>        
+        <record id="project_done_email_template" model="mail.template">
+            <field name="name">Project: Project Completed</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="subject">Project status - {{ object.name }}</field>
+            <field name="email_from">{{ (object.partner_id.email_formatted if object.partner_id else user.email_formatted) }}</field>
+            <field name="partner_to" >{{ object.partner_id.id }}</field>
+            <field name="description">Set on project's stages to inform customers when a project reaches that stage</field>
+            <field name="body_html" type="html">
+<div>
+    Dear <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/>
+    It is my pleasure to let you know that we have successfully completed the project "<strong t-out="object.name or ''">Renovations</strong>".
+    <t t-if="user.signature">
+        <br />
+        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
+</div>
+<br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;" groups="project.group_project_stages">You are receiving this email because your project has been moved to the stage <b t-out="object.stage_id.name or ''">Done</b></span>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

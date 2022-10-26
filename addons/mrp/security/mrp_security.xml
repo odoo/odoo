@@ -30,8 +30,18 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <record id="group_locked_by_default" model="res.groups">
-        <field name="name">Locked by default</field>
+    <record id="group_unlocked_by_default" model="res.groups">
+        <field name="name">Unlocked by default</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_mrp_reception_report" model="res.groups">
+        <field name="name">Use Reception Report with Manufacturing Orders</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_mrp_workorder_dependencies" model="res.groups">
+        <field name="name">Use Operation Dependencies</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 

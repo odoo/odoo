@@ -25,7 +25,7 @@ class CreatorCase(common.TransactionCase):
 
     def export(self, value, fields=('value',), context=None):
         record = self.make(value, context=context)
-        record.invalidate_cache()
+        self.env.invalidate_all()
         return record._export_rows([f.split('/') for f in fields])
 
 class test_xids(CreatorCase):
@@ -40,7 +40,7 @@ class test_xids(CreatorCase):
             'model': self.model_name,
             'res_id': record.id,
         })
-        record.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(
             record._export_rows([['id'], ['value']]),
             [[u'x', True]]
@@ -323,7 +323,7 @@ class test_m2o(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_basic(self):
         """ Exported value is the name_get of the related object
@@ -358,7 +358,7 @@ class test_m2o(CreatorCase):
           | self.make(m2o)
           | self.make(m2o)
         )
-        records.invalidate_cache()
+        self.env.invalidate_all()
         xp = [r[0] for r in records._export_rows([['value', 'id']])]
         self.assertEqual(len(xp), 4)
         self.assertRegex(
@@ -384,7 +384,7 @@ class test_o2m(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_single(self):
         self.assertEqual(
@@ -499,16 +499,16 @@ class test_o2m_multiple(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(child1=False, child2=False),
-            [[False, False]])
+            [['', '']])
 
     def test_single_per_side(self):
         self.assertEqual(
             self.export(child1=False, child2=[Command.create({'value': 42})]),
-            [[False, u'export.one2many.child.2:42']])
+            [['', u'export.one2many.child.2:42']])
 
         self.assertEqual(
             self.export(child1=[Command.create({'value': 43})], child2=False),
-            [[u'export.one2many.child.1:43', False]])
+            [[u'export.one2many.child.1:43', '']])
 
         self.assertEqual(
             self.export(child1=[Command.create({'value': 43})],
@@ -520,12 +520,12 @@ class test_o2m_multiple(CreatorCase):
         self.assertEqual(
             self.export(child1=False, child2=[Command.create({'value': 42})],
                         fields=fields),
-            [[36, False, 42]])
+            [[36, '', 42]])
 
         self.assertEqual(
             self.export(child1=[Command.create({'value': 43})], child2=False,
                         fields=fields),
-            [[36, 43, False]])
+            [[36, 43, '']])
 
         self.assertEqual(
             self.export(child1=[Command.create({'value': 43})],
@@ -546,7 +546,7 @@ class test_o2m_multiple(CreatorCase):
         self.assertEqual(
             self.export(child1=child1, child2=False, fields=fields),
             [
-                [36, 4, False],
+                [36, 4, ''],
                 ['', 42, ''],
                 ['', 36, ''],
                 ['', 4, ''],
@@ -555,7 +555,7 @@ class test_o2m_multiple(CreatorCase):
         self.assertEqual(
             self.export(child1=False, child2=child2, fields=fields),
             [
-                [36, False, 8],
+                [36, '', 8],
                 ['', '', 12],
                 ['', '', 8],
                 ['', '', 55],
@@ -595,7 +595,7 @@ class test_m2m(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_single(self):
         self.assertEqual(
@@ -662,7 +662,7 @@ class test_m2m(CreatorCase):
             }).complete_name
             for sub in r.value
         ]
-        r.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(
             r._export_rows([['value', 'id']]),
@@ -728,7 +728,7 @@ class test_xid_perfs(common.TransactionCase):
         Model = self.env['export.integer']
         for i in range(10000):
             Model.create({'value': i})
-        Model.invalidate_cache()
+        self.env.invalidate_all()
         records = Model.search([])
 
         self.profile.runcall(records._export_rows, [['id'], ['value']])
@@ -738,7 +738,7 @@ class test_xid_perfs(common.TransactionCase):
         Model = self.env['export.many2one']
         for _ in range(10000):
             Model.create({'value': rid})
-        Model.invalidate_cache()
+        self.env.invalidate_all()
         records = Model.search([])
 
         self.profile.runcall(records._export_rows, [['id'], ['value','id']])
@@ -750,7 +750,7 @@ class test_xid_perfs(common.TransactionCase):
             Model.create({
                 'value': Integer.create({'value': i}).id
             })
-        Model.invalidate_cache()
+        self.env.invalidate_all()
         records = Model.search([])
 
         self.profile.runcall(records._export_rows, [['id'], ['value', 'id']])

@@ -47,14 +47,14 @@ class Users(models.Model):
             for conf in Ldap._get_ldap_dicts():
                 changed = Ldap._change_password(conf, self.env.user.login, old_passwd, new_passwd)
                 if changed:
-                    uid = self.env.user.id
-                    self._set_empty_password(uid)
-                    self.invalidate_cache(['password'], [uid])
+                    self.env.user._set_empty_password()
                     return True
         return super(Users, self).change_password(old_passwd, new_passwd)
 
-    def _set_empty_password(self, uid):
+    def _set_empty_password(self):
+        self.flush_recordset(['password'])
         self.env.cr.execute(
             'UPDATE res_users SET password=NULL WHERE id=%s',
-            (uid,)
+            (self.id,)
         )
+        self.invalidate_recordset(['password'])

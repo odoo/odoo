@@ -7,7 +7,6 @@ import json
 import logging
 
 from odoo import fields
-from odoo.tools import exception_to_unicode
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_account.models.google_service import TIMEOUT
 
@@ -67,7 +66,8 @@ class GoogleCalendarService():
 
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT):
-        url = "/calendar/v3/calendars/primary/events"
+        send_updates = self.google_service._context.get('send_updates', True)
+        url = "/calendar/v3/calendars/primary/events?sendUpdates=%s" % ("all" if send_updates else "none")
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values['id'] = uuid4().hex
@@ -76,13 +76,13 @@ class GoogleCalendarService():
 
     @requires_auth_token
     def patch(self, event_id, values, token=None, timeout=TIMEOUT):
-        url = "/calendar/v3/calendars/primary/events/%s" % event_id
+        url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        self.google_service._do_request(url, json.dumps(values), headers, method='PUT', timeout=timeout)
+        self.google_service._do_request(url, json.dumps(values), headers, method='PATCH', timeout=timeout)
 
     @requires_auth_token
     def delete(self, event_id, token=None, timeout=TIMEOUT):
-        url = "/calendar/v3/calendars/primary/events/%s" % event_id
+        url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
         try:
@@ -107,7 +107,19 @@ class GoogleCalendarService():
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def _google_authentication_url(self, from_url='http://www.odoo.com'):
-        return self.google_service._get_authorize_uri(from_url, service='calendar', scope=self._get_calendar_scope())
+        state = {
+            'd': self.google_service.env.cr.dbname,
+            's': 'calendar',
+            'f': from_url
+        }
+        return self.google_service._get_authorize_uri(
+            'calendar',
+            self._get_calendar_scope(),
+            self.google_service.get_base_url() + '/google_account/authentication',
+            state=json.dumps(state),
+            approval_prompt='force',
+            access_type='offline'
+        )
 
     def _can_authorize_google(self, user):
         return user.has_group('base.group_erp_manager')

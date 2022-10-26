@@ -21,7 +21,7 @@ tour.register('tour_shop_no_variant_attribute', {
     },
     {
         content: "add to cart",
-        trigger: 'a:contains(Add to Cart)',
+        trigger: 'a:contains(ADD TO CART)',
     },
         tourUtils.goToCart(),
     {

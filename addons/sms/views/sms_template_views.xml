@@ -5,11 +5,18 @@
         <field name="model">sms.template</field>
         <field name="arch" type="xml">
             <form string="SMS Templates">
+                <header>
+                    <field name="template_fs" invisible="1"/>
+                    <button string="Reset Template"
+                            name="%(sms_template_reset_action)d" type="action"
+                            groups="base.group_system"
+                            attrs="{'invisible': [('template_fs', '=', False)]}"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <field name="sidebar_action_id" invisible="1"/>
                         <button name="action_create_sidebar_action" type="object"
-                                groups="base.group_system"
+                                groups="base.group_no_one"
                                 class="oe_stat_button"
                                 attrs="{'invisible':[('sidebar_action_id','!=',False)]}" icon="fa-plus"
                                 help="Add a contextual action on the related model to open a sms composer with this template">
@@ -19,7 +26,7 @@
                             </div>
                         </button>
                         <button name="action_unlink_sidebar_action" type="object"
-                                groups="base.group_system"
+                                groups="base.group_no_one"
                                 class="oe_stat_button" icon="fa-minus"
                                 attrs="{'invisible':[('sidebar_action_id','=',False)]}"
                                 help="Remove the contextual action of the related model" widget="statinfo">
@@ -36,25 +43,13 @@
                         <group>
                             <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                             <field name="model" invisible="1"/>
-                            <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or ${object.partner_id.lang}"/>
+                            <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or {{ object.partner_id.lang }}"/>
                         </group>
                     </div>
                     <notebook>
                         <page string="Content" name="content">
                             <group>
                                 <field name="body" widget="sms_widget" nolabel="1"/>
-                            </group>
-                        </page>
-                        <page string="Dynamic Placeholder Generator" name="dynamic_placeholder_generator" groups="base.group_no_one">
-                            <group>
-                                <field name="model_object_field"
-                                        domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
-                                <field name="sub_object" readonly="1"/>
-                                <field name="sub_model_object_field"
-                                        domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                        attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"/>
-                                <field name="null_value"/>
-                                <field name="copyvalue"/>
                             </group>
                         </page>
                     </notebook>

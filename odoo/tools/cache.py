@@ -47,7 +47,7 @@ class ormcache(object):
 
     Methods implementing this decorator should never return a Recordset,
     because the underlying cursor will eventually be closed and raise a
-    `psycopg2.OperationalError`.
+    `psycopg2.InterfaceError`.
     """
     def __init__(self, *args, **kwargs):
         self.args = args
@@ -201,7 +201,7 @@ def log_ormcache_stats(sig=None, frame=None):
     from odoo.modules.registry import Registry
     import threading
 
-    me = threading.currentThread()
+    me = threading.current_thread()
     me_dbname = getattr(me, 'dbname', 'n/a')
 
     for dbname, reg in sorted(Registry.registries.d.items()):

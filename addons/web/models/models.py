@@ -7,7 +7,7 @@ import json
 
 from odoo import _, _lt, api, fields, models
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import lazy
+from odoo.tools import date_utils, lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
@@ -24,6 +24,15 @@ class lazymapping(defaultdict):
         self[key] = value
         return value
 
+DISPLAY_DATE_FORMATS = {
+    'day': 'dd MMM yyyy',
+    'week': "'W'w YYYY",
+    'month': 'MMMM yyyy',
+    'quarter': 'QQQ yyyy',
+    'year': 'yyyy',
+}
+
+
 class IrActionsActWindowView(models.Model):
     _inherit = 'ir.actions.act_window.view'
 
@@ -36,7 +45,7 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
         """
         Performs a search_read and a search_count.
 
@@ -57,7 +66,7 @@ class Base(models.AbstractModel):
                 'records': []
             }
         if limit and (len(records) == limit or self.env.context.get('force_search_count')):
-            length = self.search_count(domain)
+            length = self.search_count(domain, limit=count_limit)
         else:
             length = len(records) + offset
         return {
@@ -93,8 +102,15 @@ class Base(models.AbstractModel):
         if not groups:
             length = 0
         elif limit and len(groups) == limit:
-            all_groups = self.read_group(domain, ['display_name'], groupby, lazy=True)
-            length = len(all_groups)
+            # We need to fetch all groups to know the total number
+            # this cannot be done all at once to avoid MemoryError
+            length = limit
+            chunk_size = 100000
+            while True:
+                more = len(self.read_group(domain, ['display_name'], groupby, offset=length, limit=chunk_size, lazy=True))
+                length += more
+                if more < chunk_size:
+                    break
         else:
             length = len(groups) + offset
         return {
@@ -136,95 +152,100 @@ class Base(models.AbstractModel):
         :return a dictionnary mapping group_by values to dictionnaries mapping
                 progress bar field values to the related number of records
         """
-
-        # Workaround to match read_group's infrastructure
-        # TO DO in master: harmonize this function and readgroup to allow factorization
-        group_by_modifier = group_by.partition(':')[2] or 'month'
-        group_by = group_by.partition(':')[0]
-        display_date_formats = {
-            'day': 'dd MMM yyyy',
-            'week': "'W'w YYYY",
-            'month': 'MMMM yyyy',
-            'quarter': 'QQQ yyyy',
-            'year': 'yyyy'}
-
-        records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
-
-        data = {}
-        field_type = self._fields[group_by].type
+        group_by_fname = group_by.partition(':')[0]
+        field_type = self._fields[group_by_fname].type
         if field_type == 'selection':
             selection_labels = dict(self.fields_get()[group_by]['selection'])
 
+        def adapt(value):
+            if field_type == 'selection':
+                value = selection_labels.get(value, False)
+            if isinstance(value, tuple):
+                value = value[1]  # FIXME should use technical value (0)
+            return value
+
+        result = {}
+        for group in self._read_progress_bar(domain, group_by, progress_bar):
+            group_by_value = str(adapt(group[group_by]))
+            field_value = group[progress_bar['field']]
+            if group_by_value not in result:
+                result[group_by_value] = dict.fromkeys(progress_bar['colors'], 0)
+            if field_value in result[group_by_value]:
+                result[group_by_value][field_value] += group['__count']
+        return result
+
+    def _read_progress_bar(self, domain, group_by, progress_bar):
+        """ Implementation of read_progress_bar() that returns results in the
+            format of read_group().
+        """
+        try:
+            fname = progress_bar['field']
+            return self.read_group(domain, [fname], [group_by, fname], lazy=False)
+        except UserError:
+            # possibly failed because of grouping on or aggregating non-stored
+            # field; fallback on alternative implementation
+            pass
+
+        # Workaround to match read_group's infrastructure
+        # TO DO in master: harmonize this function and readgroup to allow factorization
+        group_by_name = group_by.partition(':')[0]
+        group_by_modifier = group_by.partition(':')[2] or 'month'
+
+        records_values = self.search_read(domain or [], [progress_bar['field'], group_by_name])
+        field_type = self._fields[group_by_name].type
+
         for record_values in records_values:
-            group_by_value = record_values[group_by]
+            group_by_value = record_values.pop(group_by_name)
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
                 locale = get_lang(self.env).code
-                group_by_value = fields.Datetime.to_datetime(group_by_value)
+                group_by_value = date_utils.start_of(fields.Datetime.to_datetime(group_by_value), group_by_modifier)
                 group_by_value = pytz.timezone('UTC').localize(group_by_value)
                 tz_info = None
                 if field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones:
                     tz_info = self._context.get('tz')
                     group_by_value = babel.dates.format_datetime(
-                        group_by_value, format=display_date_formats[group_by_modifier],
+                        group_by_value, format=DISPLAY_DATE_FORMATS[group_by_modifier],
                         tzinfo=tz_info, locale=locale)
                 else:
                     group_by_value = babel.dates.format_date(
-                        group_by_value, format=display_date_formats[group_by_modifier],
+                        group_by_value, format=DISPLAY_DATE_FORMATS[group_by_modifier],
                         locale=locale)
 
-            if field_type == 'selection':
-                group_by_value = selection_labels[group_by_value] \
-                    if group_by_value in selection_labels else False
+            if field_type == 'many2many' and isinstance(group_by_value, list):
+                group_by_value = str(tuple(group_by_value)) or False
 
-            if type(group_by_value) == tuple:
-                group_by_value = group_by_value[1] # FIXME should use technical value (0)
+            record_values[group_by] = group_by_value
+            record_values['__count'] = 1
 
-            if group_by_value not in data:
-                data[group_by_value] = {}
-                for key in progress_bar['colors']:
-                    data[group_by_value][key] = 0
-
-            field_value = record_values[progress_bar['field']]
-            if field_value in data[group_by_value]:
-                data[group_by_value][field_value] += 1
-
-        return data
+        return records_values
 
     ##### qweb view hooks #####
     @api.model
     def qweb_render_view(self, view_id, domain):
         assert view_id
         return self.env['ir.qweb']._render(
-            view_id, {
-            **self.env['ir.ui.view']._prepare_qcontext(),
-            **self._qweb_prepare_qcontext(view_id, domain),
-        })
-
-    def _qweb_prepare_qcontext(self, view_id, domain):
-        """
-        Base qcontext for rendering qweb views bound to this model
-        """
-        return {
-            'model': self,
-            'domain': domain,
-            # not necessarily necessary as env is already part of the
-            # non-minimal qcontext
-            'context': self.env.context,
-            'records': lazy(self.search, domain),
-        }
+            view_id,
+            {
+                'model': self,
+                'domain': domain,
+                # not necessarily necessary as env is already part of the
+                # non-minimal qcontext
+                'context': self.env.context,
+                'records': lazy(self.search, domain),
+            })
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        r = super().fields_view_get(view_id, view_type, toolbar, submenu)
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
         # avoid leaking the raw (un-rendered) template, also avoids bloating
         # the response payload for no reason. Only send the root node,
         # to send attributes such as `js_class`.
-        if r['type'] == 'qweb':
-            root = etree.fromstring(r['arch'])
-            r['arch'] = etree.tostring(etree.Element('qweb', root.attrib))
-        return r
+        if view_type == 'qweb':
+            root = arch
+            arch = etree.Element('qweb', root.attrib)
+        return arch, view
 
     @api.model
     def _search_panel_field_image(self, field_name, **kwargs):
@@ -771,16 +792,13 @@ class ResCompany(models.Model):
         return res
 
     def _get_asset_style_b64(self):
-        template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
-        if not template_style:
-            return b''
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
-        company_styles = template_style._render({
-            'company_ids': company_ids,
-        })
-        return base64.b64encode((company_styles))
+        company_styles = self.env['ir.qweb']._render('web.styles_company_report', {
+                'company_ids': company_ids,
+            }, raise_if_not_found=False)
+        return base64.b64encode(company_styles.encode())
 
     def _update_asset_style(self):
         asset_attachment = self.env.ref('web.asset_styles_company_report', raise_if_not_found=False)

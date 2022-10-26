@@ -4,8 +4,6 @@ odoo.define('web_editor.toolbar', function (require) {
 var Widget = require('web.Widget');
 
 const Toolbar = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
-
     /**
      * @constructor
      * @param {Widget} parent

@@ -2,6 +2,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
     'use strict';
 
     const { createTourMethods } = require('point_of_sale.tour.utils');
+    const { TextAreaPopup } = require('point_of_sale.tour.TextAreaPopupTourMethods');
 
     class Do {
         clickDisplayedProduct(name) {
@@ -79,23 +80,24 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return keys.split(' ').map(generateStep);
         }
 
-        clickPayButton() {
-            return [
-                { content: 'click pay button', trigger: '.actionpad .button.pay' },
-                {
+        clickPayButton(shouldCheck = true) {
+            const steps = [{ content: 'click pay button', trigger: '.product-screen .actionpad .button.pay' }];
+            if (shouldCheck) {
+                steps.push({
                     content: 'now in payment screen',
                     trigger: '.pos-content .payment-screen',
                     run: () => {},
-                },
-            ];
+                });
+            }
+            return steps;
         }
 
-        clickCustomerButton() {
+        clickPartnerButton() {
             return [
-                { content: 'click customer button', trigger: '.actionpad .button.set-customer' },
+                { content: 'click customer button', trigger: '.actionpad .button.set-partner' },
                 {
-                    content: 'customer screen is shown',
-                    trigger: '.pos-content .clientlist-screen',
+                    content: 'partner screen is shown',
+                    trigger: '.pos-content .partnerlist-screen',
                     run: () => {},
                 },
             ];
@@ -105,23 +107,28 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: `select customer '${name}'`,
-                    trigger: `.clientlist-screen .client-line td:contains("${name}")`,
-                },
-                {
-                    content: `client line '${name}' is highlighted`,
-                    trigger: `.clientlist-screen .client-line.highlight td:contains("${name}")`,
-                    run: () => {},
+                    trigger: `.partnerlist-screen .partner-line td:contains("${name}")`,
                 },
             ];
         }
 
-        clickSetCustomer() {
+        clickOrderlineCustomerNoteButton() {
             return [
                 {
-                    content: 'click set customer',
-                    trigger: '.clientlist-screen .button.next.highlight',
+                    content: 'click customer note button',
+                    trigger: '.control-buttons .control-button span:contains("Customer Note")',
+                }
+            ]
+        }
+        clickRefund() {
+            return [
+                {
+                    trigger: '.control-button:contains("Refund")',
                 },
             ];
+        }
+        confirmOpeningPopup() {
+            return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
         }
     }
 
@@ -130,7 +137,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: 'product screen is shown',
-                    trigger: '.product-screen:not(:has(.oe_hidden))',
+                    trigger: '.product-screen',
                     run: () => {},
                 },
             ];
@@ -202,6 +209,20 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        orderlineHasCustomerNote(name, quantity, note) {
+            return [
+                {
+                    content: `line has ${quantity} quantity`,
+                    trigger: `.order .orderline .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
+                    run: function () {}, // it's a check
+                },
+                {
+                    content: `line has '${note}' as customer note`,
+                    trigger: `.order .orderline .info-list .orderline-note:contains("${note}")`,
+                    run: function () {}, // it's a check
+                },
+            ]
+        }
     }
 
     class Execute {
@@ -227,7 +248,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 res.push(...this._do.pressNumpad('Qty'));
                 res.push(...this._check.modeIsActive('Qty'));
             }
-            for (let char of quantity.toString()) {
+            for (let char of (quantity.toString() == '1' ? '' : quantity.toString())) {
                 if ('.0123456789'.includes(char)) {
                     res.push(...this._do.pressNumpad(char));
                 } else if ('-'.includes(char)) {
@@ -247,6 +268,13 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 steps.push(...this.addOrderline(product, qty, price));
             }
             return steps;
+        }
+        addCustomerNote(note) {
+            const res = [];
+            res.push(...this._do.clickOrderlineCustomerNoteButton());
+            res.push(...TextAreaPopup._do.inputText(note));
+            res.push(...TextAreaPopup._do.clickConfirm());
+            return res;
         }
     }
 

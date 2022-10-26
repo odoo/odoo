@@ -12,4 +12,5 @@ The module adds Microsoft user in res user.
     'data': [
         'data/microsoft_account_data.xml',
     ],
+    'license': 'LGPL-3',
 }

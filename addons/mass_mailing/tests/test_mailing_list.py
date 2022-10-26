@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import Form, users
 
@@ -116,14 +117,17 @@ class TestMailingListMerge(MassMailCommon):
         # The mailing list C contains the same email address than 'Norbert' in list B
         # This test ensure that the mailing lists are correctly merged and no
         # duplicates are appearing in C
-
-        result_list = self.env['mailing.list.merge'].create({
-            'src_list_ids': [(4, list_id) for list_id in [self.mailing_list_1.id, self.mailing_list_2.id]],
-            'dest_list_id': self.mailing_list_3.id,
-            'merge_options': 'existing',
-            'new_list_name': False,
-            'archive_src_lists': False,
-        }).action_mailing_lists_merge()
+        merge_form = Form(self.env['mailing.list.merge'].with_context(
+            active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
+            active_model='mailing.list'
+        ))
+        merge_form.new_list_name = False
+        merge_form.merge_options = 'existing'
+        # Need to set `merge_options` before `dest_lid_id` so `dest_list_id` is visible
+        # `'invisible': [('merge_options', '=', 'new')]`
+        merge_form.dest_list_id = self.mailing_list_3
+        merge_form.archive_src_lists = False
+        result_list = merge_form.save().action_mailing_lists_merge()
 
         # Assert the number of contacts is correct
         self.assertEqual(
@@ -134,3 +138,118 @@ class TestMailingListMerge(MassMailCommon):
         self.assertEqual(
             len(list(set(result_list.contact_ids.mapped('email')))), 5,
             'Duplicates have been merged into the destination mailing list. Check %s' % (result_list.contact_ids.mapped('email')))
+
+    @users('user_marketing')
+    def test_mailing_list_merge_cornercase(self):
+        """ Check wrong use of merge wizard """
+        with self.assertRaises(exceptions.UserError):
+            merge_form = Form(self.env['mailing.list.merge'].with_context(
+                active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
+            ))
+
+        merge_form = Form(self.env['mailing.list.merge'].with_context(
+            active_ids=[self.mailing_list_1.id],
+            active_model='mailing.list',
+            default_src_list_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
+            default_dest_list_id=self.mailing_list_3.id,
+            default_merge_options='existing',
+        ))
+        merge = merge_form.save()
+        self.assertEqual(merge.src_list_ids, self.mailing_list_1 + self.mailing_list_2)
+        self.assertEqual(merge.dest_list_id, self.mailing_list_3)
+
+
+class TestMailingContactImport(MassMailCommon):
+    """Test the transient <mailing.contact.import>."""
+
+    @users('user_marketing')
+    def test_mailing_contact_import(self):
+        first_list, second_list, third_list = self.env['mailing.list'].create([
+            {'name': 'First mailing list'},
+            {'name': 'Second mailing list'},
+            {'name': 'Third mailing list'},
+        ])
+
+        self.env['mailing.contact'].create([
+            {
+                'name': 'Already Exists',
+                'email': 'already_exists_list_1@example.com',
+                'list_ids': first_list.ids,
+            }, {
+                'email': 'already_exists_list_2@example.com',
+                'list_ids': second_list.ids,
+            }, {
+                'email': 'already_exists_list_1_and_2@example.com',
+                'list_ids': (first_list | second_list).ids,
+            },
+        ])
+
+        self.env['mailing.mailing'].create({
+            'name': 'Test',
+            'subject': 'Test',
+            'contact_list_ids': (first_list | second_list).ids,
+        })
+
+        contact_import = Form(self.env['mailing.contact.import'].with_context(
+            default_mailing_list_ids=first_list.ids,
+        ))
+
+        contact_import.contact_list = '''
+            invalid line1
+            alice@example.com
+            bob@example.com
+            invalid line2
+            "Bob" <bob@EXAMPLE.com>
+            "Test" <bob@example.com>
+
+            invalid line3, with a comma
+            already_exists_list_1@example.com
+            already_exists_list_2@example.com
+            "Test" <already_exists_list_1_and_2@example.com>
+            invalid line4
+        '''
+        contact_import = contact_import.save()
+
+        self.assertEqual(contact_import.mailing_list_ids, first_list)
+
+        # Can not add many2many directly on a Form
+        contact_import.mailing_list_ids |= third_list
+
+        self.assertEqual(len(first_list.contact_ids), 2, 'Should not yet create the contact')
+        self.assertEqual(len(second_list.contact_ids), 2, 'Should not yet create the contact')
+        self.assertEqual(len(third_list.contact_ids), 0, 'Should not yet create the contact')
+
+        # Test that the context key "default_list_ids" is ignored (because we manually set list_ids)
+        contact_import.with_context(default_list_ids=(first_list | second_list).ids).action_import()
+
+        # Check the contact of the first mailing list
+        contacts = [
+            (contact.name, contact.email)
+            for contact in first_list.contact_ids
+        ]
+        self.assertIn(('', 'alice@example.com'), contacts, 'Should have imported the right email address')
+        self.assertIn(('Bob', 'bob@example.com'), contacts, 'Should have imported the name of the contact')
+        self.assertIn(
+            ('', 'already_exists_list_2@example.com'), contacts,
+            'The email already exists but in a different list. The contact must be imported.')
+        self.assertEqual(len(second_list.contact_ids), 2, 'Should have ignored default_list_ids')
+        self.assertNotIn(('Test', 'bob@example.com'), contacts, 'Should have ignored duplicated')
+        self.assertNotIn(('', 'bob@example.com'), contacts, 'Should have ignored duplicated')
+        self.assertNotIn(('Test', 'already_exists_list_1_and_2@example.com'), contacts, 'Should have ignored duplicated')
+        self.assertEqual(len(contacts), 5, 'Should have imported 2 new contacts')
+
+        # Check the contact of the third mailing list
+        contacts = [
+            (contact.name, contact.email)
+            for contact in third_list.contact_ids
+        ]
+        self.assertIn(('', 'alice@example.com'), contacts, 'Should have imported the right email address')
+        self.assertIn(('Bob', 'bob@example.com'), contacts, 'Should have imported the name of the contact')
+        self.assertIn(
+            ('', 'already_exists_list_2@example.com'), contacts,
+            'The email already exists but in a different list. The contact must be imported.')
+        self.assertIn(('Already Exists', 'already_exists_list_1@example.com'), contacts, 'This contact exists in the first mailing list, but not in the third mailing list')
+        self.assertNotIn(('Test', 'already_exists_list_1_and_2@example.com'), contacts, 'Should have ignored duplicated')
+
+        contact = self.env['mailing.contact'].search([('email', '=', 'already_exists_list_1@example.com')])
+        self.assertEqual(len(contact), 1, 'Should have updated the existing contact instead of creating a new one')

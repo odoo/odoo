@@ -2,38 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList" owl="1">
-        <div class="o_AttachmentList">
-            <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages">
-                <t t-foreach="imageAttachments" t-as="attachment" t-key="attachment.localId">
-                    <Attachment
-                        class="o_AttachmentList_attachment o_AttachmentList_imageAttachment"
-                        attachmentLocalId="attachment.localId"
-                        attachmentLocalIds="viewableAttachments.map(attachment => attachment.localId)"
-                        detailsMode="props.attachmentsDetailsMode"
-                        imageSize="props.attachmentsImageSize"
-                        isDownloadable="props.areAttachmentsDownloadable"
-                        isEditable="props.areAttachmentsEditable"
-                        showExtension="props.showAttachmentsExtensions"
-                        showFilename="props.showAttachmentsFilenames"
-                    />
-                </t>
+        <t t-if="attachmentList">
+            <div class="o_AttachmentList d-flex flex-column mt-1" t-att-class="{ 'me-2 pe-4': attachmentList.isInChatWindowAndIsAlignedLeft and !attachmentList.composerViewOwner, 'ms-2 ps-4': attachmentList.isInChatWindowAndIsAlignedRight and !attachmentList.composerViewOwner }" t-attf-class="{{ className }}" t-ref="root">
+                <div t-if="attachmentList.attachmentImages.length > 0" class="o_AttachmentList_partialList o_AttachmentList_partialListImages d-flex flex-grow-1 flex-wrap" t-att-class="{ 'justify-content-end': attachmentList.isInChatWindowAndIsAlignedRight and !attachmentList.composerViewOwner }">
+                    <t t-foreach="attachmentList.attachmentImages" t-as="attachmentImage" t-key="attachmentImage.localId">
+                        <AttachmentImage className="'o_AttachmentList_attachment mw-100 mb-1'" classNameObj="{ 'ms-1': attachmentList.isInChatWindowAndIsAlignedRight, 'me-1': !attachmentList.isInChatWindowAndIsAlignedRight }" record="attachmentImage"/>
+                    </t>
+                </div>
+                <div t-if="attachmentList.attachmentCards.length > 0" class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages d-flex flex-grow-1 flex-wrap mt-1" t-att-class="{ 'justify-content-end': attachmentList.isInChatWindowAndIsAlignedRight and !attachmentList.composerViewOwner }">
+                    <t t-foreach="attachmentList.attachmentCards" t-as="attachmentCard" t-key="attachmentCard.localId">
+                        <AttachmentCard className="'o_AttachmentList_attachment mw-100 mb-1'" classNameObj="{ 'ms-1': attachmentList.isInChatWindowAndIsAlignedRight, 'me-1': !attachmentList.isInChatWindowAndIsAlignedRight }" record="attachmentCard"/>
+                    </t>
+                </div>
             </div>
-            <div class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages">
-                <t t-foreach="nonImageAttachments" t-as="attachment" t-key="attachment.localId">
-                    <Attachment
-                        class="o_AttachmentList_attachment o_AttachmentList_nonImageAttachment"
-                        attachmentLocalId="attachment.localId"
-                        attachmentLocalIds="viewableAttachments.map(attachment => attachment.localId)"
-                        detailsMode="'card'"
-                        imageSize="props.attachmentsImageSize"
-                        isDownloadable="props.areAttachmentsDownloadable"
-                        isEditable="props.areAttachmentsEditable"
-                        showExtension="props.showAttachmentsExtensions"
-                        showFilename="props.showAttachmentsFilenames"
-                    />
-                </t>
-            </div>
-        </div>
+        </t>
     </t>
 
 </templates>

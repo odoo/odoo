@@ -6,21 +6,26 @@
 """
 from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import closing, contextmanager
+from contextlib import closing, contextmanager, suppress
 from functools import partial
 from operator import attrgetter
-from weakref import WeakValueDictionary
 import logging
 import os
 import threading
+import time
+import warnings
 
 import psycopg2
 
 import odoo
+from odoo.modules.db import FunctionStatus
+from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, ignore,
-                        lazy_classproperty, lazy_property, sql, OrderedSet)
+                        lazy_classproperty, lazy_property, sql,
+                        Collector, OrderedSet)
+from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -36,9 +41,6 @@ class Registry(Mapping):
     """
     _lock = threading.RLock()
     _saved_lock = None
-
-    # a cache for model classes, indexed by their base classes
-    model_cache = WeakValueDictionary()
 
     @lazy_classproperty
     def registries(cls):
@@ -65,45 +67,47 @@ class Registry(Mapping):
                 return cls.new(db_name)
             finally:
                 # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.service.wsgi_server.application
+                # odoo.http.root
                 threading.current_thread().dbname = db_name
 
     @classmethod
+    @locked
     def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for the given database name. """
-        with cls._lock:
-            with odoo.api.Environment.manage():
-                registry = object.__new__(cls)
-                registry.init(db_name)
+        t0 = time.time()
+        registry = object.__new__(cls)
+        registry.init(db_name)
 
-                # Initializing a registry will call general code which will in
-                # turn call Registry() to obtain the registry being initialized.
-                # Make it available in the registries dictionary then remove it
-                # if an exception is raised.
-                cls.delete(db_name)
-                cls.registries[db_name] = registry
-                try:
-                    registry.setup_signaling()
-                    # This should be a method on Registry
-                    try:
-                        odoo.modules.load_modules(registry._db, force_demo, status, update_module)
-                    except Exception:
-                        odoo.modules.reset_modules_state(db_name)
-                        raise
-                except Exception:
-                    _logger.error('Failed to load registry')
-                    del cls.registries[db_name]
-                    raise
+        # Initializing a registry will call general code which will in
+        # turn call Registry() to obtain the registry being initialized.
+        # Make it available in the registries dictionary then remove it
+        # if an exception is raised.
+        cls.delete(db_name)
+        cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+        try:
+            registry.setup_signaling()
+            # This should be a method on Registry
+            try:
+                odoo.modules.load_modules(registry, force_demo, status, update_module)
+            except Exception:
+                odoo.modules.reset_modules_state(db_name)
+                raise
+        except Exception:
+            _logger.error('Failed to load registry')
+            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+            raise
 
-                # load_modules() above can replace the registry by calling
-                # indirectly new() again (when modules have to be uninstalled).
-                # Yeah, crazy.
-                registry = cls.registries[db_name]
+        # load_modules() above can replace the registry by calling
+        # indirectly new() again (when modules have to be uninstalled).
+        # Yeah, crazy.
+        registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
-            registry._init = False
-            registry.ready = True
-            registry.registry_invalidated = bool(update_module)
+        registry._init = False
+        registry.ready = True
+        registry.registry_invalidated = bool(update_module)
+        registry.new = registry.init = registry.registries = None
 
+        _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
 
     def init(self, db_name):
@@ -132,6 +136,11 @@ class Registry(Mapping):
         self.loaded = False             # whether all modules are loaded
         self.ready = False              # whether everything is set up
 
+        # field dependencies
+        self.field_depends = Collector()
+        self.field_depends_context = Collector()
+        self.field_inverses = Collector()
+
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
@@ -141,24 +150,24 @@ class Registry(Mapping):
         self.cache_sequence = None
 
         # Flags indicating invalidation of the registry or the cache.
-        self.registry_invalidated = False
-        self.cache_invalidated = False
+        self._invalidation_flags = threading.local()
 
         with closing(self.cursor()) as cr:
             self.has_unaccent = odoo.modules.db.has_unaccent(cr)
+            self.has_trigram = odoo.modules.db.has_trigram(cr)
 
     @classmethod
+    @locked
     def delete(cls, db_name):
         """ Delete the registry linked to a given database. """
-        with cls._lock:
-            if db_name in cls.registries:
-                del cls.registries[db_name]
+        if db_name in cls.registries:  # pylint: disable=unsupported-membership-test
+            del cls.registries[db_name]  # pylint: disable=unsupported-delete-operation
 
     @classmethod
+    @locked
     def delete_all(cls):
         """ Delete all the registries. """
-        with cls._lock:
-            cls.registries.clear()
+        cls.registries.clear()
 
     #
     # Mapping abstract methods implementation
@@ -239,6 +248,7 @@ class Registry(Mapping):
             This must be called after loading modules and before using the ORM.
         """
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        env.invalidate_all()
 
         # Uninstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
@@ -252,11 +262,10 @@ class Registry(Mapping):
         lazy_property.reset_all(self)
         self.registry_invalidated = True
 
-        if env.all.tocompute:
-            _logger.error(
-                "Remaining fields to compute before setting up registry: %s",
-                env.all.tocompute, stack_info=True,
-            )
+        # we must setup ir.model before adding manual fields because _add_manual_models may
+        # depend on behavior that is implemented through overrides, such as is_mail_thread which
+        # is implemented through an override to env['ir.model']._instanciate
+        env['ir.model']._prepare_setup()
 
         # add manual models
         if self._init_modules:
@@ -267,23 +276,35 @@ class Registry(Mapping):
         for model in models:
             model._prepare_setup()
 
-        # do the actual setup from a clean state
-        self._m2m = defaultdict(list)
+        self.field_depends.clear()
+        self.field_depends_context.clear()
+        self.field_inverses.clear()
+
+        # do the actual setup
         for model in models:
             model._setup_base()
 
+        self._m2m = defaultdict(list)
         for model in models:
             model._setup_fields()
+        del self._m2m
 
         for model in models:
             model._setup_complete()
+
+        # determine field_depends and field_depends_context
+        for model in models:
+            for field in model._fields.values():
+                depends, depends_context = field.get_depends(model)
+                self.field_depends[field] = tuple(depends)
+                self.field_depends_context[field] = tuple(depends_context)
 
         # Reinstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
         if self.ready:
             for model in env.values():
                 model._register_hook()
-            env['base'].flush()
+            env.flush_all()
 
     @lazy_property
     def field_computed(self):
@@ -299,6 +320,9 @@ class Registry(Mapping):
                 if len({field.compute_sudo for field in fields}) > 1:
                     _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
                                     model_name, ", ".join(field.name for field in fields))
+                if len({field.precompute for field in fields}) > 1:
+                    _logger.warning("%s: inconsistent 'precompute' for computed fields: %s",
+                                    model_name, ", ".join(field.name for field in fields))
         return computed
 
     @lazy_property
@@ -311,7 +335,7 @@ class Registry(Mapping):
             for field in Model._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.base_field.manual else ()
-                with ignore(*exceptions):
+                with suppress(*exceptions):
                     dependencies[field] = OrderedSet(field.resolve_depends(self))
 
         # determine transitive dependencies
@@ -343,6 +367,30 @@ class Registry(Mapping):
 
         return triggers
 
+    @lazy_property
+    def fields_modifying_relations(self):
+        '''
+        Return the union of the set of relational fields that are dependencies
+        of other fields, with the set of non-relational fields that are
+        dependencies of relational fields.
+        '''
+        result = set()
+
+        for field in self.field_triggers:
+            # If the field is itself a relational field, it is also considered
+            # as triggering relational fields.
+            if field.relational or self.field_inverses[field]:
+                result.add(field)
+                continue
+
+            Model = self.models[field.model_name]
+            for dep in Model._dependent_fields(field):
+                if dep.relational or self.field_inverses[dep]:
+                    result.add(field)
+                    break
+
+        return result
+
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
@@ -372,7 +420,9 @@ class Registry(Mapping):
             try:
                 func(*args, **kwargs)
             except Exception as e:
-                _schema.error(*e.args)
+                # warn only, this is not a deployment showstopper, and
+                # can sometimes be a transient error
+                _schema.warning(*e.args)
 
     def init_models(self, cr, model_names, context, install=True):
         """ Initialize a list of models (given by their name). Call methods
@@ -417,7 +467,7 @@ class Registry(Mapping):
             self.check_indexes(cr, model_names)
             self.check_foreign_keys(cr)
 
-            env['base'].flush()
+            env.flush_all()
 
             # make sure all tables are present
             self.check_tables_exist(cr)
@@ -430,7 +480,7 @@ class Registry(Mapping):
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
         expected = [
-            ("%s_%s_index" % (Model._table, field.name), Model._table, field.name, field.index)
+            (f"{Model._table}_{field.name}_index", Model._table, field, getattr(field, 'unaccent', False))
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -440,18 +490,46 @@ class Registry(Mapping):
         if not expected:
             return
 
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
+        # retrieve existing indexes with their corresponding table
+        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
                    [tuple(row[0] for row in expected)])
-        existing = {row[0] for row in cr.fetchall()}
+        existing = dict(cr.fetchall())
 
-        for indexname, tablename, columnname, index in expected:
-            if index and indexname not in existing:
+        for indexname, tablename, field, unaccent in expected:
+            column_expression = f'"{field.name}"'
+            index = field.index
+            assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
+            if index and indexname not in existing and \
+                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
+
+                if index == 'trigram':
+                    if field.translate:
+                        column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
+                    # add `unaccent` to the trigram index only because the
+                    # trigram indexes are mainly used for (i/=)like search and
+                    # unaccent is added only in these cases when searching
+                    if unaccent and self.has_unaccent:
+                        if self.has_unaccent == FunctionStatus.INDEXABLE:
+                            column_expression = get_unaccent_wrapper(cr)(column_expression)
+                        else:
+                            warnings.warn(
+                                "PostgreSQL function 'unaccent' is present but not immutable, "
+                                "therefore trigram indexes may not be effective.",
+                            )
+                    expression = f'{column_expression} gin_trgm_ops'
+                    method = 'gin'
+                    where = ''
+                else:  # index in ['btree', 'btree_not_null'， True]
+                    expression = f'{column_expression}'
+                    method = 'btree'
+                    where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
                     with cr.savepoint(flush=False):
-                        sql.create_index(cr, indexname, tablename, ['"%s"' % columnname])
+                        sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
-            elif not index and indexname in existing:
+
+            elif not index and tablename == existing.get(indexname):
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,
@@ -489,15 +567,16 @@ class Registry(Mapping):
         for key, val in self._foreign_keys.items():
             table1, column1 = key
             table2, column2, ondelete, model, module = val
-            conname = '%s_%s_fkey' % key
             deltype = sql._CONFDELTYPES[ondelete.upper()]
             spec = existing.get(key)
             if spec is None:
                 sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+                conname = sql.get_foreign_keys(cr, table1, column1, table2, column2, ondelete)[0]
                 model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
             elif (spec[1], spec[2], spec[3]) != (table2, column2, deltype):
                 sql.drop_constraint(cr, table1, spec[0])
                 sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+                conname = sql.get_foreign_keys(cr, table1, column1, table2, column2, ondelete)[0]
                 model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
 
     def check_tables_exist(self, cr):
@@ -519,7 +598,7 @@ class Registry(Mapping):
             for name in missing:
                 _logger.info("Recreate table of model %s.", name)
                 env[name].init()
-            env['base'].flush()
+            env.flush_all()
             # check again, and log errors if tables are still missing
             missing_tables = set(table2model).difference(existing_tables(cr, table2model))
             for table in missing_tables:
@@ -554,6 +633,24 @@ class Registry(Mapping):
             self._ordinary_tables = {row[0] for row in cr.fetchall()}
 
         return model._table in self._ordinary_tables
+
+    @property
+    def registry_invalidated(self):
+        """ Determine whether the current thread has modified the registry. """
+        return getattr(self._invalidation_flags, 'registry', False)
+
+    @registry_invalidated.setter
+    def registry_invalidated(self, value):
+        self._invalidation_flags.registry = value
+
+    @property
+    def cache_invalidated(self):
+        """ Determine whether the current thread has modified the cache. """
+        return getattr(self._invalidation_flags, 'cache', False)
+
+    @cache_invalidated.setter
+    def cache_invalidated(self, value):
+        self._invalidation_flags.cache = value
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
@@ -677,8 +774,7 @@ class Registry(Mapping):
             as a context manager to commit/rollback and close automatically.
         """
         if self.test_cr is not None:
-            # When in test mode, we use a proxy object that uses 'self.test_cr'
-            # underneath.
+            # in test mode we use a proxy object that uses 'self.test_cr' underneath
             return TestCursor(self.test_cr, self.test_lock)
         return self._db.cursor()
 

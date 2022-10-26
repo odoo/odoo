@@ -3,8 +3,8 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
-from odoo.tools import format_datetime
+from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo.tools import format_date
 from odoo.exceptions import AccessError, ValidationError
 
 
@@ -27,22 +27,21 @@ class EventRegistration(models.Model):
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
     utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
-    partner_id = fields.Many2one(
-        'res.partner', string='Booked by',
-        states={'done': [('readonly', True)]})
+    partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1)
     name = fields.Char(
-        string='Attendee Name', index=True,
+        string='Attendee Name', index='trigram',
         compute='_compute_name', readonly=False, store=True, tracking=10)
     email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=11)
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
     mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
     # organization
-    date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
         readonly=False, store=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
+    event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
+    event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
     company_id = fields.Many2one(
         'res.company', string='Company', related='event_id.company_id',
         store=True, readonly=True, states={'draft': [('readonly', False)]})
@@ -50,26 +49,6 @@ class EventRegistration(models.Model):
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        """ Keep an explicit onchange on partner_id. Rationale : if user explicitly
-        changes the partner in interface, he want to update the whole customer
-        information. If partner_id is updated in code (e.g. updating your personal
-        information after having registered in website_event_sale) fields with a
-        value should not be reset as we don't know which one is the right one.
-
-        In other words
-          * computed fields based on partner_id should only update missing
-            information. Indeed automated code cannot decide which information
-            is more accurate;
-          * interface should allow to update all customer related information
-            at once. We consider event users really want to update all fields
-            related to the partner;
-        """
-        for registration in self:
-            if registration.partner_id:
-                registration.update(registration._synchronize_partner_values(registration.partner_id))
 
     @api.depends('partner_id')
     def _compute_name(self):
@@ -112,21 +91,9 @@ class EventRegistration(models.Model):
         for registration in self:
             if not registration.date_closed:
                 if registration.state == 'done':
-                    registration.date_closed = fields.Datetime.now()
+                    registration.date_closed = self.env.cr.now()
                 else:
                     registration.date_closed = False
-
-    @api.constrains('event_id', 'state')
-    def _check_seats_limit(self):
-        for registration in self:
-            if registration.event_id.seats_limited and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
-                raise ValidationError(_('No more seats available for this event.'))
-
-    @api.constrains('event_ticket_id', 'state')
-    def _check_ticket_seats_limit(self):
-        for record in self:
-            if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
-                raise ValidationError(_('No more available seats for this ticket'))
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
@@ -155,20 +122,32 @@ class EventRegistration(models.Model):
         # some were created already open
         if registrations._check_auto_confirmation():
             registrations.sudo().action_confirm()
-        else:
+        elif not self.env.context.get('install_mode', False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
             registrations._update_mail_schedulers()
-
         return registrations
 
     def write(self, vals):
-        pre_draft = self.env['event.registration']
-        if vals.get('state') == 'open':
-            pre_draft = self.filtered(lambda registration: registration.state == 'draft')
-
+        confirming = vals.get('state') in {'open', 'done'}
+        to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
+                      if confirming else None)
         ret = super(EventRegistration, self).write(vals)
+        # As these Event(Ticket) methods are model constraints, it is not necessary to call them
+        # explicitly when creating new registrations. However, it is necessary to trigger them here
+        # as changes in registration states cannot be used as constraints triggers.
+        if confirming:
+            to_confirm.event_id._check_seats_availability()
+            to_confirm.event_ticket_id._check_seats_availability()
 
-        if vals.get('state') == 'open':
-            pre_draft._update_mail_schedulers()
+            if not self.env.context.get('install_mode', False):
+                # running the scheduler for demo data can cause an issue where wkhtmltopdf runs
+                # during server start and hangs indefinitely, leading to serious crashes we
+                # currently avoid this by not running the scheduler, would be best to find the
+                # actual reason for this issue and fix it so we can remove this check
+                to_confirm._update_mail_schedulers()
 
         return ret
 
@@ -193,11 +172,18 @@ class EventRegistration(models.Model):
             ret_list.append((registration.id, name))
         return ret_list
 
+    def toggle_active(self):
+        pre_inactive = self - self.filtered(self._active_name)
+        super().toggle_active()
+        # Necessary triggers as changing registration states cannot be used as triggers for the
+        # Event(Ticket) models constraints.
+        if pre_inactive:
+            pre_inactive.event_id._check_seats_availability()
+            pre_inactive.event_ticket_id._check_seats_availability()
+
     def _check_auto_confirmation(self):
-        if any(not registration.event_id.auto_confirm or
-               (not registration.event_id.seats_available and registration.event_id.seats_limited) for registration in self):
-            return False
-        return True
+        """ Checks that all registrations are for `auto-confirm` events. """
+        return all(event.auto_confirm for event in self.event_id)
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
@@ -221,15 +207,15 @@ class EventRegistration(models.Model):
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref('event.event_registration_mail_template_badge')
+        template = self.env.ref('event.event_registration_mail_template_badge', raise_if_not_found=False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
         ctx = dict(
             default_model='event.registration',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template.id,
+            default_template_id=template and template.id,
             default_composition_mode='comment',
-            custom_layout="mail.mail_notification_light",
+            default_email_layout_xmlid="mail.mail_notification_light",
         )
         return {
             'name': _('Compose Email'),
@@ -260,7 +246,7 @@ class EventRegistration(models.Model):
         # we could simply call _create_missing_mail_registrations and let cron do their job
         # but it currently leads to several delays. We therefore call execute until
         # cron triggers are correctly used
-        onsubscribe_schedulers.execute()
+        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
@@ -310,7 +296,7 @@ class EventRegistration(models.Model):
     # TOOLS
     # ------------------------------------------------------------
 
-    def get_date_range_str(self):
+    def get_date_range_str(self, lang_code=False):
         self.ensure_one()
         today = fields.Datetime.now()
         event_date = self.event_begin_date
@@ -326,7 +312,7 @@ class EventRegistration(models.Model):
         elif event_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
-            return _('on %(date)s', date=format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium'))
+            return _('on %(date)s', date=format_date(self.env, self.event_begin_date, lang_code=lang_code, date_format='medium'))
 
     def _get_registration_summary(self):
         self.ensure_one()

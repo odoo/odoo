@@ -6,6 +6,10 @@ const s_dynamic_snippet_carousel_options = require('website.s_dynamic_snippet_ca
 
 var wUtils = require('website.utils');
 
+const alternativeSnippetRemovedOptions = [
+    'filter_opt', 'product_category_opt', 'product_tag_opt', 'product_names_opt',
+]
+
 const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend({
 
     /**
@@ -15,17 +19,30 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     init: function () {
         this._super.apply(this, arguments);
         this.modelNameFilter = 'product.product';
-        const productTemplateId = $("input.product_template_id");
+        // Directly calling $() will not work in this case since we are querying something
+        // in an iframe
+        const productTemplateId = this.$target.closest("#wrapwrap").find("input.product_template_id");
         this.hasProductTemplateId = productTemplateId.val();
         if (!this.hasProductTemplateId) {
             this.contextualFilterDomain.push(['product_cross_selling', '=', false]);
         }
         this.productCategories = {};
+        this.isAlternativeProductSnippet = this.$target.hasClass('o_wsale_alternative_products');
     },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @override
+     */
+     _computeWidgetVisibility(widgetName, params) {
+        if (this.isAlternativeProductSnippet && alternativeSnippetRemovedOptions.includes(widgetName)) {
+            return false;
+        }
+        return this._super(...arguments);
+    },
     /**
      * Fetches product categories.
      * @private

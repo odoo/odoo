@@ -8,6 +8,12 @@ $-seen-urls: ();
     @if $-url and index($-seen-urls, $-url) == null {
         $-seen-urls: append($-seen-urls, $-url);
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    } @else {
+        $-name: o-get-font-info($alias, 'name');
+        $-attachment: o-get-font-info($alias, 'attachment');
+        @if $-attachment {
+            @import url("/web/content/#{$-attachment}/google-font-#{unquote($-name)}");
+        }
     }
 }
 
@@ -23,9 +29,22 @@ $-seen-urls: ();
     // 1) Handle default values
     @include print-variable('header-font-size', $font-size-base);
 
+    $-font-website-value: o-website-value('font');
+    @include print-variable('headings-font', $-font-website-value);
+    @include print-variable('navbar-font', $-font-website-value);
+    @include print-variable('buttons-font', $-font-website-value);
+
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
-    // 3) The values in the $colors map are also printed by Bootstrap.
+    // 3) The values in the $colors map are also printed by Bootstrap. However,
+    // we have color variables which can contain a reference to a color
+    // combination and that is the info we want in that case.
+    @each $key in ('menu', 'header-boxed', 'footer', 'copyright') {
+        $-value: map-get($o-color-palette, $key);
+        @if type-of($-value) == 'number' {
+            @include print-variable($key, $-value);
+        }
+    }
 
     // 4) The Odoo values map, $o-website-values, must be printed.
     @each $key, $value in $o-website-values {
@@ -87,11 +106,6 @@ $-seen-urls: ();
 }
 
 #wrapwrap {
-    // When the modal is in #wrapwrap, position top should be size of the navbar
-    .modal:not(.s_popup_bottom) {
-        top: $o-navbar-height;
-    }
-
     @if o-website-value('body-image') {
         background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
         background-position: center;
@@ -133,7 +147,8 @@ $-seen-urls: ();
             }
 
             // Vertical alignment when top-menu has visually "no background"
-            @if o-color('menu') == o-color('body') {
+            $-menu-color: o-color('menu-custom') or o-color('menu');
+            @if (not $-menu-color or $-menu-color == o-color('body')) {
                 > header {
                     .navbar, .container {
                         padding-left: 0;
@@ -186,25 +201,25 @@ $-seen-urls: ();
     .navbar-collapse {
         min-width: 0; // Allows it to shrink during loading
     }
-    .nav-item {
-        transition: opacity 1000ms ease 0s;
-    }
     .btn {
         // This was a default bootstrap style before but it was removed from
         // the library at some point. It seems important in the header so that
         // the header does not flicker during loading.
         white-space: nowrap;
     }
-    .o_menu_loading {
+    .o_menu_image_placeholder {
+        width: 80px !important;
+    }
+    #top_menu {
         flex-wrap: nowrap !important;
-        overflow: hidden !important;
-
-        .nav-item {
+        &.o_menu_loading {
+            overflow: hidden !important;
             opacity: 0 !important;
         }
     }
 }
-.navbar-brand, .navbar-text, .navbar .nav-link {
+.navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
+.navbar a.o_add_language {
     @if $o-theme-navbar-font != $o-theme-font {
         font-family: $o-theme-navbar-font;
     }
@@ -216,9 +231,12 @@ $-seen-urls: ();
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
     @include o-apply-colors('menu');
-    @if (color-yiq(o-color('menu')) != $yiq-text-dark) {
+    @include o-apply-colors('menu-custom');
+    $-menu-color: o-color('menu-custom') or o-color('menu');
+    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
         @extend .navbar-dark;
     }
+    @include o-add-gradient('menu-gradient');
 }
 
 $-header-nav-link-height: $nav-link-height;
@@ -248,26 +266,31 @@ $-header-nav-link-height: $nav-link-height;
 
 .o_footer {
     @include o-apply-colors('footer');
+    @include o-apply-colors('footer-custom');
+    @include o-add-gradient('footer-gradient');
 
     .o_footer_copyright {
-        @include o-apply-colors('copyright', $background: o-color('footer'));
+        $-footer-color: o-color('footer-custom') or o-color('footer');
+        @include o-apply-colors('copyright', $background: $-footer-color);
+        @include o-apply-colors('copyright-custom', $background: $-footer-color);
+        @include o-add-gradient('copyright-gradient');
     }
 }
 
 h2, h3, h4, h5, h6 {
-    color: color('o-cc1-h2');
+    color: map-get($colors, 'o-cc1-h2');
 }
 h3, h4, h5, h6 {
-    color: color('o-cc1-h3');
+    color: map-get($colors, 'o-cc1-h3');
 }
 h4, h5, h6 {
-    color: color('o-cc1-h4');
+    color: map-get($colors, 'o-cc1-h4');
 }
 h5, h6 {
-    color: color('o-cc1-h5');
+    color: map-get($colors, 'o-cc1-h5');
 }
 h6 {
-    color: color('o-cc1-h6');
+    color: map-get($colors, 'o-cc1-h6');
 }
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
@@ -276,7 +299,7 @@ h6 {
 }
 
 // Texts
-font[style*='background'],
+font[style*='background']:not(.text-gradient),
 font[class*='bg-'] {
     padding: 2px 6px 4px;
 }
@@ -296,11 +319,13 @@ font[class*='bg-'] {
         vertical-align: middle;
         text-align: center;
         // fa-1x is not ouput
-        @include size($size);
+        width: $size;
+        height: $size;
         line-height: $size;
         @for $i from 2 through 5 {
             &.fa-#{$i}x {
-                @include size($size + $i);
+                width: $size + $i;
+                height: $size + $i;
                 line-height: $size + $i;
             }
         }
@@ -335,17 +360,17 @@ font[class*='bg-'] {
         border: 0;
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), $btn-line-height, 0);
-        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), $btn-line-height-lg, 0); }
-        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), $btn-line-height-sm, 0); }
-        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), $btn-line-height-sm, 0); }
+        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
+        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
+        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
+        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
     }
     &.rounded-circle {
         border-radius: 100px !important;
-        @include button-size(0.45rem, 1.35rem, $font-size-base, $btn-line-height, 30px);
-        &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, $btn-line-height-lg, 30px); }
-        &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, $btn-line-height-sm, 30px); }
-        &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), $btn-line-height-sm, 30px); }
+        @include button-size(0.45rem, 1.35rem, $font-size-base, 30px);
+        &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, 30px); }
+        &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, 30px); }
+        &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), 30px); }
     }
 }
 
@@ -482,7 +507,7 @@ table.table_desc tr td {
         width: 8%;
         opacity: 1;
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .carousel-control-prev,
         .carousel-control-next {
             display: none; // remove arrows on mobile
@@ -492,7 +517,8 @@ table.table_desc tr td {
     .carousel-control-next { justify-content: flex-end; }
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
-        @include size(auto);
+        width: auto;
+        height: auto;
         background-image: none;
         color: $body-color;
         &:before {
@@ -543,7 +569,7 @@ table.table_desc tr td {
     // Border
     &.s_carousel_bordered {
         border: 2rem solid rgba(0,0,0,0);
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             border: 0.5rem solid rgba(0,0,0,0);
         }
         // Controls - caret
@@ -551,13 +577,15 @@ table.table_desc tr td {
         .carousel-control-next-icon:before { content: "\f0da"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
-            @include size(2rem, 6rem);
+            width: 2rem;
+            height: 6rem;
             line-height: 6rem;
             font-size: 1.5rem;
         }
         // Indicators
         .carousel-indicators li {
-            @include size(3rem, 1rem);
+            width: 3rem;
+            height: 1rem;
         }
     }
 
@@ -575,14 +603,16 @@ table.table_desc tr td {
         .carousel-control-next-icon:before { content: "\f061"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
-            @include size(4rem);
+            width: 4rem;
+            height: 4rem;
             line-height: 4rem;
             border-radius: 50%;
             font-size: 1.25rem;
         }
         // Indicators
         .carousel-indicators li {
-            @include size(1rem);
+            width: 1rem;
+            height: 1rem;
             border-radius: 50%;
         }
     }
@@ -606,13 +636,15 @@ table.table_desc tr td {
         .carousel-control-next-icon:before { content: "\f105"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
-            @include size(2rem);
+            width: 2rem;
+            height: 2rem;
             line-height: 2rem;
             font-size: 1.25rem;
         }
         // Indicators
         .carousel-indicators li {
-            @include size(1rem);
+            width: 1rem;
+            height: 1rem;
             &:hover:not(.active) {
                 background-color: rgba(255,255,255,.8);
             }
@@ -726,7 +758,6 @@ $-transition-duration: 200ms;
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    background: $light;
 
     &:not(.o_header_no_transition) {
         transition: transform $-transition-duration;
@@ -770,18 +801,15 @@ $-transition-duration: 200ms;
         }
     }
 }
-#oe_main_menu_navbar + #wrapwrap .o_header_affixed {
-    top: $o-navbar-height;
-}
 
 // Navbar
-.navbar .o_extra_menu_items.show > ul {
+.navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid gray('200');
+            border-top: 1px solid map-get($grays, '200');
         }
         > a.dropdown-toggle {
-            background-color: gray('200');
+            background-color: map-get($grays, '200');
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }
@@ -796,7 +824,7 @@ $-transition-duration: 200ms;
             box-shadow: none;
         }
         > .o_mega_menu .row > div { // remove mega menu col-lg-* style
-            max-width: none;
+            width: 100%;
             flex: auto;
         }
     }
@@ -868,7 +896,7 @@ header {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
-                text-align: center;
+                text-align: center !important;
             }
         }
     }
@@ -906,6 +934,15 @@ header {
             transition: none;
             transform: none;
 
+            @if o-website-value('header-template') == 'magazine' {
+                @include media-breakpoint-up(lg) {
+                    position: fixed;
+                }
+                #top_menu {
+                    align-items: normal !important;
+                }
+            }
+
             &, & > .o_header_collapsed_content_wrapper {
                 // TODO improve: ugly code to reset a potential wrapper
                 display: flex !important;
@@ -939,7 +976,8 @@ header {
                 }
                 min-width: 250px;
                 margin: 0 !important;
-                background-color: o-color('menu');
+                background-color: o-color('menu-custom') or o-color('menu');
+                @include o-add-gradient('menu-gradient');
                 transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
 
                 @if $-hamburger-center {
@@ -985,11 +1023,6 @@ header {
                     padding-left: .5em;
                     padding-right: .5em;
                 }
-            }
-
-            .o_connected_user:not(.editor_has_snippets) header & {
-                top: -$o-navbar-height;
-                padding-top: $o-navbar-height;
             }
         }
         &.collapsing #top_menu {
@@ -1081,13 +1114,12 @@ header {
                 }
             }
         }
-        body.o_connected_user:not(.editor_has_snippets) #wrapwrap > header {
-            top: $o-navbar-height;
-        }
     }
 } @else if o-website-value('header-template') == 'boxed' {
     #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
         @include o-apply-colors('header-boxed');
+        @include o-apply-colors('header-boxed-custom');
+        @include o-add-gradient('header-boxed-gradient');
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
@@ -1102,8 +1134,10 @@ header {
                 $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
                 > header {
                     .navbar-collapse {
+                        max-height: unset;
+
                         > .container {
-                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            height: calc(100vh - #{$o-hamburger-full-navbar-height});
                             transition: height .3s ease;
                         }
                         .nav-link {
@@ -1117,6 +1151,11 @@ header {
                 }
             }
         }
+        @include media-breakpoint-up(lg) {
+            #wrapwrap > header #top_menu {
+                align-items: center !important;
+            }
+        }
     }
 }
 
@@ -1127,6 +1166,7 @@ header {
     margin-top: 0;
     border-radius: 0;
     background-clip: unset; // Remove the 1px gap introduced by BS4
+    background-color: transparent; // In order to allow the mega menu to be transparent
 
     .container, .container-fluid {
         // Need to reforce those because they are removed since its a container
@@ -1135,10 +1175,15 @@ header {
         padding-right: $grid-gutter-width / 2;
     }
 }
+
 .o_mega_menu_container_size {
-    @include media-breakpoint-up(md) {
-        left: 50%;
-        transform: translateX(-50%);
+    $-header-template: o-website-value('header-template');
+    @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
+        $bp: if($-header-template == 'minimalist', md, lg);
+        @include media-breakpoint-up($bp) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 
     $-mm-max-widths: ();
@@ -1148,6 +1193,26 @@ header {
         ));
     }
     @include make-container-max-widths($-mm-max-widths);
+}
+
+// The design of some of the new mega menu templates required a column with
+// an overlay that would overflow until the end of the container. For
+// technical reasons, this overlay has to be hardcoded here.
+%s_mega_menu_gray_area {
+    z-index: 1;
+
+    &:before {
+        content: '';
+        display: block;
+        width: 100vw;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: rgba(0, 0, 0, .05);
+    }
 }
 
 #wrapwrap.o_header_overlay {
@@ -1230,7 +1295,12 @@ header {
     @include media-breakpoint-up(lg) {
         #wrapwrap.o_footer_effect_enable {
             > main {
-                background-color: $body-bg;
+                @if o-website-value('layout') == 'full' {
+                    // Ensure a transparent snippet at the end of the content
+                    // still appears with the same background when hovering the
+                    // footer during the scroll effect.
+                    background-color: $body-bg;
+                }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
                 }
@@ -1257,17 +1327,32 @@ header {
     }
 }
 .o_lang_flag {
-    width: 1.5em;
-    height: 1.5em;
+    width: 1em;
+    height: 1em;
     margin-right: 0.2em;
-    border-radius: $rounded-pill;
+    border-radius: $border-radius-pill;
+}
+a.js_change_lang:hover, a.o_add_language:hover {
+    text-decoration: none;
+
+    span {
+        text-decoration: $link-hover-decoration;
+    }
+}
+span.list-inline-item.o_add_language:last-child {
+    display: none !important; // Hide the separator if it is the last list item
 }
 
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop_wrapper {
+        position: relative;
+        z-index: 1;
+    }
     #o_footer_scrolltop {
-        $-footer-color: o-color('footer');
-        $-copyright-color: o-color('copyright');
+        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
+        $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
+        $-copyright-color: o-color('copyright-custom') or o-color('copyright') or rgba(0, 0, 0, 0);
         $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
 
         box-sizing: content-box;
@@ -1275,14 +1360,14 @@ header {
         height: 3rem;
         border: 0;
         padding: 0;
-        @include o-apply-colors('footer', $with-extras: false, $background: $-footer-color);
+        @include o-apply-colors($-footer-color, $with-extras: false, $background: $-footer-color);
         text-decoration: none;
 
         @if $-footer-color == $-copyright-color {
-            color: rgba(color-yiq($-footer-color), 0.5);
+            color: rgba(color-contrast($-footer-color), 0.5);
         }
 
-        @include hover-focus {
+        &:hover, &:focus {
             @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
             text-decoration: none;
         }
@@ -1298,7 +1383,7 @@ header {
     }
     .figure-caption {
         @include o-position-absolute(auto, 0, 0, 0);
-        @include o-bg-color(rgba(theme-color('dark'), $o-theme-figcaption-opacity));
+        @include o-bg-color(rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
         padding: $tooltip-padding-y $tooltip-padding-x;
         font-weight: $font-weight-bold;
         a {
@@ -1318,7 +1403,7 @@ header {
 }
 
 // TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
-.modal-footer > .float-left {
+.modal-footer > .float-start {
     margin-right: auto;
 }
 
@@ -1361,7 +1446,7 @@ header {
     }
     7%, 21% {
         transform: scale(1.3);
-        background-color: rgba(theme-color('primary'), 0.8);
+        background-color: rgba(map-get($theme-colors, 'primary'), 0.8);
     }
 }
 
@@ -1392,11 +1477,14 @@ $ribbon-padding: 100px;
     @include o-tag-left();
 }
 
-// Cookies Bar
-#website_cookies_bar {
-    :not(.o_cookies_popup) {
-        bottom: 0;
-    }
+// Conditional visibility
+.o_conditional_hidden {
+    display: none !important;
+}
+
+// Search results
+.o_search_result_item_detail {
+    flex: 1;
 }
 
 .o_website_btn_loading {
@@ -1405,4 +1493,758 @@ $ribbon-padding: 100px;
     .fa:not(.fa-spin) {
         display: none;
     }
+}
+
+ul.o_checklist > li.o_checked::after {
+    left: - ($o-checklist-margin-left - $o-checklist-checkmark-width) - 1;
+    top: 0;
+}
+
+// Bottom fixed element (e.g. livechat button)
+.modal-open .o_bottom_fixed_element, .o_bottom_fixed_element_hidden {
+    // Prevent bottom fixed elements from hidding buttons and
+    // hide them if a modal is open.
+    display: none !important;
+}
+
+//------------------------------------------------------------------------------
+// Website Animate
+//------------------------------------------------------------------------------
+
+.o_animate {
+    // Elements with an animation must always be above the elements that are
+    // around so that the animation is fully visible.
+    z-index: 1;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    transform: translate3d(0,0,0); // force GPU acceleration
+    backface-visibility: hidden; // avoid flickering
+    text-rendering: geometricPrecision; // take care of animated titles
+    visibility: hidden;
+    --wanim-intensity: 50;
+    --wanim-intensity-squared: calc(var(--wanim-intensity) * var(--wanim-intensity));
+    --wanim-zoom-out-scale: calc(1 + (var(--wanim-intensity-squared) / 8333.3));
+    --wanim-zoom-in-scale: calc(1.01 - (var(--wanim-intensity) / 100 ));
+    --wanim-zoom-in-scale-60: calc(var(--wanim-zoom-in-scale) + ((1 - var(--wanim-zoom-in-scale)) / 2));
+    --wanim-opacity-adjustment: 0;
+
+    &:not(.o_animating):not(.o_animate_in_dropdown) {
+        transform: none !important;
+    }
+}
+.o_animate_preview {
+    visibility: visible;
+}
+.o_wanim_overflow_xy_hidden {
+    overflow-x: hidden !important;
+    .o_footer_slideout {
+        overflow-y: hidden !important;
+    }
+}
+.o_animated_text {
+    display: inline-block;
+}
+.o_animate_on_scroll {
+    animation-play-state: paused;
+    --wanim-opacity-adjustment: 1;
+}
+
+// Slide //////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_slide_in_down {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(-2% * var(--wanim-intensity)));
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_top {
+    animation-name: o_anim_slide_in_down;
+}
+
+@keyframes o_anim_slide_in_left {
+    0% {
+        opacity: 0;
+        transform: translate(calc(-2% * var(--wanim-intensity)), 0);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_left {
+    animation-name: o_anim_slide_in_left;
+}
+
+@keyframes o_anim_slide_in_right {
+    0% {
+        opacity: 0;
+        transform: translate(calc(2% * var(--wanim-intensity)), 0);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_right{
+    animation-name: o_anim_slide_in_right;
+}
+
+@keyframes o_anim_slide_in_up {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(2% * var(--wanim-intensity)));
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_slide_in.o_anim_from_bottom {
+    animation-name: o_anim_slide_in_up;
+}
+
+// Bounce /////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_bounce_in {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: scale(calc(1 - (var(--wanim-intensity) / 71.4)));
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    20% {
+        transform: scale(calc(1 + (var(--wanim-intensity-squared) / 25000)));
+    }
+    40% {
+        transform: scale(calc(1 - (var(--wanim-intensity-squared) / 25000)));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(calc(1 + (var(--wanim-intensity-squared) / 83333.3)));
+    }
+    80% {
+        transform: scale(calc(1 - (var(--wanim-intensity-squared) / 83333.3)));
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.o_anim_bounce_in {
+    animation-name: o_anim_bounce_in;
+}
+
+@keyframes o_anim_bounce_in_down {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(0, -3000px);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(0, calc(1px * (var(--wanim-intensity-squared) / 100)));
+    }
+    75% {
+        transform: translate(0, calc(-1px * (var(--wanim-intensity-squared) / 250)));
+    }
+    90% {
+        transform: translate(0, calc(1px * (var(--wanim-intensity-squared) / 500)));
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_top {
+    animation-name: o_anim_bounce_in_down;
+}
+
+@keyframes o_anim_bounce_in_left {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(-3000px, 0);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(calc(1px * (var(--wanim-intensity-squared) / 100)), 0);
+    }
+    75% {
+        transform: translate(calc(-1px * (var(--wanim-intensity-squared) / 250)), 0);
+    }
+    90% {
+        transform: translate(calc(1px * (var(--wanim-intensity-squared) / 500)), 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_left {
+    animation-name: o_anim_bounce_in_left;
+}
+
+@keyframes o_anim_bounce_in_right {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(3000px, 0);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(calc(-1px * (var(--wanim-intensity-squared) / 100)), 0);
+    }
+    75% {
+        transform: translate(calc(1px * (var(--wanim-intensity-squared) / 250)), 0);
+    }
+    90% {
+        transform: translate(calc(-1px * (var(--wanim-intensity-squared) / 500)), 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_right {
+    animation-name: o_anim_bounce_in_right;
+}
+
+@keyframes o_anim_bounce_in_up {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+        opacity: 0;
+        transform: translate(0, 3000px);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: translate(0, calc(-1px * (var(--wanim-intensity-squared) / 100)));
+    }
+    75% {
+        transform: translate(0, calc(1px * (var(--wanim-intensity-squared) / 250)));
+    }
+    90% {
+        transform: translate(0, calc(-1px * (var(--wanim-intensity-squared) / 500)));
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.o_anim_bounce_in.o_anim_from_bottom {
+    animation-name: o_anim_bounce_in_up;
+}
+
+// Fade ///////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_fade_in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_fade_in {
+    animation-name: o_anim_fade_in;
+}
+
+@keyframes o_anim_fade_in_down {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(-2% * var(--wanim-intensity)));
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_top {
+    animation-name: o_anim_fade_in_down;
+}
+
+@keyframes o_anim_fade_in_left {
+    0% {
+        opacity: 0;
+        transform: translate(calc(-2% * var(--wanim-intensity)), 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_left {
+    animation-name: o_anim_fade_in_left;
+}
+
+@keyframes o_anim_fade_in_right {
+    0% {
+        opacity: 0;
+        transform: translate(calc(2% * var(--wanim-intensity)), 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_right {
+    animation-name: o_anim_fade_in_right;
+}
+
+@keyframes o_anim_fade_in_up {
+    0% {
+        opacity: 0;
+        transform: translate(0, calc(2% * var(--wanim-intensity)));
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+.o_anim_fade_in.o_anim_from_bottom {
+    animation-name: o_anim_fade_in_up;
+}
+
+@keyframes o_anim_fade_out {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.o_anim_fade_out {
+    animation-name: o_anim_fade_out;
+}
+
+// Rotate /////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_rotate_in {
+    0% {
+        opacity: 0;
+        transform: rotate(calc(-1deg * (5 + (var(--wanim-intensity-squared) / 12.82))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in {
+    animation-name: o_anim_rotate_in;
+}
+
+@keyframes o_anim_rotate_in_down_left {
+    0% {
+        opacity: 0;
+        transform-origin: left bottom;
+        transform: rotate(calc(-1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: left bottom;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_bottom_left {
+    animation-name: o_anim_rotate_in_down_left;
+}
+
+@keyframes o_anim_rotate_in_down_right {
+    0% {
+        opacity: 0;
+        transform-origin: right bottom;
+        transform: rotate(calc(1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: right bottom;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_bottom_right {
+    animation-name: o_anim_rotate_in_down_right;
+}
+
+@keyframes o_anim_rotate_in_up_left {
+    0% {
+        opacity: 0;
+        transform-origin: left top;
+        transform: rotate(calc(1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: left top;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_top_left {
+    animation-name: o_anim_rotate_in_up_left;
+}
+
+@keyframes o_anim_rotate_in_up_right {
+    0% {
+        opacity: 0;
+        transform-origin: right top;
+        transform: rotate(calc(-1deg * (5 + (var(--wanim-intensity-squared) / 62.5))));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+        transform-origin: right top;
+        transform: rotate(0);
+    }
+}
+.o_anim_rotate_in.o_anim_from_top_right {
+    animation-name: o_anim_rotate_in_up_right;
+}
+
+// Zoom out ///////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_zoom_out {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale));
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out {
+    animation-name: o_anim_zoom_out;
+}
+
+@keyframes o_anim_zoom_out_right {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(100%, 0);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_right {
+    animation-name: o_anim_zoom_out_right;
+}
+
+@keyframes o_anim_zoom_out_left {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(-100%, 0);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_left {
+    animation-name: o_anim_zoom_out_left;
+}
+
+@keyframes o_anim_zoom_out_bottom {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(0, 100%);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_bottom {
+    animation-name: o_anim_zoom_out_bottom;
+}
+
+@keyframes o_anim_zoom_out_top {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-out-scale)) translate(0, -100%);
+    }
+    10% {
+        opacity: calc(0.1 + (0.9 * (var(--wanim-opacity-adjustment))));
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_out.o_anim_from_top {
+    animation-name: o_anim_zoom_out_top;
+}
+
+// Zoom in ////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_zoom_in {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale));
+    }
+    10% {
+        opacity: calc(0.2 + (0.8 * (var(--wanim-opacity-adjustment))));
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.o_anim_zoom_in {
+    animation-name: o_anim_zoom_in;
+}
+
+@keyframes o_anim_zoom_in_down {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(0, calc(-0.1px * var(--wanim-intensity-squared)));
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(0, calc(1px * var(--wanim-intensity)));
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_top {
+    animation-name: o_anim_zoom_in_down;
+}
+
+@keyframes o_anim_zoom_in_up {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(0, calc(0.1px * var(--wanim-intensity-squared)));
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(0, calc(-1px * var(--wanim-intensity)));
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_bottom {
+    animation-name: o_anim_zoom_in_up;
+}
+
+@keyframes o_anim_zoom_in_left {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(calc(-0.1px * var(--wanim-intensity-squared)), 0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(calc(0.2px * var(--wanim-intensity)), 0);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_left {
+    animation-name: o_anim_zoom_in_left;
+}
+
+@keyframes o_anim_zoom_in_right {
+    0% {
+        opacity: 0;
+        transform: scale(var(--wanim-zoom-in-scale)) translate(calc(0.1px * var(--wanim-intensity-squared)), 0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    10% {
+        opacity: calc(0.15 + (0.85 * (var(--wanim-opacity-adjustment))));
+    }
+    60% {
+        opacity: 1;
+        transform: scale(var(--wanim-zoom-in-scale-60)) translate(calc(-0.2px * var(--wanim-intensity)), 0);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    }
+}
+.o_anim_zoom_in.o_anim_from_right {
+    animation-name: o_anim_zoom_in_right;
+}
+
+// Flash / Pulse / Shake / Tada ///////////////////////////////////////////////
+
+@keyframes o_anim_flash {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: calc(1 - (var(--wanim-intensity) / 100));
+    }
+}
+.o_anim_flash {
+    animation-name: o_anim_flash;
+}
+
+@keyframes o_anim_pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(calc(1.01 + (0.000016 * var(--wanim-intensity-squared))));
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.o_anim_pulse {
+    animation-name: o_anim_pulse;
+}
+
+@keyframes o_anim_shake {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(calc(-1px - (0.0036px * var(--wanim-intensity-squared))), 0);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate(calc(1px + (0.0036px * var(--wanim-intensity-squared))), 0);
+    }
+}
+.o_anim_shake {
+    animation-name: o_anim_shake;
+}
+
+@keyframes o_anim_tada {
+    0% {
+        transform: scale(1);
+    }
+    10%, 20% {
+        transform: scale(calc(1 - (0.00004 * var(--wanim-intensity-squared)))) rotate(calc(-2deg - (0.02deg * var(--wanim-intensity))));
+    }
+    30%, 50%, 70%, 90% {
+        transform: scale(calc(1 + (0.00004 * var(--wanim-intensity-squared)))) rotate(calc(2deg + (0.02deg * var(--wanim-intensity))));
+    }
+    40%, 60%, 80% {
+        transform: scale(calc(1 + (0.00004 * var(--wanim-intensity-squared)))) rotate(calc(-2deg - (0.02deg * var(--wanim-intensity))));
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.o_anim_tada {
+    animation-name: o_anim_tada;
+}
+
+// Flip in ////////////////////////////////////////////////////////////////////
+
+@keyframes o_anim_flip_in_x {
+    0% {
+        transform: perspective(1000px) rotateX(calc(1deg * (5 + (var(--wanim-intensity) * 1.7))));
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.o_anim_flip_in_x {
+    backface-visibility: visible;
+    animation-name: o_anim_flip_in_x;
+    transition-timing-function: ease-out;
+}
+
+@keyframes o_anim_flip_in_y {
+    0% {
+        transform: perspective(1000px) rotateY(calc(1deg * (5 + (var(--wanim-intensity) * 1.7))));
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.o_anim_flip_in_y {
+    backface-visibility: visible;
+    animation-name: o_anim_flip_in_y;
+    transition-timing-function: ease-out;
+}
+
+// Compatibility <= 13.0
+.o_anim_dur500 {
+    animation-duration: 500ms;
+}
+.o_anim_dur1500 {
+    animation-duration: 1500ms;
+}
+.o_anim_dur2000 {
+    animation-duration: 2000ms;
+}
+.o_anim_dur2500 {
+    animation-duration: 2500ms;
+}
+.o_anim_dur3000 {
+    animation-duration: 3000ms;
+}
+.o_anim_del500 {
+    animation-delay: 500ms;
+}
+.o_anim_del1000 {
+    animation-delay: 1000ms;
+}
+.o_anim_del1500 {
+    animation-delay: 1500ms;
+}
+.o_anim_del2000 {
+    animation-delay: 2000ms;
+}
+.o_anim_del2500 {
+    animation-delay: 2500ms;
+}
+
+// Odoo dropdown menu
+.o_dropdown_menu {
+    @extend .dropdown-menu;
 }

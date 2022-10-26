@@ -15,6 +15,7 @@ import threading
 import zipfile
 
 import requests
+import werkzeug.urls
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -31,6 +32,7 @@ from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
 from odoo.http import request
+from odoo.modules import get_module_path, get_module_resource
 
 _logger = logging.getLogger(__name__)
 
@@ -65,7 +67,7 @@ def assert_log_admin_access(method):
     def check_and_log(method, self, *args, **kwargs):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
-        log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
+        log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
         if not self.env.is_admin():
             _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
             raise AccessDenied()
@@ -80,6 +82,8 @@ class ModuleCategory(models.Model):
 
     @api.depends('module_ids')
     def _compute_module_nr(self):
+        self.env['ir.module.module'].flush_model(['category_id'])
+        self.flush_model(['parent_id'])
         cr = self._cr
         cr.execute('SELECT category_id, COUNT(*) \
                       FROM ir_module_module \
@@ -156,18 +160,18 @@ class Module(models.Model):
     _order = 'application desc,sequence,name'
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(Module, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=False)
-        if view_type == 'form' and res.get('toolbar',False):
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        if res['views'].get('form', {}).get('toolbar'):
             install_id = self.env.ref('base.action_server_module_immediate_install').id
-            action = [rec for rec in res['toolbar']['action'] if rec.get('id', False) != install_id]
-            res['toolbar'] = {'action': action}
+            action = [rec for rec in res['views']['form']['toolbar']['action'] if rec.get('id', False) != install_id]
+            res['views']['form']['toolbar'] = {'action': action}
         return res
 
     @classmethod
     def get_module_info(cls, name):
         try:
-            return modules.load_information_from_description_file(name)
+            return modules.get_manifest(name)
         except Exception:
             _logger.debug('Error when trying to fetch information for module %s', name, exc_info=True)
             return {}
@@ -253,7 +257,7 @@ class Module(models.Model):
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
 
-    name = fields.Char('Technical Name', readonly=True, required=True, index=True)
+    name = fields.Char('Technical Name', readonly=True, required=True)
     category_id = fields.Many2one('ir.module.category', string='Category', readonly=True, index=True)
     shortdesc = fields.Char('Module Name', readonly=True, translate=True)
     summary = fields.Char('Summary', readonly=True, translate=True)
@@ -519,6 +523,8 @@ class Module(models.Model):
         """
         if not self:
             return self
+        self.flush_model(['name', 'state'])
+        self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
@@ -543,6 +549,8 @@ class Module(models.Model):
         """
         if not self:
             return self
+        self.flush_model(['name', 'state'])
+        self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
@@ -577,7 +585,10 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
-        if getattr(threading.currentThread(), 'testing', False):
+        if not self.env.registry.ready or self.env.registry._init:
+            raise UserError(_('The method _button_immediate_install cannot be called on init or non loaded registries. Please use button_install instead.'))
+
+        if getattr(threading.current_thread(), 'testing', False):
             raise RuntimeError(
                 "Module operations inside tests are not transactional and thus forbidden.\n"
                 "If you really need to perform module operations to test a specific behavior, it "
@@ -596,18 +607,18 @@ class Module(models.Model):
         function(self)
 
         self._cr.commit()
-        api.Environment.reset()
-        modules.registry.Registry.new(self._cr.dbname, update_module=True)
-
+        registry = modules.registry.Registry.new(self._cr.dbname, update_module=True)
         self._cr.commit()
-        env = api.Environment(self._cr, self._uid, self._context)
+        self._cr.reset()
+        assert self.env.registry is registry
+
         # pylint: disable=next-method-called
-        config = env['ir.module.module'].next() or {}
+        config = self.env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
-        menu = env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
+        menu = self.env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
@@ -662,17 +673,30 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_upgrade(self):
+        if not self:
+            return
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
 
         todo = list(self)
+        if 'base' in self.mapped('name'):
+            # If an installed module is only present in the dependency graph through
+            # a new, uninstalled dependency, it will not have been selected yet.
+            # An update of 'base' should also update these modules, and as a consequence,
+            # install the new dependency.
+            todo.extend(self.search([
+                ('state', '=', 'installed'),
+                ('name', '!=', 'studio_customization'),
+                ('id', 'not in', self.ids),
+            ]))
         i = 0
         while i < len(todo):
             module = todo[i]
             i += 1
             if module.state not in ('installed', 'to upgrade'):
                 raise UserError(_("Can not upgrade module '%s'. It is not installed.") % (module.name,))
-            self.check_external_dependencies(module.name, 'to upgrade')
+            if self.get_module_info(module.name).get("installable", True):
+                self.check_external_dependencies(module.name, 'to upgrade')
             for dep in Dependency.search([('name', '=', module.name)]):
                 if (
                     dep.module_id.state == 'installed'
@@ -685,6 +709,8 @@ class Module(models.Model):
 
         to_install = []
         for module in todo:
+            if not self.get_module_info(module.name).get("installable", True):
+                continue
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise UserError(_('You try to upgrade the module %s that depends on the module: %s.\nBut this module is not available in your system.') % (module.name, dep.name,))
@@ -718,18 +744,18 @@ class Module(models.Model):
             'to_buy': False
         }
 
-    @api.model
-    def create(self, vals):
-        new = super(Module, self).create(vals)
-        module_metadata = {
-            'name': 'module_%s' % vals['name'],
+    @api.model_create_multi
+    def create(self, vals_list):
+        modules = super().create(vals_list)
+        module_metadata_list = [{
+            'name': 'module_%s' % module.name,
             'model': 'ir.module.module',
             'module': 'base',
-            'res_id': new.id,
+            'res_id': module.id,
             'noupdate': True,
-        }
-        self.env['ir.model.data'].create(module_metadata)
-        return new
+        } for module in modules]
+        self.env['ir.model.data'].create(module_metadata_list)
+        return modules
 
     # update the list of available packages
     @assert_log_admin_access
@@ -792,7 +818,7 @@ class Module(models.Model):
             _logger.warning(msg)
             raise UserError(msg)
 
-        apps_server = urls.url_parse(self.get_apps_server())
+        apps_server = werkzeug.urls.url_parse(self.get_apps_server())
 
         OPENERP = odoo.release.product_name.lower()
         tmp = tempfile.mkdtemp()
@@ -803,7 +829,7 @@ class Module(models.Model):
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
-                up = urls.url_parse(url)
+                up = werkzeug.urls.url_parse(url)
                 if up.scheme != apps_server.scheme or up.netloc != apps_server.netloc:
                     raise AccessDenied()
 
@@ -878,6 +904,7 @@ class Module(models.Model):
         return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
+        self.env['ir.module.module.dependency'].flush_model()
         existing = set(dep.name for dep in self.dependencies_id)
         needed = set(depends or [])
         for dep in (needed - existing):
@@ -886,16 +913,18 @@ class Module(models.Model):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
         self._cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
                          (list(auto_install_requirements or ()), self.id))
-        self.invalidate_cache(['dependencies_id'], self.ids)
+        self.env['ir.module.module.dependency'].invalidate_model(['auto_install_required'])
+        self.invalidate_recordset(['dependencies_id'])
 
     def _update_exclusions(self, excludes=None):
+        self.env['ir.module.module.exclusion'].flush_model()
         existing = set(excl.name for excl in self.exclusion_ids)
         needed = set(excludes or [])
         for name in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
         for name in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
-        self.invalidate_cache(['exclusion_ids'], self.ids)
+        self.invalidate_recordset(['exclusion_ids'])
 
     def _update_category(self, category='Uncategorized'):
         current_category = self.category_id
@@ -922,12 +951,25 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.translation']._load_module_terms(mod_names, filter_lang, overwrite)
+        self.env['ir.module.module']._load_module_terms(mod_names, filter_lang, overwrite)
 
     def _check(self):
         for module in self:
             if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)
+
+    def _get(self, name):
+        """ Return the (sudoed) `ir.module.module` record with the given name.
+        The result may be an empty recordset if the module is not found.
+        """
+        model_id = self._get_id(name) if name else False
+        return self.browse(model_id).sudo()
+
+    @tools.ormcache('name')
+    def _get_id(self, name):
+        self.flush_model(['name'])
+        self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
+        return self.env.cr.fetchone()
 
     @api.model
     @tools.ormcache()
@@ -986,12 +1028,57 @@ class Module(models.Model):
 
         return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
+    @api.model
+    def _load_module_terms(self, modules, langs, overwrite=False):
+        """ Load PO files of the given modules for the given languages. """
+        # load i18n files
+        for module_name in modules:
+            modpath = get_module_path(module_name)
+            if not modpath:
+                continue
+            for lang in langs:
+                lang_code = tools.get_iso_codes(lang)
+                lang_overwrite = overwrite
+                base_lang_code = None
+                if '_' in lang_code:
+                    base_lang_code = lang_code.split('_')[0]
+
+                # Step 1: for sub-languages, load base language first (e.g. es_CL.po is loaded over es.po)
+                if base_lang_code:
+                    base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
+                    if base_trans_file:
+                        _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
+                        tools.trans_load(self._cr, base_trans_file, lang, verbose=False, overwrite=lang_overwrite)
+                        lang_overwrite = True  # make sure the requested translation will override the base terms later
+
+                    # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
+                    base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
+                    if base_trans_extra_file:
+                        _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
+                        tools.trans_load(self._cr, base_trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
+                        lang_overwrite = True  # make sure the requested translation will override the base terms later
+
+                # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
+                trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
+                if trans_file:
+                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
+                    tools.trans_load(self._cr, trans_file, lang, verbose=False, overwrite=lang_overwrite)
+                elif lang_code != 'en_US':
+                    _logger.info('module %s: no translation for language %s', module_name, lang_code)
+
+                trans_extra_file = get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
+                if trans_extra_file:
+                    _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
+                    tools.trans_load(self._cr, trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
+        return True
+
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]
 
 class ModuleDependency(models.Model):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
+    _log_access = False  # inserts are done manually, create and write uid, dates are always null
 
     # the dependency name
     name = fields.Char(index=True)

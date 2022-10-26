@@ -2,23 +2,50 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import models, fields, api, exceptions, _, SUPERUSER_ID
+from odoo import models, fields, api, exceptions, _
+from odoo.tools import float_round
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
 
-    attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
-    last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id', store=True)
-    last_check_in = fields.Datetime(related='last_attendance_id.check_in', store=True)
-    last_check_out = fields.Datetime(related='last_attendance_id.check_out', store=True)
-    attendance_state = fields.Selection(string="Attendance Status", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
-    hours_last_month = fields.Float(compute='_compute_hours_last_month')
-    hours_today = fields.Float(compute='_compute_hours_today')
-    hours_last_month_display = fields.Char(compute='_compute_hours_last_month')
+    attendance_ids = fields.One2many(
+        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_user")
+    last_attendance_id = fields.Many2one(
+        'hr.attendance', compute='_compute_last_attendance_id', store=True,
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+    last_check_in = fields.Datetime(
+        related='last_attendance_id.check_in', store=True,
+        groups="hr_attendance.group_hr_attendance_user")
+    last_check_out = fields.Datetime(
+        related='last_attendance_id.check_out', store=True,
+        groups="hr_attendance.group_hr_attendance_user")
+    attendance_state = fields.Selection(
+        string="Attendance Status", compute='_compute_attendance_state',
+        selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+    hours_last_month = fields.Float(
+        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user")
+    hours_today = fields.Float(
+        compute='_compute_hours_today',
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+    hours_last_month_display = fields.Char(
+        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user")
+    overtime_ids = fields.One2many(
+        'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_user")
+    total_overtime = fields.Float(
+        compute='_compute_total_overtime', compute_sudo=True,
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+
+    @api.depends('overtime_ids.duration', 'attendance_ids')
+    def _compute_total_overtime(self):
+        for employee in self:
+            if employee.company_id.hr_attendance_overtime:
+                employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration')), 2)
+            else:
+                employee.total_overtime = 0
 
     @api.depends('user_id.im_status', 'attendance_state')
     def _compute_presence_state(self):
@@ -112,9 +139,14 @@ class HrEmployeeBase(models.AbstractModel):
 
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
-        can_check_without_pin = not self.env.user.has_group('hr_attendance.group_hr_attendance_use_pin') or (self.user_id == self.env.user and entered_pin is None)
+        attendance_user_and_no_pin = self.user_has_groups(
+            'hr_attendance.group_hr_attendance_user,'
+            '!hr_attendance.group_hr_attendance_use_pin')
+        can_check_without_pin = attendance_user_and_no_pin or (self.user_id == self.env.user and entered_pin is None)
         if can_check_without_pin or entered_pin is not None and entered_pin == self.sudo().pin:
             return self._attendance_action(next_action)
+        if not self.user_has_groups('hr_attendance.group_hr_attendance_user'):
+            return {'warning': _('To activate Kiosk mode without pin code, you must have access right as an Officer or above in the Attendance app. Please contact your administrator.')}
         return {'warning': _('Wrong PIN')}
 
     def _attendance_action(self, next_action):
@@ -130,12 +162,17 @@ class HrEmployeeBase(models.AbstractModel):
         action_message['barcode'] = employee.barcode
         action_message['next_action'] = next_action
         action_message['hours_today'] = employee.hours_today
+        action_message['kiosk_delay'] = employee.company_id.attendance_kiosk_delay * 1000
 
         if employee.user_id:
-            modified_attendance = employee.with_user(employee.user_id)._attendance_action_change()
+            modified_attendance = employee.with_user(employee.user_id).sudo()._attendance_action_change()
         else:
             modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]
+        action_message['total_overtime'] = employee.total_overtime
+        # Overtime have an unique constraint on the day, no need for limit=1
+        action_message['overtime_today'] = self.env['hr.attendance.overtime'].sudo().search([
+            ('employee_id', '=', employee.id), ('date', '=', fields.Date.context_today(self)), ('adjustment', '=', False)]).duration or 0
         return {'action': action_message}
 
     def _attendance_action_change(self):
@@ -164,11 +201,10 @@ class HrEmployeeBase(models.AbstractModel):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'pin' in groupby or 'pin' in self.env.context.get('group_by', '') or self.env.context.get('no_group_by'):
             raise exceptions.UserError(_('Such grouping is not allowed.'))
-        return super(HrEmployeeBase, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        return super(HrEmployee, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()
         # All employee must chek in or check out. Everybody must have an icon
-        employee_to_define = self.filtered(lambda e: e.hr_icon_display == 'presence_undetermined')
-        employee_to_define.hr_icon_display = 'presence_to_define'
+        self.filtered(lambda employee: not employee.show_hr_icon_display).show_hr_icon_display = True
         return res

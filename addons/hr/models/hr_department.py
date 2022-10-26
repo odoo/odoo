@@ -11,18 +11,25 @@ class Department(models.Model):
     _inherit = ['mail.thread']
     _order = "name"
     _rec_name = 'complete_name'
+    _parent_store = True
 
     name = fields.Char('Department Name', required=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
+    total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee')
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
+    plan_ids = fields.One2many('hr.plan', 'department_id')
+    plans_count = fields.Integer(compute='_compute_plan_count')
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
+    parent_path = fields.Char(index=True, unaccent=False)
+    master_department_id = fields.Many2one(
+        'hr.department', 'Master Department', compute='_compute_master_department_id', store=True)
 
     def name_get(self):
         if not self.env.context.get('hierarchical_naming', True):
@@ -41,21 +48,41 @@ class Department(models.Model):
             else:
                 department.complete_name = department.name
 
+    @api.depends('parent_path')
+    def _compute_master_department_id(self):
+        # Don't use the cache as the value is updated in SQL
+        parent_path_values = {e['id']: e['parent_path'] for e in self.read(['parent_path'])}
+        for department in self:
+            department.master_department_id = int(parent_path_values[department.id].split('/')[0])
+
+    def _compute_total_employee(self):
+        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
+        result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
+        for department in self:
+            department.total_employee = result.get(department.id, 0)
+
+    def _compute_plan_count(self):
+        plans_data = self.env['hr.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
+        plans_count = {x['department_id'][0]: x['department_id_count'] for x in plans_data}
+        for department in self:
+            department.plans_count = plans_count.get(department.id, 0)
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive departments.'))
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.
-        department = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals)
-        manager = self.env['hr.employee'].browse(vals.get("manager_id"))
-        if manager.user_id:
-            department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
-        return department
+        departments = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        for department, vals in zip(departments, vals_list):
+            manager = self.env['hr.employee'].browse(vals.get("manager_id"))
+            if manager.user_id:
+                department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
+        return departments
 
     def write(self, vals):
         """ If updating manager of a department, we need to update all the employees
@@ -84,3 +111,26 @@ class Department(models.Model):
                 ('parent_id', '=', department.manager_id.id)
             ])
         employees.write({'parent_id': manager_id})
+
+    def get_formview_action(self, access_uid=None):
+        res = super().get_formview_action(access_uid=access_uid)
+        if (not self.user_has_groups('hr.group_hr_user') and
+           self.env.context.get('open_employees_kanban', False)):
+            res.update({
+                'name': self.name,
+                'res_model': 'hr.employee.public',
+                'view_type': 'kanban',
+                'view_mode': 'kanban',
+                'views': [(False, 'kanban'), (False, 'form')],
+                'context': {'searchpanel_default_department_id': self.id},
+                'res_id': False,
+            })
+        return res
+
+    def action_plan_from_department(self):
+        action = self.env['ir.actions.actions']._for_xml_id('hr.hr_plan_action')
+        action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
+        return action
+
+    def get_children_department_ids(self):
+        return self.env['hr.department'].search([('id', 'child_of', self.ids)])

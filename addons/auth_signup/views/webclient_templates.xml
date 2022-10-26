@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="login_successful" inherit_id="web.login_successful">
+        <xpath expr="//div[hasclass('oe_login_form')]/p" position="before">
+            <p class="alert alert-success" t-if="account_created" role="status">
+                Registration successful.
+            </p>
+            <!-- Remove parameter from URL, do not show "Account created" if page is refreshed -->
+            <script defer="defer" type="text/javascript">
+                window.history.replaceState({}, null, '/web/login_successful');
+            </script>
+        </xpath>
+    </template>
+
+</odoo>

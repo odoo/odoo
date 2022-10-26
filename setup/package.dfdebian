@@ -1,6 +1,6 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM debian:buster
+FROM debian:bullseye
 MAINTAINER Odoo S.A. <info@odoo.com>
 
 RUN apt-get update && \
@@ -27,20 +27,18 @@ RUN apt-get update -qq &&  \
         python3-dateutil \
         python3-decorator \
         python3-docutils \
-        python3-feedparser \
         python3-gevent \
-        python3-html2text \
         python3-pil \
         python3-jinja2 \
         python3-libsass \
         python3-lxml \
-        python3-mako \
         python3-ofxparse \
         python3-passlib \
         python3-polib \
         python3-psutil \
         python3-psycopg2 \
         python3-pydot \
+        python3-openssl \
         python3-pypdf2 \
         python3-qrcode \
         python3-renderpm \

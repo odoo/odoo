@@ -19,11 +19,12 @@
         <field name="date" eval="(DateTime.today() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_2_notif_0" model="mail.notification">
+        <field name="author_id" ref="base.partner_admin"/>
         <field name="mail_message_id" ref="message_demo_partner_1_1"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">email</field>
         <field name="notification_status">exception</field>
-        <field name="failure_type">SMTP</field>
+        <field name="failure_type">mail_smtp</field>
     </record>
 
     <record id="message_demo_partner_1_2" model="mail.message">
@@ -45,6 +46,7 @@
         <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_3_notif_0" model="mail.notification">
+        <field name="author_id" ref="base.partner_admin"/>
         <field name="mail_message_id" ref="message_demo_partner_1_3"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">sms</field>
@@ -61,6 +63,7 @@
         <field name="date" eval="(DateTime.today() - timedelta(days=1,hours=22)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_4_notif_0" model="mail.notification">
+        <field name="author_id" ref="base.partner_admin"/>
         <field name="mail_message_id" ref="message_demo_partner_1_4"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">sms</field>
@@ -76,6 +79,7 @@
         <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
     </record>
     <record id="message_demo_partner_1_5_notif_0" model="mail.notification">
+        <field name="author_id" ref="base.partner_admin"/>
         <field name="mail_message_id" ref="message_demo_partner_1_5"/>
         <field name="res_partner_id" ref="base.res_partner_address_16"/>
         <field name="notification_type">sms</field>

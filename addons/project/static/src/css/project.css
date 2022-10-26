@@ -1,69 +1,7 @@
-
-.oe_kanban_project_avatars img {
-    width: 30px;
-    border-radius: 2px;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-.oe_form_gantt_avatars:after {
-  font-family: "mnmliconsRegular" !important;
-  font-size: 21px;
-  font-weight: 300 !important;
-  content: "y";
-  top: 3px;
-  position: relative;
-}
-
-.openerp .oe_kanban_view .oe_kanban_project {
-  width: 250px;
-  min-height: 160px !important;
-  cursor: default;
-}
-
-.openerp .oe_percent strong:after {
-  content: "%";
-}
-
-.openerp .oe_margin_top_8 {
-  margin-top: 8px;
-}
-.openerp .oe_kanban_project .oe_kanban_project_list .col-lg-6 a{
-  margin-left: 5px;
-}
-
-/* Kanban status as label in project stage form view */
-.openerp label.oe_project_kanban_legend {
-  min-width: inherit !important;
-  margin-top: 6px;
-  margin-right: 8px;
-}
-
-.o_form_project_tasks.o_form_editable .oe_title {
-  max-width: initial;
-}
-
-.o_form_project_tasks.o_form_editable .oe_title .o_task_name {
-  /*
-   * should be (coming from addons/web/static/src/scss/form_view.scss):
-   * max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
-   */
-  max-width: 688px;
-  margin-right: auto;
-}
-
-.o_kanban_project_tasks .badge {
+.o_kanban_project_tasks .oe_kanban_align.badge {
   background: inherit;
   color: inherit;
   border: 1px solid var(--success);
-}
-
-.o_kanban_project_tasks .badge-warning {
-  border-color: var(--warning);
-}
-
-.o_kanban_project_tasks .badge-danger {
-  border-color: var(--danger);
 }
 
 .o_kanban_project_tasks .o_field_one2many_sub_task {
@@ -71,28 +9,6 @@
   margin-right: 6px;
 }
 
-.o_form_project_tasks .ribbon:not(.o_invisible_modifier) + div > h1 > div[name="kanban_state"] {
-  margin-right: 150px;
-  padding-left: 1rem;
-}
-
-.o_form_project_recurrence_message *:last-child {
-  margin-bottom: 0;
-}
-
-.o_project_portal_warning_dl {
-    width: 100%;
-    padding: 0;
-    margin: 0
-}
-.o_project_portal_warning_dt {
-    width: 4%;
-    float: left;
-}
-.o_project_portal_warning_dd {
-    width: 96%;
-    float: left;
-}
-.o_btn_onhover {
-    margin-left: -1rem;
+.o_form_project_project  .o_setting_box {
+  margin-left: 1.5rem;
 }

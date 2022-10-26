@@ -1,31 +1,24 @@
 odoo.define('website_sale.s_dynamic_snippet_products', function (require) {
 'use strict';
 
-const config = require('web.config');
-const core = require('web.core');
 const publicWidget = require('web.public.widget');
 const DynamicSnippetCarousel = require('website.s_dynamic_snippet_carousel');
 var wSaleUtils = require('website_sale.utils');
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
-    read_events: {
-        'click .js_add_cart': '_onAddToCart',
-        'click .js_remove': '_onRemoveFromRecentlyViewed',
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
-     * Method to be overridden in child components in order to provide a search
-     * domain if needed.
-     * @override
+     * Gets the category search domain
+     *
      * @private
      */
-    _getSearchDomain: function () {
-        const searchDomain = this._super.apply(this, arguments);
+    _getCategorySearchDomain() {
+        const searchDomain = [];
         let productCategoryId = this.$el.get(0).dataset.productCategoryId;
         if (productCategoryId && productCategoryId !== 'all') {
             if (productCategoryId === 'current') {
@@ -55,14 +48,48 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
                 searchDomain.push(['public_categ_ids', 'child_of', parseInt(productCategoryId)]);
             }
         }
+        return searchDomain;
+    },
+    /**
+     * Gets the tag search domain
+     *
+     * @private
+     */
+    _getTagSearchDomain() {
+        const searchDomain = [];
+        let productTagIds = this.$el.get(0).dataset.productTagIds;
+        if (productTagIds) {
+            searchDomain.push(['all_product_tag_ids', 'in', JSON.parse(productTagIds).map(productTag => productTag.id)]);
+        }
+        return searchDomain;
+    },
+    /**
+     * Method to be overridden in child components in order to provide a search
+     * domain if needed.
+     * @override
+     * @private
+     */
+    _getSearchDomain: function () {
+        const searchDomain = this._super.apply(this, arguments);
+        searchDomain.push(...this._getCategorySearchDomain());
+        searchDomain.push(...this._getTagSearchDomain());
         const productNames = this.$el.get(0).dataset.productNames;
         if (productNames) {
             const nameDomain = [];
             for (const productName of productNames.split(',')) {
+                // Ignore empty names
+                if (!productName.length) {
+                    continue;
+                }
+                // Search on name, internal reference and barcode.
                 if (nameDomain.length) {
                     nameDomain.unshift('|');
                 }
-                nameDomain.push(['name', 'ilike', productName]);
+                nameDomain.push(...[
+                    '|', '|', ['name', 'ilike', productName],
+                              ['default_code', '=', productName],
+                              ['barcode', '=', productName],
+                ]);
             }
             searchDomain.push(...nameDomain);
         }
@@ -77,50 +104,72 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
             productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
         });
     },
+});
+
+const DynamicSnippetProductsCard = publicWidget.Widget.extend({
+    selector: '.o_carousel_product_card',
+    read_events: {
+        'click .js_add_cart': '_onClickAddToCart',
+        'click .js_remove': '_onRemoveFromRecentlyViewed',
+    },
+
+    init(root, options) {
+        const parent = options.parent || root;
+        this._super(parent, options);
+    },
+
+    start() {
+        this.add2cartRerender = this.el.dataset.add2cartRerender === 'True';
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
-     * Add product to cart and reload the carousel.
-     * @private
-     * @param {Event} ev
+     * Event triggered by a click on the Add to cart button
+     * 
+     * @param {OdooEvent} ev 
      */
-    _onAddToCart: function (ev) {
-        var self = this;
-        var $card = $(ev.currentTarget).closest('.card');
-        this._rpc({
+    async _onClickAddToCart(ev) {
+        const $card = $(ev.currentTarget).closest('.card');
+        const data = await this._rpc({
             route: "/shop/cart/update_json",
             params: {
                 product_id: $card.find('input[data-product-id]').data('product-id'),
                 add_qty: 1
             },
-        }).then(function (data) {
-            wSaleUtils.updateCartNavBar(data);
-            var $navButton = $('header .o_wsale_my_cart').first();
-            var fetch = self._fetchData();
-            var animation = wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
-            Promise.all([fetch, animation]).then(function (values) {
-                self._render();
-            });
         });
+        const $navButton = $('header .o_wsale_my_cart').first();
+        await wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
+        wSaleUtils.updateCartNavBar(data);
+        if (this.add2cartRerender) {
+            this.trigger_up('widgets_start_request', {
+                $target: this.$el.closest('.s_dynamic'),
+            });
+        }
     },
-
     /**
-     * Remove product from recently viewed products.
-     * @private
-     * @param {Event} ev
+     * Event triggered by a click on the remove button on a "recently viewed"
+     * template.
+     *
+     * @param {OdooEvent} ev
      */
-    _onRemoveFromRecentlyViewed: function (ev) {
-        var self = this;
-        var $card = $(ev.currentTarget).closest('.card');
-        this._rpc({
+    async _onRemoveFromRecentlyViewed(ev) {
+        const $card = $(ev.currentTarget).closest('.card');
+        await this._rpc({
             route: "/shop/products/recently_viewed_delete",
             params: {
                 product_id: $card.find('input[data-product-id]').data('product-id'),
             },
-        }).then(function (data) {
-            self._fetchData().then(() => self._render());
+        });
+        this.trigger_up('widgets_start_request', {
+            $target: this.$el.closest('.s_dynamic'),
         });
     },
-
 });
+
+publicWidget.registry.dynamic_snippet_products_cta = DynamicSnippetProductsCard;
 publicWidget.registry.dynamic_snippet_products = DynamicSnippetProducts;
 
 return DynamicSnippetProducts;

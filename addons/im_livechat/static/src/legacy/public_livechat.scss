@@ -1,5 +1,5 @@
 //-------------------------------------
-// legacy: mail/abstract_thread_window.scss
+// legacy: mail/public_livechat_window.scss
 //-------------------------------------
 
 $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
@@ -11,7 +11,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     position: fixed;
     width: $o-mail-thread-window-width;
     max-width: 100%;
-    height: 400px;
+    height: 460px;
     max-height: 100%;
     font-size: 12px;
     background-color: $o-mail-thread-window-bg;
@@ -19,7 +19,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     z-index: $o-mail-thread-window-zindex;
     box-shadow: -5px -5px 10px rgba(black, 0.18);
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         width: 100%;
         height: 100%!important;
         box-shadow: none;
@@ -39,11 +39,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         color: white;
         padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
         border-radius: 3px 3px 0 0;
-        border-bottom: 1px solid gray('300');
+        border-bottom: 1px solid map-get($grays, '300');
         background-color: $o-brand-odoo;
         padding: 8px;
+        cursor: pointer;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             align-items: center;
             height: $o-mail-chat-header-height;
             padding: 0;
@@ -81,7 +82,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         }
 
         .o_thread_window_title {
-            cursor: pointer;
             flex: 1 1 auto;
             @include o-text-overflow;
 
@@ -89,14 +89,14 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 padding-left: 2px;
 
                 .o_mail_thread_typing_icon_dot {
-                    background: gray('300');
+                    background: map-get($grays, '300');
                 }
             }
         }
 
         .o_thread_window_buttons {
             flex: 0 0 auto;
-            .o_thread_window_close, .o_thread_window_expand {
+            .o_thread_window_close {
                 color: white;
                 padding: 0px 3px;
                 margin-left: 5px;
@@ -139,11 +139,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     width: auto;
     height: 28px;
     color: white;
-    background-color: gray('900');
+    background-color: map-get($grays, '900');
     cursor: pointer;
     box-shadow: none;
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         display: none;
     }
 
@@ -161,7 +161,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             font-size: smaller;
         }
     }
-    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
+    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter {
         display: none;
     }
 
@@ -191,10 +191,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     // will disappear under the thread windows but this is not really an issue as
     // there should not be any at that time).
     z-index: 1101; // blockUI's z-index is 1100
-}
-
-.o_no_thread_window .o_thread_window {
-    display: none;
 }
 
 //-------------------------------------
@@ -227,19 +223,14 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         height: 15px;
     }
 
-    .o_thread_tooltip_container {
-        display: inline;
-        position: relative;
-    }
-
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             margin-top: 0px;
             margin-bottom: 15px;
         }
-        border-bottom: 1px solid gray('400');
+        border-bottom: 1px solid map-get($grays, '400');
         text-align: center;
 
         .o_thread_date {
@@ -272,8 +263,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         margin-bottom: 0px;
 
         &.o_mail_not_discussion {
-            background-color: rgba(gray('300'), 0.5);
-            border-bottom: 1px solid gray('400');
+            background-color: rgba(map-get($grays, '300'), 0.5);
+            border-bottom: 1px solid map-get($grays, '400');
         }
 
         .o_thread_message_sidebar {
@@ -300,7 +291,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 }
             }
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 margin-top: 4px;
                 font-size: x-small;
             }
@@ -322,10 +313,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             .o_thread_message_side_date {
                 opacity: 0;
             }
-
-            .o_mail_thread_message_seen_icon:not(.o_all_seen) {
-                opacity: $o-mail-thread-icon-opacity*0.5;
-            }
         }
         .o_thread_icon {
             cursor: pointer;
@@ -346,11 +333,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 opacity: $o-mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
-                }
-            }
-            .o_thread_message_sidebar {
-                .o_mail_thread_message_seen_icon {
-                    display: none;
                 }
             }
         }
@@ -432,39 +414,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                     margin-bottom: $grid-gutter-width;
                 }
             }
-
-            .o_thread_tooltip_container {
-                display: inline;
-                position: relative;
-            }
         }
-    }
-    .o_thread_title {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 125%;
-
-        &.o_neutral_face_icon:before {
-            @extend %o-nocontent-init-image;
-            @include size(120px, 140px);
-            background: transparent url(/web/static/src/img/neutral_face.svg) no-repeat center;
-        }
-    }
-
-    .o_mail_no_content {
-        @include o-position-absolute(30%, 0, 0, 0);
-        text-align: center;
-        font-size: 115%;
     }
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
     }
-}
-
-.o_web_client .popover .o_thread_tooltip_icon {
-    min-width: 1rem;
 }
 
 .o_web_client.o_touch_device {
@@ -488,7 +443,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         width: 3px;
         height: 3px;
         border-radius: 50%;
-        background: gray('800');
+        background: map-get($grays, '800');
         animation: o_mail_thread_typing_icon_dot 1.5s linear infinite;
 
         &:nth-child(2) {
@@ -507,34 +462,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
     20% {
         transform: translateY(-5px);
-    }
-}
-
-// ------------------------------------------------------------------
-// Thread seen icon: shared between discuss and chat windows
-// ------------------------------------------------------------------
-
-.o_mail_thread_message_seen_icon {
-    position: relative;
-    opacity: 0.6;
-
-    &.o_all_seen {
-        color: $o-enterprise-color;
-    }
-
-    &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-    }
-
-    .fa-check:nth-child(1) {
-        padding-left: 3px;
-    }
-
-    .fa-check:nth-child(2) {
-        position: absolute;
-        top: -1px;
-        left: 0px;
     }
 }
 
@@ -674,4 +601,112 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
 .o_livechat_no_rating {
     opacity: 0.5;
+}
+
+.o_PublicLivechatMessage {
+    display: flex;
+    position: relative;
+    
+    &.o-isVisitorTheAuthor {
+        flex-direction: row-reverse !important;
+    }
+}
+
+.o_PublicLivechatMessage_content {
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.o_PublicLivechatMessage_header {
+    display: flex;
+    align-items: center;
+
+    &.o-isVisitorTheAuthor {
+        justify-content: flex-end !important;
+    }
+}
+
+.o_PublicLivechatMessage_headerAuthor {
+    margin-right: map-get($spacers, 2);
+}
+
+.o_PublicLivechatMessage_headerDate {
+    opacity: 50%;
+}
+
+.o_PublicLivechatMessage_headerDatePrefix {
+    opacity: 50%;
+    margin-right: map-get($spacers, 1) / 2;
+}
+
+.o_PublicLivechatMessage_bubbleWrap {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+
+    &.o-isVisitorTheAuthor {
+        justify-content: flex-end;
+        margin-left: map-get($spacers, 4);
+    }
+    
+    &.o-isOperatorTheAuthor {
+        margin-right: map-get($spacers, 4);
+    }
+}
+
+.o_PublicLivechatMessage_bubble {
+    position: relative;
+
+    &.o-isContentNonEmpty {
+        padding: map-get($spacers, 4) / 2;
+    }
+
+    &.o-isVisitorTheAuthor {
+        margin-left: map-get($spacers, 2);
+    }
+    
+    &.o-isOperatorTheAuthor {
+        margin-right: map-get($spacers, 2);
+    }
+
+}
+
+.o_PublicLivechatMessage_background {
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity .5s ease-out;
+    margin-right: map-get($spacers, 5);
+    border-bottom-right-radius: 0.6rem !important;
+    border-bottom-left-radius: 0.6rem !important;
+    border: 1px solid #C9CCD2 !important;
+
+    &.o-isVisitorTheAuthor {
+        border-bottom-left-radius: 0.6rem !important;
+        border-top-left-radius: 0.6rem !important;
+        opacity: 50%;
+        border-color: #198754 !important;
+        background-color: rgba(40, 167, 69, 0.5) !important;
+        color: #000;
+        opacity: 25%;
+    }
+
+    &.o-isOperatorTheAuthor {
+        border-top-right-radius: 0.6rem !important;
+        border-bottom-right-radius: 0.6rem !important;
+        border-color: #17a2b8 !important;
+        background-color: rgba(23, 162, 184, 0.5) !important;
+        color: #000;
+        opacity: 15%
+    }
+}
+
+.o_PublicLivechatWindow_composer {
+    padding: map-get($spacers, 2);
+    outline: none;
+    border: 0;
+    border-top: 1px solid lightgray;
 }

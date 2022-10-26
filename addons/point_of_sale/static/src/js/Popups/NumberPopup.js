@@ -1,11 +1,14 @@
 odoo.define('point_of_sale.NumberPopup', function(require) {
     'use strict';
+    var core = require('web.core');
+    var _t = core._t;
 
-    const { useState } = owl;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+
+    const { useState } = owl;
 
     // formerly NumberPopupWidget
     class NumberPopup extends AbstractAwaitablePopup {
@@ -19,13 +22,13 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
          * @confirmed {Boolean}
          * @payload {String}
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('accept-input', this.confirm);
             useListener('close-this-popup', this.cancel);
             let startingBuffer = '';
             if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
-                startingBuffer = this.props.startingValue.toString();
+                startingBuffer = this.props.startingValue.toString().replace('.', this.decimalSeparator);
             }
             this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
             NumberBuffer.use({
@@ -62,9 +65,9 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
     }
     NumberPopup.template = 'NumberPopup';
     NumberPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
-        title: 'Confirm ?',
+        confirmText: _t('Ok'),
+        cancelText: _t('Cancel'),
+        title: _t('Confirm ?'),
         body: '',
         cheap: false,
         startingValue: null,

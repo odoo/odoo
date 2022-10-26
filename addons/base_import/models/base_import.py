@@ -352,6 +352,8 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
+            except ValueError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
@@ -360,6 +362,8 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
+            except ValueError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
 
@@ -371,6 +375,8 @@ class Import(models.TransientModel):
             if ext in EXTENSIONS:
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
+                except ValueError as e:
+                    raise e
                 except Exception:
                     _logger.warning("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
 
@@ -721,8 +727,15 @@ class Import(models.TransientModel):
 
         if '/' not in header:
             # Then, try exact match
-            IrTranslation = self.env['ir.translation']
-            translated_header = IrTranslation._get_source('ir.model.fields,field_description', 'model', self.env.lang, header).lower()
+            if header:
+                field_rec = (
+                    self.env['ir.model.fields'].sudo().with_context(lang='en_US')
+                    .search([('field_description', '=', header)], limit=1)
+                    .with_env(self.env)
+                )
+                translated_header = (field_rec.sudo().field_description or header).lower()
+            else:
+                translated_header = ""
             for field in fields_tree:
                 # exact match found based on the field technical name
                 if header.casefold() == field['name'].casefold():
@@ -950,16 +963,21 @@ class Import(models.TransientModel):
                 has_relational_match = any(len(match) > 1 for field, match in matches.items() if match)
                 advanced_mode = has_relational_header or has_relational_match
 
-            # Take the first non null value for each column to display example to user
+            # Take first non null values for each column to show preview to users.
+            # Initially first non null value is displayed to the user.
+            # On hover preview consists in 5 values.
             column_example = []
             for column_index, _unused in enumerate(preview[0]):
+                vals = []
                 for record in preview:
                     if record[column_index]:
-                        column_example.append("%s%s" % (record[column_index][:50], "..." if len(record[column_index]) > 50 else ""))
+                        vals.append("%s%s" % (record[column_index][:50], "..." if len(record[column_index]) > 50 else ""))
+                    if len(vals) == 5:
                         break
-                # add a blank value if no example have been found at all for the current column
-                else:
-                    column_example.append("")
+                column_example.append(
+                    vals or
+                    [""]  # blank value if no example have been found at all for the current column
+                )
 
             # Batch management
             batch = False
@@ -1304,7 +1322,8 @@ class Import(models.TransientModel):
         model = self.env[self.res_model].with_context(
             import_file=True,
             name_create_enabled_fields=name_create_enabled_fields,
-            import_skip_fields=options.get('import_skip_fields'),
+            import_set_empty_fields=options.get('import_set_empty_fields', []),
+            import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
         import_result = model.load(import_fields, merged_data)
         _logger.info('done')
@@ -1418,7 +1437,8 @@ class Import(models.TransientModel):
                 for field in split_fields:
                     if field != target_field:  # if not on the last hierarchy level, retarget the model
                         target_model = self.env[target_model][field]._name
-                field_type = self.env[target_model].fields_get().get(target_field, {}).get('type', '')
+                field = self.env[target_model]._fields.get(target_field)
+                field_type = field.type if field else ''
 
                 # merge data if necessary
                 if field_type == 'char':

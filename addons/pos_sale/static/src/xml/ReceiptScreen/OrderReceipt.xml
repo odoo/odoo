@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-foreach]" position="inside">
+            <div class="pos-receipt-left-padding" t-if="line.so_reference">From <t t-esc="line.so_reference"/></div>
+            <div class="pos-receipt-left-padding" t-if="line.down_payment_details">
+                <table class="sale-order-info">
+                    <tr t-foreach='line.down_payment_details' t-as='line' t-key='line_index'>
+                        <td><t t-esc="line['product_uom_qty']" />x</td>
+                        <td style="max-width: 200px;">
+                            <t t-esc="line['product_name']" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

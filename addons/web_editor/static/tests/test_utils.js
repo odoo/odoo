@@ -4,7 +4,7 @@ odoo.define('web_editor.test_utils', function (require) {
 var ajax = require('web.ajax');
 var MockServer = require('web.MockServer');
 var testUtils = require('web.test_utils');
-var OdooEditorLib = require('web_editor.odoo-editor');
+var OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 var Widget = require('web.Widget');
 var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');
@@ -36,7 +36,7 @@ const SNIPPETS_TEMPLATE = `
         <div id="snippet_structure" class="o_panel">
             <div class="o_panel_header">First Panel</div>
             <div class="o_panel_body">
-                <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png">
+                <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg">
                     <div class="s_hr pt32 pb32">
                         <hr class="s_hr_1px s_hr_solid w-100 mx-auto"/>
                     </div>
@@ -722,6 +722,154 @@ var textInput = function (target, char) {
     }
 };
 
+//--------------------------------------------------------------------------
+// Convert Inline
+//--------------------------------------------------------------------------
+
+const tableAttributes = {
+    cellspacing: 0,
+    cellpadding: 0,
+    border: 0,
+    width: '100%',
+    align: 'center',
+    role: 'presentation',
+};
+const tableAttributesString = Object.keys(tableAttributes).map(key => `${key}="${tableAttributes[key]}"`).join(' ');
+const tableStyles = {
+    'border-collapse': 'collapse',
+    'text-align': 'inherit',
+    'font-size': 'unset',
+    'line-height': 'unset',
+};
+const tableStylesString = Object.keys(tableStyles).map(key => `${key}: ${tableStyles[key]};`).join(' ');
+/**
+ * Take a matrix representing a grid and return an HTML string of the Bootstrap
+ * grid. The matrix is an array of rows, with each row being an array of cells.
+ * Each cell can be represented either by a 0 < number < 13 (col-#) or a falsy
+ * value (col). Each cell has its coordinates `(row index, column index)` as
+ * text content.
+ * Eg: [                        // <div class="container">
+ *      [                       //     <div class="row">
+ *          1,                  //         <div class="col-1">(0, 0)</div>
+ *          11,                 //         <div class="col-11">(0, 1)</div>
+ *      ],                      //     </div>
+ *      [                       //     <div class="row">
+ *          false,              //         <div class="col">(1, 0)</div>
+ *      ],                      //     </div>
+ * ]                            // </div>
+ *
+ * @param {Array<Array<Number|null>>} matrix
+ * @returns {string}
+ */
+function getGridHtml(matrix) {
+    return (
+        `<div class="container">` +
+        matrix.map((row, iRow) => (
+            `<div class="row">` +
+            row.map((col, iCol) => (
+                `<div class="${col ? 'col-' + col : 'col'}">(${iRow}, ${iCol})</div>`
+            )).join('') +
+            `</div>`
+        )).join('') +
+        `</div>`
+    );
+}
+/**
+ * Take a matrix representing a table and return an HTML string of the table.
+ * The matrix is an array of rows, with each row being an array of cells. Each
+ * cell is represented by a tuple of numbers [colspan, width (in percent)]. A
+ * cell can have a string as third value to represent its text content. The
+ * default text content of each cell is its coordinates `(row index, column
+ * index)`.
+ * Eg: [                        // <table> (note: extra attrs and styles apply)
+ *      [                       //   <tr>
+ *          [1, 8],             //     <td colspan="1" width="8%">(0, 0)</td>
+ *          [11, 92]            //     <td colspan="11" width="92%">(0, 1)</td>
+ *      ],                      //   </tr>
+ *      [                       //   <tr>
+ *          [2, 17, 'A'],       //     <td colspan="2" width="17%">A</td>
+ *          [10, 83],           //     <td colspan="10" width="83%">(1, 1)</td>
+ *      ],                      //   </tr>
+ * ]                            // </table>
+ *
+ * @param {Array<Array<Array<[Number, Number, string?]>>>} matrix
+ * @returns {string}
+ */
+function getTableHtml(matrix) {
+    return (
+        `<table ${tableAttributesString} style="width: 100% !important; ${tableStylesString}">` +
+        matrix.map((row, iRow) => (
+            `<tr>` +
+            row.map((col, iCol) => (
+                `<td colspan="${col[0]}">` +
+                (col.length === 3 ? col[2] : `(${iRow}, ${iCol})`) +
+                `</td>`
+            )).join('') +
+            `</tr>`
+        )).join('') +
+        `</table>`
+    );
+}
+/**
+ * Take a number of rows and a number of columns (or number of columns per
+ * individual row) and return an HTML string of the corresponding grid. Every
+ * column is a regular Bootstrap "col" (no col-#).
+ * Eg: [2, 3] <=> getGridHtml([[false, false, false], [false, false, false]])
+ * Eg: [2, [2, 1]] <=> getGridHtml([[false, false], [false]])
+ *
+ * @see getGridHtml
+ * @param {Number} nRows
+ * @param {Number|Number[]} nCols
+ * @returns {string}
+ */
+function getRegularGridHtml(nRows, nCols) {
+    const matrix = new Array(nRows).fill().map((_, iRow) => (
+        new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill()
+    ));
+    return getGridHtml(matrix);
+};
+/**
+ * Take a number of rows, a number of columns (or number of columns per
+ * individual row), a colspan (or colspan per individual row) and a width (or
+ * width per individual row, in percent), and return an HTML string of the
+ * corresponding table. Every cell in a row has the same colspan/width.
+ * Eg: [2, 2, 6, 50] <=> getTableHtml([[[6, 50], [6, 50]], [[6, 50], [6, 50]]])
+ * Eg: [2, [2, 1], [6, 12], [50, 100]] <=> getTableHtml([[[6, 50], [6, 50]], [[12, 100]]])
+ *
+ * @see getTableHtml
+ * @param {Number} nRows
+ * @param {Number|Number[]} nCols
+ * @param {Number|Number[]} colspan
+ * @param {Number|Number[]} width
+ * @returns {string}
+ */
+function getRegularTableHtml(nRows, nCols, colspan, width) {
+    const matrix = new Array(nRows).fill().map((_, iRow) => (
+        new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill().map(() => ([
+            Array.isArray(colspan) ? colspan[iRow] : colspan,
+            Array.isArray(width) ? width[iRow] : width,
+        ])))
+    );
+    return getTableHtml(matrix);
+}
+/**
+ * Take an HTML string and returns that string stripped from any HTML comments.
+ * By default, also removes the mso-hide class which is only there for outlook
+ * to hide elements when we use mso conditional comments.
+ *
+ * @param {string} html
+ * @param {boolean} [removeMsoHide=true]
+ * @returns {string}
+ */
+function removeComments(html, removeMsoHide=true) {
+    const cleanHtml = html.replace(/<!--(.*?)-->/g, '');
+    if (removeMsoHide) {
+        return cleanHtml.replaceAll(' class="mso-hide"', '').replace(/\s*mso-hide/g, '').replace(/mso-hide\s*/g, '');
+    } else {
+        return cleanHtml;
+    }
+}
+
 return {
     wysiwygData: wysiwygData,
     createWysiwyg: createWysiwyg,
@@ -730,6 +878,11 @@ return {
     keydown: keydown,
     patch: patch,
     unpatch: unpatch,
+    getGridHtml: getGridHtml,
+    getTableHtml: getTableHtml,
+    getRegularGridHtml: getRegularGridHtml,
+    getRegularTableHtml: getRegularTableHtml,
+    removeComments: removeComments,
 };
 
 

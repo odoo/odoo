@@ -63,7 +63,7 @@ odoo.define('payment.checkout_form', require => {
             // Update the tx context with the value of the "Save my payment details" checkbox
             if (flow !== 'token') {
                 const $tokenizeCheckbox = this.$(
-                    `#o_payment_acquirer_inline_form_${paymentOptionId}` // Only match acq. radios
+                    `#o_payment_provider_inline_form_${paymentOptionId}` // Only match provider radios
                 ).find('input[name="o_payment_save_as_token"]');
                 this.txContext.tokenizationRequested = $tokenizeCheckbox.length === 1
                     && $tokenizeCheckbox[0].checked;
@@ -74,6 +74,10 @@ odoo.define('payment.checkout_form', require => {
             // Make the payment
             this._hideError(); // Don't keep the error displayed if the user is going through 3DS2
             this._disableButton(true); // Disable until it is needed again
+            $('body').block({
+                message: false,
+                overlayCSS: {backgroundColor: "#000", opacity: 0, zIndex: 1050},
+            });
             this._processPayment(provider, paymentOptionId, flow);
         },
 

@@ -31,7 +31,7 @@ var SelectBox = publicWidget.Widget.extend({
         defs.push(this._rpc({
             model: this.obj,
             method: 'search_read',
-            params: {
+            kwargs: {
                 fields: ['id', 'name'],
             },
         }).then(function (result) {
@@ -115,7 +115,6 @@ var SelectBox = publicWidget.Widget.extend({
 
 var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
-    xmlDependencies: ['/website_links/static/src/xml/recent_link.xml'],
     events: {
         'click .btn_shorten_url_clipboard': '_toggleCopyButton',
         'click .o_website_links_edit_code': '_editCode',
@@ -384,7 +383,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         this.url_copy_animating = false;
 
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-bs-toggle="tooltip"]').tooltip();
 
         return Promise.all(defs);
     },

@@ -3,7 +3,6 @@
     'name': 'Products Expiration Date',
     'category': 'Inventory/Inventory',
     'depends': ['stock'],
-    'demo': [],
     'description': """
 Track different dates on products and production lots.
 ======================================================
@@ -27,5 +26,9 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
              'wizard/confirm_expiry_view.xml',
              'report/report_deliveryslip.xml',
              'report/report_lot_barcode.xml',
-             'data/product_expiry_data.xml'],
+             'report/report_package_barcode.xml',
+             'data/product_expiry_data.xml',
+             'data/mail_activity_type_data.xml',
+            ],
+    'license': 'LGPL-3',
 }

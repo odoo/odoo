@@ -40,10 +40,12 @@ class AccountChartTemplate(models.Model):
         return res
 
     @api.model
-    def _prepare_transfer_account_for_direct_creation(self, name, company):
-        res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
-        if company.account_fiscal_country_id.code == 'MX':
-            xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
-            res.setdefault('tag_ids', [])
-            res['tag_ids'].append((4, xml_id))
-        return res
+    def _create_liquidity_journal_suspense_account(self, company, code_digits):
+        if not self == self.env.ref('l10n_mx.mx_coa'):
+            return super()._create_liquidity_journal_suspense_account(company, code_digits)
+        return self.env['account.account'].create({
+            'name': _("Bank Suspense Account"),
+            'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
+            'account_type': 'asset_current',
+            'company_id': company.id,
+        })

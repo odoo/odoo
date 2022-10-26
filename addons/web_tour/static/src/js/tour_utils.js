@@ -1,6 +1,8 @@
 odoo.define('web_tour.utils', function(require) {
 "use strict";
 
+const { _legacyIsVisible } = require("@web/core/utils/ui");
+
 function get_step_key(name) {
     return 'tour_' + name + '_step';
 }
@@ -20,7 +22,7 @@ function get_running_delay_key() {
 function get_first_visible_element($elements) {
     for (var i = 0 ; i < $elements.length ; i++) {
         var $i = $elements.eq(i);
-        if ($i.is(':visible:hasVisibility')) {
+        if (_legacyIsVisible($i[0])) {
             return $i;
         }
     }
@@ -46,10 +48,14 @@ function do_before_unload(if_unload_callback, if_not_unload_callback) {
 }
 
 function get_jquery_element_from_selector(selector) {
-    if (_.isString(selector) && selector.indexOf('iframe') !== -1) {
-        var $iframe = $(selector.split('iframe')[0] + ' iframe');
+    const iframeSplit = _.isString(selector) && selector.match(/(.*\biframe[^ ]*)(.*)/);
+    if (iframeSplit && iframeSplit[2]) {
+        var $iframe = $(`${iframeSplit[1]}:not(.o_ignore_in_tour)`);
+        if ($iframe.is('[is-ready="false"]')) {
+            return $();
+        }
         var $el = $iframe.contents()
-            .find(selector.split('iframe')[1]);
+            .find(iframeSplit[2]);
         $el.iframeContainer = $iframe[0];
         return $el;
     } else {

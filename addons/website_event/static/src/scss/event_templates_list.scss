@@ -1,15 +1,18 @@
-.o_wevent_social_link {
+.o_wevent_sidebar_social > .o_wevent_social_link {
     $o_link_size: 3em;
-    display: inline-block;
-    @include size($o_link_size);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $o_link_size;
+    height: $o_link_size;
     margin: 0 ($spacer * .25) ($spacer * .5) ($spacer * .25);
     line-height: $o_link_size;
-    background-color: gray('100');
+    background-color: map-get($grays, '100');
     border: $border-width solid $border-color;
     border-radius: 50%;
     text-align: center;
-    @include hover-focus {
-        background-color: gray('300');
+    &:hover, &:focus {
+        background-color: map-get($grays, '300');
     }
 }
 
@@ -20,14 +23,14 @@
         header {
             a {
                 transition: all .25s ease-in-out;
-                @include hover-focus {
+                &:hover, &:focus {
                     transform: scale(1.05);
                 }
             }
         }
-        &.opt_event_list_cards_bg {
-            @if (color('body') == $o-portal-default-body-bg) {
-                @extend .bg-200;
+        @include media-breakpoint-up(sm) {
+            #o_wevent_index_main_col article div.col {
+                min-width: 0;
             }
         }
         .opt_events_list_columns {
@@ -36,7 +39,7 @@
             }
         }
         .opt_events_list_rows {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 header {
                     height: 200px;
                 }
@@ -44,7 +47,7 @@
         }
         .o_wevent_badge_event {
             @include o-position-absolute($top: 0, $left: 0);
-            @include border-left-radius(0);
+            @include border-start-radius(0);
             padding: ($spacer * .5) $card-spacer-x;
             transform: translateY(-50%);
         }
@@ -54,9 +57,12 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            @include size(4rem);
+            width: 4rem;
+            height: 4rem;
             border-radius: 50%;
             text-align: center;
+            background-color: $o-wevent-bg-color-base;
+            color: $o-wevent-color;
 
             .o_wevent_event_day {
                 font-size: 1.125rem;
@@ -77,8 +83,13 @@
             padding: $card-spacer-y $card-spacer-x;
             text-align: right;
         }
-        .card-title {
-            color: $body-color;
+        article {
+            background-color: $o-wevent-bg-color-base;
+            color: $o-wevent-color;
+            .card-body {
+                background-color: $o-wevent-bg-color-base !important;
+                color: $o-wevent-color;
+            }
         }
     }
     .o_wevent_sidebar_title {
@@ -106,7 +117,8 @@
             color: #fff;
         }
     }
-    #o_wevent_index_main_col .form-inline {
-        width: 100%;
+    .o_half_screen_height {
+        // Set min-height to the same value as the header
+        min-height: 200px !important;
     }
 }

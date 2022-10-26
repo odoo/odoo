@@ -5,19 +5,19 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     /**
-     * @props client
-     * @emits click-customer
+     * @props partner
+     * @emits click-partner
      * @emits click-pay
      */
     class ActionpadWidget extends PosComponent {
         get isLongName() {
-            return this.client && this.client.name.length > 10;
-        }
-        get client() {
-            return this.props.client;
+            return this.props.partner && this.props.partner.name.length > 10;
         }
     }
     ActionpadWidget.template = 'ActionpadWidget';
+    ActionpadWidget.defaultProps = {
+        isActionButtonHighlighted: false,
+    }
 
     Registries.Component.add(ActionpadWidget);
 

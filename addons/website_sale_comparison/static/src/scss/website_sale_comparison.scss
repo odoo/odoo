@@ -4,15 +4,7 @@
     left: 50%;
     transform: translateX(-50%);
     z-index:10;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom: 0px;
-    padding: 10px 20px;
-    text-align: center;
-    border: 2px solid theme-color('primary');
-    border-bottom: 0px;
-    background-color: white;
-    opacity: 0.95;
+    border: 2px solid;
 
     .o_product_panel {
         position: relative;
@@ -63,21 +55,9 @@
     }
 }
 
-// Add to compare button
-#product_details .o_add_compare_dyn {
-    margin-top: 0.75rem;
-}
-
-.o_add_compare_dyn {
-    &, &:hover, &:focus {
-        color: theme-color('primary');
-        text-decoration: none;
-    }
-}
-
 // Specifications
 #product_full_spec {
-    border-top: 1px solid gray('400');
+    border-top: 1px solid map-get($grays, '400');
 
     .o_add_compare_dyn {
         font-size: 1.1rem;

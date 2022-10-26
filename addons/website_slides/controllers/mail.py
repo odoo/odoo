@@ -13,10 +13,17 @@ from odoo.tools import plaintext2html, html2plaintext
 
 class SlidesPortalChatter(PortalChatter):
 
+    def _portal_post_has_content(self, res_model, res_id, message, attachment_ids=None, **kw):
+        """ Relax constraint on slide model: having a rating value is sufficient
+        to consider we have a content. """
+        if res_model == 'slide.channel' and kw.get('rating_value'):
+            return True
+        return super()._portal_post_has_content(res_model, res_id, message, attachment_ids=attachment_ids, **kw)
+
     @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         result = super(SlidesPortalChatter, self).portal_chatter_post(res_model, res_id, message, **kw)
-        if res_model == 'slide.channel':
+        if result and res_model == 'slide.channel':
             rating_value = kw.get('rating_value', False)
             slide_channel = request.env[res_model].sudo().browse(int(res_id))
             if rating_value and slide_channel and request.env.user.partner_id.id == int(kw.get('pid')):
@@ -33,7 +40,7 @@ class SlidesPortalChatter(PortalChatter):
     @http.route([
         '/slides/mail/update_comment',
         '/mail/chatter_update',
-        ], type='json', auth="user")
+        ], type='json', auth="user", methods=['POST'])
     def mail_update_message(self, res_model, res_id, message, message_id, attachment_ids=None, attachment_tokens=None, **post):
         # keep this mechanism intern to slide currently (saas 12.5) as it is
         # considered experimental

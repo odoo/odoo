@@ -1,0 +1,22 @@
+.o_LinkPreviewCardView {
+    max-width: $o-mail-link-preview-width;
+}
+.o_LinkPreviewCardView .row {
+    min-height: $o-mail-link-preview-card-height;
+}
+
+.o_LinkPreviewCardView_hasMultineLines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    &.o_LinkPreviewCardView_description {
+        -webkit-line-clamp: 2;
+    }
+    &.o_LinkPreviewCardView_title {
+        -webkit-line-clamp: 3;
+    }    
+}
+
+.o_LinkPreviewCardView_imageLinkWrap {
+    border-right: 1px solid $card-border-color;
+}

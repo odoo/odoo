@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 from odoo import fields
+from odoo.tests import common
 from odoo.addons.lunch.tests.common import TestsCommon
 
 
 class TestAlarm(TestsCommon):
+    @common.users('cle-lunch-manager')
     def test_cron_sync_create(self):
         cron_ny = self.alert_ny.cron_id
         self.assertTrue(cron_ny.active)
@@ -17,6 +19,7 @@ class TestAlarm(TestsCommon):
         tokyo_cron = self.alert_tokyo.cron_id
         self.assertEqual(tokyo_cron.nextcall, datetime(2021, 1, 29, 23, 0))  # Tokyo is UTC+9 but the cron is posponed
 
+    @common.users('cle-lunch-manager')
     def test_cron_sync_active(self):
         cron_ny = self.alert_ny.cron_id
 
@@ -38,6 +41,7 @@ class TestAlarm(TestsCommon):
         self.alert_ny.until = False
         self.assertTrue(cron_ny.active)
 
+    @common.users('cle-lunch-manager')
     def test_cron_sync_nextcall(self):
         cron_ny = self.alert_ny.cron_id
         old_nextcall = cron_ny.nextcall
@@ -46,8 +50,8 @@ class TestAlarm(TestsCommon):
         self.assertEqual(cron_ny.nextcall, old_nextcall - timedelta(hours=5) + timedelta(days=1))
 
         # Simulate cron execution
-        cron_ny.lastcall = old_nextcall - timedelta(hours=5)
-        cron_ny.nextcall += timedelta(days=1)
+        cron_ny.sudo().lastcall = old_nextcall - timedelta(hours=5)
+        cron_ny.sudo().nextcall += timedelta(days=1)
 
         self.alert_ny.notification_time += 7
         self.assertEqual(cron_ny.nextcall, old_nextcall + timedelta(days=1, hours=2))

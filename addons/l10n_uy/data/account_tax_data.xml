@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <!-- Account Tax Template -->
         <record id="vat1" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
@@ -13,32 +12,27 @@
             <field name="tax_group_id" ref="tax_group_iva_22"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_base_impb_vnts_22')],
+                    'plus_report_expression_ids': [ref('account_tax_report_base_impb_vnts_22_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_5202'),
-                    'plus_report_line_ids': [ref('account_tax_report_iva_vnts_22')],
+                    'plus_report_expression_ids': [ref('account_tax_report_iva_vnts_22_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_impb_vnts')],
+                    'minus_report_expression_ids': [ref('account_tax_report_impb_vnts_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_5202'),
-                    'minus_report_line_ids': [ref('account_tax_report_vnts_prcbdo')],
+                    'minus_report_expression_ids': [ref('account_tax_report_vnts_prcbdo_tag')],
                 }),
             ]"/>
         </record>
-
         <record id="vat2" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
             <field name="name">IVA Ventas (10%)</field>
@@ -49,32 +43,27 @@
             <field name="tax_group_id" ref="tax_group_iva_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_base_impb_vnts_10')],
+                    'plus_report_expression_ids': [ref('account_tax_report_base_impb_vnts_10_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_5201'),
-                    'plus_report_line_ids': [ref('account_tax_report_iva_vnts_10')],
+                    'plus_report_expression_ids': [ref('account_tax_report_iva_vnts_10_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_impb_vnts')],
+                    'minus_report_expression_ids': [ref('account_tax_report_impb_vnts_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_5201'),
-                    'minus_report_line_ids': [ref('account_tax_report_vnts_prcbdo')],
+                    'minus_report_expression_ids': [ref('account_tax_report_vnts_prcbdo_tag')],
                 }),
             ]"/>
         </record>
-
         <record id="vat3" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
             <field name="name">Ventas Exentos IVA</field>
@@ -85,28 +74,21 @@
             <field name="tax_group_id" ref="tax_group_exenton"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_base_impb_vnts_0')],
+                    'plus_report_expression_ids': [ref('account_tax_report_base_impb_vnts_0_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
               (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_impb_vnts')],
+                    'minus_report_expression_ids': [ref('account_tax_report_impb_vnts_tag')],
               }),
               (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
               }),
             ]"/>
         </record>
-
         <record id="vat4" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
             <field name="name">IVA Compras (22%)</field>
@@ -117,32 +99,27 @@
             <field name="tax_group_id" ref="tax_group_iva_22"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_base_impb_cmprs_22')],
+                    'plus_report_expression_ids': [ref('account_tax_report_base_impb_cmprs_22_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_11502'),
-                    'plus_report_line_ids': [ref('account_tax_report_iva_cmprs_22')],
+                    'plus_report_expression_ids': [ref('account_tax_report_iva_cmprs_22_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_impb_cmprs')],
+                    'minus_report_expression_ids': [ref('account_tax_report_impb_cmprs_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_11502'),
-                    'minus_report_line_ids': [ref('account_tax_report_cmprs_pagdo')],
+                    'minus_report_expression_ids': [ref('account_tax_report_cmprs_pagdo_tag')],
                 }),
             ]"/>
         </record>
-
         <record id="vat5" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
             <field name="name">IVA Compras (10%)</field>
@@ -153,32 +130,27 @@
             <field name="tax_group_id" ref="tax_group_iva_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_base_impb_cmprs_10')],
+                    'plus_report_expression_ids': [ref('account_tax_report_base_impb_cmprs_10_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_11501'),
-                    'plus_report_line_ids': [ref('account_tax_report_iva_cmprs_10')],
+                    'plus_report_expression_ids': [ref('account_tax_report_iva_cmprs_10_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_impb_cmprs')],
+                    'minus_report_expression_ids': [ref('account_tax_report_impb_cmprs_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('uy_code_11501'),
-                    'minus_report_line_ids': [ref('account_tax_report_cmprs_pagdo')],
+                    'minus_report_expression_ids': [ref('account_tax_report_cmprs_pagdo_tag')],
                 }),
             ]"/>
         </record>
-
         <record id="vat6" model="account.tax.template">
             <field name="chart_template_id" ref="uy_chart_template"/>
             <field name="name">Compras Exentos IVA</field>
@@ -189,27 +161,18 @@
             <field name="tax_group_id" ref="tax_group_exenton"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_base_impb_cmprs_0')],
+                    'plus_report_expression_ids': [ref('account_tax_report_base_impb_cmprs_0_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_impb_cmprs')],
+                    'minus_report_expression_ids': [ref('account_tax_report_impb_cmprs_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         </record>
-
     </data>
 </odoo>

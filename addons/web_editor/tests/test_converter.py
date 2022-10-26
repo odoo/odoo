@@ -8,7 +8,7 @@ from lxml.builder import E
 
 from odoo.tests import common
 from odoo.tests.common import BaseCase
-from odoo.addons.web_editor.models.ir_qweb import html_to_text
+from odoo.addons.web_editor.models.ir_qweb_fields import html_to_text
 
 
 class TestHTMLToText(BaseCase):
@@ -145,6 +145,7 @@ class TestConvertBack(common.TransactionCase):
 
     def test_integer(self):
         self.field_roundtrip('integer', 42)
+        self.field_roundtrip('integer', 42000)
 
     def test_float(self):
         self.field_roundtrip('float', 42.567890)

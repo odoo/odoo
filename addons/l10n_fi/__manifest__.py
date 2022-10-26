@@ -17,6 +17,7 @@ After installing this module, you'll have access to :
     * Finnish chart of account
     * Fiscal positions
     * Invoice Payment Reference Types (Finnish Standard Reference & Finnish Creditor Reference (RF))
+    * Finnish Reference format for Sale Orders
 
 Set the payment reference type from the Sales Journal.
     """,
@@ -30,7 +31,7 @@ Set the payment reference type from the Sales Journal.
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_tax_report_line.xml',
-        'data/account_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_tax_template_data.xml',
         'data/l10n_fi_chart_post_data.xml',
         'data/account_fiscal_position_template_data.xml',
@@ -40,4 +41,5 @@ Set the payment reference type from the Sales Journal.
         'demo/demo_company.xml',
     ],
     "installable": True,
+    'license': 'LGPL-3',
 }

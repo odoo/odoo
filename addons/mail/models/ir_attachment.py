@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import models
 from odoo.exceptions import AccessError
+from odoo.http import request
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -34,3 +35,38 @@ class IrAttachment(models.Model):
                     related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
+
+    def _delete_and_notify(self):
+        for attachment in self:
+            if attachment.res_model == 'mail.channel' and attachment.res_id:
+                target = self.env['mail.channel'].browse(attachment.res_id)
+            else:
+                target = self.env.user.partner_id
+            self.env['bus.bus']._sendone(target, 'ir.attachment/delete', {
+                'id': attachment.id,
+            })
+        self.unlink()
+
+    def _attachment_format(self, legacy=False):
+        safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
+        res_list = []
+        for attachment in self:
+            res = {
+                'checksum': attachment.checksum,
+                'id': attachment.id,
+                'filename': attachment.name,
+                'name': attachment.name,
+                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            }
+            if not legacy:
+                res['originThread'] = [('insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                })]
+            else:
+                res.update({
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                })
+            res_list.append(res)
+        return res_list

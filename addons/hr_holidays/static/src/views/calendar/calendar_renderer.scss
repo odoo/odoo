@@ -1,0 +1,17 @@
+.o_timeoff_calendar {
+    .o_calendar_renderer {
+        height: unset;
+
+        .o_calendar_widget {
+            @for $size from 1 through length($o-colors) {
+                .hr_stress_day_#{$size - 1}:not(.fc-disabled-day) {
+                    background-color: lighten(nth($o-colors, $size), 25%) !important;
+                }
+            }
+        }
+
+        .fc-bgevent {
+            border-radius: 25px;
+        }
+    }
+}

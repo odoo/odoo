@@ -5,10 +5,14 @@
         <field name="name">res.config.settings.view.form.inherit.sale</field>
         <field name="model">res.config.settings</field>
         <field name="priority" eval="10"/>
-        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block o_not_app" data-string="Sales" string="Sales" data-key="sale_management" groups="sales_team.group_sale_manager">
+                <div class="app_settings_block o_not_app"
+                    string="Sales"
+                    data-string="Sales"
+                    data-key="sale_management"
+                    groups="sales_team.group_sale_manager">
                     <h2>Product Catalog</h2>
                     <div class="row mt16 o_settings_container" name="catalog_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" id="variant_options">
@@ -17,7 +21,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_product_variant"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Sell variants of a product using attributes (size, color, etc.)
                                 </div>
@@ -25,17 +29,6 @@
                                     <div class="mt8">
                                         <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="product_configurator">
-                            <div class="o_setting_left_pane">
-                                <field name="module_sale_product_configurator"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_sale_product_configurator"/>
-                                <div class="text-muted">
-                                    Select product attributes and optional products from the sales order
                                 </div>
                             </div>
                         </div>
@@ -61,7 +54,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_uom','=',False)]}">
                                     <div class="mt8">
-                                        <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
+                                        <button name="%(uom.product_uom_categ_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -110,14 +103,14 @@
                        </div>
                         <div class="col-12 col-lg-6 o_setting_box"
                             id="coupon_settings"
-                            title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
+                            title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_coupon"/>
+                                <field name="module_loyalty"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_sale_coupon"/>
+                                <label for="module_loyalty" string="Discounts, Loyalty &amp; Gift Card"/>
                                 <div class="text-muted" id="sale_coupon">
-                                    Manage promotion &amp; coupon programs
+                                    Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet
                                 </div>
                             </div>
                         </div>
@@ -127,7 +120,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_product_pricelist"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/products_prices/prices/pricing.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/products_prices/prices/pricing.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Set multiple prices per product, automated discounts, etc.
                                 </div>
@@ -179,7 +172,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="portal_confirmation_sign"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="me-2 o_doc_link" target="_blank"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an online signature to confirm orders
@@ -192,37 +185,13 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="portal_confirmation_pay"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/send_quotations/get_paid_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/send_quotations/get_paid_to_validate.html" title="Documentation" class="me-2 o_doc_link" target="_blank"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an online payment to confirm orders
                                 </div>
                                 <div class="mt8" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
-                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting" attrs="{'invisible': [('portal_confirmation_pay', '=', False) , ('portal_confirmation_sign', '=', False)]}" groups="base.group_no_one">
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Confirmation Email</span>
-                                <div class="text-muted">
-                                    Automatic email sent after the customer has signed or paid online
-                                </div>
-                                <div class="row mt16">
-                                    <label for="confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
-                                    <field name="confirmation_template_id" class="oe_inline"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="invoice_delivery_addresses">
-                            <div class="o_setting_left_pane">
-                                <field name="group_sale_delivery_address"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="group_sale_delivery_address"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/send_quotations/different_addresses.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Select specific invoice and delivery addresses
+                                    <button name='%(payment.action_payment_provider)d' icon="fa-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -374,6 +343,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_sendcloud">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_sendcloud"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with Sendcloud
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_sendcloud"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h2>Invoicing</h2>
                     <div class="row mt16 o_settings_container" name="invoicing_setting_container">
@@ -382,7 +365,7 @@
                              title="This default value is applied to any new product created. This can be changed in the product detail form.">
                             <div class="o_setting_right_pane">
                                 <label for="default_invoice_policy"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/invoicing/invoicing_policy.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/invoicing/invoicing_policy.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Quantities to invoice from sales orders
                                 </div>
@@ -405,8 +388,8 @@
                                     Generate the invoice automatically when the online payment is confirmed
                                 </div>
                                 <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" groups="base.group_no_one">
-                                    <label for="template_id" class="o_light_label"/>
-                                    <field name="template_id" class="oe_inline" options="{'no_create': True}"/>
+                                    <label for="invoice_mail_template_id" class="o_light_label"/>
+                                    <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -414,12 +397,12 @@
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Down Payments</span>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Product used for down payments
                                 </div>
                                 <div class="text-muted">
-                                    <field name="deposit_default_product_id" context="{'default_type': 'service'}"/>
+                                    <field name="deposit_default_product_id" context="{'default_detailed_type': 'service'}"/>
                                 </div>
                             </div>
                         </div>
@@ -432,7 +415,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_sale_amazon"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/master/applications/sales/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Import Amazon orders and sync deliveries
                                 </div>
@@ -457,12 +440,5 @@
         <field name="target">inline</field>
         <field name="context">{'module' : 'sale_management', 'bin_size': False}</field>
     </record>
-
-    <menuitem id="menu_sale_general_settings"
-        name="Settings"
-        parent="menu_sale_config"
-        sequence="0"
-        action="action_sale_config_settings"
-        groups="base.group_system"/>
 
 </odoo>

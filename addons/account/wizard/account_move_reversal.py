@@ -26,13 +26,50 @@ class AccountMoveReversal(models.TransientModel):
             ('modify', 'Full refund and new draft invoice')
         ], string='Credit Method', required=True,
         help='Choose how you want to credit this invoice. You cannot "modify" nor "cancel" if the invoice is already reconciled.')
-    journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.', check_company=True)
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Use Specific Journal',
+        required=True,
+        compute='_compute_journal_id',
+        readonly=False,
+        store=True,
+        check_company=True,
+        help='If empty, uses the journal of the journal entry to be reversed.',
+    )
     company_id = fields.Many2one('res.company', required=True, readonly=True)
+    available_journal_ids = fields.Many2many('account.journal', compute='_compute_available_journal_ids')
+    country_code = fields.Char(related='company_id.country_id.code')
 
     # computed fields
     residual = fields.Monetary(compute="_compute_from_moves")
     currency_id = fields.Many2one('res.currency', compute="_compute_from_moves")
     move_type = fields.Char(compute="_compute_from_moves")
+
+    @api.depends('move_ids')
+    def _compute_journal_id(self):
+        for record in self:
+            if record.journal_id:
+                record.journal_id = record.journal_id
+            else:
+                journals = record.move_ids.journal_id.filtered(lambda x: x.active)
+                record.journal_id = journals[0] if journals else None
+
+    @api.depends('move_ids')
+    def _compute_available_journal_ids(self):
+        for record in self:
+            if record.move_ids:
+                record.available_journal_ids = self.env['account.journal'].search([
+                    ('company_id', '=', record.company_id.id),
+                    ('type', 'in', record.move_ids.journal_id.mapped('type')),
+                ])
+            else:
+                record.available_journal_ids = self.env['account.journal'].search([('company_id', '=', record.company_id.id)])
+
+    @api.constrains('journal_id', 'move_ids')
+    def _check_journal_type(self):
+        for record in self:
+            if record.journal_id.type not in record.move_ids.journal_id.mapped('type'):
+                raise UserError(_('Journal should be the same type as the reversed entry.'))
 
     @api.model
     def default_get(self, fields):
@@ -60,15 +97,16 @@ class AccountMoveReversal(models.TransientModel):
     def _prepare_default_reversal(self, move):
         reverse_date = self.date if self.date_mode == 'custom' else move.date
         return {
-            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason) 
+            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
                    if self.reason
                    else _('Reversal of: %s', move.name),
             'date': reverse_date,
+            'invoice_date_due': reverse_date,
             'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
-            'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
+            'journal_id': self.journal_id.id,
             'invoice_payment_term_id': None,
             'invoice_user_id': move.invoice_user_id.id,
-            'auto_post': True if reverse_date > fields.Date.context_today(self) else False,
+            'auto_post': 'at_date' if reverse_date > fields.Date.context_today(self) else 'no',
         }
 
     def reverse_moves(self):
@@ -85,7 +123,7 @@ class AccountMoveReversal(models.TransientModel):
             [self.env['account.move'], [], False],  # Others.
         ]
         for move, default_vals in zip(moves, default_values_list):
-            is_auto_post = bool(default_vals.get('auto_post'))
+            is_auto_post = default_vals.get('auto_post') != 'no'
             is_cancel_needed = not is_auto_post and self.refund_method in ('cancel', 'modify')
             batch_index = 0 if is_cancel_needed else 1
             batches[batch_index][0] |= move
@@ -116,10 +154,13 @@ class AccountMoveReversal(models.TransientModel):
             action.update({
                 'view_mode': 'form',
                 'res_id': moves_to_redirect.id,
+                'context': {'default_move_type':  moves_to_redirect.move_type},
             })
         else:
             action.update({
                 'view_mode': 'tree,form',
                 'domain': [('id', 'in', moves_to_redirect.ids)],
             })
+            if len(set(moves_to_redirect.mapped('move_type'))) == 1:
+                action['context'] = {'default_move_type':  moves_to_redirect.mapped('move_type').pop()}
         return action

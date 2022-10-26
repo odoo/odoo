@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_analytic_account_view_form_mrp" model="ir.ui.view">
+        <field name="name">account.analytic.account.form.mrp</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field eval="14" name="priority"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_mrp_production"
+                    groups="mrp.group_mrp_user"
+                    icon="fa-wrench" attrs="{'invisible': [('production_count', '=', 0)]}">
+                    <field string="Manufacturing Orders" name="production_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_mrp_bom"
+                    groups="mrp.group_mrp_user"
+                    icon="fa-flask" attrs="{'invisible': [('bom_count', '=', 0)]}">
+                    <field string="Bills of Materials" name="bom_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

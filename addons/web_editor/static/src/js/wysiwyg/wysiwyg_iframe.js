@@ -7,8 +7,7 @@ var core = require('web.core');
 var config = require('web.config');
 
 var qweb = core.qweb;
-var promiseCommon;
-var promiseWysiwyg;
+var promiseJsAssets;
 
 
 /**
@@ -26,7 +25,6 @@ Wysiwyg.include({
         if (this.options.inIframe) {
             this._onUpdateIframeId = 'onLoad_' + this.id;
         }
-        this.__extraAssetsForIframe = [];
     },
     /**
      * Load assets to inject into iframe.
@@ -38,22 +36,14 @@ Wysiwyg.include({
             return this._super();
         }
 
-        var defAsset;
+        promiseJsAssets = promiseJsAssets || ajax.loadAsset('web_editor.wysiwyg_iframe_editor_assets');
+        const assetsPromises = [promiseJsAssets];
         if (this.options.iframeCssAssets) {
-            defAsset = ajax.loadAsset(this.options.iframeCssAssets);
-        } else {
-            defAsset = Promise.resolve({
-                cssLibs: [],
-                cssContents: []
-            });
+            assetsPromises.push(ajax.loadAsset(this.options.iframeCssAssets));
         }
+        this.defAsset = Promise.all(assetsPromises);
 
-        promiseWysiwyg = promiseWysiwyg || ajax.loadAsset('web_editor.wysiwyg_iframe_editor_assets');
-        this.defAsset = Promise.all([promiseWysiwyg, defAsset]);
-
-        this.$target = this.$el;
         const _super = this._super.bind(this);
-
         await this.defAsset;
         await _super();
     },
@@ -61,7 +51,7 @@ Wysiwyg.include({
     /**
      * @override
      **/
-    start: async function () {
+    startEdition: async function () {
         const _super = this._super.bind(this);
         if (!this.options.inIframe) {
             return _super();
@@ -76,6 +66,16 @@ Wysiwyg.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     **/
+    _editorOptions: function () {
+        let options = this._super.apply(this, arguments);
+        options.getContextFromParentRect = () => {
+            return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
+        };
+        return options;
+    },
+    /**
      * Create iframe, inject css and create a link with the content,
      * then inject the target inside.
      *
@@ -84,7 +84,9 @@ Wysiwyg.include({
      */
     _loadIframe: function () {
         var self = this;
-        this.$iframe = $('<iframe class="wysiwyg_iframe">').css({
+        this.$editable = $('<div class="note-editable oe_structure odoo-editor-editable"></div>');
+        this.$el.removeClass('note-editable oe_structure odoo-editor-editable');
+        this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
             'min-height': '55vh',
             width: '100%'
         });
@@ -101,15 +103,19 @@ Wysiwyg.include({
                 var $iframeTarget = self.$iframe.contents().find('#iframe_target');
                 // copy the html in itself to have the node prototypes relative
                 // to this window rather than the iframe window.
-                $iframeTarget.html($iframeTarget.html());
+                const $targetClone = $iframeTarget.clone();
+                $targetClone.find('script').remove();
+                $iframeTarget.html($targetClone.html());
                 self.$iframeBody = $iframeTarget;
                 $iframeTarget.attr("isMobile", config.device.isMobile);
                 const $utilsZone = $('<div class="iframe-utils-zone">');
                 self.$utilsZone = $utilsZone;
 
-                const $iframeWrapper = $('<div class="iframe-editor-wrapper">');
-                self.$editable.attr('class', 'o_editable oe_structure');
+                const $iframeWrapper = $('<div class="iframe-editor-wrapper odoo-editor">');
+                const $codeview = $('<textarea class="o_codeview d-none"/>');
+                self.$editable.addClass('o_editable oe_structure');
 
+                $iframeTarget.append($codeview);
                 $iframeTarget.append($iframeWrapper);
                 $iframeTarget.append($utilsZone);
                 $iframeWrapper.append(self.$editable);
@@ -137,20 +143,24 @@ Wysiwyg.include({
                 }
 
                 var iframeContent = qweb.render('wysiwyg.iframeContent', {
-                    assets: assets.concat(self.__extraAssetsForIframe),
+                    assets: assets,
                     updateIframeId: self._onUpdateIframeId,
                     avoidDoubleLoad: _avoidDoubleLoad
                 });
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
-                    .write(iframeContent);
+                    .write(`<!DOCTYPE html><html${
+                        self.options.iframeHtmlClass ? ` class="${self.options.iframeHtmlClass}"` : ''
+                    }>${iframeContent}</html>`);
             });
             self.options.document = self.$iframe[0].contentWindow.document;
         });
 
-        this.$iframe.insertAfter(this.$editable);
+        this.$el.append(this.$iframe);
 
-        return def;
+        return def.then(() => {
+            this.options.onIframeUpdated();
+        });
     },
 
     _insertSnippetMenu: function () {

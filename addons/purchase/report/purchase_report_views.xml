@@ -4,7 +4,7 @@
             <field name="name">product.month.pivot</field>
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
-                <pivot string="Purchase Analysis" disable_linking="True" display_quantity="true" sample="1">
+                <pivot string="Purchase Analysis" display_quantity="1" sample="1">
                     <field name="category_id" type="row"/>
                     <field name="order_id" type="measure"/>
                     <field name="untaxed_total" type="measure"/>
@@ -16,10 +16,33 @@
             <field name="name">product.month.graph</field>
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
-                <graph string="Purchase Orders Statistics" type="line" sample="1" disable_linking="1">
-                    <field name="date_approve" interval="day" type="col"/>
+                <graph string="Purchase Analysis" type="line" sample="1">
+                    <field name="date_approve" interval="day"/>
                     <field name="untaxed_total" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="purchase_report_view_tree" model="ir.ui.view">
+            <field name="name">purchase.report.view.tree</field>
+            <field name="model">purchase.report</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Analysis">
+                    <field name="date_order" widget="date"/>
+                    <field name="order_id" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="category_id" optional="show"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="qty_ordered" optional="hide" sum="Sum of Qty Ordered"/>
+                    <field name="qty_received" optional="hide" sum="Sum of Qty Received"/>
+                    <field name="qty_billed" optional="hide" sum="Sum of Qty Billed"/>
+                    <field name="currency_id" optional="show" invisible="1"/>
+                    <field name="untaxed_total" optional="hide" widget="monetary" sum="Sum of Untaxed Total"/>
+                    <field name="price_total" optional="show" widget="monetary" sum="Sum of Total"/>
+                    <field name="state" optional="show"/>
+                </tree>
             </field>
         </record>
 
@@ -63,7 +86,14 @@
         <field name="res_model">purchase.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
-        <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your vendors, etc.</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Purchase Analysis
+            </p><p>
+                This analysis allows you to easily check and analyse your company purchase history and performance.
+                You can track your negotiation performance, the delivery performance of your vendors, etc
+            </p>
+        </field>
         <field name="target">current</field>
     </record>
 

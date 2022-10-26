@@ -1,14 +1,15 @@
 odoo.define('pos_restaurant.EditableTable', function(require) {
     'use strict';
 
-    const { onPatched, onMounted } = owl.hooks;
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    const { onMounted, onPatched } = owl;
+
     class EditableTable extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('resize-end', this._onResizeEnd);
             useListener('drag-end', this._onDragEnd);
             onPatched(this._setElementStyle.bind(this));
@@ -42,14 +43,14 @@ odoo.define('pos_restaurant.EditableTable', function(require) {
             table.height = size.height;
             table.position_v = loc.top;
             table.position_h = loc.left;
-            this.trigger('save-table', this.props.table);
+            this.props.onSaveTable(this.props.table);
         }
         _onDragEnd(event) {
             const { loc } = event.detail;
             const table = this.props.table;
             table.position_v = loc.top;
             table.position_h = loc.left;
-            this.trigger('save-table', this.props.table);
+            this.props.onSaveTable(this.props.table);
         }
     }
     EditableTable.template = 'EditableTable';

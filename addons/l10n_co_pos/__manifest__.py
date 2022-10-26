@@ -13,14 +13,13 @@
         'point_of_sale'
     ],
     'data': [
-        'views/views.xml'
+        'views/res_config_settings_views.xml'
     ],
     'assets': {
         'point_of_sale.assets': [
             'l10n_co_pos/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'l10n_co_pos/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

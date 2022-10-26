@@ -20,14 +20,13 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
      */
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
-        var self = this;
         var $element = $(ev.currentTarget);
         this._rpc({
             route: '/profile/send_validation_email',
             params: {'redirect_url': $element.data('redirect_url')},
         }).then(function (data) {
             if (data) {
-                self.$('button.validation_email_close').click();
+                window.location = $element.data('redirect_url');
             }
         });
     },
@@ -68,6 +67,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
                 res_id: parseInt(this.$('input[name=user_id]').val()),
             },
             resizable: true,
+            userGeneratedContent: true,
         });
 
         return Promise.all([def]);
@@ -107,13 +107,26 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      */
     _onProfilePicClearClick: function (ev) {
         var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_forum_avatar_img').attr('src', '/web/static/src/img/placeholder.png');
+        $form.find('.o_forum_avatar_img').attr('src', '/web/static/img/placeholder.png');
         $form.append($('<input/>', {
             name: 'clear_image',
             id: 'forum_clear_image',
             type: 'hidden',
         }));
     },
+});
+
+publicWidget.registry.websiteProfileNextRankCard = publicWidget.Widget.extend({
+    selector: '.o_wprofile_progress_circle',
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.$('g[data-bs-toggle="tooltip"]').tooltip();
+        return this._super.apply(this, arguments);
+    },
+
 });
 
 return publicWidget.registry.websiteProfile;

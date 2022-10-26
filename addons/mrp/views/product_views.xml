@@ -8,10 +8,21 @@
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='sale_delay']" position="before">
-                    <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                    <field name="bom_count" string="Bill of Materials" invisible="1"/>
+                    <label for="produce_delay" string="Manuf. Lead Time" attrs="{'invisible':[('type','=','service')]}"/>
                     <div attrs="{'invisible':[('type','=','service')]}">
                         <field name="produce_delay" class="oe_inline"/> days
                     </div>
+                    <label for="days_to_prepare_mo" attrs="{'invisible':[('type','=','service')]}"/>
+                    <div attrs="{'invisible':[('type','=','service')]}">
+                        <field name="days_to_prepare_mo" class="oe_inline"/> days
+                        <button name="action_compute_bom_days" string="Compute from BoM" type="object" attrs="{'invisible':['|', ('type', '=', 'service'), ('bom_count', '=', 0)]}"
+                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
+                                class="oe_link pt-0"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='product_variant_count']" position="after">
+                    <field name="is_kits" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -49,7 +60,7 @@
             <field name="res_model">product.template</field>
             <field name="search_view_id" ref="mrp_product_template_search_view"/>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
+            <field name="context">{"search_default_consumable": 1, 'default_detailed_type': 'product'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No product found. Let's create one!
@@ -81,18 +92,20 @@
             <field name="name">product.template.procurement</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
-            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
+                        groups="mrp.group_mrp_user"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_used_in_bom" type="object"
+                        groups="mrp.group_mrp_user"
                         attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_bom_count', '=', 0)]}" icon="fa-level-up">
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
+                        groups="mrp.group_mrp_user"
                         attrs="{'invisible': ['|', '|', ('type', 'not in', ['product', 'consu']), ('bom_count', '=', 0), ('mrp_product_qty', '=', 0)]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
@@ -110,18 +123,20 @@
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
-            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
+                        groups="mrp.group_mrp_user"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_used_in_bom" type="object"
+                        groups="mrp.group_mrp_user"
                         attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_bom_count', '=', 0)]}" icon="fa-level-up">
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
+                        groups="mrp.group_mrp_user"
                         attrs="{'invisible': ['|', '|', ('type', 'not in', ['product', 'consu']), ('bom_count', '=', 0), ('mrp_product_qty', '=', 0)]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">

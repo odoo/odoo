@@ -19,3 +19,17 @@ class IrConfigParameter(models.Model):
             if 'value' in vals and parameter.key in ['mail.bounce.alias', 'mail.catchall.alias'] and vals['value'] != parameter.value:
                 vals['value'] = self.env['mail.alias']._clean_and_check_unique([vals.get('value')])[0]
         return super().write(vals)
+
+    @api.model
+    def set_param(self, key, value):
+        if key == 'mail.restrict.template.rendering':
+            group_user = self.env.ref('base.group_user')
+            group_mail_template_editor = self.env.ref('mail.group_mail_template_editor')
+
+            if not value and group_mail_template_editor not in group_user.implied_ids:
+                group_user.implied_ids |= group_mail_template_editor
+
+            elif value and group_mail_template_editor in group_user.implied_ids:
+                group_user.implied_ids -= group_mail_template_editor
+
+        return super(IrConfigParameter, self).set_param(key, value)

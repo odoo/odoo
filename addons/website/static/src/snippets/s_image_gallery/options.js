@@ -1,16 +1,15 @@
 odoo.define('website.s_image_gallery_options', function (require) {
 'use strict';
 
+const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
+const { ComponentWrapper } = require('web.OwlCompatibility');
 var core = require('web.core');
-var weWidgets = require('wysiwyg.widgets');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 options.registry.gallery = options.Class.extend({
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
-
     /**
      * @override
      */
@@ -18,21 +17,21 @@ options.registry.gallery = options.Class.extend({
         var self = this;
 
         // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed', 'img', function (ev) {
+        this.$target.on('image_changed.gallery', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
-            self.$('.carousel:first li[data-target]:eq(' + index + ')')
+            self.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
 
         // When the snippet is empty, an edition button is the default content
         // TODO find a nicer way to do that to have editor style
-        this.$target.on('click', '.o_add_images', function (e) {
+        this.$target.on('click.gallery', '.o_add_images', function (e) {
             e.stopImmediatePropagation();
             self.addImages(false);
         });
 
-        this.$target.on('dropped', 'img', function (ev) {
+        this.$target.on('dropped.gallery', 'img', function (ev) {
             self.mode(null, self.getMode());
             if (!ev.target.height) {
                 $(ev.target).one('load', function () {
@@ -74,6 +73,13 @@ options.registry.gallery = options.Class.extend({
             this.$target.removeAttr('style');
         }
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.gallery');
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -87,29 +93,36 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
-        var lastImage = _.last(this._getImages());
-        var index = lastImage ? this._getIndex(lastImage) : -1;
-        return new Promise(resolve => {
-            dialog.on('save', this, function (attachments) {
-                for (var i = 0; i < attachments.length; i++) {
-                    $('<img/>', {
+        const lastImage = _.last(this._getImages());
+        let index = lastImage ? this._getIndex(lastImage) : -1;
+        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+            multiImages: true,
+            onlyImages: true,
+            save: images => {
+                let $newImageToSelect;
+                for (const image of images) {
+                    const $img = $('<img/>', {
                         class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
-                        src: attachments[i].image_src,
+                        src: image.src,
                         'data-index': ++index,
-                        alt: attachments[i].description || '',
+                        alt: image.alt || '',
                         'data-name': _t('Image'),
                         style: $images.length > 0 ? $images[0].style.cssText : '',
                     }).appendTo($container);
+                    if (!$newImageToSelect) {
+                        $newImageToSelect = $img;
+                    }
                 }
-                if (attachments.length > 0) {
+                if (images.length > 0) {
                     this.mode('reset', this.getMode());
                     this.trigger_up('cover_update');
+                    // Triggers the re-rendering of the thumbnail
+                    $newImageToSelect.trigger('image_changed');
+
                 }
-            });
-            dialog.on('closed', this, () => resolve());
-            dialog.open();
+            },
         });
+        dialog.mount(this.el);
     },
     /**
      * Allows to change the number of columns when displaying images with a
@@ -239,7 +252,7 @@ options.registry.gallery = options.Class.extend({
      */
     removeAllImages: function (previewMode) {
         var $addImg = $('<div>', {
-            class: 'alert alert-info css_editable_mode_display text-center',
+            class: 'alert alert-info css_non_editable_mode_hidden text-center',
         });
         var $text = $('<span>', {
             class: 'o_add_images',
@@ -330,7 +343,7 @@ options.registry.gallery = options.Class.extend({
                 $carousel.removeClass('slide');
                 $carousel.carousel(position);
                 this.$target.find('.carousel-indicators li').removeClass('active');
-                this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
+                this.$target.find('.carousel-indicators li[data-bs-slide-to="' + position + '"]').addClass('active');
                 this.trigger_up('activate_snippet', {
                     $snippet: this.$target.find('.carousel-item.active img'),
                     ifInactiveOptions: true,
@@ -355,10 +368,10 @@ options.registry.gallery = options.Class.extend({
     _adaptNavigationIDs: function () {
         var uuid = new Date().getTime();
         this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+        _.each(this.$target.find('[data-bs-slide], [data-bs-slide-to]'), function (el) {
             var $el = $(el);
-            if ($el.attr('data-target')) {
-                $el.attr('data-target', '#slideshow_' + uuid);
+            if ($el.attr('data-bs-target')) {
+                $el.attr('data-bs-target', '#slideshow_' + uuid);
             } else if ($el.attr('href')) {
                 $el.attr('href', '#slideshow_' + uuid);
             }

@@ -5,8 +5,8 @@ from datetime import date, datetime, time
 import pytz
 from dateutil.relativedelta import relativedelta
 
-from . import ustr
 from .func import lazy
+from odoo.loglevels import ustr
 
 def get_month(date):
     ''' Compute the month dates range on which the 'date' parameter belongs to.
@@ -216,9 +216,9 @@ def json_default(obj):
 def date_range(start, end, step=relativedelta(months=1)):
     """Date range generator with a step interval.
 
-    :param start datetime: beginning date of the range.
-    :param end datetime: ending date of the range.
-    :param step relativedelta: interval of the range.
+    :param datetime start: beginning date of the range.
+    :param datetime end: ending date of the range.
+    :param relativedelta step: interval of the range.
     :return: a range of datetime from start to end.
     :rtype: Iterator[datetime]
     """

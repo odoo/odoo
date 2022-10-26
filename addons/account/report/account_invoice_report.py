@@ -18,7 +18,7 @@ class AccountInvoiceReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
+    commercial_partner_id = fields.Many2one('res.partner', string='Main Partner')
     country_id = fields.Many2one('res.country', string="Country")
     invoice_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     move_type = fields.Selection([
@@ -47,8 +47,8 @@ class AccountInvoiceReport(models.Model):
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting")
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
+    price_total = fields.Float(string='Total', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
 
     _depends = {
@@ -57,8 +57,8 @@ class AccountInvoiceReport(models.Model):
             'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'partner_bank_id',
         ],
         'account.move.line': [
-            'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',
-            'move_id', 'product_id', 'product_uom_id', 'account_id', 'analytic_account_id',
+            'quantity', 'price_subtotal', 'price_total', 'amount_residual', 'balance', 'amount_currency',
+            'move_id', 'product_id', 'product_uom_id', 'account_id',
             'journal_id', 'company_id', 'currency_id', 'partner_id',
         ],
         'product.product': ['product_tmpl_id'],
@@ -80,11 +80,11 @@ class AccountInvoiceReport(models.Model):
                 line.move_id,
                 line.product_id,
                 line.account_id,
-                line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
                 line.company_currency_id,
                 line.partner_id AS commercial_partner_id,
+                account.account_type AS user_type,
                 move.state,
                 move.move_type,
                 move.partner_id,
@@ -98,8 +98,13 @@ class AccountInvoiceReport(models.Model):
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
                 -line.balance * currency_table.rate                         AS price_subtotal,
-                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * currency_table.rate
-                                                                            AS price_average,
+                line.price_total,
+                -COALESCE(
+                   -- Average line price
+                   (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
+                   -- convert to template uom
+                   * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
+                   0.0) * currency_table.rate                               AS price_average,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
         '''
 
@@ -110,7 +115,6 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN res_partner partner ON partner.id = line.partner_id
                 LEFT JOIN product_product product ON product.id = line.product_id
                 LEFT JOIN account_account account ON account.id = line.account_id
-                LEFT JOIN account_account_type user_type ON user_type.id = account.user_type_id
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
@@ -126,7 +130,7 @@ class AccountInvoiceReport(models.Model):
         return '''
             WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                 AND line.account_id IS NOT NULL
-                AND NOT line.exclude_from_invoice_tab
+                AND line.display_type = 'product'
         '''
 
 
@@ -141,7 +145,7 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
         qr_code_urls = {}
         for invoice in docs:
             if invoice.display_qr_code:
-                new_code_url = invoice.generate_qr_code()
+                new_code_url = invoice._generate_qr_code()
                 if new_code_url:
                     qr_code_urls[invoice.id] = new_code_url
 

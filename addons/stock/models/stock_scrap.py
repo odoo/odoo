@@ -38,13 +38,13 @@ class StockScrap(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial',
+        'stock.lot', 'Lot/Serial',
         states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
         states={'done': [('readonly', True)]}, check_company=True)
     owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]}, check_company=True)
-    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True)
+    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True, copy=False)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
@@ -52,12 +52,21 @@ class StockScrap(models.Model):
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
-    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
+    scrap_qty = fields.Float(
+        'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
+        compute='_compute_scrap_qty', precompute=True, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
+
+    @api.depends('move_id', 'move_id.move_line_ids.qty_done')
+    def _compute_scrap_qty(self):
+        self.scrap_qty = 1
+        for scrap in self:
+            if scrap.move_id:
+                scrap.scrap_qty = scrap.move_id.quantity_done
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):

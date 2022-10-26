@@ -13,7 +13,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/web_studio.png</field>
-            <field name="website">https://odoo.com/page/studio?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://odoo.com/app/studio?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_timesheet_grid">
@@ -27,7 +27,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/timesheet_grid.png</field>
-            <field name="website">https://www.odoo.com/page/timesheet-mobile-app?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/timesheet?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_account_accountant">
@@ -41,7 +41,21 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/account_accountant.png</field>
-            <field name="website">https://www.odoo.com/page/accounting?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/accounting?utm_source=db&amp;utm_medium=module</field>
+        </record>
+
+        <record model="ir.module.module" id="base.module_industry_fsm">
+            <field name="name">industry_fsm</field>
+            <field name="shortdesc">Field Service</field>
+            <field name="sequence">90</field>
+            <field name="category_id" ref="base.module_category_services_field_service"/>
+            <field name="application" eval="True"/>
+            <field name="summary">Schedule and track onsite operations, time and material</field>
+            <field name="license">OEEL-1</field>
+            <field name="author">Odoo S.A.</field>
+            <field name="to_buy" eval="True"/>
+            <field name="icon">/base/static/img/icons/industry_fsm.png</field>
+            <field name="website">https://www.odoo.com/app/field-service?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_helpdesk">
@@ -55,7 +69,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/helpdesk.png</field>
-            <field name="website">https://www.odoo.com/page/helpdesk?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/helpdesk?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_hr_appraisal">
@@ -69,7 +83,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/hr_appraisal.png</field>
-            <field name="website">https://www.odoo.com/page/appraisal?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/appraisals?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_marketing_automation">
@@ -83,7 +97,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/marketing_automation.png</field>
-            <field name="website">https://www.odoo.com/page/marketing-automation?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/marketing-automation?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_mrp_plm">
@@ -97,7 +111,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/mrp_plm.png</field>
-            <field name="website">https://www.odoo.com/page/mrp-plm?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/plm?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_quality_control">
@@ -111,7 +125,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/quality_control.png</field>
-            <field name="website">https://www.odoo.com/page/quality-management-software?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/quality?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_sale_ebay">
@@ -125,7 +139,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/sale_ebay.png</field>
-            <field name="website">https://www.odoo.com/page/sales?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/sales?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_planning">
@@ -139,7 +153,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/planning.png</field>
-            <field name="website">https://www.odoo.com/page/planning?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/planning?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_sale_subscription">
@@ -153,7 +167,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/sale_subscription.png</field>
-            <field name="website">https://www.odoo.com/page/subscriptions?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/subscriptions?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_sign">
@@ -167,7 +181,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/sign.png</field>
-            <field name="website">https://www.odoo.com/page/sign?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/sign?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_stock_barcode">
@@ -181,7 +195,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/stock_barcode.png</field>
-            <field name="website">https://www.odoo.com/page/warehouse?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/inventory?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_voip">
@@ -195,11 +209,11 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/voip.png</field>
-            <field name="website">https://www.odoo.com/page/crm?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/app/crm?utm_source=db&amp;utm_medium=module</field>
         </record>
 
-        <record model="ir.module.module" id="base.module_website_calendar">
-            <field name="name">website_calendar</field>
+        <record model="ir.module.module" id="base.module_appointment">
+            <field name="name">appointment</field>
             <field name="shortdesc">Appointments</field>
             <field name="sequence">215</field>
             <field name="category_id" ref="base.module_category_sales_sales"/>
@@ -208,8 +222,8 @@
             <field name="license">OEEL-1</field>
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
-            <field name="icon">/base/static/img/icons/website_calendar.png</field>
-            <field name="website">https://www.odoo.com/page/appointments?utm_source=db&amp;utm_medium=module</field>
+            <field name="icon">/base/static/img/icons/appointment.png</field>
+            <field name="website">https://www.odoo.com/app/appointments?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_mrp_workorder">
@@ -223,7 +237,7 @@
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
             <field name="icon">/base/static/img/icons/mrp_workorder.png</field>
-            <field name="website">https://www.odoo.com/page/mrp-cloud-software?utm_source=db&amp;utm_medium=module</field>
+            <field name="website">https://www.odoo.com/page/manufacturing?utm_source=db&amp;utm_medium=module</field>
         </record>
 
         <record model="ir.module.module" id="base.module_web_mobile">
@@ -253,7 +267,7 @@
 
         <record model="ir.module.module" id="base.module_payment_sepa_direct_debit">
             <field name="name">payment_sepa_direct_debit</field>
-            <field name="shortdesc">Sepa Direct Debit Payment Acquirer</field>
+            <field name="shortdesc">Sepa Direct Debit Payment Provider</field>
             <field name="summary">Checkout with SEPA Direct Debit</field>
             <field name="category_id" ref="base.module_category_accounting_accounting"/>
             <field name="license">OEEL-1</field>

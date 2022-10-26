@@ -15,6 +15,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'title': 'MyCompany Vendor Certification',
             'access_token': '4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
             'access_mode': 'public',
+            'questions_layout': 'one_page',
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
@@ -52,7 +53,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Select all the existing products',
                     'sequence': 3,
                     'question_type': 'multiple_choice',
-                    'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair floor protection',
@@ -83,7 +83,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Select all the available customizations for our Customizable Desk',
                     'sequence': 4,
                     'question_type': 'multiple_choice',
-                    'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Color',
@@ -174,7 +173,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Select all the products that sell for $100 or more',
                     'sequence': 9,
                     'question_type': 'multiple_choice',
-                    'column_nb': '2',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Corner Desk Right Sit',

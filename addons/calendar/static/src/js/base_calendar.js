@@ -1,117 +1,10 @@
-odoo.define('base_calendar.base_calendar', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var BasicModel = require('web.BasicModel');
-var fieldRegistry = require('web.field_registry');
-var Notification = require('web.Notification');
-var relationalFields = require('web.relational_fields');
-var session = require('web.session');
-var WebClient = require('web.WebClient');
+import BasicModel from 'web.BasicModel';
+import fieldRegistry from 'web.field_registry';
+import relationalFields from 'web.relational_fields';
 
 const FieldMany2ManyTagsAvatar = relationalFields.FieldMany2ManyTagsAvatar;
-
-var CalendarNotification = Notification.extend({
-    template: "CalendarNotification",
-    xmlDependencies: (Notification.prototype.xmlDependencies || [])
-        .concat(['/calendar/static/src/xml/notification_calendar.xml']),
-
-    init: function(parent, params) {
-        this._super(parent, params);
-        this.eid = params.eventID;
-        this.sticky = true;
-
-        this.events = _.extend(this.events || {}, {
-            'click .link2event': function() {
-                var self = this;
-
-                this._rpc({
-                        route: '/web/action/load',
-                        params: {
-                            action_id: 'calendar.action_calendar_event_notify',
-                        },
-                    })
-                    .then(function(r) {
-                        r.res_id = self.eid;
-                        return self.do_action(r);
-                    });
-            },
-
-            'click .link2recall': function() {
-                this.close();
-            },
-
-            'click .link2showed': function() {
-                this._rpc({route: '/calendar/notify_ack'})
-                    .then(this.close.bind(this, false), this.close.bind(this, false));
-            },
-        });
-    },
-});
-
-WebClient.include({
-    display_calendar_notif: function(notifications) {
-        var self = this;
-        var last_notif_timer = 0;
-
-        // Clear previously set timeouts and destroy currently displayed calendar notifications
-        clearTimeout(this.get_next_calendar_notif_timeout);
-        _.each(this.calendar_notif_timeouts, clearTimeout);
-        this.calendar_notif_timeouts = {};
-
-        // For each notification, set a timeout to display it
-        _.each(notifications, function(notif) {
-            var key = notif.event_id + ',' + notif.alarm_id;
-            if (key in self.calendar_notif) {
-                return;
-            }
-            self.calendar_notif_timeouts[key] = setTimeout(function () {
-                var notificationID = self.call('notification', 'notify', {
-                    Notification: CalendarNotification,
-                    title: notif.title,
-                    message: notif.message,
-                    eventID: notif.event_id,
-                    onClose: function () {
-                        delete self.calendar_notif[key];
-                    },
-                });
-                self.calendar_notif[key] = notificationID;
-            }, notif.timer * 1000);
-            last_notif_timer = Math.max(last_notif_timer, notif.timer);
-        });
-
-        // Set a timeout to get the next notifications when the last one has been displayed
-        if (last_notif_timer > 0) {
-            this.get_next_calendar_notif_timeout = setTimeout(this.get_next_calendar_notif.bind(this), last_notif_timer * 1000);
-        }
-    },
-    get_next_calendar_notif: function() {
-        session.rpc("/calendar/notify", {}, {shadow: true})
-            .then(this.display_calendar_notif.bind(this))
-            .guardedCatch(function(reason) { //
-                var err = reason.message;
-                var ev = reason.event;
-                if(err.code === -32098) {
-                    // Prevent the CrashManager to display an error
-                    // in case of an xhr error not due to a server error
-                    ev.preventDefault();
-                }
-            });
-    },
-    show_application: function() {
-        // An event is triggered on the bus each time a calendar event with alarm
-        // in which the current user is involved is created, edited or deleted
-        this.calendar_notif_timeouts = {};
-        this.calendar_notif = {};
-        this.call('bus_service', 'onNotification', this, function (notifications) {
-            _.each(notifications, (function (notification) {
-                if (notification[0][1] === 'calendar.alarm') {
-                    this.display_calendar_notif(notification[1]);
-                }
-            }).bind(this));
-        });
-        return this._super.apply(this, arguments).then(this.get_next_calendar_notif.bind(this));
-    },
-});
 
 BasicModel.include({
     /**
@@ -127,12 +20,10 @@ BasicModel.include({
         return this._rpc({
             model: 'res.partner',
             method: 'get_attendee_detail',
-            args: [attendeeIDs, meetingID],
+            args: [attendeeIDs, [meetingID]],
             context: context,
         }).then(function (result) {
-            return _.map(result, function (d) {
-                return _.object(['id', 'display_name', 'status', 'color'], d);
-            });
+            return result;
         });
     },
 });
@@ -141,8 +32,13 @@ const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
     // as this widget is model dependant (rpc on res.partner), use it in another
     // context probably won't work
     // supportedFieldTypes: ['many2many'],
-    tag_template: "Many2ManyAttendeeTag",
     specialData: "_fetchSpecialAttendeeStatus",
+    className: 'o_field_many2manytags avatar',
+
+    init: function () {
+        this._super.apply(this, arguments);
+        this.className += this.nodeOptions.block ? ' d-block' : '';
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -152,13 +48,38 @@ const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
      * @override
      * @private
      */
+    _renderTags: function () {
+        this._super.apply(this, arguments);
+        const avatars = this.el.querySelectorAll('.o_m2m_avatar');
+        for (const avatar of avatars) {
+            const partner_id = parseInt(avatar.dataset["id"]);
+            const partner_data = this.record.specialData.partner_ids.find(partner => partner.id === partner_id);
+            if (partner_data) {
+                avatar.classList.add('o_attendee_border', "o_attendee_border_" + partner_data.status);
+            }
+        }
+    },
+    /**
+     * @override
+     * @private
+     */
     _getRenderTagsContext: function () {
-        var result = this._super.apply(this, arguments);
+        let result = this._super.apply(this, arguments);
         result.attendeesData = this.record.specialData.partner_ids;
+        // Sort attendees to have the organizer on top.
+        // partner_ids are sorted by default according to their id/display_name in the "elements" FieldMany2ManyTag
+        // This method sort them to put the organizer on top
+        const organizer = result.attendeesData.find(item => item.is_organizer);
+        if (organizer) {
+            const org_id = organizer.id
+            // sort elements according to the partner id
+            result.elements.sort((a, b) => {
+                const a_org = a.id === org_id;
+                return a_org ? -1 : 1;
+             });
+        }
         return result;
     },
 });
 
 fieldRegistry.add('many2manyattendee', Many2ManyAttendee);
-
-});

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
-    'version': '1.5',
-    'website': 'https://www.odoo.com/page/events',
+    'version': '1.7',
+    'website': 'https://www.odoo.com/app/events',
     'category': 'Marketing/Events',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
     'description': """
@@ -23,7 +23,10 @@ Key Features
         'security/ir.model.access.csv',
         'views/event_menu_views.xml',
         'views/event_ticket_views.xml',
-        'views/event_views.xml',
+        'views/event_mail_views.xml',
+        'views/event_registration_views.xml',
+        'views/event_type_views.xml',
+        'views/event_event_views.xml',
         'views/event_stage_views.xml',
         'report/event_event_templates.xml',
         'report/event_event_reports.xml',
@@ -43,17 +46,25 @@ Key Features
         'data/event_registration_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'event/static/src/scss/event.scss',
-            'event/static/src/js/field_icon_selection.js',
+            'event/static/src/icon_selection_field/icon_selection_field.js',
+            'event/static/src/icon_selection_field/icon_selection_field.xml',
         ],
         'web.assets_common': [
             'event/static/src/js/tours/**/*',
         ],
-        'web.assets_qweb': [
-            'event/static/src/xml/**/*',
+        'web.assets_frontend': [
+            'event/static/src/js/tours/**/*',
         ],
-    }
+        'web.report_assets_common': [
+            '/event/static/src/scss/event_foldable_badge_report.scss',
+            '/event/static/src/scss/event_full_page_ticket_report.scss',
+        ],
+        'web.report_assets_pdf': [
+            '/event/static/src/scss/event_full_page_ticket_report_pdf.scss',
+        ],
+    },
+    'license': 'LGPL-3',
 }

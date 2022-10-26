@@ -5,12 +5,21 @@
         <field name="model">event.track</field>
         <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='event_track_cta_group']" position="after">
-                <group name="event_track_quiz_group">
-                    <field name="quiz_id"
-                        context="{'form_view_ref': 'website_event_track_quiz.event_quiz_view_form_from_track'}"/>
-                </group>
-            </xpath>
+            <field name='stage_id' position="before">
+                <field name="quiz_id" invisible="1"/>
+                <button name="action_add_quiz"
+                    type="object" class="btn btn-primary" string="Add Quiz"
+                    attrs="{'invisible': [('quiz_id', '!=', False)]}"
+                    groups="event.group_event_user">
+                </button>
+            </field>
+            <field name='is_published' position="before">
+                <button name="action_view_quiz" type="object" class="oe_stat_button"
+                    string="Go to Quiz" icon="fa-question-circle" widget="stat_info"
+                    attrs="{'invisible': [('quiz_id', '=', False)]}"
+                    groups="event.group_event_user">
+                </button>
+            </field>
         </field>
     </record>
 </odoo>

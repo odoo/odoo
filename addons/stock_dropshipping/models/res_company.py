@@ -53,6 +53,7 @@ class ResCompany(models.Model):
                 'default_location_src_id': self.env.ref('stock.stock_location_suppliers').id,
                 'default_location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'sequence_code': 'DS',
+                'use_existing_lots': False,
             })
         if dropship_vals:
             self.env['stock.picking.type'].create(dropship_vals)
@@ -90,10 +91,12 @@ class ResCompany(models.Model):
                 ('default_location_src_id.usage', '=', 'supplier'),
                 ('default_location_dest_id.usage', '=', 'customer'),
             ], limit=1, order='sequence')
+            if not dropship_picking_type:
+                continue
             dropship_vals.append({
                 'name': '%s → %s' % (supplier_location.name, customer_location.name),
                 'action': 'buy',
-                'location_id': customer_location.id,
+                'location_dest_id': customer_location.id,
                 'location_src_id': supplier_location.id,
                 'procure_method': 'make_to_stock',
                 'route_id': dropship_route.id,

@@ -10,8 +10,8 @@ class ResConfigSettings(models.TransientModel):
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='product.group_discount_per_so_line')
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
-    module_sale_product_configurator = fields.Boolean("Product Configurator")
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
+    module_loyalty = fields.Boolean("Promotions, Coupons, Gift Card & Loyalty Program")
     group_stock_packaging = fields.Boolean('Product Packagings',
         implied_group='product.group_stock_packaging')
     group_product_pricelist = fields.Boolean("Pricelists",
@@ -38,22 +38,8 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_product_variant(self):
         """The product Configurator requires the product variants activated.
         If the user disables the product variants -> disable the product configurator as well"""
-        if self.module_sale_product_configurator and not self.group_product_variant:
-            self.module_sale_product_configurator = False
         if self.module_sale_product_matrix and not self.group_product_variant:
             self.module_sale_product_matrix = False
-
-    @api.onchange('module_sale_product_configurator')
-    def _onchange_module_sale_product_configurator(self):
-        """The product Configurator requires the product variants activated
-        If the user enables the product configurator -> enable the product variants as well"""
-        if self.module_sale_product_configurator and not self.group_product_variant:
-            self.group_product_variant = True
-
-    @api.onchange('group_multi_currency')
-    def _onchange_group_multi_currency(self):
-        if self.group_multi_currency:
-            self.group_product_pricelist = True
 
     @api.onchange('group_product_pricelist')
     def _onchange_group_sale_pricelist(self):
@@ -68,14 +54,7 @@ class ResConfigSettings(models.TransientModel):
             self.group_sale_pricelist = True
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
+        super().set_values()
         if not self.group_discount_per_so_line:
             pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
             pl.write({'discount_policy': 'with_discount'})
-
-    @api.onchange('module_sale_product_matrix')
-    def _onchange_module_module_sale_product_matrix(self):
-        """The product Grid Configurator requires the product Configurator activated
-        If the user enables the Grid Configurator -> enable the product Configurator as well"""
-        if self.module_sale_product_matrix and not self.module_sale_product_configurator:
-            self.module_sale_product_configurator = True

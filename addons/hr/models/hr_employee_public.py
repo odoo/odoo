@@ -24,6 +24,8 @@ class HrEmployeePublic(models.Model):
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
     work_email = fields.Char(readonly=True)
+    work_contact_id = fields.Many2one(readonly=True)
+    related_contact_ids = fields.Many2many(readonly=True)
     work_location_id = fields.Many2one(readonly=True)
     user_id = fields.Many2one(readonly=True)
     resource_id = fields.Many2one(readonly=True)
@@ -32,26 +34,35 @@ class HrEmployeePublic(models.Model):
     color = fields.Integer(readonly=True)
     employee_type = fields.Selection(readonly=True)
 
+    employee_id = fields.Many2one('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id", compute_sudo=True)
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
-    image_1920 = fields.Image("Original Image", compute='_compute_image', compute_sudo=True)
-    image_1024 = fields.Image("Image 1024", compute='_compute_image', compute_sudo=True)
-    image_512 = fields.Image("Image 512", compute='_compute_image', compute_sudo=True)
-    image_256 = fields.Image("Image 256", compute='_compute_image', compute_sudo=True)
-    image_128 = fields.Image("Image 128", compute='_compute_image', compute_sudo=True)
+    image_1920 = fields.Image("Image", related='employee_id.image_1920', compute_sudo=True)
+    image_1024 = fields.Image("Image 1024", related='employee_id.image_1024', compute_sudo=True)
+    image_512 = fields.Image("Image 512", related='employee_id.image_512', compute_sudo=True)
+    image_256 = fields.Image("Image 256", related='employee_id.image_256', compute_sudo=True)
+    image_128 = fields.Image("Image 128", related='employee_id.image_128', compute_sudo=True)
+    avatar_1920 = fields.Image("Avatar", related='employee_id.avatar_1920', compute_sudo=True)
+    avatar_1024 = fields.Image("Avatar 1024", related='employee_id.avatar_1024', compute_sudo=True)
+    avatar_512 = fields.Image("Avatar 512", related='employee_id.avatar_512', compute_sudo=True)
+    avatar_256 = fields.Image("Avatar 256", related='employee_id.avatar_256', compute_sudo=True)
+    avatar_128 = fields.Image("Avatar 128", related='employee_id.avatar_128', compute_sudo=True)
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
 
-    def _compute_image(self):
+    def _search_employee_id(self, operator, value):
+        return [('id', operator, value)]
+
+    def _compute_employee_id(self):
         for employee in self:
-            # We have to be in sudo to have access to the images
-            employee_id = self.sudo().env['hr.employee'].browse(employee.id)
-            employee.image_1920 = employee_id.image_1920
-            employee.image_1024 = employee_id.image_1024
-            employee.image_512 = employee_id.image_512
-            employee.image_256 = employee_id.image_256
-            employee.image_128 = employee_id.image_128
+            employee.employee_id = self.env['hr.employee'].browse(employee.id)
+
+    @api.depends('user_partner_id')
+    def _compute_related_contacts(self):
+        super()._compute_related_contacts()
+        for employee in self:
+            employee.related_contact_ids |= employee.user_partner_id
 
     @api.model
     def _get_fields(self):

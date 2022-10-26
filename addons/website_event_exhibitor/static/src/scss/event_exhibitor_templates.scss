@@ -9,6 +9,10 @@
         opacity: 0.8;
     }
 
+    .o_wesponsor_topbar_filters .dropdown-item {
+        cursor: pointer;
+    }
+
     /*
      * MAIN PAGE: LIST
      */
@@ -17,6 +21,8 @@
     .o_wesponsor_card {
         .card-body {
             padding: 1rem;
+            background-color: $o-wevent-bg-color-base !important;
+            color: $o-wevent-color;
         }
 
         .card-footer {
@@ -57,19 +63,19 @@
             a {
                 display: none;
             }
-        }
+            @include media-breakpoint-up(md) {
+                &:hover {
+                    cursor: pointer;
+                    transition: background-color .2s linear;
+                    background-color: rgba(0,0,0,.1);
 
-        @include media-breakpoint-up(md) {
-            :hover .o_wesponsor_connect_button {
-                cursor: pointer;
-                transition: background-color .2s linear;
-                background-color: rgba(0,0,0,.1);
-
-                a {
-                    display: inline-block;
+                    a {
+                        display: inline-block;
+                    }
                 }
             }
         }
+
     }
 
     /*
@@ -77,13 +83,17 @@
      */
 
     .o_wevent_online_page_container {
-
         // Jitsi container
         #o_wsponsor_jitsi_iframe {
             height: 85vh;
         }
-
+        .o_wesponsor_exhibitor_main {
+            background-color: $o-wevent-bg-color-base;
+            color: $o-wevent-color;
+        }
         .o_wesponsor_exhibitor_aside {
+            background-color: $o-wevent-bg-color-base;
+            color: $o-wevent-color;
             .o_wesponsor_sponsor_name {
                 line-height: 1rem;
             }
@@ -109,6 +119,15 @@
                 background-color: #c7632a;
                 color: $white;
             }
+        }
+    }
+}
+
+.editor_enable {
+    .o_wesponsor_index {
+        .o_wesponsor_exhibitor_main_empty_website_descr_warning {
+            /** Hide warning in edition mode */
+            display: none;
         }
     }
 }

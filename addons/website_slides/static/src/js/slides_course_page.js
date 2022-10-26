@@ -1,0 +1,162 @@
+/** @odoo-module **/
+
+import publicWidget from 'web.public.widget';
+import session from 'web.session';
+import { qweb as QWeb } from 'web.core';
+
+
+/**
+ * Global widget for both fullscreen view and non-fullscreen view of a slide course.
+ * Contains general methods to update the UI elements (progress bar, sidebar...) as well
+ * as method to mark the slide as completed / uncompleted.
+ */
+export const SlideCoursePage = publicWidget.Widget.extend({
+    events: {
+        'click button.o_wslides_button_complete': '_onClickComplete',
+    },
+
+    custom_events: {
+        'slide_completed': '_onSlideCompleted',
+        'slide_mark_completed': '_onSlideMarkCompleted',
+    },
+
+    /**
+     * Greens up the bullet when the slide is completed
+     *
+     * @public
+     * @param {Object} slide
+     * @param {Boolean} completed
+     */
+    toggleCompletionButton: function (slide, completed = true) {
+        const $button = this.$(`.o_wslides_sidebar_done_button[data-id="${slide.id}"]`);
+
+        if (!$button.length) {
+            return;
+        }
+
+        const newButton = QWeb.render('website.slides.sidebar.done.button', {
+            slideId: slide.id,
+            slideCompleted: completed,
+            canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
+            canSelfMarkCompleted: slide.canSelfMarkCompleted,
+            isMember: slide.isMember,
+        });
+        $button.replaceWith(newButton);
+    },
+
+    /**
+     * Updates the progressbar whenever a lesson is completed
+     *
+     * @public
+     * @param {Integer} channelCompletion
+     */
+    updateProgressbar: function (channelCompletion) {
+        const completion = Math.min(100, channelCompletion);
+
+        const $completed = $('.o_wslides_channel_completion_completed');
+        const $progressbar = $('.o_wslides_channel_completion_progressbar');
+
+        if (completion < 100) {
+            // Hide the "Completed" text and show the progress bar
+            $completed.addClass('d-none');
+            $progressbar.removeClass('d-none').addClass('d-flex');
+        } else {
+            // Hide the progress bar and show the "Completed" text
+            $completed.removeClass('d-none');
+            $progressbar.addClass('d-none').removeClass('d-flex');
+        }
+
+        $progressbar.find('.progress-bar').css('width', `${completion}%`);
+        $progressbar.find('.o_wslides_progress_percentage').text(completion);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Once the completion conditions are filled,
+     * rpc call to set the relation between the slide and the user as "completed"
+     *
+     * @private
+     * @param {Object} slide: slide to set as completed
+     * @param {Boolean} completed: true to mark the slide as completed
+     *     false to mark the slide as not completed
+     */
+    _toggleSlideCompleted: async function (slide, completed = true) {
+        if (!!slide.completed === !!completed || !slide.isMember) {
+            // no useless RPC call
+            return;
+        }
+
+        const data = await this._rpc({
+            route: `/slides/slide/${completed ? 'set_completed' : 'set_uncompleted'}`,
+            params: {slide_id: slide.id},
+        });
+
+        this.toggleCompletionButton(slide, completed);
+        this.updateProgressbar(data.channel_completion);
+    },
+    /**
+     * Retrieve the slide data corresponding to the slide id given in argument.
+     * This method used the "slide_sidebar_done_button" template.
+     *
+     * @private
+     * @param {Integer} slideId
+     */
+    _getSlide: function (slideId) {
+        return $(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`).data();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handler
+    //--------------------------------------------------------------------------
+    /**
+     * We clicked on the "done" button.
+     * It will make a RPC call to update the slide state and update the UI.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClickComplete: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const $button = $(ev.currentTarget).closest('.o_wslides_sidebar_done_button');
+
+        const slideData = $button.data();
+        const isCompleted = Boolean(slideData.completed);
+
+        this._toggleSlideCompleted(slideData, !isCompleted);
+    },
+
+    /**
+     * The slide has been completed, update the UI
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSlideCompleted: function (ev) {
+        const slideId = ev.data.slideId;
+        const completed = ev.data.completed;
+        const slide = this._getSlide(slideId);
+        if (slide) {
+            // Just joined the course (e.g. When "Submit & Join" action), update the UI
+            this.toggleCompletionButton(slide, completed);
+        }
+        this.updateProgressbar(ev.data.channelCompletion);
+    },
+
+    /**
+     * Make a RPC call to complete the slide then update the UI
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSlideMarkCompleted: function (ev) {
+        if (!session.is_website_user) { // no useless RPC call
+            const slide = this._getSlide(ev.data.id);
+            this._toggleSlideCompleted(slide, true);
+        }
+    }
+});

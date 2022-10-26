@@ -4,6 +4,7 @@
 from . import common
 from . import test_survey
 from . import test_survey_flow
+from . import test_survey_flow_with_conditions
 from . import test_certification_flow
 from . import test_survey_invite
 from . import test_survey_security

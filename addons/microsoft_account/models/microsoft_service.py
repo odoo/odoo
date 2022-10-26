@@ -17,6 +17,7 @@ TIMEOUT = 20
 DEFAULT_MICROSOFT_AUTH_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
 DEFAULT_MICROSOFT_TOKEN_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 
+RESOURCE_NOT_FOUND_STATUSES = (204, 404)
 
 class MicrosoftService(models.AbstractModel):
     _name = 'microsoft.service'
@@ -60,9 +61,9 @@ class MicrosoftService(models.AbstractModel):
             req = requests.post(self._get_token_endpoint(), data=data, headers=headers, timeout=TIMEOUT)
             req.raise_for_status()
             content = req.json()
-        except IOError:
+        except requests.exceptions.RequestException as exc:
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
-            raise self.env['res.config.settings'].get_config_warning(error_msg)
+            raise self.env['res.config.settings'].get_config_warning(error_msg) from exc
 
         return content.get('refresh_token')
 
@@ -149,17 +150,18 @@ class MicrosoftService(models.AbstractModel):
             res.raise_for_status()
             status = res.status_code
 
-            if int(status) in (204, 404):  # Page not found, no response
+            if int(status) in RESOURCE_NOT_FOUND_STATUSES:
                 response = False
             else:
-                response = res.json()
+                # Some answers return empty content
+                response = res.content and res.json() or {}
 
             try:
                 ask_time = datetime.strptime(res.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
             except:
                 pass
         except requests.HTTPError as error:
-            if error.response.status_code in (204, 404):
+            if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:
                 status = error.response.status_code
                 response = ""
             else:

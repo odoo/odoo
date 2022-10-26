@@ -15,6 +15,34 @@
         </field>
     </record>
 
+    <record id="view_latam_form_inherit_l10n_cl" model="ir.ui.view">
+        <field name="name">account.move.latam.form.inherit.l10n.cl</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_document_number" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [
+                    '|',
+                        ('l10n_latam_use_documents', '=', False),
+                        ('l10n_latam_manual_document_number', '=', False),
+                    '|', '|',
+                        ('l10n_latam_use_documents', '=', False),
+                        ('highest_name', '!=', False),
+                        ('state', '!=', 'draft'),
+                    '|', '|', '|',
+                        ('l10n_latam_use_documents', '=', False),
+                        ('posted_before', '=', False),
+                        ('state', '!=', 'draft'),
+                        ('country_code', '!=', 'CL')
+                    ],
+                    'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')],
+                    'required': ['|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)]}
+                </attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="view_complete_invoice_refund_tree" model="ir.ui.view">
         <field name="name">account.move.tree2</field>
         <field name="model">account.move</field>

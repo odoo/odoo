@@ -6,7 +6,7 @@
     'category': 'Hidden',
     'sequence': 6,
     'summary': 'Connect the Web Client to Hardware Peripherals',
-    'website': 'https://www.odoo.com/page/iot',
+    'website': 'https://www.odoo.com/app/iot',
     'description': """
 Hardware Poxy
 =============
@@ -18,4 +18,5 @@ are found in other modules that must be installed separately.
 
 """,
     'installable': False,
+    'license': 'LGPL-3',
 }

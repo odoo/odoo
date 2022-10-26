@@ -3,7 +3,6 @@
 
 import logging
 from werkzeug.exceptions import Forbidden, NotFound
-from werkzeug.utils import redirect
 
 from odoo import exceptions, http
 from odoo.http import request
@@ -17,11 +16,13 @@ _logger = logging.getLogger(__name__)
 class WebsiteEventMeetController(EventCommunityController):
 
     def _get_event_rooms_base_domain(self, event):
-        search_domain_base = [('event_id', '=', event.id), ('is_published', '=', True)]
+        search_domain_base = [('event_id', '=', event.id)]
+        if not request.env.user.has_group('event.group_event_registration_desk'):
+            search_domain_base = expression.AND([search_domain_base, [('is_published', '=', True)]])
         return search_domain_base
 
     def _sort_event_rooms(self, room):
-        return (room.is_pinned, room.room_last_activity, room.id)
+        return (room.website_published, room.is_pinned, room.room_last_activity, room.id)
 
     # ------------------------------------------------------------
     # MAIN PAGE
@@ -51,7 +52,7 @@ class WebsiteEventMeetController(EventCommunityController):
         meeting_rooms = request.env['event.meeting.room'].sudo().search(search_domain)
         meeting_rooms = meeting_rooms.sorted(self._sort_event_rooms, reverse=True)
 
-        is_event_user = request.env.user.has_group("event.group_event_user")
+        is_event_user = request.env.user.has_group("event.group_event_registration_desk")
         if not is_event_user:
             meeting_rooms = meeting_rooms.filtered(lambda m: not m.room_is_full)
 
@@ -59,7 +60,7 @@ class WebsiteEventMeetController(EventCommunityController):
 
         return {
             # event information
-            "event": event.sudo(),
+            "event": event,
             'main_object': event,
             # rooms
             "meeting_rooms": meeting_rooms,
@@ -101,7 +102,7 @@ class WebsiteEventMeetController(EventCommunityController):
         })
         _logger.info("New meeting room (%s) created by %s (uid %s)" % (name, request.httprequest.remote_addr, request.env.uid))
 
-        return redirect(f"/event/{slug(event)}/meeting_room/{slug(meeting_room)}")
+        return request.redirect(f"/event/{slug(event)}/meeting_room/{slug(meeting_room)}")
 
     @http.route(["/event/active_langs"], type="json", auth="public")
     def active_langs(self):
@@ -135,10 +136,10 @@ class WebsiteEventMeetController(EventCommunityController):
         )
 
     def _event_meeting_room_page_get_values(self, event, meeting_room):
-        # search for meeting room list
+        # search for meeting room list. Set a limit to 6 because it is better than 5 or 7
         meeting_rooms_other = request.env['event.meeting.room'].sudo().search([
             ('event_id', '=', event.id), ('id', '!=', meeting_room.id), ('is_published', '=', True),
-        ])
+        ], limit=6)
 
         if not request.env.user.has_group("event.group_event_manager"):
             # only the event manager can see meeting rooms which are full
@@ -155,5 +156,5 @@ class WebsiteEventMeetController(EventCommunityController):
             'meeting_rooms_other': meeting_rooms_other,
             # options
             'option_widescreen': True,
-            'is_event_user': request.env.user.has_group('event.group_event_manager'),
+            'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
         }

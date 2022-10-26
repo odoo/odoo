@@ -3,7 +3,7 @@
 
 <template id="s_popup" name="Popup">
     <div class="s_popup o_snippet_invisible" data-vcss="001">
-        <div class="modal fade s_popup_middle" style="background-color: var(--black-50) !important;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-focus="false" data-backdrop="false" tabindex="-1" role="dialog">
+        <div class="modal fade s_popup_middle" style="background-color: var(--black-50) !important;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog">
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
                     <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">&#215;</div>
@@ -50,7 +50,7 @@
                 <we-button data-select-data-attribute="afterDelay" data-name="show_delay">Delay</we-button>
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
             </we-select>
-            <we-input string="&#8985; Delay" data-select-data-attribute="" data-attribute-name="showAfter" data-unit="s" data-save-unit="ms" data-dependencies="show_delay"/>
+            <we-input string="&#8985; Delay" title="Automatically opens the pop-up if the user stays on a page longer than the specified time." data-select-data-attribute="" data-attribute-name="showAfter" data-unit="s" data-save-unit="ms" data-dependencies="show_delay"/>
             <t t-set="unit_popup_duration">days</t>
             <we-input string="Hide For" title="Once the user closes the popup, it won't be shown again for that period of time." t-attf-data-select-data-attribute="7#{unit_popup_duration}" data-attribute-name="consentsDuration" t-att-data-unit="unit_popup_duration"/>
             <we-select string="Show on" data-no-preview="true">
@@ -58,12 +58,15 @@
                 <we-button data-move-block="moveToFooter">All pages</we-button>
             </we-select>
         </t>
-        <div data-js="SnippetPopup" data-selector=".s_popup" data-exclude="#website_cookies_bar" data-target=".modal">
-            <t t-raw="base_popup_options"/>
-            <t t-raw="extra_popup_options"/>
+        <div data-js="SnippetPopup"
+             data-selector=".s_popup" data-exclude="#website_cookies_bar"
+             data-target=".modal"
+             data-drop-in=":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)">
+            <t t-out="base_popup_options"/>
+            <t t-out="extra_popup_options"/>
         </div>
         <div data-js="SnippetPopup" data-selector=".s_popup#website_cookies_bar" data-target=".modal">
-            <t t-raw="base_popup_options"/>
+            <t t-out="base_popup_options"/>
         </div>
     </xpath>
 </template>

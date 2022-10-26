@@ -14,9 +14,9 @@ class Company(models.Model):
         except ValueError:
             return False
 
+    # used for resupply routes between warehouses that belong to this company
     internal_transit_location_id = fields.Many2one(
-        'stock.location', 'Internal Transit Location', ondelete="restrict", check_company=True,
-        help="Technical field used for resupply routes between warehouses that belong to this company")
+        'stock.location', 'Internal Transit Location', ondelete="restrict", check_company=True)
     stock_move_email_validation = fields.Boolean("Email Confirmation picking", default=False)
     stock_mail_confirmation_template_id = fields.Many2one('mail.template', string="Email Template confirmation picking",
         domain="[('model', '=', 'stock.picking')]",
@@ -148,7 +148,7 @@ class Company(models.Model):
     def create_missing_inventory_loss_location(self):
         company_ids  = self.env['res.company'].search([])
         inventory_loss_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_inventory')
-        companies_having_property = self.env['ir.property'].sudo().search([('fields_id', '=', inventory_loss_product_template_field.id)]).mapped('company_id')
+        companies_having_property = self.env['ir.property'].sudo().search([('fields_id', '=', inventory_loss_product_template_field.id), ('res_id', '=', False)]).mapped('company_id')
         company_without_property = company_ids - companies_having_property
         company_without_property._create_inventory_loss_location()
 
@@ -156,7 +156,7 @@ class Company(models.Model):
     def create_missing_production_location(self):
         company_ids  = self.env['res.company'].search([])
         production_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_production')
-        companies_having_property = self.env['ir.property'].sudo().search([('fields_id', '=', production_product_template_field.id)]).mapped('company_id')
+        companies_having_property = self.env['ir.property'].sudo().search([('fields_id', '=', production_product_template_field.id), ('res_id', '=', False)]).mapped('company_id')
         company_without_property = company_ids - companies_having_property
         company_without_property._create_production_location()
 
@@ -191,17 +191,18 @@ class Company(models.Model):
     def _create_per_company_rules(self):
         self.ensure_one()
 
-    @api.model
-    def create(self, vals):
-        company = super(Company, self).create(vals)
-        company.sudo()._create_per_company_locations()
-        company.sudo()._create_per_company_sequences()
-        company.sudo()._create_per_company_picking_types()
-        company.sudo()._create_per_company_rules()
-        self.env['stock.warehouse'].sudo().create({
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        for company in companies:
+            company.sudo()._create_per_company_locations()
+            company.sudo()._create_per_company_sequences()
+            company.sudo()._create_per_company_picking_types()
+            company.sudo()._create_per_company_rules()
+        self.env['stock.warehouse'].sudo().create([{
             'name': company.name,
             'code': self.env.context.get('default_code') or company.name[:5],
             'company_id': company.id,
             'partner_id': company.partner_id.id
-        })
-        return company
+        } for company in companies])
+        return companies

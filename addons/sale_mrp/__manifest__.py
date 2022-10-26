@@ -17,9 +17,10 @@ from sales order. It adds sales name and sales Reference on production order.
     'data': [
         'security/ir.model.access.csv',
         'views/mrp_production_views.xml',
-        'views/sale_order_views.xml'
+        'views/sale_order_views.xml',
+        'views/sale_portal_templates.xml'
     ],
-    'demo': [],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

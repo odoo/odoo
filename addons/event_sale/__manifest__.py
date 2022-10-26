@@ -4,7 +4,7 @@
     'name': 'Events Sales',
     'version': '1.2',
     'category': 'Marketing/Events',
-    'website': 'https://www.odoo.com/page/events',
+    'website': 'https://www.odoo.com/app/events',
     'description': """
 Creating registration with sales orders.
 ========================================
@@ -23,17 +23,22 @@ this event.
         'views/event_ticket_views.xml',
         'views/event_registration_views.xml',
         'views/event_views.xml',
-        'views/product_views.xml',
         'views/sale_order_views.xml',
         'data/event_sale_data.xml',
-        'data/mail_data.xml',
+        'data/mail_templates.xml',
         'report/event_event_templates.xml',
+        'report/event_sale_report_views.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'security/event_security.xml',
         'wizard/event_edit_registration.xml',
         'wizard/event_configurator_views.xml',
     ],
-    'demo': ['data/event_demo.xml'],
+    'demo': [
+        'data/event_sale_demo.xml',
+        'data/event_demo.xml',  # needs event_sale_demo
+        'data/event_registration_demo.xml',  # needs event_sale_demo
+    ],
     'installable': True,
     'auto_install': True,
     'assets': {
@@ -43,8 +48,6 @@ this event.
         'web.assets_tests': [
             'event_sale/static/tests/tours/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'event_sale/static/tests/event_configurator.test.js',
-        ],
-    }
+    },
+    'license': 'LGPL-3',
 }

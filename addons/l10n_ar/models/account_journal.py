@@ -17,8 +17,6 @@ class AccountJournal(models.Model):
         'res.partner', 'AFIP POS Address', help='This is the address used for invoice reports of this POS',
         domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
-    l10n_ar_share_sequences = fields.Boolean(
-        'Unified Book', help='Use same sequence for documents with the same letter')
 
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """
@@ -51,14 +49,14 @@ class AccountJournal(models.Model):
                 '99': []
             },
             'received': {
-                '1': ['A', 'B', 'C', 'M', 'I'],
+                '1': ['A', 'B', 'C', 'E', 'M', 'I'],
                 '3': ['B', 'C', 'I'],
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
-                '6': ['B', 'C', 'I'],
+                '6': ['A', 'B', 'C', 'I'],
                 '9': ['E'],
                 '10': ['E'],
-                '13': ['B', 'C', 'I'],
+                '13': ['A', 'B', 'C', 'I'],
                 '99': ['B', 'C', 'I']
             },
         }
@@ -77,31 +75,34 @@ class AccountJournal(models.Model):
 
     def _get_journal_codes(self):
         self.ensure_one()
+        if self.type != 'sale':
+            return []
+        return self._get_codes_per_journal_type(self.l10n_ar_afip_pos_system)
+
+    @api.model
+    def _get_codes_per_journal_type(self, afip_pos_system):
         usual_codes = ['1', '2', '3', '6', '7', '8', '11', '12', '13']
         mipyme_codes = ['201', '202', '203', '206', '207', '208', '211', '212', '213']
         invoice_m_code = ['51', '52', '53']
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
-        if self.type != 'sale':
-            return []
-        elif self.l10n_ar_afip_pos_system == 'II_IM':
+        if afip_pos_system == 'II_IM':
             # pre-printed invoice
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
-        elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
+        elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             # electronic/online invoice
             return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
-        elif self.l10n_ar_afip_pos_system in ['CPERCEL', 'CPEWS']:
+        elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code
-        elif self.l10n_ar_afip_pos_system in ['BFERCEL', 'BFEWS']:
+        elif afip_pos_system in ['BFERCEL', 'BFEWS']:
             # Bonds invoice
             return usual_codes + mipyme_codes
-        elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
+        elif afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
-    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
-                    'l10n_latam_use_documents')
+    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_latam_use_documents')
     def _check_afip_configurations(self):
         """ Do not let the user update the journal if it already contains confirmed invoices """
         journals = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.type in ['sale', 'purchase'])
@@ -122,11 +123,6 @@ class AccountJournal(models.Model):
 
         if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number > 99999):
             raise ValidationError(_('Please define a valid AFIP POS number (5 digits max)'))
-
-    @api.onchange('l10n_ar_afip_pos_system')
-    def _onchange_l10n_ar_afip_pos_system(self):
-        """ On 'Pre-printed Invoice' the usual is to share sequences. On other types, do not share """
-        self.l10n_ar_share_sequences = bool(self.l10n_ar_afip_pos_system == 'II_IM')
 
     @api.onchange('l10n_ar_afip_pos_number', 'type')
     def _onchange_set_short_name(self):

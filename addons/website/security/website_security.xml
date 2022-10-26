@@ -4,14 +4,14 @@
         <field name="sequence">23</field>
     </record>
 
-    <record id="group_website_publisher" model="res.groups">
+    <record id="group_website_restricted_editor" model="res.groups">
         <field name="name">Restricted Editor</field>
         <field name="category_id" ref="base.module_category_website_website"/>
     </record>
     <record id="group_website_designer" model="res.groups">
         <field name="name">Editor and Designer</field>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
-        <field name="implied_ids" eval="[(4, ref('group_website_publisher'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_website_restricted_editor')), (4, ref('base.group_sanitize_override'))]"/>
         <field name="category_id" ref="base.module_category_website_website"/>
     </record>
 
@@ -23,17 +23,13 @@
         <field name="groups_id" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
+    <!-- NOTE: this group implication is needed so that any admin user can do the website onboarding
+        after website app installation. -->
     <record id="base.group_system" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
     <data noupdate="1">
-
-    <record id="website_menu" model="ir.rule">
-        <field name="name">Website menu: group_ids</field>
-        <field name="model_id" ref="model_website_menu"/>
-        <field name="domain_force">['|', ('group_ids', '=', False), ('group_ids', 'in', user.groups_id.ids)]</field>
-    </record>
 
     <record id="website_designer_edit_qweb" model="ir.rule">
         <field name="name">website_designer: Manage Website and qWeb view</field>

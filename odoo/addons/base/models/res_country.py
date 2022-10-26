@@ -3,8 +3,9 @@
 
 import re
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.osv import expression
+from odoo.exceptions import UserError
 from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ class Country(models.Model):
     _order = 'name'
 
     name = fields.Char(
-        string='Country Name', required=True, translate=True, help='The full name of the country.')
+        string='Country Name', required=True, translate=True)
     code = fields.Char(
         string='Country Code', size=2,
         help='The ISO country code in two chars. \nYou can use this field for quick search.')
@@ -68,7 +69,7 @@ class Country(models.Model):
             ('after', 'After Address'),
         ], string="Customer Name Position", default="before",
         help="Determines where the customer/company name should be placed, i.e. after or before the address.")
-    vat_label = fields.Char(string='Vat Label', translate=True, help="Use this field if you want to change vat label.")
+    vat_label = fields.Char(string='Vat Label', translate=True, prefetch=True, help="Use this field if you want to change vat label.")
 
     state_required = fields.Boolean(default=False)
     zip_required = fields.Boolean(default=True)
@@ -95,6 +96,11 @@ class Country(models.Model):
 
         return ids
 
+    @api.model
+    @tools.ormcache('code')
+    def _phone_code_for(self, code):
+        return self.search([('code', '=', code)]).phone_code
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -105,7 +111,15 @@ class Country(models.Model):
     def write(self, vals):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
-        return super(Country, self).write(vals)
+        res = super().write(vals)
+        if ('code' in vals or 'phone_code' in vals):
+            # Intentionally simplified by not clearing the cache in create and unlink.
+            self.clear_caches()
+        if 'address_view_id' in vals:
+            # Changing the address view of the company must invalidate the view cached for res.partner
+            # because of _view_get_address
+            self.env['res.partner'].clear_caches()
+        return res
 
     def get_address_fields(self):
         self.ensure_one()
@@ -120,6 +134,15 @@ class Country(models.Model):
                 code = FLAG_MAPPING.get(country.code, country.code.lower())
                 country.image_url = "/base/static/img/country_flags/%s.png" % code
 
+    @api.constrains('address_format')
+    def _check_address_format(self):
+        for record in self:
+            if record.address_format:
+                address_fields = self.env['res.partner']._formatting_address_fields() + ['state_code', 'state_name', 'country_code', 'country_name', 'company_name']
+                try:
+                    record.address_format % {i: 1 for i in address_fields}
+                except (ValueError, KeyError):
+                    raise UserError(_('The layout contains an invalid format key'))
 
 class CountryGroup(models.Model):
     _description = "Country Group"

@@ -111,6 +111,22 @@
             <!-- `href` is send through `url_for` for non editor users -->
             <a href="/test_website/country/andorra-1">I am a link</a>
         </template>
+        <template id="test_redirect_view_qs">
+            <a href="/empty_controller_test?a=a">Home</a>
+        </template>
+
+        <record id="test_image_progress" model="website.page">
+            <field name="name">Test Image Progress</field>
+            <field name="url">/test_image_progress</field>
+            <field name="type">qweb</field>
+            <field name="key">test_website.test_image_progress</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty"/>
+                </t>
+            </field>
+            <field name="website_indexed" eval="False"/>
+        </record>
 
     </data>
 </odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="br_3_01_01_05_01_47" model="account.account.template">
+        <field name="code">3.01.01.05.01.47</field>
+        <field name="name">Ganho Cambial</field>
+        <field name="account_type">income_other</field>
+        <field name="chart_template_id" ref="l10n_br_account_chart_template"/>
+    </record>
+
+    <record id="br_3_11_01_09_01_40" model="account.account.template">
+        <field name="code">3.11.01.09.01.40</field>
+        <field name="name">Perda Cambial</field>
+        <field name="account_type">expense</field>
+        <field name="chart_template_id" ref="l10n_br_account_chart_template"/>
+    </record>
+
+    <record id="l10n_br_account_chart_template" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="account_template_101010401"/>
+        <field name="property_account_payable_id" ref="account_template_201010301"/>
+        <field name="property_account_expense_categ_id" ref="account_template_30101030101"/>
+        <field name="property_account_income_categ_id" ref="account_template_30101010105"/>
+        <field name="income_currency_exchange_account_id" ref="br_3_01_01_05_01_47"/>
+        <field name="expense_currency_exchange_account_id" ref="br_3_11_01_09_01_40"/>
+        <field name="default_pos_receivable_account_id" ref="account_template_101010402"/>
+        <field name="account_journal_early_pay_discount_loss_account_id" ref="account_template_31101010202"/>
+        <field name="account_journal_early_pay_discount_gain_account_id" ref="account_template_30101050148"/>
+    </record>
+</odoo>

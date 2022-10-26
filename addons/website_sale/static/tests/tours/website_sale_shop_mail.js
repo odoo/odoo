@@ -64,11 +64,11 @@ tour.register('shop_mail', {
     {
         content: "click send by email",
         trigger: '.btn[name="action_quotation_send"]',
-        extra_trigger: '.o_statusbar_status .btn-primary:contains("Sales Order")',
+        extra_trigger: '.o_statusbar_status .o_arrow_button_current:contains("Sales Order")',
     },
     {
         content: "Open recipients dropdown",
-        trigger: '.o_field_many2one[name="partner_ids"] .ui-autocomplete-input',
+        trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
         run: 'click',
     },
     {
@@ -94,8 +94,8 @@ tour.register('shop_mail', {
     },
     {
         content: "check it's the correct email, and the URL is correct too",
-        trigger: 'div.oe_form_field_html[name="body_html"] p:contains("Your"):contains("order")',
-        extra_trigger: 'div.oe_form_field_html[name="body_html"] a[href^="http://my-test-domain.com"]',
+        trigger: 'div.o_field_html[name="body_html"] p:contains("Your"):contains("order")',
+        extra_trigger: 'div.o_field_html[name="body_html"] a[href^="https://my-test-domain.com"]',
     },
 ]);
 });

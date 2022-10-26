@@ -41,12 +41,13 @@ class TSConfig(Command):
         parser.add_argument('--addons-path', type=str, nargs=1, dest="paths")
         args = parser.parse_args(args=cmdargs)
 
+        paths = list(map(self.clean_path, args.paths[0].split(',')))
         modules = {}
-        for path in args.paths[0].split(','):
-            for module in self.get_module_list(self.clean_path(path)):
+        for path in paths:
+            for module in self.get_module_list(path):
                 modules[module] = self.prefix_suffix_path(module, path, "/static/src/*")
 
-        content = self.generate_file_content(modules)
+        content = self.generate_file_content(modules, paths)
         # pylint: disable=bad-builtin
         print(json.dumps(content, indent=2))
 
@@ -56,13 +57,15 @@ class TSConfig(Command):
             for module, path in modules.items()
         }
 
-    def generate_file_content(self, modules):
+    def generate_file_content(self, modules, paths):
         return {
             'compilerOptions': {
                 "baseUrl": ".",
+                "target": "es2019",
                 "checkJs": True,
                 "allowJs": True,
                 "noEmit": True,
+                "typeRoots": list(map(lambda p: p + "/web/tooling/types", paths)),
                 "paths": self.generate_imports(modules)
             }, "exclude": self.generate_excludes()
         }

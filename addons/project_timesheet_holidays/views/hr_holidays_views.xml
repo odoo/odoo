@@ -6,11 +6,15 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='calendar']" position="after">
-                <group name="timesheet" string="Timesheet" groups="base.group_no_one">
-                    <field name="timesheet_project_id" context="{'active_test': False}"/>
-                    <field name="timesheet_task_id" context="{'active_test': False}"/>
-                    <field name="timesheet_generate" invisible="1"/>
+            <xpath expr="//group[@name='visual']" position="before">
+                <group name="timesheet" groups="base.group_no_one" string="Timesheet">
+                    <group>
+                        <field name="timesheet_project_id" context="{'active_test': False}"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="timesheet_task_id" context="{'active_test': False, 'default_project_id': timesheet_project_id}" attrs="
+                            {'invisible': [('timesheet_project_id', '=', False)], 'required': [('timesheet_project_id', '!=', False)]}"/>
+                        <field name="timesheet_generate" invisible="1"/>
+                    </group>
                 </group>
 
             </xpath>

@@ -9,10 +9,22 @@
                 <div class="o_handle w readonly"/>
                 <div class="o_handle s readonly"/>
 
+                <!-- Grid resize handles -->
+                <div class="o_handle o_grid_handle n d-none"/>
+                <div class="o_handle o_grid_handle e d-none"/>
+                <div class="o_handle o_grid_handle w d-none"/>
+                <div class="o_handle o_grid_handle s d-none"/>
+                <div class="o_handle o_grid_handle ne d-none"/>
+                <div class="o_handle o_grid_handle nw d-none"/>
+                <div class="o_handle o_grid_handle se d-none"/>
+                <div class="o_handle o_grid_handle sw d-none"/>
+
                 <div class="o_overlay_options_wrap">
                     <!-- Overlay move specific section -->
                     <div class="o_overlay_move_options">
                         <!-- Button-like handle to drag and drop -->
+                        <div class="o_front_back o_send_back d-none"/>
+                        <div class="o_front_back o_bring_front d-none"/>
                         <div class="o_move_handle"/>
                     </div>
                     <div class="o_overlay_edit_options">
@@ -47,20 +59,21 @@
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
-            <t t-if="widget.withCombinations">
-                <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">
-                    <span>Combinations</span>
-                </button>
-                <button type="button" tabindex="2" t-attf-class="o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">
-                    <span>Custom</span>
-                </button>
-            </t>
-            <button t-if="widget.resetButton" type="button" class="my-1 ml-auto o_we_color_btn o_colorpicker_reset">
-                <t t-if="widget.withCombinations">None</t>
-                <t t-else="">Reset</t>
+            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{widget.withCombinations? 'color-combinations' : 'theme-colors'}" title="Theme">
+                <span>Theme</span>
             </button>
+            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors" title="Solid">
+                <span>Solid</span>
+            </button>
+            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients" title="Gradient">
+                <span>Gradient</span>
+            </button>
+            <t t-if="widget.resetButton">
+                <t t-set="trash_title"><t t-if="widget.withCombinations">None</t><t t-else="">Reset</t></t>
+                <button type="button" class="fa fa-trash my-1 ms-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title"/>
+            </t>
         </div>
-        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? '' : 'd-none'} pt-2 px-2 pb-3 bg-black-25" data-color-tab="color-combinations">
+        <div class="o_colorpicker_sections pt-2 px-2 pb-3" data-color-tab="color-combinations">
             <!-- List all Presets -->
             <t t-foreach="5" t-as="i">
                 <t t-call="web_editor.colorpalette.combination.btn">
@@ -68,7 +81,9 @@
                 </t>
             </t>
         </div>
-        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? 'd-none' : ''} py-3 px-2 bg-black-25" data-color-tab="theme-colors"/>
+        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="theme-colors"/>
+        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="custom-colors"/>
+        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="gradients"/>
     </div>
     <t t-name="web_editor.colorpalette.combination.btn">
         <button type="button" class="o_we_color_btn o_we_color_combination_btn"
@@ -80,7 +95,7 @@
         <div class="o_we_cc_preview_wrapper d-flex justify-content-between">
             <h1 class="o_we_color_combination_btn_title">Title</h1>
             <p class="o_we_color_combination_btn_text flex-grow-1">Text</p>
-            <span class="o_we_color_combination_btn_btn btn btn-sm btn-primary o_btn_preview mr-1"><small>Button</small></span>
+            <span class="o_we_color_combination_btn_btn btn btn-sm btn-primary o_btn_preview me-1"><small>Button</small></span>
             <span class="o_we_color_combination_btn_btn btn btn-sm btn-secondary o_btn_preview"><small>Button</small></span>
         </div>
     </t>

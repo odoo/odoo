@@ -2,6 +2,7 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     'use strict';
 
     const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
+    const { TextAreaPopup } = require('point_of_sale.tour.TextAreaPopupTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     var Tour = require('web_tour.tour');
 
@@ -21,7 +22,7 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     // Clicking product should add new orderline and select the orderline
     // If orderline exists, increment the quantity
     ProductScreen.do.clickDisplayedProduct('Letter Tray');
-    ProductScreen.check.selectedOrderlineHas('Letter Tray', '1.0', '4.80');
+    ProductScreen.check.selectedOrderlineHas('Letter Tray', '1.0', '5.28');
     ProductScreen.do.clickDisplayedProduct('Desk Organizer');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '3.0', '15.30');
 
@@ -65,6 +66,26 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.do.clickSubcategory('Chairs');
     ProductScreen.check.productIsDisplayed('Letter Tray');
     ProductScreen.do.clickHomeCategory();
+    
+    // Add two orderlines and update quantity
+    ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
+    ProductScreen.do.clickDisplayedProduct('Wall Shelf Unit');
+    ProductScreen.do.clickOrderline('Whiteboard Pen', '1.0');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '1.0');
+    ProductScreen.do.pressNumpad('2');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '2.0');
+    ProductScreen.do.clickOrderline('Wall Shelf Unit', '1.0');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '1.0');
+    ProductScreen.do.pressNumpad('2');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '2.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '0.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '2.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '0.0');
+    ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.orderIsEmpty();
 
     // Add multiple orderlines then delete each of them until empty
     ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
@@ -101,5 +122,42 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.do.pressNumpad('Backspace');
     ProductScreen.check.orderIsEmpty();
 
+    // Test OrderlineCustomerNoteButton
+    ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+    ProductScreen.do.clickOrderlineCustomerNoteButton();
+    TextAreaPopup.check.isShown();
+    TextAreaPopup.do.inputText('Test customer note');
+    TextAreaPopup.do.clickConfirm();
+    ProductScreen.check.orderlineHasCustomerNote('Desk Organizer', '1', 'Test customer note');
+
+
     Tour.register('ProductScreenTour', { test: true, url: '/pos/ui' }, getSteps());
+});
+
+odoo.define('point_of_sale.tour.FixedPriceNegativeQty', function (require) {
+    'use strict';
+
+    const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
+    const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
+    const { getSteps, startSteps } = require('point_of_sale.tour.utils');
+    var Tour = require('web_tour.tour');
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+
+    ProductScreen.do.clickDisplayedProduct('Zero Amount Product');
+    ProductScreen.check.selectedOrderlineHas('Zero Amount Product', '1.0', '1.0');
+    ProductScreen.do.pressNumpad('+/- 1');
+    ProductScreen.check.selectedOrderlineHas('Zero Amount Product', '-1.0', '-1.0');
+
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.00');
+    PaymentScreen.do.clickValidate();
+
+    ReceiptScreen.check.receiptIsThere();
+
+    Tour.register('FixedTaxNegativeQty', { test: true, url: '/pos/ui' }, getSteps());
 });

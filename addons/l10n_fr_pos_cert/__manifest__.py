@@ -25,9 +25,7 @@ The module adds following features:
     'depends': ['l10n_fr', 'point_of_sale'],
     'installable': True,
     'auto_install': True,
-    'application': False,
     'data': [
-        'views/account_views.xml',
         'views/pos_views.xml',
         'views/account_sale_closure.xml',
         'views/pos_inalterability_menuitem.xml',
@@ -40,9 +38,9 @@ The module adds following features:
     'assets': {
         'point_of_sale.assets': [
             'l10n_fr_pos_cert/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
+            'l10n_fr_pos_cert/static/src/css/pos.css',
             'l10n_fr_pos_cert/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

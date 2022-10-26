@@ -18,5 +18,5 @@ class Company(models.Model):
         'sms.template', string="SMS Template",
         domain="[('model', '=', 'stock.picking')]",
         default=_default_confirmation_sms_picking_template,
-        help="SMS sent to the customer once the order is done.")
+        help="SMS sent to the customer once the order is delivered.")
     has_received_warning_stock_sms = fields.Boolean()

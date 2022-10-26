@@ -209,6 +209,7 @@
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
             <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="allow_group_range_value"/></rng:optional>
             <rng:optional><rng:attribute name="domain_filter"/></rng:optional>
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="class"/></rng:optional>
@@ -265,8 +266,10 @@
             <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
             <rng:optional><rng:attribute name="write_model" /></rng:optional>
             <rng:optional><rng:attribute name="write_field" /></rng:optional>
+            <rng:optional><rng:attribute name="filter_field" /></rng:optional>
             <rng:optional><rng:attribute name="text" /></rng:optional>
             <rng:optional><rng:attribute name="optional" /></rng:optional>
+            <rng:optional><rng:attribute name="add-label"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
@@ -337,6 +340,7 @@
             <rng:ref name="modifiable"/>
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="disabled"/></rng:optional>
             <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
@@ -411,7 +415,8 @@
         <rng:element name="create">
             <rng:ref name="overload"/>
             <rng:attribute name="string"/>
-            <rng:attribute name="context"/>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
         </rng:element>
     </rng:define>
 
@@ -421,6 +426,7 @@
             <rng:oneOrMore>
                 <rng:choice>
                     <rng:ref name="create"/>
+                    <rng:ref name="button"/>
                 </rng:choice>
             </rng:oneOrMore>
         </rng:element>

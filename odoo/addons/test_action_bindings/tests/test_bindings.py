@@ -9,8 +9,8 @@ class TestActionBindings(common.TransactionCase):
         # first make sure there is no bound action
         self.env.ref('base.action_partner_merge').unlink()
         bindings = Actions.get_bindings('res.partner')
-        self.assertFalse(bindings['action'])
-        self.assertFalse(bindings['report'])
+        self.assertFalse(bindings.get('action'))
+        self.assertFalse(bindings.get('report'))
 
         # create action bindings, and check the returned bindings
         action1 = self.env.ref('base.action_attachment')
@@ -23,29 +23,29 @@ class TestActionBindings(common.TransactionCase):
         bindings = Actions.get_bindings('res.partner')
         self.assertItemsEqual(
             bindings['action'],
-            (action1 + action2).read(),
+            (action1 + action2).read(['name', 'binding_view_types']),
             "Wrong action bindings",
         )
         self.assertItemsEqual(
             bindings['report'],
-            action3.read(),
+            action3.read(['name', 'binding_view_types']),
             "Wrong action bindings",
         )
 
         # add a group on an action, and check that it is not returned
-        group = self.env.ref('base.group_user')
+        group = self.env.ref('base.group_system')
         action2.groups_id += group
         self.env.user.groups_id -= group
 
         bindings = Actions.get_bindings('res.partner')
         self.assertItemsEqual(
             bindings['action'],
-            action1.read(),
+            action1.read(['name', 'binding_view_types']),
             "Wrong action bindings",
         )
         self.assertItemsEqual(
             bindings['report'],
-            action3.read(),
+            action3.read(['name', 'binding_view_types']),
             "Wrong action bindings",
         )
 
@@ -53,19 +53,19 @@ class TestBindingViewFilters(common.TransactionCase):
     def test_act_window(self):
         A = self.env['tab.a']
 
-        form_act = A.fields_view_get(toolbar=True)['toolbar']['action']
+        form_act = A.get_views([(False, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in form_act],
             ['Action 1', 'Action 2', 'Action 3'],
             "forms should have all actions")
 
-        list_act = A.fields_view_get(view_type='tree', toolbar=True)['toolbar']['action']
+        list_act = A.get_views([(False, 'list')], {'toolbar': True})['views']['list']['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in list_act],
             ['Action 1', 'Action 3'],
             "lists should not have the form-only action")
 
-        kanban_act = A.fields_view_get(view_type='kanban', toolbar=True)['toolbar']['action']
+        kanban_act = A.get_views([(False, 'kanban')], {'toolbar': True})['views']['kanban']['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in kanban_act],
             ['Action 1'],
@@ -74,19 +74,19 @@ class TestBindingViewFilters(common.TransactionCase):
     def test_act_record(self):
         B = self.env['tab.b']
 
-        form_act = B.fields_view_get(toolbar=True)['toolbar']['action']
+        form_act = B.get_views([(False, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in form_act],
             ['Record 1', 'Record 2', 'Record 3'],
             "forms should have all actions")
 
-        list_act = B.fields_view_get(view_type='tree', toolbar=True)['toolbar']['action']
+        list_act = B.get_views([(False, 'list')], {'toolbar': True})['views']['list']['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in list_act],
             ['Record 1', 'Record 3'],
             "lists should not have the form-only action")
 
-        kanban_act = B.fields_view_get(view_type='kanban', toolbar=True)['toolbar']['action']
+        kanban_act = B.get_views([(False, 'kanban')], {'toolbar': True})['views']['kanban']['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in kanban_act],
             ['Record 1'],

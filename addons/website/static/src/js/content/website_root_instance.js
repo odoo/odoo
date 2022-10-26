@@ -1,26 +1,16 @@
-odoo.define('root.widget', function (require) {
-'use strict';
+/** @odoo-module alias=root.widget */
 
-const AbstractService = require('web.AbstractService');
-const env = require('web.public_env');
-var lazyloader = require('web.public.lazyloader');
-var websiteRootData = require('website.root');
+import { createPublicRoot } from "@web/legacy/js/public/public_root";
+import { WebsiteRoot } from "./website_root";
+import { loadWysiwyg } from "web_editor.loader";
 
-/**
- * Configure Owl with the public env
- */
-owl.config.mode = env.isDebug() ? "dev" : "prod";
-owl.Component.env = env;
-
-/**
- * Deploy services in the env
- */
-AbstractService.prototype.deployServices(env);
-
-var websiteRoot = new websiteRootData.WebsiteRoot(null);
-return lazyloader.allScriptsLoaded.then(function () {
-    return websiteRoot.attachTo(document.body).then(function () {
-        return websiteRoot;
-    });
-});
+export default createPublicRoot(WebsiteRoot).then(rootInstance => {
+    // This data attribute is set by the WebsitePreview client action for a
+    // restricted editor user.
+    if (window.frameElement && window.frameElement.dataset.loadWysiwyg === 'true') {
+        loadWysiwyg(['website.assets_wysiwyg']).then(() => {
+            window.dispatchEvent(new CustomEvent('PUBLIC-ROOT-READY', {detail: {rootInstance}}));
+        });
+    }
+    return rootInstance;
 });

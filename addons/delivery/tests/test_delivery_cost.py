@@ -37,19 +37,19 @@ class TestDeliveryCost(common.TransactionCase):
             'parent_id': self.partner_4.id,
         })
         self.product_uom_hour = self.env.ref('uom.product_uom_hour')
-        self.account_data = self.env.ref('account.data_account_type_revenue')
         self.account_tag_operating = self.env.ref('account.account_tag_operating')
         self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct'})
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
         # that the company actually uses USD
-        # We do an invalidate_cache so the cache is aware of it too.
+        # We do an invalidation so the cache is aware of it too.
+        self.env.company.invalidate_recordset()
         self.env.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.env.ref('base.USD').id, self.env.company.id])
-        self.env.company.invalidate_cache()
         self.pricelist.currency_id = self.env.ref('base.USD').id
+        self.env.user.groups_id |= self.env.ref('uom.group_uom')
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
@@ -73,7 +73,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.a_sale = self.AccountAccount.create({
             'code': 'X2020',
             'name': 'Product Sales - (test)',
-            'user_type_id': self.account_data.id,
+            'account_type': 'income',
             'tag_ids': [(6, 0, {
                 self.account_tag_operating.id
             })]
@@ -155,3 +155,147 @@ class TestDeliveryCost(common.TransactionCase):
         self.default_delivery_policy = self.SaleConfigSetting.create({})
 
         self.default_delivery_policy.execute()
+
+    def test_01_delivery_cost_from_pricelist(self):
+        """ This test aims to validate the use of a pricelist to compute the delivery cost in the case the associated
+            product of the shipping method is defined in the pricelist """
+
+        # Create pricelist with a custom price for the standard shipping method
+        my_pricelist = self.env['product.pricelist'].create({
+            'name': 'shipping_cost_change',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 5,
+                'applied_on': '0_product_variant',
+                'product_id': self.normal_delivery.product_id.id,
+            })],
+        })
+
+        # Create sales order with Normal Delivery Charges
+        sale_pricelist_based_delivery_charges = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'pricelist_id': my_pricelist.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assamble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        # Add of delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_pricelist_based_delivery_charges.id,
+            'default_carrier_id': self.normal_delivery.id
+        }))
+        self.assertEqual(delivery_wizard.delivery_price, 5.0, "Delivery cost does not correspond to 5.0 in wizard")
+        delivery_wizard.save().button_confirm()
+
+        line = self.SaleOrderLine.search([('order_id', '=', sale_pricelist_based_delivery_charges.id),
+                                          ('product_id', '=', self.normal_delivery.product_id.id)])
+        self.assertEqual(len(line), 1, "Delivery cost hasn't been added to SO")
+        self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
+
+    def test_02_delivery_cost_from_different_currency(self):
+        """ This test aims to validate the use of a pricelist using a different currency to compute the delivery cost in
+            the case the associated product of the shipping method is defined in the pricelist """
+
+        # Create pricelist with a custom price for the standard shipping method
+        my_pricelist = self.env['product.pricelist'].create({
+            'name': 'shipping_cost_change',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 5,
+                'applied_on': '0_product_variant',
+                'product_id': self.normal_delivery.product_id.id,
+            })],
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        # Create sales order with Normal Delivery Charges
+        sale_pricelist_based_delivery_charges = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'pricelist_id': my_pricelist.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assamble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        # Add of delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_pricelist_based_delivery_charges.id,
+            'default_carrier_id': self.normal_delivery.id
+        }))
+        self.assertEqual(delivery_wizard.delivery_price, 5.0, "Delivery cost does not correspond to 5.0 in wizard")
+        delivery_wizard.save().button_confirm()
+
+        line = self.SaleOrderLine.search([('order_id', '=', sale_pricelist_based_delivery_charges.id),
+                                          ('product_id', '=', self.normal_delivery.product_id.id)])
+        self.assertEqual(len(line), 1, "Delivery cost hasn't been added to SO")
+        self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
+
+    def test_01_taxes_on_delivery_cost(self):
+
+        # Creating taxes and fiscal position
+
+        tax_price_include = self.env['account.tax'].create({
+            'name': '10% inc',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        tax_price_exclude = self.env['account.tax'].create({
+            'name': '15% exc',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+            'tax_ids': [
+                (0, None, {
+                    'tax_src_id': tax_price_include.id,
+                    'tax_dest_id': tax_price_exclude.id,
+                }),
+            ],
+        })
+
+        # Setting tax on delivery product
+        self.normal_delivery.product_id.taxes_id = tax_price_include
+
+        # Create sales order
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = self.partner_18
+        order_form.pricelist_id = self.pricelist
+        order_form.fiscal_position_id = fiscal_position
+
+        # Try adding delivery product as a normal product
+        with order_form.order_line.new() as line:
+            line.product_id = self.normal_delivery.product_id
+            line.product_uom_qty = 1.0
+            line.product_uom = self.product_uom_unit
+        sale_order = order_form.save()
+
+        self.assertRecordValues(sale_order.order_line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
+
+        # Now trying to add the delivery line using the delivery wizard, the results should be the same as before
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context(default_order_id=sale_order.id,
+                          default_carrier_id=self.normal_delivery.id))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        line = self.SaleOrderLine.search([
+            ('order_id', '=', sale_order.id),
+            ('product_id', '=', self.normal_delivery.product_id.id),
+            ('is_delivery', '=', True)
+        ])
+
+        self.assertRecordValues(line, [{'price_subtotal': 9.09, 'price_total': 10.45}])

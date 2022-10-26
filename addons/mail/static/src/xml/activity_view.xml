@@ -6,12 +6,12 @@
         <tr>
             <th></th>
             <th t-foreach="props.activity_types" t-as="type" t-key="type[0]"
-                class="o_activity_type_cell" t-attf-class="{{ activeFilter.activityTypeId === type[0] ? 'o_activity_filter_' + activeFilter.state : '' }}"
+                class="o_activity_type_cell" t-attf-class="{{ activeFilter.activityTypeId === type[0] ? 'o_activity_filter_' + activeFilter.state.value : '' }}"
                 t-att-data-activity-type-id="type[0]" t-attf-width="{{100/props.activity_types.length}}%">
                 <div>
                     <span t-esc="type[1]"/>
-                    <span t-if="type[2].length > 0" class="dropdown pull-right">
-                        <i class="fa fa-ellipsis-v fa-fw" data-toggle="dropdown"/>
+                    <span t-if="type[2].length > 0" class="dropdown float-end">
+                        <i class="fa fa-ellipsis-v fa-fw" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu">
                             <t t-foreach="type[2]" t-as="template" t-key="template.id">
                                 <div title="This action will send an email."
@@ -28,7 +28,7 @@
                 <KanbanColumnProgressBarAdapter Component="widgetComponents.KanbanColumnProgressBar"
                     widgetArgs="[getProgressBarOptions(type[0]), getProgressBarColumnState(type[0])]"
                     t-if="activityTypeIds.includes(type[0])"
-                    t-on-set-progress-bar-state="_onSetProgressBarState"/>
+                    onSetProgressBarState.bind="_onSetProgressBarState"/>
                 <div t-else="" class="mt24"/>
             </th>
         </tr>
@@ -46,7 +46,7 @@
 <t t-name="mail.ActivityViewRow" owl="1">
     <tr class="o_data_row" t-att-data-res-id="resId">
         <t t-set="record" t-value="props.data.find(data => data.res_id === resId)"/>
-        <td t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state : '' }}">
+        <td t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state.value : '' }}">
             <ActivityRecordAdapter Component="widgetComponents.ActivityRecord"
                 widgetArgs="[record, { qweb: qweb }]"/>
         </td>
@@ -58,14 +58,15 @@
 
 <t t-name="mail.ActivityViewCell" owl="1">
     <t t-set="activityGroup" t-value="props.grouped_activities[resId] and props.grouped_activities[resId][type[0]] or {count: 0, ids: [], state: false}"/>
-    <td t-if="activityGroup.state" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
-        t-attf-class="o_activity_summary_cell {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state : '' }}">
-        <ActivityCellAdapter Component="widgetComponents.ActivityCell"
-            widgetArgs="['activity_ids', props.getKanbanActivityData(activityGroup, resId)]"/>
+    <t t-set="isCellHidden" t-value="activeFilter.resIds.length and !activeFilter.resIds.includes(resId) and activeFilter.activityTypeId === type[0]"/>
+    <td t-if="activityGroup.state and !isCellHidden" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
+        t-attf-class="o_activity_summary_cell {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state.value : '' }}">
+        <ActivityCellAdapter Component="widgetComponents.KanbanActivity"
+            widgetArgs="['activity_ids', props.getKanbanActivityData(activityGroup, resId), { activityType: type[0], isActivityViewCell: true }]"/>
     </td>
     <td t-else="" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
         class="o_activity_summary_cell o_activity_empty_cell"
-        t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state : '' }}"
+        t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state.value : '' }}"
         t-on-click.prevent.stop="_onEmptyCellClicked">
         <i title="Create" class="text-center fa fa-plus"/>
     </td>
@@ -74,8 +75,8 @@
 <t t-name="mail.ActivityViewFooter" owl="1">
     <tfoot>
         <tr class="o_data_row">
-            <td class="o_record_selector p-3" t-on-click.prevent.stop="trigger('schedule_activity')">
-                <span class="fa fa-plus pr-2"/><span>Schedule activity</span>
+            <td class="o_record_selector p-3" t-on-click.prevent.stop="() => this.trigger('schedule_activity')">
+                <span class="btn btn-link"><i class="fa fa-plus pe-2"/><span>Schedule activity</span></span>
             </td>
         </tr>
     </tfoot>
@@ -83,7 +84,7 @@
 
 <div t-name="mail.ActivityRenderer" class="o_activity_view" owl="1">
     <t t-if="!props.activity_types.length" t-call="web.NoContentHelper"/>
-    <table t-else="" class="table-bordered mb-5">
+    <table t-else="" class="table table-bordered mb-5 bg-view">
         <t t-call="mail.ActivityViewHeader"/>
         <t t-call="mail.ActivityViewBody"/>
         <t t-call="mail.ActivityViewFooter"/>

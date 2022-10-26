@@ -6,18 +6,21 @@
         <field name="name">survey.user_input.view.search</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
-            <search string="Search Survey">
-                <field name="survey_id"/>
-                <field name="email"/>
+            <search string="Search Survey User Inputs">
+                <field name="email" string="Participant" filter_domain="[
+                    '|',
+                    ('partner_id', 'ilike', self),
+                    ('email', 'ilike', self)]"/>
                 <field name="partner_id"/>
+                <field name="survey_id"/>
                 <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                 <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
                 <separator/>
                 <filter string="Quizz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
                 <separator/>
-                <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
-                <filter string="Except Test Entries" name="not_test" domain="[('test_entry','=', False)]" invisible="1"/>
+                <filter string="Tests Only" name="test" domain="[('test_entry','=', True)]"/>
+                <filter string="Exclude Tests" name="not_test" domain="[('test_entry','=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                     <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
@@ -39,11 +42,28 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <field name="attempts_count" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_redirect_to_attempts"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('attempts_count', '=', 1)]}"
+                            icon="fa-files-o">
+                            <field string="Attempts" name="attempts_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="test_entry" invisible="1"/>
+                    <widget name="web_ribbon" title="Test Entry" bg_color="bg-info"
+                        attrs="{'invisible': [('test_entry', '!=', True)]}"/>
+                    <widget name="web_ribbon" title="Failed" bg_color="bg-danger"
+                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Passed"
+                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', False)]}"/>
                     <group col="2">
                         <group>
                             <field name="survey_id"/>
                             <field name="create_date"/>
+                            <field name="deadline" attrs="{'invisible': [('state', '=', 'done'), ('deadline', '=', False)]}"/>
                             <field name="is_attempts_limited" invisible="1"/>
                             <label for="attempts_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
                             <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}">
@@ -51,31 +71,44 @@
                                  / 
                                 <field name="attempts_limit" nolabel="1" />
                             </div>
-                            <field name="access_token" groups="base.group_no_one"/>
+                            <field name="test_entry" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="deadline"/>
+                            <field name="scoring_type" invisible="1"/>
+                            <field name="scoring_success" invisible="1"/>
+                            <label for="scoring_percentage" string="Score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <div attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}">
+                                <field name="scoring_percentage" nolabel="1"/>
+                                <span>%</span>
+                            </div>
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
-                            <field name="test_entry" groups="base.group_no_one"/>
-                            <field name="scoring_type" invisible="1"/>
-                            <field name="scoring_percentage" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
-                            <field name="scoring_success" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <field name="access_token" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
-                        <tree>
-                            <field name="question_sequence" invisible="1"/>
-                            <field name="question_id"/>
-                            <field name="page_id"/>
-                            <field name="answer_type"/>
-                            <field name="skipped"/>
-                            <field name="create_date"/>
-                            <field name="answer_is_correct"/>
-                            <field name="answer_score"/>
-                        </tree>
-                    </field>
+                    <notebook>
+                        <page string="Answers">
+                            <field name="user_input_line_ids" mode="tree" attrs="{'readonly': True}" no_label="1">
+                                <tree decoration-muted="skipped == True">
+                                    <field name="question_sequence" invisible="1"/>
+                                    <field name="create_date" optional="hidden"/>
+                                    <field name="page_id" optional="hidden"/>
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="hidden"/>
+                                    <field name="skipped" hide="1"/>
+                                    <field name="display_name" string="Answer"/>
+                                    <field name="answer_is_correct"/>
+                                    <field name="answer_score" sum="Score"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -85,16 +118,20 @@
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
-                <field name="survey_id"/>
                 <field name="create_date"/>
-                <field name="deadline"/>
-                <field name="partner_id"/>
-                <field name="email"/>
+                <field name="survey_id"/>
+                <field name="nickname" optional="hide"/>
+                <field name="partner_id" optional="show"/>
+                <field name="email" optional="show"/>
                 <field name="attempts_number"/>
-                <field name="state"/>
+                <field name="deadline"/>
                 <field name="test_entry" invisible="True"/>
                 <field name="scoring_success"/>
                 <field name="scoring_percentage"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'new'"
+                    decoration-info="state == 'in_progress'"/>
             </tree>
         </field>
     </record>
@@ -103,7 +140,7 @@
         <field name="name">survey.user_input.view.kanban</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
-            <kanban create="false">
+            <kanban create="false" group_create="false">
                 <field name="survey_id"/>
                 <field name="create_date"/>
                 <field name="partner_id"/>
@@ -140,9 +177,11 @@
         <field name="search_view_id" ref="survey_user_input_view_search"/>
         <field name="context">{'search_default_group_by_survey': True}</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            Nobody has replied to your surveys yet
-          </p>
+            <p class="o_view_nocontent_empty_folder">
+                No answers yet!
+            </p><p>
+                You can share your links through different means: email, invite shortcut, live presentation, ...
+            </p>
         </field>
     </record>
 
@@ -220,13 +259,7 @@
     <menuitem name="Participations"
         id="menu_survey_type_form1"
         action="action_survey_user_input"
-        parent="survey_menu_user_inputs"
+        parent="menu_surveys"
         sequence="1"/>
-    <menuitem name="Detailed Answers"
-        id="menu_survey_response_line_form"
-        action="survey_user_input_line_action"
-        parent="survey_menu_user_inputs"
-        sequence="4"
-        groups="base.group_no_one"/>
 </data>
 </odoo>

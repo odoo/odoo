@@ -42,13 +42,13 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         # (see `self._create_other_currency_config` method)
         # Except for product2 where the price is specified in the pricelist.
 
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product1, 1, self.customer), 5.00)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product2, 1, self.customer), 12.99)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product3, 1, self.customer), 15.00)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product4, 1, self.customer), 50)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product5, 1, self.customer), 100)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product6, 1, self.customer), 22.65)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product7, 1, self.customer), 3.50)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product1, 1), 5.00)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product2, 1), 12.99)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product3, 1), 15.00)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product4, 1), 50)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product5, 1), 100)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product6, 1), 22.65)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product7, 1), 3.50)
 
     def test_02_orders_without_invoice(self):
         """ orders without invoice
@@ -82,37 +82,47 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         +---------------------+---------+-----------------+
         """
 
-        self.open_new_session()
+        def _before_closing_cb():
+            # check values before closing the session
+            self.assertEqual(3, self.pos_session.order_count)
+            orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+            self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
-        # create orders
-        orders = []
-        orders.append(self.create_ui_order_data([(self.product1, 10), (self.product2, 10), (self.product3, 10)]))
-        orders.append(self.create_ui_order_data([(self.product1, 5), (self.product2, 5)]))
-        orders.append(self.create_ui_order_data([(self.product2, 5), (self.product3, 5)], payments=[(self.bank_pm, 139.95)]))
-
-        # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
-
-        # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
-        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
-        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
-
-        # close the session
-        self.pos_session.action_pos_session_validate()
-        session_move = self.pos_session.move_id
-
-        sale_account_line = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertAlmostEqual(sale_account_line.balance, -1119.6)
-        self.assertAlmostEqual(sale_account_line.amount_currency, -559.80)
-
-        pos_receivable_line_bank = session_move.line_ids.filtered(lambda line: line.account_id == self.pos_receivable_account and self.bank_pm.name in line.name)
-        self.assertAlmostEqual(pos_receivable_line_bank.balance, 279.9)
-        self.assertAlmostEqual(pos_receivable_line_bank.amount_currency, 139.95)
-
-        pos_receivable_line_cash = session_move.line_ids.filtered(lambda line: line.account_id == self.pos_receivable_account and self.cash_pm.name in line.name)
-        self.assertAlmostEqual(pos_receivable_line_cash.balance, 839.7)
-        self.assertAlmostEqual(pos_receivable_line_cash.amount_currency, 419.85)
+        self._run_test({
+            'payment_methods': self.cash_pm2 | self.bank_pm2,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm2, 139.95)], 'uid': '00100-010-0003'},
+            ],
+            'before_closing_cb': _before_closing_cb,
+            'journal_entries_before_closing': {},
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 1119.6, 'reconciled': False, 'amount_currency': -559.80},
+                        {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': True, 'amount_currency': 139.95},
+                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': True, 'amount_currency': 419.85},
+                    ],
+                },
+                'cash_statement': [
+                    ((419.85, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': False, 'amount_currency': 419.85},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 839.7, 'reconciled': True, 'amount_currency': -419.85},
+                        ]
+                    }),
+                ],
+                'bank_payments': [
+                    ((139.95, ), {
+                        'line_ids': [
+                            {'account_id': self.bank_pm2.outstanding_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
+                            {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
+                        ]
+                    }),
+                ],
+            },
+        })
 
     def test_03_orders_with_invoice(self):
         """ orders with invoice
@@ -141,56 +151,77 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         | sale_account        |  -659.8 |         -329.90 |
         | pos receivable bank |   279.9 |          139.95 |
         | pos receivable cash |   839.7 |          419.85 |
-        | invoice receivable  |  -459.8 |         -229.90 |
+        | invoice receivable  |  -179.9 |          -89.95 |
+        | invoice receivable  |  -279.9 |         -139.95 |
         +---------------------+---------+-----------------+
         | Total balance       |     0.0 |            0.00 |
         +---------------------+---------+-----------------+
         """
 
-        self.open_new_session()
+        def _before_closing_cb():
+            # check values before closing the session
+            self.assertEqual(3, self.pos_session.order_count)
+            orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+            self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
-        # create orders
-        orders = []
-        orders.append(self.create_ui_order_data([(self.product1, 10), (self.product2, 10), (self.product3, 10)]))
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 5), (self.product2, 5)],
-            customer=self.customer,
-            is_invoiced=True,
-        ))
-        orders.append(self.create_ui_order_data(
-            [(self.product2, 5), (self.product3, 5)],
-            payments=[(self.bank_pm, 139.95)],
-            customer=self.customer,
-            is_invoiced=True,
-        ))
-
-        # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
-
-        # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
-        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
-        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
-
-        # close the session
-        self.pos_session.action_pos_session_validate()
-        session_move = self.pos_session.move_id
-
-        sale_account_line = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertAlmostEqual(sale_account_line.balance, -659.8)
-        self.assertAlmostEqual(sale_account_line.amount_currency, -329.9)
-
-        pos_receivable_line_bank = session_move.line_ids.filtered(lambda line: line.account_id == self.pos_receivable_account and self.bank_pm.name in line.name)
-        self.assertAlmostEqual(pos_receivable_line_bank.balance, 279.9)
-        self.assertAlmostEqual(pos_receivable_line_bank.amount_currency, 139.95)
-
-        pos_receivable_line_cash = session_move.line_ids.filtered(lambda line: line.account_id == self.pos_receivable_account and self.cash_pm.name in line.name)
-        self.assertAlmostEqual(pos_receivable_line_cash.balance, 839.7)
-        self.assertAlmostEqual(pos_receivable_line_cash.amount_currency, 419.85)
-
-        invoice_receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
-        self.assertAlmostEqual(invoice_receivable_line.balance, -459.8)
-        self.assertAlmostEqual(invoice_receivable_line.amount_currency, -229.9)
+        self._run_test({
+            'payment_methods': self.cash_pm2 | self.bank_pm2,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'is_invoiced': True, 'customer': self.customer, 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm2, 139.95)], 'is_invoiced': True, 'customer': self.customer, 'uid': '00100-010-0003'},
+            ],
+            'before_closing_cb': _before_closing_cb,
+            'journal_entries_before_closing': {
+                '00100-010-0002': {
+                    'payments': [
+                        ((self.cash_pm2, 89.95), {
+                            'line_ids': [
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 179.90, 'reconciled': True, 'amount_currency': -89.95},
+                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 179.90, 'credit': 0, 'reconciled': False, 'amount_currency': 89.95},
+                            ]
+                        }),
+                    ],
+                },
+                '00100-010-0003': {
+                    'payments': [
+                        ((self.bank_pm2, 139.95), {
+                            'line_ids': [
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
+                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
+                            ]
+                        }),
+                    ],
+                },
+            },
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 659.8, 'reconciled': False, 'amount_currency': -329.90},
+                        {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': True, 'amount_currency': 139.95},
+                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': True, 'amount_currency': 419.85},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 179.90, 'reconciled': True, 'amount_currency': -89.95},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
+                    ],
+                },
+                'cash_statement': [
+                    ((419.85, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': False, 'amount_currency': 419.85},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 839.7, 'reconciled': True, 'amount_currency': -419.85},
+                        ]
+                    }),
+                ],
+                'bank_payments': [
+                    ((139.95, ), {
+                        'line_ids': [
+                            {'account_id': self.bank_pm2.outstanding_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
+                            {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
+                        ]
+                    }),
+                ],
+            },
+        })
 
     def test_04_anglo_saxon_products(self):
         """
@@ -228,65 +259,60 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         | Total balance       |       0.00 |            0.00 |
         +---------------------+------------+-----------------+
         """
-        self.open_new_session()
 
-        # create orders
-        orders = []
-        orders.append(self.create_ui_order_data([(self.product4, 7), (self.product5, 7)]))
-        orders.append(self.create_ui_order_data([(self.product5, 6), (self.product4, 6), (self.product6, 49)]))
-        orders.append(self.create_ui_order_data([(self.product5, 2), (self.product6, 13)]))
-        orders.append(self.create_ui_order_data([(self.product6, 1)]))
-
-        # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
-
-        # close the session
-        self.pos_session.action_pos_session_validate()
-
-        # check values after the session is closed
-        session_account_move = self.pos_session.move_id
-
-        self.assertEqual(len(session_account_move.line_ids), 4, msg='There should exactly be 4 account move lines.')
-
-        sales_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertAlmostEqual(sales_line.balance, -7153.90, msg='Sales line balance should be equal to total orders amount.')
-        self.assertAlmostEqual(sales_line.amount_currency, -3576.95)
-
-        receivable_line_cash = session_account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_cash.balance, 7153.90, msg='Cash receivable should be equal to the total cash payments.')
-        self.assertAlmostEqual(receivable_line_cash.amount_currency, 3576.95)
-
-        expense_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.expense_account)
-        self.assertAlmostEqual(expense_line.balance, 2375.99)
-        self.assertAlmostEqual(expense_line.amount_currency, 2375.99)
-
-        output_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.output_account)
-        self.assertAlmostEqual(output_line.balance, -2375.99)
-        self.assertAlmostEqual(output_line.amount_currency, -2375.99)
-
-        self.assertTrue(receivable_line_cash.full_reconcile_id, msg='Cash receivable line should be fully-reconciled.')
-        self.assertTrue(output_line.full_reconcile_id, msg='The stock output account line should be fully-reconciled.')
+        self._run_test({
+            'payment_methods': self.cash_pm2,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product4, 7), (self.product5, 7)], 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product5, 6), (self.product4, 6), (self.product6, 49)], 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product5, 2), (self.product6, 13)], 'uid': '00100-010-0003'},
+                {'pos_order_lines_ui_args': [(self.product6, 1)], 'uid': '00100-010-0004'},
+            ],
+            'journal_entries_before_closing': {},
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': False, 'amount_currency': -3576.95},
+                        {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 2375.99, 'credit': 0, 'reconciled': False, 'amount_currency': 2375.99},
+                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': True, 'amount_currency': 3576.95},
+                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': True, 'amount_currency': -2375.99},
+                    ],
+                },
+                'cash_statement': [
+                    ((3576.95, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': False, 'amount_currency': 3576.95},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': True, 'amount_currency': -3576.95},
+                        ]
+                    }),
+                ],
+                'bank_payments': [],
+            },
+        })
 
     def test_05_tax_base_amount(self):
-        self.open_new_session()
-
-        order = self.env['pos.order'].create_from_ui(
-            [self.create_ui_order_data([(self.product7, 7)])]
-        )
-        self.pos_session.action_pos_session_validate()
-        session_account_move = self.pos_session.move_id
-
-        self.assertEqual(len(session_account_move.line_ids), 3, msg='There should exactly be 3 account move lines.')
-
-        sales_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertAlmostEqual(sales_line.balance, -49)
-        self.assertAlmostEqual(sales_line.amount_currency, -24.5)
-
-        receivable_line_cash = session_account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_cash.balance, 52.43)
-        self.assertAlmostEqual(receivable_line_cash.amount_currency, 26.215)
-
-        tax_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
-        self.assertAlmostEqual(tax_line.balance, -3.43)
-        self.assertAlmostEqual(tax_line.amount_currency, -1.715)
-        self.assertAlmostEqual(tax_line.tax_base_amount, 49, msg="Value should be in company's currency.")
+        self._run_test({
+            'payment_methods': self.cash_pm2,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product7, 7)], 'uid': '00100-010-0001'},
+            ],
+            'journal_entries_before_closing': {},
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': 49},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 49, 'reconciled': False, 'amount_currency': -24.5, 'tax_base_amount': 0},
+                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 52.43, 'credit': 0, 'reconciled': True, 'amount_currency': 26.215, 'tax_base_amount': 0},
+                    ],
+                },
+                'cash_statement': [
+                    ((26.215, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 52.43, 'credit': 0, 'reconciled': False, 'amount_currency': 26.215},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 52.43, 'reconciled': True, 'amount_currency': -26.215},
+                        ]
+                    }),
+                ],
+                'bank_payments': [],
+            },
+        })

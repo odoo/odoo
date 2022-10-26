@@ -13,7 +13,7 @@ class NoteController(http.Controller):
         note = request.env['note.note'].create({'memo': note})
         if date_deadline:
             note.activity_schedule(
-                activity_type_id=activity_type_id or request.env['mail.activity.type'].sudo().search([('category', '=', 'reminder')], limit=1).id,
+                activity_type_id=activity_type_id or request.env['mail.activity.type'].search([('category', '=', 'reminder')], limit=1).id,
                 note=note.memo,
                 date_deadline=date_deadline
             )

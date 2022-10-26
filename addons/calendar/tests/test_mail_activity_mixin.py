@@ -22,7 +22,7 @@ class TestMailActivityMixin(MailCommon):
         cls.activity_type_1 = cls.env['mail.activity.type'].create({
             'name': 'Calendar Activity Test Default',
             'summary': 'default activity',
-            'res_model_id': cls.env['ir.model']._get('base.res_partner').id,
+            'res_model': 'res.partner',
         })
         cls.env['ir.model.data'].create({
             'name': cls.activity_type_1.name.lower().replace(' ', '_'),
@@ -48,7 +48,7 @@ class TestMailActivityMixin(MailCommon):
             meeting.calendar_event_id = calendar_event
             return meeting
 
-        group_partner_manager = self.env['ir.model.data'].xmlid_to_res_id('base.group_partner_manager')
+        group_partner_manager = self.env['ir.model.data']._xmlid_to_res_id('base.group_partner_manager')
         self.user_employee.write({
             'tz': self.user_admin.tz,
             'groups_id': [Command.link(group_partner_manager)]

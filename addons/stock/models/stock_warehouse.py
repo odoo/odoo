@@ -33,11 +33,11 @@ class Warehouse(models.Model):
         count = self.env['stock.warehouse'].with_context(active_test=False).search_count([('company_id', '=', self.env.company.id)])
         return "%s - warehouse # %s" % (self.env.company.name, count + 1) if count else self.env.company.name
 
-    name = fields.Char('Warehouse', index=True, required=True, default=_default_name)
+    name = fields.Char('Warehouse', required=True, default=_default_name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
-        index=True, readonly=True, required=True,
+        readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
     partner_id = fields.Many2one('res.partner', 'Address', default=lambda self: self.env.company.partner_id, check_company=True)
     view_location_id = fields.Many2one(
@@ -50,7 +50,7 @@ class Warehouse(models.Model):
         required=True, check_company=True)
     code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
+        'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
         domain="[('warehouse_selectable', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help='Defaults routes through the warehouse', check_company=True)
@@ -76,14 +76,15 @@ class Warehouse(models.Model):
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type', check_company=True)
     in_type_id = fields.Many2one('stock.picking.type', 'In Type', check_company=True)
     int_type_id = fields.Many2one('stock.picking.type', 'Internal Type', check_company=True)
-    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route', ondelete='restrict')
-    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route', ondelete='restrict')
-    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route', ondelete='restrict')
+    return_type_id = fields.Many2one('stock.picking.type', 'Return Type', check_company=True)
+    crossdock_route_id = fields.Many2one('stock.route', 'Crossdock Route', ondelete='restrict')
+    reception_route_id = fields.Many2one('stock.route', 'Receipt Route', ondelete='restrict')
+    delivery_route_id = fields.Many2one('stock.route', 'Delivery Route', ondelete='restrict')
     resupply_wh_ids = fields.Many2many(
         'stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id',
         'Resupply From', help="Routes will be created automatically to resupply this warehouse from the warehouses ticked")
     resupply_route_ids = fields.One2many(
-        'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
+        'stock.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the warehouses.")
@@ -96,7 +97,8 @@ class Warehouse(models.Model):
     def _onchange_company_id(self):
         group_user = self.env.ref('base.group_user')
         group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
-        if group_stock_multi_warehouses not in group_user.implied_ids:
+        group_stock_multi_location = self.env.ref('stock.group_stock_multi_locations')
+        if group_stock_multi_warehouses not in group_user.implied_ids and group_stock_multi_location not in group_user.implied_ids:
             return {
                 'warning': {
                     'title': _('Warning'),
@@ -104,44 +106,51 @@ class Warehouse(models.Model):
                 }
             }
 
-    @api.model
-    def create(self, vals):
-        # create view location for warehouse then create all locations
-        loc_vals = {'name': vals.get('code'), 'usage': 'view',
-                    'location_id': self.env.ref('stock.stock_location_locations').id}
-        if vals.get('company_id'):
-            loc_vals['company_id'] = vals.get('company_id')
-        vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
-        sub_locations = self._get_locations_values(vals)
-
-        for field_name, values in sub_locations.items():
-            values['location_id'] = vals['view_location_id']
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # create view location for warehouse then create all locations
+            loc_vals = {'name': vals.get('code'), 'usage': 'view',
+                        'location_id': self.env.ref('stock.stock_location_locations').id}
             if vals.get('company_id'):
-                values['company_id'] = vals.get('company_id')
-            vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
+                loc_vals['company_id'] = vals.get('company_id')
+            vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
+            sub_locations = self._get_locations_values(vals)
+
+            for field_name, values in sub_locations.items():
+                values['location_id'] = vals['view_location_id']
+                if vals.get('company_id'):
+                    values['company_id'] = vals.get('company_id')
+                vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
 
         # actually create WH
-        warehouse = super(Warehouse, self).create(vals)
-        # create sequences and operation types
-        new_vals = warehouse._create_or_update_sequences_and_picking_types()
-        warehouse.write(new_vals)  # TDE FIXME: use super ?
-        # create routes and push/stock rules
-        route_vals = warehouse._create_or_update_route()
-        warehouse.write(route_vals)
+        warehouses = super().create(vals_list)
 
-        # Update global route with specific warehouse rule.
-        warehouse._create_or_update_global_routes_rules()
+        for warehouse, vals in zip(warehouses, vals_list):
+            # create sequences and operation types
+            new_vals = warehouse._create_or_update_sequences_and_picking_types()
+            warehouse.write(new_vals)  # TDE FIXME: use super ?
+            # create routes and push/stock rules
+            route_vals = warehouse._create_or_update_route()
+            warehouse.write(route_vals)
 
-        # create route selectable on the product to resupply the warehouse from another one
-        warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
+            # Update global route with specific warehouse rule.
+            warehouse._create_or_update_global_routes_rules()
 
-        # update partner data if partner assigned
-        if vals.get('partner_id'):
-            self._update_partner_data(vals['partner_id'], vals.get('company_id'))
+            # create route selectable on the product to resupply the warehouse from another one
+            warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
+
+            # update partner data if partner assigned
+            if vals.get('partner_id'):
+                self._update_partner_data(vals['partner_id'], vals.get('company_id'))
+
+            # manually update locations' warehouse since it didn't exist at their creation time
+            view_location_id = self.env['stock.location'].browse(vals.get('view_location_id'))
+            (view_location_id | view_location_id.with_context(active_test=False).child_ids).write({'warehouse_id': warehouse.id})
 
         self._check_multiwarehouse_group()
 
-        return warehouse
+        return warehouses
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -149,7 +158,7 @@ class Warehouse(models.Model):
                 if warehouse.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
 
-        Route = self.env['stock.location.route']
+        Route = self.env['stock.route']
         warehouses = self.with_context(active_test=False)
         warehouses._create_missing_locations(vals)
 
@@ -168,12 +177,16 @@ class Warehouse(models.Model):
 
         # If another partner assigned
         if vals.get('partner_id'):
-            warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
-
-        res = super(Warehouse, self).write(vals)
+            if vals.get('company_id'):
+                warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+            else:
+                for warehouse in self:
+                    warehouse._update_partner_data(vals['partner_id'], warehouse.company_id.id)
 
         if vals.get('code') or vals.get('name'):
             warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
+
+        res = super().write(vals)
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
@@ -272,16 +285,21 @@ class Warehouse(models.Model):
         return res
 
     def _check_multiwarehouse_group(self):
-        cnt_by_company = self.env['stock.warehouse'].sudo().read_group([('active', '=', True)], ['company_id'], groupby=['company_id'])
+        cnt_by_company = self.env['stock.warehouse'].sudo()._read_group([('active', '=', True)], ['company_id'], groupby=['company_id'])
         if cnt_by_company:
             max_cnt = max(cnt_by_company, key=lambda k: k['company_id_count'])
             group_user = self.env.ref('base.group_user')
             group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+            group_stock_multi_locations = self.env.ref('stock.group_stock_multi_locations')
             if max_cnt['company_id_count'] <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
                 group_user.write({'implied_ids': [(3, group_stock_multi_warehouses.id)]})
                 group_stock_multi_warehouses.write({'users': [(3, user.id) for user in group_user.users]})
             if max_cnt['company_id_count'] > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
-                group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, self.env.ref('stock.group_stock_multi_locations').id)]})
+                if group_stock_multi_locations not in group_user.implied_ids:
+                    self.env['res.config.settings'].create({
+                        'group_stock_multi_locations': True,
+                    }).execute()
+                group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, group_stock_multi_locations.id)]})
 
     @api.model
     def _update_partner_data(self, partner_id, company_id):
@@ -323,7 +341,7 @@ class Warehouse(models.Model):
 
         for picking_type, values in data.items():
             if self[picking_type]:
-                self[picking_type].update(values)
+                self[picking_type].write(values)
             else:
                 data[picking_type].update(create_data[picking_type])
                 sequence = IrSequenceSudo.create(sequence_data[picking_type])
@@ -331,7 +349,7 @@ class Warehouse(models.Model):
                 warehouse_data[picking_type] = PickingType.create(values).id
 
         if 'out_type_id' in warehouse_data:
-            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data.get('in_type_id', False)})
+            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data.get('return_type_id', False)})
         if 'in_type_id' in warehouse_data:
             PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data.get('out_type_id', False)})
         return warehouse_data
@@ -356,7 +374,7 @@ class Warehouse(models.Model):
         """ return a route record set from an xml_id or its name. """
         route = self.env.ref(xml_id, raise_if_not_found=False)
         if not route:
-            route = self.env['stock.location.route'].search([('name', 'like', route_name)], limit=1)
+            route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
         if not route:
             raise UserError(_('Can\'t find any generic route %s.') % (route_name))
         return route
@@ -393,7 +411,7 @@ class Warehouse(models.Model):
                 },
                 'update_values': {
                     'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
-                    'location_id': location_dest_id.id,
+                    'location_dest_id': location_dest_id.id,
                     'location_src_id': location_id.id,
                     'picking_type_id': picking_type_id.id,
                 }
@@ -433,7 +451,7 @@ class Warehouse(models.Model):
             else:
                 if 'route_update_values' in route_data:
                     route_data['route_create_values'].update(route_data['route_update_values'])
-                route = self.env['stock.location.route'].create(route_data['route_create_values'])
+                route = self.env['stock.route'].create(route_data['route_create_values'])
                 self[route_field] = route
             # Get rules needed for the route
             routing_key = route_data.get('routing_key')
@@ -569,7 +587,7 @@ class Warehouse(models.Model):
             existing_rule = self.env['stock.rule'].search([
                 ('picking_type_id', '=', rule_vals['picking_type_id']),
                 ('location_src_id', '=', rule_vals['location_src_id']),
-                ('location_id', '=', rule_vals['location_id']),
+                ('location_dest_id', '=', rule_vals['location_dest_id']),
                 ('route_id', '=', rule_vals['route_id']),
                 ('action', '=', rule_vals['action']),
                 ('active', '=', False),
@@ -592,6 +610,7 @@ class Warehouse(models.Model):
                 'name': _('Stock'),
                 'active': True,
                 'usage': 'internal',
+                'replenish_location': True,
                 'barcode': self._valid_barcode(code + '-STOCK', company_id)
             },
             'wh_input_stock_loc_id': {
@@ -647,7 +666,7 @@ class Warehouse(models.Model):
                 warehouse.write(missing_location)
 
     def create_resupply_routes(self, supplier_warehouses):
-        Route = self.env['stock.location.route']
+        Route = self.env['stock.route']
         Rule = self.env['stock.rule']
 
         input_location, output_location = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
@@ -772,7 +791,7 @@ class Warehouse(models.Model):
             route_rule_values = {
                 'name': self._format_rulename(routing.from_loc, routing.dest_loc, name_suffix),
                 'location_src_id': routing.from_loc.id,
-                'location_id': routing.dest_loc.id,
+                'location_dest_id': routing.dest_loc.id,
                 'action': routing.action,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
@@ -819,14 +838,14 @@ class Warehouse(models.Model):
         """ Check if the resupply routes from this warehouse follow the changes of number of delivery steps
         Check routes being delivery bu this warehouse and change the rule going to transit location """
         Rule = self.env["stock.rule"]
-        routes = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.id)])
-        rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_id.usage', '=', 'transit')])
+        routes = self.env['stock.route'].search([('supplier_wh_id', '=', self.id)])
+        rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_dest_id.usage', '=', 'transit')])
         rules.write({
             'location_src_id': new_location.id,
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
-            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.mapped('location_id')]
+            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.location_dest_id]
             mto_vals = self._get_global_route_rules_values().get('mto_pull_id')
             values = mto_vals['create_values']
             mto_rule_vals = self._get_rule_values(routings, values, name_suffix='MTO')
@@ -837,21 +856,21 @@ class Warehouse(models.Model):
             # We need to delete all the MTO stock rules, otherwise they risk to be used in the system
             Rule.search([
                 '&', ('route_id', '=', self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id),
-                ('location_id.usage', '=', 'transit'),
+                ('location_dest_id.usage', '=', 'transit'),
                 ('action', '!=', 'push'),
                 ('location_src_id', '=', self.lot_stock_id.id)]).write({'active': False})
 
     def _check_reception_resupply(self, new_location):
         """ Check routes being delivered by the warehouses (resupply routes) and
         change their rule coming from the transit location """
-        routes = self.env['stock.location.route'].search([('supplied_wh_id', 'in', self.ids)])
+        routes = self.env['stock.route'].search([('supplied_wh_id', 'in', self.ids)])
         self.env['stock.rule'].search([
             '&',
                 ('route_id', 'in', routes.ids),
                 '&',
                     ('action', '!=', 'push'),
                     ('location_src_id.usage', '=', 'transit')
-        ]).write({'location_id': new_location.id})
+        ]).write({'location_dest_id': new_location.id})
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
@@ -867,7 +886,7 @@ class Warehouse(models.Model):
                 if warehouse.mto_pull_id:
                     warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
         for warehouse in self:
-            sequence_data = warehouse._get_sequence_values()
+            sequence_data = warehouse._get_sequence_values(name=new_name, code=new_code)
             # `ir.sequence` write access is limited to system user
             if self.user_has_groups('stock.group_stock_manager'):
                 warehouse = warehouse.sudo()
@@ -903,16 +922,22 @@ class Warehouse(models.Model):
                 'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
             },
             'pick_type_id': {
-                'active': self.delivery_steps != 'ship_only',
+                'active': self.delivery_steps != 'ship_only' and self.active,
                 'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id,
                 'barcode': self.code.replace(" ", "").upper() + "-PICK",
             },
             'pack_type_id': {
-                'active': self.delivery_steps == 'pick_pack_ship',
+                'active': self.delivery_steps == 'pick_pack_ship' and self.active,
+                'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id,
+
                 'barcode': self.code.replace(" ", "").upper() + "-PACK",
             },
             'int_type_id': {
                 'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
+            },
+            'return_type_id': {
+                'default_location_dest_id': output_loc.id,
+                'barcode': self.code.replace(" ", "").upper() + "-RETURNS",
             },
         }
 
@@ -975,37 +1000,54 @@ class Warehouse(models.Model):
                 'sequence': max_sequence + 2,
                 'sequence_code': 'INT',
                 'company_id': self.company_id.id,
+            }, 'return_type_id': {
+                'name': _('Returns'),
+                'code': 'incoming',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': False,
+                'sequence': max_sequence + 6,
+                'show_reserved': True,
+                'sequence_code': 'IN',
+                'company_id': self.company_id.id,
             },
         }, max_sequence + 6
 
-    def _get_sequence_values(self):
+    def _get_sequence_values(self, name=False, code=False):
         """ Each picking type is created with a sequence. This method returns
         the sequence values associated to each picking type.
         """
+        name = name if name else self.name
+        code = code if code else self.code
         return {
             'in_type_id': {
-                'name': self.name + ' ' + _('Sequence in'),
-                'prefix': self.code + '/IN/', 'padding': 5,
+                'name': name + ' ' + _('Sequence in'),
+                'prefix': code + '/IN/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
-                'name': self.name + ' ' + _('Sequence out'),
-                'prefix': self.code + '/OUT/', 'padding': 5,
+                'name': name + ' ' + _('Sequence out'),
+                'prefix': code + '/OUT/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
-                'name': self.name + ' ' + _('Sequence packing'),
-                'prefix': self.code + '/PACK/', 'padding': 5,
+                'name': name + ' ' + _('Sequence packing'),
+                'prefix': code + '/PACK/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pick_type_id': {
-                'name': self.name + ' ' + _('Sequence picking'),
-                'prefix': self.code + '/PICK/', 'padding': 5,
+                'name': name + ' ' + _('Sequence picking'),
+                'prefix': code + '/PICK/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
-                'name': self.name + ' ' + _('Sequence internal'),
-                'prefix': self.code + '/INT/', 'padding': 5,
+                'name': name + ' ' + _('Sequence internal'),
+                'prefix': code + '/INT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'return_type_id': {
+                'name': name + ' ' + _('Sequence return'),
+                'prefix': code + '/RET/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }
@@ -1026,7 +1068,7 @@ class Warehouse(models.Model):
     @api.returns('self')
     def _get_all_routes(self):
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
-        routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
+        routes |= self.env["stock.route"].search([('supplied_wh_id', 'in', self.ids)])
         return routes
 
     def action_view_all_routes(self):
@@ -1034,10 +1076,13 @@ class Warehouse(models.Model):
         return {
             'name': _('Warehouse\'s Routes'),
             'domain': [('id', 'in', routes.ids)],
-            'res_model': 'stock.location.route',
+            'res_model': 'stock.route',
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
             'limit': 20,
             'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }
+
+    def get_current_warehouses(self):
+        return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'], order='name')

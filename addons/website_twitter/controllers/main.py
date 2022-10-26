@@ -17,7 +17,7 @@ class Twitter(http.Controller):
         key = request.website.twitter_api_key
         secret = request.website.twitter_api_secret
         screen_name = request.website.twitter_screen_name
-        debug = request.env['res.users'].has_group('website.group_website_publisher')
+        debug = request.env['res.users'].has_group('website.group_website_restricted_editor')
         if not key or not secret:
             if debug:
                 return {"error": _("Please set the Twitter API Key and Secret in the Website Settings.")}

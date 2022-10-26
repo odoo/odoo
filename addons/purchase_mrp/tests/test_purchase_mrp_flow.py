@@ -2,51 +2,59 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import Form, TransactionCase
-from odoo.tests import Form
+from odoo.tests import tagged
+from odoo import fields
 
 
-class TestSaleMrpFlow(TransactionCase):
+@tagged('post_install', '-at_install')
+class TestPurchaseMrpFlow(TransactionCase):
 
-    def setUp(self):
-        super(TestSaleMrpFlow, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Useful models
-        self.UoM = self.env['uom.uom']
-        self.categ_unit = self.env.ref('uom.product_uom_categ_unit')
-        self.categ_kgm = self.env.ref('uom.product_uom_categ_kgm')
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.warehouse = self.env.ref('stock.warehouse0')
+        cls.UoM = cls.env['uom.uom']
+        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
+        cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.warehouse = cls.env.ref('stock.warehouse0')
 
-        self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm.id), ('uom_type', '=', 'reference')],
+        grp_uom = cls.env.ref('uom.group_uom')
+        group_user = cls.env.ref('base.group_user')
+        group_user.write({'implied_ids': [(4, grp_uom.id)]})
+        cls.env.user.write({'groups_id': [(4, grp_uom.id)]})
+
+        cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')],
                                                  limit=1)
-        self.uom_kg.write({
+        cls.uom_kg.write({
             'name': 'Test-KG',
             'rounding': 0.000001})
-        self.uom_gm = self.UoM.create({
+        cls.uom_gm = cls.UoM.create({
             'name': 'Test-G',
-            'category_id': self.categ_kgm.id,
+            'category_id': cls.categ_kgm.id,
             'uom_type': 'smaller',
             'factor': 1000.0,
             'rounding': 0.001})
-        self.uom_unit = self.env['uom.uom'].search(
-            [('category_id', '=', self.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
-        self.uom_unit.write({
+        cls.uom_unit = cls.env['uom.uom'].search(
+            [('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
+        cls.uom_unit.write({
             'name': 'Test-Unit',
             'rounding': 0.01})
-        self.uom_dozen = self.UoM.create({
+        cls.uom_dozen = cls.UoM.create({
             'name': 'Test-DozenA',
-            'category_id': self.categ_unit.id,
+            'category_id': cls.categ_unit.id,
             'factor_inv': 12,
             'uom_type': 'bigger',
             'rounding': 0.001})
 
         # Creating all components
-        self.component_a = self._create_product('Comp A', self.uom_unit)
-        self.component_b = self._create_product('Comp B', self.uom_unit)
-        self.component_c = self._create_product('Comp C', self.uom_unit)
-        self.component_d = self._create_product('Comp D', self.uom_unit)
-        self.component_e = self._create_product('Comp E', self.uom_unit)
-        self.component_f = self._create_product('Comp F', self.uom_unit)
-        self.component_g = self._create_product('Comp G', self.uom_unit)
+        cls.component_a = cls._create_product('Comp A', cls.uom_unit)
+        cls.component_b = cls._create_product('Comp B', cls.uom_unit)
+        cls.component_c = cls._create_product('Comp C', cls.uom_unit)
+        cls.component_d = cls._create_product('Comp D', cls.uom_unit)
+        cls.component_e = cls._create_product('Comp E', cls.uom_unit)
+        cls.component_f = cls._create_product('Comp F', cls.uom_unit)
+        cls.component_g = cls._create_product('Comp G', cls.uom_unit)
 
         # Create a kit 'kit_1' :
         # -----------------------
@@ -55,26 +63,26 @@ class TestSaleMrpFlow(TransactionCase):
         #         |- component_b   x1
         #         |- component_c   x3
 
-        self.kit_1 = self._create_product('Kit 1', self.uom_unit)
+        cls.kit_1 = cls._create_product('Kit 1', cls.uom_unit)
 
-        self.bom_kit_1 = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.kit_1.product_tmpl_id.id,
+        cls.bom_kit_1 = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.kit_1.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
 
-        BomLine = self.env['mrp.bom.line']
+        BomLine = cls.env['mrp.bom.line']
         BomLine.create({
-            'product_id': self.component_a.id,
+            'product_id': cls.component_a.id,
             'product_qty': 2.0,
-            'bom_id': self.bom_kit_1.id})
+            'bom_id': cls.bom_kit_1.id})
         BomLine.create({
-            'product_id': self.component_b.id,
+            'product_id': cls.component_b.id,
             'product_qty': 1.0,
-            'bom_id': self.bom_kit_1.id})
+            'bom_id': cls.bom_kit_1.id})
         BomLine.create({
-            'product_id': self.component_c.id,
+            'product_id': cls.component_c.id,
             'product_qty': 3.0,
-            'bom_id': self.bom_kit_1.id})
+            'bom_id': cls.bom_kit_1.id})
 
         # Create a kit 'kit_parent' :
         # ---------------------------
@@ -90,62 +98,63 @@ class TestSaleMrpFlow(TransactionCase):
         #              |- component_e x1
 
         # Creating all kits
-        self.kit_2 = self._create_product('Kit 2', self.uom_unit)
-        self.kit_3 = self._create_product('kit 3', self.uom_unit)
-        self.kit_parent = self._create_product('Kit Parent', self.uom_unit)
+        cls.kit_2 = cls._create_product('Kit 2', cls.uom_unit)
+        cls.kit_3 = cls._create_product('kit 3', cls.uom_unit)
+        cls.kit_parent = cls._create_product('Kit Parent', cls.uom_unit)
 
         # Linking the kits and the components via some 'phantom' BoMs
-        bom_kit_2 = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.kit_2.product_tmpl_id.id,
+        bom_kit_2 = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.kit_2.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
 
         BomLine.create({
-            'product_id': self.component_d.id,
+            'product_id': cls.component_d.id,
             'product_qty': 1.0,
             'bom_id': bom_kit_2.id})
         BomLine.create({
-            'product_id': self.kit_1.id,
+            'product_id': cls.kit_1.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_2.id})
 
-        bom_kit_parent = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.kit_parent.product_tmpl_id.id,
+        bom_kit_parent = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.kit_parent.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
 
         BomLine.create({
-            'product_id': self.component_e.id,
+            'product_id': cls.component_e.id,
             'product_qty': 1.0,
             'bom_id': bom_kit_parent.id})
         BomLine.create({
-            'product_id': self.kit_2.id,
+            'product_id': cls.kit_2.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
 
-        bom_kit_3 = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.kit_3.product_tmpl_id.id,
+        bom_kit_3 = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
 
         BomLine.create({
-            'product_id': self.component_f.id,
+            'product_id': cls.component_f.id,
             'product_qty': 1.0,
             'bom_id': bom_kit_3.id})
         BomLine.create({
-            'product_id': self.component_g.id,
+            'product_id': cls.component_g.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_3.id})
 
         BomLine.create({
-            'product_id': self.kit_3.id,
+            'product_id': cls.kit_3.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
 
-    def _create_product(self, name, uom_id, routes=()):
-        p = Form(self.env['product.product'])
+    @classmethod
+    def _create_product(cls, name, uom_id, routes=()):
+        p = Form(cls.env['product.product'])
         p.name = name
-        p.type = 'product'
+        p.detailed_type = 'product'
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()
@@ -241,8 +250,8 @@ class TestSaleMrpFlow(TransactionCase):
         self.assertEqual(len(po.picking_ids), 1)
         order_line = po.order_line[0]
         picking_original = po.picking_ids[0]
-        move_lines = picking_original.move_lines
-        products = move_lines.mapped('product_id')
+        move_ids = picking_original.move_ids
+        products = move_ids.mapped('product_id')
         kits = [self.kit_parent, self.kit_3, self.kit_2, self.kit_1]
         components = [self.component_a, self.component_b, self.component_c, self.component_d, self.component_e,
                       self.component_f, self.component_g]
@@ -256,14 +265,14 @@ class TestSaleMrpFlow(TransactionCase):
             self.component_g: 28.0
         }
 
-        self.assertEqual(len(move_lines), 7)
+        self.assertEqual(len(move_ids), 7)
         self.assertTrue(not any(kit in products for kit in kits))
         self.assertTrue(all(component in products for component in components))
-        self._assert_quantities(move_lines, expected_quantities)
+        self._assert_quantities(move_ids, expected_quantities)
 
         # Process only 7 units of each component
         qty_to_process = 7
-        move_lines.write({'quantity_done': qty_to_process})
+        move_ids.write({'quantity_done': qty_to_process})
 
         # Create a backorder for the missing componenents
         pick = po.picking_ids[0]
@@ -284,7 +293,7 @@ class TestSaleMrpFlow(TransactionCase):
             self.component_a: 1,
             self.component_c: 5,
         }
-        self._process_quantities(backorder_1.move_lines, qty_to_process)
+        self._process_quantities(backorder_1.move_ids, qty_to_process)
 
         # Create a backorder for the missing componenents
         res = backorder_1.button_validate()
@@ -311,10 +320,10 @@ class TestSaleMrpFlow(TransactionCase):
         # Check that the computed quantities are matching the theorical ones.
         # Since component_e was totally processed, this componenent shouldn't be
         # present in backorder_2
-        self.assertEqual(len(backorder_2.move_lines), 6)
-        move_comp_e = backorder_2.move_lines.filtered(lambda m: m.product_id.id == self.component_e.id)
+        self.assertEqual(len(backorder_2.move_ids), 6)
+        move_comp_e = backorder_2.move_ids.filtered(lambda m: m.product_id.id == self.component_e.id)
         self.assertFalse(move_comp_e)
-        self._assert_quantities(backorder_2.move_lines, expected_quantities)
+        self._assert_quantities(backorder_2.move_ids, expected_quantities)
 
         # Process enough components to make x3 kit_parents
         qty_to_process = {
@@ -323,7 +332,7 @@ class TestSaleMrpFlow(TransactionCase):
             self.component_c: 24,
             self.component_g: 5
         }
-        self._process_quantities(backorder_2.move_lines, qty_to_process)
+        self._process_quantities(backorder_2.move_ids, qty_to_process)
 
         # Create a backorder for the missing componenents
         res = backorder_2.button_validate()
@@ -346,10 +355,10 @@ class TestSaleMrpFlow(TransactionCase):
             self.component_f: 7,
             self.component_g: 16
         }
-        self._assert_quantities(backorder_3.move_lines, expected_quantities)
+        self._assert_quantities(backorder_3.move_ids, expected_quantities)
 
         # Process all missing components
-        self._process_quantities(backorder_3.move_lines, expected_quantities)
+        self._process_quantities(backorder_3.move_ids, expected_quantities)
 
         # Validating the last backorder now it's complete.
         # All kits should be received
@@ -387,7 +396,7 @@ class TestSaleMrpFlow(TransactionCase):
         return_of_return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components except one of each
-        for move in return_of_return_pick.move_lines:
+        for move in return_of_return_pick.move_ids:
             move.write({
                 'quantity_done': expected_quantities[move.product_id] - 1,
                 'to_refund': True
@@ -407,5 +416,103 @@ class TestSaleMrpFlow(TransactionCase):
         self.assertEqual(backorder_4.backorder_id.id, return_of_return_pick.id)
 
         # Check the components quantities that backorder_4 should have
-        for move in backorder_4.move_lines:
+        for move in backorder_4.move_ids:
             self.assertEqual(move.product_qty, 1)
+
+    def test_concurent_procurements(self):
+        """ Check a production created to fulfill a procurement will not
+        replenish more that needed if others procurements have the same products
+        than the production component. """
+
+        warehouse = self.env.ref('stock.warehouse0')
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        vendor1 = self.env['res.partner'].create({'name': 'aaa', 'email': 'from.test@example.com'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'partner_id': vendor1.id,
+            'price': 50,
+        })
+
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'route_ids': [(4, buy_route.id)],
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+        })
+        finished = self.env['product.product'].create({
+            'name': 'finished',
+            'type': 'product',
+            'route_ids': [(4, manufacture_route.id)],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': component.id,
+            'route_id': buy_route.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': finished.id,
+            'route_id': manufacture_route.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'operation_ids': [
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ]})
+
+        # Delivery to trigger replenishment
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.out_type_id
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = finished
+            move.product_uom_qty = 3
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = component
+            move.product_uom_qty = 2
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        # Find PO
+        purchase = self.env['purchase.order.line'].search([
+            ('product_id', '=', component.id),
+        ]).order_id
+        self.assertTrue(purchase)
+        self.assertEqual(purchase.order_line.product_qty, 5)
+
+    def test_01_purchase_mrp_kit_qty_change(self):
+        self.partner = self.env.ref('base.res_partner_1')
+
+        # Create a PO with one unit of the kit product
+        self.po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.kit_1.name, 'product_id': self.kit_1.id, 'product_qty': 1, 'product_uom': self.kit_1.uom_id.id, 'price_unit': 60.0, 'date_planned': fields.Datetime.now()})],
+        })
+        # Validate the PO
+        self.po.button_confirm()
+
+        # Check the component qty in the created picking
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty, 2, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty, 1, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty, 3, "The quantity of components must be created according to the BOM")
+
+        # Update the kit quantity in the PO
+        self.po.order_line[0].product_qty = 2
+        # Check the component qty after the update
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty, 4, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty, 2, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty, 6, "The amount of the kit components must be updated when changing the quantity of the kit.")

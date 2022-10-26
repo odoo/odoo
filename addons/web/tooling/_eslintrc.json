@@ -1,0 +1,48 @@
+{
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2019
+  },
+  "env": {
+    "browser": true,
+    "es2017": true,
+    "qunit": true
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-undef": "error",
+    "no-restricted-globals": ["error", "event", "self"],
+    "no-const-assign": ["error"],
+    "no-debugger": ["error"],
+    "no-dupe-class-members": ["error"],
+    "no-unsafe-negation": ["error"],
+    "no-duplicate-imports": ["error"],
+    "valid-typeof": ["error"],
+    "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all", "caughtErrorsIgnorePattern": "^_" }],
+    "curly": ["error", "all"],
+    "prefer-const": ["error", {
+      "destructuring": "all",
+      "ignoreReadBeforeAssign": true
+    }]
+  },
+  "globals": {
+    "owl": "readonly",
+    "odoo": "readonly",
+    "$": "readonly",
+    "jQuery": "readonly",
+    "_": "readonly",
+    "Chart": "readonly",
+    "fuzzy": "readonly",
+    "QWeb2": "readonly",
+    "Popover": "readonly",
+    "StackTrace": "readonly",
+    "QUnit": "readonly",
+    "luxon": "readonly",
+    "moment": "readonly",
+    "py": "readonly",
+    "FullCalendar": "readonly",
+    "ClipboardJS": "readonly",
+    "globalThis": "readonly"
+  }
+}

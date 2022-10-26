@@ -7,9 +7,9 @@ from odoo.exceptions import UserError
 class AccountMoveReversal(models.TransientModel):
     _inherit = "account.move.reversal"
 
-    l10n_latam_use_documents = fields.Boolean(compute='_compute_document_type')
-    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False)
-    l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_document_type')
+    l10n_latam_use_documents = fields.Boolean(compute='_compute_documents_info')
+    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False, store=True)
+    l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_documents_info')
     l10n_latam_document_number = fields.Char(string='Document Number')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
 
@@ -19,7 +19,7 @@ class AccountMoveReversal(models.TransientModel):
         for rec in self.filtered('move_ids'):
             move = rec.move_ids[0]
             if move.journal_id and move.journal_id.l10n_latam_use_documents:
-                rec.l10n_latam_manual_document_number = self.env['account.move']._is_manual_document_number(move.journal_id)
+                rec.l10n_latam_manual_document_number = move._is_manual_document_number()
 
     @api.model
     def _reverse_type_map(self, move_type):
@@ -32,10 +32,17 @@ class AccountMoveReversal(models.TransientModel):
             'in_receipt': 'out_receipt'}
         return match.get(move_type)
 
-    @api.depends('move_ids')
+    @api.depends('l10n_latam_available_document_type_ids')
     def _compute_document_type(self):
+        for record in self.filtered(
+                lambda x: not x.l10n_latam_document_type_id or
+                x.l10n_latam_document_type_id not in x.l10n_latam_available_document_type_ids):
+            document_types = record.l10n_latam_available_document_type_ids._origin
+            record.l10n_latam_document_type_id = document_types[0] if document_types else False
+
+    @api.depends('move_ids', 'journal_id')
+    def _compute_documents_info(self):
         self.l10n_latam_available_document_type_ids = False
-        self.l10n_latam_document_type_id = False
         self.l10n_latam_use_documents = False
         for record in self:
             if len(record.move_ids) > 1:
@@ -48,11 +55,10 @@ class AccountMoveReversal(models.TransientModel):
             if record.l10n_latam_use_documents:
                 refund = record.env['account.move'].new({
                     'move_type': record._reverse_type_map(record.move_ids.move_type),
-                    'journal_id': record.move_ids.journal_id.id,
+                    'journal_id': record.journal_id.id,
                     'partner_id': record.move_ids.partner_id.id,
                     'company_id': record.move_ids.company_id.id,
                 })
-                record.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
                 record.l10n_latam_available_document_type_ids = refund.l10n_latam_available_document_type_ids
 
     def _prepare_default_reversal(self, move):

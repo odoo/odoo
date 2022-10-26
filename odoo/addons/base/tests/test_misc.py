@@ -276,6 +276,18 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
 
+    def test_02_tz(self):
+        self.env.user.tz = 'Europe/Brussels'
+        datetime_str = '2016-12-31 23:55:00'
+        date_datetime = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+
+        # While London is still in 2016, Brussels is already in 2017
+        self.assertEqual(misc.format_date(self.env, date_datetime), '01/01/2017')
+
+        # Force London timezone
+        date_datetime = date_datetime.replace(tzinfo=pytz.UTC)
+        self.assertEqual(misc.format_date(self.env, date_datetime), '12/31/2016', "User's tz must be ignored when tz is specifed in datetime object")
+
 
 class TestCallbacks(BaseCase):
     def test_callback(self):

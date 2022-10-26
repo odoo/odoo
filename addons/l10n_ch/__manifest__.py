@@ -33,13 +33,14 @@ Here is how it works:
     'version': '11.0',
     'category': 'Accounting/Localizations/Account Charts',
 
-    'depends': ['account', 'l10n_multilang', 'base_iban'],
+    'depends': ['account', 'l10n_multilang', 'base_iban', 'l10n_din5008'],
 
     'data': [
+        'security/ir.model.access.csv',
         'data/l10n_ch_chart_data.xml',
         'data/account.account.template.csv',
         'data/l10n_ch_chart_post_data.xml',
-        'data/account_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_tax_report_data.xml',
         'data/account_vat2011_data.xml',
         'data/account_fiscal_position_data.xml',
@@ -50,6 +51,7 @@ Here is how it works:
         'views/account_invoice_view.xml',
         'views/res_config_settings_views.xml',
         'views/setup_wizard_views.xml',
+        'views/qr_invoice_wizard_view.xml'
     ],
 
     'demo': [
@@ -61,5 +63,6 @@ Here is how it works:
         'web.report_assets_common': [
             'l10n_ch/static/src/scss/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

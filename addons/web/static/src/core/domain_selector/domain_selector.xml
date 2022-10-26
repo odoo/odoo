@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web._DomainSelector" owl="1">
+        <t t-set="tree" t-value="buildTree()"/>
+        <t t-if="tree">
+            <DomainSelectorRootNode
+                value="props.value"
+                node="tree"
+                readonly="props.readonly"
+                resModel="props.resModel"
+                isDebugMode="props.isDebugMode"
+                debugValue="props.debugValue"
+                className="props.className"
+            />
+        </t>
+        <t t-else="">
+            <div t-att-class="props.className">This domain is not supported.</div>
+        </t>
+    </t>
+
+</templates>

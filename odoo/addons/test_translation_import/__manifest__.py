@@ -7,13 +7,14 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
-        'view.xml'
+        'view.xml',
+        'data/test_translation_import_data.xml'
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
-        'web.assets_qweb': [
+        'web.assets_backend': [
             'test_translation_import/static/src/xml/js_templates.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

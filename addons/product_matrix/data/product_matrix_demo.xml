@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
-    
+
     <!-- Size -->
     <record id="product_attribute_size" model="product.attribute">
         <field name="name">Size</field>
@@ -31,7 +31,7 @@
         <field name="attribute_id" ref="product_attribute_size"/>
         <field name="sequence">5</field>
     </record>
-    
+
     <!-- Color -->
     <record id="product_attribute_value_color_1" model="product.attribute.value">
         <field name="name">Blue</field>
@@ -53,7 +53,7 @@
         <field name="attribute_id" ref="product.product_attribute_2"/>
         <field name="sequence">6</field>
     </record>
-    
+
     <!-- Gender -->
     <record id="product_attribute_gender" model="product.attribute">
         <field name="name">Gender</field>
@@ -75,7 +75,7 @@
         <field name="categ_id" ref="product.product_category_6"/>
         <field name="standard_price">7.0</field>
         <field name="list_price">15.0</field>
-        <field name="type">consu</field>
+        <field name="detailed_type">consu</field>
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="description_sale">Show your company love around you =).</field>

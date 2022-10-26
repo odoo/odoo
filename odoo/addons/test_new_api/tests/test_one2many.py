@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import MissingError
 from odoo import Command
 
 
@@ -57,7 +57,7 @@ class One2manyCase(TransactionCase):
             return
         # Invalidate the cache and check again; this crashes if the value
         # of self.multi.lines in cache contains new records
-        self.multi.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(len(self.multi.lines), 9)
         self.assertIn("hello", self.multi.lines.mapped('name'))
 
@@ -180,7 +180,7 @@ class One2manyCase(TransactionCase):
             'res_model': record0._name,
             'res_id': record0.id,
         })
-        attachment.flush()
+        self.env.flush_all()
         with self.assertQueryCount(0):
             self.assertEqual(attachment.name, record0.display_name,
                              "field should be computed")
@@ -198,7 +198,7 @@ class One2manyCase(TransactionCase):
 
         # writing on res_id must recompute name and invalidate attachment_ids
         attachment.res_id = record1.id
-        attachment.flush()
+        self.env.flush_all()
         with self.assertQueryCount(0):
             self.assertEqual(attachment.name, record1.display_name,
                              "field should be recomputed")
@@ -247,7 +247,7 @@ class One2manyCase(TransactionCase):
 
         # delete parent, and check that recomputation ends
         parent.unlink()
-        parent.flush()
+        self.env.flush_all()
 
     def test_compute_stored_many2one_one2many(self):
         container = self.env['test_new_api.compute.container'].create({'name': 'Foo'})
@@ -256,3 +256,111 @@ class One2manyCase(TransactionCase):
         # at this point, member.container_id must be computed for member to
         # appear in container.member_ids
         self.assertEqual(container.member_ids, member)
+        self.assertEqual(container.member_count, 1)
+
+        # Changing member.name will trigger recomputing member.container_id,
+        # container.member_ids and container.member_count. Since we are setting
+        # the name to bar, it will be detached from container, resulting in a
+        # member_count of zero on the container.
+        member.name = 'Bar'
+        self.assertEqual(container.member_count, 0)
+
+        # Reattach member to container again
+        member.name = 'Foo'
+        self.assertEqual(container.member_count, 1)
+
+    def test_reward_line_delete(self):
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [
+                Command.create({'product': 'a'}),
+                Command.create({'product': 'b'}),
+                Command.create({'product': 'b', 'reward': True}),
+            ],
+        })
+        line0, line1, line2 = order.line_ids
+
+        # this is what the client sends to delete the 2nd line; it should not
+        # crash when deleting the 2nd line automatically deletes the 3rd line
+        order.write({
+            'line_ids': [
+                Command.link(line0.id),
+                Command.delete(line1.id),
+                Command.link(line2.id),
+            ],
+        })
+        self.assertEqual(order.line_ids, line0)
+
+        # but linking a missing line on purpose is an error
+        with self.assertRaises(MissingError):
+            order.write({
+                'line_ids': [Command.link(line0.id), Command.link(line1.id)],
+            })
+
+    def test_new_real_interactions(self):
+        """ Test and specify the interactions between new and real records.
+        Through m2o and o2m, with real/unreal records on both sides, the behavior
+        varies greatly.  At least, the behavior will be clearly consistent and any
+        change will have to adapt the current test.
+        """
+        ##############
+        # REAL - NEW #
+        ##############
+        parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parentB'})
+        new_child = self.env['test_new_api.model_child_m2o'].new({'name': 'B', 'parent_id': parent.id})
+
+        # wanted behavior: when creating a new with a real parent id, the child
+        # isn't present in the parent childs until true creation
+        self.assertFalse(parent.child_ids)
+        self.assertEqual(new_child.parent_id, parent)
+
+        # current (wanted?) behavior: when adding a new record to a real record
+        # o2m, the record is created, but not linked to the new in cache
+        # REAL.O2M += NEW RECORD
+        parent.child_ids += new_child
+        self.assertTrue(parent.child_ids)
+        self.assertNotEqual(parent.child_ids, new_child)
+
+        #############
+        # NEW - NEW #
+        #############
+        # wanted behavior: linking new records to new records is totally fine
+        new_parent = self.env['test_new_api.model_parent_m2o'].new({
+            "name": 'parentC3PO',
+            "child_ids": [(0, 0, {"name": "C3"})],
+        })
+        self.assertEqual(new_parent, new_parent.child_ids.parent_id)
+        self.assertFalse(new_parent.id)
+        self.assertTrue(new_parent.child_ids)
+        self.assertFalse(new_parent.child_ids.ids)
+
+        new_child = self.env['test_new_api.model_child_m2o'].new({
+            'name': 'PO',
+        })
+        new_parent.child_ids += new_child
+        self.assertIn(new_child, new_parent.child_ids)
+        self.assertEqual(len(new_parent.child_ids), 2)
+        self.assertListEqual(new_parent.child_ids.mapped('name'), ['C3', 'PO'])
+
+        new_child2 = self.env['test_new_api.model_child_m2o'].new({
+            'name': 'R2D2',
+            'parent_id': new_parent.id,
+        })
+        self.assertIn(new_child2, new_parent.child_ids)
+        self.assertEqual(len(new_parent.child_ids), 3)
+        self.assertListEqual(new_parent.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
+
+        ###############################
+        # NEW TO REAL CONVERSION TEST #
+        ###############################
+
+        # A bit out of scope, but was interesting to check everything was
+        # working fine on the way.
+        name = type(new_parent).name
+        child_ids = type(new_parent).child_ids
+        parent = self.env['test_new_api.model_parent_m2o'].create({
+            'name': name.convert_to_write(new_parent.name, new_parent),
+            'child_ids': child_ids.convert_to_write(new_parent.child_ids, new_parent),
+        })
+        self.assertEqual(len(parent.child_ids), 3)
+        self.assertEqual(parent, parent.child_ids.parent_id)
+        self.assertEqual(parent.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])

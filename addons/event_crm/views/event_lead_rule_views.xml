@@ -42,6 +42,7 @@
                         <h1><field name="name" placeholder="e.g. B2B Fairs"/></h1>
                     </div>
                     <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                     <group name="lead_creation_configuration">
                         <group name="lead_creation_basis" invisible="1">
                             <field name="lead_creation_basis" widget="radio"/>
@@ -60,7 +61,7 @@
                         </group>
                     </group>
                     <group string="If the Attendees meet these Conditions">
-                        <field name="event_registration_filter" widget="domain" options="{'model': 'event.registration'}" nolabel="1"/>
+                        <field name="event_registration_filter" widget="domain" options="{'model': 'event.registration'}" nolabel="1" colspan="2"/>
                     </group>
                     <group string="Lead Default Values">
                         <group class="col">

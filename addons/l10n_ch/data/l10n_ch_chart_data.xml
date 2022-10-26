@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="account_reports_ch_statements_menu" name="Switzerland" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
-
     <data>
          <!-- Account Tags -->
         <record id="l10nch_chart_template" model="account.chart.template">
@@ -11,8 +9,8 @@
             <field name="cash_account_code_prefix">100</field>
             <field name="transfer_account_code_prefix">1090</field>
             <field name="currency_id" ref="base.CHF"/>
-            <field name="spoken_languages" eval="'it_IT;de_DE;de_CH'"/>
             <field name="country_id" ref="base.ch"/>
+            <field name="spoken_languages" eval="'it_IT;de_DE;de_CH;fr_FR;fr_CH'"/>
         </record>
     </data>
 </odoo>

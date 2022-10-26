@@ -47,6 +47,12 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         # Remove livechat_username
         self.operator.livechat_username = False
 
+        # This fixes an issue in the controller, possibly related to the testing
+        # environment.  The business code unexpectedly uses two cache objects
+        # (env.cache), which triggers cache misses: a field is computed with its
+        # value stored into one cache and retrieved from another cache :-/
+        self.operator.name
+
         # Open a new live chat
         res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
@@ -76,6 +82,25 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the author the message.")
         self.assertEqual(channel.message_ids[0].body, "<p>%s has left the conversation.</p>" % self.visitor.display_name)
         self.assertEqual(channel.livechat_active, False, "The livechat session must be inactive since visitor has left the conversation.")
+
+    def test_visitor_info_access_rights(self):
+        channel = self._common_basic_flow()
+        self.authenticate(self.operator.login, 'ideboulonate')
+
+        # Retrieve channels information, visitor info should be there
+        res = self.opener.post(self.message_info_url, json={})
+        self.assertEqual(res.status_code, 200)
+        messages_info = res.json().get('result', {})
+        livechat_info = next(c for c in messages_info['channels'] if c['id'] == channel.id)
+        self.assertIn('visitor', livechat_info)
+
+        # Remove access to visitors and try again, visitors info shouldn't be included
+        self.operator.groups_id -= self.group_livechat_user
+        res = self.opener.post(self.message_info_url, json={})
+        self.assertEqual(res.status_code, 200)
+        messages_info = res.json().get('result', {})
+        livechat_info = next(c for c in messages_info['channels'] if c['id'] == channel.id)
+        self.assertNotIn('visitor', livechat_info)
 
     def _common_basic_flow(self):
         # Open a new live chat

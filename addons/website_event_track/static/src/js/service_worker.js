@@ -1,3 +1,6 @@
+/* eslint-env serviceworker */
+/* eslint-disable no-restricted-globals */
+/* global idbKeyval */
 importScripts("/website_event_track/static/lib/idb-keyval/idb-keyval.js");
 
 const PREFIX = "odoo-event";
@@ -5,9 +8,10 @@ const SYNCABLE_ROUTES = ["/event/track/toggle_reminder"];
 const CACHABLE_ROUTES = ["/web/webclient/version_info"];
 const MAX_CACHE_SIZE = 512 * 1024 * 1024; // 500 MB
 const MAX_CACHE_QUOTA = 0.5;
+// eslint-disable-next-line no-undef
 const CDN_URL = __ODOO_CDN_URL__; // {string|undefined} the cdn_url configured for the website if activated
 
-const { Store, set, get, del } = idbKeyval;
+const { Store, set, get } = idbKeyval;
 const pendingRequestsQueueName = `${PREFIX}-pending-requests`;
 const cacheName = `${PREFIX}-cache`;
 const syncStore = new Store(`${PREFIX}-sync-db`, `${PREFIX}-sync-store`);
@@ -232,14 +236,20 @@ const matchCache = async (request) => {
 
 /**
  *
- * @param {FetchEvent} param0
+ * @param {Request} request
+ * @param {object} [options]
+ * @param {Boolean} [options.disableTracking] whether adding a header preventing the server to track the request
  * @returns {Promise<Response>}
  */
-const processFetchRequest = async ({ request }) => {
+const processFetchRequest = async (request, options) => {
     const requestCopy = request.clone();
     let response;
     try {
-        response = await fetch(request);
+        if (options && options.disableTracking) {
+            response = await fetch(request, { headers: { 'X-Disable-Tracking': '1' } });
+        } else {
+            response = await fetch(request);
+        }
         await cacheRequest(request, response);
     } catch (requestError) {
         if (isCachableRequest(requestCopy)) {
@@ -304,7 +314,7 @@ const prefetchUrls = async (urls = []) => {
             continue;
         }
         try {
-            await processFetchRequest({ request: new Request(url) });
+            await processFetchRequest(new Request(url), { disableTracking: true });
         } catch (error) {
             console.error(`fail to prefetch ${url} : ${error}`);
         }
@@ -343,7 +353,7 @@ const processMessage = (data) => {
 };
 
 self.addEventListener("fetch", (event) => {
-    event.respondWith(processFetchRequest(event));
+    event.respondWith(processFetchRequest(event.request));
 });
 
 self.addEventListener("sync", (event) => {

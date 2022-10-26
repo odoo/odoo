@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
-    'version': '2.3',
+    'version': '2.6',
     'sequence': 125,
     'summary': 'Manage and publish an eLearning platform',
-    'website': 'https://www.odoo.com/page/slides',
+    'website': 'https://www.odoo.com/app/elearning',
     'category': 'Website/eLearning',
     'description': """
 Create Online Courses
@@ -14,7 +14,7 @@ Featuring
 
  * Integrated course and lesson management
  * Fullscreen navigation
- * Support Youtube videos, Google documents, PDF, images, web pages
+ * Support Youtube videos, Google documents, PDF, images, articles
  * Test knowledge with quizzes
  * Filter and Tag
  * Statistics
@@ -31,11 +31,14 @@ Featuring
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/rating_rating_views.xml',
+        'views/slide_embed_views.xml',
         'views/slide_question_views.xml',
+        'views/slide_slide_partner_views.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
         'views/slide_channel_tag_views.xml',
+        'views/slide_snippets.xml',
         'views/website_slides_menu_views.xml',
         'views/website_slides_templates_homepage.xml',
         'views/website_slides_templates_course.xml',
@@ -44,9 +47,12 @@ Featuring
         'views/website_slides_templates_lesson_embed.xml',
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
+        'views/website_pages_views.xml',
+        'views/slide_channel_add.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/gamification_data.xml',
-        'data/mail_data.xml',
+        'data/mail_activity_type_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
         'data/slide_data.xml',
@@ -62,12 +68,16 @@ Featuring
     'installable': True,
     'application': True,
     'assets': {
+        'mail.assets_messaging': [
+            'website_slides/static/src/models/*.js',
+        ],
         'web.assets_backend': [
-            'website_slides/static/src/scss/rating_rating_views.scss',
+            'website_slides/static/src/slide_category_one2many_field.js',
+            'website_slides/static/src/slide_category_list_renderer.js',
             'website_slides/static/src/scss/slide_views.scss',
-            'website_slides/static/src/components/activity/activity.js',
             'website_slides/static/src/js/slide_category_one2many.js',
-            'website_slides/static/src/js/rating_field_backend.js',
+            'website_slides/static/src/js/components/**/*.js',
+            'website_slides/static/src/components/**/*.xml',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',
@@ -81,6 +91,7 @@ Featuring
             'website_slides/static/src/js/slides_slide_archive.js',
             'website_slides/static/src/js/slides_slide_toggle_is_preview.js',
             'website_slides/static/src/js/slides_slide_like.js',
+            'website_slides/static/src/js/slides_course_page.js',
             'website_slides/static/src/js/slides_course_slides_list.js',
             'website_slides/static/src/js/slides_course_fullscreen_player.js',
             'website_slides/static/src/js/slides_course_join.js',
@@ -92,15 +103,26 @@ Featuring
             'website_slides/static/src/js/slides_course_unsubscribe.js',
             'website_slides/static/src/js/tours/slides_tour.js',
             'website_slides/static/src/js/portal_chatter.js',
-        ],
-        'web.assets_tests': [
-            'website_slides/static/src/tests/**/*',
+            'website_slides/static/src/xml/website_slides_sidebar.xml',
+            'website_slides/static/src/xml/website_slides_upload.xml',
+            'website_slides/static/src/xml/website_slides_fullscreen.xml',
+            'website_slides/static/src/xml/website_slides_share.xml',
+            'website_slides/static/src/xml/website_slides_channel_tag.xml',
+            'website_slides/static/src/xml/website_slides_unsubscribe.xml',
+            'website_slides/static/src/xml/slide_management.xml',
+            'website_slides/static/src/xml/slide_course_join.xml',
+            'website_slides/static/src/xml/slide_quiz_create.xml',
+            'website_slides/static/src/xml/slide_quiz.xml',
         ],
         'website.assets_editor': [
-            'website_slides/static/src/js/website_slides.editor.js',
+            'website_slides/static/src/js/systray_items/*.js',
+        ],
+        'web.assets_tests': [
+            'website_slides/static/tests/tours/*.js',
         ],
         'website_slides.slide_embed_assets': [
             ('include', 'web._assets_helpers'),
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             ('include', 'web._assets_bootstrap'),
             'website_slides/static/src/scss/website_slides.scss',
@@ -108,11 +130,12 @@ Featuring
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
         ],
+        'web.tests_assets': [
+            'website_slides/static/tests/helpers/*.js',
+        ],
         'web.qunit_suite_tests': [
-            'website_slides/static/src/components/activity/activity_tests.js',
+            'website_slides/static/tests/qunit_suite_tests/**/*.js',
         ],
-        'web.assets_qweb': [
-            'website_slides/static/src/components/activity/activity.xml',
-        ],
-    }
+    },
+    'license': 'LGPL-3',
 }

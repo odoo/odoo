@@ -17,13 +17,12 @@ class MailingTrace(models.Model):
     trace_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
-    sms_sms_id = fields.Many2one('sms.sms', string='SMS', index=True, ondelete='set null')
+    sms_sms_id = fields.Many2one('sms.sms', string='SMS', index='btree_not_null', ondelete='set null')
     sms_sms_id_int = fields.Integer(
         string='SMS ID (tech)',
-        help='ID of the related sms.sms. This field is an integer field because '
-             'the related sms.sms can be deleted separately from its statistics. '
-             'However the ID is needed for several action and controllers.',
-        index=True,
+        index='btree_not_null'
+        # Integer because the related sms.sms can be deleted separately from its statistics.
+        # However the ID is needed for several action and controllers.
     )
     sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')
@@ -36,6 +35,7 @@ class MailingTrace(models.Model):
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
+        ('sms_optout', 'Opted Out'),
     ])
 
     @api.model_create_multi
@@ -52,36 +52,3 @@ class MailingTrace(models.Model):
         as it serves as obfuscation when unsubscribing. A valid trio
         code / mailing_id / number will be requested. """
         return ''.join(random.choice(string.ascii_letters + string.digits) for dummy in range(self.CODE_SIZE))
-
-    def _get_records_from_sms(self, sms_sms_ids=None, additional_domain=None):
-        if not self.ids and sms_sms_ids:
-            domain = [('sms_sms_id_int', 'in', sms_sms_ids)]
-        else:
-            domain = [('id', 'in', self.ids)]
-        if additional_domain:
-            domain = expression.AND([domain, additional_domain])
-        return self.search(domain)
-
-    def set_failed(self, failure_type):
-        for trace in self:
-            trace.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
-
-    def set_sms_sent(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('sent', '=', False)])
-        statistics.write({'sent': fields.Datetime.now()})
-        return statistics
-
-    def set_sms_clicked(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('clicked', '=', False)])
-        statistics.write({'clicked': fields.Datetime.now()})
-        return statistics
-
-    def set_sms_ignored(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('ignored', '=', False)])
-        statistics.write({'ignored': fields.Datetime.now()})
-        return statistics
-
-    def set_sms_exception(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('exception', '=', False)])
-        statistics.write({'exception': fields.Datetime.now()})
-        return statistics

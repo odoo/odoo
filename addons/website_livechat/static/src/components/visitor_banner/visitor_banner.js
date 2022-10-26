@@ -1,47 +1,23 @@
-odoo.define('website_livechat/static/src/components/visitor_banner/visitor_banner.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-class VisitorBanner extends Component {
+export class VisitorBanner extends Component {
 
     /**
-     * @override
+     * @returns {VisitorBannerView}
      */
-    constructor(...args) {
-        super(...args);
-        useStore(props => {
-            const visitor = this.env.models['website_livechat.visitor'].get(props.visitorLocalId);
-            const country = visitor && visitor.country;
-            return {
-                country: country && country.__state,
-                visitor: visitor ? visitor.__state : undefined,
-            };
-        });
-    }
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {website_livechat.visitor}
-     */
-    get visitor() {
-        return this.env.models['website_livechat.visitor'].get(this.props.visitorLocalId);
+    get visitorBannerView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(VisitorBanner, {
-    props: {
-        visitorLocalId: String,
-    },
+    props: { record: Object },
     template: 'website_livechat.VisitorBanner',
 });
 
-return VisitorBanner;
-
-});
+registerMessagingComponent(VisitorBanner);

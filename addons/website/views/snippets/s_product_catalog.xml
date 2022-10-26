@@ -50,12 +50,36 @@
     <li class="s_product_catalog_dish" data-name="Product">
         <p class="s_product_catalog_dish_title d-flex align-items-baseline pb-2">
             <span t-esc="name" class="s_product_catalog_dish_name s_product_catalog_dish_dot_leaders"/>
-            <span t-esc="price" class="s_product_catalog_dish_price ml-auto pl-2"/>
+            <span t-esc="price" class="s_product_catalog_dish_price ms-auto ps-2"/>
         </p>
     </li>
 </template>
 
+<template id="s_product_catalog_add_product_widget">
+    <we-row string="Product">
+        <we-button data-add-item="" data-item=".s_product_catalog_dish:last" data-select-item=""
+                   t-att-data-apply-to="apply_to"
+                   data-no-preview="true" class="o_we_bg_brand_primary">
+            Add Product
+        </we-button>
+    </we-row>
+</template>
+
 <template id="s_product_catalog_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
+        <div data-js="MultipleItems"
+             data-selector=".s_product_catalog">
+            <t t-call="website.s_product_catalog_add_product_widget">
+                <t t-set="apply_to" t-valuef="> :has(.s_product_catalog_dish):not(:has(.row > div:has(.s_product_catalog_dish)))"/>
+            </t>
+        </div>
+        <div data-js="MultipleItems"
+             data-selector=".s_product_catalog .row > div">
+            <t t-call="website.s_product_catalog_add_product_widget">
+                <t t-set="apply_to" t-valuef="> :has(.s_product_catalog_dish)"/>
+            </t>
+        </div>
+    </xpath>
     <xpath expr="." position="inside">
         <div data-js="ProductCatalog" data-selector=".s_product_catalog">
             <we-checkbox string="Descriptions" data-toggle-description="true" data-no-preview="true"/>
@@ -66,11 +90,10 @@
                 <!-- Note: no need of extra dependency thanks to the apply-to -->
             </t>
         </div>
-        <div data-selector=".s_product_catalog_dish"/>
+        <div data-selector=".s_product_catalog_dish" data-drop-near=".s_product_catalog_dish"/>
     </xpath>
     <xpath expr="//div[@data-js='SnippetMove']" position="attributes">
         <attribute name="data-selector" add=".s_product_catalog_dish" separator=","/>
-        <attribute name="data-drop-near" add=".s_product_catalog_dish" separator=","/>
     </xpath>
 </template>
 

@@ -1,9 +1,11 @@
 odoo.define('point_of_sale.Gui', function (require) {
     'use strict';
 
+    const { status } = owl;
+
     /**
      * This module bridges the data classes (such as those defined in
-     * models.js) to the view (owl.Component) but not vice versa.
+     * models.js) to the view (Component) but not vice versa.
      *
      * The idea is to be able to perform side-effects to the user interface
      * during calculation. Think of console.log during times we want to see
@@ -29,11 +31,12 @@ odoo.define('point_of_sale.Gui', function (require) {
     /**
      * Call this when the user interface is ready. Provide the component
      * that will be used to control the ui.
-     * @param {owl.component} component component having the ui methods.
+     * @param {component} component component having the ui methods.
      */
     const configureGui = ({ component }) => {
         config.component = component;
         config.availableMethods = new Set([
+            'showScreen',
             'showPopup',
             'showTempScreen',
             'playSound',
@@ -50,7 +53,7 @@ odoo.define('point_of_sale.Gui', function (require) {
         get(target, key) {
             const { component, availableMethods } = target;
             if (!component) throw new Error(`Call 'configureGui' before using Gui.`);
-            const isMounted = component.__owl__.status === 3 /* mounted */;
+            const isMounted = status(component) === 'mounted';
             if (availableMethods.has(key) && isMounted) {
                 return component[key].bind(component);
             }

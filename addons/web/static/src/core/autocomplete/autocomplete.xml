@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.AutoComplete" owl="1">
+        <div class="o-autocomplete dropdown" t-ref="root">
+            <input
+                type="text"
+                t-att-id="props.id"
+                class="o-autocomplete--input o_input"
+                autocomplete="off"
+                t-att-placeholder="props.placeholder"
+                t-model="state.value"
+                t-on-blur="onInputBlur"
+                t-on-click="onInputClick"
+                t-on-change="onInputChange"
+                t-on-input="debouncedOnInput"
+                t-on-keydown="onInputKeydown"
+                t-ref="input"
+            />
+            <t t-if="isOpened and hasOptions">
+                <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show" t-on-mousedown.prevent="" t-ref="sourcesList">
+                    <t t-foreach="sources" t-as="source" t-key="source.id">
+                        <t t-if="source.isLoading">
+                            <li class="o-autocomplete--dropdown-item ui-menu-item">
+                                <a href="#" class="dropdown-item ui-menu-item-wrapper">
+                                    <i class="fa fa-spin fa-circle-o-notch" /> <t t-esc="source.placeholder" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="source.options" t-as="option" t-key="option.id">
+                                <li
+                                    class="o-autocomplete--dropdown-item ui-menu-item"
+                                    t-att-class="option.classList"
+                                    t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
+                                    t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
+                                    t-on-click="() => this.onOptionClick([source_index, option_index])"
+                                >
+                                    <a
+                                        href="#"
+                                        class="dropdown-item ui-menu-item-wrapper"
+                                        t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
+                                    >
+                                        <t t-if="source.optionTemplate">
+                                            <t t-call="{{ source.optionTemplate }}" />
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="option.label" />
+                                        </t>
+                                    </a>
+                                </li>
+                            </t>
+                        </t>
+                    </t>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -47,7 +47,6 @@ Izvori podataka:
     ],
     'data': [
         'data/l10n_hr_chart_data.xml',
-        'data/account.account.type.csv',
         'data/account.account.template.csv',
         'data/account_chart_tag_data.xml',
         'data/account.tax.group.csv',
@@ -59,4 +58,5 @@ Izvori podataka:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

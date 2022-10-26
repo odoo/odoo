@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityListView" owl="1">
+        <div class="o_ActivityListView d-flex flex-column" t-ref="root">
+            <div class="o_ActivityListView_activityList d-flex flex-column flex-grow-1">
+                <t t-if="activityListView.activityListViewItems.length === 0">
+                    <span class="p-3 text-center fst-italic text-500 border-bottom">Schedule activities to help you get things done.</span>
+                </t>
+                <t t-if="activityListView.overdueActivityListViewItems.length > 0">
+                    <div class="d-flex bg-100 py-2 border-bottom">
+                        <span class="text-danger fw-bold mx-3">Overdue</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-danger mx-3 align-self-center" t-esc="activityListView.overdueActivityListViewItems.length"/>
+                    </div>
+                    <t t-foreach="activityListView.overdueActivityListViewItems" t-as="activityListViewItem" t-key="activityListViewItem">
+                        <ActivityListViewItem record="activityListViewItem"/>
+                    </t>
+                </t>
+                <t t-if="activityListView.todayActivityListViewItems.length > 0">
+                    <div class="d-flex bg-100 py-2 border-bottom">
+                        <span class="text-warning fw-bold mx-3">Today</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-warning mx-3 align-self-center" t-esc="activityListView.todayActivityListViewItems.length"/>
+                    </div>
+                    <t t-foreach="activityListView.todayActivityListViewItems" t-as="activityListViewItem" t-key="activityListViewItem">
+                        <ActivityListViewItem record="activityListViewItem"/>
+                    </t>
+                </t>
+                <t t-if="activityListView.plannedActivityListViewItems.length > 0">
+                    <div class="d-flex bg-100 py-2 border-bottom">
+                        <span class="text-success fw-bold mx-3">Planned</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-success mx-3 align-self-center" t-esc="activityListView.plannedActivityListViewItems.length"/>
+                    </div>
+                    <t t-foreach="activityListView.plannedActivityListViewItems" t-as="activityListViewItem" t-key="activityListViewItem">
+                        <ActivityListViewItem record="activityListViewItem"/>
+                    </t>
+                </t>
+            </div>
+            <button class="o_ActivityListView_addActivityButton btn btn-secondary p-3 text-center" t-on-click="activityListView.onClickAddActivityButton">
+                <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
+            </button>
+        </div>
+    </t>
+</templates>

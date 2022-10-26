@@ -9,6 +9,7 @@ access_stock_move_pos_user,stock.move pos_user,stock.model_stock_move,group_pos_
 access_report_pos_order,report.pos.order,model_report_pos_order,group_pos_user,1,1,1,1
 access_account_journal_pos_user,account.journal pos_user,account.model_account_journal,group_pos_user,1,0,0,0
 access_account_payment_method_pos_user,account.payment.method pos_user,account.model_account_payment_method,group_pos_manager,1,0,0,0
+access_account_payment_method_line_pos_user,account.payment.method.line pos_user,account.model_account_payment_method_line,group_pos_manager,1,0,0,0
 access_account_bank_statement,account.bank.statement,account.model_account_bank_statement,group_pos_user,1,1,1,0
 access_account_bank_statement_manager,account.bank.statement manager,account.model_account_bank_statement,group_pos_manager,1,1,1,1
 access_account_bank_statement_line,account.bank.statement.line,account.model_account_bank_statement_line,group_pos_user,1,1,1,0
@@ -31,8 +32,10 @@ access_uom_uom_manager,uom.uom manager,uom.model_uom_uom,group_pos_manager,1,1,1
 access_product_category_manager,product.category manager,product.model_product_category,group_pos_manager,1,1,1,1
 access_product_pricelist_manager,product.pricelist manager,product.model_product_pricelist,group_pos_manager,1,1,1,1
 access_product_pricelist_user,product.pricelist user,product.model_product_pricelist,group_pos_user,1,0,0,0
+access_product_tag_pos_manager,product.tag.pos.manager,product.model_product_tag,group_pos_manager,1,1,1,1
 access_pos_session_user,pos.session user,model_pos_session,group_pos_user,1,1,1,0
 access_pos_config_user,pos.config user,model_pos_config,group_pos_user,1,1,0,0
+access_pos_config_system_user,pos.config system,model_pos_config,base.group_system,1,1,0,0
 access_pos_config_manager,pos.config manager,model_pos_config,group_pos_manager,1,1,1,1
 access_product_category_pos_manager,pos.category manager,model_pos_category,group_pos_manager,1,1,1,1
 access_product_category_pos_user,pos.category user,model_pos_category,group_pos_user,1,0,0,0
@@ -40,15 +43,13 @@ access_barcode_nomenclature_pos_user,barcode.nomenclature.pos.user,barcodes.mode
 access_barcode_nomenclature_pos_manager,barcode.nomenclature.pos.manager,barcodes.model_barcode_nomenclature,group_pos_manager,1,1,1,1
 access_barcode_rule_pos_user,barcode.rule.pos.user,barcodes.model_barcode_rule,group_pos_user,1,0,0,0
 access_barcode_rule_pos_manager,barcode.rule.pos.manager,barcodes.model_barcode_rule,group_pos_manager,1,1,1,1
-access_bank_statement_cashbox_user,account.bank.statement.cashbox user,account.model_account_bank_statement_cashbox,group_pos_user,1,1,1,0
-access_account_cashbox_line_user,account.cashbox.line user,account.model_account_cashbox_line,group_pos_user,1,1,1,1
 access_decimal_precision_user,decimal.precision,base.model_decimal_precision,group_pos_user,1,0,0,0
 access_pos_payment_user,pos.payment user,model_pos_payment,group_pos_user,1,1,1,1
 access_pos_payment_method_user,pos.payment.method user,model_pos_payment_method,group_pos_user,1,0,0,0
 access_pos_payment_method_manager,pos.payment.method manager,model_pos_payment_method,group_pos_manager,1,1,1,1
-access_closing_balance_confirm_wizard,access.closing.balance.confirm.wizard,model_closing_balance_confirm_wizard,point_of_sale.group_pos_manager,1,1,1,0
 access_pos_details_wizard,access.pos.details.wizard,model_pos_details_wizard,point_of_sale.group_pos_manager,1,1,1,0
 access_pos_make_payment,access.pos.make.payment,model_pos_make_payment,point_of_sale.group_pos_manager,1,1,1,0
-access_money_in_out_wizard,access.money.in.out.wizard,model_cash_box_out,point_of_sale.group_pos_user,1,1,1,0
 access_pos_close_session_wizard,access.pos.close.session.wizard,model_pos_close_session_wizard,point_of_sale.group_pos_user,1,1,1,0
 access_account_cash_rounding_pos_user,account.cash.rounding pos_user,account.model_account_cash_rounding,group_pos_user,1,0,0,0
+access_pos_bill,pos.bill pos_user,model_pos_bill,group_pos_user,1,1,1,1
+access_pos_session_check_product_wizard,access.pos.session.check.product.wizard,model_pos_session_check_product_wizard,group_pos_user,1,1,1,0

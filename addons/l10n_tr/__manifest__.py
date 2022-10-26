@@ -19,14 +19,24 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'account',
     ],
     'data': [
-        'data/l10n_tr_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/l10n_tr_chart_post_data.xml',
-        'data/account_data.xml',
-        'data/account_tax_template_data.xml',
+        # Chart of Accounts
         'data/account_chart_template_data.xml',
+        "data/account.account.template-common.csv",
+        "data/account.account.template-7a.csv",
+        "data/account.account.template-7b.csv",
+        "data/account.group.template.csv",
+
+        # Taxes
+        "data/account_tax_group_data.xml",
+        "data/account_tax_template_data.xml",
+
+        # post processing
+        "data/account_chart_post_data.xml",
+        "data/account_chart_template_try_loading.xml",
+
     ],
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

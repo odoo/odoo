@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+from psycopg2 import IntegrityError
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 import pytz
 
-from odoo import exceptions, tests
+from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
-from odoo.tests.common import Form
+from odoo.tests.common import Form, users
 
 
 class TestActivityCommon(TestMailCommon):
@@ -47,7 +49,7 @@ class TestActivityRights(TestActivityCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
+            """ If employee is test employee, consider they have no access on document """
             recordset = args[0]
             if recordset.env.uid == self.user_employee.id:
                 raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
@@ -63,11 +65,62 @@ class TestActivityRights(TestActivityCommon):
 
     def test_activity_security_user_noaccess_manual(self):
         def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
+            """ If employee is test employee, consider they have no access on document """
             recordset = args[0]
             if recordset.env.uid == self.user_employee.id:
                 raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
             return DEFAULT
+
+        test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_admin.id,
+            'summary': 'Summary',
+        })
+        test_activity.flush_recordset()
+
+        # can _search activities if access to the document
+        self.env['mail.activity'].with_user(self.user_employee)._search(
+            [('id', '=', test_activity.id)], count=False)
+
+        # cannot _search activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
+                    [('id', '=', test_activity.id)], count=False)
+
+        # can read_group activities if access to the document
+        read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+            [('id', '=', test_activity.id)],
+            ['summary'],
+            ['summary'],
+        )
+        self.assertEqual(1, read_group_result[0]['summary_count'])
+        self.assertEqual('Summary', read_group_result[0]['summary'])
+
+        # cannot read_group activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                self.env['mail.activity'].with_user(self.user_employee).read_group(
+                    [('id', '=', test_activity.id)],
+                    ['summary'],
+                    ['summary'],
+                )
+
+        # cannot read activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                searched_activity = self.env['mail.activity'].with_user(self.user_employee).search(
+                    [('id', '=', test_activity.id)])
+                searched_activity.read(['summary'])
+
+        # cannot search_read activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                self.env['mail.activity'].with_user(self.user_employee).search_read(
+                    [('id', '=', test_activity.id)],
+                    ['summary'])
 
         # cannot create activities for people that cannot access record
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
@@ -107,11 +160,9 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.activity_state, 'planned')
 
             test_record.activity_ids.write({'date_deadline': date.today() - relativedelta(days=1)})
-            test_record.invalidate_cache()  # TDE note: should not have to do it I think
             self.assertEqual(test_record.activity_state, 'overdue')
 
             test_record.activity_ids.write({'date_deadline': date.today()})
-            test_record.invalidate_cache()  # TDE note: should not have to do it I think
             self.assertEqual(test_record.activity_state, 'today')
 
             # activity is done
@@ -125,7 +176,7 @@ class TestActivityFlow(TestActivityCommon):
         rec = self.test_record.with_user(self.user_employee)
         with self.assertSinglePostNotifications(
                 [{'partner': self.partner_admin, 'type': 'email'}],
-                message_info={'content': 'assigned you an activity', 'subtype': 'mail.mt_note', 'message_type': 'user_notification'}):
+                message_info={'content': 'assigned you the following activity', 'subtype': 'mail.mt_note', 'message_type': 'user_notification'}):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_admin.id)
@@ -150,7 +201,6 @@ class TestActivityFlow(TestActivityCommon):
             activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_summary_sync(self):
         """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
         ActivityType = self.env['mail.activity.type']
@@ -159,9 +209,9 @@ class TestActivityFlow(TestActivityCommon):
             'summary': 'Email Summary',
         })
         call_activity_type = ActivityType.create({'name': 'call'})
-        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env.ref('base.model_res_partner'))) as ActivityForm:
-            ActivityForm.res_model_id = self.env.ref('base.model_res_partner')
-
+        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'), default_res_id=self.test_record.id)) as ActivityForm:
+            # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
+            # they must be set using defaults, see `action_feedback_schedule_next`
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
             self.assertEqual(ActivityForm.summary, False)
@@ -174,47 +224,46 @@ class TestActivityFlow(TestActivityCommon):
             # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
             self.assertEqual(ActivityForm.summary, email_activity_type.summary)
 
-    def test_action_feedback_attachment(self):
-        Partner = self.env['res.partner']
-        Activity = self.env['mail.activity']
-        Attachment = self.env['ir.attachment']
-        Message = self.env['mail.message']
+    @mute_logger('odoo.sql_db')
+    def test_activity_values(self):
+        """ Test activities are created with right model / res_id values linking
+        to records without void values. 0 as res_id especially is not wanted. """
+        # creating activities on a temporary record generates activities with res_id
+        # being 0, which is annoying -> never create activities in transient mode
+        temp_record = self.env['mail.test.activity'].new({'name': 'Test'})
+        with self.assertRaises(IntegrityError):
+            activity = temp_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
 
-        partner = self.env['res.partner'].create({
-            'name': 'Tester',
-        })
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
 
-        activity = Activity.create({
-            'summary': 'Test',
-            'activity_type_id': 1,
-            'res_model_id': self.env.ref('base.model_res_partner').id,
-            'res_id': partner.id,
-        })
+        with self.assertRaises(IntegrityError):
+            self.env['mail.activity'].create({
+                'res_model_id': self.env['ir.model']._get_id(test_record._name),
+            })
+        with self.assertRaises(IntegrityError):
+            self.env['mail.activity'].create({
+                'res_model_id': self.env['ir.model']._get_id(test_record._name),
+                'res_id': False,
+            })
+        with self.assertRaises(IntegrityError):
+            self.env['mail.activity'].create({
+                'res_id': test_record.id,
+            })
 
-        attachments = Attachment
-        attachments += Attachment.create({
-            'name': 'test',
-            'res_name': 'test',
-            'res_model': 'mail.activity',
-            'res_id': activity.id,
-            'datas': 'test',
+        activity = self.env['mail.activity'].create({
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id(test_record._name),
         })
-        attachments += Attachment.create({
-            'name': 'test2',
-            'res_name': 'test',
-            'res_model': 'mail.activity',
-            'res_id': activity.id,
-            'datas': 'testtest',
-        })
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_model_id': False})
+            self.env.flush_all()
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_id': False})
+            self.env.flush_all()
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_id': 0})
+            self.env.flush_all()
 
-        # Checking if the attachment has been forwarded to the message
-        # when marking an activity as "Done"
-        activity.action_feedback()
-        activity_message = Message.search([], order='id desc', limit=1)
-        self.assertEqual(set(activity_message.attachment_ids.ids), set(attachments.ids))
-        for attachment in attachments:
-            self.assertEqual(attachment.res_id, activity_message.id)
-            self.assertEqual(attachment.res_model, activity_message._name)
 
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
@@ -268,7 +317,7 @@ class TestActivityMixin(TestActivityCommon):
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
             # As we just created the activity, its not yet in the right order.
             # We force it by invalidating it so it gets fetched from database, in the right order.
-            self.test_record.invalidate_cache(['activity_ids'])
+            self.test_record.invalidate_recordset(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             act3 = self.test_record.activity_schedule(
@@ -280,10 +329,10 @@ class TestActivityMixin(TestActivityCommon):
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
             # As we just created the activity, its not yet in the right order.
             # We force it by invalidating it so it gets fetched from database, in the right order.
-            self.test_record.invalidate_cache(['activity_ids'])
+            self.test_record.invalidate_recordset(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
-            self.test_record.invalidate_cache(ids=self.test_record.ids)
+            self.test_record.invalidate_recordset()
             self.assertEqual(self.test_record.activity_ids, act1 | act2 | act3)
 
             # Perform todo activities for admin
@@ -353,6 +402,89 @@ class TestActivityMixin(TestActivityCommon):
             new_user_id=self.user_employee.id)
         self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
 
+    @users('employee')
+    def test_feedback_w_attachments(self):
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+
+        activity = self.env['mail.activity'].create({
+            'activity_type_id': 1,
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'summary': 'Test',
+        })
+        attachments = self.env['ir.attachment'].create([{
+            'name': 'test',
+            'res_name': 'test',
+            'res_model': 'mail.activity',
+            'res_id': activity.id,
+            'datas': 'test',
+        }, {
+            'name': 'test2',
+            'res_name': 'test',
+            'res_model': 'mail.activity',
+            'res_id': activity.id,
+            'datas': 'testtest',
+        }])
+
+        # Checking if the attachment has been forwarded to the message
+        # when marking an activity as "Done"
+        activity.action_feedback()
+        activity_message = test_record.message_ids[-1]
+        self.assertEqual(set(activity_message.attachment_ids.ids), set(attachments.ids))
+        for attachment in attachments:
+            self.assertEqual(attachment.res_id, activity_message.id)
+            self.assertEqual(attachment.res_model, activity_message._name)
+
+    @users('employee')
+    def test_feedback_chained_current_date(self):
+        frozen_now = datetime(2021, 10, 10, 14, 30, 15)
+
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+        first_activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_chained_1').id,
+            'date_deadline': frozen_now + relativedelta(days=-2),
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'summary': 'Test',
+        })
+        first_activity_id = first_activity.id
+
+        with freeze_time(frozen_now):
+            first_activity.action_feedback(feedback='Done')
+        self.assertFalse(first_activity.exists())
+
+        # check chained activity
+        new_activity = test_record.activity_ids
+        self.assertNotEqual(new_activity.id, first_activity_id)
+        self.assertEqual(new_activity.summary, 'Take the second step.')
+        self.assertEqual(new_activity.date_deadline, frozen_now.date() + relativedelta(days=10))
+
+    @users('employee')
+    def test_feedback_chained_previous(self):
+        self.env.ref('test_mail.mail_act_test_chained_2').sudo().write({'delay_from': 'previous_activity'})
+        frozen_now = datetime(2021, 10, 10, 14, 30, 15)
+
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+        first_activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_chained_1').id,
+            'date_deadline': frozen_now + relativedelta(days=-2),
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'summary': 'Test',
+        })
+        first_activity_id = first_activity.id
+
+        with freeze_time(frozen_now):
+            first_activity.action_feedback(feedback='Done')
+        self.assertFalse(first_activity.exists())
+
+        # check chained activity
+        new_activity = test_record.activity_ids
+        self.assertNotEqual(new_activity.id, first_activity_id)
+        self.assertEqual(new_activity.summary, 'Take the second step.')
+        self.assertEqual(new_activity.date_deadline, frozen_now.date() + relativedelta(days=8),
+                         'New deadline should take into account original activity deadline, not current date')
+
     def test_mail_activity_state(self):
         """Create 3 activity for 2 different users in 2 different timezones.
 
@@ -398,6 +530,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(activity_2.state, 'overdue')
             self.assertEqual(activity_3.state, 'today')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_basic(self):
         """Test the search method on the "activity_state".
 
@@ -420,7 +553,8 @@ class TestActivityMixin(TestActivityCommon):
 
         origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
 
-        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime), \
+            patch('odoo.addons.mail.models.mail_activity_mixin.datetime', MockedDatetime):
             origin_1_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
                 'activity_type_id': 1,
@@ -454,6 +588,8 @@ class TestActivityMixin(TestActivityCommon):
             origin_2_activity_3.date_deadline -= relativedelta(hours=8)
             origin_2_activity_4 = origin_2_activity_1.copy()
             origin_2_activity_4.date_deadline = datetime(2020, 1, 2, 0, 0, 0)
+
+            self.env['mail.test.activity'].flush_model()
 
             self.assertEqual(origin_2_activity_1.state, 'planned')
             self.assertEqual(origin_2_activity_2.state, 'today')
@@ -492,6 +628,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertTrue(len(result) > 0)
             self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state in ('today', False)))
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_different_day_but_close_time(self):
         """Test the case where there's less than 24 hours between the deadline and now_tz,
         but one day of difference (e.g. 23h 01/01/2020 & 1h 02/02/2020). So the state
@@ -526,3 +663,101 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(origin_1_activity_1.state, 'planned')
             result = self.env['mail.test.activity'].search([('activity_state', '=', 'today')])
             self.assertNotIn(origin_1, result, 'The activity state miss calculated during the search')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_my_activity_flow_employee(self):
+        Activity = self.env['mail.activity']
+        date_today = date.today()
+        Activity.create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'date_deadline': date_today,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_admin.id,
+        })
+        Activity.create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_call').id,
+            'date_deadline': date_today + relativedelta(days=1),
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+        })
+
+        test_record_1 = self.env['mail.test.activity'].with_context(self._test_context).create({'name': 'Test 1'})
+        Activity.create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'date_deadline': date_today,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': test_record_1.id,
+            'user_id': self.user_employee.id,
+        })
+        with self.with_user('employee'):
+            record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', date_today)])
+            self.assertEqual(test_record_1, record)
+
+
+class TestReadProgressBar(tests.TransactionCase):
+    """Test for read_progress_bar"""
+
+    def test_week_grouping(self):
+        """The labels associated to each record in read_progress_bar should match
+        the ones from read_group, even in edge cases like en_US locale on sundays
+        """
+        model = self.env['mail.test.activity'].with_context(lang='en_US')
+
+        # Don't mistake fields date and date_deadline:
+        # * date is just a random value
+        # * date_deadline defines activity_state
+        model.create({
+            'date': '2021-05-02',
+            'name': "Yesterday, all my troubles seemed so far away",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Make another test super asap (yesterday)",
+            date_deadline=fields.Date.context_today(model) - timedelta(days=7),
+        )
+        model.create({
+            'date': '2021-05-09',
+            'name': "Things we said today",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Make another test asap",
+            date_deadline=fields.Date.context_today(model),
+        )
+        model.create({
+            'date': '2021-05-16',
+            'name': "Tomorrow Never Knows",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Make a test tomorrow",
+            date_deadline=fields.Date.context_today(model) + timedelta(days=7),
+        )
+
+        domain = [('date', "!=", False)]
+        groupby = "date:week"
+        progress_bar = {
+            'field': 'activity_state',
+            'colors': {
+                "overdue": 'danger',
+                "today": 'warning',
+                "planned": 'success',
+            }
+        }
+
+        # call read_group to compute group names
+        groups = model.read_group(domain, fields=['date'], groupby=[groupby])
+        progressbars = model.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+        self.assertEqual(len(groups), 3)
+        self.assertEqual(len(progressbars), 3)
+
+        # format the read_progress_bar result to get a dictionary under this
+        # format: {activity_state: group_name}; the original format
+        # (after read_progress_bar) is {group_name: {activity_state: count}}
+        pg_groups = {
+            next(state for state, count in data.items() if count): group_name
+            for group_name, data in progressbars.items()
+        }
+
+        self.assertEqual(groups[0][groupby], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby], pg_groups["today"])
+        self.assertEqual(groups[2][groupby], pg_groups["planned"])

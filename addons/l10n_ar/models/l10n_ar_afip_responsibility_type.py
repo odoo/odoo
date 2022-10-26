@@ -9,7 +9,7 @@ class L10nArAfipResponsibilityType(models.Model):
     _description = 'AFIP Responsibility Type'
     _order = 'sequence'
 
-    name = fields.Char(required=True, index=True)
+    name = fields.Char(required=True, index='trigram')
     sequence = fields.Integer()
     code = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True)

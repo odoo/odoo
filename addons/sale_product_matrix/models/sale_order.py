@@ -8,9 +8,9 @@ from odoo.exceptions import ValidationError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    report_grids = fields.Boolean(
-        string="Print Variant Grids", default=True,
-        help="If set, the matrix of the products configurable by matrix will be shown on the report of the order.")
+    # if set, the matrix of the products configurable by matrix will be shown
+    # on the report of the order.
+    report_grids = fields.Boolean(string="Print Variant Grids", default=True)
 
     """ Matrix loading and update: fields and methods :
 
@@ -23,14 +23,14 @@ class SaleOrder(models.Model):
     """
 
     grid_product_tmpl_id = fields.Many2one(
-        'product.template', store=False,
-        help="Technical field for product_matrix functionalities.")
-    grid_update = fields.Boolean(
-        default=False, store=False,
-        help="Whether the grid field contains a new matrix to apply or not.")
+        'product.template', store=False)
+    # Whether the grid field contains a new matrix to apply or not
+    grid_update = fields.Boolean(default=False, store=False)
     grid = fields.Char(
         "Matrix local storage", store=False,
-        help="Technical local storage of grid. \nIf grid_update, will be loaded on the SO. \nIf not, represents the matrix to open.")
+        help="Technical local storage of grid. "
+        "\nIf grid_update, will be loaded on the SO."
+        "\nIf not, represents the matrix to open.")
 
     @api.onchange('grid_product_tmpl_id')
     def _set_grid_up(self):
@@ -64,8 +64,12 @@ class SaleOrder(models.Model):
                 old_qty = sum(order_lines.mapped('product_uom_qty'))
                 qty = cell['qty']
                 diff = qty - old_qty
+
+                if not diff:
+                    continue
+
                 # TODO keep qty check? cannot be 0 because we only get cell changes ...
-                if diff and order_lines:
+                if order_lines:
                     if qty == 0:
                         if self.state in ['draft', 'sent']:
                             # Remove lines if qty was set to 0 in matrix
@@ -95,7 +99,7 @@ class SaleOrder(models.Model):
                             # if len(order_lines) > 1:
                             #     # Remove 1+ lines
                             #     self.order_line -= order_lines[1:]
-                elif diff and not order_lines:
+                else:
                     if not default_so_line_vals:
                         OrderLine = self.env['sale.order.line']
                         default_so_line_vals = OrderLine.default_get(OrderLine._fields.keys())
@@ -109,13 +113,8 @@ class SaleOrder(models.Model):
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if new_lines:
-                res = False
+                # Add new SO lines
                 self.update(dict(order_line=new_lines))
-                for line in self.order_line.filtered(lambda line: line.product_template_id == product_template):
-                    res = line.product_id_change() or res
-                    line._onchange_discount()
-                    line._onchange_product_id_set_customer_lead()
-                return res
 
     def _get_matrix(self, product_template):
         """Return the matrix of the given product, updated with current SOLines quantities.

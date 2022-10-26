@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mail_followers')
 class TestInvite(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

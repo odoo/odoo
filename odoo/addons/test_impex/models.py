@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
-
-def selection_fn(model):
-    return [(str(key), val) for key, val in enumerate(["Corge", "Grault", "Wheee", "Moog"])]
+def selection_fn(self):
+    return [
+        (str(key), val)
+        for key, val in enumerate([_("Corge"), _("Grault"), _("Wheee"), _("Moog")])
+    ]
 
 def compute_fn(records):
     for record in records:
@@ -174,3 +176,13 @@ class InheritsChild(models.Model):
 
     parent_id = fields.Many2one('export.inherits.parent', required=True, ondelete='cascade')
     value = fields.Integer()
+
+class Many2String(models.Model):
+    _name = _description = 'export.m2o.str'
+
+    child_id = fields.Many2one('export.m2o.str.child')
+
+class ChidToString(models.Model):
+    _name = _description = 'export.m2o.str.child'
+
+    name = fields.Char()

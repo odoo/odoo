@@ -1,0 +1,39 @@
+.o_website_loader_container {
+    --website-loader-color: #{$white};
+
+    font-family: "Montserrat", $font-family-sans-serif;
+    background-color: rgba($o-shadow-color, .9);
+    pointer-events: all;
+    font-size: 3.5rem;
+    justify-content: space-evenly;
+    z-index: $zindex-modal - 1;
+    padding: 7%;
+    color: var(--website-loader-color);
+
+    .o_website_loader {
+        position: relative;
+        display: inline-block;
+        width: 400px;
+        height: 220px;
+        background-image: url('/website/static/src/img/theme_loader.gif');
+        background-size: cover;
+        border-radius: 6px;
+    }
+
+    .o_website_loader_tip {
+        font-size: 0.5em;
+        color: var(--website-loader-color);
+        
+        @include media-breakpoint-down(md) {
+            width: 50% !important;
+        }
+
+        .o_tooltip {
+            top: auto !important;
+            bottom: 11px !important;
+            left: 0 !important;
+            margin-right: 7px !important;
+            padding-left: 33px !important;
+        }
+    }
+}

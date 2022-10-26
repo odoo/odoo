@@ -10,7 +10,7 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
     def setUp(self):
         super(TestLivechatUI, self).setUp()
         self.visitor_tour = self.env['website.visitor'].create({
-            'name': 'Visitor Tour',
+            'access_token': 'f9d2e784d3d96a904fca2f5e2a559a19',
             'website_id': self.env.ref('website.default_website').id,
         })
         self.target_visitor = self.visitor_tour
@@ -57,7 +57,7 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
         self.assertEqual(channel.livechat_active, True, 'Livechat must be active while the chat window is not closed.')
 
         # Check that the chat request has been canceled.
-        chat_request.invalidate_cache()
+        chat_request.invalidate_recordset()
         self.assertEqual(chat_request.livechat_active, False, "The livechat request must be inactive as the visitor started himself a livechat session.")
 
     def test_chat_request_flow_with_rating_ui(self):

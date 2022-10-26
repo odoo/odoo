@@ -2,6 +2,7 @@
 import logging
 import threading
 import time
+import os
 import psycopg2
 import pytz
 from datetime import datetime, timedelta
@@ -13,7 +14,7 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
+BASE_VERSION = odoo.modules.get_manifest('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
 
 
@@ -64,10 +65,13 @@ class ir_cron(models.Model):
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
-    @api.model
-    def create(self, values):
-        values['usage'] = 'ir_cron'
-        return super(ir_cron, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['usage'] = 'ir_cron'
+        if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
+            self._cr.postcommit.add(self._notifydb)
+        return super().create(vals_list)
 
     @api.model
     def default_get(self, fields_list):
@@ -79,7 +83,7 @@ class ir_cron(models.Model):
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
-            cron.with_user(cron.user_id).with_context(lastcall=cron.lastcall).ir_actions_server_id.run()
+            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
             cron.lastcall = fields.Datetime.now()
         return True
 
@@ -95,15 +99,22 @@ class ir_cron(models.Model):
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
-                job_ids = tuple([job['id'] for job in jobs])
 
-                while True:
-                    job = cls._acquire_one_job(cron_cr, job_ids)
+                for job_id in (job['id'] for job in jobs):
+                    try:
+                        job = cls._acquire_one_job(cron_cr, (job_id,))
+                    except psycopg2.extensions.TransactionRollbackError:
+                        cron_cr.rollback()
+                        _logger.debug("job %s has been processed by another worker, skip", job_id)
+                        continue
                     if not job:
-                        break
-                    _logger.debug("job %s acquired", job['id'])
-                    cls._process_job(db, cron_cr, job)
-                    _logger.debug("job %s updated and released", job['id'])
+                        _logger.debug("another worker is processing job %s, skip", job_id)
+                        continue
+                    _logger.debug("job %s acquired", job_id)
+                    # take into account overridings of _process_job() on that database
+                    registry = odoo.registry(db_name)
+                    registry[cls._name]._process_job(db, cron_cr, job)
+                    _logger.debug("job %s updated and released", job_id)
 
         except BadVersion:
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
@@ -168,7 +179,7 @@ class ir_cron(models.Model):
     def _get_all_ready_jobs(cls, cr):
         """ Return a list of all jobs that are ready to be executed """
         cr.execute("""
-            SELECT *
+            SELECT *, cron_name->>'en_US' as cron_name
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0
@@ -185,7 +196,17 @@ class ir_cron(models.Model):
 
     @classmethod
     def _acquire_one_job(cls, cr, job_ids):
-        """ Acquire one job for update from the job_ids tuple. """
+        """
+        Acquire for update one job that is ready from the job_ids tuple.
+
+        The jobs that have already been processed in this worker should
+        be excluded from the tuple.
+
+        This function raises a ``psycopg2.errors.SerializationFailure``
+        when the ``nextcall`` of one of the job_ids is modified in
+        another transaction. You should rollback the transaction and try
+        again later.
+        """
 
         # We have to make sure ALL jobs are executed ONLY ONCE no matter
         # how many cron workers may process them. The exlusion mechanism
@@ -198,7 +219,15 @@ class ir_cron(models.Model):
         # the other workers don't select it too.
         # (ii) is implemented via the `WHERE` statement, when a job has
         # been processed, its nextcall is updated to a date in the
-        # future and the optionnal trigger is removed.
+        # future and the optional triggers are removed.
+        #
+        # Note about (ii): it is possible that a job becomes available
+        # again quickly (e.g. high frequency or self-triggering cron).
+        # This function doesn't prevent from acquiring that job multiple
+        # times at different moments. This can block a worker on
+        # executing a same job in loop. To prevent this problem, the
+        # callee is responsible of providing a `job_ids` tuple without
+        # the jobs it has executed already.
         #
         # An `UPDATE` lock type is the strongest row lock, it conflicts
         # with ALL other lock types. Among them the `KEY SHARE` row lock
@@ -211,8 +240,8 @@ class ir_cron(models.Model):
         #
         # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
 
-        cr.execute("""
-            SELECT *
+        query = """
+            SELECT *, cron_name->>'en_US' as cron_name
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0
@@ -227,7 +256,18 @@ class ir_cron(models.Model):
               AND id in %s
             ORDER BY priority
             LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
-        """, [job_ids])
+        """
+        try:
+            cr.execute(query, [job_ids], log_exceptions=False)
+        except psycopg2.extensions.TransactionRollbackError:
+            # A serialization error can occur when another cron worker
+            # commits the new `nextcall` value of a cron it just ran and
+            # that commit occured just before this query. The error is
+            # genuine and the job should be skipped in this cron worker.
+            raise
+        except Exception as exc:
+            _logger.error("bad query: %s\nERROR: %s", query, exc)
+            raise
         return cr.dictfetchone()
 
     @classmethod
@@ -249,7 +289,7 @@ class ir_cron(models.Model):
         # 3: now
         # 4: future_nextcall, the cron nextcall as seen from now
 
-        with api.Environment.manage(), db.cursor() as job_cr:
+        with cls.pool.cursor() as job_cr:
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
             interval = _intervalTypes[job['interval_type']](job['interval_number'])
             env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall})
@@ -322,9 +362,11 @@ class ir_cron(models.Model):
             log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
             odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', cron_name, server_action_id), depth=log_depth)
             start_time = False
+            _logger.info('Starting job `%s`.', cron_name)
             if _logger.isEnabledFor(logging.DEBUG):
                 start_time = time.time()
             self.env['ir.actions.server'].browse(server_action_id).run()
+            _logger.info('Job `%s` done.', cron_name)
             if start_time and _logger.isEnabledFor(logging.DEBUG):
                 end_time = time.time()
                 _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
@@ -367,6 +409,8 @@ class ir_cron(models.Model):
 
     def write(self, vals):
         self._try_lock()
+        if ('nextcall' in vals or vals.get('active')) and os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
+            self._cr.postcommit.add(self._notifydb)
         return super(ir_cron, self).write(vals)
 
     def unlink(self):
@@ -390,10 +434,14 @@ class ir_cron(models.Model):
 
     @api.model
     def toggle(self, model, domain):
+        # Prevent deactivated cron jobs from being re-enabled through side effects on
+        # neutralized databases.
+        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+            return True
+
         active = bool(self.env[model].search_count(domain))
         return self.try_write({'active': active})
 
-    @api.model
     def _trigger(self, at=None):
         """
         Schedule a cron job to be executed soon independently of its
@@ -412,7 +460,7 @@ class ir_cron(models.Model):
             of as soon as possible.
         """
         if at is None:
-            at_list = [datetime.utcnow()]
+            at_list = [fields.Datetime.now()]
         elif isinstance(at, datetime):
             at_list = [at]
         else:
@@ -421,7 +469,6 @@ class ir_cron(models.Model):
 
         self._trigger_list(at_list)
 
-    @api.model
     def _trigger_list(self, at_list):
         """
         Implementation of :meth:`~._trigger`.
@@ -443,13 +490,16 @@ class ir_cron(models.Model):
             ats = ', '.join(map(str, at_list))
             _logger.debug("will execute '%s' at %s", self.sudo().name, ats)
 
-        if min(at_list) <= now:
+        if min(at_list) <= now or os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self._cr.postcommit.add(self._notifydb)
 
     def _notifydb(self):
-        """ Wake up the cron workers """
+        """ Wake up the cron workers
+        The ODOO_NOTIFY_CRON_CHANGES environment variable allows to force the notifydb on both
+        ir_cron modification and on trigger creation (regardless of call_at)
+        """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
-            cr.execute('NOTIFY cron_trigger')
+            cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 
 

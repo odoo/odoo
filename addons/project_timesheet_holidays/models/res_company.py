@@ -1,50 +1,44 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import fields, models, _
 
 
 class Company(models.Model):
     _inherit = 'res.company'
 
-    leave_timesheet_project_id = fields.Many2one(
-        'project.project', string="Internal Project",
-        help="Default project value for timesheet generated from time off type.")
     leave_timesheet_task_id = fields.Many2one(
         'project.task', string="Time Off Task",
-        domain="[('project_id', '=', leave_timesheet_project_id)]")
-
-    @api.constrains('leave_timesheet_project_id')
-    def _check_leave_timesheet_project_id_company(self):
-        for company in self:
-            if company.leave_timesheet_project_id:
-                if company.leave_timesheet_project_id.sudo().company_id != company:
-                    raise ValidationError(_('The Internal Project of a company should be in that company.'))
+        domain="[('project_id', '=', internal_project_id)]")
 
     def init(self):
         type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]
-        for company in self.search([('leave_timesheet_project_id', '=', False)]):
+        companies = self.search(['|', ('internal_project_id', '=', False), ('leave_timesheet_task_id', '=', False)])
+        internal_projects_by_company_dict = None
+        Project = self.env['project.project']
+        for company in companies:
             company = company.with_company(company)
-            project = company.env['project.project'].search([
-                ('name', '=', _('Internal')),
-                ('allow_timesheets', '=', True),
-                ('company_id', '=', company.id),
-            ], limit=1)
-            if not project:
-                project = company.env['project.project'].create({
-                    'name': _('Internal'),
-                    'allow_timesheets': True,
-                    'company_id': company.id,
-                    'type_ids': type_ids,
-                })
-            company.write({
-                'leave_timesheet_project_id': project.id,
-            })
+            if not company.internal_project_id:
+                if not internal_projects_by_company_dict:
+                    internal_projects_by_company_read = Project.search_read([
+                        ('name', '=', _('Internal')),
+                        ('allow_timesheets', '=', True),
+                        ('company_id', 'in', companies.ids),
+                    ], ['company_id', 'id'])
+                    internal_projects_by_company_dict = {res['company_id'][0]: res['id'] for res in internal_projects_by_company_read}
+                project_id = internal_projects_by_company_dict.get(company.id, False)
+                if not project_id:
+                    project_id = Project.create({
+                        'name': _('Internal'),
+                        'allow_timesheets': True,
+                        'company_id': company.id,
+                        'type_ids': type_ids,
+                    }).id
+                company.write({'internal_project_id': project_id})
             if not company.leave_timesheet_task_id:
                 task = company.env['project.task'].create({
                     'name': _('Time Off'),
-                    'project_id': company.leave_timesheet_project_id.id,
+                    'project_id': company.internal_project_id.id,
                     'active': True,
                     'company_id': company.id,
                 })
@@ -57,17 +51,14 @@ class Company(models.Model):
         for project in projects:
             company = project.company_id
             company = company.with_company(company)
-            if not company.leave_timesheet_project_id:
-                company.write({
-                    'leave_timesheet_project_id': project.id,
-                })
             if not company.leave_timesheet_task_id:
                 task = company.env['project.task'].sudo().create({
                     'name': _('Time Off'),
-                    'project_id': company.leave_timesheet_project_id.id,
+                    'project_id': company.internal_project_id.id,
                     'active': True,
                     'company_id': company.id,
                 })
                 company.write({
                     'leave_timesheet_task_id': task.id,
                 })
+        return projects

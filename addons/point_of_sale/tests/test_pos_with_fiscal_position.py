@@ -124,61 +124,54 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         """
 
         self.customer.write({'property_account_position_id': self.fpos.id})
-        self.open_new_session()
 
-        # create orders
-        orders = []
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 10), (self.product2, 10), (self.product3, 10)],
-            customer=self.customer
-        ))
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 5), (self.product2, 5)],
-            customer=self.customer,
-        ))
-        orders.append(self.create_ui_order_data(
-            [(self.product2, 5), (self.product3, 5)],
-            payments=[(self.bank_pm, 265.75)],
-        ))
-        # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
+        def _before_closing_cb():
+            # check values before closing the session
+            self.assertEqual(3, self.pos_session.order_count)
+            orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+            self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
-        # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
-        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
-        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
-
-        # close the session
-        self.pos_session.action_pos_session_validate()
-
-        # check values after the session is closed
-        session_move = self.pos_session.move_id
-
-        sale_account_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        lines_balance = [-154.95, -90.86]
-        self.assertEqual(len(sale_account_lines), len(lines_balance))
-        for balance, amount in zip(sorted(sale_account_lines.mapped('balance')), sorted(lines_balance)):
-            self.assertAlmostEqual(balance, amount)
-
-        other_sale_account_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.other_sale_account)
-        lines_balance = [-474.75, -272.59]
-        self.assertEqual(len(other_sale_account_lines), len(lines_balance))
-        for balance, amount in zip(sorted(other_sale_account_lines.mapped('balance')), sorted(lines_balance)):
-            self.assertAlmostEqual(balance, amount)
-
-        receivable_line_bank = session_move.line_ids.filtered(lambda line: self.bank_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_bank.balance, 265.75)
-
-        receivable_line_cash = session_move.line_ids.filtered(lambda line: self.cash_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_cash.balance, 855.3)
-
-        manually_calculated_taxes = (-80.7, -36.35, -10.85)
-        tax_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
-        self.assertAlmostEqual(len(manually_calculated_taxes), len(tax_lines.mapped('balance')))
-        for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
-            self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined.')
-
-        self.assertTrue(receivable_line_cash.full_reconcile_id)
+        self._run_test({
+            'payment_methods': self.cash_pm1 | self.bank_pm1,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'customer': self.customer, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'customer': self.customer, 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm1, 265.75)], 'uid': '00100-010-0003'},
+            ],
+            'before_closing_cb': _before_closing_cb,
+            'journal_entries_before_closing': {},
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 80.70, 'reconciled': False},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 36.35, 'reconciled': False},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 10.85, 'reconciled': False},
+                        {'account_id': self.other_sale_account.id, 'partner_id': False, 'debit': 0, 'credit': 474.75, 'reconciled': False},
+                        {'account_id': self.other_sale_account.id, 'partner_id': False, 'debit': 0, 'credit': 272.59, 'reconciled': False},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 90.86, 'reconciled': False},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 154.95, 'reconciled': False},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 265.75, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 855.30, 'credit': 0, 'reconciled': True},
+                    ],
+                },
+                'cash_statement': [
+                    ((855.30, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 855.30, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 855.30, 'reconciled': True},
+                        ]
+                    }),
+                ],
+                'bank_payments': [
+                    ((265.75, ), {
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 265.75, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 265.75, 'reconciled': True},
+                        ]
+                    }),
+                ],
+            },
+        })
 
     def test_02_no_invoice_fpos_no_tax_dest(self):
         """ Customer with fiscal position that maps a tax to no tax.
@@ -218,61 +211,53 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         """
 
         self.customer.write({'property_account_position_id': self.fpos_no_tax_dest.id})
-        self.open_new_session()
-        # create orders
-        orders = []
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 10), (self.product2, 10), (self.product3, 10)],
-            customer=self.customer,
-            payments=[(self.bank_pm, 619.7)],
-        ))
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 5), (self.product2, 5)],
-            customer=self.customer,
-        ))
-        orders.append(self.create_ui_order_data(
-            [(self.product2, 5), (self.product3, 5)],
-            payments=[(self.bank_pm, 265.75)],
-        ))
-        # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
 
-        # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
-        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
-        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
+        def _before_closing_cb():
+            # check values before closing the session
+            self.assertEqual(3, self.pos_session.order_count)
+            orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+            self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
-        # close the session
-        self.pos_session.action_pos_session_validate()
-
-        # check values after the session is closed
-        session_move = self.pos_session.move_id
-
-        sale_account_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        lines_balance = [-154.95, -90.86]
-        self.assertEqual(len(sale_account_lines), len(lines_balance))
-        for balance, amount in zip(sorted(sale_account_lines.mapped('balance')), sorted(lines_balance)):
-            self.assertAlmostEqual(balance, amount)
-
-        other_sale_account_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.other_sale_account)
-        lines_balance = [-474.75, -272.59]
-        self.assertEqual(len(other_sale_account_lines), len(lines_balance))
-        for balance, amount in zip(sorted(other_sale_account_lines.mapped('balance')), sorted(lines_balance)):
-            self.assertAlmostEqual(balance, amount)
-
-        receivable_line_bank = session_move.line_ids.filtered(lambda line: self.bank_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_bank.balance, 885.45)
-
-        receivable_line_cash = session_move.line_ids.filtered(lambda line: self.cash_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_cash.balance, 154.9)
-
-        manually_calculated_taxes = [-36.35, -10.85]
-        tax_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
-        self.assertAlmostEqual(len(manually_calculated_taxes), len(tax_lines.mapped('balance')))
-        for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
-            self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined.')
-
-        self.assertTrue(receivable_line_cash.full_reconcile_id)
+        self._run_test({
+            'payment_methods': self.cash_pm1 | self.bank_pm1,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 619.7)], 'customer': self.customer, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'customer': self.customer, 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm1, 265.75)], 'uid': '00100-010-0003'},
+            ],
+            'before_closing_cb': _before_closing_cb,
+            'journal_entries_before_closing': {},
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 36.35, 'reconciled': False},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 10.85, 'reconciled': False},
+                        {'account_id': self.other_sale_account.id, 'partner_id': False, 'debit': 0, 'credit': 474.75, 'reconciled': False},
+                        {'account_id': self.other_sale_account.id, 'partner_id': False, 'debit': 0, 'credit': 272.59, 'reconciled': False},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 90.86, 'reconciled': False},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 154.95, 'reconciled': False},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 885.45, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 154.9, 'credit': 0, 'reconciled': True},
+                    ],
+                },
+                'cash_statement': [
+                    ((154.9, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 154.9, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 154.9, 'reconciled': True},
+                        ]
+                    }),
+                ],
+                'bank_payments': [
+                    ((885.45, ), {
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 885.45, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 885.45, 'reconciled': True},
+                        ]
+                    }),
+                ],
+            },
+        })
 
     def test_03_invoiced_fpos(self):
         """ Invoice 2 orders.
@@ -312,79 +297,79 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         """
 
         self.customer.write({'property_account_position_id': self.fpos.id})
-        self.open_new_session()
-        # create orders
-        orders = []
-        uid1 = self.create_random_uid()
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 10), (self.product2, 10), (self.product3, 10)],
-            customer=self.customer,
-            payments=[(self.bank_pm, 691.06)],
-            is_invoiced=True,
-            uid=uid1
-        ))
-        orders.append(self.create_ui_order_data(
-            [(self.product1, 5), (self.product2, 5)],
-            customer=self.customer,
-        ))
-        uid2 = self.create_random_uid()
-        orders.append(self.create_ui_order_data(
-            [(self.product2, 5), (self.product3, 5)],
-            customer=self.other_customer,
-            is_invoiced=True,
-            uid=uid2,
-        ))
-        # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
 
-        # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
-        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
-        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
+        def _before_closing_cb():
+            # check values before closing the session
+            self.assertEqual(3, self.pos_session.order_count)
+            orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+            self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
-        invoiced_order_1 = self.pos_session.order_ids.filtered(lambda order: uid1 in order.pos_reference)
-        invoiced_order_2 = self.pos_session.order_ids.filtered(lambda order: uid2 in order.pos_reference)
+            invoiced_order_1 = self.pos_session.order_ids.filtered(lambda order: '00100-010-0001' in order.pos_reference)
+            invoiced_order_2 = self.pos_session.order_ids.filtered(lambda order: '00100-010-0003' in order.pos_reference)
 
-        self.assertTrue(invoiced_order_1, msg='Invoiced order 1 should exist.')
-        self.assertTrue(invoiced_order_2, msg='Invoiced order 2 should exist.')
-        self.assertTrue(invoiced_order_1.account_move, msg='Invoiced order 1 should have invoice (account_move).')
-        self.assertTrue(invoiced_order_2.account_move, msg='Invoiced order 2 should have invoice (account_move).')
+            self.assertTrue(invoiced_order_1, msg='Invoiced order 1 should exist.')
+            self.assertTrue(invoiced_order_2, msg='Invoiced order 2 should exist.')
+            self.assertTrue(invoiced_order_1.account_move, msg='Invoiced order 1 should have invoice (account_move).')
+            self.assertTrue(invoiced_order_2.account_move, msg='Invoiced order 2 should have invoice (account_move).')
 
-        # NOTE Tests of values in the invoice accounting lines is not done here.
-
-        # close the session
-        self.pos_session.action_pos_session_validate()
-
-        # check values after the session is closed
-        session_move = self.pos_session.move_id
-
-        sale_account_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertFalse(sale_account_lines, msg='There should be no self.sale_account lines.')
-
-        other_sale_account_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.other_sale_account)
-        lines_balance = [-54.95, -90.86]
-        self.assertEqual(len(other_sale_account_lines), len(lines_balance))
-        for balance, amount in zip(sorted(other_sale_account_lines.mapped('balance')), sorted(lines_balance)):
-            self.assertAlmostEqual(balance, amount)
-
-        receivable_line_bank = session_move.line_ids.filtered(lambda line: self.bank_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_bank.balance, 691.06)
-
-        receivable_line_cash = session_move.line_ids.filtered(lambda line: self.cash_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_cash.balance, 429.99)
-
-        manually_calculated_taxes = [-9.09, -9.34]
-        tax_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
-        self.assertAlmostEqual(len(manually_calculated_taxes), len(tax_lines.mapped('balance')))
-        for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
-            self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined.')
-
-        receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
-        self.assertAlmostEqual(receivable_line.balance, -691.06, msg='That is not the correct receivable line balance.')
-
-        other_receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.other_receivable_account)
-        self.assertAlmostEqual(other_receivable_line.balance, -265.75, msg='That is not the correct other receivable line balance.')
-
-        self.assertTrue(receivable_line_cash.full_reconcile_id)
-        self.assertTrue(receivable_line.full_reconcile_id)
-        self.assertTrue(other_receivable_line.full_reconcile_id)
+        self._run_test({
+            'payment_methods': self.cash_pm1 | self.bank_pm1,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 691.06)], 'customer': self.customer, 'is_invoiced': True, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'customer': self.customer, 'uid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'customer': self.other_customer, 'is_invoiced': True, 'uid': '00100-010-0003'},
+            ],
+            'before_closing_cb': _before_closing_cb,
+            'journal_entries_before_closing': {
+                '00100-010-0001': {
+                    'payments': [
+                        ((self.bank_pm1, 691.06), {
+                            'line_ids': [
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 691.06, 'reconciled': True},
+                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 691.06, 'credit': 0, 'reconciled': False},
+                            ]
+                        }),
+                    ],
+                },
+                '00100-010-0003': {
+                    'payments': [
+                        ((self.cash_pm1, 265.75), {
+                            'line_ids': [
+                                {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 0, 'credit': 265.75, 'reconciled': True},
+                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 265.75, 'credit': 0, 'reconciled': False},
+                            ]
+                        }),
+                    ],
+                },
+            },
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 9.34, 'reconciled': False},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 9.09, 'reconciled': False},
+                        {'account_id': self.other_sale_account.id, 'partner_id': False, 'debit': 0, 'credit': 54.95, 'reconciled': False},
+                        {'account_id': self.other_sale_account.id, 'partner_id': False, 'debit': 0, 'credit': 90.86, 'reconciled': False},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 691.06, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 429.99, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 691.06, 'reconciled': True},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 265.75, 'reconciled': True},
+                    ],
+                },
+                'cash_statement': [
+                    ((429.99, ), {
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 429.99, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 429.99, 'reconciled': True},
+                        ]
+                    }),
+                ],
+                'bank_payments': [
+                    ((691.06, ), {
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 691.06, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 691.06, 'reconciled': True},
+                        ]
+                    }),
+                ],
+            },
+        })

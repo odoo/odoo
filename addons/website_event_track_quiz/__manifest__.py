@@ -8,8 +8,7 @@
     'sequence': 1007,
     'version': '1.0',
     'summary': 'Quizzes on tracks',
-    'website': 'https://www.odoo.com/page/events',
-    'description': "",
+    'website': 'https://www.odoo.com/app/events',
     'depends': [
         'website_profile',
         'website_event_track',
@@ -30,13 +29,14 @@
     'demo': [
         'data/quiz_demo.xml',
     ],
-    'application': False,
     'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_event_track_quiz/static/src/scss/event_quiz.scss',
             'website_event_track_quiz/static/src/js/event_quiz.js',
             'website_event_track_quiz/static/src/js/event_quiz_leaderboard.js',
+            'website_event_track_quiz/static/src/xml/quiz_templates.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

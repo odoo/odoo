@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import re
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
-
 
 l10n_ch_ISR_NUMBER_LENGTH = 27
 l10n_ch_ISR_ID_NUM_LENGTH = 6
 
 class AccountMove(models.Model):
+    # NOTE
+    # The ISR system is kept and taken into account up to September 2022.
+    # After that, the transition to the QR system will be completed and the ISR system won't exist anymore.
+    # This means that Odoo v16 shouldn't support the ISR system and all the references to it should be cleaned up by then.
+    # In the versions leading to that change,
+    # although the functions related to the ISR are still taken into account and still exist,
+    # the QR billing is always preferred.
+
     _inherit = 'account.move'
 
     l10n_ch_isr_subscription = fields.Char(compute='_compute_l10n_ch_isr_subscription', help='ISR subscription number identifying your company or your bank to generate ISR.')
@@ -28,6 +34,14 @@ class AccountMove(models.Model):
     l10n_ch_isr_sent = fields.Boolean(default=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=True, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
     l10n_ch_isr_needs_fixing = fields.Boolean(compute="_compute_l10n_ch_isr_needs_fixing", help="Used to show a warning banner when the vendor bill needs a correct ISR payment reference. ")
+
+    l10n_ch_is_qr_valid = fields.Boolean(compute='_compute_l10n_ch_qr_is_valid', help="Determines whether an invoice can be printed as a QR or not")
+
+    @api.depends('partner_id', 'currency_id')
+    def _compute_l10n_ch_qr_is_valid(self):
+        for move in self:
+            move.l10n_ch_is_qr_valid = move.move_type == 'out_invoice' \
+                                       and move.partner_bank_id._eligible_for_qr_code('ch_qr', move.partner_id, move.currency_id, raises_error=False)
 
     @api.depends('partner_bank_id.l10n_ch_isr_subscription_eur', 'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
@@ -278,46 +292,18 @@ class AccountMove(models.Model):
         """
         return float_split_str(self.amount_residual, 2)
 
-    def isr_print(self):
-        """ Triggered by the 'Print ISR' button.
-        """
-        self.ensure_one()
-        if self.l10n_ch_isr_valid:
-            self.l10n_ch_isr_sent = True
-            return self.env.ref('l10n_ch.l10n_ch_isr_report').report_action(self)
-        else:
-            raise ValidationError(_("""You cannot generate an ISR yet.\n
-                                   For this, you need to :\n
-                                   - set a valid postal account number (or an IBAN referencing one) for your company\n
-                                   - define its bank\n
-                                   - associate this bank with a postal reference for the currency used in this invoice\n
-                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
-
-    def print_ch_qr_bill(self):
-        """ Triggered by the 'Print QR-bill' button.
-        """
-        self.ensure_one()
-
-        if not self.partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
-            raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
-
-        self.l10n_ch_isr_sent = True
-        return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
-
     def action_invoice_sent(self):
         # OVERRIDE
         rslt = super(AccountMove, self).action_invoice_sent()
-
-        if self.l10n_ch_isr_valid:
+        if self.l10n_ch_isr_valid or self.l10n_ch_is_qr_valid:
             rslt['context']['l10n_ch_mark_isr_as_sent'] = True
-
         return rslt
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('l10n_ch_mark_isr_as_sent'):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
-        return super(AccountMove, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+        return super(AccountMove, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
 
     def _get_invoice_reference_ch_invoice(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as
@@ -343,5 +329,41 @@ class AccountMove(models.Model):
         while i > 0:
             spaced_qrr_ref = qrr_ref[max(i-5, 0) : i] + ' ' + spaced_qrr_ref
             i -= 5
-
         return spaced_qrr_ref
+
+    @api.model
+    def space_scor_reference(self, iso11649_ref):
+        """ Makes the provided SCOR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+
+        return ' '.join(iso11649_ref[i:i + 4] for i in range(0, len(iso11649_ref), 4))
+
+    def l10n_ch_action_print_qr(self):
+        '''
+        Checks that all invoices can be printed in the QR format.
+        If so, launches the printing action.
+        Else, triggers the l10n_ch wizard that will display the informations.
+        '''
+        if any(x.move_type != 'out_invoice' for x in self):
+            raise UserError(_("Only customers invoices can be QR-printed."))
+        if False in self.mapped('l10n_ch_is_qr_valid'):
+            return {
+                'name': (_("Some invoices could not be printed in the QR format")),
+                'type': 'ir.actions.act_window',
+                'res_model': 'l10n_ch.qr_invoice.wizard',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'active_ids': self.ids},
+            }
+        return self.env.ref('account.account_invoices').report_action(self)
+
+    def _l10n_ch_dispatch_invoices_to_print(self):
+        qr_invs = self.filtered('l10n_ch_is_qr_valid')
+        isr_invs = self.filtered('l10n_ch_isr_valid')
+        return {
+            'qr': qr_invs,
+            'isr': isr_invs,
+            'classic': self - qr_invs - isr_invs,
+        }

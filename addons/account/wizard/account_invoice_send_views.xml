@@ -29,7 +29,7 @@
                         <field name="is_email" />
                         <b><label for="is_email"/></b>
                     </div>
-                    <div class="text-left d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
+                    <div class="text-start d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
                         <field name="invoice_without_email" class="mr4"/>
                     </div>
                     <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
@@ -48,7 +48,7 @@
                                 </div>
                                 <field name="subject" placeholder="Subject..." attrs="{'required': [('is_email', '=', True), ('composition_mode', '=', 'comment')]}"/>
                             </group>
-                            <field name="body" style="border:none;" options="{'style-inline': true}"/>
+                            <field name="body" class="oe-bordered-editor" options="{'style-inline': true}"/>
                         </div>
                         <group>
                             <group attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
@@ -63,18 +63,18 @@
 
                     <footer>
                         <button string="Send &amp; Print"
-                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}"
+                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}" data-hotkey="q"
                             name="send_and_print_action" type="object" class="send_and_print btn-primary o_mail_send"/>
-                        <button string="Send"
+                        <button string="Send" data-hotkey="q"
                             attrs="{'invisible': ['|', ('is_print', '=', True), ('is_email', '=', False)]}"
                             name="send_and_print_action" type="object" class="send btn-primary o_mail_send"/>
-                        <button string="Print"
+                        <button string="Print" data-hotkey="q"
                             attrs="{'invisible': ['|', ('is_print', '=', False), ('is_email', '=', True)]}"
                             name="send_and_print_action" type="object" class="print btn-primary o_mail_send"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
                             attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_email', '=', False)]}"
-                            class="pull-right btn-secondary" help="Save as a new template" />
+                            class="float-end btn-secondary" help="Save as a new template" data-hotkey="w" />
                     </footer>
                 </form>
             </field>

@@ -4,12 +4,6 @@
 from odoo import models, fields
 
 
-class MailActivityType(models.Model):
-    _inherit = "mail.activity.type"
-
-    category = fields.Selection(selection_add=[('reminder', 'Reminder')])
-
-
 class MailActivity(models.Model):
     _inherit = "mail.activity"
 

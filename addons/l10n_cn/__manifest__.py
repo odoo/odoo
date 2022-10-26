@@ -52,4 +52,5 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
         'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
+    'license': 'LGPL-3',
 }

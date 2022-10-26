@@ -69,7 +69,7 @@ if result:
         <field name="name">Test 5.1 : Payable and Receivable accountant lines of reconciled invoices</field>
         <field name="desc">Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts</field>
         <field name="code_exec"><![CDATA[res = []
-cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move m, account_move_line ml, account_account a where m.id=ml.move_id and ml.account_id=a.id and a.internal_type in ('receivable','payable') and inv.move_id=m.id and ml.reconciled is true;")
+cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move m, account_move_line ml, account_account a where m.id=ml.move_id and ml.account_id=a.id and a.account_type in ('asset_receivable','liability_payable') and inv.move_id=m.id and ml.reconciled is true;")
 records= cr.dictfetchall()
 rec = [r['id'] for r in records]
 res = reconciled_inv()
@@ -87,7 +87,7 @@ if result:
         <field name="code_exec"><![CDATA[res = reconciled_inv()
 result=[]
 if res:
-    cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move_line ml, account_account a, account_move m where m.id=ml.move_id and inv.move_id=m.id and inv.id=inv.move_id and ml.reconciled is false and a.internal_type in ('receivable','payable') and ml.account_id=a.id and inv.id in %s",(tuple(res),))
+    cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move_line ml, account_account a, account_move m where m.id=ml.move_id and inv.move_id=m.id and inv.id=inv.move_id and ml.reconciled is false and a.account_type in ('asset_receivable','liability_payable') and ml.account_id=a.id and inv.id in %s",(tuple(res),))
     records = cr.dictfetchall()
     result = [rec for rec in records]
     if result:

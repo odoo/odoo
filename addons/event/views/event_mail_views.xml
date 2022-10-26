@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <!-- EVENT.MAIL VIEWS -->
+    <record model="ir.ui.view" id="view_event_mail_form">
+        <field name="name">event.mail.form</field>
+        <field name="model">event.mail</field>
+        <field name="arch" type="xml">
+            <form string="Event Mail Scheduler">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="notification_type"/>
+                            <field name="template_model_id" invisible="1"/>
+                            <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                            <field name="mail_state"/>
+                        </group>
+                        <group>
+                            <label for="interval_nbr"/>
+                            <div class="o_row">
+                                <field name="interval_nbr" attrs="{'invisible': [('interval_unit', '=', 'now')], 'readonly': [('interval_unit', '=', 'now')]}"/>
+                                <field name="interval_unit"/>
+                            </div>
+                            <field name="interval_type"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                    </group>
+                    <notebook groups="base.group_no_one">
+                        <page string="Registration Mails" name="registration_mails">
+                            <field name="mail_registration_ids">
+                                <tree string="Registration mail" editable="bottom">
+                                    <field name="registration_id"/>
+                                    <field name="scheduled_date"/>
+                                    <field name="mail_sent" string="Sent"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_mail_tree">
+        <field name="name">event.mail.tree</field>
+        <field name="model">event.mail</field>
+        <field name="arch" type="xml">
+            <tree string="Event Mail Schedulers">
+                <field name="event_id"/>
+                <field name="notification_type"/>
+                <field name="template_model_id" invisible="1"/>
+                <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                <field name="scheduled_date"/>
+                <field name="mail_count_done"/>
+                <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
+                    options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_mail">
+        <field name="name">Events Mail Schedulers</field>
+        <field name="res_model">event.mail</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nothing Scheduled yet!
+            </p><p>
+                Under this technical menu you will find all scheduled communication related to your events.
+            </p>
+        </field>
+    </record>
+
+    <record id="menu_event_mail_schedulers" model="ir.ui.menu">
+        <field name="action" ref="event.action_event_mail"/>
+    </record>
+</data></odoo>

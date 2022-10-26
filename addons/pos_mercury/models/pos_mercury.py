@@ -32,7 +32,7 @@ class PoSPayment(models.Model):
     mercury_card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
     mercury_prefixed_card_number = fields.Char(string='Card Number Prefix', compute='_compute_prefixed_card_number', help='The card number used for the payment.')
     mercury_card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
-    mercury_card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
+    mercury_card_owner_name = fields.Char(string='Card Owner Name')
     mercury_ref_no = fields.Char(string='Vantiv reference number', help='Payment reference number from Vantiv Pay')
     mercury_record_no = fields.Char(string='Vantiv record number', help='Payment record number from Vantiv Pay')
     mercury_invoice_no = fields.Char(string='Vantiv invoice number', help='Invoice number from Vantiv Pay')

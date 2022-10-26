@@ -33,14 +33,14 @@
                 (0, 0, {
                     'product_id': ref('product.product_product_25'),
                     'name': obj().env.ref('product.product_product_25').partner_ref,
-                    'price_unit': 2868.70,
+                    'price_unit': 286.70,
                     'product_qty': 5.0,
                     'product_uom': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=3)}),
                 (0, 0, {
                     'product_id': ref('product.product_product_27'),
                     'name': obj().env.ref('product.product_product_27').partner_ref,
-                    'price_unit': 3297.20,
+                    'price_unit': 99.00,
                     'product_qty': 4.0,
                     'product_uom': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=3)})
@@ -112,6 +112,10 @@
                     'date_planned': DateTime.today() + relativedelta(days=5)})
             ]"/>
         </record>
+        <function model="purchase.order" name="write">
+            <value eval="[ref('purchase_order_4')]"/>
+            <value eval="{'state': 'sent'}"/>
+        </function>
 
         <record id="purchase_order_5" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_2"/>
@@ -172,7 +176,7 @@
                 (0, 0, {
                     'product_id': ref('product.product_product_12'),
                     'name': obj().env.ref('product.product_product_12').partner_ref,
-                    'price_unit': 13.5,
+                    'price_unit': 130.5,
                     'product_qty': 5.0,
                     'product_uom': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),

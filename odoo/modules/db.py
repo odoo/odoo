@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.modules
+from psycopg2.extras import Json
 import logging
+from enum import IntEnum
+
+import odoo.modules
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +32,7 @@ def initialize(cr):
         raise IOError(m)
 
     with odoo.tools.misc.file_open(f) as base_sql_file:
-        cr.execute(base_sql_file.read())
+        cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
 
     for i in odoo.modules.get_modules():
         mod_path = odoo.modules.get_module_path(i)
@@ -37,7 +40,7 @@ def initialize(cr):
             continue
 
         # This will raise an exception if no/unreadable descriptor file.
-        info = odoo.modules.load_information_from_description_file(i)
+        info = odoo.modules.get_manifest(i)
 
         if not info:
             continue
@@ -54,13 +57,13 @@ def initialize(cr):
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
-            info['website'], i, info['name'],
-            info['description'], category_id,
+            info['website'], i, Json({'en_US': info['name']}),
+            Json({'en_US': info['description']}), category_id,
             info['auto_install'] is not False, state,
             info['web'],
             info['license'],
             info['application'], info['icon'],
-            info['sequence'], info['summary']))
+            info['sequence'], Json({'en_US': info['summary']})))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
@@ -127,7 +130,7 @@ def create_categories(cr, categories):
         if not c_id:
             cr.execute('INSERT INTO ir_module_category \
                     (name, parent_id) \
-                    VALUES (%s, %s) RETURNING id', (categories[0], p_id))
+                    VALUES (%s, %s) RETURNING id', (Json({'en_US': categories[0]}), p_id))
             c_id = cr.fetchone()[0]
             cr.execute('INSERT INTO ir_model_data (module, name, res_id, model, noupdate) \
                        VALUES (%s, %s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category', True))
@@ -137,12 +140,41 @@ def create_categories(cr, categories):
         categories = categories[1:]
     return p_id
 
+class FunctionStatus(IntEnum):
+    MISSING = 0  # function is not present (falsy)
+    PRESENT = 1  # function is present but not indexable (not immutable)
+    INDEXABLE = 2  # function is present and indexable (immutable)
+
 def has_unaccent(cr):
-    """ Test if the database has an unaccent function.
+    """ Test whether the database has function 'unaccent' and return its status.
 
     The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
     module but any similar function will be picked by OpenERP.
 
+    :rtype: FunctionStatus
     """
-    cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
+    cr.execute("""
+        SELECT p.provolatile
+        FROM pg_proc p
+            LEFT JOIN pg_catalog.pg_namespace ns ON p.pronamespace = ns.oid
+        WHERE p.proname = 'unaccent'
+              AND p.pronargs = 1
+              AND ns.nspname = 'public'
+    """)
+    result = cr.fetchone()
+    if not result:
+        return FunctionStatus.MISSING
+    # The `provolatile` of unaccent allows to know whether the unaccent function
+    # can be used to create index (it should be 'i' - means immutable), see
+    # https://www.postgresql.org/docs/current/catalog-pg-proc.html.
+    return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
+
+def has_trigram(cr):
+    """ Test if the database has the a word_similarity function.
+
+    The word_similarity is supposed to be provided by the PostgreSQL built-in
+    pg_trgm module but any similar function will be picked by Odoo.
+
+    """
+    cr.execute("SELECT proname FROM pg_proc WHERE proname='word_similarity'")
     return len(cr.fetchall()) > 0

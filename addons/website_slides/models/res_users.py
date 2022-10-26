@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, _
 
 
 class Users(models.Model):
@@ -30,6 +30,6 @@ class Users(models.Model):
         res = super(Users, self).get_gamification_redirection_data()
         res.append({
             'url': '/slides',
-            'label': 'See our eLearning'
+            'label': _('See our eLearning')
         })
         return res

@@ -12,19 +12,7 @@ class StockLandedCost(models.Model):
     ], ondelete={'manufacturing': 'set default'})
     mrp_production_ids = fields.Many2many(
         'mrp.production', string='Manufacturing order',
-        copy=False, states={'done': [('readonly', True)]}, groups='mrp.group_mrp_user')
-    allowed_mrp_production_ids = fields.Many2many(
-        'mrp.production', compute='_compute_allowed_mrp_production_ids', groups='mrp.group_mrp_user')
-
-    @api.depends('company_id')
-    def _compute_allowed_mrp_production_ids(self):
-        for cost in self:
-            moves = self.env['stock.move'].search([
-                ('stock_valuation_layer_ids', '!=', False),
-                ('production_id', '!=', False),
-                ('company_id', '=', cost.company_id.id)
-            ])
-            self.allowed_mrp_production_ids = moves.production_id
+        copy=False, states={'done': [('readonly', True)]}, groups='stock.group_stock_manager')
 
     @api.onchange('target_model')
     def _onchange_target_model(self):

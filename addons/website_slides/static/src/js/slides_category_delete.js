@@ -1,10 +1,8 @@
-odoo.define('website_slides.category.delete', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const publicWidget = require('web.public.widget');
-const Dialog = require('web.Dialog');
-const core = require('web.core');
-const _t = core._t;
+import publicWidget from 'web.public.widget';
+import Dialog from 'web.Dialog';
+import { _t } from 'web.core';
 
 const categoryDeleteDialog = Dialog.extend({
     template: 'slides.category.delete',
@@ -53,7 +51,6 @@ const categoryDeleteDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesCategoryDelete = publicWidget.Widget.extend({
     selector: '.o_wslides_js_category_delete',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onClickDeleteCateogry',
     },
@@ -71,9 +68,7 @@ publicWidget.registry.websiteSlidesCategoryDelete = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     categoryDeleteDialog: categoryDeleteDialog,
     websiteSlidesCategoryDelete: publicWidget.registry.websiteSlidesCategoryDelete
 };
-
-});

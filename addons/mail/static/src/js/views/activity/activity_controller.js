@@ -1,13 +1,14 @@
-odoo.define('mail.ActivityController', function (require) {
-"use strict";
+/** @odoo-module **/
 
-require('mail.Activity');
-var BasicController = require('web.BasicController');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var ViewDialogs = require('web.view_dialogs');
+import '@mail/js/activity';
 
-var KanbanActivity = field_registry.get('kanban_activity');
+import BasicController from 'web.BasicController';
+import core from 'web.core';
+import { sprintf } from '@web/core/utils/strings';
+
+import { SelectCreateDialog } from '@web/views/view_dialogs/select_create_dialog';
+
+const { Component } = owl;
 var _t = core._t;
 
 var ActivityController = BasicController.extend({
@@ -32,6 +33,7 @@ var ActivityController = BasicController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.title = params.title;
+        this.searchViewId = params.searchViewId;
     },
 
     //--------------------------------------------------------------------------
@@ -55,21 +57,22 @@ var ActivityController = BasicController.extend({
      * @private
      */
     _onScheduleActivity: function () {
-        var self = this;
         var state = this.model.get(this.handle);
-        new ViewDialogs.SelectCreateDialog(this, {
-            res_model: state.model,
+        Component.env.services.dialog.add(SelectCreateDialog, {
+            resModel: state.model,
+            searchViewId: this.searchViewId,
             domain: this.model.originalDomain,
-            title: _.str.sprintf(_t("Search: %s"), this.title),
-            no_create: !this.activeActions.create,
-            disable_multiple_selection: true,
+            title: sprintf(_t("Search: %s"), this.title),
+            noCreate: !this.activeActions.create,
+            multiSelect: false,
             context: state.context,
-            on_selected: function (record) {
-                var fakeRecord = state.getKanbanActivityData({}, record[0]);
-                var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
-                widget.scheduleActivity();
+            onSelected: async resIds => {
+                const messaging = await owl.Component.env.services.messaging.get();
+                const thread = messaging.models['Thread'].insert({ id: resIds[0], model: this.model.modelName });
+                await messaging.openActivityForm({ thread });
+                this.trigger_up('reload');
             },
-        }).open();
+        });
     },
     /**
      * @private
@@ -119,6 +122,4 @@ var ActivityController = BasicController.extend({
     },
 });
 
-return ActivityController;
-
-});
+export default ActivityController;

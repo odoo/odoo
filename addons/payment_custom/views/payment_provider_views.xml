@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Custom Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <field name="capture_manually" position="after">
+                <field name="qr_code" attrs="{'invisible': [('code', '!=', 'custom')]}" />
+            </field>
+            <group name="payment_followup" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('code', '=', 'custom')]}
+                </attribute>
+            </group>
+        </field>
+    </record>
+
+</odoo>

@@ -29,7 +29,7 @@
         <field name="name">sales.team.crm.tag.view.tree</field>
         <field name="model">crm.tag</field>
         <field name="arch" type="xml">
-            <tree string="Tags" editable="bottom">
+            <tree string="Tags" editable="bottom" sample="1">
                 <field name="name"/>
                 <field name="color" widget="color_picker" />
             </tree>
@@ -43,9 +43,9 @@
         <field name="view_id" ref="sales_team_crm_tag_view_tree"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create new tags for your opportunities
+            Create CRM Tags
             </p><p>
-            Create tags that fit your business (product structure, sales type, etc.) to better manage and track your opportunities.
+            Use Tags to manage and track your Opportunities (product structure, sales type, ...)
             </p>
         </field>
     </record>

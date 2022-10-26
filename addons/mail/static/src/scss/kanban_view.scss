@@ -1,16 +1,17 @@
 $o-kanban-attachement-image-size: 80px;
 
-.o_kanban_view {
+.o_legacy_kanban_view, .o_kanban_renderer {
 
-    .o_kanban_record.o_kanban_attachment {
-        padding: 0;
+    .o_kanban_record.o_kanban_attachment,
+    .o_kanban_record .o_kanban_attachment {
+        padding: map-get($spacers, 0);
 
         .o_kanban_image {
             width: $o-kanban-attachement-image-size;
 
             + div {
                 padding-left: $o-kanban-attachement-image-size + $o-kanban-inside-hgutter;
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     padding-left:  $o-kanban-attachement-image-size + $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -23,11 +24,13 @@ $o-kanban-attachement-image-size: 80px;
             }
 
             .o_attachment_image {
-                @include size($o-kanban-attachement-image-size);
+                width: $o-kanban-attachement-image-size;
+                height: $o-kanban-attachement-image-size;
             }
 
             .o_image {
-                @include size($o-kanban-attachement-image-size*0.7);
+                width: $o-kanban-attachement-image-size*0.7;
+                height: $o-kanban-attachement-image-size*0.7;
             }
         }
 

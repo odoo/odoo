@@ -5,11 +5,6 @@
         <div class="receipt-screen screen">
             <div class="screen-content">
                 <div class="top-content">
-                    <span class="button back" t-on-click="confirm">
-                        <i class="fa fa-angle-double-left"></i>
-                        <span> </span>
-                        <span>Back</span>
-                    </span>
                     <div class="top-content-center">
                         <h1>Bill Printing</h1>
                     </div>
@@ -25,8 +20,8 @@
                         <span> </span>
                         <span>Print</span>
                     </div>
-                    <div class="pos-receipt-container">
-                        <OrderReceipt order="currentOrder" isBill="true" t-ref="order-receipt"/>
+                    <div class="pos-receipt-container" t-ref="order-receipt">
+                        <OrderReceipt order="currentOrder" isBill="true"/>
                     </div>
                 </div>
             </div>

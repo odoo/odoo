@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_expense_split" model="ir.ui.view">
+            <field name="name">Expense split</field>
+            <field name="model">hr.expense.split.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="total_amount_original" invisible="1"/>
+                    <field name="expense_id" invisible="1"/>
+                    <field name="expense_split_line_ids" widget="one2many" context="{'default_expense_id': expense_id}">
+                        <tree editable="bottom">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="expense_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="product_has_tax" invisible="1"/>
+                            <field name="product_has_cost" invisible="1"/>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="total_amount" force_save="1" attrs="{'readonly': [('product_has_cost', '=', True)]}"/>
+                            <field name="tax_ids" widget="many2many_tags" attrs="{'readonly': [('product_has_tax', '=', False)]}"/>
+                            <field name="amount_tax"/>
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                optional="show"
+                                groups="analytic.group_analytic_accounting"/>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                        </tree>
+                    </field>
+                    <field name="currency_id" invisible="1"/>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="expense_total">
+                        <label for="total_amount" attrs="{'invisible': [('split_possible', '=', True)]}"/>
+                        <field name="total_amount" nolabel="1" class="text-danger" attrs="{'invisible': [('split_possible', '=', True)]}"/>
+                        <field name="total_amount" attrs="{'invisible': [('split_possible', '=', False)]}"/>
+                        <field name="total_amount_original" widget='monetary' string="Original Amount"/>
+                        <field name="total_amount_taxes" widget='monetary' string="Taxes"/>
+                    </group>
+                    <field name="split_possible" invisible="1"/>
+                    <footer>
+                        <button name="action_split_expense" attrs="{'invisible': [ ('split_possible', '=', True)]}" string="Split Expense" type="object" class="oe_highlight disabled"  data-hotkey="q"/>
+                        <button name="action_split_expense" string="Split Expense" attrs="{'invisible': [('split_possible', '=', False)]}" type="object" class="oe_highlight"  data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -6,6 +6,8 @@ from datetime import datetime, date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.osv.expression import AND
+from odoo.tools import format_date
 
 
 class HrLeaveType(models.Model):
@@ -30,49 +32,73 @@ class HrLeave(models.Model):
         resource_leave_values = []
 
         for leave in self.filtered(lambda l: l.employee_id):
-
-            contract = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open'])
-            if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
-                resource_leave_values += [{
-                    'name': _("%s: Time Off", leave.employee_id.name),
-                    'holiday_id': leave.id,
-                    'resource_id': leave.employee_id.resource_id.id,
-                    'work_entry_type_id': leave.holiday_status_id.work_entry_type_id.id,
-                    'time_type': leave.holiday_status_id.time_type,
-                    'date_from': max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time())),
-                    'date_to': min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time())),
-                    'calendar_id': contract.resource_calendar_id.id,
-                }]
+            contracts = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open'])
+            for contract in contracts:
+                if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
+                    resource_leave_values += [{
+                        'name': _("%s: Time Off", leave.employee_id.name),
+                        'holiday_id': leave.id,
+                        'resource_id': leave.employee_id.resource_id.id,
+                        'work_entry_type_id': leave.holiday_status_id.work_entry_type_id.id,
+                        'time_type': leave.holiday_status_id.time_type,
+                        'date_from': max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time())),
+                        'date_to': min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time())),
+                        'calendar_id': contract.resource_calendar_id.id,
+                    }]
 
         return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)
+
+    def _get_overlapping_contracts(self, contract_states=None):
+        self.ensure_one()
+        if contract_states is None:
+            contract_states = [
+                '|',
+                ('state', 'not in', ['draft', 'cancel']),
+                '&',
+                ('state', '=', 'draft'),
+                ('kanban_state', '=', 'done')
+            ]
+        domain = AND([contract_states, [
+            ('employee_id', '=', self.employee_id.id),
+            ('date_start', '<=', self.date_to),
+            '|',
+                ('date_end', '>=', self.date_from),
+                '&',
+                    ('date_end', '=', False),
+                    ('state', '!=', 'close')
+        ]])
+        return self.env['hr.contract'].sudo().search(domain)
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
         """
             A leave cannot be set across multiple contracts.
             Note: a leave can be across multiple contracts despite this constraint.
-            It happens if a leave is correctly created (not accross multiple contracts) but
+            It happens if a leave is correctly created (not across multiple contracts) but
             contracts are later modifed/created in the middle of the leave.
         """
         for holiday in self.filtered('employee_id'):
-            domain = [
-                ('employee_id', '=', holiday.employee_id.id),
-                ('date_start', '<=', holiday.date_to),
-                '|',
-                ('state', 'not in', ['draft', 'cancel']),
-                '&',
-                ('state', '=', 'draft'),
-                ('kanban_state', '=', 'done'),
-                '|',
-                    ('date_end', '>=', holiday.date_from),
-                    '&',
-                        ('date_end', '=', False),
-                        ('state', '!=', 'close')
-            ]
-            nbr_contracts = self.env['hr.contract'].sudo().search_count(domain)
-            if nbr_contracts > 1:
-                contracts = self.env['hr.contract'].sudo().search(domain)
-                raise ValidationError(_('A leave cannot be set across multiple contracts.') + '\n' + ', '.join(contracts.mapped('name')))
+            contracts = holiday._get_overlapping_contracts()
+            if len(contracts.resource_calendar_id) > 1:
+                state_labels = {e[0]: e[1] for e in contracts._fields['state']._description_selection(self.env)}
+                raise ValidationError(
+                    _("""A leave cannot be set across multiple contracts with different working schedules.
+
+Please create one time off for each contract.
+
+Time off:
+%s
+
+Contracts:
+%s""",
+                      holiday.display_name,
+                      '\n'.join(_(
+                          "Contract %s from %s to %s, status: %s",
+                          contract.name,
+                          format_date(self.env, contract.date_start),
+                          format_date(self.env, contract.date_start) if contract.date_end else _("undefined"),
+                          state_labels[contract.state]
+                      ) for contract in contracts)))
 
     def _cancel_work_entry_conflict(self):
         """
@@ -105,7 +131,7 @@ class HrLeave(models.Model):
             # 2. Fetch overlapping work entries, grouped by employees
             start = min(self.mapped('date_from'), default=False)
             stop = max(self.mapped('date_to'), default=False)
-            work_entry_groups = self.env['hr.work.entry'].read_group([
+            work_entry_groups = self.env['hr.work.entry']._read_group([
                 ('date_start', '<', stop),
                 ('date_stop', '>', start),
                 ('employee_id', 'in', self.employee_id.ids),
@@ -150,7 +176,7 @@ class HrLeave(models.Model):
     def create(self, vals_list):
         start_dates = [v.get('date_from') for v in vals_list if v.get('date_from')]
         stop_dates = [v.get('date_to') for v in vals_list if v.get('date_to')]
-        if any(vals.get('holiday_type', 'employee') == 'employee' and not vals.get('employee_id', False) for vals in vals_list):
+        if any(vals.get('holiday_type', 'employee') == 'employee' and not vals.get('multi_employee', False) and not vals.get('employee_id', False) for vals in vals_list):
             raise ValidationError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         with self.env['hr.work.entry']._error_checking(start=min(start_dates, default=False), stop=max(stop_dates, default=False)):
             return super().create(vals_list)
@@ -161,8 +187,12 @@ class HrLeave(models.Model):
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop):
             return super().action_confirm()
 
-    def action_validate(self):
-        super(HrLeave, self).action_validate()
+    def _get_leaves_on_public_holiday(self):
+        return super()._get_leaves_on_public_holiday().filtered(
+            lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE280'])
+
+    def _validate_leave_request(self):
+        super(HrLeave, self)._validate_leave_request()
         self.sudo()._cancel_work_entry_conflict()  # delete preexisting conflicting work_entries
         return True
 
@@ -172,6 +202,18 @@ class HrLeave(models.Model):
         where the refused leave was.
         """
         res = super(HrLeave, self).action_refuse()
+        self._regen_work_entries()
+        return res
+
+    def _action_user_cancel(self, reason):
+        res = super()._action_user_cancel(reason)
+        self.sudo()._regen_work_entries()
+        return res
+
+    def _regen_work_entries(self):
+        """
+        Called when the leave is refused or cancelled to regenerate the work entries properly for that period.
+        """
         work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', self.ids)])
 
         work_entries.write({'active': False})
@@ -180,7 +222,6 @@ class HrLeave(models.Model):
         for work_entry in work_entries:
             vals_list += work_entry.contract_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
         self.env['hr.work.entry'].create(vals_list)
-        return res
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ If an employee is currently working full time but asks for time off next month
@@ -196,7 +237,12 @@ class HrLeave(models.Model):
             contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open'])
             contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
             calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
-            return employee._get_work_days_data_batch(date_from, date_to, calendar=calendar)[employee.id]
+            # We force the company in the domain as we are more than likely in a compute_sudo
+            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+            result = employee._get_work_days_data_batch(date_from, date_to, calendar=calendar, domain=domain)[employee.id]
+            if self.request_unit_half and result['hours'] > 0:
+                result['days'] = 0.5
+            return result
 
         return days
 
@@ -208,3 +254,13 @@ class HrLeave(models.Model):
             contract_calendar = contracts[:1].resource_calendar_id if contracts else None
             return contract_calendar or self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         return super()._get_calendar()
+
+    def _compute_can_cancel(self):
+        super()._compute_can_cancel()
+
+        cancellable_leaves = self.filtered('can_cancel')
+        work_entries = self.env['hr.work.entry'].sudo().search([('state', '=', 'validated'), ('leave_id', 'in', cancellable_leaves.ids)])
+        leave_ids = work_entries.mapped('leave_id').ids
+
+        for leave in cancellable_leaves:
+            leave.can_cancel = leave.id not in leave_ids

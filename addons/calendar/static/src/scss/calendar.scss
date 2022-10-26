@@ -1,12 +1,8 @@
 .o_calendar_invitation {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    vertical-align: middle;
+    @extend .o_status;
 
     &.accepted {
-        background-color: theme-color('success');
+        background-color: map-get($theme-colors, 'success');
     }
 
     &.tentative {
@@ -14,7 +10,7 @@
     }
 
     &.declined {
-        background-color: theme-color('danger');
+        background-color: map-get($theme-colors, 'danger');
     }
 }
 
@@ -53,15 +49,15 @@
     }
 
     .o_accepted {
-        color: theme-color('success');
+        @extend .text-success;
     }
     .o_declined {
-        color: theme-color('danger');
+        @extend .text-danger;
     }
 }
 .o_meeting_filter {
     @include o-text-overflow();
-    width: 64%;
+    min-width: 0;
     color: grey;
     vertical-align: top;
     &.o_meeting_bold {
@@ -80,4 +76,91 @@
 
 .o_calendar_attendees {
     max-width:80% !important;
+}
+
+.o_attendee_border {
+    border-width: 2px;
+    border-style: solid;
+}
+
+.o_attendee_border_accepted {
+    border-color: map-get($theme-colors, 'success');
+}
+.o_attendee_border_declined {
+    border-color: map-get($theme-colors, 'danger');
+}
+.o_attendee_border_tentative {
+    border-color: map-get($theme-colors, 'light');
+}
+
+@for $i from 1 through length($o-filter_colors) {
+    $color: nth($o-filter_colors, $i);
+
+    .o_cw_popover_link.o_calendar_color_#{$i - 1} {
+        &.o_attendee_status_tentative {
+            color: color-contrast($color);
+            background: repeating-linear-gradient(
+                45deg,
+                $color,
+                $color 10px,
+                rgba($color, 0.7) 10px,
+                rgba($color, 0.7) 20px
+            ) !important;
+        }
+
+        &.o_attendee_status_needsAction {
+            background-color: rgba($o-view-background-color, 0.9) !important;
+        }
+
+        &.o_attendee_status_declined {
+            text-decoration: line-through;
+            background-color: rgba($o-view-background-color, 0.9) !important;
+        }
+    }
+
+    .o_calendar_renderer {
+        .fc-event.o_calendar_color_#{$i - 1} {
+            &.o_attendee_status_needsAction,
+            &.o_attendee_status_tentative,
+            &.o_attendee_status_declined,
+            &.o_attendee_status_alone {
+                border-width: 2px 2px 2px !important;
+
+                &.o_cw_custom_highlight {
+                    background-color: $color;
+                }
+            }
+
+            &.o_attendee_status_tentative {
+                color: color-contrast($color) !important;
+                .fc-bg {
+                    background: repeating-linear-gradient(
+                        45deg,
+                        $color,
+                        $color 10px,
+                        rgba(white, 0.4) 10px,
+                        rgba(white, 0.4) 20px
+                    ) !important;
+                }
+            }
+
+            &.o_attendee_status_alone,
+            &.o_attendee_status_needsAction {
+                background-color: rgba($o-view-background-color, 0.9) !important;
+                color: $o-black !important;
+                .fc-bg {
+                    background-color: rgba($o-view-background-color, 0.9) !important;
+                }
+            }
+
+            &.o_attendee_status_declined {
+                text-decoration: line-through;
+                background-color: rgba($o-view-background-color, 0.9) !important;
+                color: $o-black !important;
+                .fc-bg {
+                    background-color: rgba($o-view-background-color, 0.9) !important;
+                }
+            }
+        }
+    }
 }

@@ -17,16 +17,10 @@ class AccountMove(models.Model):
         not_posted_before = self.filtered(lambda r: not r.posted_before)
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
         for line in (not_posted_before & posted).line_ids.filtered(lambda ml: ml.vehicle_id and ml.move_id.move_type == 'in_invoice'):
-            val = {
-                'service_type_id': vendor_bill_service.id,
-                'vehicle_id': line.vehicle_id.id,
-                'amount': line.price_subtotal,
-                'vendor_id': line.partner_id.id,
-                'description': line.name,
-            }
-            log = _('Service Vendor Bill: <a href=# data-oe-model=account.move data-oe-id={move_id}>{move_name}</a>').format(
-                move_id=line.move_id.id,
-                move_name=line.move_id.name,
+            val = line._prepare_fleet_log_service()
+            log = _(
+                'Service Vendor Bill: %s',
+                line.move_id._get_html_link(),
             )
             val_list.append(val)
             log_list.append(log)
@@ -39,9 +33,19 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
-    need_vehicle = fields.Boolean(compute='_compute_need_vehicle',
-        help="Technical field to decide whether the vehicle_id field is editable")
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', index='btree_not_null')
+    # used to decide whether the vehicle_id field is editable
+    need_vehicle = fields.Boolean(compute='_compute_need_vehicle')
 
     def _compute_need_vehicle(self):
         self.need_vehicle = False
+
+    def _prepare_fleet_log_service(self):
+        vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
+        return {
+            'service_type_id': vendor_bill_service.id,
+            'vehicle_id': self.vehicle_id.id,
+            'amount': self.price_subtotal,
+            'vendor_id': self.partner_id.id,
+            'description': self.name,
+        }

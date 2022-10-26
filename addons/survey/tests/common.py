@@ -24,6 +24,7 @@ class SurveyCase(common.TransactionCase):
             'char_box': ('char_box', 'value_char_box'),
             'numerical_box': ('numerical_box', 'value_numerical_box'),
             'date': ('date', 'value_date'),
+            'datetime': ('datetime', 'value_datetime'),
             'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
             'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
             'matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
@@ -135,6 +136,8 @@ class SurveyCase(common.TransactionCase):
         qtype = self._type_match.get(question.question_type, (False, False))
         answer_type = kwargs.pop('answer_type', qtype[0])
         answer_fname = kwargs.pop('answer_fname', qtype[1])
+        if question.question_type == 'matrix':
+            answer_fname = qtype[1][0]
 
         base_alvals = {
             'user_input_id': answer.id,
@@ -143,11 +146,15 @@ class SurveyCase(common.TransactionCase):
             'answer_type': answer_type,
         }
         base_alvals[answer_fname] = answer_value
+        if 'answer_value_row' in kwargs:
+            answer_value_row = kwargs.pop('answer_value_row')
+            base_alvals[qtype[1][1]] = answer_value_row
+
         base_alvals.update(kwargs)
         return self.env['survey.user_input.line'].create(base_alvals)
 
     # ------------------------------------------------------------
-    # UTILS
+    # UTILS / CONTROLLER ENDPOINTS FLOWS
     # ------------------------------------------------------------
 
     def _access_start(self, survey):
@@ -157,13 +164,11 @@ class SurveyCase(common.TransactionCase):
         return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
     def _access_begin(self, survey, token):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = base_url + '/survey/begin/%s/%s' % (survey.access_token, token)
+        url = survey.get_base_url() + '/survey/begin/%s/%s' % (survey.access_token, token)
         return self.opener.post(url=url, json={})
 
     def _access_submit(self, survey, token, post_data):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)
+        url = survey.get_base_url() + '/survey/submit/%s/%s' % (survey.access_token, token)
         return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
@@ -197,6 +202,18 @@ class SurveyCase(common.TransactionCase):
         response = self._access_page(question.survey_id, answer_token)
         self.assertResponse(response, 200)
 
+    def _answer_page(self, page, answers, answer_token, csrf_token):
+        post_data = {}
+        for question, answer in answers.items():
+            post_data[question.id] = answer.id
+        post_data['page_id'] = page.id
+        post_data['csrf_token'] = csrf_token
+        post_data['token'] = answer_token
+        response = self._access_submit(page.survey_id, answer_token, post_data)
+        self.assertResponse(response, 200)
+        response = self._access_page(page.survey_id, answer_token)
+        self.assertResponse(response, 200)
+
     def _format_submission_data(self, question, answer, additional_post_data):
         post_data = {}
         post_data['question_id'] = question.id
@@ -205,6 +222,36 @@ class SurveyCase(common.TransactionCase):
             post_data['page_id'] = question.page_id.id
         post_data.update(**additional_post_data)
         return post_data
+
+    # ------------------------------------------------------------
+    # UTILS / TOOLS
+    # ------------------------------------------------------------
+
+    def _assert_skipped_question(self, question, survey_user):
+        statistics = question._prepare_statistics(survey_user.user_input_line_ids)
+        question_data = next(
+            (question_data
+            for question_data in statistics
+            if question_data.get('question') == question),
+            False
+        )
+        self.assertTrue(bool(question_data))
+        self.assertEqual(len(question_data.get('answer_input_skipped_ids')), 1)
+
+    def _create_one_question_per_type(self):
+        all_questions = self.env['survey.question']
+        for (question_type, dummy) in self.env['survey.question']._fields['question_type'].selection:
+            kwargs = {}
+            if question_type == 'multiple_choice':
+                kwargs['labels'] = [{'value': 'MChoice0'}, {'value': 'MChoice1'}]
+            elif question_type == 'simple_choice':
+                kwargs['labels'] = [{'value': 'SChoice0'}, {'value': 'SChoice1'}]
+            elif question_type == 'matrix':
+                kwargs['labels'] = [{'value': 'Column0'}, {'value': 'Column1'}]
+                kwargs['labels_2'] = [{'value': 'Row0'}, {'value': 'Row1'}]
+            all_questions |= self._add_question(self.page_0, 'Q0', question_type, **kwargs)
+
+        return all_questions
 
 
 class TestSurveyCommon(SurveyCase):
@@ -253,6 +300,7 @@ class TestSurveyCommon(SurveyCase):
             'survey_id': self.survey.id,
             'sequence': 1,
             'is_page': True,
+            'question_type': False,
         })
         self.question_ft = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'Test Free Text',

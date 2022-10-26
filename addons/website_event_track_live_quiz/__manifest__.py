@@ -7,8 +7,7 @@
     'category': 'Hidden',
     'version': '1.0',
     'summary': 'Bridge module to support quiz features during "live" tracks. ',
-    'website': 'https://www.odoo.com/page/events',
-    'description': "",
+    'website': 'https://www.odoo.com/app/events',
     'depends': [
         'website_event_track_live',
         'website_event_track_quiz',
@@ -16,17 +15,13 @@
     'data': [
         'views/event_track_templates_page.xml',
     ],
-    'demo': [
-    ],
-    'application': False,
     'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live_quiz/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'website_event_track_live_quiz/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

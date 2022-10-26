@@ -1,0 +1,27 @@
+.o_kanban_renderer, .o_list_renderer {
+    .o_field_many2many_avatar_user {
+        &:not(:has(.o_tags_input)) {
+            display: flex !important;
+        }
+
+        .o_field_tags:not(.o_tags_input) {
+            .o_tag {
+                background-color: transparent;
+                box-shadow: none;
+                color: inherit;
+                margin-right: 0px;
+            }
+        
+            .o_m2m_avatar, .o_m2m_avatar_empty {
+                width: 20px;
+                height: 20px;
+                margin-left: 0px;
+            }
+        
+            .o_m2m_avatar_empty {
+                background-color: $o-gray-300;
+                vertical-align: bottom;
+            }
+        }
+    }
+}

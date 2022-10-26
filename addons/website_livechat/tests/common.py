@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import random
+
 from odoo import fields, tests
 
 
@@ -9,12 +11,18 @@ class TestLivechatCommon(tests.TransactionCase):
         super(TestLivechatCommon, self).setUp()
         self.base_datetime = fields.Datetime.from_string("2019-11-11 21:30:00")
 
+        self.group_user = self.env.ref('base.group_user')
+        self.group_livechat_user = self.env.ref('im_livechat.im_livechat_group_user')
         self.operator = self.env['res.users'].create({
             'name': 'Operator Michel',
             'login': 'operator',
             'email': 'operator@example.com',
             'password': "ideboulonate",
             'livechat_username': 'El Deboulonnator',
+            'groups_id': [(6, 0, [
+                self.group_user.id,
+                self.group_livechat_user.id,
+            ])],
         })
 
         self.livechat_channel = self.env['im_livechat.channel'].create({
@@ -33,10 +41,14 @@ class TestLivechatCommon(tests.TransactionCase):
             'country_id': self.env.ref('base.de').id,
             'website_id': self.env.ref('website.default_website').id,
             'partner_id': self.env.ref('base.user_demo').partner_id.id,
-        }] + [visitor_vals]*self.max_sessions_per_operator)
+            'access_token': self.env.ref('base.user_demo').partner_id.id,
+        }] + [
+            dict(visitor_vals, access_token='%032x' % random.randrange(16**32))
+            for _ in range(self.max_sessions_per_operator)
+        ])
         self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.livechat_channel.get_base_url()
 
         self.open_chat_url = base_url + "/im_livechat/get_session"
         self.open_chat_params = {'params': {
@@ -46,6 +58,7 @@ class TestLivechatCommon(tests.TransactionCase):
 
         self.send_feedback_url = base_url + "/im_livechat/feedback"
         self.leave_session_url = base_url + "/im_livechat/visitor_leave_session"
+        self.message_info_url = base_url + "/mail/init_messaging"
 
         # override the get_available_users to return only Michel as available
         operators = self.operator

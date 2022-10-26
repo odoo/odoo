@@ -16,14 +16,14 @@ class TestLivechatLead(TestCrmCommon):
             cls.env, login='user_anonymous',
             name='Anonymous Website', email=False,
             company_id=cls.company_main.id,
-            notification_type='inbox',
+            notification_type='email',
             groups='base.group_public',
         )
         cls.user_portal = mail_new_test_user(
             cls.env, login='user_portal',
             name='Paulette Portal', email='user_portal@test.example.com',
             company_id=cls.company_main.id,
-            notification_type='inbox',
+            notification_type='email',
             groups='base.group_portal',
         )
 
@@ -44,7 +44,24 @@ class TestLivechatLead(TestCrmCommon):
         self.assertEqual(lead.name, 'TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
-        # public + someone else: no customer (as he was anonymous)
+        # public user: should not be set as customer
+        # 'base.public_user' is archived by default
+        self.assertFalse(self.env.ref('base.public_user').active)
+
+        channel = self.env['mail.channel'].create({
+            'name': 'Chat with Visitor',
+            'channel_partner_ids': [(4, self.env.ref('base.public_partner').id)]
+        })
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
+
+        self.assertEqual(
+            channel.channel_member_ids.partner_id,
+            self.user_sales_leads.partner_id | self.env.ref('base.public_partner')
+        )
+        self.assertEqual(lead.name, 'TestLead command')
+        self.assertEqual(lead.partner_id, self.env['res.partner'])
+
+        # public + someone else: no customer (as they were anonymous)
         channel.write({
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })

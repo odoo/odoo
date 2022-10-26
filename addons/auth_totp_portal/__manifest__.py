@@ -14,5 +14,6 @@
         'web.assets_tests': [
             'auth_totp_portal/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

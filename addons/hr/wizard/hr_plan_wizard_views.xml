@@ -8,13 +8,19 @@
                 <form>
                     <sheet>
                         <group>
+                            <field name="department_id"/>
                             <field name="plan_id"/>
-                            <field name="employee_id" invisible="1"/>
+                            <field name="employee_ids" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                         </group>
+                        <div role="alert" class="alert alert-danger mb8" attrs="{'invisible': [('warning', '=', False)]}">
+                            <field name="warning"/>
+                        </div>
                     </sheet>
                     <footer>
-                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" groups="hr.group_hr_manager"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" attrs="{'invisible': [('warning', '!=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" disabled="disabled" attrs="{'invisible': [('warning', '=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

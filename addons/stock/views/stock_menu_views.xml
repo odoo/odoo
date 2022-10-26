@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem name="Inventory" id="menu_stock_root" sequence="30"
+    <menuitem name="Inventory" id="menu_stock_root" sequence="140"
         groups="group_stock_manager,group_stock_user"
-        web_icon="stock,static/description/icon.png"/>
+        web_icon="stock,static/description/icon.svg"/>
 
     <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="2"/>
 
@@ -35,8 +35,8 @@
         parent="stock.menu_product_in_config_stock"  sequence="35" groups="uom.group_uom"/>
 
     <menuitem id="menu_stock_uom_form_action" action="uom.product_uom_form_action"
-        name="UoM"
-        parent="product_uom_menu" sequence="35"/>
+        name="UoM" active="False"
+        parent="product_uom_menu" sequence="35" groups="base.group_no_one"/>
 
     <menuitem id="menu_stock_inventory_control" name="Products" parent="menu_stock_root" sequence="4"/>
 

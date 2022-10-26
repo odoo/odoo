@@ -1,0 +1,176 @@
+// KANBAN VIEW
+.o_survey_survey_view_kanban {
+    // Common: left semi-trophy icon for certifications
+    .o_survey_kanban_card_certification {
+        background-image:
+            linear-gradient(rgba($o-view-background-color,.75),
+                            rgba($o-view-background-color,.75)),
+            url(/survey/static/src/img/trophy-solid.svg);
+        background-repeat: no-repeat;
+        background-position: bottom 6px left -45px;
+        background-size: 100%, 100px;
+    }
+
+    // Grouped / Ungrouped sections hidding
+    &.o_kanban_grouped {
+        .o_survey_kanban_card_ungrouped {
+            display:none !important;
+        }
+    }
+    &.o_kanban_ungrouped {
+        .o_survey_kanban_card_grouped {
+            display:none !important;
+        }
+    }
+
+    // Ungrouped display: whole length (kanban-list)
+    &.o_kanban_ungrouped {
+        padding: 0px;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0px;
+            border-top: 0px !important;
+        }
+    }
+
+    // Grouped specific
+    &.o_kanban_grouped {
+        // Set a minimal height otherwise display may have different card sized
+        .o_survey_kanban_card_grouped {
+            & > .row {
+                min-height: 60px;
+            }
+        }
+
+        // Due to activity widget crashing if present twice, have to set absolute and tweak
+        .o_survey_kanban_card_bottom {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+
+    // Ungrouped specific
+    &.o_kanban_ungrouped {
+        // Set a minimal height otherwise display may have different card sized
+        .o_survey_kanban_card_ungrouped {
+            &.row {
+                min-height: 60px;
+            }
+        }
+
+        // Left semi-trophy icon for certifications: tweak display for list view
+        .o_survey_kanban_card_certification {
+            background-position: center left -35px;
+            background-size: auto 75%;
+        }
+
+        // Due to activity widget crashing if present twice, have to set absolute and tweak
+        .o_survey_kanban_card_bottom {
+            position: absolute;
+            bottom: 4px;
+            right: 19px;
+        }
+    }
+
+    // RIBBON: Kanban specific
+    // Ungrouped specific
+    .o_survey_kanban_card_ungrouped {
+        .ribbon {
+            // Desktop: finishes on next kanban card line
+            height: 77px;
+            width: 130px;
+
+            // Mobile: is in a corner, takes more place
+            @include media-breakpoint-down(md) {
+                height: 100px;
+                width: 100px;
+            }
+
+            &-top-right {
+                margin-top: -$o-kanban-inside-vgutter;
+                right: 0;
+
+                & span {
+                    left: -8px;
+                    top: 24px;
+                }
+            }
+
+            & span {
+                font-size: 1rem;
+                width: 150px;
+                height: 32px;
+            }
+        }
+    }
+    // Grouped specific
+    .o_survey_kanban_card_grouped {
+        .ribbon {
+            height: 90px;
+            width: 98px;
+
+            &-top-right {
+                margin-top: -$o-kanban-inside-vgutter;
+                right: 0;
+
+                & span {
+                    left: -8px;
+                    top: 16px;
+                }
+            }
+
+            & span {
+                font-size: 1rem;
+                width: 150px;
+                height: 32px;
+                padding: 0 8px;
+            }
+        }
+    }
+}
+
+// FORM view
+.o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
+    font-weight: bold;
+    background-color: var(--SurveyForm__section-background-color, #DDD);
+    border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+    
+    > td {
+        background: transparent;
+    }
+}
+
+// TOOLS
+.icon_rotates {
+    transform: rotate(180deg);
+}
+
+/* Style of the tiles allowing the user to load a sample survey. */
+.o_survey_sample_tile {
+    max-width: 150px;
+    height: 150px;
+    .o_survey_sample_tile_cover {
+        display: none;
+        overflow-y: auto;
+        cursor: pointer;
+    }
+    &:hover {
+        .o_survey_sample_tile_cover {
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.9);
+            &::before, &::after {
+                content: '';
+            }
+            &::before {
+                margin-top: auto;
+            }
+            &::after {
+                margin-bottom: auto;
+            }
+        }
+    }
+}

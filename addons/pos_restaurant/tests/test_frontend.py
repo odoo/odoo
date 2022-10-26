@@ -18,7 +18,6 @@ class TestFrontend(odoo.tests.HttpCase):
 
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
-            'barcode_nomenclature_id': self.env.ref('barcodes.default_barcode_nomenclature').id,
             'module_pos_restaurant': True,
             'is_table_management': True,
             'iface_splitbill': True,
@@ -83,7 +82,7 @@ class TestFrontend(odoo.tests.HttpCase):
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
-                                                 'user_type_id': self.env.ref('account.data_account_type_receivable').id,
+                                                 'account_type': 'asset_receivable',
                                                  'reconcile': True})
 
         self.env['ir.property']._set_default(
@@ -103,7 +102,7 @@ class TestFrontend(odoo.tests.HttpCase):
         cash_journal = self.env['account.journal'].create({
             'name': 'Cash Test',
             'code': 'TCJ',
-            'type': 'sale',
+            'type': 'cash',
             'company_id': main_company.id
             })
 
@@ -114,8 +113,7 @@ class TestFrontend(odoo.tests.HttpCase):
                 'name': 'Cash restaurant',
                 'split_transactions': True,
                 'receivable_account_id': account_receivable.id,
-                'is_cash_count': True,
-                'cash_journal_id': cash_journal.id,
+                'journal_id': cash_journal.id,
             })],
         })
 
@@ -156,7 +154,7 @@ class TestFrontend(odoo.tests.HttpCase):
 
     def test_01_pos_restaurant(self):
 
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
 
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="admin")
 
@@ -170,23 +168,18 @@ class TestFrontend(odoo.tests.HttpCase):
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
     def test_02_others(self):
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin")
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin")
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin")
 
-    def test_03_order_management_integration(self):
-        self.pos_config.write({'manage_orders': True})
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResOrderManagementScreenTour', login="admin")
-
     def test_04_ticket_screen(self):
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="admin")
 
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="admin")
 
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')])
