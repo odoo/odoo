@@ -31,10 +31,16 @@ export class ModelInfo {
         this.requiredFieldsList = [];
         this.identifyingFieldNames = new Set();
         this.fields = {};
+        this.compute();
+    }
+
+    compute() {
+        this.fieldList = [...this.fieldMap.values()];
     }
 
     update({ fieldMap }) {
         this.fieldMap = fieldMap;
+        this.compute();
     }
 
 }
