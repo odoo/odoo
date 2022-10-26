@@ -334,6 +334,47 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
+    QUnit.test("show app_settings_block even if surrounded by t", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <t t-if="true">
+                                <div class="app_settings_block" string="CRM" data-key="crm">
+                                    <div class="row mt16 o_settings_container">
+                                        <div class="col-12 col-lg-6 o_setting_box">
+                                            <div class="o_setting_right_pane">
+                                                <label for="baz"/>
+                                                <div class="content-group">
+                                                    <div class="mt16">
+                                                        <field name="baz" class="o_light_label" widget="radio"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </form>`,
+        });
+        assert.hasAttrValue(
+            target.querySelector(".selected"),
+            "data-key",
+            "crm",
+            "crm setting selected"
+        );
+        assert.isVisible(
+            target.querySelector(".settings .app_settings_block"),
+            "project settings show"
+        );
+    });
+
     QUnit.test("hide / show setting tips properly", async function (assert) {
         await makeView({
             type: "form",

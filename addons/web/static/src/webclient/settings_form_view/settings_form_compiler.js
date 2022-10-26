@@ -11,24 +11,12 @@ function compileSettingsPage(el, params) {
     settingsPage.setAttribute("t-slot-scope", "settings");
 
     //props
-    const modules = [];
-
-    for (const child of el.children) {
-        if (child.nodeName === "div" && child.classList.value.includes("app_settings_block")) {
-            params.module = {
-                key: child.getAttribute("data-key"),
-                string: child.getAttribute("string"),
-                imgurl: getAppIconUrl(child.getAttribute("data-key")),
-                isVisible: getModifier(child, "invisible"),
-            };
-            if (!child.classList.value.includes("o_not_app")) {
-                modules.push(params.module);
-                append(settingsPage, this.compileNode(child, params));
-            }
-        }
+    params.modules = [];
+    for (const child of el.childNodes) {
+        append(settingsPage, this.compileNode(child, params));
     }
 
-    settingsPage.setAttribute("modules", JSON.stringify(modules));
+    settingsPage.setAttribute("modules", JSON.stringify(params.modules));
     return settingsPage;
 }
 
@@ -39,8 +27,18 @@ function getAppIconUrl(module) {
 }
 
 function compileSettingsApp(el, params) {
+    if (el.classList.value.includes("o_not_app")) {
+        return;
+    }
+    const module = {
+        key: el.getAttribute("data-key"),
+        string: el.getAttribute("string"),
+        imgurl: getAppIconUrl(el.getAttribute("data-key")),
+        isVisible: getModifier(el, "invisible"),
+    };
+    params.modules.push(module);
     const settingsApp = createElement("SettingsApp");
-    settingsApp.setAttribute("t-props", JSON.stringify(params.module));
+    settingsApp.setAttribute("t-props", JSON.stringify(module));
     settingsApp.setAttribute("selectedTab", "settings.selectedTab");
 
     for (const child of el.children) {
