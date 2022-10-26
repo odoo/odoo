@@ -1298,6 +1298,38 @@ class TestMany2one(TransactionCase):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
 
         with self.assertQueries(['''
+            SELECT "res_partner".id 
+            FROM "res_partner" 
+            WHERE (
+                ("res_partner"."company_id" in (
+                    SELECT "res_company".id 
+                    FROM "res_company" 
+                    WHERE ("res_company"."name" :: text like %s)
+                ))
+                AND ("res_partner"."company_id" in (
+                    SELECT "res_company".id 
+                    FROM "res_company" 
+                    WHERE ("res_company"."active" = %s)
+                ))
+            )
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            self.Partner.search([('company_id.name', 'like', self.company.name), ('company_id.active', '=', True)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id 
+            FROM "res_partner" 
+            WHERE ("res_partner"."company_id" in (
+                SELECT "res_company".id 
+                FROM "res_company" 
+                WHERE (("res_company"."name" :: text like %s) 
+                AND ("res_company"."active" = %s))
+                ))
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            self.Partner.search([('company_id', 'indomain', [('name', 'like', self.company.name), ('active', '=', True)])])
+
+        with self.assertQueries(['''
             SELECT "res_partner".id
             FROM "res_partner"
             WHERE ("res_partner"."company_id" IN (
@@ -1524,6 +1556,35 @@ class TestOne2many(TransactionCase):
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
             self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
+
+        with self.assertQueries(['''            
+            SELECT "res_partner".id 
+            FROM "res_partner" 
+            WHERE (("res_partner"."id" IN (
+                SELECT "res_partner_bank"."partner_id" 
+                FROM "res_partner_bank" 
+                WHERE ("res_partner_bank"."sanitized_acc_number" :: text like %s)))
+            AND ("res_partner"."id" IN (
+                SELECT "res_partner_bank"."partner_id" 
+                FROM "res_partner_bank" 
+                WHERE ("res_partner_bank"."active" = % s)))
+            ) 
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12'), ('bank_ids.active', '=', True)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id 
+            FROM "res_partner" 
+            WHERE ("res_partner"."id" IN (
+                SELECT "res_partner_bank"."partner_id" 
+                FROM "res_partner_bank" 
+                WHERE (("res_partner_bank"."sanitized_acc_number" :: text like %s) 
+                AND ("res_partner_bank"."active" = %s))
+            )) 
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            self.Partner.search([('bank_ids', 'indomain', [('sanitized_acc_number', 'like', '12'), ('active', '=', True)])])
 
         with self.assertQueries(['''
             SELECT "res_partner".id
@@ -1759,6 +1820,47 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
+            WHERE (EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
+                    SELECT "res_groups".id
+                    FROM "res_groups"
+                    WHERE ("res_groups"."color" = %s)
+                ))
+                AND EXISTS (
+                    SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                    WHERE "res_users__groups_id"."uid" = "res_users".id
+                    AND "res_users__groups_id"."gid" IN (
+                        SELECT "res_groups".id
+                        FROM "res_groups"
+                        WHERE ("res_groups"."name"->>'en_US' like %s)
+                ))
+            )
+            ORDER BY  "res_users"."id" 
+        ''']):
+            self.User.search([('groups_id.color', '=', group_color), ('groups_id.name', 'like', 'user')], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
+                    SELECT "res_groups".id
+                    FROM "res_groups"
+                    WHERE (("res_groups"."color" = %s)
+                    AND ("res_groups"."name"->>'en_US' like %s))
+                )
+            )
+            ORDER BY  "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', 'indomain', [('color', '=', group_color), ('name', 'like', 'user')])], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
             WHERE EXISTS (
                 SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
                 WHERE "res_users__groups_id"."uid" = "res_users".id
@@ -1779,6 +1881,72 @@ class TestMany2many(TransactionCase):
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE (EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
+                    SELECT "res_groups".id
+                    FROM "res_groups"
+                    WHERE EXISTS (
+                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
+                        WHERE "res_groups__rule_groups"."group_id" = "res_groups".id
+                        AND "res_groups__rule_groups"."rule_group_id" IN (
+                            SELECT "ir_rule".id
+                            FROM "ir_rule"
+                            WHERE ("ir_rule"."name"::text like %s)
+                        )
+                    )
+                )
+            )
+            AND EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
+                    SELECT "res_groups".id
+                    FROM "res_groups"
+                    WHERE EXISTS (
+                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
+                        WHERE "res_groups__rule_groups"."group_id" = "res_groups".id
+                        AND "res_groups__rule_groups"."rule_group_id" IN (
+                            SELECT "ir_rule".id
+                            FROM "ir_rule"
+                            WHERE ("ir_rule"."active" = %s)
+                        )
+                    )
+                )
+            ))
+            ORDER BY  "res_users"."id"  
+        ''']):
+            self.User.search([('groups_id.rule_groups.name', 'like', rule.name), ('groups_id.rule_groups.active', '=', True)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
+                    SELECT "res_groups".id
+                    FROM "res_groups"
+                    WHERE EXISTS (
+                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
+                        WHERE "res_groups__rule_groups"."group_id" = "res_groups".id
+                        AND "res_groups__rule_groups"."rule_group_id" IN (
+                            SELECT "ir_rule".id
+                            FROM "ir_rule"
+                            WHERE (("ir_rule"."name"::text like %s)
+                            AND ("ir_rule"."active" = %s))
+                        )
+                    )
+                )
+            )
+            ORDER BY  "res_users"."id" 
+        ''']):
+            self.User.search([('groups_id.rule_groups', 'indomain', [('name', 'like', rule.name), ('active', '=', True)])], order='id')
 
     def test_autojoin(self):
         self.patch(self.User._fields['groups_id'], 'auto_join', True)

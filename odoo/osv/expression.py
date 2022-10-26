@@ -142,7 +142,7 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of')
+                  'child_of', 'parent_of', 'indomain')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -738,6 +738,9 @@ class expression(object):
             # -------------------------------------------------
             # RELATIONAL FIELDS
             # -------------------------------------------------
+
+            elif operator == 'indomain' and field.type in ['one2many', 'many2one', 'many2many']:
+                push((left, 'in', comodel._search(right, order='id')), model, alias)
 
             # Applying recursivity on field(one2many)
             elif field.type == 'one2many' and operator in HIERARCHY_FUNCS:
