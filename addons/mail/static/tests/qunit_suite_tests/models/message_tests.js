@@ -37,8 +37,8 @@ QUnit.test('create', async function (assert) {
         body: "<p>Test</p>",
         date: moment(str_to_datetime("2019-05-05 10:00:00")),
         id: 4000,
-        isNeedaction: true,
-        isStarred: true,
+        needaction_partner_ids: [{ id: messaging.currentPartner.id }],
+        starred_partner_ids: [{ id: messaging.currentPartner.id }],
         originThread: thread,
     });
 

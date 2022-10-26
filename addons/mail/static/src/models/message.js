@@ -34,8 +34,8 @@ Model({
             if ('guestAuthor' in data) {
                 data2.guestAuthor = data.guestAuthor;
             }
-            if ('history_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isHistory = data.history_partner_ids.includes(this.messaging.currentPartner.id);
+            if ('history_partner_ids' in data) {
+                data2.history_partner_ids = data.history_partner_ids;
             }
             if ('id' in data) {
                 data2.id = data.id;
@@ -72,8 +72,8 @@ Model({
                 }
                 data2.originThread = originThreadData;
             }
-            if ('needaction_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
+            if ('needaction_partner_ids' in data) {
+                data2.needaction_partner_ids = data.needaction_partner_ids;
             }
             if ('notifications' in data) {
                 data2.notifications = insert(data.notifications.map(notificationData =>
@@ -90,8 +90,8 @@ Model({
             if ('recipients' in data) {
                 data2.recipients = data.recipients;
             }
-            if ('starred_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
+            if ('starred_partner_ids' in data) {
+                data2.starred_partner_ids = data.starred_partner_ids;
             }
             if ('subject' in data) {
                 data2.subject = data.subject;
@@ -414,6 +414,7 @@ Model({
         }),
         id: attr({ identifying: true }),
         isCurrentUserOrGuestAuthor: attr({ default: false,
+        history_partner_ids: many('Partner'),
             compute() {
                 return !!(
                     this.author &&
@@ -554,12 +555,28 @@ Model({
          * Determine whether the message was a needaction. Useful to make it
          * present in history mailbox.
          */
-        isHistory: attr({ default: false }),
+        isHistory: attr({
+            compute() {
+                if (!this.messaging.currentPartner) {
+                    return clear();
+                }
+                return this.history_partner_ids.includes(this.messaging.currentPartner);
+            },
+            default: false,
+        }),
         /**
          * Determine whether the message is needaction. Useful to make it
          * present in inbox mailbox and messaging menu.
          */
-        isNeedaction: attr({ default: false }),
+        isNeedaction: attr({
+            compute() {
+                if (!this.messaging.currentPartner) {
+                    return clear();
+                }
+                return this.needaction_partner_ids.includes(this.messaging.currentPartner);
+            },
+            default: false,
+        }),
         is_note: attr({ default: false }),
         is_notification: attr({ default: false }),
         /**
@@ -586,7 +603,15 @@ Model({
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
-        isStarred: attr({ default: false }),
+        isStarred: attr({
+            compute() {
+                if (!this.messaging.currentPartner) {
+                    return clear();
+                }
+                return this.starred_partner_ids.includes(this.messaging.currentPartner);
+            },
+            default: false,
+        }),
         /**
          * Last tracking value of the message.
          */
@@ -626,6 +651,7 @@ Model({
          */
         messageViews: many('MessageView', { inverse: 'message', isCausal: true }),
         messageListViewItems: many('MessageListViewItem', { inverse: 'message' }),
+        needaction_partner_ids: many('Partner'),
         notifications: many('Notification', { inverse: 'message', isCausal: true }),
         /**
          * Origin thread of this message (if any).
@@ -666,6 +692,7 @@ Model({
             },
         }),
         recipients: many('Partner'),
+        starred_partner_ids: many('Partner'),
         shortTime: attr({
             compute() {
                 if (!this.momentDate) {

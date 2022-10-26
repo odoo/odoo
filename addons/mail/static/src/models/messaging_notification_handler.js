@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { decrement, increment, insert, Model } from '@mail/model';
+import { decrement, increment, insert, Model, link, unlink } from '@mail/model';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
@@ -497,8 +497,8 @@ Model({
                 }
                 // move messages from Inbox to history
                 message.update({
-                    isHistory: true,
-                    isNeedaction: false,
+                    history_partner_ids: link(this.messaging.currentPartner),
+                    needaction_partner_ids: unlink(this.messaging.currentPartner),
                 });
             }
             const inbox = this.messaging.inbox;
@@ -518,19 +518,19 @@ Model({
         /**
          * @private
          * @param {Object} param0
-         * @param {integer[]} param0.message_ids
+         * @param {Object[]} param0.messages
          * @param {boolean} param0.starred
          */
-        _handleNotificationPartnerToggleStar({ message_ids = [], starred }) {
+        _handleNotificationPartnerToggleStar({ messages = [], starred }) {
             const starredMailbox = this.messaging.starred;
-            for (const messageId of message_ids) {
+            this.messaging.models['Message'].insert(messages);
+            for (const { id: messageId } of messages) {
                 const message = this.messaging.models['Message'].findFromIdentifyingData({
                     id: messageId,
                 });
                 if (!message) {
                     continue;
                 }
-                message.update({ isStarred: starred });
                 starredMailbox.update({
                     counter: starred ? increment() : decrement(),
                 });

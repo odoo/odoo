@@ -2844,7 +2844,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.message/inbox', {
             'body': "not empty",
             'id': 100,
-            'needaction_partner_ids': [pyEnv.currentPartnerId],
+            'needaction_partner_ids': [{ id: pyEnv.currentPartnerId }],
             'model': 'res.partner',
             'res_id': 20,
         });
@@ -2884,7 +2884,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.message/inbox', {
             'body': "not empty",
             'id': 101,
-            'needaction_partner_ids': [pyEnv.currentPartnerId],
+            'needaction_partner_ids': [{ id: pyEnv.currentPartnerId }],
             'model': 'res.partner',
             'res_id': 20,
         });

@@ -764,9 +764,13 @@ class Message(models.Model):
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
         starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
-        ids = [m.id for m in starred_messages]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
-            'message_ids': ids,
+            'messages': [{
+                'id': m.id,
+                'starred_partner_ids': [{
+                    'id': p.id,
+                } for p in m.starred_partner_ids]
+            } for m in starred_messages],
             'starred': False,
         })
 
@@ -783,7 +787,12 @@ class Message(models.Model):
             self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
 
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
-            'message_ids': [self.id],
+            'messages': [{
+                'id': m.id,
+                'starred_partner_ids': [{
+                    'id': p.id,
+                } for p in m.starred_partner_ids]
+            } for m in self],
             'starred': starred,
         })
 
@@ -952,10 +961,11 @@ class Message(models.Model):
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
             vals.update({
-                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
-                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
+                'needaction_partner_ids': [{'id': p.id} for p in notifs.filtered(lambda n: not n.is_read).res_partner_id],
+                'history_partner_ids': [{'id': p.id} for p in notifs.filtered(lambda n: n.is_read).res_partner_id],
                 'is_note': message_sudo.subtype_id.id == note_id,
                 'is_discussion': message_sudo.subtype_id.id == com_id,
+                'starred_partner_ids': [{'id': p.id} for p in message_sudo.starred_partner_ids],
                 'subtype_description': message_sudo.subtype_id.description,
                 'is_notification': vals['message_type'] == 'user_notification',
                 'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
@@ -969,7 +979,6 @@ class Message(models.Model):
             'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
-            'starred_partner_ids',  # list of partner ids for whom the message is starred
         ]
 
     def _message_notification_format(self):
