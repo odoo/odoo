@@ -418,6 +418,12 @@ def list_db_incompatible(databases):
     return incompatible_databases
 
 
+def exp_monodb():
+    dbs = list_dbs(force=True)
+    if len(dbs) != 1:
+        return None
+    return dbs[0]
+
 def exp_list(document=False):
     if not odoo.tools.config['list_db']:
         raise odoo.exceptions.AccessDenied()
@@ -448,7 +454,7 @@ def exp_server_version():
 def dispatch(method, params):
     g = globals()
     exp_method_name = 'exp_' + method
-    if method in ['db_exist', 'list', 'list_lang', 'server_version']:
+    if method in ['db_exist', 'monodb', 'list', 'list_lang', 'server_version']:
         return g[exp_method_name](*params)
     elif exp_method_name in g:
         passwd = params[0]
