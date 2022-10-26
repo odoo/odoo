@@ -25,7 +25,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
         res_id: resPartnerId1,
         views: [[false, 'form']],
     });
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
 
     assert.containsOnce(
         document.body,
@@ -77,7 +77,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         res_id: resPartnerId1,
         views: [[false, 'form']],
     });
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
 
     assert.containsOnce(
         document.body,
@@ -145,7 +145,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         res_id: resPartnerId1,
         views: [[false, 'form']],
     });
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
     await click('.o_ActivityMarkDonePopoverContent_doneButton');
     assert.verifySteps(
         ['action_feedback'],
@@ -187,7 +187,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         res_id: resPartnerId1,
         views: [[false, 'form']],
     });
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
 
     let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopoverContent_feedback');
     feedbackTextarea.focus();
@@ -237,7 +237,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
             throw new Error("The do-action event should not be triggered when the route doesn't return an action");
         },
     });
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
 
     let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopoverContent_feedback');
     feedbackTextarea.focus();
@@ -282,7 +282,7 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
             );
         },
     });
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
 
     await click('.o_ActivityMarkDonePopoverContent_doneScheduleNextButton');
     assert.verifySteps(
