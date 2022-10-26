@@ -36,6 +36,7 @@ export class ModelInfo {
 
     compute() {
         this.fieldList = [...this.fieldMap.values()];
+        this.requiredFieldsList = this.fieldList.filter(field => field.required);
     }
 
     destroy() {

@@ -421,9 +421,6 @@ export class ModelGenerator {
             this.manager.modelInfos[model.name].update({
                 fieldMap: new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields)),
             });
-            this.manager.modelInfos[model.name].requiredFieldList = this.manager.modelInfos[model.name].fieldList.filter(
-                field => field.required
-            );
             for (const [fieldName, field] of this.manager.modelInfos[model.name].fieldMap) {
                 if (field.identifying) {
                     this.manager.modelInfos[model.name].identifyingFieldNames.add(fieldName);
