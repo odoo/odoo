@@ -1786,7 +1786,6 @@ class JsonRPCDispatcher(Dispatcher):
             'data': serialize_exception(exc),
         }
         if isinstance(exc, NotFound):
-            error['http_status'] = 404
             error['code'] = 404
             error['message'] = "404: Not Found"
         elif isinstance(exc, SessionExpiredException):
@@ -1797,11 +1796,9 @@ class JsonRPCDispatcher(Dispatcher):
 
     def _response(self, result=None, error=None):
         request_id = self.jsonrequest.get('id')
-        status = 200
         response = {'jsonrpc': '2.0', 'id': request_id}
         if error is not None:
             response['error'] = error
-            status = error.pop('http_status', 200)
         if result is not None:
             response['result'] = result
 
