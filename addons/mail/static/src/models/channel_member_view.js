@@ -12,11 +12,12 @@ Model({
          *
          * @param {MouseEvent} ev
          */
-        onClickMember(ev) {
+        async onClickMember(ev) {
             if (isEventHandled(ev, 'PersonaImStatusIcon.Click') || !this.channelMember.persona.partner) {
                 return;
             }
-            this.channelMember.persona.partner.openChat();
+            await this.channelMember.persona.sync();
+            this.channelMember.persona.openChat();
         },
     },
     fields: {

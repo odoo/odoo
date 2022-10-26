@@ -12,12 +12,18 @@ Patch({
          * @override
          * @param {integer} [param0.employeeId]
          */
-        async getChat({ employeeId }) {
+        async getSyncedPersona(person) {
+            const { employeeId } = person;
             if (employeeId) {
-                const employee = this.messaging.models['Employee'].insert({ id: employeeId });
-                return employee.getChat();
+                const employee = this.models['Employee'].insert({ id: employeeId });
+                if (!employee.partner) {
+                    await employee.checkIsUser();
+                }
+                if (employee.exists() && employee.partner) {
+                    return this.models['Persona'].insert({ partner: employee.partner });
+                }
             }
-            return this._super(...arguments);
+            return this._super(person);
         },
         /**
          * @override

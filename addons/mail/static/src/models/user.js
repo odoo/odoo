@@ -62,69 +62,6 @@ Model({
             });
         },
         /**
-         * Gets the chat between this user and the current user.
-         *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @returns {Channel|undefined}
-         */
-        async getChat() {
-            if (!this.partner) {
-                await this.fetchPartner();
-                if (!this.exists()) {
-                    return;
-                }
-            }
-            if (!this.partner) {
-                // This user has been deleted from the server or never existed:
-                // - Validity of id is not verified at insert.
-                // - There is no bus notification in case of user delete from
-                //   another tab or by another user.
-                this.messaging.notify({
-                    message: this.env._t("You can only chat with existing users."),
-                    type: 'warning',
-                });
-                return;
-            }
-            // in other cases a chat would be valid, find it or try to create it
-            let chat = this.partner.dmChatWithCurrentPartner;
-            if (!chat || !chat.thread.isPinned) {
-                // if chat is not pinned then it has to be pinned client-side
-                // and server-side, which is a side effect of following rpc
-                chat = await this.messaging.models['Channel'].performRpcCreateChat({
-                    partnerIds: [this.partner.id],
-                });
-                if (!this.exists()) {
-                    return;
-                }
-            }
-            if (!chat) {
-                this.messaging.notify({
-                    message: this.env._t("An unexpected error occurred during the creation of the chat."),
-                    type: 'warning',
-                });
-                return;
-            }
-            return chat;
-        },
-        /**
-         * Opens a chat between this user and the current user and returns it.
-         *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @param {Object} [options] forwarded to @see `Thread:open()`
-         */
-        async openChat(options) {
-            const chat = await this.getChat();
-            if (!this.exists() || !chat) {
-                return;
-            }
-            await chat.thread.open(options);
-            if (!this.exists() || !chat.exists()) {
-                return;
-            }
-        },
-        /**
          * Opens the most appropriate view that is a profile for this user.
          * Because user is a rather technical model to allow login, it's the
          * partner profile that contains the most useful information.

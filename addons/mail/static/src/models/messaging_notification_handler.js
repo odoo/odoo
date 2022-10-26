@@ -619,11 +619,10 @@ Model({
             const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
             this.messaging.userNotificationManager.sendNotification({ message, title, type: 'info' });
-            const chat = await this.messaging.getChat({ partnerId });
-            if (!this.exists() || !chat || this.messaging.device.isSmall) {
+            if (this.messaging.device.isSmall) {
                 return;
             }
-            this.messaging.chatWindowManager.openThread(chat.thread);
+            this.messaging.openChat({ partnerId }, { inChatWindow: true });
         },
         /**
          * @private

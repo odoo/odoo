@@ -77,22 +77,24 @@ Model({
         /**
          * @param {MouseEvent} ev
          */
-        onClickAuthorAvatar(ev) {
+        async onClickAuthorAvatar(ev) {
             markEventHandled(ev, 'Message.ClickAuthorAvatar');
             if (!this.hasAuthorOpenChat) {
                 return;
             }
-            this.message.author.openChat();
+            await this.message.author.persona.sync();
+            this.message.author.persona.openChat();
         },
         /**
          * @param {MouseEvent} ev
          */
-        onClickAuthorName(ev) {
+        async onClickAuthorName(ev) {
             markEventHandled(ev, 'Message.ClickAuthorName');
             if (!this.message.author) {
                 return;
             }
-            this.message.author.openChat();
+            await this.message.author.persona.sync();
+            this.message.author.persona.openChat();
         },
         /**
          * @param {MouseEvent} ev

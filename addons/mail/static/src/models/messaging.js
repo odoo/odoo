@@ -35,25 +35,29 @@ Patch({
             }
         },
         /**
-         * Open the form view of the record with provided id and model.
-         * Gets the chat with the provided person and returns it.
+         * Get the persona related to the given id, sync with its
+         * identities.
          *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @param {Object} param0
-         * @param {integer} [param0.partnerId]
-         * @param {integer} [param0.userId]
-         * @param {Object} [options]
-         * @returns {Channel|undefined}
+         * @param {Object} person
+         * @param {Number} [person.partnerId]
+         * @param {Number} [person.userid]
+         * @returns
          */
-        async getChat({ partnerId, userId }) {
+        async getSyncedPersona({ userId, partnerId }) {
+            let partner;
             if (userId) {
-                const user = this.messaging.models['User'].insert({ id: userId });
-                return user.getChat();
+                const user = this.models['User'].insert({ id: userId });
+                if (!user.partner) {
+                    await user.fetchPartner();
+                    partner = user.partner;
+                }
+            } else if (partnerId) {
+                partner = this.models['Partner'].insert({ id: partnerId });
             }
-            if (partnerId) {
-                const partner = this.messaging.models['Partner'].insert({ id: partnerId });
-                return partner.getChat();
+            if (partner) {
+                const persona = this.models['Persona'].insert({ partner });
+                await persona.sync();
+                return persona;
             }
         },
         /**
@@ -129,18 +133,19 @@ Patch({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @param {Object} person forwarded to @see `getChat()`
-         * @param {Object} [options] forwarded to @see `Thread:open()`
+         * @param {Object} person forwarded to @see `Messaging.getSyncedPersona()`
+         * @param {Object} [options] forwarded to @see `Thread:open()`/@see `ChatWindow:openThread()`
          */
         async openChat(person, options) {
-            const chat = await this.getChat(person);
-            if (!this.exists() || !chat) {
+            const persona = await this.getSyncedPersona(person);
+            if (!persona) {
+                this.notify({
+                    message: this.env._t('You can only chat with existing users.'),
+                    type: 'info',
+                });
                 return;
             }
-            await chat.thread.open(options);
-            if (!this.exists()) {
-                return;
-            }
+            return persona.openChat(options);
         },
         /**
          * Opens the form view of the record with provided id and model.

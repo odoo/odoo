@@ -213,48 +213,6 @@ Model({
             }
         },
         /**
-         * Gets the chat between the user of this partner and the current user.
-         *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @returns {Channel|undefined}
-         */
-        async getChat() {
-            if (!this.user && !this.hasCheckedUser) {
-                await this.checkIsUser();
-                if (!this.exists()) {
-                    return;
-                }
-            }
-            // prevent chatting with non-users
-            if (!this.user) {
-                this.messaging.notify({
-                    message: this.env._t("You can only chat with partners that have a dedicated user."),
-                    type: 'info',
-                });
-                return;
-            }
-            return this.user.getChat();
-        },
-        /**
-         * Opens a chat between the user of this partner and the current user
-         * and returns it.
-         *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @param {Object} [options] forwarded to @see `Thread:open()`
-         */
-        async openChat(options) {
-            const chat = await this.getChat();
-            if (!this.exists() || !chat) {
-                return;
-            }
-            await chat.thread.open(options);
-            if (!this.exists()) {
-                return;
-            }
-        },
-        /**
          * Opens the most appropriate view that is a profile for this partner.
          */
         async openProfile() {

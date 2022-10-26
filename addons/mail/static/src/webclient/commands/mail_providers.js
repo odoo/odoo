@@ -38,8 +38,9 @@ commandProviderRegistry.add("partner", {
                 partners.forEach((partner) => {
                     suggestions.push({
                         Component: DialogCommand,
-                        action() {
-                            partner.openChat();
+                        async action() {
+                            await partner.persona.sync();
+                            partner.persona.openChat();
                         },
                         name: partner.nameOrDisplayName,
                         props: {

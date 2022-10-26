@@ -41,7 +41,7 @@ QUnit.module('hr', {}, function () {
                     );
                     assert.strictEqual(
                         message,
-                        "You can only chat with employees that have a dedicated user.",
+                        "You can only chat with existing users.",
                         "should display the correct information in the notification"
                     );
                 }),
@@ -148,7 +148,7 @@ QUnit.module('hr', {}, function () {
                     );
                     assert.strictEqual(
                         message,
-                        "You can only chat with employees that have a dedicated user.",
+                        "You can only chat with existing users.",
                         "should display the correct information in the notification"
                     );
                 }),
