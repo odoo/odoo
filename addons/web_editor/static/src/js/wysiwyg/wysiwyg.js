@@ -975,12 +975,26 @@ const Wysiwyg = Widget.extend({
                 // Modifying an image always creates a copy of the original, even if
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
+                let altData = undefined;
+                if (el.dataset.mimetype === 'image/webp') {
+                    // Generate alternate format for reports.
+                    const image = document.createElement('img');
+                    image.src = isBackground ? el.dataset.bgSrc : el.getAttribute('src');
+                    await new Promise(resolve => image.addEventListener('load', resolve));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(image, 0, 0);
+                    altData = canvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+                }
                 const newAttachmentSrc = await this._rpc({
                     route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
                     params: {
                         res_model: resModel,
                         res_id: parseInt(resId),
                         data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
+                        alt_data: altData,
                         mimetype: el.dataset.mimetype,
                         name: (el.dataset.fileName ? el.dataset.fileName : null),
                     },
