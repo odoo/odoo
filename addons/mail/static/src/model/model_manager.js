@@ -460,7 +460,7 @@ export class ModelManager {
         if (this.isDebug) {
             this._ensureNoLockingListener();
         }
-        const model = record.constructor;
+        const model = this.recordInfos[record.localId].model;
         if (!record.exists()) {
             throw Error(`Cannot delete already deleted record ${record}.`);
         }
@@ -535,7 +535,7 @@ export class ModelManager {
                 throw Error(`Cannot start compute/related for already deleted ${record}.`);
             }
             const listeners = [];
-            for (const field of this.modelInfos[record.constructor.name].fieldList) {
+            for (const field of this.modelInfos[this.recordInfos[record.localId].model.name].fieldList) {
                 if (field.compute) {
                     const listener = new Listener({
                         name: `compute ${field} of ${record}`,
@@ -587,7 +587,7 @@ export class ModelManager {
             if (!record.exists()) {
                 throw Error(`Cannot call _created for already deleted ${record}.`);
             }
-            const lifecycleHooks = registry.get(record.constructor.name).get('lifecycleHooks');
+            const lifecycleHooks = registry.get(this.recordInfos[record.localId].model.name).get('lifecycleHooks');
             if (lifecycleHooks.has('_created')) {
                 lifecycleHooks.get('_created').call(record);
             }
@@ -605,7 +605,7 @@ export class ModelManager {
             if (!record.exists()) {
                 throw Error(`Cannot call onChange for already deleted ${record}.`);
             }
-            for (const onChange of registry.get(record.constructor.name).get('onChanges')) {
+            for (const onChange of registry.get(this.recordInfos[record.localId].model.name).get('onChanges')) {
                 const listener = new Listener({
                     name: `${onChange} of ${record}`,
                     type: 'onChange',
@@ -636,7 +636,7 @@ export class ModelManager {
      */
     doCheck() {
         for (const record of this.cycle.check) {
-            for (const required of record.constructor.__requiredFieldsList) {
+            for (const required of this.recordInfos[record.localId].model.__requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
                     throw Error(`required ${required} of ${record} is missing`);
                 }
@@ -851,7 +851,7 @@ export class ModelManager {
             throw Error(`Cannot update already deleted record ${record}.`);
         }
         const { allowWriteReadonly = false } = options;
-        const model = record.constructor;
+        const model = this.recordInfos[record.localId].model;
         let hasChanged = false;
         for (const fieldName of Object.keys(data)) {
             if (data[fieldName] === undefined) {
