@@ -75,8 +75,8 @@ class AccountPaymentRegister(models.TransientModel):
         for rec in self.filtered('l10n_latam_check_id'):
             rec.amount = rec.l10n_latam_check_id.amount
 
-    def _create_payment_vals_from_wizard(self):
-        vals = super()._create_payment_vals_from_wizard()
+    def _create_payment_vals_from_wizard(self, batch_result):
+        vals = super()._create_payment_vals_from_wizard(batch_result)
         vals.update({
             'l10n_latam_check_id': self.l10n_latam_check_id.id,
             'l10n_latam_check_bank_id': self.l10n_latam_check_bank_id.id,
