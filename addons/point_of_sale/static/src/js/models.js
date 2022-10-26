@@ -1890,6 +1890,9 @@ exports.PosModel = Backbone.Model.extend({
     htmlToImgLetterRendering() {
         return false;
     },
+    doNotAllowRefundAndSales() {
+        return false;
+    }
 });
 
 /**
@@ -3365,7 +3368,21 @@ exports.Order = Backbone.Model.extend({
         line.set_unit_price(line.compute_fixed_price(line.price));
     },
 
-    add_product: function(product, options){
+    _isRefundAndSaleOrder: function() {
+        if(this.orderlines.length && this.orderlines.models[0].refunded_orderline_id)
+            return true;
+        else
+            return false;
+    },
+
+    add_product: async function(product, options){
+        if(this.pos.doNotAllowRefundAndSales() && this._isRefundAndSaleOrder()) {
+            await Gui.showPopup('ErrorPopup',{
+                    'title': _t("POS error"),
+                    'body':  _t("Can't mix order with refund products with new products."),
+                });
+            return false;
+        }
         if(this._printed){
             this.destroy();
             return this.pos.get_order().add_product(product, options);
