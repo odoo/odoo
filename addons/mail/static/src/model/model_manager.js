@@ -175,7 +175,7 @@ export class ModelManager {
             delete this.modelInfos[model.name].fieldMap;
             delete model.__identifyingFieldNames;
             delete this.modelInfos[model.name].records;
-            delete model.__requiredFieldsList;
+            delete this.modelInfos[model.name].requiredFieldsList;
             delete model.fields;
             delete model.modelManager;
             delete this.modelInfos[model.name];
@@ -636,7 +636,7 @@ export class ModelManager {
      */
     doCheck() {
         for (const record of this.cycle.check) {
-            for (const required of this.recordInfos[record.localId].model.__requiredFieldsList) {
+            for (const required of this.modelInfos[this.recordInfos[record.localId].model.name].requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
                     throw Error(`required ${required} of ${record} is missing`);
                 }

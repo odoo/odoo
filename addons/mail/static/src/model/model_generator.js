@@ -423,7 +423,7 @@ export class ModelGenerator {
             this.manager.modelInfos[model.name].fieldMap = new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields));
             // List of all fields, for iterating.
             this.manager.modelInfos[model.name].fieldList = [...this.manager.modelInfos[model.name].fieldMap.values()];
-            model.__requiredFieldsList =this.manager.modelInfos[model.name].fieldList.filter(
+            this.manager.modelInfos[model.name].requiredFieldList = this.manager.modelInfos[model.name].fieldList.filter(
                 field => field.required
             );
             model.__identifyingFieldNames = new Set();
