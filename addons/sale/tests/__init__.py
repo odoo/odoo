@@ -7,6 +7,7 @@ from . import test_onchange
 from . import test_payment_flow
 from . import test_reinvoice
 from . import test_sale_flow
+from . import test_sale_onboarding
 from . import test_sale_order
 from . import test_sale_pricelist
 from . import test_sale_product_attribute_value_config
