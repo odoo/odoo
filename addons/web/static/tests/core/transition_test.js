@@ -77,3 +77,37 @@ QUnit.test("Transition HOC", async (assert) => {
     await nextTick();
     assert.containsNone(target, ".test");
 });
+
+QUnit.test("Transition HOC Always Mount", async (assert) => {
+    patchWithCleanup(transitionConfig, {
+        disabled: false,
+    });
+    class Parent extends Component {
+        setup() {
+            this.state = useState({ show: true });
+        }
+    }
+    Parent.template = xml`
+        <Transition name="'test'" visible="state.show" t-slot-scope="transition" alwaysMounted="true">
+            <div t-att-class="transition.className"/>
+        </Transition>
+    `;
+    Parent.components = { Transition };
+    const { execRegisteredTimeouts } = mockTimeout();
+
+    const target = getFixture();
+    const parent = await mount(Parent, target);
+    // Mounted with -enter
+    assert.containsOnce(target, ".test");
+    await nextTick();
+    // Showing with enter-active
+    parent.state.show = false;
+    await nextTick();
+    // Leaving: -leave but not -enter-active
+    assert.containsOnce(target, ".test.test-leave:not(.test-enter-active)");
+    assert.verifySteps([]);
+    execRegisteredTimeouts();
+    await nextTick();
+    // Make sure the component is not removed
+    assert.containsOnce(target, ".test");
+});

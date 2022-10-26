@@ -128,10 +128,11 @@ export class Transition extends Component {
     }
 }
 
-Transition.template = xml`<t t-slot="default" t-if="transition.shouldMount" className="transition.className"/>`;
+Transition.template = xml`<t t-slot="default" t-if="this.props.alwaysMounted || transition.shouldMount" className="transition.className"/>`;
 Transition.props = {
     name: String,
     visible: { type: Boolean, optional: true },
+    alwaysMounted: { type: Boolean, optional: true },
     leaveDuration: { type: Number, optional: true },
     onLeave: { type: Function, optional: true },
     slots: Object,
