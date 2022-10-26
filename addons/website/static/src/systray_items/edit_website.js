@@ -47,7 +47,8 @@ class EditWebsiteSystray extends Component {
             const languagePrefix = `${pathname}/`.indexOf('/', 1);
             const defaultLanguagePathname = pathname.substring(languagePrefix);
             this.websiteService.goToWebsite({
-                path: `/website/lang/default?r=${encodeURIComponent(defaultLanguagePathname + search + hash)}`,
+                path: defaultLanguagePathname + search + hash,
+                lang: 'default',
                 edition: true
             });
         } else {
