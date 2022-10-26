@@ -52,7 +52,7 @@ export class ModelManager {
          * Set of active listeners. Useful to be able to register which records
          * or fields they accessed to be able to notify them when those change.
          */
-        this._listeners = new Set();
+        this.listeners = new Set();
         /**
          * Map between model and a set of listeners that are using all() on that
          * model.
@@ -100,7 +100,7 @@ export class ModelManager {
      * @returns {Record[]} records matching criteria.
      */
     all(model, filterFunc) {
-        for (const listener of this._listeners) {
+        for (const listener of this.listeners) {
             listener.alls.add(model);
             const entry = this.listenersAll.get(model);
             const info = {
@@ -175,7 +175,7 @@ export class ModelManager {
         if (!record) {
             return;
         }
-        for (const listener of this._listeners) {
+        for (const listener of this.listeners) {
             listener.records.add(record);
             const entry = this.recordInfos[record.localId].listenersOnRecord;
             const info = {
@@ -269,7 +269,7 @@ export class ModelManager {
      * @param {Listener} listener
      */
     removeListener(listener) {
-        this._listeners.delete(listener);
+        this.listeners.delete(listener);
         this.cycleInfo.notifyNow.delete(listener);
         this.cycleInfo.notifyAfter.delete(listener);
         for (const record of listener.records) {
@@ -299,7 +299,7 @@ export class ModelManager {
      */
     startListening(listener) {
         this.removeListener(listener);
-        this._listeners.add(listener);
+        this.listeners.add(listener);
     }
 
     /**
@@ -308,7 +308,7 @@ export class ModelManager {
      * @param {Listener} listener
      */
     stopListening(listener) {
-        this._listeners.delete(listener);
+        this.listeners.delete(listener);
     }
 
     /**
@@ -484,7 +484,7 @@ export class ModelManager {
      * @throws {Error}
      */
     _ensureNoLockingListener() {
-        for (const listener of this._listeners) {
+        for (const listener of this.listeners) {
             if (listener.isLocking) {
                 throw Error(`Model manager locked by ${listener}. It is not allowed to insert/update/delete from inside a lock.`);
             }

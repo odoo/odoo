@@ -437,7 +437,7 @@ export class ModelGenerator {
                             ? this.modelManager.recordInfos[this.localId].proxifiedRecord
                             : this.modelManager.recordInfos[this.localId].nonProxifiedRecord
                         );
-                        if (this.modelManager._listeners.size) {
+                        if (this.modelManager.listeners.size) {
                             let entryRecord = this.modelManager.recordInfos[record.localId].listenersOnRecord;
                             const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
                             let entryField = this.modelManager.recordInfos[record.localId].listenersOnField.get(field);
@@ -445,7 +445,7 @@ export class ModelGenerator {
                                 entryField = new Map();
                                 this.modelManager.recordInfos[record.localId].listenersOnField.set(field, entryField);
                             }
-                            for (const listener of record.modelManager._listeners) {
+                            for (const listener of record.modelManager.listeners) {
                                 listener.records.add(record);
                                 const info = { listener, reason };
                                 if (entryRecord.has(listener)) {
