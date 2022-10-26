@@ -14,7 +14,7 @@ async function createDashboardWithModel(model) {
     const serverData = getDashboardServerData();
     const json = JSON.stringify(model.exportData());
     const dashboard = serverData.models["spreadsheet.dashboard"].records[0];
-    dashboard.raw = json;
+    dashboard.spreadsheet_data = json;
     dashboard.json_data = json;
     serverData.models = {
         ...serverData.models,

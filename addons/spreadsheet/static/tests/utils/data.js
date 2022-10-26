@@ -120,7 +120,7 @@ export function getBasicData() {
         "documents.document": {
             fields: {
                 name: { string: "Name", type: "char" },
-                raw: { string: "Data", type: "text" },
+                spreadsheet_data: { string: "Data", type: "text" },
                 thumbnail: { string: "Thumbnail", type: "text" },
                 favorited_ids: { string: "Name", type: "many2many" },
                 is_favorited: { string: "Name", type: "boolean" },
@@ -150,7 +150,7 @@ export function getBasicData() {
                 {
                     id: 1,
                     name: "My spreadsheet",
-                    raw: "{}",
+                    spreadsheet_data: "{}",
                     is_favorited: false,
                     folder_id: 1,
                     handler: "spreadsheet",
@@ -158,7 +158,7 @@ export function getBasicData() {
                 {
                     id: 2,
                     name: "",
-                    raw: "{}",
+                    spreadsheet_data: "{}",
                     is_favorited: true,
                     folder_id: 1,
                     handler: "spreadsheet",

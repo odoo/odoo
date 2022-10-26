@@ -11,4 +11,4 @@ class TestSpreadsheetDashboardData(ValidateSpreadsheetData):
         dashboards = self.env["spreadsheet.dashboard"].search([])
         for dashboard in dashboards:
             with self.subTest(dashboard.name):
-                self.validate_spreadsheet_data(dashboard.raw, dashboard.name)
+                self.validate_spreadsheet_data(dashboard.spreadsheet_data, dashboard.name)
