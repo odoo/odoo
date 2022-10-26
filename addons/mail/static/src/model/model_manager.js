@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { CycleInfo } from '@mail/model/cycle_info';
 import { IS_RECORD, patchesAppliedPromise, registry } from '@mail/model/model_core';
 import { ModelGenerator } from '@mail/model/model_generator';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
@@ -44,40 +45,7 @@ export class ModelManager {
         // moment, for performance reasons.
         //----------------------------------------------------------------------
 
-        this.cycle = {
-            /**
-             * Set of records that have been created during the current update
-             * cycle and for which the compute/related methods still have to be
-             * executed a first time.
-             */
-            newCompute: new Set(),
-            /**
-             * Set of records that have been created during the current update
-             * cycle and for which the _created method still has to be executed.
-             */
-            newCreated: new Set(),
-            /**
-             * Set of records that have been created during the current update
-             * cycle and for which the onChange methods still have to be executed
-             * a first time.
-             */
-            newOnChange: new Set(),
-            /**
-             * Map of listeners that should be notified as part of the current
-             * update cycle. Value contains list of info to help for debug.
-             */
-            notifyNow: new Map(),
-            /**
-             * Map of listeners that should be notified at the end of the current
-             * update cycle. Value contains list of info to help for debug.
-             */
-            notifyAfter: new Map(),
-            /**
-             * Set of records that have been updated during the current update cycle
-             * and for which required fields check still has to be executed.
-             */
-            check: new Set(),
-        };
+        this.cycleInfo = new CycleInfo(this);
         this.recordInfos = {};
         this.modelInfos = {};
         /**
@@ -302,8 +270,8 @@ export class ModelManager {
      */
     removeListener(listener) {
         this._listeners.delete(listener);
-        this.cycle.notifyNow.delete(listener);
-        this.cycle.notifyAfter.delete(listener);
+        this.cycleInfo.notifyNow.delete(listener);
+        this.cycleInfo.notifyAfter.delete(listener);
         for (const record of listener.records) {
             if (!record.exists()) {
                 continue;
@@ -440,9 +408,9 @@ export class ModelManager {
          * Register post processing operation that are to be delayed at
          * the end of the update cycle.
          */
-        this.cycle.newCompute.add(record);
-        this.cycle.newCreated.add(record);
-        this.cycle.newOnChange.add(record);
+        this.cycleInfo.newCompute.add(record);
+        this.cycleInfo.newCreated.add(record);
+        this.cycleInfo.newOnChange.add(record);
         for (const [listener, infoList] of this.listenersAll.get(model)) {
             this.markToNotify(listener, {
                 listener,
@@ -482,10 +450,10 @@ export class ModelManager {
             }
         }
         this.modelInfos[model.name].recordsIndex.removeRecord(record);
-        this.cycle.newCompute.delete(record);
-        this.cycle.newCreated.delete(record);
-        this.cycle.newOnChange.delete(record);
-        this.cycle.check.delete(record);
+        this.cycleInfo.newCompute.delete(record);
+        this.cycleInfo.newCreated.delete(record);
+        this.cycleInfo.newOnChange.delete(record);
+        this.cycleInfo.check.delete(record);
         for (const [listener, infoList] of this.recordInfos[record.localId].listenersOnRecord) {
             this.markToNotify(listener, {
                 listener,
@@ -527,11 +495,11 @@ export class ModelManager {
      * Executes the compute methods of the created records.
      */
     doNewCompute() {
-        const hasChanged = this.cycle.newCompute.size > 0;
-        for (const record of this.cycle.newCompute) {
+        const hasChanged = this.cycleInfo.newCompute.size > 0;
+        for (const record of this.cycleInfo.newCompute) {
             // Delete at every step to avoid recursion, indeed compute/related
             // method might trigger an update cycle itself.
-            this.cycle.newCompute.delete(record);
+            this.cycleInfo.newCompute.delete(record);
             if (!record.exists()) {
                 throw Error(`Cannot start compute/related for already deleted ${record}.`);
             }
@@ -581,10 +549,10 @@ export class ModelManager {
      * Executes the _created method of the created records.
      */
     doNewCreated() {
-        for (const record of this.cycle.newCreated) {
+        for (const record of this.cycleInfo.newCreated) {
             // Delete at every step to avoid recursion, indeed _created might
             // trigger an update cycle itself.
-            this.cycle.newCreated.delete(record);
+            this.cycleInfo.newCreated.delete(record);
             if (!record.exists()) {
                 throw Error(`Cannot call _created for already deleted ${record}.`);
             }
@@ -599,10 +567,10 @@ export class ModelManager {
      * Executes the onChange method of the created records.
      */
     doNewOnChange() {
-        for (const record of this.cycle.newOnChange) {
+        for (const record of this.cycleInfo.newOnChange) {
             // Delete at every step to avoid recursion, indeed _created
             // might trigger an update cycle itself.
-            this.cycle.newOnChange.delete(record);
+            this.cycleInfo.newOnChange.delete(record);
             if (!record.exists()) {
                 throw Error(`Cannot call onChange for already deleted ${record}.`);
             }
@@ -636,14 +604,14 @@ export class ModelManager {
      * Executes the check of the required field of updated records.
      */
     doCheck() {
-        for (const record of this.cycle.check) {
+        for (const record of this.cycleInfo.check) {
             for (const required of this.modelInfos[this.recordInfos[record.localId].model.name].requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
                     throw Error(`required ${required} of ${record} is missing`);
                 }
             }
         }
-        this.cycle.check.clear();
+        this.cycleInfo.check.clear();
     }
 
     /**
@@ -721,19 +689,19 @@ export class ModelManager {
             throw new Error(`Listener is not a listener ${listener}`);
         }
         if (listener.isPartOfUpdateCycle) {
-            const entry = this.cycle.notifyNow.get(listener);
+            const entry = this.cycleInfo.notifyNow.get(listener);
             if (entry) {
                 entry.push(info);
             } else {
-                this.cycle.notifyNow.set(listener, [info]);
+                this.cycleInfo.notifyNow.set(listener, [info]);
             }
         }
         if (!listener.isPartOfUpdateCycle) {
-            const entry = this.cycle.notifyAfter.get(listener);
+            const entry = this.cycleInfo.notifyAfter.get(listener);
             if (entry) {
                 entry.push(info);
             } else {
-                this.cycle.notifyAfter.set(listener, [info]);
+                this.cycleInfo.notifyAfter.set(listener, [info]);
             }
         }
     }
@@ -765,8 +733,8 @@ export class ModelManager {
      * @returns {boolean} whether any change happened
      */
     doNotifyAfter() {
-        for (const [listener, infoList] of this.cycle.notifyAfter) {
-            this.cycle.notifyAfter.delete(listener);
+        for (const [listener, infoList] of this.cycleInfo.notifyAfter) {
+            this.cycleInfo.notifyAfter.delete(listener);
             listener.onChange(infoList);
         }
     }
@@ -784,9 +752,9 @@ export class ModelManager {
      * @returns {boolean} whether any change happened
      */
     doNotifyNow() {
-        const hasChanged = this.cycle.notifyNow.size > 0;
-        for (const [listener, infoList] of this.cycle.notifyNow) {
-            this.cycle.notifyNow.delete(listener);
+        const hasChanged = this.cycleInfo.notifyNow.size > 0;
+        for (const [listener, infoList] of this.cycleInfo.notifyNow) {
+            this.cycleInfo.notifyNow.delete(listener);
             listener.onChange(infoList);
         }
         if (hasChanged) {
@@ -875,7 +843,7 @@ export class ModelManager {
             this.markAsChanged(record, field);
         }
         if (hasChanged) {
-            this.cycle.check.add(record);
+            this.cycleInfo.check.add(record);
         }
         return hasChanged;
     }
