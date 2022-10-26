@@ -36,13 +36,6 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'button[name="action_confirm"]',
     content: 'Click on Confirm button to create a sale order with this quotation.',
-}, {
-    trigger: 'button.o_form_button_save',
-    extra_trigger: '.o_field_widget[name=state] button[data-value=sale].o_arrow_button_current',
-    content: 'Click on Save button to save the Sales Order.',
-}, {
-    trigger: '.o_form_saved',
-    content: 'Save is done and form is reloaded.',
 }, tour.stepUtils.toggleHomeMenu(),
 ...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 {
@@ -185,9 +178,6 @@ tour.register('sale_timesheet_tour', {
     content: 'Set Project name',
     run: 'text Project with employee mapping',
 }, {
-    trigger: '.o_form_button_save',
-    content: 'Save Project',
-}, {
     trigger: '.dropdown-item[data-menu-xmlid="project.menu_main_pm"]',
     content: 'Select Project main menu',
 }, {
@@ -215,9 +205,6 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first item on the autocomplete dropdown',
-}, {
-    trigger: '.o_form_button_save',
-    content: 'Save the modifications',
 }, {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project created',
@@ -281,9 +268,6 @@ tour.register('sale_timesheet_tour', {
     content: "Give a name to Project Update",
     run: 'text New update',
 }, {
-    trigger: ".o_form_button_save",
-    content: "Save Project Update",
-}, {
     trigger: ".o_field_widget[name=description] h3:contains('Sold')",
     content: "Sold title must be in description in description",
     run: function () {},
@@ -300,7 +284,16 @@ tour.register('sale_timesheet_tour', {
     content: "Milestones title must be in description",
     run: function () {},
 },
-// This step is currently needed in order to prevent a session timeout at the end of the test.
+// Those steps are currently needed in order to prevent the following issue:
+// "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
+{
+    trigger: '.o_back_button',
+    content: 'Go back to the kanban view and the project update will be added on that view',
+}, {
+    trigger: '.o_controller_with_rightpanel',
+    content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
+    run: function() {},
+},
 tour.stepUtils.toggleHomeMenu(),
 ...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 ]);
