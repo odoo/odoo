@@ -54,7 +54,7 @@
                 <search string="Departments">
                     <field name="name" string="Department"/>
                     <field name="manager_id" />
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>

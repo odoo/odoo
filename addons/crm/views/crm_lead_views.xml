@@ -999,7 +999,7 @@
                         domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
                         help="Open Opportunities"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter string="Creation Date" name="creation_date" date="create_date"/>
                     <filter string="Closed Date" name="close_date" date="date_closed"/>

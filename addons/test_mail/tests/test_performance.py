@@ -19,11 +19,18 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 
         # creating partners is required notably witn template usage
         cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
-        cls.user_test = cls.env['res.users'].with_context(cls._test_context).create({
+        cls.user_test = cls.user_test_inbox = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'Paulette Testouille',
             'login': 'paul',
             'email': 'user.test.paulette@example.com',
             'notification_type': 'inbox',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+        })
+        cls.user_test_email = cls.env['res.users'].with_context(cls._test_context).create({
+            'name': 'Georgette Testouille',
+            'login': 'george',
+            'email': 'user.test.georgette@example.com',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
 
@@ -557,11 +564,17 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @users('__system__', 'employee')
     @warmup
     def test_message_assignation_email(self):
-        self.user_test.write({'notification_type': 'email'})
+        # Changing the `notification_type` of a user adds or removes him a group
+        # which clear the caches.
+        # The @warmup decorator would then becomes useless,
+        # as the first thing done by this method would be to clear the cache, making the warmup pointless.
+        # So, instead of changing the user notification type within this method,
+        # use another user already pre-defined with the email notification type,
+        # so the ormcache is preserved.
         record = self.env['mail.test.track'].create({'name': 'Test'})
         with self.assertQueryCount(__system__=28, employee=29):
             record.write({
-                'user_id': self.user_test.id,
+                'user_id': self.user_test_email.id,
             })
 
     @users('__system__', 'employee')
@@ -570,7 +583,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.env['mail.test.track'].create({'name': 'Test'})
         with self.assertQueryCount(__system__=19, employee=21):
             record.write({
-                'user_id': self.user_test.id,
+                'user_id': self.user_test_inbox.id,
             })
 
     @users('__system__', 'employee')
