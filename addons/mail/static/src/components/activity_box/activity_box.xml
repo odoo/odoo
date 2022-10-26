@@ -34,7 +34,7 @@
                 <t t-if="activityBoxView.isActivityListVisible">
                     <div class="o_ActivityBox_activityList">
                         <t t-foreach="activityBoxView.activityViews" t-as="activityView" t-key="activityView.localId">
-                            <Activity className="'o_ActivityBox_activity'" record="activityView"/>
+                            <ActivityView className="'o_ActivityBox_activity'" record="activityView"/>
                         </t>
                     </div>
                 </t>

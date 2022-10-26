@@ -7,7 +7,7 @@ import Popover from "web.Popover";
 
 const { Component } = owl;
 
-export class Activity extends Component {
+export class ActivityView extends Component {
 
     /**
      * @override
@@ -26,10 +26,10 @@ export class Activity extends Component {
 
 }
 
-Object.assign(Activity, {
+Object.assign(ActivityView, {
     props: { record: Object },
-    template: 'mail.Activity',
+    template: 'mail.ActivityView',
     components: { Popover },
 });
 
-registerMessagingComponent(Activity);
+registerMessagingComponent(ActivityView);
