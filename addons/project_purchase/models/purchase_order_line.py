@@ -9,5 +9,6 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_analytic_distribution(self):
         super()._compute_analytic_distribution()
-        if self._context.get('project_id'):
-            self.analytic_distribution = {self.env['project.project'].browse(self._context['project_id']).analytic_account_id: 100}
+        for line in self:
+            if line._context.get('project_id'):
+                line.analytic_distribution = {line.env['project.project'].browse(line._context['project_id']).analytic_account_id.id: 100}
