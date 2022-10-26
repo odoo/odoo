@@ -136,10 +136,14 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
             ]);
             const historyPartnerIds = allNotifications
                 .filter(notification => notification.is_read)
-                .map(notification => notification.res_partner_id);
+                .map(notification => ({ id: notification.res_partner_id }));
             const needactionPartnerIds = allNotifications
                 .filter(notification => !notification.is_read)
-                .map(notification => notification.res_partner_id);
+                .map(notification => ({ id: notification.res_partner_id }));
+            let starredPartnerIds;
+            if (message.starred_partner_ids) {
+                starredPartnerIds = message.starred_partner_ids.map(p => ({ id: p }));
+            }
             let notifications = this._mockMailNotification_FilteredForWebClient(
                 allNotifications.map(notification => notification.id)
             );
@@ -169,6 +173,7 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
                 parentMessage: message.parent_id ? this._mockMailMessageMessageFormat([message.parent_id])[0] : false,
                 recipients: partners.map(p => ({ id: p.id, name: p.name })),
                 record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
+                starred_partner_ids: starredPartnerIds,
                 trackingValues: formattedTrackingValues,
             });
             delete response['author_id'];
@@ -267,8 +272,15 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
                 [message.id],
                 { starred_partner_ids: [[wasStared ? 3 : 4, this.currentPartnerId]] }
             );
+
+            const newMessage = this.getRecords('mail.message', [['id', '=', message.id]])[0];
             this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/toggle_star', {
-                'message_ids': [message.id],
+                'messages': [{
+                    'id': message.id,
+                    'starred_partner_ids': newMessage.starred_partner_ids.map(
+                        p => ({ 'id': p })
+                    ),
+                }],
                 'starred': !wasStared,
             });
         }
@@ -287,7 +299,12 @@ patch(MockServer.prototype, 'mail/models/mail_message', {
             { starred_partner_ids: [[3, this.currentPartnerId]] }
         );
         this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/toggle_star', {
-            'message_ids': messages.map(message => message.id),
+            'messages': messages.map(m => ({
+                'id': m.id,
+                'starred_partner_ids': m.starred_partner_ids.map(
+                    p => ({ 'id': p.id })
+                ),
+            })),
             'starred': false,
         });
     },
