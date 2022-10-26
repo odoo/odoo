@@ -29,9 +29,9 @@ async function createDashboardLoader(params = {}) {
         const [record] = await env.services.orm.read(
             "spreadsheet.dashboard",
             [dashboardId],
-            ["raw"]
+            ["spreadsheet_data"]
         );
-        return { data: JSON.parse(record.raw), revisions: [] };
+        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
     });
 }
 
@@ -176,7 +176,7 @@ QUnit.test("load spreadsheet data with error", async (assert) => {
             if (
                 args.method === "read" &&
                 args.model === "spreadsheet.dashboard" &&
-                args.args[1][0] === "raw"
+                args.args[1][0] === "spreadsheet_data"
             ) {
                 throw new Error("Bip");
             }
@@ -206,7 +206,7 @@ QUnit.test("async formulas are correctly evaluated", async (assert) => {
     serverData.models["spreadsheet.dashboard"].records = [
         {
             id: dashboardId,
-            raw: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
             json_data: JSON.stringify(spreadsheetData),
             name: "Dashboard Accounting 1",
             dashboard_group_id: 2,

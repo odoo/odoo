@@ -6,7 +6,7 @@ export function getDashboardServerData() {
             "spreadsheet.dashboard": {
                 fields: {
                     json_data: { type: "char" },
-                    raw: { type: "char " },
+                    spreadsheet_data: { type: "char " },
                     name: { type: "char" },
                     dashboard_group_id: {
                         type: "many2one",
@@ -16,21 +16,21 @@ export function getDashboardServerData() {
                 records: [
                     {
                         id: 1,
-                        raw: "{}",
+                        spreadsheet_data: "{}",
                         json_data: "{}",
                         name: "Dashboard CRM 1",
                         dashboard_group_id: 1,
                     },
                     {
                         id: 2,
-                        raw: "{}",
+                        spreadsheet_data: "{}",
                         json_data: "{}",
                         name: "Dashboard CRM 2",
                         dashboard_group_id: 1,
                     },
                     {
                         id: 3,
-                        raw: "{}",
+                        spreadsheet_data: "{}",
                         json_data: "{}",
                         name: "Dashboard Accounting 1",
                         dashboard_group_id: 2,
