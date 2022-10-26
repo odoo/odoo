@@ -1116,7 +1116,7 @@ function _clonePage(pageId) {
                     method: 'clone_page',
                     args: [
                         pageId,
-                        this.$content.find('#page_name').val(),
+                        this.$('#page_name').val(),
                     ],
                 }).then(function (path) {
                     window.location.href = path;
