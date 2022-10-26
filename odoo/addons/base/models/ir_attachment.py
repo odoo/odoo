@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import binascii
 import contextlib
 import hashlib
 import io
@@ -663,6 +664,31 @@ class IrAttachment(models.Model):
             attachment.write({'access_token': access_token})
             tokens.append(access_token)
         return tokens
+
+    @api.model
+    def create_unique(self, values_list):
+        ids = []
+        for values in values_list:
+            # Create only if record does not already exist for checksum and size.
+            try:
+                bin_data = base64.b64decode(values.get('datas', '')) or False
+            except binascii.Error:
+                raise UserError(_("Attachment is not encoded in base64."))
+            checksum = self._compute_checksum(bin_data)
+            existing_domain = [
+                ['id', '!=', False],  # No implicit condition on res_field.
+                ['checksum', '=', checksum],
+                ['file_size', '=', len(bin_data)],
+                ['mimetype', '=', values['mimetype']],
+            ]
+            existing = self.sudo().search(existing_domain)
+            if existing:
+                for attachment in existing:
+                    ids.append(attachment.id)
+            else:
+                attachment = self.create(values)
+                ids.append(attachment.id)
+        return ids
 
     def _generate_access_token(self):
         return str(uuid.uuid4())
