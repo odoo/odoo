@@ -10,7 +10,7 @@ export class ModelIndexXor {
     }
 
     addRecord(record, data) {
-        const [fieldName, fieldValue] = [...this.manager.modelInfos[this.model.name].identifyingFieldNames].reduce(([fieldName, fieldValue], currentFieldName) => {
+        const [fieldName, fieldValue] = [...this.model.__info.identifyingFieldNames].reduce(([fieldName, fieldValue], currentFieldName) => {
             const currentFieldValue = data[currentFieldName];
             if (currentFieldValue === undefined) {
                 return [fieldName, fieldValue];
@@ -28,7 +28,7 @@ export class ModelIndexXor {
     }
 
     findRecord(data) {
-        const [fieldName, fieldValue] = [...this.manager.modelInfos[this.model.name].identifyingFieldNames].reduce(([fieldName, fieldValue], currentFieldName) => {
+        const [fieldName, fieldValue] = [...this.model.__info.identifyingFieldNames].reduce(([fieldName, fieldValue], currentFieldName) => {
             const currentFieldValue = data[currentFieldName];
             if (currentFieldValue === undefined) {
                 return [fieldName, fieldValue];

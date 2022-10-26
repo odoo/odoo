@@ -105,6 +105,9 @@ registerModel({
         models() {
             return this.modelManager.models;
         },
+        __info() {
+            return this.modelManager && this.modelManager.modelInfos[this.name];
+        },
     },
     recordMethods: {
         /**

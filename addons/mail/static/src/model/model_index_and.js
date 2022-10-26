@@ -11,14 +11,14 @@ export class ModelIndexAnd {
     }
 
     addRecord(record, data) {
-        if (this.manager.modelInfos[this.model.name].identifyingFieldNames.size === 0) {
+        if (this.model.__info.identifyingFieldNames.size === 0) {
             this.singleton = record;
             return;
         }
         const valuesOfRecord = [];
         let res = this.recordsByValuesTree;
-        const { length, [length - 1]: lastFieldName } = [...this.manager.modelInfos[this.model.name].identifyingFieldNames];
-        for (const fieldName of this.manager.modelInfos[this.model.name].identifyingFieldNames) {
+        const { length, [length - 1]: lastFieldName } = [...this.model.__info.identifyingFieldNames];
+        for (const fieldName of this.model.__info.identifyingFieldNames) {
             const fieldValue = data[fieldName];
             if (fieldValue === undefined) {
                 throw new Error(`Identifying field "${fieldName}" is lacking a value on ${this.model} with 'and' identifying mode`);
@@ -33,11 +33,11 @@ export class ModelIndexAnd {
     }
 
     findRecord(data) {
-        if (this.manager.modelInfos[this.model.name].identifyingFieldNames.size === 0) {
+        if (this.model.__info.identifyingFieldNames.size === 0) {
             return this.singleton;
         }
         let res = this.recordsByValuesTree;
-        for (const fieldName of this.manager.modelInfos[this.model.name].identifyingFieldNames) {
+        for (const fieldName of this.model.__info.identifyingFieldNames) {
             const fieldValue = data[fieldName];
             if (fieldValue === undefined) {
                 throw new Error(`Identifying field "${fieldName}" is lacking a value on ${this.model} with 'and' identifying mode`);
@@ -51,7 +51,7 @@ export class ModelIndexAnd {
     }
 
     removeRecord(record) {
-        if (this.manager.modelInfos[this.model.name].identifyingFieldNames.size === 0) {
+        if (this.model.__info.identifyingFieldNames.size === 0) {
             this.singleton = undefined;
             return;
         }

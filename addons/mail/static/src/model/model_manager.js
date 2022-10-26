@@ -113,7 +113,7 @@ export class ModelManager {
                 entry.set(listener, [info]);
             }
         }
-        const allRecords = [...this.modelInfos[model.name].records];
+        const allRecords = [...model.__info.records];
         if (filterFunc) {
             return allRecords.filter(filterFunc);
         }
@@ -139,7 +139,7 @@ export class ModelManager {
     destroy() {
         this.messaging.delete();
         for (const model of Object.values(this.models)) {
-            this.modelInfos[model.name].destroy();
+            model.__info.destroy();
             delete model.modelManager;
             delete this.modelInfos[model.name];
         }
@@ -153,7 +153,7 @@ export class ModelManager {
      * @returns {boolean}
      */
     exists(model, record) {
-        return this.modelInfos[model.name].records.has(record);
+        return model.__info.records.has(record);
     }
 
     /**
@@ -166,7 +166,7 @@ export class ModelManager {
      */
     findFromIdentifyingData(model, data = {}) {
         this.preinsert(model, data);
-        const record = this.modelInfos[model.name].recordsIndex.findRecord(data);
+        const record = model.__info.recordsIndex.findRecord(data);
         if (!record) {
             return;
         }
@@ -336,7 +336,7 @@ export class ModelManager {
      */
     _addDefaultData(model, data = {}) {
         const data2 = { ...data };
-        for (const field of this.modelInfos[model.name].fieldList) {
+        for (const field of model.__info.fieldList) {
             if (data2[field.fieldName] === undefined && field.default !== undefined) {
                 data2[field.fieldName] = field.default;
             }
@@ -350,7 +350,7 @@ export class ModelManager {
      * @returns {Record}
      */
     _create(model) {
-        const localId = `${model.name}_${++this.modelInfos[model.name].recordCount}`;
+        const localId = `${model.name}_${++model.__info.recordCount}`;
         /**
          * Prepare record state. Assign various keys and values that are
          * expected to be found on every record.
@@ -361,11 +361,10 @@ export class ModelManager {
             localId,
             [IS_RECORD]: true,
         });
-        const self = this;
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
-                    (self.modelInfos[model.name] && self.modelInfos[model.name].fieldMap && !self.modelInfos[model.name].fieldMap.has(prop)) &&
+                    (model.__info && model.__info.fieldMap && !model.__info.fieldMap.has(prop)) &&
                     !['_super', 'then', 'localId'].includes(prop) &&
                     typeof prop !== 'symbol' &&
                     !(prop in record)
@@ -381,7 +380,7 @@ export class ModelManager {
             record.__info.proxifiedRecord = record;
         }
         // Ensure X2many relations are Set initially (other fields can stay undefined).
-        for (const field of this.modelInfos[model.name].fieldList) {
+        for (const field of model.__info.fieldList) {
             if (field.fieldType === 'relation') {
                 if (field.relationType === 'many') {
                     record.__info.values.set(field.fieldName, new RelationSet(this, record, field));
@@ -391,7 +390,7 @@ export class ModelManager {
         /**
          * Register record.
          */
-        this.modelInfos[model.name].records.add(record);
+        model.__info.records.add(record);
         /**
          * Auto-bind record methods so that `this` always refer to the record.
          */
@@ -435,7 +434,7 @@ export class ModelManager {
         for (const listener of record.__info.listeners) {
             this.removeListener(listener);
         }
-        for (const field of this.modelInfos[model.name].fieldList) {
+        for (const field of model.__info.fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
                 field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
@@ -444,7 +443,7 @@ export class ModelManager {
                 }
             }
         }
-        this.modelInfos[model.name].recordsIndex.removeRecord(record);
+        model.__info.recordsIndex.removeRecord(record);
         this.cycleInfo.newCompute.delete(record);
         this.cycleInfo.newCreated.delete(record);
         this.cycleInfo.newOnChange.delete(record);
@@ -464,7 +463,7 @@ export class ModelManager {
             });
         }
         record.__info.destroy();
-        this.modelInfos[model.name].records.delete(record);
+        model.__info.records.delete(record);
         delete this.recordInfos[record.localId];
         delete record.localId;
     }
@@ -496,7 +495,7 @@ export class ModelManager {
                 throw Error(`Cannot start compute/related for already deleted ${record}.`);
             }
             const listeners = [];
-            for (const field of this.modelInfos[record.__info.model.name].fieldList) {
+            for (const field of record.__info.model.__info.fieldList) {
                 if (field.compute) {
                     const listener = new Listener({
                         name: `compute ${field} of ${record}`,
@@ -597,7 +596,7 @@ export class ModelManager {
      */
     doCheck() {
         for (const record of this.cycleInfo.check) {
-            for (const required of this.modelInfos[record.__info.model.name].requiredFieldsList) {
+            for (const required of record.__info.model.__info.requiredFieldsList) {
                 if (record[required.fieldName] === undefined) {
                     throw Error(`required ${required} of ${record} is missing`);
                 }
@@ -657,7 +656,7 @@ export class ModelManager {
                 const data2 = this._addDefaultData(model, data);
                 this.preinsert(model, data2);
                 record = this._create(model);
-                this.modelInfos[model.name].recordsIndex.addRecord(record, data2);
+                model.__info.recordsIndex.addRecord(record, data2);
                 this._update(record, data2, { ...options, allowWriteReadonly: true });
             } else {
                 this._update(record, data, options);
@@ -763,11 +762,11 @@ export class ModelManager {
      * @param {Object} data
      */
     preinsert(model, data) {
-        for (const fieldName of this.modelInfos[model.name].identifyingFieldNames) {
+        for (const fieldName of model.__info.identifyingFieldNames) {
             if (data[fieldName] === undefined) {
                 continue;
             }
-            const field = this.modelInfos[model.name].fieldMap.get(fieldName);
+            const field = model.__info.fieldMap.get(fieldName);
             if (!field.to) {
                 continue;
             }
@@ -819,7 +818,7 @@ export class ModelManager {
                 // `undefined` should have the same effect as not passing the field
                 continue;
             }
-            const field = this.modelInfos[model.name].fieldMap.get(fieldName);
+            const field = model.__info.fieldMap.get(fieldName);
             if (!field) {
                 console.warn(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
                 continue;

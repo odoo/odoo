@@ -135,7 +135,7 @@ export class ModelGenerator {
                     if ('readonly' in field) {
                         throw new Error(`Identifying field ${model}/${fieldName} has unnecessary "readonly" attribute (readonly is implicit for identifying fields).`);
                     }
-                    if ('required' in field && this.manager.modelInfos[model.name].identifyingMode === 'and') {
+                    if ('required' in field && model.__info.identifyingMode === 'and') {
                         throw new Error(`Identifying field ${model}/${fieldName} has unnecessary "required" attribute (required is implicit for AND identifying fields).`);
                     }
                     if ('default' in field) {
@@ -219,7 +219,7 @@ export class ModelGenerator {
                         if (!currentModel) {
                             throw new Error(`OnChange '${methodName}' defines a dependency with path '${dependency.join('.')}', but this dependency does not resolve: ${currentField} is not a relational field, therefore there is no relation to follow.`);
                         }
-                        currentField = this.manager.modelInfos[currentModel.name].fieldMap.get(fieldName);
+                        currentField = currentModel.__info.fieldMap.get(fieldName);
                         if (!currentField) {
                             throw new Error(`OnChange '${methodName}' defines a dependency with path '${dependency.join('.')}', but this path does not resolve: ${currentModel}/${fieldName} does not exist.`);
                         }
@@ -240,10 +240,10 @@ export class ModelGenerator {
      */
     _checkProcessed() {
         for (const model of Object.values(this.manager.models)) {
-            if (!['and', 'xor'].includes(this.manager.modelInfos[model.name].identifyingMode)) {
-                throw new Error(`Unsupported identifying mode "${this.manager.modelInfos[model.name].identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
+            if (!['and', 'xor'].includes(model.__info.identifyingMode)) {
+                throw new Error(`Unsupported identifying mode "${model.__info.identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
             }
-            for (const field of this.manager.modelInfos[model.name].fieldList) {
+            for (const field of model.__info.fieldList) {
                 const fieldName = field.fieldName;
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
                     throw new Error(`${field} has unsupported type "${field.fieldType}".`);
@@ -270,7 +270,7 @@ export class ModelGenerator {
                 if (!relatedModel) {
                     throw new Error(`${field} defines a relation to model ${field.to}, but there is no model registered with this name.`);
                 }
-                const inverseField = this.manager.modelInfos[relatedModel.name].fieldMap.get(field.inverse);
+                const inverseField = relatedModel.__info.fieldMap.get(field.inverse);
                 if (!inverseField) {
                     throw new Error(`${field} defines its inverse as field ${relatedModel}/${field.inverse}, but it does not exist.`);
                 }
@@ -295,8 +295,8 @@ export class ModelGenerator {
                     }
                 }
             }
-            for (const identifyingField of this.manager.modelInfos[model.name].identifyingFieldNames) {
-                const field = this.manager.modelInfos[model.name].fieldMap.get(identifyingField);
+            for (const identifyingField of model.__info.identifyingFieldNames) {
+                const field = model.__info.fieldMap.get(identifyingField);
                 if (!field) {
                     throw new Error(`Identifying field "${model}/${identifyingField}" is not a field on ${model}.`);
                 }
@@ -305,7 +305,7 @@ export class ModelGenerator {
                         throw new Error(`Identifying field "${model}/${identifyingField}" has a relation of type "${field.relationType}" but identifying field is only supported for "one".`);
                     }
                     const relatedModel = this.manager.models[field.to];
-                    const inverseField = this.manager.modelInfos[relatedModel.name].fieldMap.get(field.inverse);
+                    const inverseField = relatedModel.__info.fieldMap.get(field.inverse);
                     if (!inverseField.isCausal) {
                         throw new Error(`Identifying field "${model}/${identifyingField}" has an inverse "${inverseField}" not declared as "isCausal".`);
                     }
@@ -353,7 +353,7 @@ export class ModelGenerator {
             const sumContributionsByFieldName = new Map();
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of registry.get(model.name).get('fields')) {
-                this.manager.modelInfos[model.name].fields[fieldName] = new ModelField(this.manager, Object.assign({}, fieldData, {
+                model.__info.fields[fieldName] = new ModelField(this.manager, Object.assign({}, fieldData, {
                     fieldName,
                     model,
                 }));
@@ -369,14 +369,14 @@ export class ModelGenerator {
                 }
             }
             for (const [fieldName, sumContributions] of sumContributionsByFieldName) {
-                this.manager.modelInfos[model.name].fields[fieldName].sumContributions = sumContributions;
+                model.__info.fields[fieldName].sumContributions = sumContributions;
             }
         }
         /**
          * 2. Auto-generate definitions of undeclared inverse relations.
          */
         for (const model of Object.values(this.manager.models)) {
-            for (const field of Object.values(this.manager.modelInfos[model.name].fields)) {
+            for (const field of Object.values(model.__info.fields)) {
                 if (field.fieldType !== 'relation') {
                     continue;
                 }
@@ -390,7 +390,7 @@ export class ModelGenerator {
                 const relatedModel = this.manager.models[field.to];
                 const inverseField = this._makeInverse(model, field);
                 field.inverse = inverseField.fieldName;
-                this.manager.modelInfos[relatedModel.name].fields[inverseField.fieldName] = inverseField;
+                relatedModel.__info.fields[inverseField.fieldName] = inverseField;
             }
         }
         /**
@@ -398,15 +398,15 @@ export class ModelGenerator {
          * fields of its parents.
          */
         for (const model of Object.values(this.manager.models)) {
-            for (const field of Object.values(this.manager.modelInfos[model.name].fields)) {
-                this.manager.modelInfos[model.name].combinedFields[field.fieldName] = field;
+            for (const field of Object.values(model.__info.fields)) {
+                model.__info.combinedFields[field.fieldName] = field;
             }
             let TargetModel = model.__proto__;
-            while (TargetModel && this.manager.modelInfos[TargetModel.name] && this.manager.modelInfos[TargetModel.name].fields) {
-                for (const targetField of Object.values(this.manager.modelInfos[TargetModel.name].fields)) {
-                    const field = this.manager.modelInfos[model.name].combinedFields[targetField.fieldName];
+            while (TargetModel && TargetModel.__info && TargetModel.__info.fields) {
+                for (const targetField of Object.values(TargetModel.__info.fields)) {
+                    const field = model.__info.combinedFields[targetField.fieldName];
                     if (!field) {
-                        this.manager.modelInfos[model.name].combinedFields[targetField.fieldName] = targetField;
+                        model.__info.combinedFields[targetField.fieldName] = targetField;
                     }
                 }
                 TargetModel = TargetModel.__proto__;
@@ -418,12 +418,12 @@ export class ModelGenerator {
          * without calling update (which is necessary to process update cycle).
          */
         for (const model of Object.values(this.manager.models)) {
-            this.manager.modelInfos[model.name].update({
-                fieldMap: new Map(Object.entries(this.manager.modelInfos[model.name].combinedFields)),
+            model.__info.update({
+                fieldMap: new Map(Object.entries(model.__info.combinedFields)),
             });
-            for (const [fieldName, field] of this.manager.modelInfos[model.name].fieldMap) {
+            for (const [fieldName, field] of model.__info.fieldMap) {
                 if (field.identifying) {
-                    this.manager.modelInfos[model.name].identifyingFieldNames.add(fieldName);
+                    model.__info.identifyingFieldNames.add(fieldName);
                 }
                 // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {
@@ -464,7 +464,7 @@ export class ModelGenerator {
                     },
                 });
             }
-            delete this.manager.modelInfos[model.name].combinedFields;
+            delete model.__info.combinedFields;
         }
     }
 

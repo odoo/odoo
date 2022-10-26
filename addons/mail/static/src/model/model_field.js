@@ -155,7 +155,7 @@ export class ModelField {
          */
         if (this.identifying) {
             this.readonly = true;
-            if (this.manager.modelInfos[model.name].identifyingMode === 'and') {
+            if (model.__info.identifyingMode === 'and') {
                 this.required = true;
             }
         }
@@ -247,7 +247,7 @@ export class ModelField {
      */
     computeRelated(record) {
         const [relationName, relatedFieldName] = this.related.split('.');
-        const relationField = this.manager.modelInfos[this.model.name].fieldMap.get(relationName);
+        const relationField = this.model.__info.fieldMap.get(relationName);
         if (relationField.relationType === 'many') {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
@@ -523,7 +523,7 @@ export class ModelField {
      */
     _insertOtherRecord(record, data, options) {
         const otherModel = record.models[this.to];
-        const otherField = this.manager.modelInfos[otherModel.name].fieldMap.get(this.inverse);
+        const otherField = otherModel.__info.fieldMap.get(this.inverse);
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const dataList = isMulti ? data : [data];
         for (const recordData of dataList) {
@@ -891,7 +891,7 @@ export class ModelField {
             throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
         }
         const otherModel = record.modelManager.models[this.to];
-        if (this.manager.modelInfos[otherModel.name].records.has(record)) {
+        if (otherModel.__info.records.has(record)) {
             return;
         }
         // support for inherited models (eg. relation targeting `Record`)
@@ -899,7 +899,7 @@ export class ModelField {
             if (!(subModel.prototype instanceof otherModel)) {
                 continue;
             }
-            if (this.manager.modelInfos[subModel.name].records.has(record)) {
+            if (subModel.__info.records.has(record)) {
                 return;
             }
         }
