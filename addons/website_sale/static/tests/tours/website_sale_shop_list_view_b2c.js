@@ -5,7 +5,7 @@ import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
     test: true,
-    url: '/shop?search=Test Product',
+    url: '/@/shop?search=Test+Product',
 },
     [
         {

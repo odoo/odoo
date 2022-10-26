@@ -3,9 +3,8 @@
 import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
-    url: '/pa_GB',
+    url: '/@/pa_GB',
     test: true,
-    edition: false,
 }, [
     {
         content: "activate translate mode",

@@ -11,7 +11,7 @@ var ready = Promise.all([domReady, session.is_bound]);
 
 wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,
-    url: '/',
+    url: '/@/',
     wait_for: ready,
 }, [{
     content: "click language dropdown",

@@ -3,8 +3,7 @@ import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     {
         content: "Go to theme options",

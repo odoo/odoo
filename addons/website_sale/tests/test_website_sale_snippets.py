@@ -8,7 +8,7 @@ from odoo.addons.website.tools import MockRequest
 class TestSnippets(HttpCase):
 
     def test_01_snippet_products_edition(self):
-        self.start_tour('/', 'website_sale.snippet_products', login='admin')
+        self.start_tour('/@/?enable_editor=1', 'website_sale.snippet_products', login='admin')
 
     def test_02_snippet_products_remove(self):
         self.user = self.env['res.users'].search([('login', '=', 'admin')])
@@ -25,6 +25,6 @@ class TestSnippets(HttpCase):
                 'description_sale': 'Pedal-based opening system',
             })
             self.website_visitor._add_viewed_product(self.product.id)
-            self.start_tour('/', 'website_sale.products_snippet_recently_viewed', login='admin')
+            self.start_tour('/@/?enable_editor=1', 'website_sale.products_snippet_recently_viewed', login='admin')
             after_tour_product_ids = self.website_visitor.product_ids.ids
             self.assertEqual(before_tour_product_ids, after_tour_product_ids, "There shouldn't be any new product in recently viewed after this tour")

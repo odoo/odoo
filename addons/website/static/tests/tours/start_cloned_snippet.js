@@ -10,9 +10,8 @@ const dragNDropOutOfFooter = wTourUtils.dragNDrop(countdownSnippet);
 dragNDropOutOfFooter.run = 'drag_and_drop iframe #wrapwrap #wrap';
 
 wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
-    edition: true,
     test: true,
-    url: '/',
+    url: '/@/?enable_editor=1',
 }, [
     dragNDropOutOfFooter,
     wTourUtils.clickOnSnippet(countdownSnippet),

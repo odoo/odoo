@@ -11,7 +11,7 @@ import wTourUtils from 'website.tour_utils';
  * they publish it;
  */
 wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
-    url: '/slides',
+    url: '/@/slides',
     test: true,
 }, [{
     content: 'eLearning: click on New (top-menu)',

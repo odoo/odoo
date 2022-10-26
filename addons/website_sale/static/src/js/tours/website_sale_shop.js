@@ -6,7 +6,7 @@ odoo.define("website_sale.tour_shop", function (require) {
     const wTourUtils = require("website.tour_utils");
 
     wTourUtils.registerWebsitePreviewTour("shop", {
-        url: '/shop',
+        url: '/@/shop',
         sequence: 130,
     }, [{
         trigger: ".o_menu_systray .o_new_content_container > a",

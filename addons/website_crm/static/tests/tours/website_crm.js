@@ -6,12 +6,11 @@ odoo.define('website_crm.tour', function(require) {
 
     wTourUtils.registerWebsitePreviewTour('website_crm_pre_tour', {
         test: true,
-        url: '/contactus',
-        edition: true,
+        url: '/@/contactus?enable_editor=1',
     }, [{
         content: "Select contact form",
         trigger: "iframe #wrap.o_editable section.s_website_form",
-        extra_trigger: "iframe body.editor_enable",
+        extra_trigger: "#oe_snippets.o_loaded",
     }, {
         content: "Open action select",
         trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",

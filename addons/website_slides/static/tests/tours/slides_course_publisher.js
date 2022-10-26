@@ -11,8 +11,7 @@ import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
  * they publishe it;
  */
 wTourUtils.registerWebsitePreviewTour('course_publisher', {
-    // TODO: replace by wTourUtils.getClientActionURL when it's added
-    url: '/slides',
+    url: '/@/slides',
     test: true
 }, [{
     content: 'eLearning: click on New (top-menu)',

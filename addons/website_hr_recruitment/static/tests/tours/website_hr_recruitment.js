@@ -63,7 +63,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
 
     wTourUtils.registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         test: true,
-        url: '/jobs',
+        url: '/@/jobs',
     }, [{
         content: 'Go to the Guru job page',
         trigger: 'iframe a[href*="guru"]',
@@ -98,7 +98,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         content: 'Go back to /jobs page after save',
         trigger: 'iframe body:not(.editor_enable)',
         run: () => {
-            window.location.href = wTourUtils.getClientActionUrl('/jobs');
+            window.location.href = '/@/jobs';
         }
     }, {
         content: 'Go to the Internship job page',

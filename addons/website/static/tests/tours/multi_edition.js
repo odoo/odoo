@@ -4,8 +4,7 @@ import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     {
         content: 'Check the current page has not the elements that will be added',

@@ -20,8 +20,7 @@ const selectImageSteps = [{
 
 wTourUtils.registerWebsitePreviewTour('test_image_link', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     wTourUtils.dragNDrop({
         id: 's_text_image',

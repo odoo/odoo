@@ -91,8 +91,7 @@ function updateAndCheckCustomGradient({updateStep, checkGradient}) {
 }
 
 wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
     test: true,
 },
 [

@@ -14,8 +14,7 @@ const checkFontSize = function (actions) {
 
 wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [{
     content: "Go to theme options",
     extra_trigger: '#oe_snippets.o_loaded',

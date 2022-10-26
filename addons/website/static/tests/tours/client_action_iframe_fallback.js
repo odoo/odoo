@@ -4,7 +4,7 @@ import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('client_action_iframe_fallback', {
     test: true,
-    url: '/',
+    url: '/@/',
 },
 [
     {

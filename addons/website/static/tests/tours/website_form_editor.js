@@ -86,8 +86,7 @@ odoo.define('website.tour.form_editor', function (require) {
     };
 
     wTourUtils.registerWebsitePreviewTour("website_form_editor_tour", {
-        url: '/',
-        edition: true,
+        url: '/@/?enable_editor=1',
         test: true,
     }, [
         // Drop a form builder snippet and configure it
@@ -391,8 +390,7 @@ odoo.define('website.tour.form_editor', function (require) {
     }
 
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
-        url: '/contactus',
-        edition: true,
+        url: '/@/contactus?enable_editor=1',
         test: true,
     }, editContactUs([
         {
@@ -402,8 +400,7 @@ odoo.define('website.tour.form_editor', function (require) {
         },
     ]));
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
-        url: '/contactus',
-        edition: true,
+        url: '/@/contactus?enable_editor=1',
         test: true,
     }, editContactUs([
         {

@@ -5,7 +5,7 @@ var wTourUtils = require("website.tour_utils");
 
 wTourUtils.registerWebsitePreviewTour("restricted_editor", {
     test: true,
-    url: "/",
+    url: "/@/",
 }, [{
     trigger: '.o_edit_website_container a',
     content: "Click \"EDIT\" button of website as Restricted Editor",

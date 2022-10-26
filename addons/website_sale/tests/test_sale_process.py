@@ -64,7 +64,7 @@ class TestUi(HttpCaseWithUserDemo):
         })
 
     def test_01_admin_shop_tour(self):
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'shop', login='admin')
+        self.start_tour('/@/shop', 'shop', login='admin')
 
     def test_02_admin_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
@@ -123,7 +123,7 @@ class TestUi(HttpCaseWithUserDemo):
         }).execute()
 
         self.start_tour("/", 'website_sale_tour_1')
-        self.start_tour(self.env['website'].get_client_action_url('/shop/cart'), 'website_sale_tour_backend', login='admin')
+        self.start_tour('/@/shop/cart?enable_editor=1', 'website_sale_tour_backend', login='admin')
         self.start_tour("/", 'website_sale_tour_2', login="admin")
 
     def test_05_google_analytics_tracking(self):

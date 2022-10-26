@@ -33,4 +33,4 @@ class TestAddToCartSnippet(HttpCase):
     def test_configure_product(self):
         # Reset the company country id, which ensure that no country dependant fields are blocking the address form.
         self.env.company.country_id = self.env.ref('base.us')
-        self.start_tour("/", 'add_to_cart_snippet_tour', login="admin")
+        self.start_tour("/@/?enable_editor=1", 'add_to_cart_snippet_tour', login="admin")

@@ -3,8 +3,7 @@
 import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('snippet_translation', {
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
     test: true,
 }, [
     wTourUtils.dragNDrop({name: 'Cover'}),

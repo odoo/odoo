@@ -4,8 +4,7 @@ import tourUtils from 'website_sale.tour_utils';
 import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('shop_customize', {
-    url: '/shop',
-    edition: true,
+    url: '/@/shop?enable_editor=1',
     test: true,
 },
     [

@@ -31,8 +31,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
 
 wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     wTourUtils.dragNDrop({id: 's_social_media', name: 'Social Media'}),
     wTourUtils.clickOnSnippet({id: 's_social_media', name: 'Social Media'}),

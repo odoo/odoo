@@ -13,7 +13,7 @@ import wTourUtils from 'website.tour_utils';
  *
  */
  wTourUtils.registerWebsitePreviewTour('full_screen_web_editor', {
-    url: '/slides',
+    url: '/@/slides',
     test: true,
 }, [{
     // open to the course
