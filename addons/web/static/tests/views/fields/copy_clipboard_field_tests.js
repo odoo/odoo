@@ -73,8 +73,9 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("CopyClipboardField on unset field", async function (assert) {
+    QUnit.test("CopyClipboardField: show copy button even on empty field", async function (assert) {
         serverData.models.partner.records[0].char_field = false;
+        serverData.models.partner.records[0].text_field = false;
 
         await makeView({
             serverData,
@@ -85,21 +86,25 @@ QUnit.module("Fields", (hooks) => {
                     <sheet>
                         <group>
                             <field name="char_field" widget="CopyClipboardChar" />
+                            <field name="text_field" widget="CopyClipboardText" />
                         </group>
                     </sheet>
                 </form>`,
             resId: 1,
         });
 
-        assert.containsNone(
+        assert.containsOnce(
             target,
-            '.o_field_copy[name="char_field"] .o_clipboard_button',
-            "char_field (unset) should not contain a button"
+            '.o_field_CopyClipboardChar[name="char_field"] .o_clipboard_button'
+        );
+        assert.containsOnce(
+            target,
+            '.o_field_CopyClipboardText[name="text_field"] .o_clipboard_button'
         );
     });
 
     QUnit.test(
-        "CopyClipboardField on readonly unset fields in create mode",
+        "CopyClipboardField: show copy button even on readonly empty field",
         async function (assert) {
             serverData.models.partner.fields.display_name.readonly = true;
 
@@ -117,10 +122,9 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            assert.containsNone(
+            assert.containsOnce(
                 target,
-                '.o_field_copy[name="display_name"] .o_clipboard_button',
-                "the readonly unset field should not contain a button"
+                '.o_field_CopyClipboardChar[name="display_name"] .o_clipboard_button'
             );
         }
     );
