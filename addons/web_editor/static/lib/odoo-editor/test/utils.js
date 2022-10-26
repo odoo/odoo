@@ -298,6 +298,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     } else {
         document.getSelection().removeAllRanges();
     }
+    editor.observerUnactive('beforeUnitTests');
 
     // we have to sanitize after having put the cursor
     sanitize(editor.editable);
@@ -315,7 +316,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     }
 
     if (spec.stepFunction) {
-            await spec.stepFunction(editor);
+        editor.observerActive('beforeUnitTests');
+        await spec.stepFunction(editor);
+        editor.observerUnactive('afterUnitTests');
     }
 
     if (spec.contentAfterEdit) {
@@ -420,7 +423,17 @@ export async function deleteForward(editor) {
 }
 
 export async function deleteBackward(editor) {
-    editor.execCommand('oDeleteBackward');
+    const selection = document.getSelection();
+    if (selection.isCollapsed) {
+        // Better representation of what append in the editor when the user
+        // press the backspace key.
+        await keydown(editor.editable, 'Backspace');
+    } else {
+        // We cannot use the fake keydown when we have a range because we rely
+        // on the browser to delete someting in the document for us, and the
+        // browser will not do it if the event is fake.
+        editor.execCommand('oDeleteBackward');
+    }
 }
 
 export async function insertParagraphBreak(editor) {
