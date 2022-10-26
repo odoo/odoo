@@ -365,10 +365,9 @@ export class WebsitePreview extends Component {
                 const destinationUrl = new URL(href, window.location);
                 destinationUrl.searchParams.delete('edit_translations');
                 destinationUrl.hash = this.websiteService.contentWindow.location.hash;
-                const forceLangUrl = `/website/lang/${lang}?r=${destinationUrl.toString()}`;
                 this.websiteService.bus.trigger('LEAVE-EDIT-MODE', {
                     onLeave: () => {
-                        this.websiteService.goToWebsite({ path: forceLangUrl });
+                        this.websiteService.goToWebsite({ path: destinationUrl.toString(), lang });
                     },
                     reloadIframe: false,
                 });
