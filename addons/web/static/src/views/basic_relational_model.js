@@ -448,6 +448,7 @@ export class Record extends DataPoint {
                         : false;
                     break;
                 }
+                case "text":
                 case "char": {
                     data[fieldName] = data[fieldName] || "";
                     break;
