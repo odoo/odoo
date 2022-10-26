@@ -301,6 +301,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         } else {
             document.getSelection().removeAllRanges();
         }
+        editor.observerUnactive('beforeUnitTests');
 
         // we have to sanitize after having put the cursor
         sanitize(editor.editable);
@@ -318,7 +319,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         }
 
         if (spec.stepFunction) {
+            editor.observerActive('beforeUnitTests');
             await spec.stepFunction(editor);
+            editor.observerUnactive('afterUnitTests');
         }
 
         if (spec.contentAfterEdit) {
@@ -424,7 +427,6 @@ export async function click(el, options) {
     triggerEvent(el, 'click', options);
     await nextTickFrame();
 }
-
 
 export async function deleteForward(editor) {
     editor.execCommand('oDeleteForward');
