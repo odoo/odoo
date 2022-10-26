@@ -296,7 +296,7 @@ export class ModelGenerator {
                     }
                 }
             }
-            for (const identifyingField of model.__identifyingFieldNames) {
+            for (const identifyingField of this.manager.modelInfos[model.name].identifyingFieldNames) {
                 const field = this.manager.modelInfos[model.name].fieldMap.get(identifyingField);
                 if (!field) {
                     throw new Error(`Identifying field "${model}/${identifyingField}" is not a field on ${model}.`);
@@ -426,10 +426,9 @@ export class ModelGenerator {
             this.manager.modelInfos[model.name].requiredFieldList = this.manager.modelInfos[model.name].fieldList.filter(
                 field => field.required
             );
-            model.__identifyingFieldNames = new Set();
             for (const [fieldName, field] of this.manager.modelInfos[model.name].fieldMap) {
                 if (field.identifying) {
-                    model.__identifyingFieldNames.add(fieldName);
+                    this.manager.modelInfos[model.name].identifyingFieldNames.add(fieldName);
                 }
                 // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {

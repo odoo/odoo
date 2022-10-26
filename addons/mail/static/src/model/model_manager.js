@@ -173,7 +173,7 @@ export class ModelManager {
         for (const model of Object.values(this.models)) {
             delete this.modelInfos[model.name].fieldList;
             delete this.modelInfos[model.name].fieldMap;
-            delete model.__identifyingFieldNames;
+            delete this.modelInfos[model.name].identifyingFieldNames;
             delete this.modelInfos[model.name].records;
             delete this.modelInfos[model.name].requiredFieldsList;
             delete model.fields;
@@ -802,7 +802,7 @@ export class ModelManager {
      * @param {Object} data
      */
     preinsert(model, data) {
-        for (const fieldName of model.__identifyingFieldNames) {
+        for (const fieldName of this.modelInfos[model.name].identifyingFieldNames) {
             if (data[fieldName] === undefined) {
                 continue;
             }

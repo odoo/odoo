@@ -29,6 +29,7 @@ export class ModelInfo {
         this.fieldList = [];
         this.combinedFields = {};
         this.requiredFieldsList = [];
+        this.identifyingFieldNames = new Set();
     }
 
 }
