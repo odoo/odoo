@@ -101,6 +101,9 @@ class PaymentProcessing(http.Controller):
 
         tx_to_process = payment_transaction_ids.filtered(lambda x: x.state == 'done' and x.is_processed is False)
         try:
+            if request.env.user._is_public():
+                # prevent timezone from defaulting to UTC when the user is not logged in.
+                tx_to_process = tx_to_process.with_context(tz=tx_to_process.acquirer_id.company_id.partner_id.tz)
             tx_to_process._post_process_after_done()
         except psycopg2.OperationalError as e:
             request.env.cr.rollback()
