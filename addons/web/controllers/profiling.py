@@ -16,9 +16,9 @@ class Profiling(Controller):
         profile = profile and profile != '0'
         try:
             state = request.env['ir.profile'].set_profiling(profile, collectors=collectors, params=params)
-            return json.dumps(state)
+            return Response(json.dumps(state), mimetype='application/json')
         except UserError as e:
-            return Response(response='error: %s' % e, status=500)
+            return Response(response='error: %s' % e, status=500, mimetype='text/plain')
 
     @route(['/web/speedscope', '/web/speedscope/<model("ir.profile"):profile>'], type='http', sitemap=False, auth='user')
     def speedscope(self, profile=None):
