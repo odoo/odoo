@@ -59,7 +59,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    const partnerTitle = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"]`).getAttribute('title');
+    const partnerTitle = document.querySelector(`.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"]`).getAttribute('title');
     assert.strictEqual(
         partnerTitle,
         "Add as recipient and follower (reason: Email partner)",
@@ -79,7 +79,7 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    const checkboxUnchecked = document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]');
+    const checkboxUnchecked = document.querySelector('.o_ComposerSuggestedRecipientView:not([data-partner-id]) input[type=checkbox]');
     assert.notOk(
         checkboxUnchecked.checked,
         "suggested recipient without partner must be unchecked by default",
@@ -99,7 +99,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    const checkboxChecked = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"] input[type=checkbox]`);
+    const checkboxChecked = document.querySelector(`.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"] input[type=checkbox]`);
     assert.ok(
         checkboxChecked.checked,
         "suggested recipient with partner must be checked by default",
@@ -158,7 +158,7 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
     await click(`.o_ComposerSuggestedRecipientList_showMore`);
     assert.containsN(
         document.body,
-        '.o_ComposerSuggestedRecipient',
+        '.o_ComposerSuggestedRecipientView',
         4,
         "more than 3 suggested recipients: show all of them on click 'show more' button"
     );
@@ -218,7 +218,7 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     await click(`.o_ComposerSuggestedRecipientList_showLess`);
     assert.containsN(
         document.body,
-        '.o_ComposerSuggestedRecipient',
+        '.o_ComposerSuggestedRecipientView',
         3,
         "suggested recipient list should display 3 suggested recipients after clicking on 'show less'."
     );

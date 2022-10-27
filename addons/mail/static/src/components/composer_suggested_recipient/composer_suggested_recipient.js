@@ -8,14 +8,14 @@ import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
 const { Component, useRef } = owl;
 
-export class ComposerSuggestedRecipient extends Component {
+export class ComposerSuggestedRecipientView extends Component {
 
     /**
      * @override
      */
     setup() {
         super.setup();
-        this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
+        this.id = _.uniqueId('o_ComposerSuggestedRecipientView_');
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the checkbox. Useful to know whether it was checked or
@@ -117,9 +117,9 @@ export class ComposerSuggestedRecipient extends Component {
     }
 }
 
-Object.assign(ComposerSuggestedRecipient, {
+Object.assign(ComposerSuggestedRecipientView, {
     props: { record: Object },
-    template: 'mail.ComposerSuggestedRecipient',
+    template: 'mail.ComposerSuggestedRecipientView',
 });
 
-registerMessagingComponent(ComposerSuggestedRecipient);
+registerMessagingComponent(ComposerSuggestedRecipientView);
