@@ -116,7 +116,7 @@ registerModel({
                     return 'AttachmentDeleteConfirm';
                 }
                 if (this.deleteMessageConfirmView) {
-                    return 'DeleteMessageConfirm';
+                    return 'DeleteMessageConfirmView';
                 }
                 if (this.followerSubtypeList) {
                     return 'FollowerSubtypeList';
