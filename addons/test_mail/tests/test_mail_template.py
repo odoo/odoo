@@ -128,7 +128,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='mail.test_layout')
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
-                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish description</body>' % self.test_record.name)
+                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish Model Description</body>' % self.test_record.name)
         self.assertEqual(mail.subject, 'SpanishSubject for %s' % self.test_record.name)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -147,5 +147,5 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='mail.test_layout')
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
-                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish description</body>' % self.test_record.name)
+                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish Model Description</body>' % self.test_record.name)
         self.assertEqual(mail.subject, 'SpanishSubject for %s' % self.test_record.name)
