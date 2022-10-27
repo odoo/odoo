@@ -580,22 +580,22 @@ QUnit.test('activity with mail template layout', async function (assert) {
         "should have activity mail template"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_name').length,
+        document.querySelectorAll('.o_MailTemplateView_name').length,
         1,
         "should have activity mail template name"
     );
     assert.strictEqual(
-        document.querySelector('.o_MailTemplate_name').textContent,
+        document.querySelector('.o_MailTemplateView_name').textContent,
         "Dummy mail template",
         "should have activity mail template name"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_preview').length,
+        document.querySelectorAll('.o_MailTemplateView_preview').length,
         1,
         "should have activity mail template name preview button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_send').length,
+        document.querySelectorAll('.o_MailTemplateView_send').length,
         1,
         "should have activity mail template name send button"
     );
@@ -660,12 +660,12 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_preview').length,
+        document.querySelectorAll('.o_MailTemplateView_preview').length,
         1,
         "should have activity mail template name preview button"
     );
 
-    document.querySelector('.o_MailTemplate_preview').click();
+    document.querySelector('.o_MailTemplateView_preview').click();
     assert.verifySteps(
         ['do_action'],
         "should have called 'compose email' action correctly"
@@ -708,12 +708,12 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_send').length,
+        document.querySelectorAll('.o_MailTemplateView_send').length,
         1,
         "should have activity mail template name send button"
     );
 
-    document.querySelector('.o_MailTemplate_send').click();
+    document.querySelector('.o_MailTemplateView_send').click();
     assert.verifySteps(
         ['activity_send_mail'],
         "should have called activity_send_mail rpc"
