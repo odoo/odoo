@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class CallActionList extends Component {
+export class CallActionListView extends Component {
 
     /**
      * @override
@@ -24,9 +24,9 @@ export class CallActionList extends Component {
 
 }
 
-Object.assign(CallActionList, {
+Object.assign(CallActionListView, {
     props: { record: Object },
-    template: 'mail.CallActionList',
+    template: 'mail.CallActionListView',
 });
 
-registerMessagingComponent(CallActionList);
+registerMessagingComponent(CallActionListView);
