@@ -993,7 +993,7 @@ QUnit.test('Chat with partner should be opened after clicking on their mention',
     await click('.o_ChatterTopbar_buttonSendMessage');
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     await click('.o_mail_redirect');
     assert.containsOnce(
         document.body,
@@ -1022,7 +1022,7 @@ QUnit.test('Channel should be opened after clicking on its mention', async funct
     await click('.o_ChatterTopbar_buttonSendMessage');
     await insertText('.o_ComposerTextInput_textarea', "#my-channel");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     await click('.o_channel_redirect');
     assert.containsOnce(
         document.body,

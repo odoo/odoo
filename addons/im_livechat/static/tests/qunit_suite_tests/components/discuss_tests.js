@@ -295,7 +295,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     // post a new message on the last channel
     await afterNextRender(() => initialLivechats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    await afterNextRender(() => document.querySelector('.o_ComposerView_buttonSend').click());
 
     const newLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
@@ -394,7 +394,7 @@ QUnit.test('reaction button should not be present on livechat', async function (
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     await click('.o_Message');
     assert.containsNone(
         document.body,
@@ -422,7 +422,7 @@ QUnit.test('reply button should not be present on livechat', async function (ass
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     await click('.o_Message');
     assert.containsNone(
         document.body,

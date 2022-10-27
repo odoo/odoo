@@ -253,7 +253,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
     });
     await click(`.o_ChatterTopbar_buttonLogNote`);
     await insertText('.o_ComposerTextInput_textarea', "Dummy Message");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
 });
 
 });

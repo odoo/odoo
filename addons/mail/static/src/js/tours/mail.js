@@ -37,7 +37,7 @@ tour.register('mail_tour', {
         actions.text("SomeText_" + t, this.$anchor);
     },
 }, {
-    trigger: '.o_Discuss_thread .o_Composer_buttonSend',
+    trigger: '.o_Discuss_thread .o_ComposerView_buttonSend',
     content: _t("Post your message on the thread"),
     position: "top",
 }, {

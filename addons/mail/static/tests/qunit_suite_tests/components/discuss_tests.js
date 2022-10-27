@@ -1183,7 +1183,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
     await openDiscuss();
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText('.o_ComposerTextInput_textarea', "/who");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     // click on message to show actions on the transient message resulting from the "/who" command
     await click('.o_Message');
     assert.containsNone(
@@ -2471,12 +2471,12 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     await afterNextRender(() => channels[0].click());
     // Check attachment is reloaded
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         1,
         "should have 1 attachment in the composer"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Composer .o_AttachmentCard`).dataset.id,
+        document.querySelector(`.o_ComposerView .o_AttachmentCard`).dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 1 }).localId,
         "should have correct 1st attachment in the composer"
     );
@@ -2485,22 +2485,22 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     await afterNextRender(() => channels[1].click());
     // Check attachments are reloaded
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         3,
         "should have 3 attachments in the composer"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[0].dataset.id,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[0].dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 2 }).localId,
         "should have attachment with id 2 as 1st attachment"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[1].dataset.id,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[1].dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 3 }).localId,
         "should have attachment with id 3 as 2nd attachment"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[2].dataset.id,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[2].dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 4 }).localId,
         "should have attachment with id 4 as 3rd attachment"
     );
@@ -2573,7 +2573,7 @@ QUnit.test('post a simple message', async function (assert) {
         "should have inserted text in editable"
     );
 
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.verifySteps(['message_post']);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
@@ -3000,11 +3000,11 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         "message should be selected after clicking on reply icon"
     );
     assert.ok(
-        document.querySelector('.o_Composer'),
+        document.querySelector('.o_ComposerView'),
         "should have composer after clicking on reply to message"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Composer_threadName`).textContent,
+        document.querySelector(`.o_ComposerView_threadName`).textContent,
         " on: Refactoring",
         "composer should display origin thread name of message"
     );
@@ -3015,10 +3015,10 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     );
 
     await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.verifySteps(['message_post']);
     assert.notOk(
-        document.querySelector('.o_Composer'),
+        document.querySelector('.o_ComposerView'),
         "should no longer have composer after posting reply to message"
     );
     assert.strictEqual(
@@ -3543,7 +3543,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "chat 'Demo User' should not be active initially"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer`).length,
+        document.querySelectorAll(`.o_ComposerView`).length,
         0,
         "there should be no composer when active thread of discuss is mailbox 'Inbox'"
     );
@@ -3556,7 +3556,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "channel 'General' should become active after selecting it from the sidebar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer`).length,
+        document.querySelectorAll(`.o_ComposerView`).length,
         1,
         "there should be a composer when active thread of discuss is channel 'General'"
     );
@@ -3580,7 +3580,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "chat 'Demo User' should become active after selecting it from the sidebar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer`).length,
+        document.querySelectorAll(`.o_ComposerView`).length,
         1,
         "there should be a composer when active thread of discuss is chat 'Demo User'"
     );
@@ -3725,7 +3725,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer_buttonSend',
+        '.o_ComposerView_buttonSend',
         "composer send button should be displayed"
     );
 

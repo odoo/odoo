@@ -31,7 +31,7 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         dragenterFiles(document.querySelector('.o_ThreadView'))
     );
     assert.ok(
-        document.querySelector('.o_Composer_dropZone'),
+        document.querySelector('.o_ComposerView_dropZone'),
         "should have dropzone when dragging file over the thread"
     );
 });
@@ -362,8 +362,8 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     await insertText('.o_ComposerTextInput_textarea', "hey !");
     await afterNextRender(() => {
         // need to remove focus from text area to avoid set_last_seen_message
-        document.querySelector('.o_Composer_buttonSend').focus();
-        document.querySelector('.o_Composer_buttonSend').click();
+        document.querySelector('.o_ComposerView_buttonSend').focus();
+        document.querySelector('.o_ComposerView_buttonSend').click();
 
     });
     assert.containsN(
@@ -521,7 +521,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
     );
 
     await insertText('.o_ComposerTextInput_textarea', "hey !");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -882,7 +882,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     await insertText('.o_ComposerTextInput_textarea', "email@odoo.com\n");
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
@@ -912,7 +912,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@Pyn");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
@@ -951,7 +951,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[1].click());
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
@@ -980,7 +980,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1009,7 +1009,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
 
     await insertText('.o_ComposerTextInput_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1038,7 +1038,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     await insertText('.o_ComposerTextInput_textarea', "#blabla\n");
     await insertText('.o_ComposerTextInput_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1070,7 +1070,7 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
     document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
     await insertText('.o_ComposerTextInput_textarea', ", test");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1109,7 +1109,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "#my");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[1].click());
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
@@ -1317,7 +1317,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     await openDiscuss();
     // send a command that leads to receiving a transient message
     await insertText('.o_ComposerTextInput_textarea', "/who");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     const transientMessage = messaging.discuss.threadViewer.threadView.messageListView.messageListViewItems[0].message;
 
     // composer is focused by default, we remove that focus
@@ -1365,9 +1365,9 @@ QUnit.test('composer should be focused automatically after clicking on the send 
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "Dummy Message");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.hasClass(
-        document.querySelector('.o_Composer'),
+        document.querySelector('.o_ComposerView'),
         'o-focused',
         "composer should be focused automatically after clicking on the send button"
     );

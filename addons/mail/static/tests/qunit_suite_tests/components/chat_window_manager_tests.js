@@ -729,7 +729,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
         "chat window should be opened initially"
     );
 
-    await click(`.o_Composer_buttonEmojis`);
+    await click(`.o_ComposerView_buttonEmojis`);
     assert.containsOnce(
         document.body,
         '.o_EmojiPickerView',
@@ -738,7 +738,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_Composer_buttonEmojis`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerView_buttonEmojis`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -864,7 +864,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     await insertText('.o_ComposerTextInput_textarea', 'XDU for the win !');
     assert.containsNone(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         "composer should have no attachment initially"
     );
     // Set attachments of the composer
@@ -893,7 +893,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
     assert.containsN(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         2,
         "composer should have 2 total attachments after adding 2 attachments"
     );
@@ -913,7 +913,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
     assert.containsN(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         2,
         "Chat window composer should have 2 attachments after closing discuss"
     );

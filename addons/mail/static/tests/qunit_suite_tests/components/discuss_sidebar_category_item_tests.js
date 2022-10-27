@@ -145,7 +145,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     // post a new message on the last channel
     await afterNextRender(() => initialChats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     const newChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         newChats.length,

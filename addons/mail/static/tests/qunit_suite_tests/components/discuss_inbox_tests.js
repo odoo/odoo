@@ -56,11 +56,11 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "should have composer after clicking on reply to message"
     );
 
-    await click(`.o_Composer_buttonEmojis`);
+    await click(`.o_ComposerView_buttonEmojis`);
     assert.containsOnce(
         document.body,
         '.o_EmojiPickerView',
@@ -69,7 +69,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_Composer_buttonEmojis`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerView_buttonEmojis`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -78,7 +78,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should still be opened after pressing escape on emojis button"
     );
 
@@ -100,7 +100,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should still be opened after pressing escape on mention suggestion"
     );
 
@@ -110,7 +110,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should be closed after pressing escape if there was no other priority escape handler"
     );
 });
@@ -155,19 +155,19 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
     await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "should have composer after clicking on reply to message"
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer_buttonDiscard',
+        '.o_ComposerView_buttonDiscard',
         "composer should have a discard button"
     );
 
-    await click(`.o_Composer_buttonDiscard`);
+    await click(`.o_ComposerView_buttonDiscard`);
     assert.containsNone(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should be closed after clicking on discard"
     );
 });
@@ -212,13 +212,13 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
     await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "should have composer after clicking on reply to message"
     );
     await click(`.o_MessageActionView_actionReplyTo`);
     assert.containsNone(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should be closed after clicking on reply button again"
     );
 });
@@ -263,7 +263,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
     await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "should have composer after clicking on reply to message"
     );
 
@@ -271,11 +271,11 @@ QUnit.test('reply: discard on click away', async function (assert) {
     await nextAnimationFrame(); // wait just in case, but nothing is supposed to happen
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should still be there after clicking inside itself"
     );
 
-    await click(`.o_Composer_buttonEmojis`);
+    await click(`.o_ComposerView_buttonEmojis`);
     assert.containsOnce(
         document.body,
         '.o_EmojiPickerView',
@@ -290,14 +290,14 @@ QUnit.test('reply: discard on click away', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should still be there after selecting an emoji (even though it is technically a click away, it should be considered inside)"
     );
 
     await click(`.o_Message`);
     assert.containsNone(
         document.body,
-        '.o_Composer',
+        '.o_ComposerView',
         "reply composer should be closed after clicking away"
     );
 });
@@ -358,13 +358,13 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
     await click('.o_Message');
     await click('.o_MessageActionView_actionReplyTo');
     assert.strictEqual(
-        document.querySelector('.o_Composer_buttonSend').textContent.trim(),
+        document.querySelector('.o_ComposerView_buttonSend').textContent.trim(),
         "Log",
         "Send button text should be 'Log'"
     );
 
     await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });
 
@@ -424,13 +424,13 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     await click('.o_Message');
     await click('.o_MessageActionView_actionReplyTo');
     assert.strictEqual(
-        document.querySelector('.o_Composer_buttonSend').textContent.trim(),
+        document.querySelector('.o_ComposerView_buttonSend').textContent.trim(),
         "Send",
         "Send button text should be 'Send'"
     );
 
     await insertText('.o_ComposerTextInput_textarea', "Test");
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });
 
