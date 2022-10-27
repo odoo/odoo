@@ -40,27 +40,27 @@ QUnit.test('Sent', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -112,27 +112,27 @@ QUnit.test('Canceled', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -184,27 +184,27 @@ QUnit.test('Pending', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -262,27 +262,27 @@ QUnit.test('No Price Available', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -349,27 +349,27 @@ QUnit.test('Credit Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -441,27 +441,27 @@ QUnit.test('Trial Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -542,27 +542,27 @@ QUnit.test('Format Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.verifySteps(
         ['do_action'],
@@ -614,27 +614,27 @@ QUnit.test('Missing Required Fields', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-paper-plane',
         "icon should represent snailmail"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.verifySteps(
         ['do_action'],

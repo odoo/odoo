@@ -129,7 +129,7 @@ registerModel({
             // This is needed because insertReadMoreLess is working with direct DOM mutations
             // which are not sync with Owl.
             if (this.contentRef.el) {
-                for (const el of this.contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')) {
+                for (const el of this.contentRef.el.querySelectorAll(':scope .o_MessageView_readMoreLess')) {
                     el.remove();
                 }
                 this.update({ lastReadMoreIndex: clear() });
@@ -222,7 +222,7 @@ registerModel({
                 const index = this.update({ lastReadMoreIndex: increment() });
                 // Insert link just before the first node
                 const $readMoreLess = $('<a>', {
-                    class: 'o_Message_readMoreLess d-block',
+                    class: 'o_MessageView_readMoreLess d-block',
                     href: '#',
                     text: this.readMoreText,
                 }).insertBefore(group[0]);

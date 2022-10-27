@@ -32,7 +32,7 @@ QUnit.test('click on message in reply to highlights the parent message', async f
         },
     });
     await openDiscuss();
-    await click(`.o_Message[data-id="${mailMessageId2}"] .o_MessageInReplyToView_body`);
+    await click(`.o_MessageView[data-id="${mailMessageId2}"] .o_MessageInReplyToView_body`);
     assert.containsOnce(
         document.body,
         `.o-highlighted[data-id="${mailMessageId1}"]`,

@@ -38,27 +38,27 @@ QUnit.test('Notification Sent', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-mobile',
         "icon should represent sms"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
+        document.querySelector('.o_MessageView_notificationIconClickable').click();
     });
     assert.containsOnce(
         document.body,
@@ -129,25 +129,25 @@ QUnit.test('Notification Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-mobile',
         "icon should represent sms"
     );
-    document.querySelector('.o_Message_notificationIconClickable').click();
+    document.querySelector('.o_MessageView_notificationIconClickable').click();
     await openResendActionDef;
     assert.verifySteps(
         ['do_action'],

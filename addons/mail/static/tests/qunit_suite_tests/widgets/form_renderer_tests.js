@@ -483,7 +483,7 @@ QUnit.test('chatter updating', async function (assert) {
     }));
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "there should be a message in partner 12 thread"
     );
 });
@@ -614,12 +614,12 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
     );
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "there should be a message"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_readMoreLess',
+        '.o_MessageView_readMoreLess',
         "there should be only one read more"
     );
 });
@@ -679,23 +679,23 @@ QUnit.test('read more links becomes read less after being clicked', async functi
     );
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "there should be a message"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_readMoreLess',
+        '.o_MessageView_readMoreLess',
         "there should be a read more"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_readMoreLess').textContent,
+        document.querySelector('.o_MessageView_readMoreLess').textContent,
         'Read More',
         "Read More/Less link should contain 'Read More' as text"
     );
 
-    document.querySelector('.o_Message_readMoreLess').click();
+    document.querySelector('.o_MessageView_readMoreLess').click();
     assert.strictEqual(
-        document.querySelector('.o_Message_readMoreLess').textContent,
+        document.querySelector('.o_MessageView_readMoreLess').textContent,
         'Read Less',
         "Read Less/Less link should contain 'Read Less' as text after it has been clicked"
     );
@@ -883,11 +883,11 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
     await click('.o_form_button_create');
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "Should have a single message when creating a new record"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_content').textContent,
+        document.querySelector('.o_MessageView_content').textContent,
         'Creating a new record...',
         "the message content should be in accord to the creation of this record"
     );
@@ -944,21 +944,21 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelector('.o_Message_readMoreLess').textContent,
+        document.querySelector('.o_MessageView_readMoreLess').textContent,
         "Read More",
         "Read More/Less link on message should be folded initially (Read More)"
     );
 
-    document.querySelector('.o_Message_readMoreLess').click(),
+    document.querySelector('.o_MessageView_readMoreLess').click(),
     assert.strictEqual(
-        document.querySelector('.o_Message_readMoreLess').textContent,
+        document.querySelector('.o_MessageView_readMoreLess').textContent,
         "Read Less",
         "Read More/Less link on message should be unfolded after a click from initial rendering (read less)"
     );
 
-    await click('.o_Message');
+    await click('.o_MessageView');
     assert.strictEqual(
-        document.querySelector('.o_Message_readMoreLess').textContent,
+        document.querySelector('.o_MessageView_readMoreLess').textContent,
         "Read Less",
         "Read More/Less link on message should still be unfolded after a click on message aside of this button click (Read Less)"
     );

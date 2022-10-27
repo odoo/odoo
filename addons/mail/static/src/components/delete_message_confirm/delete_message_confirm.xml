@@ -7,7 +7,7 @@
                 <hr class="mt-0 mb-3"/>
                 <p class="mx-3 mb-3">Are you sure you want to delete this message?</p>
                 <blockquote class="o_DeleteMessageConfirm_blockquote mx-3 mb-3 fst-normal">
-                    <Message record="deleteMessageConfirmView.messageView"/>
+                    <MessageView record="deleteMessageConfirmView.messageView"/>
                 </blockquote>
                 <small t-if="!deleteMessageConfirmView.message.originThread or deleteMessageConfirmView.message.originThread.model !== 'mail.channel'" class="mx-3 mb-3">Pay attention: The followers of this document who were notified by email will still be able to read the content of this message and reply to it.</small>
                 <hr class="mt-0 mb-3"/>

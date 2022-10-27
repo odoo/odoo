@@ -1516,7 +1516,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should now have single message in channel after posting message from pressing 'CTRL-Enter' in text input of composer for small screen"
     );
 });
@@ -1745,7 +1745,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     );
     assert.containsN(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         2,
         "chat window should have 2 messages"
     );

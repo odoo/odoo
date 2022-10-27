@@ -81,8 +81,8 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '.o_mail_send',
 }, {
     content: "Check message is shown",
-    trigger: '.o_Message:contains("blahblah")',
+    trigger: '.o_MessageView:contains("blahblah")',
 }, {
     content: "Check message contains the attachment",
-    trigger: '.o_Message .o_AttachmentCard_filename:contains("text.txt")',
+    trigger: '.o_MessageView .o_AttachmentCard_filename:contains("text.txt")',
 }]);

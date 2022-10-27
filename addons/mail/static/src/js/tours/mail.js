@@ -41,7 +41,7 @@ tour.register('mail_tour', {
     content: _t("Post your message on the thread"),
     position: "top",
 }, {
-    trigger: '.o_Discuss_thread .o_Message',
+    trigger: '.o_Discuss_thread .o_MessageView',
     content: _t("Click on your message"),
     position: "top",
 }, {
