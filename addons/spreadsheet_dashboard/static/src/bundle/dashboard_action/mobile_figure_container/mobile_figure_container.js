@@ -37,3 +37,7 @@ export class MobileFigureContainer extends Component {
 }
 
 MobileFigureContainer.template = "documents_spreadsheet.MobileFigureContainer";
+
+MobileFigureContainer.props = {
+    spreadsheetModel: Object,
+};
