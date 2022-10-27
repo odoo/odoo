@@ -977,16 +977,29 @@ const Wysiwyg = Widget.extend({
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
                 let altData = undefined;
                 if (el.dataset.mimetype === 'image/webp') {
-                    // Generate alternate format for reports.
+                    // Generate alternate sizes and format for reports.
+                    altData = {};
                     const image = document.createElement('img');
                     image.src = isBackground ? el.dataset.bgSrc : el.getAttribute('src');
                     await new Promise(resolve => image.addEventListener('load', resolve));
-                    const canvas = document.createElement('canvas');
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(image, 0, 0);
-                    altData = canvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+                    const originalSize = Math.max(image.width, image.height);
+                    const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
+                    for (const size of [originalSize, ...smallerSizes]) {
+                        const ratio = size / originalSize;
+                        const canvas = document.createElement('canvas');
+                        canvas.width = image.width * ratio;
+                        canvas.height = image.height * ratio;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = 'rgb(255, 255, 255)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+                        altData[size] = {
+                            'image/jpeg': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
+                        };
+                        if (size !== originalSize) {
+                            altData[size]['image/webp'] = canvas.toDataURL('image/webp', 0.75).split(',')[1];
+                        }
+                    }
                 }
                 const newAttachmentSrc = await this._rpc({
                     route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
