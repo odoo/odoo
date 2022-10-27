@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
+from odoo.tools.misc import formatLang
 from odoo import fields, Command
 
 
@@ -551,3 +552,57 @@ class TestExpenses(TestExpenseCommon):
         self.assertRecordValues(expense_sheet.account_move_id, [{
             'partner_id': self.expense_user_employee.partner_id.id,
         }])
+
+    def test_print_expense_check(self):
+        """
+        Test the check content when printing a check
+        that comes from an expense
+        """
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                (0, 0, {
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
+        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+            wiz_form.payment_method_line_id = payment_method_line
+        wizard = wiz_form.save()
+        action = wizard.action_create_payments()
+        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
+
+        payments = self.env[action['res_model']].search(action['domain'])
+        for payment in payments:
+            pages = payment._check_get_pages()
+            stub_line = pages[0]['stub_lines'][:1]
+            self.assertTrue(stub_line)
+            move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+            self.assertDictEqual(stub_line[0], {
+                'due_date': payment.date.strftime("%m/%d/%Y"),
+                'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
+                'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.env.company.currency_id),
+                'amount_residual': '-',
+                'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
+                'currency': self.env.company.currency_id
+            })
