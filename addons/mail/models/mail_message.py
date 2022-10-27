@@ -653,9 +653,21 @@ class Message(models.Model):
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
+        messages_by_partner = defaultdict(lambda: self.env['mail.message'])
+        partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
+            for partner in elem.partner_ids & partners_with_user:
+                messages_by_partner[partner] |= elem
             if elem.is_thread_message():
                 elem._invalidate_documents()
+
+        # Notify front-end of messages deletion for partners having a user
+        if messages_by_partner:
+            self.env['bus.bus']._sendmany([
+                (partner, 'mail.message/delete', {'message_ids': messages.ids})
+                for partner, messages in messages_by_partner.items()
+            ])
+
         return super(Message, self).unlink()
 
     @api.model
