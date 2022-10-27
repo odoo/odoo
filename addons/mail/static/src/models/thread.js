@@ -558,7 +558,7 @@ Model({
             }
             if (suggestedRecipientsData) {
                 const recipientInfoList = suggestedRecipientsData.map((recipientInfoData) => {
-                    const [partner_id, emailInfo, lang, reason] = recipientInfoData;
+                    const [partner_id, emailInfo, lang, reason, defaultCreateValues] = recipientInfoData;
                     const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
                     return {
                         email,
@@ -567,6 +567,7 @@ Model({
                         lang,
                         partner: partner_id ? insert({ id: partner_id }) : clear(),
                         reason,
+                        defaultCreateValues: defaultCreateValues,
                     };
                 });
                 Object.assign(values, {

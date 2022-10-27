@@ -664,11 +664,12 @@ class TestCRMLead(TestCrmCommon):
         })
         data = lead1._message_get_suggested_recipients()[lead1.id]
         self.assertEqual(len(data), 1)
-        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason = data[0]
+        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
         self.assertFalse(suggested_partner_id)
         self.assertEqual(suggested_partner_email, self.test_email)
         self.assertEqual(suggested_lang, None)
         self.assertEqual(suggested_reason, 'Customer Email')
+        self.assertEqual(create_vals['lang'], 'fr_FR')
 
         # Create a lead with an active language -> should keep the preset language for recipients
         lang_en = ResLang.search([('code', '=', 'en_US')])
@@ -684,11 +685,12 @@ class TestCRMLead(TestCrmCommon):
         })
         data = lead2._message_get_suggested_recipients()[lead2.id]
         self.assertEqual(len(data), 1)
-        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason = data[0]
+        suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
         self.assertFalse(suggested_partner_id)
         self.assertEqual(suggested_partner_email, self.test_email)
         self.assertEqual(suggested_lang, 'en_US')
         self.assertEqual(suggested_reason, 'Customer Email')
+        self.assertEqual(create_vals['lang'], lang_en.code)
 
     @users('user_sales_manager')
     def test_message_get_suggested_recipients_auto_creation(self):
@@ -729,11 +731,26 @@ class TestCRMLead(TestCrmCommon):
                     **lead_details_for_contact,
                 })
                 data = lead1._message_get_suggested_recipients()[lead1.id]
-                suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason = data[0]
+                suggested_partner_id, suggested_partner_email, suggested_lang, suggested_reason, create_vals = data[0]
                 self.assertFalse(suggested_partner_id)
                 self.assertEqual(suggested_partner_email, formatted_email)
                 self.assertEqual(suggested_lang, lang.code)
                 self.assertEqual(suggested_reason, 'Customer Email')
+                self.assertEqual(create_vals, lead1._get_customer_information().get(email, {}))
+                for field, value in lead_details_for_contact.items():
+                    self.assertEqual(create_vals.get(field), value)
+                expected_name = partner_name if partner_name and not name else name
+                self.assertEqual(create_vals['name'], expected_name)
+                self.assertEqual(create_vals['comment'], description)  # description -> comment
+                # Parent company not created even if partner_name is set
+                self.assertFalse(create_vals.get('parent_id'))  # not supported, even if partner_name set
+                self.assertEqual(create_vals['company_name'], partner_name)  # partner_name -> company_name
+                expected_company_type = 'company' if partner_name and not name else 'person'
+                self.assertEqual(create_vals.get('company_type', 'person'), expected_company_type)
+
+                # Check that the creation of the contact won't fail
+                partner = self.env['res.partner'].create(create_vals)
+                partner.unlink()
 
     @users('user_sales_manager')
     def test_phone_mobile_search(self):
