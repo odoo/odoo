@@ -491,11 +491,25 @@ registerModel({
          * @param {integer[]} param0.messag_ids
          */
         _handleNotificationMessageDelete({ message_ids }) {
+            let deletedInboxMsg = 0;
+            let deletedStarredMsg = 0;
             for (const id of message_ids) {
                 const message = this.messaging.models['Message'].findFromIdentifyingData({ id });
                 if (message) {
+                    if (message.isNeedaction) {
+                        deletedInboxMsg++;
+                    }
+                    if (message.isStarred) {
+                        deletedStarredMsg++;
+                    }
                     message.delete();
                 }
+            }
+            if (deletedInboxMsg) {
+                this.messaging.inbox.update({ counter: decrement(deletedInboxMsg) });
+            }
+            if (deletedStarredMsg) {
+                this.messaging.starred.update({ counter: decrement(deletedStarredMsg) });
             }
         },
         /**
