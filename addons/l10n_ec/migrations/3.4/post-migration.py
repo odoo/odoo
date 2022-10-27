@@ -35,26 +35,36 @@ def update_type_tax_use(env):
 
 def update_vat_withhold_base_percent(env):
     # For vat withhold taxes, replace factor_percent=12% with factor_percent=100%
-    all_companies = env['res.company'].search([])
-    ecuadorian_companies = all_companies.filtered(lambda r: r.country_code == 'EC')
-    ecuadorian_taxes = env['account.tax'].search([('company_id', 'in', ecuadorian_companies.ids)])
-    taxes_to_fix = ecuadorian_taxes.filtered(lambda x: x.tax_group_id.l10n_ec_type in ['withhold_vat_sale', 'withhold_vat_purchase'])
     env.cr.execute('''
         --for invoice_tax_id
-        update account_tax_repartition_line
-        set factor_percent=100 
-        where factor_percent=12 
-        and repartition_type='tax'
-        and invoice_tax_id in %s
-        ''', [tuple(taxes_to_fix.ids)])
+        UPDATE account_tax_repartition_line
+        SET factor_percent = 100 
+        WHERE factor_percent = 12 
+        AND repartition_type = 'tax'
+        AND invoice_tax_id in (
+            SELECT id
+            FROM account_tax
+            WHERE country_id = (SELECT id FROM res_country WHERE code = 'EC' LIMIT 1) --Country is Ecuador)
+            AND tax_group_id IN (
+                SELECT id FROM account_tax_group WHERE l10n_ec_type IN ('withhold_vat_sale','withhold_vat_purchase')
+                )
+            )
+    ''')
     env.cr.execute('''
         --for refund_tax_id
-        update account_tax_repartition_line
-        set factor_percent=100 
-        where factor_percent=12 
-        and repartition_type='tax'
-        and refund_tax_id in %s
-        ''', [tuple(taxes_to_fix.ids)])
+        UPDATE account_tax_repartition_line
+        SET factor_percent = 100 
+        WHERE factor_percent = 12 
+        AND repartition_type = 'tax'
+        AND refund_tax_id in (
+            SELECT id
+            FROM account_tax
+            WHERE country_id = (SELECT id FROM res_country WHERE code = 'EC' LIMIT 1) --Country is Ecuador)
+            AND tax_group_id IN (
+                SELECT id FROM account_tax_group WHERE l10n_ec_type IN ('withhold_vat_sale','withhold_vat_purchase')
+                )
+            )
+    ''')
 
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
