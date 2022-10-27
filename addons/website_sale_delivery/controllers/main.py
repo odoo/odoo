@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from odoo import http, _
 from odoo.http import request
 from odoo.addons.payment import utils as payment_utils
@@ -30,6 +31,7 @@ class WebsiteSaleDelivery(WebsiteSale):
     @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
+        order.access_point_address = {}
         carrier_id = int(post['carrier_id'])
         if order and carrier_id != order.carrier_id.id:
             if any(tx.state not in ("canceled", "error", "draft") for tx in order.transaction_ids):
@@ -201,7 +203,44 @@ class WebsiteSaleDelivery(WebsiteSale):
                 order_sudo.currency_id,
             ),
         } for carrier in order_sudo._get_delivery_methods()],
-        key=lambda carrier: carrier['minorAmount'])
+            key=lambda carrier: carrier['minorAmount'])
+
+    @http.route('/shop/access_point/set', type='json', auth='public', methods=['POST'], csrf=False, website=True, sitemap=False)
+    def set_access_point(self, access_point_encoded):
+        order = request.website.sale_get_order()
+        if hasattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations'):
+            use_location = getattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations')
+            access_point = use_location and access_point_encoded or None
+            order.write({'access_point_address': access_point})
+
+    @http.route('/shop/access_point/get', type='json', auth='public', csrf=False, website=True, sitemap=False)
+    def get_access_point(self):
+        order = request.website.sale_get_order()
+        if not order.carrier_id.delivery_type:
+            return {}
+        order_location = json.loads(order.access_point_address) if order.access_point_address else False
+        if not order_location:
+            return {}
+        address = order_location['address']
+        return {order.carrier_id.delivery_type + '_access_point': address}
+
+    @http.route('/shop/access_point/close_locations', type='json', auth='public', csrf=False, website=True, sitemap=False)
+    def get_close_locations(self):
+        order = request.website.sale_get_order()
+        try:
+            error = {'error': 'No pick-up point available for that shipping address'}
+            if not hasattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations'):
+                return error
+            close_locations = getattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations')(order.partner_shipping_id)
+            partner_address = order.partner_shipping_id
+            inline_partner_address = ' '.join((part or '') for part in [partner_address.street, partner_address.street2, partner_address.zip, partner_address.country_id.code])
+            if len(close_locations) < 0:
+                return {'error': 'No pick-up point available for that shipping address'}
+            for location in close_locations:
+                location['address_stringified'] = json.dumps(location)
+            return {'close_locations': close_locations, 'partner_address': inline_partner_address}
+        except UserError as e:
+            return {'error': str(e)}
 
     @staticmethod
     def _get_rate(carrier, order, is_express_checkout_flow=False):
