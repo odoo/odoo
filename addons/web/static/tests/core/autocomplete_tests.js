@@ -338,4 +338,20 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "t");
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
     });
+
+    QUnit.test("autofocus=true option work as expected", async (assert) => {
+        class Parent extends Component {}
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <AutoComplete value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                autofocus="true"
+                onSelect="() => {}"
+            />
+        `;
+
+        await mount(Parent, target, { env });
+
+        assert.strictEqual(target.querySelector(".o-autocomplete input"), document.activeElement);
+    });
 });
