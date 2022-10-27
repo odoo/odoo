@@ -105,7 +105,9 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (
+            if ( this.threadViewOwner.lastMessage && this.threadViewOwner.thread.lastMessage.is_note ) {
+                this.threadViewOwner.handleVisibleMessage(this.threadViewOwner.lastMessage);
+            } else if (
                 this.threadViewOwner.lastMessageView &&
                 this.threadViewOwner.lastMessageView.isPartiallyVisible()
             ) {
@@ -158,6 +160,7 @@ registerModel({
                 return;
             }
             this.adjustFromComponentHints();
+            this.checkMostRecentMessageIsVisible();
         },
         onScroll() {
             this.scrollThrottle.do();
