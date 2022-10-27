@@ -166,6 +166,8 @@ def init_logger():
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
+    # rsjmin triggers this with Python 3.10+ (that warning comes from the C code and has no `module`)
+    warnings.filterwarnings('ignore', r'^PyUnicode_FromUnicode\(NULL, size\) is deprecated', category=DeprecationWarning)
     # the SVG guesser thing always compares str and bytes, ignore it
     warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
     # reportlab does a bunch of bytes/str mixing in a hashmap
