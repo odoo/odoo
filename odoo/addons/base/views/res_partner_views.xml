@@ -81,10 +81,22 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <form string="Contact">
-                    <field name="is_company" invisible="1"/>
-                    <field name="type" invisible="1"/>
+                    <!-- Invisible fields allows other modules to populate partner (ex.: creation from a lead) -->
                     <field name="avatar_128" invisible="1"/>
+                    <field name="city" invisible="1"/>
+                    <field name="comment" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="state_id" invisible="1"/>
+                    <field name="street" invisible="1"/>
+                    <field name="street2" invisible="1"/>
+                    <field name="title" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="website" invisible="1"/>
+                    <field name="zip" invisible="1"/>
+
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>

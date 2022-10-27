@@ -358,7 +358,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         suggestions = record._message_get_suggested_recipients()[record.id]
         self.assertEqual(
             suggestions,
-            [(False, email, None, 'Customer Email')]
+            [(False, email, None, 'Customer Email', {'mobile': '+33199001015', 'phone': False})]
         )
 
     @users("employee")
@@ -373,9 +373,9 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         self.assertEqual(
             sorted(suggestions),
             [
-                (False, '"cc3" <cc3@example.com>', None, 'CC Email'),
-                (False, 'cc1@example.com', None, 'CC Email'),
-                (False, 'cc2@example.com', None, 'CC Email'),
+                (False, '"cc3" <cc3@example.com>', None, 'CC Email', {}),
+                (False, 'cc1@example.com', None, 'CC Email', {}),
+                (False, 'cc2@example.com', None, 'CC Email', {}),
             ],
             'cc should be in suggestions'
         )

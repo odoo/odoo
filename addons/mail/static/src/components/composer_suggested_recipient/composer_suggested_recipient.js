@@ -78,6 +78,9 @@ export class ComposerSuggestedRecipientView extends Component {
                             .name,
                         default_lang: this.composerSuggestedRecipientView.suggestedRecipientInfo
                             .lang,
+                        ...(Object.fromEntries(Object.entries(
+                            this.composerSuggestedRecipientView.suggestedRecipientInfo.defaultCreateValues)
+                            .map(([k, v]) => ['default_' + k, v]))),
                         force_email: true,
                         ref: "compound_context",
                     },
