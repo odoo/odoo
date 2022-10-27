@@ -488,9 +488,22 @@
         * @private
         */
        _afterJoin: function () {
+<<<<<<< HEAD
             this._saveQuizAnswersToSession().then(() => {
                 window.location.reload();
             });
+||||||| parent of e233cf3d83ac... temp
+            this.isMember = true;
+            this._renderValidationInfo();
+            this._applySessionAnswers();
+            this._submitQuiz();
+=======
+            this.isMember = true;
+            this.trigger_up('join_course');
+            this._renderValidationInfo();
+            this._applySessionAnswers();
+            this._submitQuiz();
+>>>>>>> e233cf3d83ac... temp
        },
 
         /**

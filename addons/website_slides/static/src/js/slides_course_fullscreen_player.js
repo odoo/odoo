@@ -500,7 +500,14 @@
         custom_events: _.extend({}, SlideCoursePage.prototype.custom_events, {
             'change_slide': '_onChangeSlideRequest',
             'slide_go_next': '_onSlideGoToNext',
+<<<<<<< HEAD
         }),
+||||||| parent of e233cf3d83ac... temp
+        },
+=======
+            'join_course': '_onJoinCourse',
+        },
+>>>>>>> e233cf3d83ac... temp
         /**
         * @override
         * @param {Object} el
@@ -796,6 +803,16 @@
         _toggleSidebar: function () {
             this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
             this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
+        },
+        /**
+         * Triggered when user join a course via a subwidget.
+         * User is already logged in.
+         * Update all slides frontend for fullscreen mode.
+         *
+         * @private
+         */
+         _onJoinCourse: function () {
+            this.slides.forEach((slide) => slide.isMember = true);
         },
     });
 
