@@ -14,5 +14,6 @@ class AccountChartTemplate(models.Model):
                 r.update({'name': '001-001 ' + r.get('name'),
                           'l10n_ec_entity': '001',
                           'l10n_ec_emission': '001',
+                          'l10n_ec_emission_address_id': company.partner_id.id,
                           })
         return res
