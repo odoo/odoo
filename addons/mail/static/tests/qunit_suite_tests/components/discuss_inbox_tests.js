@@ -82,7 +82,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         "reply composer should still be opened after pressing escape on emojis button"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -91,7 +91,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerTextInputView_textarea`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -106,7 +106,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerTextInputView_textarea`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -267,7 +267,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         "should have composer after clicking on reply to message"
     );
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).click();
+    document.querySelector(`.o_ComposerTextInputView_textarea`).click();
     await nextAnimationFrame(); // wait just in case, but nothing is supposed to happen
     assert.containsOnce(
         document.body,
@@ -363,7 +363,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         "Send button text should be 'Log'"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });
@@ -429,7 +429,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         "Send button text should be 'Send'"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });

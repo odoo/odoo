@@ -56,7 +56,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
     );
     await afterNextRender(() =>
         dom.triggerEvent(
-            document.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
+            document.querySelector('.o_ChatWindow .o_ComposerTextInputView_textarea'),
             'keydown',
             { key: 'Enter' },
         )

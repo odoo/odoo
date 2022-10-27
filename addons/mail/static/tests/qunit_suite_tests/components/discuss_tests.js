@@ -1182,7 +1182,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
     });
     await openDiscuss();
     // these user interactions is to forge a transient message response from channel command "/who"
-    await insertText('.o_ComposerTextInput_textarea', "/who");
+    await insertText('.o_ComposerTextInputView_textarea', "/who");
     await click('.o_Composer_buttonSend');
     // click on message to show actions on the transient message resulting from the "/who" command
     await click('.o_Message');
@@ -1704,7 +1704,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         },
     });
     // composer is focused by default, we remove that focus
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    document.querySelector('.o_ComposerTextInputView_textarea').blur();
     // simulate receiving a message
     await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
@@ -1752,7 +1752,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_ComposerTextInput_textarea').focus()
+        document.querySelector('.o_ComposerTextInputView_textarea').focus()
     );
     assert.containsNone(
         document.body,
@@ -2391,20 +2391,20 @@ QUnit.test('composer state: text save and restore', async function (assert) {
     });
     await openDiscuss();
     // Write text in composer for #general
-    await insertText('.o_ComposerTextInput_textarea', "A message");
+    await insertText('.o_ComposerTextInputView_textarea', "A message");
     await click(`.o_DiscussSidebarCategoryItem[data-channel-name="Special"]`);
-    await insertText('.o_ComposerTextInput_textarea', "An other message");
+    await insertText('.o_ComposerTextInputView_textarea', "An other message");
     // Switch back to #general
     await click(`.o_DiscussSidebarCategoryItem[data-channel-name="General"]`);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "A message",
         "should restore the input text"
     );
 
     await click(`.o_DiscussSidebarCategoryItem[data-channel-name="Special"]`);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "An other message",
         "should restore the input text"
     );
@@ -2560,15 +2560,15 @@ QUnit.test('post a simple message', async function (assert) {
         "should display no message initially"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "should have empty content initially"
     );
 
     // insert some HTML in editable
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "Test",
         "should have inserted text in editable"
     );
@@ -2576,7 +2576,7 @@ QUnit.test('post a simple message', async function (assert) {
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['message_post']);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "should have no content in composer input after posting message"
     );
@@ -2624,10 +2624,10 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async funct
     );
 
     // insert some HTML in editable
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -2659,9 +2659,9 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
     );
 
     // insert some HTML in editable
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter", shiftKey: true });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
@@ -3010,11 +3010,11 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.querySelector(`.o_ComposerTextInputView_textarea`),
         "composer text input should be auto-focus"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['message_post']);
     assert.notOk(
@@ -3562,13 +3562,13 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.querySelector(`.o_ComposerTextInputView_textarea`),
         "composer of channel 'General' should be automatically focused on opening"
     );
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).blur();
+    document.querySelector(`.o_ComposerTextInputView_textarea`).blur();
     assert.notOk(
-        document.activeElement === document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.activeElement === document.querySelector(`.o_ComposerTextInputView_textarea`),
         "composer of channel 'General' should no longer focused on click away"
     );
 
@@ -3586,7 +3586,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.querySelector(`.o_ComposerTextInputView_textarea`),
         "composer of chat 'Demo User' should be automatically focused on opening"
     );
 });
@@ -3731,7 +3731,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 
     // Try to send message
     document
-        .querySelector(`.o_ComposerTextInput_textarea`)
+        .querySelector(`.o_ComposerTextInputView_textarea`)
         .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
     assert.verifySteps(
         ['notification'],
@@ -3758,12 +3758,12 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
     });
     await openDiscuss();
     // Type message
-    await insertText('.o_ComposerTextInput_textarea', "test message");
+    await insertText('.o_ComposerTextInputView_textarea', "test message");
     await afterNextRender(() => {
         const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInputView_textarea`)
             .dispatchEvent(enterEvent);
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInputView_textarea`)
             .dispatchEvent(enterEvent);
     });
     assert.verifySteps(

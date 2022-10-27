@@ -393,7 +393,7 @@ QUnit.test('reaction button should not be present on livechat', async function (
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await click('.o_Composer_buttonSend');
     await click('.o_Message');
     assert.containsNone(
@@ -421,7 +421,7 @@ QUnit.test('reply button should not be present on livechat', async function (ass
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await click('.o_Composer_buttonSend');
     await click('.o_Message');
     assert.containsNone(

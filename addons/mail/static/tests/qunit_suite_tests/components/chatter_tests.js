@@ -463,10 +463,10 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -493,10 +493,10 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -526,9 +526,9 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     await nextAnimationFrame();
     assert.containsNone(
         document.body,

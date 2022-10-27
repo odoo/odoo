@@ -29,7 +29,7 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "@demo");
+    await insertText('.o_ComposerTextInputView_textarea', "@demo");
     assert.containsOnce(
         document.body,
         `.o_ComposerSuggestionView`,
@@ -60,7 +60,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "@demo");
+    await insertText('.o_ComposerTextInputView_textarea', "@demo");
     assert.containsOnce(
         document.querySelector('.o_ComposerSuggestionView'),
         '.o_PersonaImStatusIcon',
@@ -111,7 +111,7 @@ QUnit.test('partner mention suggestion active', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "@demo");
+    await insertText('.o_ComposerTextInputView_textarea', "@demo");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionView'),
         'active',

@@ -28,7 +28,7 @@ tour.register('mail_tour', {
         this.$consumeEventAnchors.find('li:first').click();
     },
 }, {
-    trigger: '.o_Discuss_thread .o_ComposerTextInput_textarea',
+    trigger: '.o_Discuss_thread .o_ComposerTextInputView_textarea',
     content: Markup(_t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>")),
     position: "top",
     width: 350,

@@ -7,7 +7,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ComposerTextInput extends Component {
+export class ComposerTextInputView extends Component {
 
     /**
      * @override
@@ -33,9 +33,9 @@ export class ComposerTextInput extends Component {
 
 }
 
-Object.assign(ComposerTextInput, {
+Object.assign(ComposerTextInputView, {
     props: { record: Object },
-    template: 'mail.ComposerTextInput',
+    template: 'mail.ComposerTextInputView',
 });
 
-registerMessagingComponent(ComposerTextInput);
+registerMessagingComponent(ComposerTextInputView);

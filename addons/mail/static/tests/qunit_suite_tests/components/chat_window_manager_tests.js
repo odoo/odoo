@@ -751,7 +751,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
         "chat window should still be opened after pressing escape on emojis button"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "@");
+    await insertText('.o_ComposerTextInputView_textarea', "@");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
@@ -760,7 +760,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerTextInputView_textarea`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -775,7 +775,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerTextInputView_textarea`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -826,7 +826,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
     await start();
     assert.containsN(
         document.body,
-        '.o_ChatWindow .o_ComposerTextInput_textarea',
+        '.o_ChatWindow .o_ComposerTextInputView_textarea',
         2,
         "2 chat windows should be present initially"
     );
@@ -838,7 +838,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: 'Escape' });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(ev);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(ev);
     });
     assert.containsOnce(
         document.body,
@@ -861,7 +861,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
     // Set content of the composer of the chat window
-    await insertText('.o_ComposerTextInput_textarea', 'XDU for the win !');
+    await insertText('.o_ComposerTextInputView_textarea', 'XDU for the win !');
     assert.containsNone(
         document.body,
         '.o_Composer .o_AttachmentCard',
@@ -887,7 +887,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
         )
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "XDU for the win !",
         "chat window composer initial text input should contain 'XDU for the win !'"
     );
@@ -907,7 +907,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "XDU for the win !",
         "chat window composer should still have the same input after closing discuss"
     );
@@ -1207,20 +1207,20 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
         "The name of the only chatWindow should be 'channel1' (channel with ID 1)"
     );
     assert.strictEqual(
-        chatWindow.querySelector('.o_ComposerTextInput_textarea'),
+        chatWindow.querySelector('.o_ComposerTextInputView_textarea'),
         document.activeElement,
         "The chatWindow composer must have focus"
     );
 
     await afterNextRender(() =>
         triggerEvent(
-            chatWindow.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
+            chatWindow.querySelector('.o_ChatWindow .o_ComposerTextInputView_textarea'),
             'keydown',
             { key: 'Tab' },
         )
     );
     assert.strictEqual(
-        chatWindow.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
+        chatWindow.querySelector('.o_ChatWindow .o_ComposerTextInputView_textarea'),
         document.activeElement,
         "The chatWindow composer still has focus"
     );
@@ -1244,21 +1244,21 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
         "The name of the 2nd chatWindow should be 'channel2' (channel with ID 2)"
     );
     assert.strictEqual(
-        chatWindows[1].querySelector('.o_ComposerTextInput_textarea'),
+        chatWindows[1].querySelector('.o_ComposerTextInputView_textarea'),
         document.activeElement,
         "The 2nd chatWindow composer must have focus (channel with ID 2)"
     );
 
     await afterNextRender(() =>
         triggerEvent(
-            chatWindows[1].querySelector('.o_ComposerTextInput_textarea'),
+            chatWindows[1].querySelector('.o_ComposerTextInputView_textarea'),
             'keydown',
             { key: 'Tab' },
         )
     );
     assert.containsN(document.body, '.o_ChatWindow', 2, "2 chatWindows should still be opened");
     assert.strictEqual(
-        chatWindows[0].querySelector('.o_ComposerTextInput_textarea'),
+        chatWindows[0].querySelector('.o_ComposerTextInputView_textarea'),
         document.activeElement,
         "The 1st chatWindow composer must have focus (channel with ID 1)"
     );
@@ -1314,7 +1314,7 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
     await start();
     assert.containsN(
         document.body,
-        '.o_ChatWindow .o_ComposerTextInput_textarea',
+        '.o_ChatWindow .o_ComposerTextInputView_textarea',
         3,
         "initialy, 3 chat windows should be present"
     );
@@ -1325,49 +1325,49 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
     );
 
     await afterNextRender(() => {
-        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea").focus();
+        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInputView_textarea").focus();
     });
     assert.strictEqual(
-        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea"),
+        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInputView_textarea"),
         document.activeElement,
         "The chatWindow with visible-index 2 should have the focus"
     );
 
     await afterNextRender(() =>
         triggerEvent(
-            document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea"),
+            document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInputView_textarea"),
             'keydown',
             { key: 'Tab' },
         )
     );
     assert.strictEqual(
-        document.querySelector(".o_ChatWindow[data-visible-index='1'] .o_ComposerTextInput_textarea"),
+        document.querySelector(".o_ChatWindow[data-visible-index='1'] .o_ComposerTextInputView_textarea"),
         document.activeElement,
         "after pressing tab on the chatWindow with visible-index 2, the chatWindow with visible-index 1 should have focus"
     );
 
     await afterNextRender(() =>
         triggerEvent(
-            document.querySelector(".o_ChatWindow[data-visible-index='1'] .o_ComposerTextInput_textarea"),
+            document.querySelector(".o_ChatWindow[data-visible-index='1'] .o_ComposerTextInputView_textarea"),
             'keydown',
             { key: 'Tab' },
         )
     );
     assert.strictEqual(
-        document.querySelector(".o_ChatWindow[data-visible-index='0'] .o_ComposerTextInput_textarea"),
+        document.querySelector(".o_ChatWindow[data-visible-index='0'] .o_ComposerTextInputView_textarea"),
         document.activeElement,
         "after pressing tab on the chat window with visible-index 1, the chatWindow with visible-index 0 should have focus"
     );
 
     await afterNextRender(() =>
         triggerEvent(
-            document.querySelector(".o_ChatWindow[data-visible-index='0'] .o_ComposerTextInput_textarea"),
+            document.querySelector(".o_ChatWindow[data-visible-index='0'] .o_ComposerTextInputView_textarea"),
             'keydown',
             { key: 'Tab' },
         )
     );
     assert.strictEqual(
-        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea"),
+        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInputView_textarea"),
         document.activeElement,
         "the chatWindow with visible-index 2 should have the focus after pressing tab on the chatWindow with visible-index 0"
     );
@@ -1475,11 +1475,11 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
     const { insertText } = await start();
 
     // Set content of the composer of the chat window
-    await insertText('.o_ComposerTextInput_textarea', 'WOLOLO');
+    await insertText('.o_ComposerTextInputView_textarea', 'WOLOLO');
     // Send a new message in the chatwindow to trigger the scroll
     await afterNextRender(() =>
         triggerEvent(
-            document.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
+            document.querySelector('.o_ChatWindow .o_ComposerTextInputView_textarea'),
             'keydown',
             { key: 'Enter' },
         )
@@ -1509,10 +1509,10 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
     // insert some HTML in editable
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -1834,7 +1834,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
 
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        func: () => document.querySelector('.o_ComposerTextInputView_textarea').focus(),
         message: "should wait until last seen by current partner message id changed",
         predicate: ({ thread }) => {
             return (

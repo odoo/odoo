@@ -20,7 +20,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '.o_ChatterTopbar_buttonSendMessage',
 }, {
     content: "Write something in composer",
-    trigger: '.o_ComposerTextInput_textarea',
+    trigger: '.o_ComposerTextInputView_textarea',
     run: 'text blahblah',
 }, {
     content: "Add one file in composer",
