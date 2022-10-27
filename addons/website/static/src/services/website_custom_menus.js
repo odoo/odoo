@@ -111,6 +111,7 @@ registry.category('website_custom_menus').add('website.custom_menu_edit_menu', {
     // menuitem will be cloned (in 'addCustomMenus()') to edit every content menu using
     // the 'EditMenuDialog' component.
     isDisplayed: (env) => env.services.website.currentWebsite
+        && env.services.website.currentWebsite.metadata.contentMenus
         && env.services.website.currentWebsite.metadata.contentMenus.length
         && !env.services.ui.isSmall,
 });
