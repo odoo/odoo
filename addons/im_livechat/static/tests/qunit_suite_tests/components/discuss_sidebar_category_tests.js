@@ -27,7 +27,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
     await openDiscuss();
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`,
+        `.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_counter`,
         "should not have a counter if the category is unfolded and without unread messages",
     );
 });
@@ -52,7 +52,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
     await openDiscuss();
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`,
+        `.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_counter`,
         "should not have a counter if the category is unfolded and with unread messages",
     );
 });
@@ -79,7 +79,7 @@ QUnit.test('livechat - counter: should not have a counter if category is folded 
 
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`,
+        `.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_counter`,
         "should not have a counter if the category is folded and without unread messages"
     );
 });
@@ -108,7 +108,7 @@ QUnit.test('livechat - counter: should have correct value of unread threads if c
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector(`.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_counter`).textContent,
+        document.querySelector(`.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_counter`).textContent,
         "1",
         "should have correct value of unread threads if category is folded and with unread messages"
     );

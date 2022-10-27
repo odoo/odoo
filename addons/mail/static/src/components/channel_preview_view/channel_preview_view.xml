@@ -18,7 +18,7 @@
                     <div class="o_NotificationListItem_imageContainer o_ChannelPreviewView_imageContainer o_ChannelPreviewView_sidebarItem position-relative">
                         <img class="o_NotificationListItem_image o_ChannelPreviewView_image w-100 h-100 rounded-circle" t-att-src="channelPreviewView.imageUrl" alt="Thread Image"/>
                         <t t-if="channelPreviewView.personaImStatusIconView">
-                            <PersonaImStatusIcon
+                            <PersonaImStatusIconView
                                 className="'o_NotificationListItem_personaImStatusIcon o_ChannelPreviewView_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
                                 classNameObj="{
                                     'o-isDeviceSmall': messaging.device.isSmall,
@@ -57,7 +57,7 @@
                             </t>
                             <t t-else="">
                                 <t t-if="channelPreviewView.messageAuthorPrefixView">
-                                    <MessageAuthorPrefix record="channelPreviewView.messageAuthorPrefixView"/>
+                                    <MessageAuthorPrefixView record="channelPreviewView.messageAuthorPrefixView"/>
                                 </t>
                                 <span class="o_ChannelPreviewView_messageBody" t-esc="channelPreviewView.inlineLastMessageBody"/>
                             </t>

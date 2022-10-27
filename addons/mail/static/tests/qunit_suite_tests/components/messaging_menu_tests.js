@@ -163,41 +163,41 @@ QUnit.test('basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenuHeader
-            .o_MessagingMenuTab
+            .o_MessagingMenuTabView
         `).length,
         3,
         "should have 3 tab buttons to filter items in the header"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenuTab[data-tab-id="all"]`).length,
+        document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="all"]`).length,
         1,
         "1 tab button should be 'All'"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenuTab[data-tab-id="chat"]`).length,
+        document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="chat"]`).length,
         1,
         "1 tab button should be 'Chat'"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenuTab[data-tab-id="channel"]`).length,
+        document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="channel"]`).length,
         1,
         "1 tab button should be 'Channels'"
     );
     assert.ok(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="all"]
+            .o_MessagingMenuTabView[data-tab-id="all"]
         `).classList.contains('o-active'),
         "'all' tab button should be active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="chat"]
+            .o_MessagingMenuTabView[data-tab-id="chat"]
         `).classList.contains('o-active'),
         "'chat' tab button should not be active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="channel"]
+            .o_MessagingMenuTabView[data-tab-id="channel"]
         `).classList.contains('o-active'),
         "'channel' tab button should not be active"
     );
@@ -209,7 +209,7 @@ QUnit.test('basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_NotificationList
+            .o_NotificationListView
         `).length,
         1,
         "should display thread preview list"
@@ -217,7 +217,7 @@ QUnit.test('basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_NotificationList_noConversation
+            .o_NotificationListView_noConversation
         `).length,
         1,
         "should display no conversation in thread preview list"
@@ -275,95 +275,95 @@ QUnit.test('switch tab', async function (assert) {
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenuTab[data-tab-id="all"]`).length,
+        document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="all"]`).length,
         1,
         "1 tab button should be 'All'"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenuTab[data-tab-id="chat"]`).length,
+        document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="chat"]`).length,
         1,
         "1 tab button should be 'Chat'"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenuTab[data-tab-id="channel"]`).length,
+        document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="channel"]`).length,
         1,
         "1 tab button should be 'Channels'"
     );
     assert.ok(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="all"]
+            .o_MessagingMenuTabView[data-tab-id="all"]
         `).classList.contains('o-active'),
         "'all' tab button should be active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="chat"]
+            .o_MessagingMenuTabView[data-tab-id="chat"]
         `).classList.contains('o-active'),
         "'chat' tab button should not be active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="channel"]
+            .o_MessagingMenuTabView[data-tab-id="channel"]
         `).classList.contains('o-active'),
         "'channel' tab button should not be active"
     );
 
-    await click(`.o_MessagingMenuTab[data-tab-id="chat"]`);
+    await click(`.o_MessagingMenuTabView[data-tab-id="chat"]`);
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="all"]
+            .o_MessagingMenuTabView[data-tab-id="all"]
         `).classList.contains('o-active'),
         "'all' tab button should become inactive"
     );
     assert.ok(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="chat"]
+            .o_MessagingMenuTabView[data-tab-id="chat"]
         `).classList.contains('o-active'),
         "'chat' tab button should not become active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="channel"]
+            .o_MessagingMenuTabView[data-tab-id="channel"]
         `).classList.contains('o-active'),
         "'channel' tab button should stay inactive"
     );
 
-    await click(`.o_MessagingMenuTab[data-tab-id="channel"]`);
+    await click(`.o_MessagingMenuTabView[data-tab-id="channel"]`);
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="all"]
+            .o_MessagingMenuTabView[data-tab-id="all"]
         `).classList.contains('o-active'),
         "'all' tab button should stay active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="chat"]
+            .o_MessagingMenuTabView[data-tab-id="chat"]
         `).classList.contains('o-active'),
         "'chat' tab button should become inactive"
     );
     assert.ok(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="channel"]
+            .o_MessagingMenuTabView[data-tab-id="channel"]
         `).classList.contains('o-active'),
         "'channel' tab button should become active"
     );
 
-    await click(`.o_MessagingMenuTab[data-tab-id="all"]`);
+    await click(`.o_MessagingMenuTabView[data-tab-id="all"]`);
     assert.ok(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="all"]
+            .o_MessagingMenuTabView[data-tab-id="all"]
         `).classList.contains('o-active'),
         "'all' tab button should become active"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="chat"]
+            .o_MessagingMenuTabView[data-tab-id="chat"]
         `).classList.contains('o-active'),
         "'chat' tab button should stay inactive"
     );
     assert.notOk(
         document.querySelector(`
-            .o_MessagingMenuTab[data-tab-id="channel"]
+            .o_MessagingMenuTabView[data-tab-id="channel"]
         `).classList.contains('o-active'),
         "'channel' tab button should become inactive"
     );
@@ -557,7 +557,7 @@ QUnit.test('filtered previews', async function (assert) {
         "should have preview of channel"
     );
 
-    await click('.o_MessagingMenuTab[data-tab-id="chat"]');
+    await click('.o_MessagingMenuTabView[data-tab-id="chat"]');
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`).length,
         1,
@@ -580,7 +580,7 @@ QUnit.test('filtered previews', async function (assert) {
         "should not have preview of channel"
     );
 
-    await click('.o_MessagingMenuTab[data-tab-id="channel"]');
+    await click('.o_MessagingMenuTabView[data-tab-id="channel"]');
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
@@ -606,7 +606,7 @@ QUnit.test('filtered previews', async function (assert) {
         "should have preview of channel"
     );
 
-    await click('.o_MessagingMenuTab[data-tab-id="all"]');
+    await click('.o_MessagingMenuTabView[data-tab-id="all"]');
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`).length,
         2,
@@ -787,11 +787,11 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
     await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display a notification in the messaging menu"
     );
     assert.strictEqual(
-        document.querySelector('.o_NotificationRequest_name').textContent.trim(),
+        document.querySelector('.o_NotificationRequestView_name').textContent.trim(),
         'OdooBot has a request',
         "notification should display that OdooBot has a request"
     );
@@ -816,7 +816,7 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display no notification in the messaging menu"
     );
 });
@@ -840,7 +840,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display no notification in the messaging menu"
     );
 });
@@ -868,7 +868,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     });
 
     await click('.o_MessagingMenu_toggler');
-    await click('.o_NotificationRequest');
+    await click('.o_NotificationRequestView');
     assert.verifySteps([
         "should display a toast notification with the deny confirmation",
     ]);
@@ -882,7 +882,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display no notification in the messaging menu"
     );
 });
@@ -897,7 +897,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     const { click } = await start();
 
     await click('.o_MessagingMenu_toggler');
-    await click(`.o_MessagingMenuTab[data-tab-id="chat"]`);
+    await click(`.o_MessagingMenuTabView[data-tab-id="chat"]`);
 
     assert.strictEqual(
         document.querySelectorAll(`

@@ -65,12 +65,12 @@
                                 </t>
                             </button>
                             <t t-if="chatterTopbar.chatter.hasFollowers and chatterTopbar.chatter.thread">
-                                <FollowerListMenu
+                                <FollowerListMenuView
                                     className="'o_ChatterTopbar_followerListMenu'"
                                     record="chatterTopbar.chatter.followerListMenuView"
                                 />
                                 <t t-if="chatterTopbar.chatter.followButtonView">
-                                    <FollowButton
+                                    <FollowButtonView
                                         className="'o_ChatterTopbar_followButton'"
                                         record="chatterTopbar.chatter.followButtonView"
                                     />

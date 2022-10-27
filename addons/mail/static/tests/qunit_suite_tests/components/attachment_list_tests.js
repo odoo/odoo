@@ -305,9 +305,9 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     await click('.o_AttachmentCard_asideItemUnlink');
 
     await afterNextRender(() => {
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmView_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmView_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmView_confirmButton').click();
     });
     assert.verifySteps(
         ['attachment_unlink'],

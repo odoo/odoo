@@ -19,7 +19,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-id="${messaging.inbox.thread.id}"][data-thread-model="mail.box"]`,
+        `.o_DiscussView_thread[data-thread-id="${messaging.inbox.thread.id}"][data-thread-model="mail.box"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -40,7 +40,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussView_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel #General is displayed in discuss"
     );
 });
@@ -85,7 +85,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     );
     assert.containsOnce(
         document.body,
-        '.o_Discuss_noThread',
+        '.o_DiscussView_noThread',
         "should have no thread opened in discuss"
     );
 });
@@ -100,7 +100,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-id="${messaging.inbox.thread.id}"][data-thread-model="mail.box"]`,
+        `.o_DiscussView_thread[data-thread-id="${messaging.inbox.thread.id}"][data-thread-model="mail.box"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -112,7 +112,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussView_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel #General is opened in discuss"
     );
 
@@ -125,7 +125,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_Discuss_noThread',
+        '.o_DiscussView_noThread',
         "should have no thread opened in discuss"
     );
     assert.containsNone(

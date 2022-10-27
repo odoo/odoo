@@ -4,7 +4,7 @@
     <t t-name="mail.ChatWindowManager" owl="1">
         <div class="o_ChatWindowManager flex-row-reverse d-flex" t-attf-class="{{ className }}" t-ref="root">
             <!-- Note: DOM elements are ordered from left to right -->
-            <ChatWindowHiddenMenu t-if="messaging.chatWindowManager.hiddenMenuView" className="'o_ChatWindowManager_hiddenMenu'" record="messaging.chatWindowManager.hiddenMenuView"/>
+            <ChatWindowHiddenMenuView t-if="messaging.chatWindowManager.hiddenMenuView" className="'o_ChatWindowManager_hiddenMenu'" record="messaging.chatWindowManager.hiddenMenuView"/>
             <t t-foreach="messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
                 <ChatWindow record="chatWindow"/>
             </t>

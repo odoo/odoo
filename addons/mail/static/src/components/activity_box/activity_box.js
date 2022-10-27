@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class ActivityBox extends Component {
+export class ActivityBoxView extends Component {
 
     /**
      * @returns {ActivityBoxView}
@@ -15,9 +15,9 @@ export class ActivityBox extends Component {
 
 }
 
-Object.assign(ActivityBox, {
+Object.assign(ActivityBoxView, {
     props: { record: Object },
-    template: 'mail.ActivityBox',
+    template: 'mail.ActivityBoxView',
 });
 
-registerMessagingComponent(ActivityBox);
+registerMessagingComponent(ActivityBoxView);

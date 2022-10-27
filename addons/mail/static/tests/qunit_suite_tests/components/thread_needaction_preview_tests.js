@@ -50,11 +50,11 @@ QUnit.test('mark as read', async function (assert) {
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview_markAsRead',
+        '.o_ThreadNeedactionPreviewView_markAsRead',
         "should have 1 mark as read button"
     );
 
-    await click('.o_ThreadNeedactionPreview_markAsRead');
+    await click('.o_ThreadNeedactionPreviewView_markAsRead');
     assert.verifySteps(
         ['mark_all_as_read'],
         "should have marked the thread as read"
@@ -94,7 +94,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview',
+        '.o_ThreadNeedactionPreviewView',
         "should have a preview initially"
     );
     assert.containsNone(
@@ -103,7 +103,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         "should have no chat window initially"
     );
 
-    await click('.o_ThreadNeedactionPreview');
+    await click('.o_ThreadNeedactionPreviewView');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -112,7 +112,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_ThreadNeedactionPreview',
+        '.o_ThreadNeedactionPreviewView',
         "should have no preview because the message should be marked as read after opening its thread"
     );
 });
@@ -160,11 +160,11 @@ QUnit.test('click on expand from chat window should close the chat window and op
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview',
+        '.o_ThreadNeedactionPreviewView',
         "should have a preview initially"
     );
 
-    await click('.o_ThreadNeedactionPreview');
+    await click('.o_ThreadNeedactionPreviewView');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -172,11 +172,11 @@ QUnit.test('click on expand from chat window should close the chat window and op
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatWindowHeader_commandExpand',
+        '.o_ChatWindowHeaderView_commandExpand',
         "should have an expand button"
     );
 
-    await click('.o_ChatWindowHeader_commandExpand');
+    await click('.o_ChatWindowHeaderView_commandExpand');
     assert.containsNone(
         document.body,
         '.o_ChatWindow',
@@ -227,7 +227,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview',
+        '.o_ThreadNeedactionPreviewView',
         "should have a preview initially"
     );
     assert.containsNone(
@@ -236,7 +236,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         "should have no chat window initially"
     );
 
-    await click('.o_ThreadNeedactionPreview');
+    await click('.o_ThreadNeedactionPreviewView');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -282,11 +282,11 @@ QUnit.test('preview should display last needaction message preview even if there
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview_inlineText',
+        '.o_ThreadNeedactionPreviewView_inlineText',
         "should have a preview from the last message"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadNeedactionPreview_inlineText').textContent,
+        document.querySelector('.o_ThreadNeedactionPreviewView_inlineText').textContent,
         'Stranger: I am the oldest but needaction',
         "the displayed message should be the one that needs action even if there is a more recent message that is not needaction on the thread"
     );
@@ -320,7 +320,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
             return threadCache.thread === messaging.inbox.thread;
         },
     }));
-    await click('.o_ThreadNeedactionPreview');
+    await click('.o_ThreadNeedactionPreviewView');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -328,7 +328,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
     );
     assert.containsNone(
         document.body,
-        '.o_ChatWindowHeader_counter',
+        '.o_ChatWindowHeaderView_counter',
         "chat window header should not have unread counter for non-channel thread"
     );
 });

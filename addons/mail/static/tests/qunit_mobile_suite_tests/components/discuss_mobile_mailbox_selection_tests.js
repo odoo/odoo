@@ -19,42 +19,42 @@ QUnit.test('select another mailbox', async function (assert) {
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_Discuss',
+        '.o_DiscussView',
         "should display discuss initially"
     );
     assert.hasClass(
-        document.querySelector('.o_Discuss'),
+        document.querySelector('.o_DiscussView'),
         'o-isDeviceSmall',
         "discuss should be opened in mobile mode"
     );
     assert.containsOnce(
         document.body,
-        '.o_Discuss_thread',
+        '.o_DiscussView_thread',
         "discuss should display a thread initially"
     );
     assert.strictEqual(
-        document.querySelector('.o_Discuss_thread').dataset.threadId,
+        document.querySelector('.o_DiscussView_thread').dataset.threadId,
         messaging.inbox.thread.id,
         "inbox mailbox should be opened initially"
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussMobileMailboxSelectionItem[
+        `.o_DiscussMobileMailboxSelectionItemView[
             data-mailbox-local-id="${messaging.starred.localId}"
         ]`,
         "should have a button to open starred mailbox"
     );
 
-    await click(`.o_DiscussMobileMailboxSelectionItem[
+    await click(`.o_DiscussMobileMailboxSelectionItemView[
         data-mailbox-local-id="${messaging.starred.localId}"]
     `);
     assert.containsOnce(
         document.body,
-        '.o_Discuss_thread',
+        '.o_DiscussView_thread',
         "discuss should still have a thread after clicking on starred mailbox"
     );
     assert.strictEqual(
-        document.querySelector('.o_Discuss_thread').dataset.threadId,
+        document.querySelector('.o_DiscussView_thread').dataset.threadId,
         messaging.starred.thread.id,
         "starred mailbox should be opened after clicking on it"
     );
@@ -76,19 +76,19 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     });
     await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.hasClass(
-        document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
+        document.querySelector('.o_MobileMessagingNavbarView_tab[data-tab-id="channel"]'),
         'o-active',
         "'channel' tab should be active initially when loading discuss with channel id as active_id"
     );
 
-    await click('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]');
+    await click('.o_MobileMessagingNavbarView_tab[data-tab-id="mailbox"]');
     assert.hasClass(
-        document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]'),
+        document.querySelector('.o_MobileMessagingNavbarView_tab[data-tab-id="mailbox"]'),
         'o-active',
         "'mailbox' tab should be selected after click on mailbox tab"
     );
     assert.hasClass(
-        document.querySelector(`.o_DiscussMobileMailboxSelectionItem[data-mailbox-local-id="${
+        document.querySelector(`.o_DiscussMobileMailboxSelectionItemView[data-mailbox-local-id="${
             messaging.inbox.localId
         }"]`),
         'o-active',

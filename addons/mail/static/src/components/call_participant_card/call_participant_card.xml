@@ -17,7 +17,7 @@
             >
                 <!-- card -->
                 <t t-if="callParticipantCard.callParticipantVideoView">
-                    <CallParticipantVideo record="callParticipantCard.callParticipantVideoView"/>
+                    <CallParticipantVideoView record="callParticipantCard.callParticipantVideoView"/>
                 </t>
                 <t t-else="">
                     <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized }" draggable="false">

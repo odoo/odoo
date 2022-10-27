@@ -18,7 +18,7 @@ registerPatch({
         componentName: {
             compute() {
                 if (this.snailmailErrorView) {
-                    return 'SnailmailError';
+                    return 'SnailmailErrorView';
                 }
                 return this._super();
             },

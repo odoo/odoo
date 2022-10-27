@@ -21,12 +21,12 @@ QUnit.test('base rendering not editable', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_FollowButton',
+        '.o_FollowButtonView',
         "should have follow button component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowButton_follow',
+        '.o_FollowButtonView_follow',
         "should have 'Follow' button"
     );
 });
@@ -53,48 +53,48 @@ QUnit.test('hover following button', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_FollowButton',
+        '.o_FollowButtonView',
         "should have follow button component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowButton_unfollow',
+        '.o_FollowButtonView_unfollow',
         "should have 'Unfollow' button"
     );
     assert.strictEqual(
-        document.querySelector('.o_FollowButton_text').textContent.trim(),
+        document.querySelector('.o_FollowButtonView_text').textContent.trim(),
         'Following',
         "'unfollow' button should display 'Following' as text when not hovered"
     );
     assert.containsNone(
-        document.querySelector('.o_FollowButton_unfollow'),
+        document.querySelector('.o_FollowButtonView_unfollow'),
         '.fa-times',
         "'unfollow' button should not contain a cross icon when not hovered"
     );
     assert.containsOnce(
-        document.querySelector('.o_FollowButton_unfollow'),
+        document.querySelector('.o_FollowButtonView_unfollow'),
         '.fa-check',
         "'unfollow' button should contain a check icon when not hovered"
     );
 
     await afterNextRender(() => {
         document
-            .querySelector('.o_FollowButton_unfollow')
+            .querySelector('.o_FollowButtonView_unfollow')
             .dispatchEvent(new window.MouseEvent('mouseenter'));
         }
     );
     assert.strictEqual(
-        document.querySelector('.o_FollowButton_text').textContent.trim(),
+        document.querySelector('.o_FollowButtonView_text').textContent.trim(),
         'Unfollow',
         "'unfollow' button should display 'Unfollow' as text when hovered"
     );
     assert.containsOnce(
-        document.querySelector('.o_FollowButton_unfollow'),
+        document.querySelector('.o_FollowButtonView_unfollow'),
         '.fa-times',
         "'unfollow' button should contain a cross icon when hovered"
     );
     assert.containsNone(
-        document.querySelector('.o_FollowButton_unfollow'),
+        document.querySelector('.o_FollowButtonView_unfollow'),
         '.fa-check',
         "'unfollow' button should not contain a check icon when hovered"
     );
@@ -111,24 +111,24 @@ QUnit.test('click on "follow" button', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_FollowButton',
+        '.o_FollowButtonView',
         "should have follow button component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowButton_follow',
+        '.o_FollowButtonView_follow',
         "should have button follow"
     );
 
-    await click('.o_FollowButton_follow');
+    await click('.o_FollowButtonView_follow');
     assert.containsNone(
         document.body,
-        '.o_FollowButton_follow',
+        '.o_FollowButtonView_follow',
         "should not have follow button after clicked on follow"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowButton_unfollow',
+        '.o_FollowButtonView_unfollow',
         "should have unfollow button after clicked on follow"
     );
 });
@@ -152,29 +152,29 @@ QUnit.test('click on "unfollow" button', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_FollowButton',
+        '.o_FollowButtonView',
         "should have follow button component"
     );
     assert.containsNone(
         document.body,
-        '.o_FollowButton_follow',
+        '.o_FollowButtonView_follow',
         "should not have button follow"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowButton_unfollow',
+        '.o_FollowButtonView_unfollow',
         "should have button unfollow"
     );
 
-    await click('.o_FollowButton_unfollow');
+    await click('.o_FollowButtonView_unfollow');
     assert.containsOnce(
         document.body,
-        '.o_FollowButton_follow',
+        '.o_FollowButtonView_follow',
         "should have follow button after clicked on unfollow"
     );
     assert.containsNone(
         document.body,
-        '.o_FollowButton_unfollow',
+        '.o_FollowButtonView_unfollow',
         "should not have unfollow button after clicked on unfollow"
     );
 });
