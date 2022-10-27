@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class DiscussMobileMailboxSelection extends Component {
+export class DiscussMobileMailboxSelectionView extends Component {
 
     /**
      * @returns {DiscussMobileMailboxSelectionView}
@@ -15,9 +15,9 @@ export class DiscussMobileMailboxSelection extends Component {
 
 }
 
-Object.assign(DiscussMobileMailboxSelection, {
+Object.assign(DiscussMobileMailboxSelectionView, {
     props: { record: Object },
-    template: 'mail.DiscussMobileMailboxSelection',
+    template: 'mail.DiscussMobileMailboxSelectionView',
 });
 
-registerMessagingComponent(DiscussMobileMailboxSelection);
+registerMessagingComponent(DiscussMobileMailboxSelectionView);

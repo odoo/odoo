@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
-        <div class="o_DiscussMobileMailboxSelection d-flex" t-attf-class="{{ className }}" t-ref="root">
+    <t t-name="mail.DiscussMobileMailboxSelectionView" owl="1">
+        <div class="o_DiscussMobileMailboxSelectionView d-flex" t-attf-class="{{ className }}" t-ref="root">
             <t t-foreach="discussMobileMailboxSelectionView.items" t-as="item" t-key="item.localId">
                 <DiscussMobileMailboxSelectionItem record="item"/>
             </t>
