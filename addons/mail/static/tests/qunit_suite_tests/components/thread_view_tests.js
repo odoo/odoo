@@ -801,7 +801,7 @@ QUnit.test("delete all attachments of message without content should no longer d
     await click(`.o_AttachmentCard[data-id="${
         messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
     }"] .o_AttachmentCard_asideItemUnlink`);
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -851,7 +851,7 @@ QUnit.test('delete all attachments of a message with some text content should st
     await click(`.o_AttachmentCard[data-id="${
         messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
     }"] .o_AttachmentCard_asideItemUnlink`);
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsOnce(
         document.body,
         '.o_Message',

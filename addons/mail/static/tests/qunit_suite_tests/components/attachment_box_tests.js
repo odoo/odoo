@@ -219,17 +219,17 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     await click('.o_AttachmentCard_asideItemUnlink');
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirm',
+        '.o_AttachmentDeleteConfirmView',
         "A confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirmView_mainText').textContent,
         `Do you really want to delete "Blah.txt"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
     // Confirm the deletion
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
         '.o_AttachmentCard',

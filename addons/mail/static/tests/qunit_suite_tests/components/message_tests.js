@@ -600,16 +600,16 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     await click('.o_AttachmentImage_actionUnlink');
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirm',
+        '.o_AttachmentDeleteConfirmView',
         "An attachment delete confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirmView_mainText').textContent,
         `Do you really want to delete "BLAH"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
         '.o_AttachmentCard',
