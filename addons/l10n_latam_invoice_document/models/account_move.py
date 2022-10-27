@@ -86,8 +86,8 @@ class AccountMove(models.Model):
         remaining.l10n_latam_manual_document_number = False
 
     def _is_manual_document_number(self):
-        # Manual number when document is not issued by our company
-        return self._should_check_unique_number_by_partner()
+        # Manual number when document number is to be typed by the user, aka issued by suppliers
+        return self.is_purchase_document()
 
     @api.depends('name')
     def _compute_l10n_latam_document_number(self):
@@ -142,9 +142,9 @@ class AccountMove(models.Model):
     @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
         """ This uniqueness verification was only valid for customer invoices, and vendor bills that does not use
-        documents. A new constraint method _check_unique_number_by_partner has been created just for validate for this purpose """
-        by_partner = self.filtered(lambda x: x._should_check_unique_number_by_partner() and x.l10n_latam_use_documents)
-        return super(AccountMove, self - by_partner)._check_unique_sequence_number()
+        documents. A new constraint method _check_unique_vendor_number has been created just for validate for this purpose """
+        vendor = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
+        return super(AccountMove, self - vendor)._check_unique_sequence_number()
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
@@ -204,16 +204,12 @@ class AccountMove(models.Model):
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
-    def _should_check_unique_number_by_partner(self):
+    @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
+    def _check_unique_vendor_number(self):
         """ The constraint _check_unique_sequence_number is valid for customer bills but not valid for us on vendor
         bills because the uniqueness must be per partner """
-        self.ensure_one()
-        return self.is_purchase_document()
-
-    @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
-    def _check_unique_number_by_partner(self):
         for rec in self.filtered(
-                lambda x: x.name and x.name != '/' and x._should_check_unique_number_by_partner() and x.l10n_latam_use_documents
+                lambda x: x.name and x.name != '/' and x._is_manual_document_number() and x.l10n_latam_use_documents
                             and x.commercial_partner_id):
             domain = [
                 ('move_type', '=', rec.move_type),
@@ -227,7 +223,3 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Document %s must be unique per partner and company.', rec.name))
-
-    def _check_unique_vendor_number(self):
-        # for backward compatibility in custom modules in stable, should be removed in master
-        self._check_unique_number_by_partner()
