@@ -15,14 +15,24 @@
         <field name="auto_apply" eval="True"/>
         <field name="vat_required" eval="True"/>
     </record>
-    <record id="fp_foreign_sale_goods_vat12" model="account.fiscal.position.tax.template">
-        <field name="tax_src_id" ref="l10n_ec.tax_vat_411"/>
+    <record id="fp_foreign_sale_vat12_goods" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_ec.tax_vat_411_goods"/>
         <field name="tax_dest_id" ref="l10n_ec.tax_vat_417"/>
         <field name="position_id" ref="fp_foreign"/>
     </record>
-    <record id="fp_foreign_sale_goods_vat0" model="account.fiscal.position.tax.template">
-        <field name="tax_src_id" ref="l10n_ec.tax_vat_415"/>
+    <record id="fp_foreign_sale_vat12_services" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_ec.tax_vat_411_services"/>
         <field name="tax_dest_id" ref="l10n_ec.tax_vat_417"/>
         <field name="position_id" ref="fp_foreign"/>
     </record>
+    <record id="fp_foreign_sale_vat0_goods" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_ec.tax_vat_415_goods"/>
+        <field name="tax_dest_id" ref="l10n_ec.tax_vat_417"/>
+        <field name="position_id" ref="fp_foreign"/>
+    </record>
+    <record id="fp_foreign_sale_vat0_services" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_ec.tax_vat_415_services"/>
+        <field name="tax_dest_id" ref="l10n_ec.tax_vat_417"/>
+        <field name="position_id" ref="fp_foreign"/>
+    </record>    
 </odoo>
