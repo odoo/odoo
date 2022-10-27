@@ -283,7 +283,11 @@ LinkPopoverWidget.createFor = async function (parent, targetEl, options) {
     if (wysiwyg) {
         wysiwyg.odooEditor.observerUnactive('LinkPopoverWidget');
     }
-    await popoverWidget.appendTo(targetEl)
+    // The LinkPopoverWidget element does not need to be inserted in the DOM,
+    // it just needs to be rendered so that it can be used as a content option
+    // for the Bootstrap popover.
+    const template = document.createElement('template');
+    await popoverWidget.appendTo(template);
     if (wysiwyg) {
         wysiwyg.odooEditor.observerActive('LinkPopoverWidget');
     }
