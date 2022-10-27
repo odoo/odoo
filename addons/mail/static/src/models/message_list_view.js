@@ -106,11 +106,11 @@ registerModel({
                 return;
             }
             if (
-                this.threadViewOwner.lastMessageView &&
-                this.threadViewOwner.lastMessageView.isPartiallyVisible()
+                this.threadViewOwner.lastMessageListViewItem &&
+                this.threadViewOwner.lastMessageListViewItem.isPartiallyVisible()
             ) {
                 this.threadViewOwner.handleVisibleMessage(
-                    this.threadViewOwner.lastMessageView.message,
+                    this.threadViewOwner.lastMessageListViewItem.message,
                 );
             }
         },
