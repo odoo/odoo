@@ -29,32 +29,32 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Popover component should be present"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_feedback',
+        '.o_ActivityMarkDonePopoverContentView_feedback',
         "Popover component should contain the feedback textarea"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_buttons',
+        '.o_ActivityMarkDonePopoverContentView_buttons',
         "Popover component should contain the action buttons"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_doneScheduleNextButton',
+        '.o_ActivityMarkDonePopoverContentView_doneScheduleNextButton',
         "Popover component should contain the done & schedule next button"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_doneButton',
+        '.o_ActivityMarkDonePopoverContentView_doneButton',
         "Popover component should contain the done button"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_discardButton',
+        '.o_ActivityMarkDonePopoverContentView_discardButton',
         "Popover component should contain the discard button"
     );
 });
@@ -81,32 +81,32 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Popover component should be present"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_feedback',
+        '.o_ActivityMarkDonePopoverContentView_feedback',
         "Popover component should contain the feedback textarea"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_buttons',
+        '.o_ActivityMarkDonePopoverContentView_buttons',
         "Popover component should contain the action buttons"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_doneScheduleNextButton',
+        '.o_ActivityMarkDonePopoverContentView_doneScheduleNextButton',
         "Popover component should contain the done & schedule next button"
     );
     assert.containsNone(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_doneButton',
+        '.o_ActivityMarkDonePopoverContentView_doneButton',
         "Popover component should NOT contain the done button"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_discardButton',
+        '.o_ActivityMarkDonePopoverContentView_discardButton',
         "Popover component should contain the discard button"
     );
 });
@@ -146,7 +146,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         views: [[false, 'form']],
     });
     await click('.o_ActivityView_markDoneButton');
-    await click('.o_ActivityMarkDonePopoverContent_doneButton');
+    await click('.o_ActivityMarkDonePopoverContentView_doneButton');
     assert.verifySteps(
         ['action_feedback'],
         "Mark done and schedule next button should call the right rpc"
@@ -189,10 +189,10 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
     });
     await click('.o_ActivityView_markDoneButton');
 
-    let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopoverContent_feedback');
+    let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopoverContentView_feedback');
     feedbackTextarea.focus();
     document.execCommand('insertText', false, 'This task is done');
-    document.querySelector('.o_ActivityMarkDonePopoverContent_doneButton').click();
+    document.querySelector('.o_ActivityMarkDonePopoverContentView_doneButton').click();
     assert.verifySteps(
         ['action_feedback'],
         "Mark done and schedule next button should call the right rpc"
@@ -239,10 +239,10 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
     });
     await click('.o_ActivityView_markDoneButton');
 
-    let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopoverContent_feedback');
+    let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopoverContentView_feedback');
     feedbackTextarea.focus();
     document.execCommand('insertText', false, 'This task is done');
-    await click('.o_ActivityMarkDonePopoverContent_doneScheduleNextButton');
+    await click('.o_ActivityMarkDonePopoverContentView_doneScheduleNextButton');
     assert.verifySteps(
         ['action_feedback_schedule_next'],
         "Mark done and schedule next button should call the right rpc and not trigger an action"
@@ -284,7 +284,7 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
     });
     await click('.o_ActivityView_markDoneButton');
 
-    await click('.o_ActivityMarkDonePopoverContent_doneScheduleNextButton');
+    await click('.o_ActivityMarkDonePopoverContentView_doneScheduleNextButton');
     assert.verifySteps(
         ['activity_action'],
         "The action returned by the route should be executed"

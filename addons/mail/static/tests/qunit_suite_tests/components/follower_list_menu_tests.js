@@ -25,29 +25,29 @@ QUnit.test('base rendering not editable', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "should have followers menu component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_buttonFollowers',
+        '.o_FollowerListMenuView_buttonFollowers',
         "should have followers button"
     );
     assert.ok(
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').disabled,
+        document.querySelector('.o_FollowerListMenuView_buttonFollowers').disabled,
         "followers button should be disabled"
     );
     assert.containsNone(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should not be opened"
     );
 
-    document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
+    document.querySelector('.o_FollowerListMenuView_buttonFollowers').click();
     await nextTick();
     assert.containsNone(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should still be closed as button is disabled"
     );
 });
@@ -76,28 +76,28 @@ QUnit.test('base rendering editable', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "should have followers menu component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_buttonFollowers',
+        '.o_FollowerListMenuView_buttonFollowers',
         "should have followers button"
     );
     assert.notOk(
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').disabled,
+        document.querySelector('.o_FollowerListMenuView_buttonFollowers').disabled,
         "followers button should not be disabled"
     );
     assert.containsNone(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should not be opened"
     );
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should be opened"
     );
 });
@@ -172,48 +172,48 @@ QUnit.test('click on "add followers" button', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "should have followers menu component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_buttonFollowers',
+        '.o_FollowerListMenuView_buttonFollowers',
         "should have followers button"
     );
     assert.strictEqual(
-        document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
+        document.querySelector('.o_FollowerListMenuView_buttonFollowersCount').textContent,
         "1",
         "Followers counter should be equal to 1"
     );
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should be opened"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_addFollowersButton',
+        '.o_FollowerListMenuView_addFollowersButton',
         "followers dropdown should contain a 'Add followers' button"
     );
 
-    await click('.o_FollowerListMenu_addFollowersButton');
+    await click('.o_FollowerListMenuView_addFollowersButton');
     assert.containsNone(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should be closed after click on 'Add followers'"
     );
     assert.verifySteps([
         'action:open_view',
     ]);
     assert.strictEqual(
-        document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
+        document.querySelector('.o_FollowerListMenuView_buttonFollowersCount').textContent,
         "2",
         "Followers counter should now be equal to 2"
     );
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsN(
         document.body,
         '.o_FollowerMenu_follower',
@@ -221,7 +221,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         "Follower list should be refreshed and contain 2 followers"
     );
     assert.strictEqual(
-        document.querySelector('.o_Follower_name').textContent,
+        document.querySelector('.o_FollowerView_name').textContent,
         "François Perusse",
         "Follower added in follower list should be the one added"
     );
@@ -267,26 +267,26 @@ QUnit.test('click on remove follower', async function (assert) {
         views: [[false, 'form']],
     });
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display a remove button"
     );
 
-    await click('.o_Follower_removeButton');
+    await click('.o_FollowerView_removeButton');
     assert.verifySteps(
         ['message_unsubscribe'],
         "clicking on remove button should call 'message_unsubscribe' route"
     );
     assert.containsNone(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should no longer have follower component"
     );
 });
@@ -328,31 +328,31 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
         views: [[false, 'form']],
     });
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsNone(
         document.body,
-        '.o_FollowerListMenu_addFollowersButton',
+        '.o_FollowerListMenuView_addFollowersButton',
         "'Add followers' button should not be displayed for a readonly record",
     );
-    const followersList = document.querySelectorAll('.o_Follower');
+    const followersList = document.querySelectorAll('.o_FollowerView');
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display edit button for a follower related to current user",
     );
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display remove button for a follower related to current user",
     );
     assert.containsNone(
         followersList[1],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should not display edit button for other followers on a readonly record",
     );
     assert.containsNone(
         followersList[1],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should not display remove button for others on a readonly record",
     );
 });
@@ -394,31 +394,31 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
         views: [[false, 'form']],
     });
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_addFollowersButton',
+        '.o_FollowerListMenuView_addFollowersButton',
         "'Add followers' button should be displayed for the writable record",
     );
-    const followersList = document.querySelectorAll('.o_Follower');
+    const followersList = document.querySelectorAll('.o_FollowerView');
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display edit button for a follower related to current user",
     );
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display remove button for a follower related to current user",
     );
     assert.containsOnce(
         followersList[1],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display edit button for other followers also on the writable record",
     );
     assert.containsOnce(
         followersList[1],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display remove button for other followers also on the writable record",
     );
 });
@@ -445,10 +445,10 @@ QUnit.test('Show "No Followers" dropdown-item if there are no followers and user
         views: [[false, 'form']],
     });
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_noFollowers.disabled',
+        '.o_FollowerListMenuView_noFollowers.disabled',
         "should display 'No Followers' dropdown-item",
     );
 });

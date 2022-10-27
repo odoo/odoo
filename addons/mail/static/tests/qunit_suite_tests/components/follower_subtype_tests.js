@@ -43,30 +43,30 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         res_id: pyEnv.currentPartnerId,
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerListMenuView_buttonFollowers');
+    await click('.o_FollowerView_editButton');
     assert.containsOnce(
         document.body,
-        '.o_FollowerSubtype:contains(TestSubtype)',
+        '.o_FollowerSubtypeView:contains(TestSubtype)',
         "should have a follower subtype for 'TestSubtype'"
     );
     assert.containsOnce(
-        document.querySelector('.o_FollowerSubtype'),
-        '.o_FollowerSubtype_label',
+        document.querySelector('.o_FollowerSubtypeView'),
+        '.o_FollowerSubtypeView_label',
         "should have a label"
     );
     assert.containsOnce(
-       $('.o_FollowerSubtype:contains(TestSubtype)'),
-        '.o_FollowerSubtype_checkbox',
+       $('.o_FollowerSubtypeView:contains(TestSubtype)'),
+        '.o_FollowerSubtypeView_checkbox',
         "should have a checkbox"
     );
     assert.strictEqual(
-        $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_label')[0].textContent,
+        $('.o_FollowerSubtypeView:contains(TestSubtype) .o_FollowerSubtypeView_label')[0].textContent,
         "TestSubtype",
         "should have the name of the subtype as label"
     );
     assert.ok(
-        $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_checkbox')[0].checked,
+        $('.o_FollowerSubtypeView:contains(TestSubtype) .o_FollowerSubtypeView_checkbox')[0].checked,
         "checkbox should be checked as follower subtype is followed"
     );
 });
@@ -104,10 +104,10 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         res_id: pyEnv.currentPartnerId,
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerListMenuView_buttonFollowers');
+    await click('.o_FollowerView_editButton');
     assert.notOk(
-        $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_checkbox')[0].checked,
+        $('.o_FollowerSubtypeView:contains(TestSubtype) .o_FollowerSubtypeView_checkbox')[0].checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
 });
@@ -145,22 +145,22 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         res_id: pyEnv.currentPartnerId,
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerListMenuView_buttonFollowers');
+    await click('.o_FollowerView_editButton');
     assert.notOk(
-        document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
+        document.querySelector(`.o_FollowerSubtypeView[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtypeView_checkbox`).checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
 
-    await click(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`);
+    await click(`.o_FollowerSubtypeView[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtypeView_checkbox`);
     assert.ok(
-        document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
+        document.querySelector(`.o_FollowerSubtypeView[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtypeView_checkbox`).checked,
         "checkbox should now be checked"
     );
 
-    await click(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`);
+    await click(`.o_FollowerSubtypeView[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtypeView_checkbox`);
     assert.notOk(
-        document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
+        document.querySelector(`.o_FollowerSubtypeView[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtypeView_checkbox`).checked,
         "checkbox should be no more checked"
     );
 });

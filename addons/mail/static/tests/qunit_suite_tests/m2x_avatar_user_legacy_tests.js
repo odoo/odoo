@@ -40,7 +40,7 @@ QUnit.module('mail', {}, function () {
         await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
         assert.containsOnce(document.body, '.o_ChatWindow', 'Chat window should be opened');
         assert.strictEqual(
-            document.querySelector('.o_ChatWindowHeader_name').textContent,
+            document.querySelector('.o_ChatWindowHeaderView_name').textContent,
             'Partner 1',
             'First chat window should be related to partner 1'
         );

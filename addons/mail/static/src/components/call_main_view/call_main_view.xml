@@ -27,7 +27,7 @@
             <t t-if="callMainView.showOverlay or !callMainView.isControllerFloating">
                 <div class="o_CallMainView_controls d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': callMainView.isControllerFloating }">
                     <div class="o_CallMainView_controlsOverlayContainer" t-on-mousemove="callMainView.onMouseMoveOverlay">
-                        <CallActionList record="callMainView.callActionListView"/>
+                        <CallActionListView record="callMainView.callActionListView"/>
                     </div>
                 </div>
             </t>

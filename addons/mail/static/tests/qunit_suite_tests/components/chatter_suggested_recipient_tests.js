@@ -21,7 +21,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList',
+        '.o_ComposerSuggestedRecipientListView',
         "Should display a list of suggested recipients after opening the composer from 'Send message' button"
     );
 });
@@ -41,7 +41,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showMore',
+        '.o_ComposerSuggestedRecipientListView_showMore',
         "should not display 'show more' button with 3 or less suggested recipients"
     );
 });
@@ -59,7 +59,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    const partnerTitle = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"]`).getAttribute('title');
+    const partnerTitle = document.querySelector(`.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"]`).getAttribute('title');
     assert.strictEqual(
         partnerTitle,
         "Add as recipient and follower (reason: Email partner)",
@@ -79,7 +79,7 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    const checkboxUnchecked = document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]');
+    const checkboxUnchecked = document.querySelector('.o_ComposerSuggestedRecipientView:not([data-partner-id]) input[type=checkbox]');
     assert.notOk(
         checkboxUnchecked.checked,
         "suggested recipient without partner must be unchecked by default",
@@ -99,7 +99,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    const checkboxChecked = document.querySelector(`.o_ComposerSuggestedRecipient[data-partner-id="${resPartnerId1}"] input[type=checkbox]`);
+    const checkboxChecked = document.querySelector(`.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"] input[type=checkbox]`);
     assert.ok(
         checkboxChecked.checked,
         "suggested recipient with partner must be checked by default",
@@ -129,7 +129,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showMore',
+        '.o_ComposerSuggestedRecipientListView_showMore',
         "more than 3 suggested recipients display 'show more' button"
     );
 });
@@ -155,10 +155,10 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    await click(`.o_ComposerSuggestedRecipientList_showMore`);
+    await click(`.o_ComposerSuggestedRecipientListView_showMore`);
     assert.containsN(
         document.body,
-        '.o_ComposerSuggestedRecipient',
+        '.o_ComposerSuggestedRecipientView',
         4,
         "more than 3 suggested recipients: show all of them on click 'show more' button"
     );
@@ -185,10 +185,10 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    await click(`.o_ComposerSuggestedRecipientList_showMore`);
+    await click(`.o_ComposerSuggestedRecipientListView_showMore`);
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showLess',
+        '.o_ComposerSuggestedRecipientListView_showLess',
         "more than 3 suggested recipients -> click 'show more' -> 'show less' button"
     );
 });
@@ -214,17 +214,17 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    await click(`.o_ComposerSuggestedRecipientList_showMore`);
-    await click(`.o_ComposerSuggestedRecipientList_showLess`);
+    await click(`.o_ComposerSuggestedRecipientListView_showMore`);
+    await click(`.o_ComposerSuggestedRecipientListView_showLess`);
     assert.containsN(
         document.body,
-        '.o_ComposerSuggestedRecipient',
+        '.o_ComposerSuggestedRecipientView',
         3,
         "suggested recipient list should display 3 suggested recipients after clicking on 'show less'."
     );
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showMore',
+        '.o_ComposerSuggestedRecipientListView_showMore',
         "suggested recipient list should containt a 'show More' button after clicking on 'show less'."
     );
 });
@@ -252,8 +252,8 @@ QUnit.test("suggested recipients should not be notified when posting an internal
         views: [[false, 'form']],
     });
     await click(`.o_ChatterTopbar_buttonLogNote`);
-    await insertText('.o_ComposerTextInput_textarea', "Dummy Message");
-    await click('.o_Composer_buttonSend');
+    await insertText('.o_ComposerTextInputView_textarea', "Dummy Message");
+    await click('.o_ComposerView_buttonSend');
 });
 
 });

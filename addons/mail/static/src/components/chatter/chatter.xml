@@ -5,7 +5,7 @@
         <t t-if="chatter">
             <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-view" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="chatter.dropZoneView">
-                    <DropZone
+                    <DropZoneView
                         className="'o_Chatter_dropZone'"
                         record="chatter.dropZoneView"
                     />
@@ -17,7 +17,7 @@
                         record="chatter.topbar"
                     />
                     <t t-if="chatter.composerView">
-                        <Composer
+                        <ComposerView
                             className="'o_Chatter_composer border-bottom'"
                             classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
                             record="chatter.composerView"
@@ -26,13 +26,13 @@
                 </div>
                 <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.attachmentBoxView">
-                        <AttachmentBox
+                        <AttachmentBoxView
                             className="'o_Chatter_attachmentBox'"
                             record="chatter.attachmentBoxView"
                         />
                     </t>
                     <t t-if="chatter.activityBoxView">
-                        <ActivityBox
+                        <ActivityBoxView
                             className="'o_Chatter_activityBox'"
                             record="chatter.activityBoxView"
                         />

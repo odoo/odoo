@@ -52,11 +52,11 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         dragenterFiles(document.querySelector('.o_ChatWindow'))
     );
     await afterNextRender(() =>
-        dropFiles(document.querySelector('.o_ChatWindow .o_DropZone'), [file2])
+        dropFiles(document.querySelector('.o_ChatWindow .o_DropZoneView'), [file2])
     );
     await afterNextRender(() =>
         dom.triggerEvent(
-            document.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
+            document.querySelector('.o_ChatWindow .o_ComposerTextInputView_textarea'),
             'keydown',
             { key: 'Enter' },
         )

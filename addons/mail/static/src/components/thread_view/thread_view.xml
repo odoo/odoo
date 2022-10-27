@@ -26,7 +26,7 @@
                             </div>
                         </t>
                         <t t-elif="threadView.messageListView">
-                            <MessageList
+                            <MessageListView
                                 className="'o_ThreadView_messageList flex-grow-1'"
                                 record="threadView.messageListView"
                             />
@@ -45,14 +45,14 @@
                             <div class="flex-grow-1"/>
                         </t>
                         <t t-if="threadView.composerView">
-                            <Composer
+                            <ComposerView
                                 className="'o_ThreadView_composer flex-shrink-0'"
                                 record="threadView.composerView"
                             />
                         </t>
                     </div>
                     <t t-if="threadView.channelMemberListView">
-                        <ChannelMemberList className="'o_ThreadView_channelMemberList flex-shrink-0 border-start'" record="threadView.channelMemberListView"/>
+                        <ChannelMemberListView className="'o_ThreadView_channelMemberList flex-shrink-0 border-start'" record="threadView.channelMemberListView"/>
                     </t>
                     <t t-if="threadView.isCallSettingsMenuOpen">
                         <CallSettingsMenu className="'o_ThreadView_callSettingsMenu flex-shrink-0 border-start'" record="threadView.callSettingsMenu"/>

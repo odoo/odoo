@@ -33,26 +33,26 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
     await click('.o_ChatterTopbar_buttonSendMessage');
 
     assert.strictEqual(
-        document.querySelectorAll('.o_Composer').length,
+        document.querySelectorAll('.o_ComposerView').length,
         1,
         "should have composer in discuss thread"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Composer_textInput').length,
+        document.querySelectorAll('.o_ComposerView_textInput').length,
         1,
         "should have text input inside discuss thread composer"
     );
     assert.ok(
-        document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
+        document.querySelector('.o_ComposerView_textInput').classList.contains('o_ComposerTextInputView'),
         "composer text input of composer should be a ComposerTextIput component"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        document.querySelectorAll(`.o_ComposerTextInputView_textarea`).length,
         1,
         "should have editable part inside composer text input"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).placeholder,
         "Send a message to followers...",
         "should have 'Send a message to followers...' as placeholder composer text input"
     );
@@ -70,26 +70,26 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
     await click('.o_ChatterTopbar_buttonLogNote');
 
     assert.strictEqual(
-        document.querySelectorAll('.o_Composer').length,
+        document.querySelectorAll('.o_ComposerView').length,
         1,
         "should have composer in discuss thread"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Composer_textInput').length,
+        document.querySelectorAll('.o_ComposerView_textInput').length,
         1,
         "should have text input inside discuss thread composer"
     );
     assert.ok(
-        document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
+        document.querySelector('.o_ComposerView_textInput').classList.contains('o_ComposerTextInputView'),
         "composer text input of composer should be a ComposerTextIput component"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        document.querySelectorAll(`.o_ComposerTextInputView_textarea`).length,
         1,
         "should have editable part inside composer text input"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).placeholder,
         "Log an internal note...",
         "should have 'Log an internal note...' as placeholder in composer text input if composer is log"
     );
@@ -107,21 +107,21 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
     });
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll('.o_Composer').length,
+        document.querySelectorAll('.o_ComposerView').length,
         1,
         "should have composer in discuss thread"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Composer_textInput').length,
+        document.querySelectorAll('.o_ComposerView_textInput').length,
         1,
         "should have text input inside discuss thread composer"
     );
     assert.ok(
-        document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
+        document.querySelector('.o_ComposerView_textInput').classList.contains('o_ComposerTextInputView'),
         "composer text input of composer should be a ComposerTextIput component"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        document.querySelectorAll(`.o_ComposerTextInputView_textarea`).length,
         1,
         "should have editable part inside composer text input"
     );
@@ -139,7 +139,7 @@ QUnit.test('composer text input placeholder should contain channel name when thr
     });
     await openDiscuss();
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).placeholder,
         "Message #General...",
         "should have 'Message #General...' as placeholder for composer text input when thread does not have specific correspondent"
     );
@@ -164,7 +164,7 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
     });
     await openDiscuss();
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).placeholder,
         "Message Marc Demo...",
         "should have 'Message Marc Demo...' as placeholder for composer text input when thread has exactly one correspondent"
     );
@@ -181,10 +181,10 @@ QUnit.test('add an emoji', async function (assert) {
         },
     });
     await openDiscuss();
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "😊",
         "emoji should be inserted in the composer text input"
     );
@@ -201,17 +201,17 @@ QUnit.test('add an emoji after some text', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "Blabla");
+    await insertText('.o_ComposerTextInputView_textarea', "Blabla");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "Blabla",
         "composer text input should have text only initially"
     );
 
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "Blabla😊",
         "emoji should be inserted after the text"
     );
@@ -228,8 +228,8 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
         },
     });
     await openDiscuss();
-    const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
-    await insertText('.o_ComposerTextInput_textarea', "Blabla");
+    const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInputView_textarea`);
+    await insertText('.o_ComposerTextInputView_textarea', "Blabla");
     assert.strictEqual(
         composerTextInputTextArea.value,
         "Blabla",
@@ -238,10 +238,10 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 
     // simulate selection of all the content by keyboard
     composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "😊",
         "whole text selection should have been replaced by emoji"
     );
@@ -265,7 +265,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         '.o_ComposerSuggestionListView_list',
         "Canned responses suggestions list should not be present"
     );
-    await insertText('.o_ComposerTextInput_textarea', ':');
+    await insertText('.o_ComposerTextInputView_textarea', ':');
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
@@ -292,11 +292,11 @@ QUnit.test('use a canned response', async function (assert) {
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', ':');
+    await insertText('.o_ComposerTextInputView_textarea', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -304,7 +304,7 @@ QUnit.test('use a canned response', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? ",
         "text content of composer should have canned response + additional whitespace afterwards"
     );
@@ -329,17 +329,17 @@ QUnit.test('use a canned response some text', async function (assert) {
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
+    await insertText('.o_ComposerTextInputView_textarea', "bluhbluh ");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await insertText('.o_ComposerTextInput_textarea', ':');
+    await insertText('.o_ComposerTextInputView_textarea', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -347,7 +347,7 @@ QUnit.test('use a canned response some text', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "bluhbluh Hello! How are you? ",
         "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
     );
@@ -372,11 +372,11 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', ':');
+    await insertText('.o_ComposerTextInputView_textarea', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -384,16 +384,16 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? ",
         "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
     );
 
     // select emoji
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? 😊",
         "text content of composer should have previous canned response substitution and selected emoji just after"
     );
@@ -416,7 +416,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         '.o_ComposerSuggestionListView_list',
         "channel mention suggestions list should not be present"
     );
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
@@ -442,11 +442,11 @@ QUnit.test('mention a channel', async function (assert) {
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -454,7 +454,7 @@ QUnit.test('mention a channel', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "#General ",
         "text content of composer should have mentioned channel + additional whitespace afterwards"
     );
@@ -478,17 +478,17 @@ QUnit.test('mention a channel after some text', async function (assert) {
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
+    await insertText('.o_ComposerTextInputView_textarea', "bluhbluh ");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -496,7 +496,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "bluhbluh #General ",
         "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
     );
@@ -520,11 +520,11 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -532,16 +532,16 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "#General ",
         "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
     );
 
     // select emoji
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "#General 😊",
         "text content of composer should have previous channel mention and selected emoji just after"
     );
@@ -564,7 +564,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
         '.o_ComposerSuggestionListView_list',
         "command suggestions list should not be present"
     );
-    await insertText('.o_ComposerTextInput_textarea', "/");
+    await insertText('.o_ComposerTextInputView_textarea', "/");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
@@ -591,7 +591,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', "/");
+    await insertText('.o_ComposerTextInputView_textarea', "/");
     assert.verifySteps([], "No rpc done");
 });
 
@@ -614,9 +614,9 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', "/");
+    await insertText('.o_ComposerTextInputView_textarea', "/");
     await click('.o_ComposerSuggestionView');
-    await insertText('.o_ComposerTextInput_textarea', " is user?");
+    await insertText('.o_ComposerTextInputView_textarea', " is user?");
     assert.verifySteps([], "No rpc done");
 });
 
@@ -638,14 +638,14 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "/");
+    await insertText('.o_ComposerTextInputView_textarea', "/");
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "/who ",
         "text content of composer should have used command + additional whitespace afterwards"
     );
@@ -668,17 +668,17 @@ QUnit.test('command suggestion should only open if command is the first characte
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
+    await insertText('.o_ComposerTextInputView_textarea', "bluhbluh ");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await insertText('.o_ComposerTextInput_textarea', "/");
+    await insertText('.o_ComposerTextInputView_textarea', "/");
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestionView',
@@ -704,23 +704,23 @@ QUnit.test('add an emoji after a command', async function (assert) {
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "/");
+    await insertText('.o_ComposerTextInputView_textarea', "/");
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "/who ",
         "text content of composer should have previous content + used command + additional whitespace afterwards"
     );
 
     // select emoji
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "/who 😊",
         "text content of composer should have previous command and selected emoji just after"
     );
@@ -753,7 +753,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         '.o_ComposerSuggestionListView_list',
         "mention suggestions list should not be present"
     );
-    await insertText('.o_ComposerTextInput_textarea', "@");
+    await insertText('.o_ComposerTextInputView_textarea', "@");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionListView_list'),
         'show',
@@ -790,11 +790,11 @@ QUnit.test('mention a partner', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', '@Te');
+    await insertText('.o_ComposerTextInputView_textarea', '@Te');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -802,7 +802,7 @@ QUnit.test('mention a partner', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "@TestPartner ",
         "text content of composer should have mentioned partner + additional whitespace afterwards"
     );
@@ -832,17 +832,17 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
+    await insertText('.o_ComposerTextInputView_textarea', "bluhbluh ");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -850,7 +850,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "bluhbluh @TestPartner ",
         "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
     );
@@ -880,11 +880,11 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "text content of composer should be empty initially"
     );
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -892,16 +892,16 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     );
     await click('.o_ComposerSuggestionView');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "@TestPartner ",
         "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
     );
 
     // select emoji
-    await click('.o_Composer_buttonEmojis');
+    await click('.o_ComposerView_buttonEmojis');
     await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value.replace(/\s/, " "),
         "@TestPartner 😊",
         "text content of composer should have previous mention and selected emoji just after"
     );
@@ -928,11 +928,11 @@ QUnit.test('composer: add an attachment', async function (assert) {
         inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
     );
     assert.ok(
-        document.querySelector('.o_Composer_attachmentList'),
+        document.querySelector('.o_ComposerView_attachmentList'),
         "should have an attachment list"
     );
     assert.ok(
-        document.querySelector(`.o_Composer .o_AttachmentCard`),
+        document.querySelector(`.o_ComposerView .o_AttachmentCard`),
         "should have an attachment"
     );
 });
@@ -960,30 +960,30 @@ QUnit.test('composer: drop attachments', async function (assert) {
             name: 'text2.txt',
         }),
     ];
-    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Composer')));
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_ComposerView')));
     assert.ok(
-        document.querySelector('.o_Composer_dropZone'),
+        document.querySelector('.o_ComposerView_dropZone'),
         "should have a drop zone"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         0,
         "should have no attachment before files are dropped"
     );
 
     await afterNextRender(() =>
-        dropFiles(document.querySelector('.o_Composer_dropZone'), files)
+        dropFiles(document.querySelector('.o_ComposerView_dropZone'), files)
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         2,
         "should have 2 attachments in the composer after files dropped"
     );
 
-    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Composer')));
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_ComposerView')));
     await afterNextRender(async () =>
         dropFiles(
-            document.querySelector('.o_Composer_dropZone'),
+            document.querySelector('.o_ComposerView_dropZone'),
             [
                 await createFile({
                     content: 'hello, world',
@@ -994,7 +994,7 @@ QUnit.test('composer: drop attachments', async function (assert) {
         )
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         3,
         "should have 3 attachments in the box after files dropped"
     );
@@ -1019,16 +1019,16 @@ QUnit.test('composer: paste attachments', async function (assert) {
         })
     ];
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         0,
         "should not have any attachment in the composer before paste"
     );
 
     await afterNextRender(() =>
-        pasteFiles(document.querySelector('.o_ComposerTextInput'), files)
+        pasteFiles(document.querySelector('.o_ComposerTextInputView'), files)
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
         1,
         "should have 1 attachment in the composer after paste"
     );
@@ -1051,18 +1051,18 @@ QUnit.test('composer text input cleared on message post', async function (assert
     });
     await openDiscuss();
     // Type message
-    await insertText('.o_ComposerTextInput_textarea', "test message");
+    await insertText('.o_ComposerTextInputView_textarea', "test message");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "test message",
         "should have inserted text content in editable"
     );
 
     // Send message
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.verifySteps(['message_post']);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInputView_textarea`).value,
         "",
         "should have no content in composer input after posting message"
     );
@@ -1086,11 +1086,11 @@ QUnit.test('composer with thread typing notification status', async function (as
 
     assert.containsOnce(
         document.body,
-        '.o_Composer_threadTextualTypingStatus',
+        '.o_ComposerView_threadTextualTypingStatus',
         "Composer should have a thread textual typing status bar"
     );
     assert.strictEqual(
-        document.body.querySelector('.o_Composer_threadTextualTypingStatus').textContent,
+        document.body.querySelector('.o_ComposerView_threadTextualTypingStatus').textContent,
         "",
         "By default, thread textual typing status bar should be empty"
     );
@@ -1117,7 +1117,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', 'a');
+    await insertText('.o_ComposerTextInputView_textarea', 'a');
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner typing status"
@@ -1146,7 +1146,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', 'a');
+    await insertText('.o_ComposerTextInputView_textarea', 'a');
 
     assert.verifySteps(
         ['notify_typing:true'],
@@ -1155,7 +1155,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
 
     await nextAnimationFrame();
     assert.strictEqual(
-        document.body.querySelector('.o_Composer_threadTextualTypingStatus').textContent,
+        document.body.querySelector('.o_ComposerView_threadTextualTypingStatus').textContent,
         "",
         "Thread textual typing status bar should not display current partner is typing"
     );
@@ -1183,7 +1183,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', 'a');
+    await insertText('.o_ComposerTextInputView_textarea', 'a');
 
     assert.verifySteps(
         ['notify_typing:true'],
@@ -1219,7 +1219,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', "a");
+    await insertText('.o_ComposerTextInputView_textarea', "a");
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner is typing"
@@ -1229,7 +1229,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     let totalTimeElapsed = 0;
     const elapseTickTime = 2.5 * 1000;
     while (totalTimeElapsed < 50 * 1000) {
-        await insertText('.o_ComposerTextInput_textarea', 'a');
+        await insertText('.o_ComposerTextInputView_textarea', 'a');
         totalTimeElapsed += elapseTickTime;
         await advanceTime(elapseTickTime);
     }
@@ -1277,11 +1277,11 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer_buttonSend',
+        '.o_ComposerView_buttonSend',
         "composer send button should be displayed"
     );
     assert.ok(
-        !!document.querySelector('.o_Composer_buttonSend').attributes.disabled,
+        !!document.querySelector('.o_ComposerView_buttonSend').attributes.disabled,
         "composer send button should be disabled as attachment is not yet uploaded"
     );
 
@@ -1299,11 +1299,11 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer_buttonSend',
+        '.o_ComposerView_buttonSend',
         "composer send button should still be present"
     );
     assert.ok(
-        !document.querySelector('.o_Composer_buttonSend').attributes.disabled,
+        !document.querySelector('.o_ComposerView_buttonSend').attributes.disabled,
         "composer send button should be enabled as attachment is now uploaded"
     );
 });
@@ -1334,12 +1334,12 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
     }));
     assert.containsOnce(
         document.body,
-        '.o_Composer_attachmentList',
+        '.o_ComposerView_attachmentList',
         "should have an attachment list"
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         "should have only one attachment"
     );
 
@@ -1357,7 +1357,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 
     assert.containsNone(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         "should not have any attachment left after unlinking the only one"
     );
 });
@@ -1389,12 +1389,12 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer_attachmentList',
+        '.o_ComposerView_attachmentList',
         "should have an attachment list"
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         "should have only one attachment"
     );
     assert.containsOnce(
@@ -1406,7 +1406,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     await click('.o_AttachmentCard_asideItemUnlink');
     assert.containsNone(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_ComposerView .o_AttachmentCard',
         "should not have any attachment left after unlinking uploading one"
     );
 });
@@ -1468,7 +1468,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
     });
     await click('.o_ChatterTopbar_buttonSendMessage');
     assert.strictEqual(
-        document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
+        document.querySelector('.o_ComposerView_followers').textContent.replace(/\s+/g, ''),
         "To:Followersofthisdocument",
         "Composer should display \"To: Followers of this document\" if the thread as no name."
     );
@@ -1489,7 +1489,7 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
     messaging.models['Thread'].insert({ id: resPartnerId1, model: 'res.partner', name: "test name" });
     await click('.o_ChatterTopbar_buttonSendMessage');
     assert.strictEqual(
-        document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
+        document.querySelector('.o_ComposerView_followers').textContent.replace(/\s+/g, ''),
         "To:Followersof\"testname\"",
         "basic rendering when sending a message to the followers and thread does have a name"
     );
@@ -1512,11 +1512,11 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
     });
     await openDiscuss();
     // Type message
-    await insertText('.o_ComposerTextInput_textarea', "test message");
+    await insertText('.o_ComposerTextInputView_textarea', "test message");
 
     await afterNextRender(() => {
-        document.querySelector(`.o_Composer_buttonSend`).click();
-        document.querySelector(`.o_Composer_buttonSend`).click();
+        document.querySelector(`.o_ComposerView_buttonSend`).click();
+        document.querySelector(`.o_ComposerView_buttonSend`).click();
     });
     assert.verifySteps(
         ['message_post'],
@@ -1590,7 +1590,7 @@ QUnit.test('send button on mail.channel should have "Send" as label', async func
     });
     await openDiscuss();
     assert.strictEqual(
-        document.querySelector('.o_Composer_buttonSend').textContent,
+        document.querySelector('.o_ComposerView_buttonSend').textContent,
         "Send",
         "Send button of mail.channel composer should have 'Send' as label",
     );

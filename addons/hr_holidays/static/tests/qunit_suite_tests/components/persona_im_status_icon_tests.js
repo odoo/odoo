@@ -31,12 +31,12 @@ QUnit.test('on leave & online', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.hasClass(
-        document.querySelector('.o_PersonaImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIconView_icon'),
         'o-online',
         "persona IM status icon should have online status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_PersonaImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIconView_icon'),
         'fa-plane',
         "persona IM status icon should have leave status rendering"
     );
@@ -65,12 +65,12 @@ QUnit.test('on leave & away', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.hasClass(
-        document.querySelector('.o_PersonaImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIconView_icon'),
         'o-away',
         "persona IM status icon should have away status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_PersonaImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIconView_icon'),
         'fa-plane',
         "persona IM status icon should have leave status rendering"
     );
@@ -99,12 +99,12 @@ QUnit.test('on leave & offline', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.hasClass(
-        document.querySelector('.o_PersonaImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIconView_icon'),
         'o-offline',
         "persona IM status icon should have offline status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_PersonaImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIconView_icon'),
         'fa-plane',
         "persona IM status icon should have leave status rendering"
     );

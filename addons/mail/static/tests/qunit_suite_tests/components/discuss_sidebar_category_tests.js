@@ -19,7 +19,7 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_counter`).length,
         0,
         "should not have a counter if the category is unfolded and without unread messages"
     );
@@ -57,7 +57,7 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_counter`).length,
         0,
         "should not have a counter if the category is unfolded and with needaction messages",
     );
@@ -77,7 +77,7 @@ QUnit.test('channel - counter: should not have a counter if category is folded a
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_counter`).length,
         0,
         "should not have a counter if the category is folded and without unread messages"
     );
@@ -120,7 +120,7 @@ QUnit.test('channel - counter: should have correct value of needaction threads i
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_counter`).textContent,
+        document.querySelector(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_counter`).textContent,
         "2",
         "should have correct value of needaction threads if category is folded and with needaction messages"
     );
@@ -133,7 +133,7 @@ QUnit.test('channel - command: should have view command when category is unfolde
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandView`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandView`).length,
         1,
         "should have view command when channel category is open"
     );
@@ -150,9 +150,9 @@ QUnit.test('channel - command: should have view command when category is folded'
     const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandView`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandView`).length,
         1,
         "should have view command when channel category is closed"
     );
@@ -165,7 +165,7 @@ QUnit.test('channel - command: should have add command when category is unfolded
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
         1,
         "should have add command when channel category is open"
     );
@@ -183,7 +183,7 @@ QUnit.test('channel - command: should not have add command when category is fold
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
         0,
         "should not have add command when channel category is closed"
     );
@@ -201,7 +201,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
     const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
@@ -221,7 +221,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
     const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
@@ -253,7 +253,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
         "the server side value should be true"
     );
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_title`);
     const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -290,7 +290,7 @@ QUnit.test('channel - states: open should update the value on the server', async
         "the server side value should be false"
     );
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_title`);
     const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -376,14 +376,14 @@ QUnit.test('channel - states: the active category item should be visible even if
     });
     assert.ok(channel.classList.contains('o-active'));
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         'the active channel item should remain even if the category is folded'
     );
 
-    await click(`.o_DiscussSidebarMailbox[data-mailbox-local-id="${
+    await click(`.o_DiscussSidebarMailboxView[data-mailbox-local-id="${
         messaging.inbox.localId
     }"]`);
     assert.containsNone(
@@ -410,7 +410,7 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_counter`).length,
         0,
         "should not have a counter if the category is unfolded and without unread messages",
     );
@@ -432,7 +432,7 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_counter`).length,
         0,
         "should not have a counter if the category is unfolded and with unread messages",
     );
@@ -453,9 +453,9 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
     });
     const { click, openDiscuss } = await start();
     await openDiscuss();
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_counter`).length,
         0,
         "should not have a counter if the category is folded and without unread messages"
     );
@@ -487,9 +487,9 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
     ]);
     const { click, openDiscuss } = await start();
     await openDiscuss();
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).textContent,
+        document.querySelector(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_counter`).textContent,
         "2",
         "should have correct value of unread threads if category is folded and with unread messages"
     );
@@ -501,7 +501,7 @@ QUnit.test('chat - command: should have add command when category is unfolded', 
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
         1,
         "should have add command when chat category is open"
     );
@@ -519,7 +519,7 @@ QUnit.test('chat - command: should not have add command when category is folded'
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
+        document.querySelectorAll(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandAdd`).length,
         0,
         "should not have add command when chat category is closed"
     );
@@ -538,7 +538,7 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     });
     const { click, openDiscuss } = await start();
     await openDiscuss();
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
@@ -559,7 +559,7 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     });
     const { click, openDiscuss } = await start();
     await openDiscuss();
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
@@ -591,7 +591,7 @@ QUnit.test('chat - states: close should call update server data', async function
         "the value in server side should be true"
     );
 
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -627,7 +627,7 @@ QUnit.test('chat - states: open should call update server data', async function 
         "the value in server side should be false"
     );
 
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -719,14 +719,14 @@ QUnit.test('chat - states: the active category item should be visible even if th
     });
     assert.ok(chat.classList.contains('o-active'));
 
-    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
+    await click(`.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         'the active chat item should remain even if the category is folded'
     );
 
-    await click(`.o_DiscussSidebarMailbox[data-mailbox-local-id="${
+    await click(`.o_DiscussSidebarMailboxView[data-mailbox-local-id="${
         messaging.inbox.localId
     }"]`);
     assert.containsNone(

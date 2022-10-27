@@ -71,6 +71,6 @@ Object.assign(DiscussContainer, {
         className: String,
         globalState: { type: Object, optional: 1 },
     },
-    components: { Discuss: getMessagingComponent('Discuss') },
+    components: { DiscussView: getMessagingComponent('DiscussView') },
     template: 'mail.DiscussContainer',
 });

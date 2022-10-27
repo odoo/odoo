@@ -22,9 +22,9 @@
                         </t>
                         <t t-else="">
                             <div class="o_MessagingMenu_dropdownMenuHeader border-bottom" t-attf-class="{{ messaging.device.isSmall ? 'o-isDeviceSmall p-2' : 'd-flex flex-shrink-0' }}">
-                                <MessagingMenuTab t-if="messagingMenu.allTab" record="messagingMenu.allTab"/>
-                                <MessagingMenuTab t-if="messagingMenu.chatTab" record="messagingMenu.chatTab"/>
-                                <MessagingMenuTab t-if="messagingMenu.channelTab" record="messagingMenu.channelTab"/>
+                                <MessagingMenuTabView t-if="messagingMenu.allTab" record="messagingMenu.allTab"/>
+                                <MessagingMenuTabView t-if="messagingMenu.chatTab" record="messagingMenu.chatTab"/>
+                                <MessagingMenuTabView t-if="messagingMenu.channelTab" record="messagingMenu.channelTab"/>
                                 <t t-if="messaging.device.isSmall">
                                     <t t-call="mail.MessagingMenu.newMessageButton"/>
                                 </t>
@@ -40,10 +40,10 @@
                                 </t>
                             </div>
                             <t t-if="messagingMenu.notificationListView">
-                                <NotificationList className="'o_MessagingMenu_notificationList'" classNameObj="{ 'o-isDeviceSmall flex-grow-1 overflow-auto': messaging.device.isSmall }" record="messagingMenu.notificationListView"/>
+                                <NotificationListView className="'o_MessagingMenu_notificationList'" classNameObj="{ 'o-isDeviceSmall flex-grow-1 overflow-auto': messaging.device.isSmall }" record="messagingMenu.notificationListView"/>
                             </t>
                             <t t-if="messagingMenu.mobileMessagingNavbarView">
-                                <MobileMessagingNavbar
+                                <MobileMessagingNavbarView
                                     className="'o_MessagingMenu_mobileNavbar'"
                                     record="messagingMenu.mobileMessagingNavbarView"
                                 />

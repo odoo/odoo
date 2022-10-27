@@ -30,12 +30,12 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     assert.containsOnce(
         document.body.querySelector('.o_DiscussSidebarCategoryItem'),
-        '.o_ThreadIcon',
+        '.o_ThreadIconView',
         "should have thread icon in the sidebar"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_online',
+        '.o_ThreadIconView_online',
         "should have thread icon with persona IM status icon 'online'"
     );
 
@@ -52,11 +52,11 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_typing',
+        '.o_ThreadIconView_typing',
         "should have thread icon with partner currently typing"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadIcon_typing').title,
+        document.querySelector('.o_ThreadIconView_typing').title,
         "Demo is typing...",
         "title of icon should tell demo is currently typing"
     );
@@ -74,7 +74,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_online',
+        '.o_ThreadIconView_online',
         "should have thread icon with persona IM status icon 'online' (no longer typing)"
     );
 });

@@ -266,24 +266,24 @@ QUnit.test('activity view: activity widget', async function (assert) {
     await testUtils.dom.click(document.querySelector('.today .o_ActivityCellView_closestDeadline'));
     assert.containsOnce(document.body, '.o_ActivityListView', "dropdown should be displayed");
     assert.ok(document.querySelector('.o_ActivityListView_todayTitle').textContent.includes('Today'), "Title should be today");
-    assert.ok([...document.querySelectorAll('.o_MailTemplate_name')].filter(el => el.textContent.includes('Template1')).length,
+    assert.ok([...document.querySelectorAll('.o_MailTemplateView_name')].filter(el => el.textContent.includes('Template1')).length,
         "Template1 should be available");
-    assert.ok([...document.querySelectorAll('.o_MailTemplate_name')].filter(el => el.textContent.includes('Template2')).length,
+    assert.ok([...document.querySelectorAll('.o_MailTemplateView_name')].filter(el => el.textContent.includes('Template2')).length,
         "Template2 should be available");
 
-    await testUtils.dom.click(document.querySelector('.o_MailTemplate_preview'));
+    await testUtils.dom.click(document.querySelector('.o_MailTemplateView_preview'));
     await testUtils.dom.click(document.querySelector('.today .o_ActivityCellView_closestDeadline'));
-    await testUtils.dom.click(document.querySelector('.o_MailTemplate_send'));
+    await testUtils.dom.click(document.querySelector('.o_MailTemplateView_send'));
     await testUtils.dom.click(document.querySelector('.overdue .o_ActivityCellView_closestDeadline'));
-    assert.containsNone(document.body, '.o_MailTemplate_name',
+    assert.containsNone(document.body, '.o_MailTemplateView_name',
         "No template should be available");
 
     await testUtils.dom.click(document.querySelector('.o_ActivityListView_addActivityButton'));
     await testUtils.dom.click(document.querySelector('.overdue .o_ActivityCellView_closestDeadline'));
     await testUtils.dom.click(document.querySelector('.o_ActivityListViewItem_markAsDone'));
-    document.querySelector('.o_ActivityMarkDonePopoverContent_feedback').value = "feedback2";
+    document.querySelector('.o_ActivityMarkDonePopoverContentView_feedback').value = "feedback2";
 
-    await testUtils.dom.click(document.querySelector('.o_ActivityMarkDonePopoverContent_doneScheduleNextButton'));
+    await testUtils.dom.click(document.querySelector('.o_ActivityMarkDonePopoverContentView_doneScheduleNextButton'));
     assert.verifySteps([
         "do_action_compose",
         "activity_send_mail",

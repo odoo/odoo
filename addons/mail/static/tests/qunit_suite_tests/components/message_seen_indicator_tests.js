@@ -45,17 +45,17 @@ QUnit.test('rendering when just one has received the message', async function (a
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator',
+        '.o_MessageSeenIndicatorView',
         "should display a message seen indicator component"
     );
     assert.doesNotHaveClass(
-        document.querySelector('.o_MessageSeenIndicator'),
+        document.querySelector('.o_MessageSeenIndicatorView'),
         'o-all-seen',
         "indicator component should not be considered as all seen"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "should display only one seen indicator icon"
     );
 });
@@ -95,17 +95,17 @@ QUnit.test('rendering when everyone have received the message', async function (
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator',
+        '.o_MessageSeenIndicatorView',
         "should display a message seen indicator component"
     );
     assert.doesNotHaveClass(
-        document.querySelector('.o_MessageSeenIndicator'),
+        document.querySelector('.o_MessageSeenIndicatorView'),
         'o-all-seen',
         "indicator component should not be considered as all seen"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "should display only one seen indicator icon"
     );
 });
@@ -149,17 +149,17 @@ QUnit.test('rendering when just one has seen the message', async function (asser
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator',
+        '.o_MessageSeenIndicatorView',
         "should display a message seen indicator component"
     );
     assert.doesNotHaveClass(
-        document.querySelector('.o_MessageSeenIndicator'),
+        document.querySelector('.o_MessageSeenIndicatorView'),
         'o-all-seen',
         "indicator component should not be considered as all seen"
     );
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "should display two seen indicator icon"
     );
@@ -200,17 +200,17 @@ QUnit.test('rendering when just one has seen & received the message', async func
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator',
+        '.o_MessageSeenIndicatorView',
         "should display a message seen indicator component"
     );
     assert.doesNotHaveClass(
-        document.querySelector('.o_MessageSeenIndicator'),
+        document.querySelector('.o_MessageSeenIndicatorView'),
         'o-all-seen',
         "indicator component should not be considered as all seen"
     );
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "should display two seen indicator icon"
     );
@@ -251,17 +251,17 @@ QUnit.test('rendering when just everyone has seen the message', async function (
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator',
+        '.o_MessageSeenIndicatorView',
         "should display a message seen indicator component"
     );
     assert.hasClass(
-        document.querySelector('.o_MessageSeenIndicator'),
+        document.querySelector('.o_MessageSeenIndicatorView'),
         'o-all-seen',
         "indicator component should not considered as all seen"
     );
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "should display two seen indicator icon"
     );

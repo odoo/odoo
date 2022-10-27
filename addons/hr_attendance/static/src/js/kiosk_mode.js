@@ -44,7 +44,7 @@ var KioskMode = AbstractAction.extend({
     on_attach_callback: function () {
         // Stop the bus_service to avoid notifications in kiosk mode
         this.call('bus_service', 'stop');
-        $('body').find('.o_ChatWindowHeader_commandClose').click();
+        $('body').find('.o_ChatWindowHeaderView_commandClose').click();
     },
 
     _onBarcodeScanned: function(barcode) {

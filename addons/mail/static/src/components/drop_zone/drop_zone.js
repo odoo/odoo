@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class DropZone extends Component {
+export class DropZoneView extends Component {
 
     //--------------------------------------------------------------------------
     // Public
@@ -19,9 +19,9 @@ export class DropZone extends Component {
 
 }
 
-Object.assign(DropZone, {
+Object.assign(DropZoneView, {
     props: { record: Object },
-    template: 'mail.DropZone',
+    template: 'mail.DropZoneView',
 });
 
-registerMessagingComponent(DropZone);
+registerMessagingComponent(DropZoneView);

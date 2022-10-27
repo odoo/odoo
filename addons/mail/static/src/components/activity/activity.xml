@@ -111,7 +111,7 @@
                     <t t-if="activityView.mailTemplateViews.length > 0">
                         <div class="o_ActivityView_mailTemplates">
                             <t t-foreach="activityView.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
-                                <MailTemplate
+                                <MailTemplateView
                                     className="'o_ActivityView_mailTemplate'"
                                     record="mailTemplateView"
                                 />

@@ -20,11 +20,11 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '.o_ChatterTopbar_buttonSendMessage',
 }, {
     content: "Write something in composer",
-    trigger: '.o_ComposerTextInput_textarea',
+    trigger: '.o_ComposerTextInputView_textarea',
     run: 'text blahblah',
 }, {
     content: "Add one file in composer",
-    trigger: '.o_Composer_buttonAttachment',
+    trigger: '.o_ComposerView_buttonAttachment',
     async run() {
         const file = await createFile({
             content: 'hello, world',
@@ -40,7 +40,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     },
 }, {
     content: "Open full composer",
-    trigger: '.o_Composer_buttonFullComposer',
+    trigger: '.o_ComposerView_buttonFullComposer',
     extra_trigger: '.o_AttachmentCard:not(.o-isUploading)' // waiting the attachment to be uploaded
 }, {
     content: "Check the earlier provided attachment is listed",
@@ -81,8 +81,8 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '.o_mail_send',
 }, {
     content: "Check message is shown",
-    trigger: '.o_Message:contains("blahblah")',
+    trigger: '.o_MessageView:contains("blahblah")',
 }, {
     content: "Check message contains the attachment",
-    trigger: '.o_Message .o_AttachmentCard_filename:contains("text.txt")',
+    trigger: '.o_MessageView .o_AttachmentCard_filename:contains("text.txt")',
 }]);

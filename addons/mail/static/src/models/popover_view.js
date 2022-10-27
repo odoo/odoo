@@ -210,7 +210,7 @@ registerModel({
         contentComponentName: attr({
             compute() {
                 if (this.activityMarkDonePopoverContentView) {
-                    return 'ActivityMarkDonePopoverContent';
+                    return 'ActivityMarkDonePopoverContentView';
                 }
                 if (this.callOptionMenuView) {
                     return 'CallOptionMenu';
@@ -228,7 +228,7 @@ registerModel({
                     return 'ActivityListView';
                 }
                 if (this.messageNotificationPopoverContentView) {
-                    return 'MessageNotificationPopoverContent';
+                    return 'MessageNotificationPopoverContentView';
                 }
                 return clear();
             },

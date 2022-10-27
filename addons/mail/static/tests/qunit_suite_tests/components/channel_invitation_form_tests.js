@@ -73,7 +73,7 @@ QUnit.test('should be able to search for a new user to invite from an existing c
     await click(`.o_ThreadViewTopbar_inviteButton`);
     await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");
     assert.strictEqual(
-       document.querySelector(`.o_ChannelInvitationFormSelectablePartner_name`).textContent,
+       document.querySelector(`.o_ChannelInvitationFormSelectablePartnerView_name`).textContent,
        "TestPartner2",
        "should display 'TestPartner2' as it matches search term",
     );
@@ -111,7 +111,7 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
 
     await click(`.o_ThreadViewTopbar_inviteButton`);
     await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");
-    await click(`.o_ChannelInvitationFormSelectablePartner_checkbox`);
+    await click(`.o_ChannelInvitationFormSelectablePartnerView_checkbox`);
     await click(`.o_ChannelInvitationForm_inviteButton`);
     assert.strictEqual(
        document.querySelector(`.o_ThreadViewTopbar_threadName`).textContent,

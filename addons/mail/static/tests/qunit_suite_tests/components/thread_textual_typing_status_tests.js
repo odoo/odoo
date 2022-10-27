@@ -30,7 +30,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -47,7 +47,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Demo is typing...",
         "Should display that demo user is typing"
     );
@@ -72,7 +72,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -89,7 +89,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Demo is typing...",
         "Should display that demo user is typing"
     );
@@ -106,7 +106,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should no longer display that demo user is typing"
     );
@@ -132,7 +132,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -149,14 +149,14 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Demo is typing...",
         "Should display that demo user is typing"
     );
 
     await afterNextRender(() => advanceTime(60 * 1000));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should no longer display that demo user is typing"
     );
@@ -182,7 +182,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -199,7 +199,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Demo is typing...",
         "Should display that demo user is typing"
     );
@@ -219,14 +219,14 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     await advanceTime(50 * 1000);
     await nextAnimationFrame();
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Demo is typing...",
         "Should still display that demo user is typing after 100 seconds (refreshed is typing status at 50s => (100 - 50) = 50s < 60s after assuming no-longer typing)"
     );
 
     await afterNextRender(() => advanceTime(11 * 1000));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should no longer display that demo user is typing after 111 seconds (refreshed is typing status at 50s => (111 - 50) = 61s > 60s after assuming no-longer typing)"
     );
@@ -257,7 +257,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -274,7 +274,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Other 10 is typing...",
         "Should display that 'Other 10' member is typing"
     );
@@ -291,7 +291,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Other 10 and Other 11 are typing...",
         "Should display that members 'Other 10' and 'Other 11' are typing (order: longer typer named first)"
     );
@@ -308,7 +308,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Other 10, Other 11 and more are typing...",
         "Should display that members 'Other 10', 'Other 11' and more (at least 1 extra member) are typing (order: longer typer named first)"
     );
@@ -325,7 +325,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Other 11 and Other 12 are typing...",
         "Should display that members 'Other 11' and 'Other 12' are typing ('Other 10' stopped typing)"
     );
@@ -342,7 +342,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Other 11, Other 12 and more are typing...",
         "Should display that members 'Other 11' and 'Other 12' and more (at least 1 extra member) are typing (order by longer typer, 'Other 10' just recently restarted typing)"
     );

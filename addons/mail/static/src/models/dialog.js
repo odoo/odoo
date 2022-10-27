@@ -113,10 +113,10 @@ registerModel({
                     return 'AttachmentViewer';
                 }
                 if (this.attachmentDeleteConfirmView) {
-                    return 'AttachmentDeleteConfirm';
+                    return 'AttachmentDeleteConfirmView';
                 }
                 if (this.deleteMessageConfirmView) {
-                    return 'DeleteMessageConfirm';
+                    return 'DeleteMessageConfirmView';
                 }
                 if (this.followerSubtypeList) {
                     return 'FollowerSubtypeList';

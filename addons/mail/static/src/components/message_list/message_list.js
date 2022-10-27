@@ -9,7 +9,7 @@ import { Transition } from "@web/core/transition";
 
 import { Component, onWillPatch } from '@odoo/owl';
 
-export class MessageList extends Component {
+export class MessageListView extends Component {
 
     /**
      * @override
@@ -49,10 +49,10 @@ export class MessageList extends Component {
 
 }
 
-Object.assign(MessageList, {
+Object.assign(MessageListView, {
     components: { Transition },
     props: { record: Object },
-    template: 'mail.MessageList',
+    template: 'mail.MessageListView',
 });
 
-registerMessagingComponent(MessageList);
+registerMessagingComponent(MessageListView);

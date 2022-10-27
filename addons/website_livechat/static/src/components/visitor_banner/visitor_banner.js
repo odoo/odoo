@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class VisitorBanner extends Component {
+export class VisitorBannerView extends Component {
 
     /**
      * @returns {VisitorBannerView}
@@ -15,9 +15,9 @@ export class VisitorBanner extends Component {
 
 }
 
-Object.assign(VisitorBanner, {
+Object.assign(VisitorBannerView, {
     props: { record: Object },
-    template: 'website_livechat.VisitorBanner',
+    template: 'website_livechat.VisitorBannerView',
 });
 
-registerMessagingComponent(VisitorBanner);
+registerMessagingComponent(VisitorBannerView);

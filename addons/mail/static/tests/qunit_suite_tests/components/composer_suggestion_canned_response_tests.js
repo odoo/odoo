@@ -23,7 +23,7 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', ":hello");
+    await insertText('.o_ComposerTextInputView_textarea', ":hello");
     assert.containsOnce(
         document.body,
         `.o_ComposerSuggestionView`,
@@ -48,7 +48,7 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', ":hello");
+    await insertText('.o_ComposerTextInputView_textarea', ":hello");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView_part1',
@@ -88,7 +88,7 @@ QUnit.test('canned response suggestion active', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', ":hello");
+    await insertText('.o_ComposerTextInputView_textarea', ":hello");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionView'),
         'active',

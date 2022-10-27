@@ -66,7 +66,7 @@ QUnit.module('mail', {}, function () {
 
         await afterNextRender(() => click(document.body, ".o_command.focused"));
         assert.containsOnce(document.body, ".o_ChatWindow");
-        assert.strictEqual(document.querySelector(".o_ChatWindow .o_ChatWindowHeader_name").textContent, "general");
+        assert.strictEqual(document.querySelector(".o_ChatWindow .o_ChatWindowHeaderView_name").textContent, "general");
     });
 
     });

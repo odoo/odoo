@@ -62,10 +62,10 @@ QUnit.test('Leave a call', async function (assert) {
     await click('.o_ThreadViewTopbar_callButton');
     assert.containsOnce(
         document.body,
-        '.o_CallActionList_callToggle',
+        '.o_CallActionListView_callToggle',
         "Should have a button to leave the call"
     );
-    await click('.o_CallActionList_callToggle');
+    await click('.o_CallActionListView_callToggle');
     assert.containsNone(
         document.body,
         '.o_CallView',

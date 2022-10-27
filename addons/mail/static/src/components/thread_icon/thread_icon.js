@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class ThreadIcon extends Component {
+export class ThreadIconView extends Component {
 
     /**
      * @returns {ThreadIconView}
@@ -15,9 +15,9 @@ export class ThreadIcon extends Component {
 
 }
 
-Object.assign(ThreadIcon, {
+Object.assign(ThreadIconView, {
     props: { record: Object },
-    template: 'mail.ThreadIcon',
+    template: 'mail.ThreadIconView',
 });
 
-registerMessagingComponent(ThreadIcon);
+registerMessagingComponent(ThreadIconView);
