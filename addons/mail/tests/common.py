@@ -19,7 +19,7 @@ from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.tests import common, new_test_user
-from odoo.tools import formataddr, pycompat
+from odoo.tools import formataddr, mute_logger, pycompat
 from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
@@ -1102,9 +1102,9 @@ class MailCommon(common.TransactionCase, MailCase):
             * 'English Layout for' -> Spanish Layout para
           * model
             * description: English:    Lang Chatter Model (depends on test_record._name)
-                           translated: Spanish description
+                           translated: Spanish Model Description
           * module
-            * _('TestStuff') -> TestSpanishStuff (used as link button name in layout)
+            * _('NotificationButtonTitle') -> SpanishNotificationButtonTitle (used as link button name in layout)
             * _('View %s') -> SpanishView %s
           * template
             * body: English:    <p>EnglishBody for <t t-out="object.name"/></p> (depends on test_template.body)
@@ -1114,17 +1114,22 @@ class MailCommon(common.TransactionCase, MailCase):
         """
         # activate translations
         cls.env['res.lang']._activate_lang(lang_code)
-        cls.env.ref('base.module_base')._update_translations([lang_code])
+        with mute_logger("odoo.addons.base.models.ir_module", "odoo.tools.translate"):
+            cls.env.ref('base.module_base')._update_translations([lang_code])
+            cls.env.ref('base.module_mail')._update_translations([lang_code])
+            cls.env.ref('base.module_test_mail')._update_translations([lang_code])
+            code_translations.get_python_translations('mail', lang_code)
+            code_translations.get_python_translations('test_mail', lang_code)
 
         # Make sure Spanish translations have not been altered
         if test_record:
-            cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish description'
+            cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish Model Description'
 
         # Translate some code strings used in mailing
-        code_translations.python_translations[('test_mail', 'es_ES')] = {'TestStuff': 'TestSpanishStuff'}
-        cls.addClassCleanup(code_translations.python_translations.pop, ('test_mail', 'es_ES'))
-        code_translations.python_translations[('mail', 'es_ES')] = {'View %s': 'SpanishView %s'}
-        cls.addClassCleanup(code_translations.python_translations.pop, ('mail', 'es_ES'))
+        code_translations.python_translations[('test_mail', 'es_ES')]['NotificationButtonTitle'] = 'SpanishButtonTitle'
+        cls.addClassCleanup(code_translations.python_translations[('test_mail', 'es_ES')].pop, 'NotificationButtonTitle')
+        code_translations.python_translations[('mail', 'es_ES')]['View %s'] = 'SpanishView %s'
+        cls.addClassCleanup(code_translations.python_translations[('mail', 'es_ES')].pop, 'View %s')
 
         # Prepare some translated value for template if given
         if test_template:
