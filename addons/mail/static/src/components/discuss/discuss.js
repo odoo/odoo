@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class Discuss extends Component {
+export class DiscussView extends Component {
 
     //--------------------------------------------------------------------------
     // Public
@@ -18,9 +18,9 @@ export class Discuss extends Component {
     }
 }
 
-Object.assign(Discuss, {
+Object.assign(DiscussView, {
     props: { record: Object },
-    template: 'mail.Discuss',
+    template: 'mail.DiscussView',
 });
 
-registerMessagingComponent(Discuss);
+registerMessagingComponent(DiscussView);

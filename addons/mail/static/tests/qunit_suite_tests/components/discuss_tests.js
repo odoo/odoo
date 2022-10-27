@@ -118,22 +118,22 @@ QUnit.test('basic rendering', async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_sidebar').length,
+        document.querySelectorAll('.o_DiscussView_sidebar').length,
         1,
         "should have a sidebar section"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_content').length,
+        document.querySelectorAll('.o_DiscussView_content').length,
         1,
         "should have content section"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_thread').length,
+        document.querySelectorAll('.o_DiscussView_thread').length,
         1,
         "should have thread section inside content"
     );
     assert.ok(
-        document.querySelector('.o_Discuss_thread').classList.contains('o_ThreadView'),
+        document.querySelector('.o_DiscussView_thread').classList.contains('o_ThreadView'),
         "thread section should use ThreadView component"
     );
 });
@@ -191,7 +191,7 @@ QUnit.test('basic rendering: sidebar', async function (assert) {
         "should have history mailbox item"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_sidebar .o_DiscussSidebar_separator`).length,
+        document.querySelectorAll(`.o_DiscussView_sidebar .o_DiscussSidebar_separator`).length,
         2,
         "should have 2 separators (separating 'Start a meeting' button, mailboxes and channels, but that's not tested)"
     );
@@ -484,7 +484,7 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
         "channel should become active"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_ThreadView_composer`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_ThreadView_composer`).length,
         1,
         "should have composer section inside thread content (can post message in channel)"
     );
@@ -833,14 +833,14 @@ QUnit.test('default thread rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).length,
         1,
         "should have empty thread in inbox"
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).textContent.trim(),
         "Congratulations, your inbox is empty  New messages appear here."
     );
@@ -860,14 +860,14 @@ QUnit.test('default thread rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).length,
         1,
         "should have empty thread in starred"
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).textContent.trim(),
         "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox."
     );
@@ -887,13 +887,13 @@ QUnit.test('default thread rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).length,
         1,
         "should have empty thread in starred"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Discuss_thread .o_MessageList_empty`).textContent.trim(),
+        document.querySelector(`.o_DiscussView_thread .o_MessageList_empty`).textContent.trim(),
         "No history messages  Messages marked as read will appear in the history."
     );
 
@@ -908,14 +908,14 @@ QUnit.test('default thread rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).length,
         1,
         "should have empty thread in starred"
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_empty
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_empty
         `).textContent.trim(),
         "There are no messages in this conversation."
     );
@@ -1011,28 +1011,28 @@ QUnit.test('load single message from channel initially', async function (assert)
     });
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_ThreadView_messageList`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_ThreadView_messageList`).length,
         1,
         "should have list of messages"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_separatorDate`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_separatorDate`).length,
         1,
         "should have a single date separator" // to check: may be client timezone dependent
     );
     assert.strictEqual(
-        document.querySelector(`.o_Discuss_thread .o_MessageList_separatorLabelDate`).textContent,
+        document.querySelector(`.o_DiscussView_thread .o_MessageList_separatorLabelDate`).textContent,
         "April 20, 2019",
         "should display date day of messages"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_message`).length,
         1,
         "should have a single message"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread
+            .o_DiscussView_thread
             .o_MessageList_message[data-message-id="${mailMessageId1}"]
         `).length,
         1,
@@ -1056,7 +1056,7 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
     assert.containsOnce(
         document.body,
         `
-            .o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussView_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `,
         "should have channel 1 open in Discuss when providing its active_id"
     );
@@ -1085,7 +1085,7 @@ QUnit.test('basic rendering of message', async function (assert) {
     });
     await openDiscuss();
     const message = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_ThreadView_messageList
         .o_MessageList_message[data-message-id="${mailMessageId1}"]
     `);
@@ -1231,18 +1231,18 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
     await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         2,
         "should have 2 messages"
     );
     const message1 = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_ThreadView_messageList
         .o_MessageList_message[data-message-id="${mailMessageId1}"]
     `);
     const message2 = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_ThreadView_messageList
         .o_MessageList_message[data-message-id="${mailMessageId2}"]
     `);
@@ -1357,18 +1357,18 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
 
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         2,
         "should have 2 messages"
     );
     const message1 = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_ThreadView_messageList
         .o_MessageList_message[data-message-id="${mailMessageId1}"]
     `);
     const message2 = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_ThreadView_messageList
         .o_MessageList_message[data-message-id="${mailMessageId2}"]
     `);
@@ -1414,28 +1414,28 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
     await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorDate
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_separatorDate
         `).length,
         1,
         "should have a single date separator" // to check: may be client timezone dependent
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorLabelDate
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_separatorLabelDate
         `).textContent,
         "April 20, 2019",
         "should display date day of messages"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         29,
         "should have 29 messages"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_loadMore
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_loadMore
         `).length,
         0,
         "should not have load more link"
@@ -1469,44 +1469,44 @@ QUnit.test('load more messages from channel', async function (assert) {
     await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorDate
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_separatorDate
         `).length,
         1,
         "should have a single date separator" // to check: may be client timezone dependent
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorLabelDate
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_separatorLabelDate
         `).textContent,
         "April 20, 2019",
         "should display date day of messages"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         30,
         "should have 30 messages"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_loadMore
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_loadMore
         `).length,
         1,
         "should have load more link"
     );
 
-    await click(`.o_Discuss_thread .o_ThreadView_messageList .o_MessageList_loadMore`);
+    await click(`.o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_loadMore`);
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         40,
         "should have 40 messages"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_loadMore
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_loadMore
         `).length,
         0,
         "should not longer have load more link (all messages loaded)"
@@ -1538,7 +1538,7 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
         func: openDiscuss,
         message: "should wait until channel scrolled to its last message initially",
         predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
             return (
                 thread &&
                 thread.model === 'mail.channel' &&
@@ -1549,12 +1549,12 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
     });
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         25,
         "should have 25 messages"
     );
-    const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+    const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
     assert.ok(
         isScrolledToBottom(messageList),
         "should have scrolled to bottom of thread"
@@ -1586,7 +1586,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
         func: openDiscuss,
         message: "should wait until channel scrolled to its last message initially",
         predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
             return (
                 thread &&
                 thread.model === 'mail.channel' &&
@@ -1597,7 +1597,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     });
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         30,
         "should have 30 messages"
@@ -1617,7 +1617,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     });
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         40,
         "should have 40 messages"
@@ -1667,7 +1667,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         func: openDiscuss,
         message: "should wait until channel scrolled to its last message initially",
         predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
             return (
                 thread &&
                 thread.model === 'mail.channel' &&
@@ -1691,7 +1691,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => {
-            document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
+            document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`).scrollTop = 0;
         },
         message: "should wait until channel scrolled to top",
         predicate: ({ scrollTop, thread }) => {
@@ -1731,12 +1731,12 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
             messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
         },
         message: "should wait until channel scrolled to bottom",
         predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
             return (
                 thread &&
                 thread.model === 'mail.channel' &&
@@ -1797,13 +1797,13 @@ QUnit.test('restore thread scroll position', async function (assert) {
     });
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         25,
         "should have 25 messages in channel 1"
     );
     const initialMessageList = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_ThreadView_messageList
     `);
     assert.ok(
@@ -1813,14 +1813,14 @@ QUnit.test('restore thread scroll position', async function (assert) {
 
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
+        func: () => document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`).scrollTop = 0,
         message: "should wait until channel 1 changed its scroll position to top",
         predicate: ({ thread }) => {
             return thread && thread.channel && thread.channel.id === mailChannelId1;
         },
     });
     assert.strictEqual(
-        document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
+        document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`).scrollTop,
         0,
         "should have scrolled to top of channel 1",
     );
@@ -1851,7 +1851,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
     });
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
+            .o_DiscussView_thread .o_ThreadView_messageList .o_MessageList_message
         `).length,
         24,
         "should have 24 messages in channel 2"
@@ -1877,7 +1877,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
         },
     });
     assert.strictEqual(
-        document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop,
+        document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`).scrollTop,
         0,
         "should have recovered scroll position of channel 1 (scroll to top)"
     );
@@ -1956,12 +1956,12 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
         "Chat 'Demo' should not be active"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_Message`).length,
         1,
         "should have 1 message"
     );
     const msg1 = document.querySelector(`
-        .o_Discuss_thread
+        .o_DiscussView_thread
         .o_Message[data-message-id="${mailMessageId1}"]
     `);
     assert.strictEqual(
@@ -2009,13 +2009,13 @@ QUnit.test('sidebar quick search', async function (assert) {
         "should have 20 channel items"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_sidebar input.o_DiscussSidebar_quickSearch`).length,
+        document.querySelectorAll(`.o_DiscussView_sidebar input.o_DiscussSidebar_quickSearch`).length,
         1,
         "should have quick search in sidebar"
     );
 
     const quickSearch = document.querySelector(`
-        .o_Discuss_sidebar input.o_DiscussSidebar_quickSearch
+        .o_DiscussView_sidebar input.o_DiscussSidebar_quickSearch
     `);
     await afterNextRender(() => {
         quickSearch.value = "1";
@@ -2171,7 +2171,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         "channel should have counter of 2"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         2,
         "should have 2 messages in inbox"
     );
@@ -2201,7 +2201,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         "channel should display no counter (= 0)"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         0,
         "should have no message in inbox"
     );
@@ -2239,7 +2239,7 @@ QUnit.test('starred: unstar all', async function (assert) {
         "starred should have counter of 2"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         2,
         "should have 2 messages in starred"
     );
@@ -2261,7 +2261,7 @@ QUnit.test('starred: unstar all', async function (assert) {
         "starred should display no counter (= 0)"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         0,
         "should have no message in starred"
     );
@@ -2311,11 +2311,11 @@ QUnit.test('toggle_star message', async function (assert) {
         "starred should display no counter (= 0)"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         1,
         "should have 1 message in channel"
     );
-    let message = document.querySelector(`.o_Discuss .o_Message`);
+    let message = document.querySelector(`.o_DiscussView .o_Message`);
     assert.notOk(
         message.classList.contains('o-starred'),
         "message should not be starred"
@@ -2340,11 +2340,11 @@ QUnit.test('toggle_star message', async function (assert) {
         "starred should display a counter of 1"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         1,
         "should have kept 1 message in channel"
     );
-    message = document.querySelector(`.o_Discuss .o_Message`);
+    message = document.querySelector(`.o_DiscussView .o_Message`);
     assert.ok(
         message.classList.contains('o-starred'),
         "message should be starred"
@@ -2363,11 +2363,11 @@ QUnit.test('toggle_star message', async function (assert) {
         "starred should no longer display a counter (= 0)"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView .o_Message`).length,
         1,
         "should still have 1 message in channel"
     );
-    message = document.querySelector(`.o_Discuss .o_Message`);
+    message = document.querySelector(`.o_DiscussView .o_Message`);
     assert.notOk(
         message.classList.contains('o-starred'),
         "message should no longer be starred"
@@ -2832,7 +2832,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
         "inbox item in sidebar should not have any counter"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_Message`).length,
         0,
         "should have no messages in inbox initially"
     );
@@ -2867,12 +2867,12 @@ QUnit.test('receive new needaction messages', async function (assert) {
         "inbox item in sidebar should have counter of '1'"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_Message`).length,
         1,
         "should have one message in inbox"
     );
     assert.strictEqual(
-        parseInt(document.querySelector(`.o_Discuss_thread .o_Message`).dataset.messageId),
+        parseInt(document.querySelector(`.o_DiscussView_thread .o_Message`).dataset.messageId),
         100,
         "should display newly received needaction message"
     );
@@ -2898,20 +2898,20 @@ QUnit.test('receive new needaction messages', async function (assert) {
         "inbox item in sidebar should have counter of '2'"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_Message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_Message`).length,
         2,
         "should have 2 messages in inbox"
     );
     assert.ok(
         document.querySelector(`
-            .o_Discuss_thread
+            .o_DiscussView_thread
             .o_Message[data-message-id="100"]
         `),
         "should still display 1st needaction message"
     );
     assert.ok(
         document.querySelector(`
-            .o_Discuss_thread
+            .o_DiscussView_thread
             .o_Message[data-message-id="101"]
         `),
         "should display 2nd needaction message"
@@ -3085,7 +3085,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "history mailbox should be active thread"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_empty`).length,
         1,
         "should have empty thread in history"
     );
@@ -3104,12 +3104,12 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "inbox mailbox should be active thread"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_empty`).length,
         0,
         "inbox mailbox should not be empty"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_message`).length,
         2,
         "inbox mailbox should have 2 messages"
     );
@@ -3124,7 +3124,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "inbox mailbox should still be active after mark as read"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_empty`).length,
         1,
         "inbox mailbox should now be empty after mark as read"
     );
@@ -3143,12 +3143,12 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "history mailbox should be active"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_empty`).length,
         0,
         "history mailbox should not be empty after mark as read"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Discuss_thread .o_MessageList_message`).length,
+        document.querySelectorAll(`.o_DiscussView_thread .o_MessageList_message`).length,
         2,
         "history mailbox should have 2 messages"
     );
@@ -3291,7 +3291,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         func: openDiscuss,
         message: "should wait until inbox scrolled to its last message initially",
         predicate: ({ orderedMessages, scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
+            const messageList = document.querySelector(`.o_DiscussView_thread .o_ThreadView_messageList`);
             return (
                 thread === messaging.inbox.thread &&
                 orderedMessages.length === 30 &&

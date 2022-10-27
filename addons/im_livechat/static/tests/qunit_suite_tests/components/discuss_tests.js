@@ -29,7 +29,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss();
 
-    assert.containsOnce(document.body, '.o_Discuss_sidebar',
+    assert.containsOnce(document.body, '.o_DiscussView_sidebar',
         "should have a sidebar section"
     );
     const groupLivechat = document.querySelector('.o_DiscussSidebar_categoryLivechat');

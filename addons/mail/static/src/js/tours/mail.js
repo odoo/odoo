@@ -28,7 +28,7 @@ tour.register('mail_tour', {
         this.$consumeEventAnchors.find('li:first').click();
     },
 }, {
-    trigger: '.o_Discuss_thread .o_ComposerTextInput_textarea',
+    trigger: '.o_DiscussView_thread .o_ComposerTextInput_textarea',
     content: Markup(_t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>")),
     position: "top",
     width: 350,
@@ -37,15 +37,15 @@ tour.register('mail_tour', {
         actions.text("SomeText_" + t, this.$anchor);
     },
 }, {
-    trigger: '.o_Discuss_thread .o_Composer_buttonSend',
+    trigger: '.o_DiscussView_thread .o_Composer_buttonSend',
     content: _t("Post your message on the thread"),
     position: "top",
 }, {
-    trigger: '.o_Discuss_thread .o_Message',
+    trigger: '.o_DiscussView_thread .o_Message',
     content: _t("Click on your message"),
     position: "top",
 }, {
-    trigger: '.o_Discuss_thread .o_MessageActionView_actionToggleStar',
+    trigger: '.o_DiscussView_thread .o_MessageActionView_actionToggleStar',
     content: Markup(_t("Messages can be <b>starred</b> to remind you to check back later.")),
     position: "bottom",
 }, {
