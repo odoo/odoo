@@ -47,6 +47,27 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "click on new page",
     trigger: '.o_new_content_element a',
 }, {
+    content: "insert file name",
+    trigger: '.modal-dialog input[type="text"]',
+    run: 'text rte_translator.xml',
+}, {
+    content: "create file",
+    trigger: '.modal-dialog button.btn-primary',
+    extra_trigger: 'input[type="text"]:propValue(rte_translator.xml)',
+}, {
+    content: "click on the 'page manager' button",
+    trigger: 'button[name="website.action_website_pages_list"]',
+}, {
+    content: "click on the record to display the xml file in the iframe",
+    trigger: 'td:contains("rte_translator.xml")',
+}, {
+    content: "Open new page menu",
+    trigger: ".o_menu_systray .o_new_content_container > a",
+    consumeVisibleOnly: true,
+}, {
+    content: "click on new page",
+    trigger: '.o_new_content_element a',
+}, {
     content: "insert page name",
     trigger: '.modal-dialog input[type="text"]',
     run: 'text rte_translator',
