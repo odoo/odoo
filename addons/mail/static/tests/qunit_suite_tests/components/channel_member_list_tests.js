@@ -59,7 +59,7 @@ QUnit.test('should show member list when clicking on show member list button in 
     await click('.o_ThreadViewTopbar_showMemberListButton');
     assert.containsOnce(
         document.body,
-        '.o_ChannelMemberList',
+        '.o_ChannelMemberListView',
         "should show member list when clicking on show member list button in thread view topbar",
     );
 });
@@ -155,7 +155,7 @@ QUnit.test('should show a button to load more members if they are not all loaded
     await click('.o_ThreadViewTopbar_showMemberListButton');
     assert.containsOnce(
         document.body,
-        '.o_ChannelMemberList_loadMoreButton',
+        '.o_ChannelMemberListView_loadMoreButton',
         "should have a load more button because 100 members were fetched initially and there are 102 members in total",
     );
 });
@@ -183,7 +183,7 @@ QUnit.test('Load more button should load more members', async function (assert) 
     });
     await openDiscuss();
     await click('.o_ThreadViewTopbar_showMemberListButton');
-    await click('.o_ChannelMemberList_loadMoreButton');
+    await click('.o_ChannelMemberListView_loadMoreButton');
     assert.containsN(
         document.body,
         '.o_ChannelMember',
