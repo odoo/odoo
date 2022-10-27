@@ -26,7 +26,7 @@
                 </div>
                 <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.attachmentBoxView">
-                        <AttachmentBox
+                        <AttachmentBoxView
                             className="'o_Chatter_attachmentBox'"
                             record="chatter.attachmentBoxView"
                         />

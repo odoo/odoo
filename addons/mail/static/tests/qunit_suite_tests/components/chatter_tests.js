@@ -255,7 +255,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         "should have a drop zone"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         0,
         "should have no attachment before files are dropped"
     );
@@ -267,7 +267,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
     }));
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCard`).length,
         2,
         "should have 2 attachments in the attachment box after files dropped"
     );
@@ -287,7 +287,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
     }));
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCard`).length,
         3,
         "should have 3 attachments in the attachment box after files dropped"
     );

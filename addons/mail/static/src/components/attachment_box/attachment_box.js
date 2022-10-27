@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class AttachmentBox extends Component {
+export class AttachmentBoxView extends Component {
 
     /**
      * @override
@@ -28,9 +28,9 @@ export class AttachmentBox extends Component {
 
 }
 
-Object.assign(AttachmentBox, {
+Object.assign(AttachmentBoxView, {
     props: { record: Object },
-    template: 'mail.AttachmentBox',
+    template: 'mail.AttachmentBoxView',
 });
 
-registerMessagingComponent(AttachmentBox);
+registerMessagingComponent(AttachmentBoxView);

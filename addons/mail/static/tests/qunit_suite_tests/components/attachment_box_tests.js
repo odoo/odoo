@@ -26,12 +26,12 @@ QUnit.test('base empty rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -40,7 +40,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a file uploader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCard`).length,
         0,
         "should not have any attachment"
     );
@@ -80,12 +80,12 @@ QUnit.test('base non-empty rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView_buttonAdd`).length,
         1,
         "should have a button add"
     );
