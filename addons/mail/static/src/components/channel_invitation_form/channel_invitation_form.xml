@@ -27,7 +27,7 @@
                             <h4>Selected users:</h4>
                             <div class="o_ChannelInvitationForm_selectedPartners overflow-auto">
                                 <t t-foreach="channelInvitationForm.selectedPartnerViews" t-as="selectedPartnerView" t-key="selectedPartnerView.localId">
-                                    <ChannelInvitationFormSelectedPartner record="selectedPartnerView"/>
+                                    <ChannelInvitationFormSelectedPartnerView record="selectedPartnerView"/>
                                 </t>
                             </div>
                         </div>
