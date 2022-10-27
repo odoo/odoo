@@ -52,7 +52,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         dragenterFiles(document.querySelector('.o_ChatWindow'))
     );
     await afterNextRender(() =>
-        dropFiles(document.querySelector('.o_ChatWindow .o_DropZone'), [file2])
+        dropFiles(document.querySelector('.o_ChatWindow .o_DropZoneView'), [file2])
     );
     await afterNextRender(() =>
         dom.triggerEvent(

@@ -5,7 +5,7 @@
         <t t-if="chatter">
             <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-view" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="chatter.dropZoneView">
-                    <DropZone
+                    <DropZoneView
                         className="'o_Chatter_dropZone'"
                         record="chatter.dropZoneView"
                     />
