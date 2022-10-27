@@ -6,7 +6,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class CallParticipantVideo extends Component {
+export class CallParticipantVideoView extends Component {
 
     /**
      * @override
@@ -30,9 +30,9 @@ export class CallParticipantVideo extends Component {
 
 }
 
-Object.assign(CallParticipantVideo, {
+Object.assign(CallParticipantVideoView, {
     props: { record: Object },
-    template: 'mail.CallParticipantVideo',
+    template: 'mail.CallParticipantVideoView',
 });
 
-registerMessagingComponent(CallParticipantVideo);
+registerMessagingComponent(CallParticipantVideoView);
