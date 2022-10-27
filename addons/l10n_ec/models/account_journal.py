@@ -22,7 +22,7 @@ class AccountJournal(models.Model):
         domain="['|', ('id', '=', company_partner_id), '&', ('id', 'child_of', company_partner_id), ('type', '!=', 'contact')]",
     )
 
-    #TODO: On next release deprecate field as is it has no use
+    #TODO: Deprecate field in master as is it has no use
     l10n_ec_emission_type = fields.Selection(
         string="Emission type",
         selection=[

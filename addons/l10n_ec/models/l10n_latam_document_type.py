@@ -36,4 +36,5 @@ class L10nLatamDocumentType(models.Model):
                     _(u"Ecuadorian Document %s must be like 001-001-123456789")
                     % (self.display_name)
                 )
+
         return document_number
