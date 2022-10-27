@@ -495,6 +495,7 @@
             'slide_to_complete': '_onSlideToComplete',
             'slide_completed': '_onSlideCompleted',
             'slide_go_next': '_onSlideGoToNext',
+            'join_course': '_onJoinCourse',
         },
         /**
         * @override
@@ -806,6 +807,16 @@
         _toggleSidebar: function () {
             this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
             this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
+        },
+        /**
+         * Triggered when user join a course via a subwidget.
+         * User is already logged in.
+         * Update all slides frontend for fullscreen mode.
+         *
+         * @private
+         */
+         _onJoinCourse: function () {
+            this.slides.forEach((slide) => slide.isMember = true);
         },
     });
 
