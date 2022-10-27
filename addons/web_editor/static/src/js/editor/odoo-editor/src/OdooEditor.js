@@ -1743,6 +1743,17 @@ export class OdooEditor extends EventTarget {
     // ===============
 
     deleteRange(sel) {
+        if (this.deleteTableRange()) {
+            return;
+        }
+        if (!this.editable.childElementCount) {
+            // Ensure the editable has content.
+            const p = document.createElement('p');
+            p.append(document.createElement('br'));
+            this.editable.append(p);
+            setSelection(p, 0);
+            return;
+        }
         let range = getDeepRange(this.editable, {
             sel,
             splitText: true,
@@ -1856,6 +1867,67 @@ export class OdooEditor extends EventTarget {
             const el = closestElement(joinWith);
             fillEmpty(el);
         }
+    }
+
+    /**
+     * Handle range deletion in cases that involve custom table selections.
+     * Return true if nodes removed _inside_ a table, false otherwise (or if the
+     * table itself was removed).
+     *
+     * @param {Selection} sel
+     * @returns {boolean}
+     */
+    deleteTableRange() {
+        const selectedTds = this.editable.querySelectorAll('.o_selected_td');
+        const fullySelectedTables = [...this.editable.querySelectorAll('.o_selected_table')].filter(table => (
+            [...table.querySelectorAll('td')].every(td => td.classList.contains('o_selected_td'))
+        ));
+        if (selectedTds.length && !fullySelectedTables.length) {
+            this.historyPauseSteps();
+            // A selection within a table has to be handled differently so it
+            // takes into account the custom table cell selections, and doesn't
+            // break the table. If the selection includes a table cell but also
+            // elements that are out of a table, the whole table will be
+            // selected so its deletion can be handled separately.
+            const rows = [...closestElement(selectedTds[0], 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
+            const firstRowCells = [...rows[0].children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
+            const areFullColumnsSelected = getRowIndex(selectedTds[0]) === 0 && getRowIndex(selectedTds[selectedTds.length - 1]) === rows.length - 1;
+            const areFullRowsSelected = getColumnIndex(selectedTds[0]) === 0 && getColumnIndex(selectedTds[selectedTds.length - 1]) === firstRowCells.length - 1;
+            if (areFullColumnsSelected || areFullRowsSelected) {
+                // If some full columns are selected, remove them.
+                if (areFullColumnsSelected) {
+                    const startIndex = getColumnIndex(selectedTds[0]);
+                    let endIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
+                    let currentIndex = startIndex;
+                    while (currentIndex <= endIndex) {
+                        this.execCommand('removeColumn', firstRowCells[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+                // If some full rows are selected, remove them.
+                if (areFullRowsSelected) {
+                    const startIndex = getRowIndex(selectedTds[0]);
+                    let endIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
+                    let currentIndex = startIndex;
+                    while (currentIndex <= endIndex) {
+                        this.execCommand('removeRow', rows[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+            } else {
+                // If no full row or column is selected, empty the selected cells.
+                for (const td of selectedTds) {
+                    [...td.childNodes].forEach(child => child.remove());
+                    td.append(document.createElement('br'));
+                }
+            }
+            this.historyUnpauseSteps();
+            this.historyStep();
+            return true;
+        } else if (fullySelectedTables.length) {
+            fullySelectedTables.forEach(table => table.remove());
+        }
+        return false;
     }
 
     /**
@@ -3145,48 +3217,7 @@ export class OdooEditor extends EventTarget {
                 this.deleteRange(selection);
             }
         }
-        const selectedTds = this.editable.querySelectorAll('.o_selected_td');
-        if ((ev.key === 'Backspace' || ev.key === 'Delete') && selectedTds.length) {
-            // backspace/delete with custom selected cells
-            ev.preventDefault();
-            this.historyPauseSteps();
-            const rows = [...closestElement(selectedTds[0], 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
-            const firstRowCells = [...rows[0].children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
-            const areFullColumnsSelected = getRowIndex(selectedTds[0]) === 0 && getRowIndex(selectedTds[selectedTds.length - 1]) === rows.length - 1;
-            const areFullRowsSelected = getColumnIndex(selectedTds[0]) === 0 && getColumnIndex(selectedTds[selectedTds.length - 1]) === firstRowCells.length - 1;
-            if (areFullColumnsSelected || areFullRowsSelected) {
-                // If some full columns are selected, remove them.
-                if (areFullColumnsSelected) {
-                    const startIndex = getColumnIndex(selectedTds[0]);
-                    let endIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
-                    let currentIndex = startIndex;
-                    while (currentIndex <= endIndex) {
-                        this.execCommand('removeColumn', firstRowCells[currentIndex]);
-                        currentIndex++;
-                    }
-                }
-                // If some full rows are selected, remove them.
-                if (areFullRowsSelected) {
-                    const startIndex = getRowIndex(selectedTds[0]);
-                    let endIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
-                    let currentIndex = startIndex;
-                    while (currentIndex <= endIndex) {
-                        this.execCommand('removeRow', rows[currentIndex]);
-                        currentIndex++;
-                    }
-                }
-                // If all rows, remove the table.
-                if (rows.every(row => !row.parentElement)) {
-                    this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
-                }
-            }
-            this.deleteRange();
-            if (this.deselectTable() && hasValidSelection(this.editable)) {
-                this.document.getSelection().collapseToStart();
-            }
-            this.historyUnpauseSteps();
-            this.historyStep();
-        } else if (ev.key === 'Backspace') {
+        if (ev.key === 'Backspace') {
             // backspace
             const selection = this.document.getSelection();
             if (!ev.ctrlKey && !ev.metaKey) {
