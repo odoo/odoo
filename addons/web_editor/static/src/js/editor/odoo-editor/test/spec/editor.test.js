@@ -1166,6 +1166,40 @@ X[]
                     contentAfter: '<h1>[]<br></h1><p>def</p>',
                 });
             });
+            it('should delete last character of paragraph, ignoring the selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab[]</p><p>def</p>',
+                });
+            });
+            it('should delete first character of paragraph, as well as selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc[</p><p>d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>abc[]ef</p>',
+                });
+            });
+            it('should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p t="unbreak">]def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab[]</p><p t="unbreak">def</p>',
+                });
+            });
+            it('should delete first character of unbreakable, ignoring selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc[</p><p t="unbreak">d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>abc[]</p><p t="unbreak">ef</p>',
+                });
+            });
             it('should remove a fully selected table', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: unformat(
@@ -1320,6 +1354,50 @@ X[]
                     contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
                     stepFunction: deleteForward,
                     contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
+                });
+            });it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before[o</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>intruder</p></div>
+                        </div>
+                        <p>o]after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]after</p>`),
+                });
+            });
+            it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before[o</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>intruder]</p></div>
+                        </div>
+                        <p>after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]</p><p>after</p>`),
+                });
+            });
+            it('should extend the range to fully include contenteditable=false that are partially selected at the start of the range', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>[intruder</p></div>
+                        </div>
+                        <p>o]after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]after</p>`),
                 });
             });
         });
@@ -2757,9 +2835,6 @@ X[]
                 });
             });
         });
-    });
-
-    describe('deleterange', () => {
         it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: unformat(`
