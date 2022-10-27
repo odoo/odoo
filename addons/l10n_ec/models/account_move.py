@@ -153,7 +153,7 @@ class AccountMove(models.Model):
                 identification_code = "02"
             elif is_final_consumer:
                 identification_code = "07"
-            else: #passport or foreign ID l10n_latam_base.it_vat, 
+            else: #passport or foreign ID l10n_latam_base.it_vat,
                 identification_code = "03"
         elif move.move_type in ("out_invoice", "out_refund"):
             if is_ruc:
