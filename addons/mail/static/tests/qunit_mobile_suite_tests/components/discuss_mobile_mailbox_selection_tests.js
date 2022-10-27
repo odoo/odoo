@@ -39,13 +39,13 @@ QUnit.test('select another mailbox', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussMobileMailboxSelectionItem[
+        `.o_DiscussMobileMailboxSelectionItemView[
             data-mailbox-local-id="${messaging.starred.localId}"
         ]`,
         "should have a button to open starred mailbox"
     );
 
-    await click(`.o_DiscussMobileMailboxSelectionItem[
+    await click(`.o_DiscussMobileMailboxSelectionItemView[
         data-mailbox-local-id="${messaging.starred.localId}"]
     `);
     assert.containsOnce(
@@ -88,7 +88,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
         "'mailbox' tab should be selected after click on mailbox tab"
     );
     assert.hasClass(
-        document.querySelector(`.o_DiscussMobileMailboxSelectionItem[data-mailbox-local-id="${
+        document.querySelector(`.o_DiscussMobileMailboxSelectionItemView[data-mailbox-local-id="${
             messaging.inbox.localId
         }"]`),
         'o-active',
