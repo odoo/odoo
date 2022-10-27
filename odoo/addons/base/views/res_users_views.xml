@@ -320,8 +320,13 @@
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>
-                                        <li class="badge rounded-pill float-end mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
-                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
+                                        <li class="d-flex flex-wrap">
+                                            <span class="mb4 text-truncate" title="Login">
+                                                <i class="fa fa-envelope me-1" role="img" aria-label="Login"/>
+                                                <field name="login"/>
+                                            </span>
+                                            <field class="badge rounded-pill mb4 ms-auto" name="lang"/>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
