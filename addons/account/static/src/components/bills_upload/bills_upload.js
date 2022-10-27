@@ -20,6 +20,7 @@ export class AccountFileUploader extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.notification = useService("notification");
         this.attachmentIdsToProcess = [];
         const rec = this.props.record ? this.props.record.data : false;
         this.extraContext = rec ? {
@@ -45,6 +46,18 @@ export class AccountFileUploader extends Component {
             context: { ...this.extraContext, ...this.env.searchModel.context },
         });
         this.attachmentIdsToProcess = [];
+        if (action.context && action.context.notifications) {
+            for (let [file, msg] of Object.entries(action.context.notifications)) {
+                this.notification.add(
+                    msg,
+                    {
+                        title: file,
+                        type: "info",
+                        sticky: true,
+                    });
+            }
+            delete action.context.notifications;
+        }
         this.action.doAction(action);
     }
 }
