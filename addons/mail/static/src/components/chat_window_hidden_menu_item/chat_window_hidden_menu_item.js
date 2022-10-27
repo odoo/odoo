@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ChatWindowHiddenMenuItem extends Component {
+export class ChatWindowHiddenMenuItemView extends Component {
 
     /**
      * @returns {ChatWindowHiddenMenuItemView}
@@ -15,9 +15,9 @@ export class ChatWindowHiddenMenuItem extends Component {
 
 }
 
-Object.assign(ChatWindowHiddenMenuItem, {
+Object.assign(ChatWindowHiddenMenuItemView, {
     props: { record: Object },
-    template: 'mail.ChatWindowHiddenMenuItem',
+    template: 'mail.ChatWindowHiddenMenuItemView',
 });
 
-registerMessagingComponent(ChatWindowHiddenMenuItem);
+registerMessagingComponent(ChatWindowHiddenMenuItemView);

@@ -11,7 +11,7 @@
             </div>
             <ul class="o_ChatWindowHiddenMenu_list dropdown-menu dropdown-menu-end m-0 p-0 overflow-auto" t-att-class="{ show: chatWindowHiddenMenuView.isOpen }" role="menu" t-ref="list">
                 <t t-foreach="chatWindowHiddenMenuView.items" t-as="item" t-key="item.localId">
-                    <ChatWindowHiddenMenuItem record="item"/>
+                    <ChatWindowHiddenMenuItemView record="item"/>
                 </t>
             </ul>
             <t t-if="messaging.chatWindowManager.unreadHiddenConversationAmount > 0">
