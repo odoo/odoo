@@ -38,27 +38,27 @@ QUnit.test('base rendering not editable', async function (assert) {
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_details',
+        '.o_FollowerView_details',
         "should display a details part"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_avatar',
+        '.o_FollowerView_avatar',
         "should display the avatar of the follower"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_name',
+        '.o_FollowerView_name',
         "should display the name of the follower"
     );
     assert.containsNone(
         document.body,
-        '.o_Follower_button',
+        '.o_FollowerView_button',
         "should have no button as follower is not editable"
     );
 });
@@ -83,32 +83,32 @@ QUnit.test('base rendering editable', async function (assert) {
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_details',
+        '.o_FollowerView_details',
         "should display a details part"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_avatar',
+        '.o_FollowerView_avatar',
         "should display the avatar of the follower"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_name',
+        '.o_FollowerView_name',
         "should display the name of the follower"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should have an edit button"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should have a remove button"
     );
 });
@@ -155,16 +155,16 @@ QUnit.test('click on partner follower details', async function (assert) {
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_details',
+        '.o_FollowerView_details',
         "should display a details part"
     );
 
-    document.querySelector('.o_Follower_details').click();
+    document.querySelector('.o_FollowerView_details').click();
     await openFormDef;
     assert.verifySteps(
         ['do_action'],
@@ -208,16 +208,16 @@ QUnit.test('click on edit follower', async function (assert) {
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display an edit button"
     );
 
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerView_editButton');
     assert.verifySteps(
         ['fetch_subtypes'],
         "clicking on edit follower should fetch subtypes"
@@ -263,16 +263,16 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display an edit button"
     );
 
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerView_editButton');
     assert.verifySteps(
         ['fetch_subtypes'],
         "clicking on edit follower should fetch subtypes"

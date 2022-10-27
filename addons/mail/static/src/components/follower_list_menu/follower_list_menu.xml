@@ -21,7 +21,7 @@
                                 </t>
                             </t>
                             <t t-if="followerListMenuView.followerViews.length > 0">
-                                <Follower
+                                <FollowerView
                                     t-foreach="followerListMenuView.followerViews" t-as="followerView" t-key="followerView.localId"
                                     className="'o_FollowerMenu_follower dropdown-item'"
                                     record="followerView"

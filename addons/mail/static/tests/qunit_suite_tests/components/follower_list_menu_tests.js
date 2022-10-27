@@ -221,7 +221,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         "Follower list should be refreshed and contain 2 followers"
     );
     assert.strictEqual(
-        document.querySelector('.o_Follower_name').textContent,
+        document.querySelector('.o_FollowerView_name').textContent,
         "François Perusse",
         "Follower added in follower list should be the one added"
     );
@@ -270,23 +270,23 @@ QUnit.test('click on remove follower', async function (assert) {
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should have follower component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display a remove button"
     );
 
-    await click('.o_Follower_removeButton');
+    await click('.o_FollowerView_removeButton');
     assert.verifySteps(
         ['message_unsubscribe'],
         "clicking on remove button should call 'message_unsubscribe' route"
     );
     assert.containsNone(
         document.body,
-        '.o_Follower',
+        '.o_FollowerView',
         "should no longer have follower component"
     );
 });
@@ -334,25 +334,25 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
         '.o_FollowerListMenu_addFollowersButton',
         "'Add followers' button should not be displayed for a readonly record",
     );
-    const followersList = document.querySelectorAll('.o_Follower');
+    const followersList = document.querySelectorAll('.o_FollowerView');
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display edit button for a follower related to current user",
     );
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display remove button for a follower related to current user",
     );
     assert.containsNone(
         followersList[1],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should not display edit button for other followers on a readonly record",
     );
     assert.containsNone(
         followersList[1],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should not display remove button for others on a readonly record",
     );
 });
@@ -400,25 +400,25 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
         '.o_FollowerListMenu_addFollowersButton',
         "'Add followers' button should be displayed for the writable record",
     );
-    const followersList = document.querySelectorAll('.o_Follower');
+    const followersList = document.querySelectorAll('.o_FollowerView');
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display edit button for a follower related to current user",
     );
     assert.containsOnce(
         followersList[0],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display remove button for a follower related to current user",
     );
     assert.containsOnce(
         followersList[1],
-        '.o_Follower_editButton',
+        '.o_FollowerView_editButton',
         "should display edit button for other followers also on the writable record",
     );
     assert.containsOnce(
         followersList[1],
-        '.o_Follower_removeButton',
+        '.o_FollowerView_removeButton',
         "should display remove button for other followers also on the writable record",
     );
 });

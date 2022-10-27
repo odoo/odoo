@@ -44,7 +44,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerView_editButton');
     assert.containsOnce(
         document.body,
         '.o_FollowerSubtype:contains(TestSubtype)',
@@ -105,7 +105,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerView_editButton');
     assert.notOk(
         $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_checkbox')[0].checked,
         "checkbox should not be checked as follower subtype is not followed"
@@ -146,7 +146,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
-    await click('.o_Follower_editButton');
+    await click('.o_FollowerView_editButton');
     assert.notOk(
         document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should not be checked as follower subtype is not followed"
