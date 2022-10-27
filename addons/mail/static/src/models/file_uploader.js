@@ -149,14 +149,14 @@ registerModel({
                     }
                 }
             }
+            if (activity && activity.exists()) {
+                await activity.markAsDone({ attachments });
+            }
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
             }
             if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
-            }
-            if (activity && activity.exists()) {
-                activity.markAsDone({ attachments });
             }
         },
     },
