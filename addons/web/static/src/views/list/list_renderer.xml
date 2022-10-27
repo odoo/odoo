@@ -250,7 +250,9 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'widget'">
-                    <Widget t-props="column.props" record="record"/>
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
+                        <Widget t-props="column.props" record="record"/>
+                    </td>
                 </t>
             </t>
 
