@@ -335,7 +335,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
         to_refill = defaultdict(float)
-        all_product_ids = self.env['product.product'].search([('type', '=', 'product')])
+        all_product_ids = self._get_orderpoint_products()
         all_replenish_location_ids = self.env['stock.location'].search([('replenish_location', '=', True)])
         ploc_per_day = defaultdict(set)
         product_loc_by_qty = {}
@@ -564,3 +564,6 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_orderpoint_procurement_date(self):
         return datetime.combine(self.lead_days_date, time.min)
+
+    def _get_orderpoint_products(self):
+        return self.env['product.product'].search([('type', '=', 'product')])
