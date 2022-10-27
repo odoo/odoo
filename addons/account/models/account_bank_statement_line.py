@@ -335,7 +335,11 @@ class AccountBankStatementLine(models.Model):
         for i, st_line in enumerate(st_lines):
             counterpart_account_id = counterpart_account_ids[i]
 
-            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration}
+            to_write = {
+                'statement_line_id': st_line.id,
+                'narration': st_line.narration,
+                'state': st_line.state or 'draft',
+            }
             if 'line_ids' not in vals_list[i]:
                 to_write['line_ids'] = [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(
                     counterpart_account_id=counterpart_account_id)]
@@ -346,7 +350,7 @@ class AccountBankStatementLine(models.Model):
             self.env.remove_to_compute(st_line.move_id._fields['narration'], st_line.move_id)
 
         # No need for the user to manage their status (from 'Draft' to 'Posted')
-        st_lines.move_id.action_post()
+        st_lines.move_id.filtered(lambda m: m.state == 'draft').action_post()
         return st_lines
 
     def write(self, vals):
