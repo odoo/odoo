@@ -1811,9 +1811,16 @@ class Task(models.Model):
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):
         """The override of fields_get making fields readonly for portal users
-        makes the view cache dependent on the fact the user has the group portal or not"""
+        makes the view cache dependent on the fact the user has the group portal or not
+
+        The override of _get_view making the "Unread messages" filter invisible
+        according to the user notification type
+        makes the view cache dependent on the user notification type"""
         key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.user.has_group('base.group_portal'),)
+        key = key + (self.env.user.has_group('base.group_portal'),)
+        if view_type == 'search':
+            key += (self.env.user.notification_type,)
+        return key
 
     @api.model
     def default_get(self, default_fields):

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
+
+from lxml import etree
 
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
@@ -139,3 +142,20 @@ class TestProjectBase(TestProjectCommon):
             } for stage in self.project_goats.type_ids
         ])
         self.assertEqual(self.project_pigs.type_ids, self.project_goats.type_ids)
+
+    def test_filter_visibility_unread_messages(self):
+        """Tests the visibility of the "Unread messages" filter in the project task search view
+        according to the notification type of the user.
+        A user with the email notification type must not see the Unread messages filter
+        A user with the inbox notification type must see the Unread messages filter"""
+        user1 = self.user_projectuser
+        user2 = self.user_projectuser.copy()
+        user1.notification_type = 'email'
+        user2.notification_type = 'inbox'
+        for user, filter_invisible_expected in ((user1, True), (user2, None)):
+            Task = self.env['project.task'].with_user(user)
+            arch = Task.get_view(self.env.ref('project.view_task_search_form').id, 'search')['arch']
+            tree = etree.fromstring(arch)
+            node = tree.xpath('//filter[@name="message_needaction"]')[0]
+            modifiers = json.loads(node.get('modifiers') or '{}')
+            self.assertEqual(modifiers.get('invisible'), filter_invisible_expected)
