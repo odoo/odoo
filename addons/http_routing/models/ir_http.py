@@ -369,13 +369,13 @@ class IrHttp(models.AbstractModel):
         3/ Use the URL as-is saving the requested lang when the user is
            a bot and that the lang is missing from the URL.
 
-        4/ Redirect the browser when the lang is missing from the URL
-           but another lang than the default one has been requested. The
-           requested lang is injected before the original path.
-
-        5) Use the url as-is when the lang is missing from the URL, that
+        4) Use the url as-is when the lang is missing from the URL, that
            another lang than the default one has been requested but that
            it is forbidden to redirect (e.g. POST)
+
+        5/ Redirect the browser when the lang is missing from the URL
+           but another lang than the default one has been requested. The
+           requested lang is injected before the original path.
 
         6/ Redirect the browser when the lang is present in the URL but
            it is the default lang. The lang is removed from the original
@@ -415,7 +415,11 @@ class IrHttp(models.AbstractModel):
         else:
             url_lang_str = ''
             path_no_lang = path
-        allow_redirect = request.httprequest.method != 'POST'
+
+        allow_redirect = (
+            request.httprequest.method != 'POST'
+            and getattr(request, 'is_frontend_multilang', True)
+        )
 
         # There is no user on the environment yet but the following code
         # requires one to set the lang on the request. Temporary grant
