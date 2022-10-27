@@ -32,7 +32,7 @@ _logger = logging.getLogger(__name__)
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less")
 
 class CompileError(RuntimeError): pass
-def rjsmin(script):
+def regex_jsmin(script):
     """ Minify js with a clever regex.
     Taken from http://opensource.perlig.de/rjsmin (version 1.1.0)
     Apache License, Version 2.0 """
@@ -91,6 +91,12 @@ def rjsmin(script):
         r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
     ).strip()
     return result
+
+try:
+    import rjsmin as rjsminlib
+    rjsmin = rjsminlib.jsmin
+except ImportError:
+    rjsmin = regex_jsmin
 
 class AssetError(Exception):
     pass
