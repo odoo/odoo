@@ -4,8 +4,7 @@ import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
-
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState, onMounted } from "@odoo/owl";
 
 export class AutoComplete extends Component {
     setup() {
@@ -22,6 +21,9 @@ export class AutoComplete extends Component {
         });
 
         this.inputRef = useForwardRefToParent("input");
+        if (this.props.autofocus) {
+            onMounted(() => this.inputRef.el.focus());
+        }
         this.root = useRef("root");
         this.debouncedOnInput = useDebounced(this.onInput, this.constructor.timeout);
         useExternalListener(window, "scroll", this.onWindowScroll, true);
@@ -322,6 +324,8 @@ Object.assign(AutoComplete, {
         onBlur: { type: Function, optional: true },
         onFocus: { type: Function, optional: true },
         input: { type: Function, optional: true },
+        autofocus: { type: Boolean, optional: true },
+        class: { type: String, optional: true },
     },
     defaultProps: {
         placeholder: "",
