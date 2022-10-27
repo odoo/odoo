@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class DiscussSidebarMailbox extends Component {
+export class DiscussSidebarMailboxView extends Component {
 
     /**
      * @returns {DiscussSidebarMailboxView}
@@ -15,9 +15,9 @@ export class DiscussSidebarMailbox extends Component {
 
 }
 
-Object.assign(DiscussSidebarMailbox, {
+Object.assign(DiscussSidebarMailboxView, {
     props: { record: Object },
-    template: 'mail.DiscussSidebarMailbox',
+    template: 'mail.DiscussSidebarMailboxView',
 });
 
-registerMessagingComponent(DiscussSidebarMailbox);
+registerMessagingComponent(DiscussSidebarMailboxView);

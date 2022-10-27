@@ -383,7 +383,7 @@ QUnit.test('channel - states: the active category item should be visible even if
         'the active channel item should remain even if the category is folded'
     );
 
-    await click(`.o_DiscussSidebarMailbox[data-mailbox-local-id="${
+    await click(`.o_DiscussSidebarMailboxView[data-mailbox-local-id="${
         messaging.inbox.localId
     }"]`);
     assert.containsNone(
@@ -726,7 +726,7 @@ QUnit.test('chat - states: the active category item should be visible even if th
         'the active chat item should remain even if the category is folded'
     );
 
-    await click(`.o_DiscussSidebarMailbox[data-mailbox-local-id="${
+    await click(`.o_DiscussSidebarMailboxView[data-mailbox-local-id="${
         messaging.inbox.localId
     }"]`);
     assert.containsNone(

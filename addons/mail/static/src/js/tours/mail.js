@@ -49,7 +49,7 @@ tour.register('mail_tour', {
     content: Markup(_t("Messages can be <b>starred</b> to remind you to check back later.")),
     position: "bottom",
 }, {
-    trigger: '.o_DiscussSidebarMailbox.o-starred-box',
+    trigger: '.o_DiscussSidebarMailboxView.o-starred-box',
     content: _t("Once a message has been starred, you can come back and review it at any time here."),
     position: "bottom",
 }, {

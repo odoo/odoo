@@ -11,9 +11,9 @@
                 </div>
                 <hr class="o_DiscussSidebar_separator w-100 border-top"/>
                 <div class="o_DiscussSidebar_category o_DiscussSidebar_categoryMailbox d-flex flex-column flex-grow-0">
-                    <DiscussSidebarMailbox record="discussSidebarView.owner.inboxView"/>
-                    <DiscussSidebarMailbox record="discussSidebarView.owner.starredView"/>
-                    <DiscussSidebarMailbox record="discussSidebarView.owner.historyView"/>
+                    <DiscussSidebarMailboxView record="discussSidebarView.owner.inboxView"/>
+                    <DiscussSidebarMailboxView record="discussSidebarView.owner.starredView"/>
+                    <DiscussSidebarMailboxView record="discussSidebarView.owner.historyView"/>
                 </div>
                 <hr class="o_DiscussSidebar_separator w-100 border-top"/>
                 <t t-if="messaging.models['Thread'].all(thread => thread.isPinned and thread.model === 'mail.channel').length > 19">
