@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ChannelMemberListCategory extends Component {
+export class ChannelMemberListCategoryView extends Component {
 
     /**
      * @returns {ChannelMemberListCategoryView}
@@ -15,9 +15,9 @@ export class ChannelMemberListCategory extends Component {
 
 }
 
-Object.assign(ChannelMemberListCategory, {
+Object.assign(ChannelMemberListCategoryView, {
     props: { record: Object },
-    template: 'mail.ChannelMemberListCategory',
+    template: 'mail.ChannelMemberListCategoryView',
 });
 
-registerMessagingComponent(ChannelMemberListCategory);
+registerMessagingComponent(ChannelMemberListCategoryView);
