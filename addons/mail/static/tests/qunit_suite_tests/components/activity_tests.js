@@ -787,14 +787,14 @@ QUnit.test('activity click on mark as done', async function (assert) {
 
     await click('.o_ActivityView_markDoneButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_ActivityMarkDonePopoverContent').length,
+        document.querySelectorAll('.o_ActivityMarkDonePopoverContentView').length,
         1,
         "should have opened the mark done popover"
     );
 
     await click('.o_ActivityView_markDoneButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_ActivityMarkDonePopoverContent').length,
+        document.querySelectorAll('.o_ActivityMarkDonePopoverContentView').length,
         0,
         "should have closed the mark done popover"
     );
@@ -832,7 +832,7 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
 
     await click('.o_ActivityView_markDoneButton');
     assert.strictEqual(
-        document.querySelector('.o_ActivityMarkDonePopoverContent_feedback'),
+        document.querySelector('.o_ActivityMarkDonePopoverContentView_feedback'),
         document.activeElement,
         "the popover textarea should have the focus"
     );
@@ -1072,17 +1072,17 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
     await click('.o_ActivityView_markDoneButton');
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Popover component should be present"
     );
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ActivityMarkDonePopoverContent`).dispatchEvent(ev);
+        document.querySelector(`.o_ActivityMarkDonePopoverContentView`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "ESCAPE pressed should have closed the mark done popover"
     );
 });
@@ -1112,18 +1112,18 @@ QUnit.test('activity mark done popover click on discard', async function (assert
     await click('.o_ActivityView_markDoneButton');
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Popover component should be present"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_discardButton',
+        '.o_ActivityMarkDonePopoverContentView_discardButton',
         "Popover component should contain the discard button"
     );
-    await click('.o_ActivityMarkDonePopoverContent_discardButton');
+    await click('.o_ActivityMarkDonePopoverContentView_discardButton');
     assert.containsNone(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Discard button clicked should have closed the mark done popover"
     );
 });

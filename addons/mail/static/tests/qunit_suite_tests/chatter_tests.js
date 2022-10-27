@@ -210,7 +210,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
 
     await click('.o_ActivityButtonView'); // open the popover
     await click('.o_ActivityListViewItem_markAsDone'); // mark the first activity as done
-    await click('.o_ActivityMarkDonePopoverContent_doneButton'); // confirm
+    await click('.o_ActivityMarkDonePopoverContentView_doneButton'); // confirm
 
     assert.strictEqual(document.querySelector('.o_ListFieldActivityView_summary').innerText, 'Meet FP');
 
