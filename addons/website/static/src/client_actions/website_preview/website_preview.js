@@ -283,7 +283,10 @@ export class WebsitePreview extends Component {
             || (pathname
                 && (backendRoutes.includes(pathname)
                     || pathname.startsWith('/@/')
-                    || pathname.startsWith('/web/content/')));
+                    || pathname.startsWith('/web/content/')
+                    // This is defined here to avoid creating a
+                    // website_documents module for just one patch.
+                    || pathname.startsWith('/document/share/')));
     }
 
     /**
