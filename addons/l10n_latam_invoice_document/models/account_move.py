@@ -143,7 +143,7 @@ class AccountMove(models.Model):
     def _check_unique_sequence_number(self):
         """ This uniqueness verification was only valid for customer invoices, and vendor bills that does not use
         documents. A new constraint method _check_unique_vendor_number has been created just for validate for this purpose """
-        vendor = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
+        vendor = self.filtered(lambda x: x._is_manual_document_number() and x.l10n_latam_use_documents)
         return super(AccountMove, self - vendor)._check_unique_sequence_number()
 
     @api.constrains('state', 'l10n_latam_document_type_id')
