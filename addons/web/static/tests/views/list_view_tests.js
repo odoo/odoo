@@ -15726,7 +15726,12 @@ QUnit.module("Views", (hooks) => {
                 </list>
             `,
         });
-        assert.containsN(target, ".test_widget", 4, "there should be one widget per record");
+        assert.containsN(
+            target,
+            "td .test_widget",
+            4,
+            "there should be one widget (inside td) per record"
+        );
         assert.deepEqual(
             [...target.querySelectorAll(".test_widget")].map((w) => w.textContent),
             ["true", "true", "true", "false"],
