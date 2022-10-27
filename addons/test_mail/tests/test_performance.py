@@ -278,7 +278,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(__system__=14, employee=15):
+        with self.assertQueryCount(__system__=12, employee=13):
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'employee')
@@ -295,7 +295,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=15, employee=17):
+        with self.assertQueryCount(__system__=13, employee=15):
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -321,7 +321,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=18, employee=21):  # com+tm 17/20
+        with self.assertQueryCount(__system__=16, employee=19):  # com+tm 15/18
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -415,7 +415,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer._onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=126, employee=159), self.mock_mail_gateway():
+        with self.assertQueryCount(__system__=108, employee=141), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -618,7 +618,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             for idx in range(10)
         ])
 
-        with self.assertQueryCount(__system__=11, employee=11):
+        with self.assertQueryCount(__system__=2, employee=2):
             records._message_log_with_view(
                 'test_mail.mail_template_simple_test',
                 render_values={'partner': self.customer.with_env(self.env)}
@@ -865,7 +865,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(__system__=42, employee=43):
+        with self.assertQueryCount(__system__=43, employee=44):
             record.message_post_with_source(
                 template,
                 message_type='comment',
@@ -890,7 +890,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             }).create({})
             composer._onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=121, employee=141):
+        with self.assertQueryCount(__system__=111, employee=131):
             messages_as_sudo = test_records.message_post_with_source(
                 'test_mail.mail_template_simple_test',
                 render_values={'partner': self.user_test.partner_id},
@@ -1075,7 +1075,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(__system__=19, employee=20):
+        with self.assertQueryCount(__system__=20, employee=21):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
