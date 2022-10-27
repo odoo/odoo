@@ -6,7 +6,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class Composer extends Component {
+export class ComposerView extends Component {
 
     /**
      * @override
@@ -30,9 +30,9 @@ export class Composer extends Component {
 
 }
 
-Object.assign(Composer, {
+Object.assign(ComposerView, {
     props: { record: Object },
-    template: 'mail.Composer',
+    template: 'mail.ComposerView',
 });
 
-registerMessagingComponent(Composer);
+registerMessagingComponent(ComposerView);

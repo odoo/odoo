@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class SnailmailError extends Component {
+export class SnailmailErrorView extends Component {
 
     /**
      * @override
@@ -23,9 +23,9 @@ export class SnailmailError extends Component {
 
 }
 
-Object.assign(SnailmailError, {
+Object.assign(SnailmailErrorView, {
     props: { record: Object },
-    template: 'snailmail.SnailmailError',
+    template: 'snailmail.SnailmailErrorView',
 });
 
-registerMessagingComponent(SnailmailError);
+registerMessagingComponent(SnailmailErrorView);

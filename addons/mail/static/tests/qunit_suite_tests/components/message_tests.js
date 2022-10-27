@@ -32,48 +32,48 @@ QUnit.test('basic rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Message').length,
+        document.querySelectorAll('.o_MessageView').length,
         1,
         "should display a message component"
     );
-    const messageEl = document.querySelector('.o_Message');
+    const messageEl = document.querySelector('.o_MessageView');
     assert.strictEqual(
         messageEl.dataset.id,
         mailMessageId.toString(),
         "message component should be linked to message store model"
     );
     assert.strictEqual(
-        messageEl.querySelectorAll(`:scope .o_Message_sidebar`).length,
+        messageEl.querySelectorAll(`:scope .o_MessageView_sidebar`).length,
         1,
         "message should have a sidebar"
     );
     assert.strictEqual(
-        messageEl.querySelectorAll(`:scope .o_Message_sidebar .o_Message_authorAvatar`).length,
+        messageEl.querySelectorAll(`:scope .o_MessageView_sidebar .o_MessageView_authorAvatar`).length,
         1,
         "message should have author avatar in the sidebar"
     );
     assert.strictEqual(
-        messageEl.querySelector(`:scope .o_Message_authorAvatar`).tagName,
+        messageEl.querySelector(`:scope .o_MessageView_authorAvatar`).tagName,
         'IMG',
         "message author avatar should be an image"
     );
     assert.strictEqual(
-        messageEl.querySelector(`:scope .o_Message_authorAvatar`).dataset.src,
+        messageEl.querySelector(`:scope .o_MessageView_authorAvatar`).dataset.src,
         `/web/image/res.partner/${otherPartnerId}/avatar_128`,
         "message author avatar should GET image of the related partner"
     );
     assert.strictEqual(
-        messageEl.querySelectorAll(`:scope .o_Message_authorName`).length,
+        messageEl.querySelectorAll(`:scope .o_MessageView_authorName`).length,
         1,
         "message should display author name"
     );
     assert.strictEqual(
-        messageEl.querySelector(`:scope .o_Message_authorName`).textContent,
+        messageEl.querySelector(`:scope .o_MessageView_authorName`).textContent,
         "Demo User",
         "message should display correct author name"
     );
     assert.strictEqual(
-        messageEl.querySelectorAll(`:scope .o_Message_date`).length,
+        messageEl.querySelectorAll(`:scope .o_MessageView_date`).length,
         1,
         "message should display date"
     );
@@ -84,12 +84,12 @@ QUnit.test('basic rendering', async function (assert) {
         "message should display list of actions"
     );
     assert.strictEqual(
-        messageEl.querySelectorAll(`:scope .o_Message_content`).length,
+        messageEl.querySelectorAll(`:scope .o_MessageView_content`).length,
         1,
         "message should display the content"
     );
     assert.strictEqual(
-        messageEl.querySelector(`:scope .o_Message_prettyBody`).innerHTML,
+        messageEl.querySelector(`:scope .o_MessageView_prettyBody`).innerHTML,
         "<p>Test</p>",
         "message should display the correct content"
     );
@@ -120,48 +120,48 @@ QUnit.test('Notification Sent', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-envelope-o',
         "icon should represent email success"
     );
 
-    await click('.o_Message_notificationIconClickable');
+    await click('.o_MessageView_notificationIconClickable');
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent',
+        '.o_MessageNotificationPopoverContentView',
         "notification popover should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationIcon',
+        '.o_MessageNotificationPopoverContentView_notificationIcon',
         "popover should have one icon"
     );
     assert.hasClass(
-        document.querySelector('.o_MessageNotificationPopoverContent_notificationIcon'),
+        document.querySelector('.o_MessageNotificationPopoverContentView_notificationIcon'),
         'fa-check',
         "popover should have the sent icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationPartnerName',
+        '.o_MessageNotificationPopoverContentView_notificationPartnerName',
         "popover should have the partner name"
     );
     assert.strictEqual(
-        document.querySelector('.o_MessageNotificationPopoverContent_notificationPartnerName').textContent.trim(),
+        document.querySelector('.o_MessageNotificationPopoverContentView_notificationPartnerName').textContent.trim(),
         "Someone",
         "partner name should be correct"
     );
@@ -210,25 +210,25 @@ QUnit.test('Notification Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-envelope',
         "icon should represent email error"
     );
-    document.querySelector('.o_Message_notificationIconClickable').click();
+    document.querySelector('.o_MessageView_notificationIconClickable').click();
     await openResendActionDef;
     assert.verifySteps(
         ['do_action'],
@@ -265,12 +265,12 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message component should not have any check (V) as message is not yet received"
     );
 
@@ -286,7 +286,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message seen indicator component should only contain one check (V) as message is just received"
     );
 });
@@ -320,12 +320,12 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message component should not have any check (V) as message is not yet received"
     );
 
@@ -340,7 +340,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     });
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "message seen indicator component should contain two checks (V) as message is seen"
     );
@@ -375,12 +375,12 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message component should not have any check (V) as message is not yet received"
     );
 
@@ -395,7 +395,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message seen indicator component should only contain one check (V) as message is just received"
     );
 
@@ -409,7 +409,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     });
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "message seen indicator component should contain two checks (V) as message is now seen"
     );
@@ -446,12 +446,12 @@ QUnit.test('do not show message seen indicator on the last message seen by every
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsNone(
         document.body,
-        '.o_Message_seenIndicator',
+        '.o_MessageView_seenIndicator',
         "message component should not have any message seen indicator because the current user is not author"
     );
 });
@@ -495,17 +495,17 @@ QUnit.test('do not show message seen indicator on all the messages of the curren
 
     assert.containsOnce(
         document.body,
-        `.o_Message[data-id=${beforeLastMailMessageId}]`,
+        `.o_MessageView[data-id=${beforeLastMailMessageId}]`,
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        `.o_Message[data-id=${beforeLastMailMessageId}] .o_Message_seenIndicator`,
+        `.o_MessageView[data-id=${beforeLastMailMessageId}] .o_MessageView_seenIndicator`,
         "message component should have a message seen indicator because the current user is author"
     );
     assert.containsNone(
         document.body,
-        `.o_Message[data-id=${beforeLastMailMessageId}] .o_MessageSeenIndicator_icon`,
+        `.o_MessageView[data-id=${beforeLastMailMessageId}] .o_MessageSeenIndicatorView_icon`,
         "message component should not have any check (V) because it is older than the last message seen by everyone"
     );
 });
@@ -544,17 +544,17 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a message component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_seenIndicator',
+        '.o_MessageView_seenIndicator',
         "message component should have a message seen indicator"
     );
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         1,
         "message component should have one check (V) because the message was fetched by everyone but no other member than author has seen the message"
     );
@@ -600,16 +600,16 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     await click('.o_AttachmentImage_actionUnlink');
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirm',
+        '.o_AttachmentDeleteConfirmView',
         "An attachment delete confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirmView_mainText').textContent,
         `Do you really want to delete "BLAH"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
         '.o_AttachmentCard',
@@ -706,11 +706,11 @@ QUnit.test('subtype description should be displayed if it is different than body
     });
     assert.containsOnce(
         document.body,
-        '.o_Message_content',
+        '.o_MessageView_content',
         "message should have content"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Message_content`).textContent,
+        document.querySelector(`.o_MessageView_content`).textContent,
         "HelloBonjour",
         "message content should display both body and subtype description when they are different"
     );
@@ -736,11 +736,11 @@ QUnit.test('subtype description should not be displayed if it is similar to body
     });
     assert.containsOnce(
         document.body,
-        '.o_Message_content',
+        '.o_MessageView_content',
         "message should have content"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Message_content`).textContent,
+        document.querySelector(`.o_MessageView_content`).textContent,
         "Hello",
         "message content should display only body when subtype description is similar"
     );
@@ -784,16 +784,16 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
     });
     assert.containsOnce(
         document.body,
-        '.o_Message_content',
+        '.o_MessageView_content',
         "message should have content"
     );
     assert.containsOnce(
-        document.querySelector('.o_Message_content'),
+        document.querySelector('.o_MessageView_content'),
         'a',
         "message content should have a link"
     );
 
-    document.querySelector(`.o_Message_content a`).click();
+    document.querySelector(`.o_MessageView_content a`).click();
     assert.verifySteps(
         ['do-action:openFormView_some.model_250'],
         "should have open form view on related record after click on link"
@@ -820,16 +820,16 @@ QUnit.test('chat with author should be opened after clicking on their avatar', a
     });
     assert.containsOnce(
         document.body,
-        '.o_Message_authorAvatar',
+        '.o_MessageView_authorAvatar',
         "message should have the author avatar"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_authorAvatar'),
+        document.querySelector('.o_MessageView_authorAvatar'),
         'o_redirect',
         "author avatar should have the redirect style"
     );
 
-    await click('.o_Message_authorAvatar');
+    await click('.o_MessageView_authorAvatar');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -861,16 +861,16 @@ QUnit.test('chat with author should be opened after clicking on their name', asy
     });
     assert.containsOnce(
         document.body,
-        '.o_Message_authorName',
+        '.o_MessageView_authorName',
         "message should have the author name"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_authorName'),
+        document.querySelector('.o_MessageView_authorName'),
         'o_redirect',
         "author name should have the redirect style"
     );
 
-    await click('.o_Message_authorName');
+    await click('.o_MessageView_authorName');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -909,16 +909,16 @@ QUnit.test('chat with author should be opened after clicking on their im status 
     await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
     assert.containsOnce(
         document.body,
-        '.o_Message_personaImStatusIcon',
+        '.o_MessageView_personaImStatusIcon',
         "message should have the author im status icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_personaImStatusIcon'),
+        document.querySelector('.o_MessageView_personaImStatusIcon'),
         'o-has-open-chat',
         "author im status icon should have the open chat style"
     );
 
-    await click('.o_Message_personaImStatusIcon');
+    await click('.o_MessageView_personaImStatusIcon');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -960,16 +960,16 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_Message_authorAvatar',
+        '.o_MessageView_authorAvatar',
         "message should have the author avatar"
     );
     assert.doesNotHaveClass(
-        document.querySelector('.o_Message_authorAvatar'),
+        document.querySelector('.o_MessageView_authorAvatar'),
         'o_redirect',
         "author avatar should not have the redirect style"
     );
 
-    document.querySelector('.o_Message_authorAvatar').click();
+    document.querySelector('.o_MessageView_authorAvatar').click();
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
@@ -991,9 +991,9 @@ QUnit.test('Chat with partner should be opened after clicking on their mention',
     });
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     await click('.o_mail_redirect');
     assert.containsOnce(
         document.body,
@@ -1020,9 +1020,9 @@ QUnit.test('Channel should be opened after clicking on its mention', async funct
     });
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "#my-channel");
+    await insertText('.o_ComposerTextInputView_textarea', "#my-channel");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     await click('.o_channel_redirect');
     assert.containsOnce(
         document.body,
@@ -1048,10 +1048,10 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    document.querySelector(`.o_Message_authorAvatar`).click();
+    document.querySelector(`.o_MessageView_authorAvatar`).click();
     await nextAnimationFrame();
     assert.doesNotHaveClass(
-        document.querySelector(`.o_Message`),
+        document.querySelector(`.o_MessageView`),
         'o-clicked',
         "message should not be considered as 'clicked' after clicking on its author avatar"
     );
@@ -1082,10 +1082,10 @@ QUnit.test('message should not be considered as "clicked" after clicking on noti
         // intercept the action: this action is not relevant in the context of this test.
         doAction() {},
     });
-    document.querySelector('.o_Message_notificationIconClickable.o-error').click();
+    document.querySelector('.o_MessageView_notificationIconClickable.o-error').click();
     await nextAnimationFrame();
     assert.doesNotHaveClass(
-        document.querySelector(`.o_Message`),
+        document.querySelector(`.o_MessageView`),
         'o-clicked',
         "message should not be considered as 'clicked' after clicking on notification failure icon"
     );

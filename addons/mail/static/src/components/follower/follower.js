@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class Follower extends Component {
+export class FollowerView extends Component {
     /**
      * @returns {FollowerView}
      */
@@ -13,9 +13,9 @@ export class Follower extends Component {
     }
 }
 
-Object.assign(Follower, {
+Object.assign(FollowerView, {
     props: { record: Object },
-    template: 'mail.Follower',
+    template: 'mail.FollowerView',
 });
 
-registerMessagingComponent(Follower);
+registerMessagingComponent(FollowerView);

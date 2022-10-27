@@ -66,7 +66,7 @@ QUnit.test('auto layout with link preview list', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message .o_LinkPreviewListView',
+        '.o_MessageView .o_LinkPreviewListView',
         "Should have a link preview list in the DOM"
     );
 });

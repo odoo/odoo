@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class DiscussMobileMailboxSelectionItem extends Component {
+export class DiscussMobileMailboxSelectionItemView extends Component {
 
     /**
      * @returns {DiscussMobileMailboxSelectionItemView}
@@ -15,9 +15,9 @@ export class DiscussMobileMailboxSelectionItem extends Component {
 
 }
 
-Object.assign(DiscussMobileMailboxSelectionItem, {
+Object.assign(DiscussMobileMailboxSelectionItemView, {
     props: { record: Object },
-    template: 'mail.DiscussMobileMailboxSelectionItem',
+    template: 'mail.DiscussMobileMailboxSelectionItemView',
 });
 
-registerMessagingComponent(DiscussMobileMailboxSelectionItem);
+registerMessagingComponent(DiscussMobileMailboxSelectionItemView);

@@ -62,7 +62,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
         "chatter should have the right thread."
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Message`).length,
+        document.querySelectorAll(`.o_MessageView`).length,
         30,
         "the first 30 messages of thread should be loaded"
     );
@@ -97,22 +97,22 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         "should have a thread in the chatter"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Message`).length,
+        document.querySelectorAll(`.o_MessageView`).length,
         1,
         "should have a message"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Message_content`).textContent,
+        document.querySelector(`.o_MessageView_content`).textContent,
         "Creating a new record...",
         "should have the 'Creating a new record ...' message"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_loadMore',
+        '.o_MessageListView_loadMore',
         "should not have the 'load more' button"
     );
 
-    await click('.o_Message');
+    await click('.o_MessageView');
     assert.strictEqual(
         document.querySelectorAll(`.o_MessageActionList`).length,
         1,
@@ -255,7 +255,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         "should have a drop zone"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         0,
         "should have no attachment before files are dropped"
     );
@@ -267,7 +267,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
     }));
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCard`).length,
         2,
         "should have 2 attachments in the attachment box after files dropped"
     );
@@ -287,7 +287,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
     }));
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCard`).length,
         3,
         "should have 3 attachments in the attachment box after files dropped"
     );
@@ -386,11 +386,11 @@ QUnit.test('should display subject when subject is not the same as the thread na
 
     assert.containsOnce(
         document.body,
-        '.o_Message_subject',
+        '.o_MessageView_subject',
         "should display subject of the message"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_subject').textContent,
+        document.querySelector('.o_MessageView_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
     );
@@ -416,7 +416,7 @@ QUnit.test('should not display subject when subject is the same as the thread na
 
     assert.containsNone(
         document.body,
-        '.o_Message_subject',
+        '.o_MessageView_subject',
         "should not display subject of the message"
     );
 });
@@ -440,7 +440,7 @@ QUnit.test('should not display user notification messages in chatter', async fun
 
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display no messages"
     );
 });
@@ -458,19 +458,19 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     });
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should not have any message initially in chatter"
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should now have single message in chatter after posting message from pressing 'CTRL-Enter' in text input of composer"
     );
 });
@@ -488,19 +488,19 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     });
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should not have any message initially in chatter"
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should now have single message in channel after posting message from pressing 'META-Enter' in text input of composer"
     );
 });
@@ -521,18 +521,18 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     });
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should not have any message initially in chatter"
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await insertText('.o_ComposerTextInputView_textarea', "Test");
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    document.querySelector('.o_ComposerTextInputView_textarea').dispatchEvent(kevt);
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
     );
 });

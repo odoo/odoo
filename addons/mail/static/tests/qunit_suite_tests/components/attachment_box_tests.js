@@ -26,12 +26,12 @@ QUnit.test('base empty rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -40,7 +40,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a file uploader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCard`).length,
         0,
         "should not have any attachment"
     );
@@ -80,12 +80,12 @@ QUnit.test('base non-empty rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -219,17 +219,17 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     await click('.o_AttachmentCard_asideItemUnlink');
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirm',
+        '.o_AttachmentDeleteConfirmView',
         "A confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirmView_mainText').textContent,
         `Do you really want to delete "Blah.txt"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
     // Confirm the deletion
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
         '.o_AttachmentCard',

@@ -19,7 +19,7 @@ QUnit.test('command suggestion displayed', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "/who");
+    await insertText('.o_ComposerTextInputView_textarea', "/who");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView',
@@ -40,7 +40,7 @@ QUnit.test('command suggestion correct data', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "/who");
+    await insertText('.o_ComposerTextInputView_textarea', "/who");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestionView_part1',
@@ -76,7 +76,7 @@ QUnit.test('command suggestion active', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "/who");
+    await insertText('.o_ComposerTextInputView_textarea', "/who");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionView'),
         'active',

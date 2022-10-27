@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class DeleteMessageConfirm extends Component {
+export class DeleteMessageConfirmView extends Component {
 
     /**
      * @override
@@ -24,9 +24,9 @@ export class DeleteMessageConfirm extends Component {
 
 }
 
-Object.assign(DeleteMessageConfirm, {
+Object.assign(DeleteMessageConfirmView, {
     props: { record: Object },
-    template: 'mail.DeleteMessageConfirm',
+    template: 'mail.DeleteMessageConfirmView',
 });
 
-registerMessagingComponent(DeleteMessageConfirm);
+registerMessagingComponent(DeleteMessageConfirmView);

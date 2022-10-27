@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class MobileMessagingNavbar extends Component {
+export class MobileMessagingNavbarView extends Component {
 
     /**
      * @returns {MobileMessagingNavbarView}
@@ -15,9 +15,9 @@ export class MobileMessagingNavbar extends Component {
 
 }
 
-Object.assign(MobileMessagingNavbar, {
+Object.assign(MobileMessagingNavbarView, {
     props: { record: Object },
-    template: 'mail.MobileMessagingNavbar',
+    template: 'mail.MobileMessagingNavbarView',
 });
 
-registerMessagingComponent(MobileMessagingNavbar);
+registerMessagingComponent(MobileMessagingNavbarView);

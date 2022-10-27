@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component } from '@odoo/owl';
 
-export class NotificationGroup extends Component {
+export class NotificationGroupView extends Component {
 
     /**
      * @override
@@ -28,9 +28,9 @@ export class NotificationGroup extends Component {
 
 }
 
-Object.assign(NotificationGroup, {
+Object.assign(NotificationGroupView, {
     props: { record: Object },
-    template: 'mail.NotificationGroup',
+    template: 'mail.NotificationGroupView',
 });
 
-registerMessagingComponent(NotificationGroup);
+registerMessagingComponent(NotificationGroupView);

@@ -31,7 +31,7 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         dragenterFiles(document.querySelector('.o_ThreadView'))
     );
     assert.ok(
-        document.querySelector('.o_Composer_dropZone'),
+        document.querySelector('.o_ComposerView_dropZone'),
         "should have dropzone when dragging file over the thread"
     );
 });
@@ -69,17 +69,17 @@ QUnit.test('message list asc order', async function (assert) {
             );
         },
     });
-    const messageItems = document.querySelectorAll(`.o_MessageList_item`);
+    const messageItems = document.querySelectorAll(`.o_MessageListView_item`);
     assert.notOk(
-        messageItems[messageItems.length - 1].classList.contains("o_MessageList_loadMore"),
+        messageItems[messageItems.length - 1].classList.contains("o_MessageListView_loadMore"),
         "load more link should be before messages"
     );
     assert.ok(
-        messageItems[0].classList.contains("o_MessageList_loadMore"),
+        messageItems[0].classList.contains("o_MessageListView_loadMore"),
         "load more link should NOT be after messages"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Message`).length,
+        document.querySelectorAll(`.o_MessageView`).length,
         30,
         "should have 30 messages at the beginning"
     );
@@ -98,7 +98,7 @@ QUnit.test('message list asc order', async function (assert) {
         },
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_Message`).length,
+        document.querySelectorAll(`.o_MessageView`).length,
         60,
         "should have 60 messages after scrolled to top"
     );
@@ -109,7 +109,7 @@ QUnit.test('message list asc order', async function (assert) {
             document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_Message`).length,
+        document.querySelectorAll(`.o_MessageView`).length,
         60,
         "scrolling to bottom should not trigger any message fetching"
     );
@@ -179,7 +179,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
 
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        func: () => document.querySelector('.o_ComposerTextInputView_textarea').focus(),
         message: "should wait until last seen by current partner message id changed after focusing the thread",
         predicate: ({ thread }) => {
             return (
@@ -221,7 +221,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         }
     });
     await openDiscuss();
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    document.querySelector('.o_ComposerTextInputView_textarea').focus();
     // simulate receiving a message
     await afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
@@ -275,16 +275,16 @@ QUnit.test('show message subject when subject is not the same as the thread name
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display a single message"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_subject',
+        '.o_MessageView_subject',
         "should display subject of the message"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_subject').textContent,
+        document.querySelector('.o_MessageView_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
     );
@@ -314,7 +314,7 @@ QUnit.test('do not show message subject when subject is the same as the thread n
 
     assert.containsNone(
         document.body,
-        '.o_Message_subject',
+        '.o_MessageView_subject',
         "should not display subject of the message"
     );
 });
@@ -350,31 +350,31 @@ QUnit.test('[technical] new messages separator on posting message', async functi
 
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display one message in thread initially"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "hey !");
+    await insertText('.o_ComposerTextInputView_textarea', "hey !");
     await afterNextRender(() => {
         // need to remove focus from text area to avoid set_last_seen_message
-        document.querySelector('.o_Composer_buttonSend').focus();
-        document.querySelector('.o_Composer_buttonSend').click();
+        document.querySelector('.o_ComposerView_buttonSend').focus();
+        document.querySelector('.o_ComposerView_buttonSend').click();
 
     });
     assert.containsN(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         2,
         "should display 2 messages (initial & newly posted), after posting a message"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "still no separator shown when current partner posted a message"
     );
 });
@@ -417,16 +417,16 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
 
     assert.containsOnce(
         document.body,
-        '.o_MessageList_message',
+        '.o_MessageListView_message',
         "should have an initial message"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    document.querySelector('.o_ComposerTextInputView_textarea').blur();
     // simulate receiving a message
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
@@ -454,25 +454,25 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     });
     assert.containsN(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         2,
         "should now have 2 messages after receiving a new message"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "'new messages' separator should be shown"
     );
 
     assert.containsOnce(
         document.body,
-        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-id="${mailMessageId1 + 1}"]`,
+        `.o_MessageListView_separatorNewMessages ~ .o_MessageView[data-message-id="${mailMessageId1 + 1}"]`,
         "'new messages' separator should be shown above new message received"
     );
 
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        func: () => document.querySelector('.o_ComposerTextInputView_textarea').focus(),
         message: "should wait until last seen by current partner message id changed after focusing the thread",
         predicate: ({ thread }) => {
             return (
@@ -483,7 +483,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     }));
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "'new messages' separator should no longer be shown as last message has been seen"
     );
 });
@@ -511,25 +511,25 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_MessageList_message',
+        '.o_MessageListView_message',
         "should have no messages"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
-    await insertText('.o_ComposerTextInput_textarea', "hey !");
-    await click('.o_Composer_buttonSend');
+    await insertText('.o_ComposerTextInputView_textarea', "hey !");
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should have the message current partner just posted"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "still no separator shown when current partner posted a message"
     );
 });
@@ -573,43 +573,43 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIconClickable',
+        '.o_MessageView_notificationIconClickable',
         "should display the notification icon container on the message"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_notificationIcon',
+        '.o_MessageView_notificationIcon',
         "should display the notification icon on the message"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
+        document.querySelector('.o_MessageView_notificationIcon'),
         'fa-envelope-o',
         "notification icon shown on the message should represent email"
     );
 
-    await click('.o_Message_notificationIconClickable');
+    await click('.o_MessageView_notificationIconClickable');
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent',
+        '.o_MessageNotificationPopoverContentView',
         "notification popover should be opened after notification has been clicked"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationIcon',
+        '.o_MessageNotificationPopoverContentView_notificationIcon',
         "an icon should be shown in notification popover"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationIcon.fa.fa-trash-o',
+        '.o_MessageNotificationPopoverContentView_notificationIcon.fa.fa-trash-o',
         "the icon shown in notification popover should be the canceled icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationPartnerName',
+        '.o_MessageNotificationPopoverContentView_notificationPartnerName',
         "partner name should be shown in notification popover"
     );
     assert.strictEqual(
-        document.querySelector('.o_MessageNotificationPopoverContent_notificationPartnerName').textContent.trim(),
+        document.querySelector('.o_MessageNotificationPopoverContentView_notificationPartnerName').textContent.trim(),
         "Someone",
         "partner name shown in notification popover should be the one concerned by the notification"
     );
@@ -645,7 +645,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         async func() {
-            await click(`.o_NotificationList_preview`);
+            await click(`.o_NotificationListView_preview`);
         },
         message: "should wait until channel scrolled initially",
         predicate: data => thread === data.threadViewer.thread,
@@ -711,7 +711,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         async func() {
-            await click(`.o_NotificationList_preview`);
+            await click(`.o_NotificationListView_preview`);
         },
         message: "should wait until channel scrolled initially",
         predicate: data => thread === data.threadViewer.thread,
@@ -794,17 +794,17 @@ QUnit.test("delete all attachments of message without content should no longer d
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "there should be 1 message displayed initially"
     );
 
     await click(`.o_AttachmentCard[data-id="${
         messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
     }"] .o_AttachmentCard_asideItemUnlink`);
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "message should no longer be displayed after removing all its attachments (empty content)"
     );
 });
@@ -844,17 +844,17 @@ QUnit.test('delete all attachments of a message with some text content should st
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "there should be 1 message displayed initially"
     );
 
     await click(`.o_AttachmentCard[data-id="${
         messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
     }"] .o_AttachmentCard_asideItemUnlink`);
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "message should still be displayed after removing its attachments (non-empty content)"
     );
 });
@@ -879,12 +879,12 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "email@odoo.com\n");
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "email@odoo.com\n");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
-        document.querySelector(`.o_Message_content`),
+        document.querySelector(`.o_MessageView_content`),
         `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "Conversation should have a message that has been posted, which contains partner mention"
     );
@@ -910,11 +910,11 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "@Pyn");
+    await insertText('.o_ComposerTextInputView_textarea', "@Pyn");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
-        document.querySelector(`.o_Message_content`),
+        document.querySelector(`.o_MessageView_content`),
         `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
         "Conversation should have a message that has been posted, which contains partner mention"
     );
@@ -947,19 +947,19 @@ QUnit.test('mention 2 different partners that have the same name', async functio
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[0].click());
-    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await insertText('.o_ComposerTextInputView_textarea', "@Te");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[1].click());
-    await click('.o_Composer_buttonSend');
-    assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
+    await click('.o_ComposerView_buttonSend');
+    assert.containsOnce(document.body, '.o_MessageView_content', 'should have one message after posting it');
     assert.containsOnce(
-        document.querySelector(`.o_Message_content`),
+        document.querySelector(`.o_MessageView_content`),
         `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "message should contain the first partner mention"
     );
     assert.containsOnce(
-        document.querySelector(`.o_Message_content`),
+        document.querySelector(`.o_MessageView_content`),
         `.o_mail_redirect[data-oe-id="${resPartnerId2}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "message should also contain the second partner mention"
     );
@@ -978,11 +978,11 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
-        document.querySelector('.o_Message_content'),
+        document.querySelector('.o_MessageView_content'),
         '.o_channel_redirect',
         "message must contain a link to the mentioned channel"
     );
@@ -1007,11 +1007,11 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
-        document.querySelector('.o_Message_content'),
+        document.querySelector('.o_MessageView_content'),
         '.o_channel_redirect',
         "message should contain a link to the mentioned channel"
     );
@@ -1035,12 +1035,12 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "#blabla\n");
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#blabla\n");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    await click('.o_Composer_buttonSend');
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
-        document.querySelector('.o_Message_content'),
+        document.querySelector('.o_MessageView_content'),
         '.o_channel_redirect',
         "message should contain a link to the mentioned channel"
     );
@@ -1065,14 +1065,14 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     });
     await openDiscuss();
 
-    await insertText('.o_ComposerTextInput_textarea', "#");
+    await insertText('.o_ComposerTextInputView_textarea', "#");
     await click('.o_ComposerSuggestionView');
-    const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
-    document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
-    await insertText('.o_ComposerTextInput_textarea', ", test");
-    await click('.o_Composer_buttonSend');
+    const text = document.querySelector(`.o_ComposerTextInputView_textarea`).value;
+    document.querySelector(`.o_ComposerTextInputView_textarea`).value = text.slice(0, -1);
+    await insertText('.o_ComposerTextInputView_textarea', ", test");
+    await click('.o_ComposerView_buttonSend');
     assert.containsOnce(
-        document.querySelector('.o_Message_content'),
+        document.querySelector('.o_MessageView_content'),
         '.o_channel_redirect',
         "message should contain a link to the mentioned channel"
     );
@@ -1104,20 +1104,20 @@ QUnit.test('mention 2 different channels that have the same name', async functio
         },
     });
     await openDiscuss();
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await insertText('.o_ComposerTextInput_textarea', "#my");
+    document.querySelector('.o_ComposerTextInputView_textarea').focus();
+    await insertText('.o_ComposerTextInputView_textarea', "#my");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[0].click());
-    await insertText('.o_ComposerTextInput_textarea', "#my");
+    await insertText('.o_ComposerTextInputView_textarea', "#my");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestionView')[1].click());
-    await click('.o_Composer_buttonSend');
-    assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
+    await click('.o_ComposerView_buttonSend');
+    assert.containsOnce(document.body, '.o_MessageView_content', 'should have one message after posting it');
     assert.containsOnce(
-        document.querySelector(`.o_Message_content`),
+        document.querySelector(`.o_MessageView_content`),
         `.o_channel_redirect[data-oe-id="${mailChannelId1}"][data-oe-model="mail.channel"]:contains("#my channel")`,
         "message should contain the first channel mention"
     );
     assert.containsOnce(
-        document.querySelector(`.o_Message_content`),
+        document.querySelector(`.o_MessageView_content`),
         `.o_channel_redirect[data-oe-id="${mailChannelId2}"][data-oe-model="mail.channel"]:contains("#my channel")`,
         "message should also contain the second channel mention"
     );
@@ -1147,12 +1147,12 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageList_empty',
+        '.o_MessageListView_empty',
         "message list empty placeholder should be shown as thread does not contain any messages"
     );
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "no message should be shown as thread does not contain any"
     );
 });
@@ -1185,12 +1185,12 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageList_empty',
+        '.o_MessageListView_empty',
         "message list empty placeholder should be shown as thread contain only empty messages"
     );
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "no message should be shown as thread contains only empty ones"
     );
 });
@@ -1227,11 +1227,11 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
     });
     assert.containsOnce(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "should display 1 message (message with subtype description 'task created')"
     );
     assert.strictEqual(
-        document.body.querySelector('.o_Message_content').textContent,
+        document.body.querySelector('.o_MessageView_content').textContent,
         "Task created",
         "message should have 'Task created' (from its subtype description)"
     );
@@ -1278,12 +1278,12 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     });
     assert.containsNone(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         "No message should be shown as all 30 first messages are empty"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_loadMore',
+        '.o_MessageListView_loadMore',
         "Load more button should be shown as there are more messages to show"
     );
 });
@@ -1316,12 +1316,12 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     });
     await openDiscuss();
     // send a command that leads to receiving a transient message
-    await insertText('.o_ComposerTextInput_textarea', "/who");
-    await click('.o_Composer_buttonSend');
+    await insertText('.o_ComposerTextInputView_textarea', "/who");
+    await click('.o_ComposerView_buttonSend');
     const transientMessage = messaging.discuss.threadViewer.threadView.messageListView.messageListViewItems[0].message;
 
     // composer is focused by default, we remove that focus
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    document.querySelector('.o_ComposerTextInputView_textarea').blur();
     // simulate receiving a message
     await afterNextRender(() => messaging.rpc({
         route: '/mail/chat_post',
@@ -1335,20 +1335,20 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     }));
     assert.containsN(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         2,
         "should display 2 messages (the transient & the received message), after posting a command"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "separator should be shown as a message has been received"
     );
     assert.containsOnce(
         document.body,
-        `.o_Message[data-message-id="${
+        `.o_MessageView[data-message-id="${
             transientMessage.id
-        }"] + .o_MessageList_separatorNewMessages`,
+        }"] + .o_MessageListView_separatorNewMessages`,
         "separator should be shown just after transient message"
     );
 });
@@ -1364,10 +1364,10 @@ QUnit.test('composer should be focused automatically after clicking on the send 
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInput_textarea', "Dummy Message");
-    await click('.o_Composer_buttonSend');
+    await insertText('.o_ComposerTextInputView_textarea', "Dummy Message");
+    await click('.o_ComposerView_buttonSend');
     assert.hasClass(
-        document.querySelector('.o_Composer'),
+        document.querySelector('.o_ComposerView'),
         'o-focused',
         "composer should be focused automatically after clicking on the send button"
     );
@@ -1461,10 +1461,10 @@ QUnit.test('failure on loading more messages should not alter message list displ
     await openDiscuss();
 
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
+    await click('.o_MessageListView_loadMore');
     assert.containsN(
         document.body,
-        '.o_Message',
+        '.o_MessageView',
         30,
         "should still show 30 messages as load more has failed"
     );
@@ -1504,20 +1504,20 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     await openDiscuss();
 
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
+    await click('.o_MessageListView_loadMore');
     assert.containsOnce(
         document.body,
-        '.o_MessageList_alertLoadingFailed',
+        '.o_MessageListView_alertLoadingFailed',
         "should show loading error message"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_alertLoadingFailedRetryButton',
+        '.o_MessageListView_alertLoadingFailedRetryButton',
         "should show loading error message button"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_loadMore',
+        '.o_MessageListView_loadMore',
         "should not show load more buttton"
     );
 });
@@ -1555,12 +1555,12 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     });
     await openDiscuss();
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
+    await click('.o_MessageListView_loadMore');
 
     messageFetchShouldFail = false;
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_MessageList_alertLoadingFailedRetryButton').click(),
+        func: () => document.querySelector('.o_MessageListView_alertLoadingFailedRetryButton').click(),
         message: "should wait until channel loaded more messages after clicked on load more",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1598,7 +1598,7 @@ QUnit.test("highlight the message mentioning the current user inside the channel
     });
     await openDiscuss();
     assert.hasClass(
-        document.querySelector(`.o_MessageList .o_Message`),
+        document.querySelector(`.o_MessageListView .o_MessageView`),
         'o-highlighted',
         "message should be highlighted"
     );
@@ -1631,7 +1631,7 @@ QUnit.test("not highlighting the message if not mentioning the current user insi
     });
     await openDiscuss();
     assert.doesNotHaveClass(
-        document.querySelector(`.o_MessageList .o_Message`),
+        document.querySelector(`.o_MessageListView .o_MessageView`),
         'o-highlighted',
         "message should not be highlighted"
     );
