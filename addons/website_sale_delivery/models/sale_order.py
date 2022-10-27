@@ -11,6 +11,7 @@ class SaleOrder(models.Model):
         compute='_compute_amount_delivery',
         string='Delivery Amount',
         help="The amount without tax.", store=True, tracking=True)
+    access_point_address = fields.Text('Delivery Point Address')
 
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):

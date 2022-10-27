@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_delivery_methods_inherit_website_sale_delivery" inherit_id="website_sale_delivery.payment_delivery_methods">
+        <xpath expr="//span[@name='price']" position="after">
+            <t t-set='delivery_method' t-value="delivery.delivery_type+'_use_locations'" />
+            <div class="small">
+                <div class="d-none">
+                    <b class="o_order_location"/>
+                    <span class="fa fa-trash-o ms-2 o_remove_order_location" aria-label="Remove this location" title="Remove this location"/>
+                </div>
+                <t t-if="delivery_method in delivery.fields_get()">
+                    <t t-if="delivery[delivery_method]">
+                        <div class="o_show_pickup_locations"/>
+                        <div class="o_list_pickup_locations"/>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

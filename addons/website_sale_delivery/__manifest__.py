@@ -12,6 +12,7 @@ Configure your own methods with a pricing grid or integrate with carriers for a 
         'views/website_sale_delivery_templates.xml',
         'views/website_sale_delivery_views.xml',
         'views/res_config_settings_views.xml',
+        'views/locations_carrier_templates.xml',
         'data/website_sale_delivery_data.xml'
     ],
     'demo': [
