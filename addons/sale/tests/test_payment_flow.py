@@ -259,3 +259,20 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
+
+    def test_invoice_is_final(self):
+        """Test that invoice generated from a payment are always final"""
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        # Create the payment
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(
+            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
+        )
+        with mute_logger('odoo.addons.sale.models.payment_transaction'), patch(
+            'odoo.addons.sale.models.sale_order.SaleOrder._create_invoices'
+        ) as _create_invoices_mock:
+            tx._reconcile_after_done()
+
+        self.assertTrue(_create_invoices_mock.call_args.kwargs['final'])

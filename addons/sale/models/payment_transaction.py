@@ -175,7 +175,7 @@ class PaymentTransaction(models.Model):
                 confirmed_orders._force_lines_to_invoice_policy_order()
                 invoices = confirmed_orders.with_context(
                     raise_if_nothing_to_invoice=False
-                )._create_invoices()
+                )._create_invoices(final=True)
                 # Setup access token in advance to avoid serialization failure between
                 # edi postprocessing of invoice and displaying the sale order on the portal
                 for invoice in invoices:
