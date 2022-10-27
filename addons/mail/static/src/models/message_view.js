@@ -115,8 +115,8 @@ registerModel({
                 this.highlight();
                 this.update({ doHighlight: clear() });
             }
-            if (this.threadViewOwnerAsLastMessageView && this.component && this.component.isPartiallyVisible()) {
-                this.threadViewOwnerAsLastMessageView.handleVisibleMessage(this.message);
+            if (this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem && this.messageListViewItemOwner.isPartiallyVisible()) {
+                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem.handleVisibleMessage(this.message);
             }
         },
         onHighlightTimerTimeout() {
@@ -547,14 +547,6 @@ registerModel({
                 return this.message.author && this.message.author.isImStatusSet ? {} : clear();
             },
             inverse: 'messageViewOwner',
-        }),
-        /**
-         * States whether this message view is the last one of its thread view.
-         * Computed from inverse relation.
-         */
-        threadViewOwnerAsLastMessageView: one('ThreadView', {
-            inverse: 'lastMessageView',
-            readonly: true,
         }),
     },
 });
