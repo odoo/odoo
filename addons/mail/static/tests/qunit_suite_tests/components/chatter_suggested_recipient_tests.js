@@ -21,7 +21,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList',
+        '.o_ComposerSuggestedRecipientListView',
         "Should display a list of suggested recipients after opening the composer from 'Send message' button"
     );
 });
@@ -41,7 +41,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showMore',
+        '.o_ComposerSuggestedRecipientListView_showMore',
         "should not display 'show more' button with 3 or less suggested recipients"
     );
 });
@@ -129,7 +129,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
     await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showMore',
+        '.o_ComposerSuggestedRecipientListView_showMore',
         "more than 3 suggested recipients display 'show more' button"
     );
 });
@@ -155,7 +155,7 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    await click(`.o_ComposerSuggestedRecipientList_showMore`);
+    await click(`.o_ComposerSuggestedRecipientListView_showMore`);
     assert.containsN(
         document.body,
         '.o_ComposerSuggestedRecipient',
@@ -185,10 +185,10 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    await click(`.o_ComposerSuggestedRecipientList_showMore`);
+    await click(`.o_ComposerSuggestedRecipientListView_showMore`);
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showLess',
+        '.o_ComposerSuggestedRecipientListView_showLess',
         "more than 3 suggested recipients -> click 'show more' -> 'show less' button"
     );
 });
@@ -214,8 +214,8 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     });
 
     await click(`.o_ChatterTopbar_buttonSendMessage`);
-    await click(`.o_ComposerSuggestedRecipientList_showMore`);
-    await click(`.o_ComposerSuggestedRecipientList_showLess`);
+    await click(`.o_ComposerSuggestedRecipientListView_showMore`);
+    await click(`.o_ComposerSuggestedRecipientListView_showLess`);
     assert.containsN(
         document.body,
         '.o_ComposerSuggestedRecipient',
@@ -224,7 +224,7 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     );
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestedRecipientList_showMore',
+        '.o_ComposerSuggestedRecipientListView_showMore',
         "suggested recipient list should containt a 'show More' button after clicking on 'show less'."
     );
 });
