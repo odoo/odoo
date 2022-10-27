@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class FollowButton extends Component {
+export class FollowButtonView extends Component {
 
     //--------------------------------------------------------------------------
     // Public
@@ -19,9 +19,9 @@ export class FollowButton extends Component {
 
 }
 
-Object.assign(FollowButton, {
+Object.assign(FollowButtonView, {
     props: { record: Object },
-    template: 'mail.FollowButton',
+    template: 'mail.FollowButtonView',
 });
 
-registerMessagingComponent(FollowButton);
+registerMessagingComponent(FollowButtonView);
