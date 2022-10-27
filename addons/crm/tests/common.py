@@ -148,6 +148,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.lead_1.write({
             'stage_id': cls.stage_team1_1.id,
         })
+        cls.lead_1.flush_recordset()
 
         # create an history for new team
         cls.lead_team_1_won = cls.env['crm.lead'].create({
@@ -165,6 +166,9 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
         cls.lead_team_1_lost.action_set_lost()
         (cls.lead_team_1_won + cls.lead_team_1_lost).flush_recordset()
+
+        # We recompute probabilities after creating this history
+        cls.lead_1._compute_probabilities()
 
         # email / phone data
         cls.test_email_data = [

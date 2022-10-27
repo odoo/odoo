@@ -499,6 +499,26 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date),
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
 
+    def test_pls_frequency_on_stage_change(self):
+        """ We test here that when changing a lead of stage, the frequency table is updated before
+            we compute the new probabilities. With a new team, no entries exist in the frequency
+            table linked to it. Therefore, no frequency should interfere."""
+        team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
+        Lead = self.env['crm.lead']
+        lead = Lead.create({'name': 'team', 'team_id': team_id})
+        original_stage_id = self.env['crm.stage'].search([], limit=1).id
+        won_stage_id = self.env['crm.stage'].search([('is_won', '=', True)], limit=1).id
+
+        lead.write({'stage_id': won_stage_id})
+        self.assertEqual(tools.float_compare(lead.probability, 100.0, 2), 0)
+        self.assertEqual(tools.float_compare(lead.automated_probability, 100.0, 2), 0)
+
+        # Here the probability should be updated correctly: 50% chance since no more lead is won.
+        # This means the table has been correctly updated before recomputing the lead probability
+        lead.write({'stage_id': original_stage_id})
+        self.assertEqual(tools.float_compare(lead.probability, 50.0, 2), 0)
+        self.assertEqual(tools.float_compare(lead.automated_probability, 50.0, 2), 0)
+
     def test_pls_no_share_stage(self):
         """ We test here the situation where all stages are team specific, as there is
             a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
