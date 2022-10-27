@@ -3,6 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from '@web/core/registry';
 import { session } from '@web/session';
+import { isIosApp } from '@web/core/browser/feature_detection';
 
 const { EventBus } = owl;
 
@@ -25,9 +26,9 @@ export const busService = {
             multiTab.removeSharedValue('last_notification_id');
         }
         const bus = new EventBus();
-        const workerClass = 'SharedWorker' in window ? browser.SharedWorker : browser.Worker;
+        const workerClass = 'SharedWorker' in window && !isIosApp() ? browser.SharedWorker : browser.Worker;
         const worker = new workerClass('/bus/websocket_worker_bundle', {
-            name: 'SharedWorker' in window ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
+            name: 'SharedWorker' in window && !isIosApp() ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
         });
 
         /**
@@ -40,7 +41,7 @@ export const busService = {
         */
         function send(action, data) {
             const message = { action, data };
-            if ('SharedWorker' in window) {
+            if ('SharedWorker' in window && !isIosApp()) {
                 worker.port.postMessage(message);
             } else {
                 worker.postMessage(message);
@@ -89,7 +90,7 @@ export const busService = {
             });
         }
 
-        if ('SharedWorker' in window) {
+        if ('SharedWorker' in window && !isIosApp()) {
             worker.port.start();
             worker.port.addEventListener('message', handleMessage);
         } else {
