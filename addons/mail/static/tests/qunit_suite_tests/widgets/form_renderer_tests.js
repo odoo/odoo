@@ -311,7 +311,7 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
     );
     assert.containsNone(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
     );
     assert.containsOnce(
@@ -368,7 +368,7 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "there should be a followers menu"
     );
     assert.containsOnce(
@@ -425,7 +425,7 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "there should be a followers menu"
     );
     assert.containsNone(

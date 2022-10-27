@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class FollowerListMenu extends Component {
+export class FollowerListMenuView extends Component {
 
     /**
      * @override
@@ -28,9 +28,9 @@ export class FollowerListMenu extends Component {
 
 }
 
-Object.assign(FollowerListMenu, {
+Object.assign(FollowerListMenuView, {
     props: { record: Object },
-    template: 'mail.FollowerListMenu',
+    template: 'mail.FollowerListMenuView',
 });
 
-registerMessagingComponent(FollowerListMenu);
+registerMessagingComponent(FollowerListMenuView);

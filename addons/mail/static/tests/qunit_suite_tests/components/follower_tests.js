@@ -35,7 +35,7 @@ QUnit.test('base rendering not editable', async function (assert) {
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -80,7 +80,7 @@ QUnit.test('base rendering editable', async function (assert) {
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -152,7 +152,7 @@ QUnit.test('click on partner follower details', async function (assert) {
             openFormDef.resolve();
         },
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -205,7 +205,7 @@ QUnit.test('click on edit follower', async function (assert) {
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -260,7 +260,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',

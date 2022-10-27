@@ -393,19 +393,19 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
 
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu',
+        '.o_FollowerListMenuView',
         "should have followers menu component"
     );
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_buttonFollowers',
+        '.o_FollowerListMenuView_buttonFollowers',
         "should have followers button"
     );
 
-    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenuView_buttonFollowers');
     assert.containsOnce(
         document.body,
-        '.o_FollowerListMenu_dropdown',
+        '.o_FollowerListMenuView_dropdown',
         "followers dropdown should be opened"
     );
     assert.containsN(
