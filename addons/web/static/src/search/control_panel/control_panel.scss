@@ -89,6 +89,7 @@
         @include media-breakpoint-down(md) {
             width: 100%;
             overflow: hidden;
+            flex-wrap: nowrap;
 
             > li {
                 margin: 0;
@@ -98,6 +99,7 @@
                 }
 
                 &.o_back_button {
+                    flex-shrink: 0;
                     &, & ~ li {
                         margin: auto 0;
                     }
@@ -191,11 +193,13 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
-        align-items: center;
+        align-items: flex-start;
         column-gap: $o-horizontal-padding;
+        @include media-breakpoint-down(md) {
+            align-items: center;
+        }
 
         > .o_cp_pager {
-            margin: auto 0 auto auto;
             padding-left: 5px;
             text-align: center;
             user-select: none;
