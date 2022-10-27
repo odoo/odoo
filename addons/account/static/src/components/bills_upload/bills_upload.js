@@ -11,9 +11,8 @@ import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { parseHTML } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
-const { Component, useState } = owl;
+const { Component, useState, markup } = owl;
 
 export class AccountFileUploader extends Component {
     setup() {
@@ -40,15 +39,17 @@ export class AccountFileUploader extends Component {
             context: { ...this.props.extraContext, ...this.env.searchModel.context },
         });
         this.attachmentIdsToProcess = [];
-        if (!!action['notif_msg']) {
-            // the server need not respond with HTML to avoid parsing (also, the message should be improved)
-            const msg = parseHTML(action['notif_msg']).textContent;
-            this.notification.add(
-                msg,
-                {
-                    type: "info",
-                    sticky: true,
-                });
+        if (action.context && action.context.notifications) {
+            for (let [key, value] of Object.entries(action.context.notifications)) {
+                this.notification.add(
+                    markup(value),
+                    {
+                        title: key,
+                        type: "info",
+                        sticky: true,
+                    });
+            }
+            delete action.context.notifications;
         }
         this.action.doAction(action);
     }
