@@ -487,6 +487,7 @@
         */
        _afterJoin: function () {
             this.isMember = true;
+            this.trigger_up('join_course');
             this._renderValidationInfo();
             this._applySessionAnswers();
             this._submitQuiz();
