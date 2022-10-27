@@ -562,13 +562,27 @@ class Web_Editor(http.Controller):
             fields['name'] = name
         attachment = attachment.copy(fields)
         if alt_data:
-            attachment.create({
-                'name': attachment.name + '.jpg',
-                'datas': alt_data,
-                'res_id': attachment.id,
-                'res_model': 'ir_attachment',
-                'mimetype': 'image/jpeg',
-            })
+            for size, per_type in alt_data.items():
+                reference_id = attachment.id
+                if 'image/webp' in per_type:
+                    resized = attachment.create_unique([{
+                        'name': attachment.name,
+                        'description': 'resize: %s' % size,
+                        'datas': per_type['image/webp'],
+                        'res_id': reference_id,
+                        'res_model': 'ir.attachment',
+                        'mimetype': 'image/webp',
+                    }])
+                    reference_id = resized[0]
+                if 'image/jpeg' in per_type:
+                    attachment.create_unique([{
+                        'name': re.sub(r'\.webp$', '.jpg', attachment.name),
+                        'description': 'format: jpeg',
+                        'datas': per_type['image/jpeg'],
+                        'res_id': reference_id,
+                        'res_model': 'ir.attachment',
+                        'mimetype': 'image/jpeg',
+                    }])
         if attachment.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.

@@ -870,12 +870,18 @@ class IrQWeb(models.AbstractModel):
                 bin_source = base64.b64decode(base64_source)
                 Attachment = self.env['ir.attachment']
                 checksum = Attachment._compute_checksum(bin_source)
-                origins = Attachment.search([['res_field', '!=', None], ['checksum', '=', checksum]])
+                origins = Attachment.sudo().search([
+                    ['id', '!=', False],  # No implicit condition on res_field.
+                    ['checksum', '=', checksum],
+                ])
                 if origins:
-                    converted = Attachment.search([
+                    converted_domain = [
+                        ['id', '!=', False],  # No implicit condition on res_field.
                         ['res_model', '=', 'ir.attachment'],
                         ['res_id', 'in', origins.ids],
-                    ], limit=1)
+                        ['mimetype', '=', 'image/jpeg'],
+                    ]
+                    converted = Attachment.sudo().search(converted_domain, limit=1)
                     if converted:
                         base64_source = converted.datas
         return image_data_uri(base64_source)
