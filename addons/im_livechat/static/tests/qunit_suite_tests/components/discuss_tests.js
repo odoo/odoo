@@ -32,7 +32,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     assert.containsOnce(document.body, '.o_Discuss_sidebar',
         "should have a sidebar section"
     );
-    const groupLivechat = document.querySelector('.o_DiscussSidebar_categoryLivechat');
+    const groupLivechat = document.querySelector('.o_DiscussSidebarView_categoryLivechat');
     assert.ok(groupLivechat,
         "should have a channel group livechat"
     );
@@ -81,10 +81,10 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
 
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should have a channel group livechat in the side bar"
     );
-    const livechat = document.querySelector('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const livechat = document.querySelector('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem');
     assert.ok(
         livechat,
         "should have a livechat in sidebar"
@@ -109,7 +109,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
 
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should not have any livechat in the sidebar initially"
     );
 
@@ -126,7 +126,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should still not have any livechat in the sidebar after visitor opened his chat"
     );
 });
@@ -156,7 +156,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should not have any livechat in the sidebar initially"
     );
 
@@ -175,7 +175,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should still not have any livechat in the sidebar after visitor started typing"
     );
 });
@@ -210,7 +210,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     await openDiscuss();
     assert.containsNone(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should not have any livechat in the sidebar initially"
     );
 
@@ -228,16 +228,16 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     }));
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat',
+        '.o_DiscussSidebarView_categoryLivechat',
         "should have a channel group livechat in the side bar after receiving first message"
     );
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem',
+        '.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem',
         "should have a livechat in the sidebar after receiving first message"
     );
     assert.strictEqual(
-        document.querySelector('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem .o_DiscussSidebarCategoryItem_name').textContent,
+        document.querySelector('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem .o_DiscussSidebarCategoryItem_name').textContent,
         "Visitor (Belgium)",
         "should have visitor name and country as livechat name"
     );
@@ -275,7 +275,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    const initialLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_item');
+    const initialLivechats = document.querySelectorAll('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         initialLivechats.length,
         2,
@@ -297,7 +297,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
 
-    const newLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_item');
+    const newLivechats = document.querySelectorAll('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         newLivechats.length,
         2,

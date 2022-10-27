@@ -121,7 +121,7 @@ QUnit.test('sidebar channels should be ordered case insensitive alphabetically',
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    const results = document.querySelectorAll('.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem_name');
+    const results = document.querySelectorAll('.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategoryItem_name');
     assert.deepEqual(
         [results[0].textContent, results[1].textContent, results[2].textContent, results[3].textContent],
         ["abc", "Abc", "Xyz", "Xyz"],

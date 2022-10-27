@@ -8,7 +8,7 @@ tour.register('mail_tour', {
     url: "/web#action=mail.action_discuss",
     sequence: 80,
 }, [{
-    trigger: '.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_commandAdd',
+    trigger: '.o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_commandAdd',
     content: Markup(_t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>")),
     position: 'bottom',
 }, {
@@ -53,7 +53,7 @@ tour.register('mail_tour', {
     content: _t("Once a message has been starred, you can come back and review it at any time here."),
     position: "bottom",
 }, {
-    trigger: '.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_commandAdd',
+    trigger: '.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_commandAdd',
     content: Markup(_t("<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>")),
     position: 'bottom',
 }]);

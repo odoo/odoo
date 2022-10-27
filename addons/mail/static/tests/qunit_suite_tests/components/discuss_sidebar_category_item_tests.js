@@ -125,7 +125,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    const initialChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item');
+    const initialChats = document.querySelectorAll('.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         initialChats.length,
         2,
@@ -146,7 +146,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     await afterNextRender(() => initialChats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
     await click('.o_Composer_buttonSend');
-    const newChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item');
+    const newChats = document.querySelectorAll('.o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         newChats.length,
         2,
