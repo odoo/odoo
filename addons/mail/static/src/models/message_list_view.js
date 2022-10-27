@@ -160,6 +160,9 @@ registerModel({
             this.adjustFromComponentHints();
         },
         onScroll() {
+            if (!this.exists()) {
+                return;
+            }
             this.scrollThrottle.do();
         },
         scrollToEnd() {
