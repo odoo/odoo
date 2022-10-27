@@ -144,6 +144,9 @@
         }
     }
     ChartJsComponent.template = "o-spreadsheet-ChartJsComponent";
+    ChartJsComponent.props = {
+        figure: Object,
+    };
     chartComponentRegistry.add("line", ChartJsComponent);
     chartComponentRegistry.add("bar", ChartJsComponent);
     chartComponentRegistry.add("pie", ChartJsComponent);
@@ -3387,6 +3390,10 @@
     ErrorToolTip.size = { width: ERROR_TOOLTIP_WIDTH, height: ERROR_TOOLTIP_HEIGHT };
     ErrorToolTip.template = "o-spreadsheet-ErrorToolTip";
     ErrorToolTip.components = {};
+    ErrorToolTip.props = {
+        text: String,
+        onClosed: { type: Function, optional: true },
+    };
     const ErrorToolTipPopoverBuilder = {
         onHover: (position, getters) => {
             const cell = getters.getCell(getters.getActiveSheetId(), position.col, position.row);
@@ -3426,6 +3433,14 @@
         }
     }
     FilterMenuValueItem.template = "o-spreadsheet-FilterMenuValueItem";
+    FilterMenuValueItem.props = {
+        value: String,
+        isChecked: Boolean,
+        isSelected: Boolean,
+        onMouseMove: Function,
+        onClick: Function,
+        scrolledTo: { type: String, optional: true },
+    };
 
     const FILTER_MENU_HEIGHT = 295;
     const CSS$2 = css /* scss */ `
@@ -3687,6 +3702,10 @@
     FilterMenu.template = "o-spreadsheet-FilterMenu";
     FilterMenu.style = CSS$2;
     FilterMenu.components = { FilterMenuValueItem };
+    FilterMenu.props = {
+        filterPosition: Object,
+        onClosed: { type: Function, optional: true },
+    };
     const FilterMenuPopoverBuilder = {
         onOpen: (position, getters) => {
             return {
@@ -3841,6 +3860,16 @@
         verticalOffset: 0,
         marginTop: 0,
         onMouseWheel: () => { },
+    };
+    Popover.props = {
+        position: Object,
+        marginTop: { type: Number, optional: true },
+        childWidth: Number,
+        childHeight: Number,
+        flipHorizontalOffset: { type: Number, optional: true },
+        flipVerticalOffset: { type: Number, optional: true },
+        onMouseWheel: { type: Function, optional: true },
+        slots: Object,
     };
 
     //------------------------------------------------------------------------------
@@ -4052,6 +4081,13 @@
     Menu.defaultProps = {
         depth: 1,
     };
+    Menu.props = {
+        position: Object,
+        menuItems: Array,
+        depth: { type: Number, optional: true },
+        onClose: Function,
+        onMenuClicked: { type: Function, optional: true },
+    };
 
     const LINK_TOOLTIP_HEIGHT = 43;
     const LINK_TOOLTIP_WIDTH = 220;
@@ -4155,6 +4191,10 @@
                 cellCorner: "BottomLeft",
             };
         },
+    };
+    LinkDisplay.props = {
+        cellPosition: Object,
+        onClosed: { type: Function, optional: true },
     };
 
     const DEFAULT_MENU_ITEM = (key) => ({
@@ -4414,6 +4454,10 @@
                 cellCorner: "BottomLeft",
             };
         },
+    };
+    LinkEditor.props = {
+        cellPosition: Object,
+        onClosed: { type: Function, optional: true },
     };
 
     const cellPopoverRegistry = new Registry();
@@ -6416,6 +6460,15 @@
         }
     }
     SelectionInput.template = "o-spreadsheet-SelectionInput";
+    SelectionInput.props = {
+        ranges: Array,
+        hasSingleRange: { type: Boolean, optional: true },
+        required: { type: Boolean, optional: true },
+        isInvalid: { type: Boolean, optional: true },
+        class: { type: String, optional: true },
+        onSelectionChanged: { type: Function, optional: true },
+        onSelectionConfirmed: { type: Function, optional: true },
+    };
 
     class LineBarPieConfigPanel extends owl.Component {
         constructor() {
@@ -6478,6 +6531,11 @@
     }
     LineBarPieConfigPanel.template = "o-spreadsheet-LineBarPieConfigPanel";
     LineBarPieConfigPanel.components = { SelectionInput };
+    LineBarPieConfigPanel.props = {
+        figureId: String,
+        definition: Object,
+        updateChart: Function,
+    };
 
     class BarConfigPanel extends LineBarPieConfigPanel {
         onUpdateStacked(ev) {
@@ -8410,6 +8468,14 @@
         }
     }
     ColorPicker.template = "o-spreadsheet-ColorPicker";
+    ColorPicker.defaultProps = {
+        currentColor: "", //TODO Change it to false instead of empty string
+    };
+    ColorPicker.props = {
+        dropdownDirection: { type: String, optional: true },
+        onColorPicked: Function,
+        currentColor: { type: String, optional: true },
+    };
 
     class LineBarPieDesignPanel extends owl.Component {
         constructor() {
@@ -8445,6 +8511,11 @@
     }
     LineBarPieDesignPanel.template = "o-spreadsheet-LineBarPieDesignPanel";
     LineBarPieDesignPanel.components = { ColorPicker };
+    LineBarPieDesignPanel.props = {
+        figureId: String,
+        definition: Object,
+        updateChart: Function,
+    };
 
     class BarChartDesignPanel extends LineBarPieDesignPanel {
     }
@@ -8478,6 +8549,11 @@
     }
     GaugeChartConfigPanel.template = "o-spreadsheet-GaugeChartConfigPanel";
     GaugeChartConfigPanel.components = { SelectionInput };
+    GaugeChartConfigPanel.props = {
+        figureId: String,
+        definition: Object,
+        updateChart: Function,
+    };
 
     css /* scss */ `
   .o-gauge-color-set {
@@ -8619,6 +8695,11 @@
     }
     GaugeChartDesignPanel.template = "o-spreadsheet-GaugeChartDesignPanel";
     GaugeChartDesignPanel.components = { ColorPicker };
+    GaugeChartDesignPanel.props = {
+        figureId: String,
+        definition: Object,
+        updateChart: Function,
+    };
 
     class LineConfigPanel extends LineBarPieConfigPanel {
         get canTreatLabelsAsText() {
@@ -8693,6 +8774,11 @@
     }
     ScorecardChartConfigPanel.template = "o-spreadsheet-ScorecardChartConfigPanel";
     ScorecardChartConfigPanel.components = { SelectionInput };
+    ScorecardChartConfigPanel.props = {
+        figureId: String,
+        definition: Object,
+        updateChart: Function,
+    };
 
     class ScorecardChartDesignPanel extends owl.Component {
         constructor() {
@@ -8729,6 +8815,11 @@
     }
     ScorecardChartDesignPanel.template = "o-spreadsheet-ScorecardChartDesignPanel";
     ScorecardChartDesignPanel.components = { ColorPicker };
+    ScorecardChartDesignPanel.props = {
+        figureId: String,
+        definition: Object,
+        updateChart: Function,
+    };
 
     const chartSidePanelComponentRegistry = new Registry();
     chartSidePanelComponentRegistry
@@ -8864,6 +8955,9 @@
         }
     }
     ChartPanel.template = "o-spreadsheet-ChartPanel";
+    ChartPanel.props = {
+        onCloseSidePanel: Function,
+    };
 
     // -----------------------------------------------------------------------------
     // We need here the svg of the icons that we need to convert to images for the renderer
@@ -8973,6 +9067,9 @@
         }
     }
     IconPicker.template = "o-spreadsheet-IconPicker";
+    IconPicker.props = {
+        onIconPicked: Function,
+    };
 
     // TODO vsc: add ordering of rules
     css /* scss */ `
@@ -9620,6 +9717,10 @@
     }
     ConditionalFormattingPanel.template = "o-spreadsheet-ConditionalFormattingPanel";
     ConditionalFormattingPanel.components = { SelectionInput, IconPicker, ColorPicker };
+    ConditionalFormattingPanel.props = {
+        selection: { type: Object, optional: true },
+        onCloseSidePanel: Function,
+    };
 
     css /* scss */ `
   .o-custom-currency {
@@ -9759,6 +9860,9 @@
         }
     }
     CustomCurrencyPanel.template = "o-spreadsheet-CustomCurrencyPanel";
+    CustomCurrencyPanel.props = {
+        onCloseSidePanel: Function,
+    };
 
     css /* scss */ `
   .o-find-and-replace {
@@ -9887,6 +9991,9 @@
         }
     }
     FindAndReplacePanel.template = "o-spreadsheet-FindAndReplacePanel";
+    FindAndReplacePanel.props = {
+        onCloseSidePanel: Function,
+    };
 
     const sidePanelRegistry = new Registry();
     sidePanelRegistry.add("ConditionalFormatting", {
@@ -10144,6 +10251,9 @@
             return maxHeight / LINE_HEIGHT;
         }
     }
+    ScorecardChart.props = {
+        figure: Object,
+    };
     chartComponentRegistry.add("scorecard", ScorecardChart);
 
     // -----------------------------------------------------------------------------
@@ -10262,6 +10372,11 @@
     }
     ChartFigure.template = "o-spreadsheet-ChartFigure";
     ChartFigure.components = { Menu };
+    ChartFigure.props = {
+        figure: Object,
+        sidePanelIsOpen: Boolean,
+        onFigureDeleted: Function,
+    };
 
     function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
         const _onMouseUp = (ev) => {
@@ -10488,11 +10603,17 @@
         }
     }
     Autofill.template = "o-spreadsheet-Autofill";
+    Autofill.props = {
+        position: Object,
+    };
     class TooltipComponent extends owl.Component {
     }
     TooltipComponent.template = owl.xml /* xml */ `
     <div t-esc="props.content"/>
   `;
+    TooltipComponent.props = {
+        content: String,
+    };
 
     css /* scss */ `
   .o-client-tag {
@@ -10519,6 +10640,13 @@
         }
     }
     ClientTag.template = "o-spreadsheet-ClientTag";
+    ClientTag.props = {
+        active: Boolean,
+        name: String,
+        color: String,
+        col: Number,
+        row: Number,
+    };
 
     //------------------------------------------------------------------------------
     // Arg description DSL
@@ -19626,6 +19754,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     TextValueProvider.template = "o-spreadsheet-TextValueProvider";
+    TextValueProvider.props = {
+        provider: String,
+        filter: { type: Function, optional: true },
+        search: String,
+        borderStyle: String,
+        exposeAPI: Function,
+        onCompleted: Function,
+    };
 
     class ContentEditableHelper {
         constructor(el) {
@@ -19849,6 +19985,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     FunctionDescriptionProvider.template = "o-spreadsheet-FunctionDescriptionProvider";
+    FunctionDescriptionProvider.props = {
+        functionName: String,
+        functionDescription: Object,
+        argToFocus: Number,
+        borderStyle: String,
+    };
 
     const functions = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
@@ -20312,7 +20454,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Composer.components = { TextValueProvider, FunctionDescriptionProvider };
     Composer.defaultProps = {
         inputStyle: "",
-        focus: "inactive",
+    };
+    Composer.props = {
+        inputStyle: { type: String, optional: true },
+        rect: { type: Object, optional: true },
+        delimitation: { type: Object, optional: true },
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerUnmounted: { type: Function, optional: true },
+        onComposerContentFocused: Function,
     };
 
     const SCROLLBAR_WIDTH = 14;
@@ -20334,8 +20483,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             this.gridComposerRef = owl.useRef("gridComposer");
             this.composerState = owl.useState({
-                rect: null,
-                delimitation: null,
+                rect: undefined,
+                delimitation: undefined,
             });
             const { col, row } = this.env.model.getters.getPosition();
             this.zone = this.env.model.getters.expandZone(this.env.model.getters.getActiveSheetId(), {
@@ -20414,6 +20563,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     GridComposer.template = "o-spreadsheet-GridComposer";
     GridComposer.components = { Composer };
+    GridComposer.props = {
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerUnmounted: Function,
+        onComposerContentFocused: Function,
+    };
 
     const { Component: Component$1 } = owl__namespace;
     const CSS$1 = css /* scss */ `
@@ -20449,6 +20603,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     FilterIcon.style = CSS$1;
     FilterIcon.template = "o-spreadsheet-FilterIcon";
+    FilterIcon.props = {
+        position: Object,
+        isActive: Boolean,
+        onClick: Function,
+    };
 
     const { Component } = owl__namespace;
     const CSS = css /* scss */ ``;
@@ -20503,6 +20662,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     FilterIconsOverlay.defaultProps = {
         gridPosition: { x: 0, y: 0 },
+    };
+    FilterIconsOverlay.props = {
+        gridPosition: { type: Object, optional: true },
     };
 
     // -----------------------------------------------------------------------------
@@ -20845,6 +21007,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     FigureComponent.template = "o-spreadsheet-FigureComponent";
     FigureComponent.components = {};
+    FigureComponent.props = {
+        sidePanelIsOpen: Boolean,
+        onFigureDeleted: Function,
+        figure: Object,
+    };
 
     class FiguresContainer extends owl.Component {
         getVisibleFigures() {
@@ -20865,6 +21032,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     FiguresContainer.template = "o-spreadsheet-FiguresContainer";
     FiguresContainer.components = { FigureComponent };
+    FiguresContainer.props = {
+        sidePanelIsOpen: Boolean,
+        onFigureDeleted: Function,
+    };
     figureRegistry.add("chart", { Component: ChartFigure, SidePanelComponent: "ChartPanel" });
 
     /**
@@ -21045,6 +21216,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onFigureDeleted: () => { },
         sidePanelIsOpen: false,
     };
+    GridOverlay.props = {
+        onCellHovered: { type: Function, optional: true },
+        onCellDoubleClicked: { type: Function, optional: true },
+        onCellClicked: { type: Function, optional: true },
+        onCellRightClicked: { type: Function, optional: true },
+        onGridResized: { type: Function, optional: true },
+        onFigureDeleted: { type: Function, optional: true },
+        onGridMoved: Function,
+        gridOverlayDimensions: String,
+        sidePanelIsOpen: { type: Boolean, optional: true },
+    };
 
     class GridPopover extends owl.Component {
         get cellPopover() {
@@ -21065,6 +21247,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     GridPopover.template = "o-spreadsheet-GridPopover";
     GridPopover.components = { Popover };
+    GridPopover.props = {
+        gridPosition: Object,
+        hoveredCell: Object,
+        onClosePopover: Function,
+        onMouseWheel: Function,
+    };
 
     class AbstractResizer extends owl.Component {
         constructor() {
@@ -21321,6 +21509,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
+    AbstractResizer.props = {
+        onOpenContextMenu: Function,
+    };
     class ColResizer extends AbstractResizer {
         setup() {
             super.setup();
@@ -21490,6 +21681,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
+    ColResizer.props = {
+        onOpenContextMenu: Function,
+    };
     class RowResizer extends AbstractResizer {
         setup() {
             super.setup();
@@ -21609,6 +21803,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
+    RowResizer.props = {
+        onOpenContextMenu: Function,
+    };
     class HeadersOverlay extends owl.Component {
         selectAll() {
             this.env.model.selection.selectAll();
@@ -21616,6 +21813,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     HeadersOverlay.template = "o-spreadsheet-HeadersOverlay";
     HeadersOverlay.components = { ColResizer, RowResizer };
+    HeadersOverlay.props = {
+        onOpenContextMenu: Function,
+    };
 
     function useGridDrawing(refName, model, canvasSize) {
         const canvasRef = owl.useRef(refName);
@@ -21701,6 +21901,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     Border.template = "o-spreadsheet-Border";
+    Border.props = {
+        zone: Object,
+        orientation: String,
+        isMoving: Boolean,
+        onMoveHighlight: Function,
+    };
 
     css /* scss */ `
   .o-corner {
@@ -21758,6 +21964,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     Corner.template = "o-spreadsheet-Corner";
+    Corner.props = {
+        zone: Object,
+        color: String,
+        orientation: String,
+        isResizing: Boolean,
+        onResizeHighlight: Function,
+    };
 
     css /*SCSS*/ `
   .o-highlight {
@@ -21865,6 +22078,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         Corner,
         Border,
     };
+    Highlight.props = {
+        zone: Object,
+        color: String,
+    };
 
     class ScrollBar$1 {
         constructor(el, direction) {
@@ -21955,6 +22172,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         width: 1,
         height: 1,
     };
+    ScrollBar.props = {
+        width: { type: Number, optional: true },
+        height: { type: Number, optional: true },
+        direction: String,
+        position: Object,
+        offset: Number,
+        onScroll: Function,
+    };
 
     class HorizontalScrollBar extends owl.Component {
         get offset() {
@@ -21970,7 +22195,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get position() {
             const { x } = this.env.model.getters.getMainViewportRect();
             return {
-                left: `${this.props.position.left + x}px`,
+                left: `${this.props.leftOffset + x}px`,
                 bottom: "0px",
                 right: `${SCROLLBAR_WIDTH$1}px`,
             };
@@ -21994,7 +22219,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onScroll.bind="onScroll"
       />`;
     HorizontalScrollBar.defaultProps = {
-        position: { left: 0 },
+        leftOffset: 0,
+    };
+    HorizontalScrollBar.props = {
+        leftOffset: { type: Number, optional: true },
     };
 
     class VerticalScrollBar extends owl.Component {
@@ -22011,7 +22239,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get position() {
             const { y } = this.env.model.getters.getMainViewportRect();
             return {
-                top: `${this.props.position.top + y}px`,
+                top: `${this.props.topOffset + y}px`,
                 right: "0px",
                 bottom: `${SCROLLBAR_WIDTH$1}px`,
             };
@@ -22035,7 +22263,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       onScroll.bind="onScroll"
     />`;
     VerticalScrollBar.defaultProps = {
-        position: { top: 0 },
+        topOffset: 0,
+    };
+    VerticalScrollBar.props = {
+        topOffset: { type: Number, optional: true },
     };
 
     const registries$1 = {
@@ -22085,10 +22316,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     });
                 },
                 "CTRL+A": () => this.env.model.selection.loopSelection(),
-                "CTRL+S": () => {
-                    var _a, _b;
-                    (_b = (_a = this.props).onSaveRequested) === null || _b === void 0 ? void 0 : _b.call(_a);
-                },
                 "CTRL+Z": () => this.env.model.dispatch("REQUEST_UNDO"),
                 "CTRL+Y": () => this.env.model.dispatch("REQUEST_REDO"),
                 "CTRL+B": () => this.env.model.dispatch("SET_FORMATTING", {
@@ -22451,6 +22678,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         VerticalScrollBar,
         HorizontalScrollBar,
         FilterIconsOverlay,
+    };
+    Grid.props = {
+        sidePanelIsOpen: Boolean,
+        exposeFocus: Function,
+        focusComposer: String,
+        onComposerContentFocused: Function,
+        onGridComposerCellFocused: Function,
     };
 
     /**
@@ -26920,6 +27154,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     class CellPlugin extends CorePlugin {
         constructor() {
             super(...arguments);
+            this.nextId = 1;
             this.cells = {};
             this.createCell = cellFactory(this.getters);
         }
@@ -27086,7 +27321,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         importCell(sheetId, cellData, normalizedStyles, normalizedFormats) {
             const style = (cellData.style && normalizedStyles[cellData.style]) || undefined;
             const format = (cellData.format && normalizedFormats[cellData.format]) || undefined;
-            const cellId = this.uuidGenerator.uuidv4();
+            const cellId = this.getNextUid();
             const properties = { format, style };
             return this.createCell(cellId, (cellData === null || cellData === void 0 ? void 0 : cellData.content) || "", properties, sheetId);
         }
@@ -27228,6 +27463,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return format;
         }
+        getNextUid() {
+            const id = this.nextId.toString();
+            this.history.update("nextId", this.nextId + 1);
+            return id;
+        }
         updateCell(sheetId, col, row, after) {
             var _a;
             const before = this.getters.getCell(sheetId, col, row);
@@ -27266,7 +27506,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 return;
             }
-            const cellId = (before === null || before === void 0 ? void 0 : before.id) || this.uuidGenerator.uuidv4();
+            const cellId = (before === null || before === void 0 ? void 0 : before.id) || this.getNextUid();
             const didContentChange = hasContent;
             const properties = { format, style };
             const cell = this.createCell(cellId, afterContent, properties, sheetId);
@@ -32353,13 +32593,26 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return 0 /* CommandResult.Success */;
         }
         handle(cmd) {
+            var _a;
             switch (cmd.type) {
                 case "UNDO":
                 case "REDO":
                 case "UPDATE_CELL":
                 case "EVALUATE_CELLS":
                 case "ACTIVATE_SHEET":
+                case "REMOVE_FILTER_TABLE":
                     this.isEvaluationDirty = true;
+                    break;
+                case "START":
+                    for (const sheetId of this.getters.getSheetIds()) {
+                        this.filterValues[sheetId] = {};
+                        for (const filter of this.getters.getFilters(sheetId)) {
+                            this.filterValues[sheetId][filter.id] = [];
+                        }
+                    }
+                    break;
+                case "CREATE_SHEET":
+                    this.filterValues[cmd.sheetId] = {};
                     break;
                 case "UPDATE_FILTER":
                     this.updateFilter(cmd);
@@ -32370,7 +32623,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     for (const copiedFilter of this.getters.getFilters(cmd.sheetId)) {
                         const zone = copiedFilter.zoneWithHeaders;
                         const newFilter = this.getters.getFilter(cmd.sheetIdTo, zone.left, zone.top);
-                        filterValues[newFilter.id] = this.filterValues[cmd.sheetId][copiedFilter.id];
+                        filterValues[newFilter.id] = ((_a = this.filterValues[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[copiedFilter.id]) || [];
                     }
                     this.filterValues[cmd.sheetIdTo] = filterValues;
                     break;
@@ -35353,6 +35606,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         handle(cmd) {
+            var _a;
             this.cleanViewports();
             switch (cmd.type) {
                 case "START":
@@ -35394,7 +35648,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "UPDATE_CELL":
                     // update cell content or format can change hidden rows because of data filters
-                    if ("content" in cmd || "format" in cmd) {
+                    if ("content" in cmd || "format" in cmd || ((_a = cmd.style) === null || _a === void 0 ? void 0 : _a.fontSize) !== undefined) {
                         this.sheetsWithDirtyViewports.add(cmd.sheetId);
                     }
                     break;
@@ -36646,6 +36900,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     BottomBar.template = "o-spreadsheet-BottomBar";
     BottomBar.components = { Menu };
+    BottomBar.props = {
+        onClick: Function,
+    };
 
     css /* scss */ `
   .o-dashboard-clickable-cell {
@@ -36774,6 +37031,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         HorizontalScrollBar,
         FilterIconsOverlay,
     };
+    SpreadsheetDashboard.props = {};
 
     css /* scss */ `
   .o-sidePanel {
@@ -37029,6 +37287,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     SidePanel.template = "o-spreadsheet-SidePanel";
+    SidePanel.props = {
+        component: String,
+        panelProps: { type: Object, optional: true },
+        onCloseSidePanel: Function,
+    };
 
     const AddMergeInteractiveContent = {
         MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
@@ -37153,7 +37416,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
           display: flex;
           align-items: center;
           margin: 2px;
-          padding: 0 3px;
+          padding: 0px 3px;
           border-radius: 2px;
           cursor: pointer;
           min-width: fit-content;
@@ -37202,6 +37465,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
         .o-dropdown {
           position: relative;
+          display: flex;
+          align-items: center;
+
+          .o-dropdown-button {
+            height: 30px;
+          }
 
           .o-text-icon {
             height: 100%;
@@ -37225,7 +37494,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             background-color: white;
 
             .o-dropdown-item {
-              padding: 7px 10px;
+              cursor: pointer;
             }
 
             .o-dropdown-item:hover {
@@ -37238,6 +37507,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
               .o-line-item {
                 padding: 4px;
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
 
                 &:hover {
                   background-color: rgba(0, 0, 0, 0.08);
@@ -37260,6 +37532,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                   left: 5px;
                 }
               }
+            }
+
+            .o-dropdown-align-item {
+              padding: 7px 10px;
             }
           }
         }
@@ -37309,7 +37585,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
   `;
         }
         setup() {
-            owl.useExternalListener(window, "click", this.onClick);
+            owl.useExternalListener(window, "click", this.onExternalClick);
             owl.onWillStart(() => this.updateCellState());
             owl.onWillUpdateProps(() => this.updateCellState());
         }
@@ -37318,22 +37594,32 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 .getAll()
                 .filter((item) => !item.isVisible || item.isVisible(this.env));
         }
-        onClick(ev) {
-            if (this.openedEl && isChildEvent(this.openedEl, ev)) {
+        onExternalClick(ev) {
+            // TODO : manage click events better. We need this piece of code
+            // otherwise the event opening the menu would close it on the same frame.
+            // And we cannot stop the event propagation because it's used in an
+            // external listener of the Menu component to close the context menu when
+            // clicking on the top bar
+            if (this.openedEl === ev.target) {
                 return;
             }
             this.closeMenus();
         }
-        toogleStyle(style) {
+        onClick() {
+            this.props.onClick();
+            this.closeMenus();
+        }
+        toggleStyle(style) {
             setStyle(this.env, { [style]: !this.style[style] });
         }
-        toogleFormat(formatName) {
+        toggleFormat(formatName) {
             const formatter = FORMATS.find((f) => f.name === formatName);
             const value = (formatter && formatter.value) || "";
             setFormatter(this.env, value);
         }
         toggleAlign(align) {
             setStyle(this.env, { ["align"]: align });
+            this.onClick();
         }
         onMenuMouseOver(menu, ev) {
             if (this.isSelectingMenu) {
@@ -37422,6 +37708,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         setColor(target, color) {
             setStyle(this.env, { [target]: color });
+            this.onClick();
         }
         setBorder(command) {
             this.env.model.dispatch("SET_FORMATTING", {
@@ -37429,17 +37716,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 target: this.env.model.getters.getSelectedZones(),
                 border: command,
             });
+            this.onClick();
         }
-        setFormat(ev) {
-            const format = ev.target.dataset.format;
-            if (format) {
-                this.toogleFormat(format);
-                return;
+        setFormat(format, custom) {
+            if (!custom) {
+                this.toggleFormat(format);
             }
-            const custom = ev.target.dataset.custom;
-            if (custom) {
-                this.openCustomFormatSidePanel(custom);
+            else {
+                this.openCustomFormatSidePanel(format);
             }
+            this.onClick();
         }
         openCustomFormatSidePanel(custom) {
             const customFormatter = CUSTOM_FORMATS.find((c) => c.name === custom);
@@ -37464,9 +37750,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 target: this.env.model.getters.getSelectedZones(),
             });
         }
-        setSize(ev) {
-            const fontSize = parseFloat(ev.target.dataset.size);
+        setSize(fontSizeStr) {
+            const fontSize = parseFloat(fontSizeStr);
             setStyle(this.env, { fontSize });
+            this.onClick();
         }
         doAction(action) {
             action(this.env);
@@ -37503,6 +37790,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     TopBar.template = "o-spreadsheet-TopBar";
     TopBar.components = { ColorPicker, Menu, Composer };
+    TopBar.props = {
+        onClick: Function,
+        focusComposer: String,
+        onComposerContentFocused: Function,
+    };
 
     css /* scss */ `
   .o-spreadsheet {
@@ -37581,6 +37873,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             super(...arguments);
             this.isViewportTooSmall = false;
         }
+        get model() {
+            return this.props.model;
+        }
         getStyle() {
             if (this.env.isDashboard()) {
                 return `grid-template-rows: auto;`;
@@ -37590,7 +37885,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             var _a, _b;
             (_b = (_a = this.props).exposeSpreadsheet) === null || _b === void 0 ? void 0 : _b.call(_a, this);
-            this.model = this.props.model;
             this.sidePanel = owl.useState({ isOpen: false, panelProps: {} });
             this.composer = owl.useState({
                 topBarFocus: "inactive",
@@ -37684,10 +37978,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             this._focusGrid();
         }
-        save() {
-            var _a, _b;
-            (_b = (_a = this.props).onContentSaved) === null || _b === void 0 ? void 0 : _b.call(_a, this.model.exportData());
-        }
         onKeydown(ev) {
             let keyDownString = "";
             if (ev.ctrlKey || ev.metaKey) {
@@ -37744,6 +38034,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Spreadsheet.template = "o-spreadsheet-Spreadsheet";
     Spreadsheet.components = { TopBar, Grid, BottomBar, SidePanel, SpreadsheetDashboard };
     Spreadsheet._t = t;
+    Spreadsheet.props = {
+        model: Object,
+        exposeSpreadsheet: { type: Function, optional: true },
+    };
 
     class LocalTransportService {
         constructor() {
@@ -41780,8 +42074,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-10-17T06:58:51.904Z';
-    exports.__info__.hash = 'ab6f7e4';
+    exports.__info__.date = '2022-10-27T09:50:44.339Z';
+    exports.__info__.hash = '1f8e5fa';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
