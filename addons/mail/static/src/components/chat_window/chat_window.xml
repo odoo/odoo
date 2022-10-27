@@ -14,7 +14,7 @@
                 }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-id="chatWindow.thread ? chatWindow.thread.id : ''" t-ref="root"
                 t-att-data-thread-model="chatWindow.thread ? chatWindow.thread.model : ''"
             >
-                <ChatWindowHeader
+                <ChatWindowHeaderView
                     className="'o_ChatWindow_header flex-grow-0 flex-shrink-0'"
                     record="chatWindow.chatWindowHeaderView"
                 />

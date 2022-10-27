@@ -34,7 +34,7 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() => document.querySelector(`.o_NotificationList_preview`).click());
-    await afterNextRender(() => document.querySelector(`.o_ChatWindowHeader_commandClose`).click());
+    await afterNextRender(() => document.querySelector(`.o_ChatWindowHeaderView_commandClose`).click());
     const channels = await messaging.rpc({
         model: 'mail.channel',
         method: 'channel_info',

@@ -73,22 +73,22 @@ QUnit.test('chat window new message: basic rendering', async function (assert) {
         "should have a header"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatWindow_header .o_ChatWindowHeader_name`).length,
+        document.querySelectorAll(`.o_ChatWindow_header .o_ChatWindowHeaderView_name`).length,
         1,
         "should have name part in header"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ChatWindow_header .o_ChatWindowHeader_name`).textContent,
+        document.querySelector(`.o_ChatWindow_header .o_ChatWindowHeaderView_name`).textContent,
         "New message",
         "should display 'new message' in the header"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatWindow_header .o_ChatWindowHeader_command`).length,
+        document.querySelectorAll(`.o_ChatWindow_header .o_ChatWindowHeaderView_command`).length,
         1,
         "should have 1 command in header"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatWindow_header .o_ChatWindowHeader_commandClose`).length,
+        document.querySelectorAll(`.o_ChatWindow_header .o_ChatWindowHeaderView_commandClose`).length,
         1,
         "should have command to close chat window"
     );
@@ -137,7 +137,7 @@ QUnit.test('chat window new message: close', async function (assert) {
     const { click } = await start();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
-    await click(`.o_ChatWindow_header .o_ChatWindowHeader_commandClose`);
+    await click(`.o_ChatWindow_header .o_ChatWindowHeaderView_commandClose`);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
         0,
@@ -312,7 +312,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
         "should have removed the 'new message' chat window after selecting a partner"
     );
     assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="1"] .o_ChatWindowHeader_name').textContent,
+        document.querySelector('.o_ChatWindow[data-visible-index="1"] .o_ChatWindowHeaderView_name').textContent,
         "Partner 131",
         "chat window with selected partner should be opened in position where 'new message' chat window was, which is in the middle"
     );
@@ -439,47 +439,47 @@ QUnit.test('chat window: basic rendering', async function (assert) {
         "should have thread icon in header part"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_name`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_name`).length,
         1,
         "should have thread name in header part"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelector(`:scope .o_ChatWindowHeader_name`).textContent,
+        chatWindowHeader.querySelector(`:scope .o_ChatWindowHeaderView_name`).textContent,
         "General",
         "should have correct thread name in header part"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_command`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_command`).length,
         6,
         "should have 6 commands in header part"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandPhone`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_commandPhone`).length,
         1,
         "should have command to start an RTC call in audio mode"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandCamera`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_commandCamera`).length,
         1,
         "should have command to start an RTC call in video mode"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandShowMemberList`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_commandShowMemberList`).length,
         1,
         "should have command to show the member list"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandShowCallSettingsMenu`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_commandShowCallSettingsMenu`).length,
         1,
         "should have command to show the call settings menu"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandExpand`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_commandExpand`).length,
         1,
         "should have command to expand thread in discuss"
     );
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandClose`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeaderView_commandClose`).length,
         1,
         "should have command to close chat window"
     );
@@ -574,7 +574,7 @@ QUnit.test('chat window: open / close', async function (assert) {
     );
 
     // Close chat window
-    await click(`.o_ChatWindowHeader_commandClose`);
+    await click(`.o_ChatWindowHeaderView_commandClose`);
     assert.containsNone(
         document.body,
         '.o_ChatWindow',
@@ -650,7 +650,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
         "should have a chat window after clicking on thread preview"
     );
     // Close chat window
-    await click(`.o_ChatWindowHeader_commandClose`);
+    await click(`.o_ChatWindowHeaderView_commandClose`);
     assert.containsNone(
         document.body,
         '.o_ChatWindow',
@@ -1202,7 +1202,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     assert.containsOnce(document.body, '.o_ChatWindow', "Only 1 chatWindow must be opened");
     const chatWindow = document.querySelector('.o_ChatWindow');
     assert.strictEqual(
-        chatWindow.querySelector('.o_ChatWindowHeader_name').textContent,
+        chatWindow.querySelector('.o_ChatWindowHeaderView_name').textContent,
         'channel1',
         "The name of the only chatWindow should be 'channel1' (channel with ID 1)"
     );
@@ -1234,12 +1234,12 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     assert.containsN(document.body, '.o_ChatWindow', 2, "2 chatWindows must be opened");
     const chatWindows = document.querySelectorAll('.o_ChatWindow');
     assert.strictEqual(
-        chatWindows[0].querySelector('.o_ChatWindowHeader_name').textContent,
+        chatWindows[0].querySelector('.o_ChatWindowHeaderView_name').textContent,
         'channel1',
         "The name of the 1st chatWindow should be 'channel1' (channel with ID 1)"
     );
     assert.strictEqual(
-        chatWindows[1].querySelector('.o_ChatWindowHeader_name').textContent,
+        chatWindows[1].querySelector('.o_ChatWindowHeaderView_name').textContent,
         'channel2',
         "The name of the 2nd chatWindow should be 'channel2' (channel with ID 2)"
     );

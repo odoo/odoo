@@ -172,11 +172,11 @@ QUnit.test('click on expand from chat window should close the chat window and op
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatWindowHeader_commandExpand',
+        '.o_ChatWindowHeaderView_commandExpand',
         "should have an expand button"
     );
 
-    await click('.o_ChatWindowHeader_commandExpand');
+    await click('.o_ChatWindowHeaderView_commandExpand');
     assert.containsNone(
         document.body,
         '.o_ChatWindow',
@@ -328,7 +328,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
     );
     assert.containsNone(
         document.body,
-        '.o_ChatWindowHeader_counter',
+        '.o_ChatWindowHeaderView_counter',
         "chat window header should not have unread counter for non-channel thread"
     );
 });

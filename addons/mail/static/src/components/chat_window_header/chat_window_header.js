@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ChatWindowHeader extends Component {
+export class ChatWindowHeaderView extends Component {
 
     /**
      * @returns {ChatWindowHeaderView}
@@ -15,9 +15,9 @@ export class ChatWindowHeader extends Component {
 
 }
 
-Object.assign(ChatWindowHeader, {
+Object.assign(ChatWindowHeaderView, {
     props: { record: Object },
-    template: 'mail.ChatWindowHeader',
+    template: 'mail.ChatWindowHeaderView',
 });
 
-registerMessagingComponent(ChatWindowHeader);
+registerMessagingComponent(ChatWindowHeaderView);
