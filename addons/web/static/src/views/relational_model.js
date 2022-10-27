@@ -1805,7 +1805,7 @@ export class DynamicRecordList extends DynamicList {
         /** @type {Record[]} */
         this.records = [];
         this.data = params.data;
-        this.countLimit = this.constructor.WEB_SEARCH_READ_COUNT_LIMIT;
+        this.countLimit = params.countLimit || this.constructor.WEB_SEARCH_READ_COUNT_LIMIT;
         this.hasLimitedCount = false;
     }
 
@@ -2569,6 +2569,7 @@ export class Group extends DataPoint {
             activeFields: params.activeFields,
             fields: params.fields,
             limit: params.limit,
+            countLimit: params.count,
             groupByInfo: params.groupByInfo,
             onCreateRecord: params.onCreateRecord,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
