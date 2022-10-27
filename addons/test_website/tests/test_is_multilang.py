@@ -71,3 +71,18 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         self.assertEqual(urlparse(it_href).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
         self.assertEqual(urlparse(fr_href).path, f'/{be.url_code}/test_lang_url/my-super-country-belgium-{country1.id}')
         self.assertEqual(urlparse(en_href).path, f'/test_lang_url/my-super-country-{country1.id}')
+
+    def test_03_multilang_false(self):
+        website = self.env['website'].search([], limit=1)
+        fr = self.env.ref('base.lang_fr').sudo()
+        en = self.env.ref('base.lang_en').sudo()
+        fr.active = True
+
+        website.default_lang_id = en
+        website.language_ids = en + fr
+        self.opener.cookies['frontend_lang'] = fr.iso_code
+
+        res = self.url_open('/get_post_nomultilang', allow_redirects=False)
+        res.raise_for_status()
+
+        self.assertEqual(res.status_code, 200, "Should not be redirected")
