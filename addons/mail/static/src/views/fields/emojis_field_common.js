@@ -3,7 +3,7 @@
 import MailEmojisMixin from '@mail/js/emojis_mixin';
 
 const _onEmojiClickMixin = MailEmojisMixin.onEmojiClick;
-const { useRef, onMounted } = owl;
+import { useRef, onMounted } from '@odoo/owl';
 
 /*
  * Common code for EmojisTextField and EmojisCharField

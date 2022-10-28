@@ -4,7 +4,7 @@
 import '@mail/components/activity_menu_view/activity_menu_view';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 export class ActivityMenuContainer extends Component {
 

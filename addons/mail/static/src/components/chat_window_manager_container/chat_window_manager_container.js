@@ -5,7 +5,7 @@ import { useModels } from '@mail/component_hooks/use_models';
 import '@mail/components/chat_window_manager/chat_window_manager';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 export class ChatWindowManagerContainer extends Component {
 

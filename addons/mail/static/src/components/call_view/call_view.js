@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 // TODO a nice-to-have would be a resize handle under the videos.
 

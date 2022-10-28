@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-const { Component, xml } = owl;
+import { Component, xml } from '@odoo/owl';
 
 class DialogCommand extends Component {}
 DialogCommand.template = xml`

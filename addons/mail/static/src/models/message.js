@@ -9,7 +9,7 @@ import { session } from '@web/session';
 
 import { getLangDatetimeFormat, str_to_datetime } from 'web.time';
 
-const { markup } = owl;
+import { markup } from '@odoo/owl';
 
 registerModel({
     name: 'Message',

@@ -7,7 +7,7 @@ import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-const { Component, onWillDestroy, onWillUpdateProps } = owl;
+import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
 const getNextId = (function () {
     let tmpId = 0;

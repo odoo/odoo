@@ -7,7 +7,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 
-const { onMounted, onWillUpdateProps } = owl;
+import { onMounted, onWillUpdateProps } from '@odoo/owl';
 
 export class FieldMany2ManyTagsEmailTagsList extends TagsList {}
 FieldMany2ManyTagsEmailTagsList.template = "FieldMany2ManyTagsEmailTagsList";

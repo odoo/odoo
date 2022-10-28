@@ -4,7 +4,7 @@
 import '@mail/components/discuss_public_view/discuss_public_view';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 export class DiscussPublicViewContainer extends Component {
 

@@ -6,7 +6,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useService } from "@web/core/utils/hooks";
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
-const { Component, useRef } = owl;
+import { Component, useRef } from '@odoo/owl';
 
 export class ComposerSuggestedRecipient extends Component {
 

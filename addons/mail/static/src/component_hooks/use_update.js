@@ -2,7 +2,7 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { onMounted, onPatched, onWillDestroy, useComponent } = owl;
+import { onMounted, onPatched, onWillDestroy, useComponent } from '@odoo/owl';
 
 /**
  * This hook provides support for executing code after update (render or patch).

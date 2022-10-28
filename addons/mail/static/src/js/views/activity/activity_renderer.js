@@ -11,7 +11,7 @@ import QWeb from 'web.QWeb';
 import session from 'web.session';
 import utils from 'web.utils';
 
-const { useState } = owl;
+import { useState } from '@odoo/owl';
 const _t = core._t;
 
 /**
