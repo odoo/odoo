@@ -256,13 +256,6 @@ class MailComposer(models.TransientModel):
             result_messages: in comment mode, posted messages
         )
         """
-        # Several custom layouts make use of the model description at rendering, e.g. in the
-        # 'View <document>' button. Some models are used for different business concepts, such as
-        # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
-        # different wording depending on the state of the object.
-        # Therefore, we can set the description in the context from the beginning to avoid falling
-        # back on the regular display_name retrieved in ``_notify_by_email_prepare_rendering_context()``.
-        model_description = self._context.get('model_description')
         result_mails_su, result_messages = self.env['mail.mail'].sudo(), self.env['mail.message']
 
         for wizard in self:
@@ -283,11 +276,6 @@ class MailComposer(models.TransientModel):
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
 
-            ActiveModel = self.env[wizard.model] if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread']
-            if wizard.composition_mode == 'mass_post':
-                # do not send emails directly but use the queue instead
-                # add context key to avoid subscribing the author
-                ActiveModel = ActiveModel.with_context(mail_notify_force_send=False, mail_create_nosubscribe=True)
             # wizard works in batch mode: [res_id] or active_ids or active_domain
             if mass_mode and wizard.use_active_domain and wizard.model:
                 res_ids = self.env[wizard.model].search(ast.literal_eval(wizard.active_domain)).ids
@@ -296,50 +284,67 @@ class MailComposer(models.TransientModel):
             else:
                 res_ids = [wizard.res_id]
 
-            batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')) or self._batch_size
-            sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
-
-            if wizard.composition_mode == 'mass_mail' or wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
-                subtype_id = False
-            elif wizard.subtype_id:
-                subtype_id = wizard.subtype_id.id
+            if wizard.composition_mode == 'mass_mail':
+                result_mails_su += wizard._action_send_mail_mass_mail(res_ids, auto_commit=auto_commit)
             else:
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-
-            for res_ids in sliced_res_ids:
-                # mass mail mode: mail are sudo-ed, as when going through get_mail_values
-                # standard access rights on related records will be checked when browsing them
-                # to compute mail values. If people have access to the records they have rights
-                # to create lots of emails in sudo as it is consdiered as a technical model.
-                batch_mails_sudo = self.env['mail.mail'].sudo()
-                all_mail_values = wizard.get_mail_values(res_ids)
-                for res_id, mail_values in all_mail_values.items():
-                    if wizard.composition_mode == 'mass_mail':
-                        batch_mails_sudo += self.env['mail.mail'].sudo().create(mail_values)
-                    else:
-                        post_params = dict(
-                            subtype_id=subtype_id,
-                            email_layout_xmlid=wizard.email_layout_xmlid,
-                            email_add_signature=not bool(wizard.template_id) and wizard.email_add_signature,
-                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
-                            model_description=model_description)
-                        post_params.update(mail_values)
-                        if ActiveModel._name == 'mail.thread':
-                            if wizard.model:
-                                post_params['model'] = wizard.model
-                                post_params['res_id'] = res_id
-                            if not ActiveModel.message_notify(**post_params):
-                                # if message_notify returns an empty record set, no recipients where found.
-                                raise UserError(_("No recipient found."))
-                        else:
-                            result_messages += ActiveModel.browse(res_id).message_post(**post_params)
-
-                result_mails_su += batch_mails_sudo
-                if wizard.composition_mode == 'mass_mail':
-                    ActiveModel.browse(res_ids)._message_mail_after_hook(batch_mails_sudo)
-                    batch_mails_sudo.send(auto_commit=auto_commit)
+                result_messages += wizard._action_send_mail_comment(res_ids)
 
         return result_mails_su, result_messages
+
+    def _action_send_mail_comment(self, res_ids):
+        """ Send in comment mode. It calls message_post on model, or the generic
+        implementation of it if not available (as message_notify). """
+        self.ensure_one()
+        post_values_all = self._prepare_mail_values(res_ids)
+        ActiveModel = self.env[self.model] if self.model and hasattr(self.env[self.model], 'message_post') else self.env['mail.thread']
+        if self.composition_mode == 'mass_post':
+            # do not send emails directly but use the queue instead
+            # add context key to avoid subscribing the author
+            ActiveModel = ActiveModel.with_context(
+                mail_notify_force_send=False,
+                mail_create_nosubscribe=True
+            )
+
+        messages = self.env['mail.message']
+        for res_id, post_values in post_values_all.items():
+            if ActiveModel._name == 'mail.thread':
+                if self.model:
+                    post_values['model'] = self.model
+                    post_values['res_id'] = res_id
+                message = ActiveModel.message_notify(**post_values)
+                if not message:
+                    # if message_notify returns an empty record set, no recipients where found.
+                    raise UserError(_("No recipient found."))
+                messages += message
+            else:
+                messages += ActiveModel.browse(res_id).message_post(**post_values)
+        return messages
+
+    def _action_send_mail_mass_mail(self, res_ids, auto_commit=False):
+        """ Send in mass mail mode. Mails are sudo-ed, as when going through
+        _prepare_mail_values standard access rights on related records will be
+        checked when browsing them to compute mail values. If people have
+        access to the records they have rights to create lots of emails in
+        sudo as it is considered as a technical model. """
+        mails_sudo = self.env['mail.mail'].sudo()
+
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')) or self._batch_size
+        sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
+
+        for res_ids_iter in sliced_res_ids:
+            mail_values_all = self._prepare_mail_values(res_ids_iter)
+
+            iter_mails_sudo = self.env['mail.mail'].sudo()
+            for _res_id, mail_values in mail_values_all.items():
+                iter_mails_sudo += mails_sudo.create(mail_values)
+            mails_sudo += iter_mails_sudo
+
+            records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
+            if records:
+                records._message_mail_after_hook(iter_mails_sudo)
+            iter_mails_sudo.send(auto_commit=auto_commit)
+
+        return mails_sudo
 
     def action_save_as_template(self):
         """ hit save as template button: current form value will be a new
@@ -373,84 +378,203 @@ class MailComposer(models.TransientModel):
     # RENDERING / VALUES GENERATION
     # ------------------------------------------------------------
 
-    def get_mail_values(self, res_ids):
+    def _prepare_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create mail_messages
         or mail_mails. """
         self.ensure_one()
-        results = dict.fromkeys(res_ids, False)
-        rendered_values = {}
-        mass_mail_mode = self.composition_mode == 'mass_mail'
+        mail_values_all = {}
+        mass_mode = self.composition_mode == 'mass_mail'
+
+        # base values
+        base_values = self._prepare_mail_values_common()
 
         # render all template-based value at once
-        if mass_mail_mode and self.model:
-            rendered_values = self._render_message(res_ids)
-        # compute alias-based reply-to in batch
-        reply_to_value = dict.fromkeys(res_ids, None)
-        if mass_mail_mode and not self.reply_to_force_new:
-            records = self.env[self.model].browse(res_ids)
-            reply_to_value = records._notify_get_reply_to(default=False)
-            # when having no specific reply-to, fetch rendered email_from value
-            for res_id, reply_to in reply_to_value.items():
-                if not reply_to:
-                    reply_to_value[res_id] = rendered_values.get(res_id, {}).get('email_from', False)
+        additional_values_all = {}
+        if mass_mode and self.model:
+            additional_values_all = self._prepare_mail_values_dynamic(res_ids)
+        elif not mass_mode:
+            additional_values_all = self._prepare_mail_values_static(res_ids)
 
         for res_id in res_ids:
-            # static wizard (mail.message) values
-            mail_values = {
+            additional_values = additional_values_all.get(res_id, {})
+            mail_values = dict(base_values, **additional_values)
+            mail_values_all[res_id] = mail_values
+
+        mail_values_all = self._process_state(mail_values_all)
+        return mail_values_all
+
+    def _prepare_mail_values_common(self):
+        """Prepare values always valid, not rendered or dynamic whatever the
+        composition mode and related records. """
+        self.ensure_one()
+        email_mode = self.composition_mode == 'mass_mail'
+
+        if email_mode:
+            subtype_id = False
+        elif self.is_log or (self.composition_mode == 'mass_post' and not self.notify):  # log a note: subtype is False
+            subtype_id = False
+        elif self.subtype_id:
+            subtype_id = self.subtype_id.id
+        else:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+
+        values = {
+            'author_id': self.author_id.id,
+            'mail_activity_type_id': self.mail_activity_type_id.id,
+            'message_type': 'email' if email_mode else self.message_type,
+            'parent_id': self.parent_id.id,
+            'reply_to_force_new': self.reply_to_force_new,
+            'subtype_id': subtype_id,
+        }
+        if self.composition_mode == 'comment':
+            # Several custom layouts make use of the model description at rendering, e.g. in the
+            # 'View <document>' button. Some models are used for different business concepts, such as
+            # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
+            # different wording depending on the state of the object.
+            # Therefore, we can set the description in the context from the beginning to avoid falling
+            # back on the regular display_name retrieved in ``_notify_by_email_prepare_rendering_context()``.
+            model_description = self._context.get('model_description')
+            values.update(
+                email_add_signature=not bool(self.template_id) and self.email_add_signature,
+                email_layout_xmlid=self.email_layout_xmlid,
+                mail_auto_delete=self.template_id.auto_delete if self.template_id else self._context.get('mail_auto_delete', True),
+                model_description=model_description,
+            )
+        return values
+
+    def _prepare_mail_values_dynamic(self, res_ids):
+        """Generate values based on composer content as well as its template
+        based on records given by res_ids.
+
+        Part of the advanced rendering is delegated to template, notably
+        recipients or attachments dynamic generation. See sub methods for
+        more details.
+
+        :param list res_ids: list of record IDs on which composer runs;
+
+        :return dict results: for each res_id, the generated values available
+          to create mail.mail or mail.message;
+        """
+        self.ensure_one()
+        records_sudo = None
+        mass_mail_mode = self.composition_mode == 'mass_mail'
+
+        subjects = self._render_field('subject', res_ids)
+        # We want to preserve comments in emails so as to keep mso conditionals
+        bodies = self._render_field('body', res_ids, options={'preserve_comments': self.composition_mode == 'mass_mail'})
+        emails_from = self._render_field('email_from', res_ids)
+
+        mail_values_all = {
+            res_id: {
+                'auto_delete': self.auto_delete,
+                'body': bodies[res_id],  # should be void
+                'body_html': bodies[res_id] if mass_mail_mode else False,
+                'email_from': emails_from[res_id],
+                'is_notification': not self.auto_delete_message,
+                'mail_server_id': self.mail_server_id.id,
+                'model': self.model,
+                'record_name': False,
+                'res_id': res_id,
+                'subject': subjects[res_id],
+            }
+            for res_id in res_ids
+        }
+
+        # generate template-based values
+        if self.template_id:
+            template_values = self._generate_template_for_composer(
+                self.template_id,
+                res_ids,
+                ('attachment_ids',
+                 'auto_delete',
+                 'email_to',
+                 'email_cc',
+                 'mail_server_id',
+                 'partner_ids',
+                 'report_template',
+                )
+            )
+            for res_id in res_ids:
+                # remove attachments from template values as they should not be rendered
+                template_values[res_id].pop('attachment_ids', None)
+                mail_values_all[res_id].update(template_values[res_id])
+        # without template, update recipients using default recipients if no recipients given
+        else:
+            if not self.partner_ids:
+                if not records_sudo:
+                    records_sudo = self.env[self.model].browse(res_ids).sudo()
+                default_recipients = records_sudo._message_get_default_recipients()
+                for res_id in res_ids:
+                    mail_values_all[res_id].update(default_recipients.get(res_id, {}))
+
+        if not self.reply_to_force_new:
+            # compute alias-based reply-to in batch
+            if not records_sudo:
+                records_sudo = self.env[self.model].browse(res_ids)
+            reply_to_values = records_sudo._notify_get_reply_to(default=False)
+        else:
+            reply_to_values = self._render_field('reply_to', res_ids)
+            for res_id in res_ids:
+                reply_to = reply_to_values.get(res_id)
+                if not reply_to:
+                    reply_to = mail_values_all[res_id].get('email_from', False)
+
+        for res_id, mail_values in mail_values_all.items():
+            record = self.env[self.model].browse(res_id)
+
+            # attachments: process, should not be encoded before being processed
+            # by message_post / mail_mail create
+            mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in mail_values.pop('attachments', list())]
+            attachment_ids = [
+                attachment.copy({'res_model': self._name, 'res_id': self.id}).id
+                for attachment in self.attachment_ids
+            ]
+            attachment_ids.reverse()
+            mail_values['attachment_ids'] = record._process_attachments_for_post(
+                mail_values.pop('attachments', []),
+                attachment_ids,
+                {'model': 'mail.message', 'res_id': 0}
+            )['attachment_ids']
+
+            # headers
+            mail_values['headers'] = repr(record._notify_by_email_get_headers())
+
+            # transform partner_ids (field used in mail_message) into recipient_ids, used by mail_mail
+            mail_values['recipient_ids'] = [
+                Command.link(id) for id in (
+                    mail_values.pop('partner_ids', []) + self.partner_ids.ids
+                )
+            ]
+
+            # when having no specific reply_to -> fetch rendered email_from
+            reply_to = reply_to_values.get(res_id)
+            if not reply_to:
+                reply_to = mail_values.get('email_from', False)
+            mail_values['reply_to'] = reply_to
+
+        return mail_values_all
+
+    def _prepare_mail_values_static(self, res_ids):
+        """Generate values that are static, aka already rendered.
+
+        :param list res_ids: list of record IDs on which composer runs;
+
+        :return dict results: for each res_id, the generated values available
+          to create mail.mail or mail.message;
+        """
+        self.ensure_one()
+        return {
+            res_id: {
                 'attachment_ids': [attach.id for attach in self.attachment_ids],
-                'author_id': self.author_id.id,
                 'body': self.body or '',
                 'email_from': self.email_from,
                 'mail_server_id': self.mail_server_id.id,
-                'mail_activity_type_id': self.mail_activity_type_id.id,
-                'message_type': 'email' if mass_mail_mode else self.message_type,
-                'parent_id': self.parent_id.id,
                 'partner_ids': self.partner_ids.ids,
                 'record_name': self.record_name,
-                'reply_to_force_new': self.reply_to_force_new,
-                'subject': self.subject,
+                'subject': self.subject or '',
             }
-
-            # mass mailing: rendering override wizard static values
-            if mass_mail_mode and self.model:
-                record = self.env[self.model].browse(res_id)
-                mail_values['headers'] = repr(record._notify_by_email_get_headers())
-                # keep a copy unless specifically requested, reset record name (avoid browsing records)
-                mail_values.update(is_notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
-                # auto deletion of mail_mail
-                if self.auto_delete or self.template_id.auto_delete:
-                    mail_values['auto_delete'] = True
-                # rendered values using template
-                email_dict = rendered_values[res_id]
-                mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
-                mail_values.update(email_dict)
-                if not self.reply_to_force_new:
-                    mail_values.pop('reply_to')
-                    if reply_to_value.get(res_id):
-                        mail_values['reply_to'] = reply_to_value[res_id]
-                if self.reply_to_force_new and not mail_values.get('reply_to'):
-                    mail_values['reply_to'] = mail_values['email_from']
-                # mail_mail values: body -> body_html, partner_ids -> recipient_ids
-                mail_values['body_html'] = mail_values.get('body', '')
-                mail_values['recipient_ids'] = [Command.link(id) for id in mail_values.pop('partner_ids', [])]
-
-                # process attachments: should not be encoded before being processed by message_post / mail_mail create
-                mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
-                attachment_ids = []
-                for attach_id in mail_values.pop('attachment_ids'):
-                    new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
-                    attachment_ids.append(new_attach_id.id)
-                attachment_ids.reverse()
-                mail_values['attachment_ids'] = record._process_attachments_for_post(
-                    mail_values.pop('attachments', []),
-                    attachment_ids,
-                    {'model': 'mail.message', 'res_id': 0}
-                )['attachment_ids']
-
-            results[res_id] = mail_values
-
-        results = self._process_state(results)
-        return results
+            for res_id in res_ids
+        }
 
     def _process_recipient_values(self, mail_values_dict):
         # Preprocess res.partners to batch-fetch from db if recipient_ids is present
@@ -555,6 +679,10 @@ class MailComposer(models.TransientModel):
     def _get_optout_emails(self, mail_values_dict):
         return []
 
+    # ----------------------------------------------------------------------
+    # TEMPLATE SPECIFIC
+    # ----------------------------------------------------------------------
+
     def _onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values
@@ -641,78 +769,6 @@ class MailComposer(models.TransientModel):
         values = self._convert_to_write(values)
 
         return {'value': values}
-
-    def _render_message(self, res_ids):
-        """Generate template-based values of wizard, for the document records given
-        by res_ids. This method is meant to be inherited by email_template that
-        will produce a more complete dictionary, using qweb templates.
-
-        Each template is generated for all res_ids, allowing to parse the template
-        once, and render it multiple times. This is useful for mass mailing where
-        template rendering represent a significant part of the process.
-
-        Default recipients are also computed, based on mail_thread method
-        _message_get_default_recipients. This allows to ensure a mass mailing has
-        always some recipients specified.
-
-        :param browse wizard: current mail.compose.message browse record
-        :param list res_ids: list of record ids
-
-        :return dict results: for each res_id, the generated template values for
-                              subject, body, email_from and reply_to
-        """
-        self.ensure_one()
-
-        subjects = self._render_field('subject', res_ids)
-        # We want to preserve comments in emails so as to keep mso conditionals
-        bodies = self._render_field('body', res_ids, options={'preserve_comments': self.composition_mode == 'mass_mail'})
-        emails_from = self._render_field('email_from', res_ids)
-        replies_to = self._render_field('reply_to', res_ids)
-        default_recipients = {}
-        if not self.partner_ids:
-            records = self.env[self.model].browse(res_ids).sudo()
-            default_recipients = records._message_get_default_recipients()
-
-        results = dict.fromkeys(res_ids, False)
-        for res_id in res_ids:
-            results[res_id] = {
-                'body': bodies[res_id],
-                'email_from': emails_from[res_id],
-                'reply_to': replies_to[res_id],
-                'subject': subjects[res_id],
-            }
-            results[res_id].update(default_recipients.get(res_id, dict()))
-
-        # generate template-based values
-        if self.template_id:
-            template_values = self._generate_template_for_composer(
-                self.template_id,
-                res_ids,
-                ('attachment_ids',
-                 'email_to',
-                 'email_cc',
-                 'mail_server_id',
-                 'partner_ids',
-                 'report_template',
-                )
-            )
-        else:
-            template_values = {}
-
-        for res_id in res_ids:
-            if template_values.get(res_id):
-                # recipients are managed by the template
-                results[res_id].pop('partner_ids', None)
-                results[res_id].pop('email_to', None)
-                results[res_id].pop('email_cc', None)
-                # remove attachments from template values as they should not be rendered
-                template_values[res_id].pop('attachment_ids', None)
-            else:
-                template_values[res_id] = dict()
-            # update template values by composer values
-            template_values[res_id].update(results[res_id])
-
-        return template_values
 
     def _generate_template_for_composer(self, template, res_ids, render_fields,
                                         partners_only=True):
