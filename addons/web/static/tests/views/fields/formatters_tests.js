@@ -167,9 +167,14 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(2), "02:00");
         assert.strictEqual(formatFloatTime(3.5), "03:30");
         assert.strictEqual(formatFloatTime(0.25), "00:15");
+        assert.strictEqual(formatFloatTime(2 / 60, { displaySeconds: true }), "00:02:00");
+        assert.strictEqual(formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true }), "00:02:01");
+        assert.strictEqual(formatFloatTime(2 / 60 + 2 / 3600, { displaySeconds: true }), "00:02:02");
+        assert.strictEqual(formatFloatTime(2 / 60 + 3 / 3600, { displaySeconds: true }), "00:02:03");
         assert.strictEqual(formatFloatTime(0.25, { displaySeconds: true }), "00:15:00");
         assert.strictEqual(formatFloatTime(0.25 + 15 / 3600, { displaySeconds: true }), "00:15:15");
         assert.strictEqual(formatFloatTime(0.25 + 45 / 3600, { displaySeconds: true }), "00:15:45");
+        assert.strictEqual(formatFloatTime(56 / 3600, { displaySeconds: true }), "00:00:56");
         assert.strictEqual(formatFloatTime(-0.5), "-00:30");
 
         const options = { noLeadingZeroHour: true };
@@ -178,6 +183,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(3.5, { ...options, displaySeconds: true }), "3:30:00");
         assert.strictEqual(formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true }), "3:30:15");
         assert.strictEqual(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true }), "3:30:45");
+        assert.strictEqual(formatFloatTime(56 / 3600, {  ...options, displaySeconds: true }), "0:00:56");
         assert.strictEqual(formatFloatTime(-0.5, options), "-0:30");
     });
 

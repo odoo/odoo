@@ -46,8 +46,7 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
     @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior
     def test_reference_is_computed_based_on_document_name(self):
         """ Test computation of reference prefixes based on the provided invoice. """
-        if not self.env['ir.module.module']._get('account').state == 'installed':
-            self.skipTest('account module not installed')
+        self._skip_if_account_payment_is_not_installed()
 
         invoice = self.env['account.move'].create({})
         reference = self.env['payment.transaction']._compute_reference(

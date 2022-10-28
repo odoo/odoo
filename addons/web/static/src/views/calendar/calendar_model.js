@@ -715,8 +715,9 @@ export class CalendarModel extends Model {
         const colorField = fields[fieldMapping.color];
         const hasFilterColorAttr = !!colorFieldName;
         const sameRelatedModel =
-            colorField.relation === field.relation ||
-            (colorField.related && colorField.related.startsWith(`${fieldName}.`));
+            colorField &&
+            (colorField.relation === field.relation ||
+                (colorField.related && colorField.related.startsWith(`${fieldName}.`)));
         let colorIndex = null;
         if (hasFilterColorAttr || sameRelatedModel) {
             colorIndex = rawFilter.colorIndex;

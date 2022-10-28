@@ -1479,7 +1479,8 @@ options.registry.menu_data = options.Class.extend({
      */
     start: function () {
         const wysiwyg = $(this.ownerDocument.getElementById('wrapwrap')).data('wysiwyg');
-        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg });
+        const popoverContainer = this.ownerDocument.getElementById('oe_manipulators');
+        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg, container: popoverContainer });
         return this._super(...arguments);
     },
     /**
@@ -2898,6 +2899,45 @@ options.registry.ScrollButton = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        // TODO adapt in master. This sets up a different UI for the image
+        // gallery snippet: for this one, we allow to force a specific height
+        // in auto mode. It was done in stable as without it, the default height
+        // is difficult to understand for the user as it depends on screen
+        // height of the one who edited the website and not on the added images.
+        // It was also a regression as in <= 11.0, this was a possibility.
+        if (this.$target[0].dataset.snippet !== 's_image_gallery') {
+            return;
+        }
+        let minHeightEl = uiFragment.querySelector('[data-name="minheight_auto_opt"]');
+        if (!minHeightEl) {
+            return;
+        }
+        minHeightEl = minHeightEl.parentElement;
+        minHeightEl.setAttribute('string', _t("Min-Height"));
+        const heightEl = document.createElement('we-input');
+        heightEl.setAttribute('string', _t("Height"));
+        heightEl.classList.add('o_we_sublevel_1');
+        heightEl.dataset.dependencies = 'minheight_auto_opt';
+        heightEl.dataset.unit = 'px';
+        heightEl.dataset.selectStyle = '';
+        heightEl.dataset.cssProperty = 'height';
+        // For this setting, we need to always force the style (= if the block
+        // is naturally 800px tall and the user enters 800px for this setting,
+        // we set 800px as inline style anyway). Indeed, this snippet's style
+        // is based on the height that is forced but once the related public
+        // widgets are started, the inner carousel items receive a min-height
+        // which makes it so the snippet "natural" height is equal to the
+        // initially forced height... so if the style is not forced, it would
+        // ultimately be removed by mistake thinking it is not necessary.
+        // Note: this is forced as not important as we still need the height to
+        // be reset to 'auto' in mobile (generic css rules).
+        heightEl.dataset.forceStyle = '';
+        uiFragment.appendChild(heightEl);
+    },
     /**
      * @override
      */

@@ -24,7 +24,26 @@ var QWeb = core.qweb;
 var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
-const { Component } = owl;
+const { Component } = require("@odoo/owl");
+
+const { DateTime } = luxon;
+// As the name suggests, this is a hack that allows archs that work in the new
+// WOWL kanban views to be instanciated with legacy code. This is one of some
+// hacks to make this work, until the legacy code base is deleted.
+// It only exposes `fromISO` and `local` of DateTime, to limit the damage and complexity.
+const hackishLuxon = {
+    DateTime: {
+        fromISO(text, opt) {
+            // In legacy text should be a Date (native JS) object (see @_transformRecord)
+            const res = DateTime.fromJSDate(text, "UTC");
+            if (!res.isValid) {
+                throw new Error("Invalid Hackish luxon instance in legacy KanbanRecord")
+            }
+            return res;
+        },
+        local: DateTime.local,
+    }
+};
 
 var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     events: {
@@ -593,6 +612,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
             record: this.record,
             user_context: this.getSession().user_context,
             widget: this,
+            luxon: hackishLuxon,
         };
     },
     /**

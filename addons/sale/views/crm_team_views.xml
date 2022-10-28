@@ -111,7 +111,7 @@
                 <div class="row" t-if="record.quotations_count.raw_value">
                     <div class="col-8">
                         <a name="%(action_quotations_salesteams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
-                            <field name="quotations_count"/>
+                            <field name="quotations_count" class="me-1"/>
                             <t t-if="record.quotations_count.raw_value == 1">Quotation</t>
                             <t t-else="">Quotations</t>
                         </a>
@@ -123,7 +123,7 @@
                 <div class="row" name="orders_to_invoice" t-if="record.sales_to_invoice_count.raw_value">
                     <div class="col-8">
                         <a name="%(action_orders_to_invoice_salesteams)d" type="action">
-                            <field name="sales_to_invoice_count"/>
+                            <field name="sales_to_invoice_count" class="me-1"/>
                             <t t-if="record.sales_to_invoice_count.raw_value == 1">Order to Invoice</t>
                             <t t-else="">Orders to Invoice</t>
                         </a>

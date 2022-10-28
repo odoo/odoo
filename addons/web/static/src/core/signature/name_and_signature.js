@@ -8,7 +8,7 @@ import { pick } from "@web/core/utils/objects";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-const { Component, useState, onWillStart, useRef, useEffect } = owl;
+import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {

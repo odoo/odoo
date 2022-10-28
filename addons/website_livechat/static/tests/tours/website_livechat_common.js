@@ -10,17 +10,15 @@ odoo.define('website_livechat.tour_common', function (require) {
 require('@im_livechat/public_models/livechat_button_view');
 const { registerPatch } = require('@mail/model/model_core');
 
-const { Markup } = require('web.utils');
-
 registerPatch({
     name: 'LivechatButtonView',
     recordMethods: {
         /**
          * Alter this method for test purposes.
          *
-         * Fake the notification after sending message
-         * As bus is not available, it's necessary to add the message in the
-         * chatter + in livechat.messages
+         * Force fetch notifications after sending the message: listen/notify
+         * mechanism is not active during tests, but available messages
+         * are directly sent when updating channel subscription.
          *
          * Add a class to the chatter window after sendFeedback is done
          * to force the test to wait until feedback is really done
@@ -40,21 +38,7 @@ registerPatch({
                     if (!in_test_mode) {
                         return;
                     }
-                    this.messaging.publicLivechatGlobal.notificationHandler._handleNotification({
-                        type: 'mail.channel/new_message',
-                        payload: {
-                            id: this.messaging.publicLivechatGlobal.publicLivechat.id,
-                            message: {
-                                id: this.messaging.publicLivechatGlobal.messages.length + 1,
-                                author_id: [0, 'Website Visitor Test'],
-                                email_from: 'Website Visitor Test',
-                                body: Markup('<p>' + message.content + '</p>'),
-                                is_discussion: true,
-                                subtype_id: [1, "Discussions"],
-                                date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                            },
-                        },
-                    });
+                    this.env.services['bus_service'].forceUpdateChannels();
                 });
             }
         },

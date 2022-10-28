@@ -2,7 +2,7 @@
 
 import { throttleForAnimation } from "./utils/timing";
 
-const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
+import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
 
 /**
  * @typedef {{

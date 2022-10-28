@@ -4,7 +4,7 @@ import { ErrorHandler } from "@web/core/utils/components";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, mount } from "../../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 QUnit.module("utils", () => {
     QUnit.module("components");

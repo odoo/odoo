@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Thomas Pot <thomas@open2bizz.nl>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,11 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"De boeking (%s) is niet evenwichtig.\n"
+"Het totale debet bedraagt %s en het totale krediet bedraagt %s.\n"
+"Misschien wil je een standaardrekening op het dagboek \"%s\" opgeven om elke boeking automatisch sluitend te maken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -227,9 +233,9 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- Een nieuw veld «Totaal (belastinginc.)» om de codering te versnellen en te"
-" controleren door het maken van lijnen te automatiseren met het juiste "
-"account &amp; belasting."
+"- Een nieuw veld «Totaal (Incl. BTW.)» om de invoer en controle te "
+"versnellen door het maken van regels te automatiseren met de juiste rekening"
+" &amp; BTW."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1118,7 +1124,7 @@ msgstr "<span>Rapportages</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
-msgstr "<span>Btw 0%</span>"
+msgstr "<span>BTW 0%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1306,7 +1312,7 @@ msgstr ""
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
 msgstr ""
-"In deze regio bestaat al een fiscale positie met een buitenlandse btw."
+"In deze regio bestaat al een fiscale positie met een buitenlandse BTW."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1410,8 +1416,8 @@ msgid ""
 "A tax should only use tags from its country. You should use another tax and "
 "a fiscal position if you wish to uses the tags from foreign tax reports."
 msgstr ""
-"Een btw mag alleen labels uit zijn eigen land gebruiken. Je moet een andere "
-"btw en een fiscale positie gebruiken als je de labels uit buitenlandse btw-"
+"Een BTW mag alleen labels uit zijn eigen land gebruiken. Je moet een andere "
+"BTW en een fiscale positie gebruiken als je de labels uit buitenlandse BTW-"
 "aangiften wilt gebruiken."
 
 #. module: account
@@ -1753,7 +1759,7 @@ msgstr "Rekeningvoorvoegsels kunnen rekeninggroepen bepalen."
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr "Boekhoudkundige rapporten met betaalregels"
+msgstr "Boekhoudkundige rapportages met betaalregels"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
@@ -2718,7 +2724,7 @@ msgstr "Toepassen"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
 msgstr ""
-"Btw toepassen van het EU-land waaraan goederen en diensten worden geleverd."
+"BTW toepassen van het EU-land waaraan goederen en diensten worden geleverd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -3384,6 +3390,9 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
+"Standaard ontvouwen we altijd de lijnen die ontvouwen kunnen worden. Als dit"
+" is aangevinkt, de lijn wordt standaard niet uitgevouwen en er wordt een "
+"vouwknop weergegeven."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -3894,7 +3903,7 @@ msgstr "Cheques"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__children_ids
 msgid "Child Lines"
-msgstr "Onderliggende lijnen"
+msgstr "Onderliggende regels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -3997,6 +4006,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
+"Door komma's gescheiden lijst met velden van account.move.line "
+"(boekingsregel). Indien ingesteld, genereert deze regel subregels die zijn "
+"gegroepeerd op die toetsen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -4471,7 +4483,7 @@ msgstr "Maak een nieuwe BTW"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_group
 msgid "Create a new tax group"
-msgstr "Een nieuwe btw-groep maken"
+msgstr "Een nieuwe BTW-groep maken"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -5898,7 +5910,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
-msgstr "Dynamische rapporten"
+msgstr "Dynamische rapportages"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6294,7 +6306,7 @@ msgid ""
 "line, in percents"
 msgstr ""
 "Factor die moet worden toegepast op de boekingsregels die zijn gegenereerd "
-"op basis van deze verdeling lijn, in procenten"
+"op basis van deze verdelingregel, in procenten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -6648,12 +6660,12 @@ msgstr "Vreemde valuta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr "Buitenlandse Btw-ID"
+msgstr "Buitenlandse BTW-ID"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
-msgstr "Buitenlandse btw-kopmodus"
+msgstr "Buitenlandse BTW-kopmodus"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -6665,7 +6677,7 @@ msgstr "Buitenlandse rekening (%s)"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account (%s)"
-msgstr "Buitenlandse btw-rekening (%s)"
+msgstr "Buitenlandse BTW-rekening (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -6741,10 +6753,10 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Vanuit dit rapport kun je een overzicht hebben van het gefactureerde bedrag "
-"van je leveranciers. De zoektool kan ook gebruikt worden om je "
-"factuurrapporten te personaliseren en zo analyses overeen doen komen met je "
-"benodigdheden."
+"Vanuit deze rapportage kun je een overzicht hebben van het gefactureerde "
+"bedrag van je leveranciers. De zoektool kan ook gebruikt worden om je "
+"factuurrapportage te personaliseren en zo analyses overeen doen komen met je"
+" benodigdheden."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -7155,7 +7167,7 @@ msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
 msgstr ""
-"Indien ingesteld, zullen btw’s met een hogere volgorde dan deze worden "
+"Indien ingesteld, zullen BTW’s met een hogere volgorde dan deze worden "
 "beïnvloed, op voorwaarde dat ze deze accepteren."
 
 #. module: account
@@ -7165,7 +7177,7 @@ msgid ""
 "If set, taxes with a lower sequence might affect this one, provided they try"
 " to do it."
 msgstr ""
-"Indien ingesteld, kunnen btw’s met een lagere volgorde hierop van invloed "
+"Indien ingesteld, kunnen BTW’s met een lagere volgorde hierop van invloed "
 "zijn, op voorwaarde dat ze dit proberen."
 
 #. module: account
@@ -7191,6 +7203,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
+"Indien ingesteld, wordt deze rekening gebruikt om automatisch boekingen "
+"sluitend te maken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -7198,8 +7212,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
-"Indien ingesteld, zal deze rekening behoren tot Non Trade Receivable/Payable in rapporten en filters.\n"
-"Zo niet, dan hoort deze rekening in rapporten en filters bij Handelsvorderingen/Te betalen."
+"Indien ingesteld, zal deze rekening behoren tot Non Trade Receivable/Payable in rapportages en filters.\n"
+"Zo niet, dan hoort deze rekening in rapportages en filters bij Handelsvorderingen/Te betalen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7209,8 +7223,8 @@ msgid ""
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
 "Indien ingesteld, wordt deze waarde op documenten gebruikt als het label van"
-" een subtotaal exclusief deze btw-groep voordat deze wordt weergegeven. "
-"Indien niet ingesteld, wordt de btw-groep weergegeven na het subtotaal "
+" een subtotaal exclusief deze BTW-groep voordat deze wordt weergegeven. "
+"Indien niet ingesteld, wordt de BTW-groep weergegeven na het subtotaal "
 "‘Onbelast bedrag’."
 
 #. module: account
@@ -7278,7 +7292,7 @@ msgid ""
 "of where you are located."
 msgstr ""
 "Als je goederen en diensten verkoopt aan klanten in een ander EU-land, moet "
-"je btw in rekening brengen op basis van het afleveradres. Deze regel is van "
+"je BTW in rekening brengen op basis van het afleveradres. Deze regel is van "
 "toepassing ongeacht waar je zich bevindt."
 
 #. module: account
@@ -8055,6 +8069,8 @@ msgid ""
 "When checked, 0 values will not show when displaying this expression's "
 "value."
 msgstr ""
+"Indien aangevinkt, worden nulwaarden niet getoond wanneer de waarde van deze"
+" uitdrukking wordt weergegeven."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -9388,7 +9404,8 @@ msgstr "Naam doorzoekbaar"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr ""
-"Navigeer gemakkelijk doorheen rapporten en zie wat er achter de cijfers zit"
+"Navigeer gemakkelijk doorheen rapportages en zie wat er achter de cijfers "
+"zit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -9550,7 +9567,7 @@ msgid ""
 "No tax template found for this country. Please install the corresponding "
 "localization module."
 msgstr ""
-"Geen btw-sjabloon gevonden voor dit land. Installeer de bijbehorende "
+"Geen BTW-sjabloon gevonden voor dit land. Installeer de bijbehorende "
 "lokalisatiemodule."
 
 #. module: account
@@ -9924,7 +9941,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "Een of meerdere lijnen vereisen een 100% kostenplaatsdistributie."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -9949,13 +9966,13 @@ msgstr "Alleen opeisbare belastingregels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
-msgid "Only Those Partner Categories"
-msgstr "Alleen die relatiecategorieën"
+msgid "Matching categories"
+msgstr "Overeenkomende categorieën"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
-msgid "Only Those Partners"
-msgstr "Alleen die relaties"
+msgid "Matching partners"
+msgstr "Overeenkomende partners"
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
@@ -10165,7 +10182,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
-msgstr "Initiator btw-groep"
+msgstr "Initiator BTW-groep"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -10494,8 +10511,8 @@ msgstr "Relatiemapping voor aflettermodellen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
-msgid "Partner should be set"
-msgstr "Relatie moet worden ingesteld"
+msgid "Partner is Set"
+msgstr "Partner is ingesteld"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -10909,7 +10926,7 @@ msgstr "Gebruik a.j.b. de volgende communicatie bij betaling:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_expression_ids
 msgid "Plus Tax Report Expressions"
-msgstr "Uitdrukkingen voor belastingrapporten"
+msgstr "Uitdrukkingen voor belastingrapportage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -11518,7 +11535,7 @@ msgstr "Gerelateerde documentmodel"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr "Bedrag gerelateerde btw"
+msgstr "Bedrag gerelateerde BTW"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -11553,7 +11570,7 @@ msgstr "Verdeling wanneer de BTW wordt gebruikt voor een creditfactuur"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template__invoice_repartition_line_ids
 msgid "Repartition when the tax is used on an invoice"
-msgstr "Verdeling wanneer de btw wordt gebruikt voor een factuur"
+msgstr "Verdeling wanneer de BTW wordt gebruikt voor een factuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_dest_id
@@ -11841,7 +11858,7 @@ msgstr "Afrondingsmethode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding
 msgid "Rounding Precision"
-msgstr "Afronding"
+msgstr "Afrondingsprecisie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__strategy
@@ -12440,7 +12457,7 @@ msgstr "Instellen als aangevinkt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Set default Taxes for sales and purchase transactions."
-msgstr "Stel de standaard Btw in voor verkoop- en inkooptransacties."
+msgstr "Stel de standaard BTW in voor verkoop- en inkooptransacties."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
@@ -12466,6 +12483,8 @@ msgid ""
 "Setting this field will turn the line into a link, executing the action when"
 " clicked."
 msgstr ""
+"Als je dit veld instelt, wordt de regel een link en wordt de actie "
+"uitgevoerd wanneer erop wordt geklikt."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
@@ -12768,7 +12787,7 @@ msgstr "Status van de onboarding voorbeeld factuur lay-out stap"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
 msgid "State of the onboarding sale tax step"
-msgstr "Status van de onboarding verkoop btw stap"
+msgstr "Status van de onboarding verkoop BTW stap"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -12787,7 +12806,7 @@ msgstr "Bankafschriftregel"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr "Verklaring rapporten"
+msgstr "Verklaring rapportages"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -13006,7 +13025,7 @@ msgstr "Doellijn"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
-msgstr "Btw"
+msgstr "BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
@@ -13052,14 +13071,14 @@ msgstr "BTW berekening"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_country_id
 msgid "Tax Country"
-msgstr "Btw land"
+msgstr "BTW land"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_code
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_code
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_country_code
 msgid "Tax Country Code"
-msgstr "Btw landcode"
+msgstr "BTW landcode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_exigibility
@@ -13176,7 +13195,7 @@ msgstr "BTW verdelingsregelsjabloon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Vergrendelingsdatum btw-aangifte"
+msgstr "Vergrendelingsdatum BTW-aangifte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -13201,7 +13220,7 @@ msgstr "BTW rubriek"
 #: model:ir.model.fields,field_description:account.field_product_product__tax_string
 #: model:ir.model.fields,field_description:account.field_product_template__tax_string
 msgid "Tax String"
-msgstr "Btw string"
+msgstr "BTW string"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
@@ -13366,7 +13385,7 @@ msgstr "TaxCloud"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Taxes"
-msgstr "Btw"
+msgstr "BTW"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13385,13 +13404,13 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal"
 " item if they share some tag."
 msgstr ""
-"Btw die verschuldigd zijn op betaling en op factuur kunnen niet worden "
+"BTW die verschuldigd zijn op betaling en op factuur kunnen niet worden "
 "gecombineerd voor hetzelfde boekingsregel als ze een label delen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Taxes set."
-msgstr "Btw ingesteld."
+msgstr "BTW ingesteld."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13748,7 +13767,7 @@ msgstr "Het land waarvoor deze fiscale eenheid geldt."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr "Het land waarvoor deze btw geldt."
+msgstr "Het land waarvoor deze BTW geldt."
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
@@ -13757,7 +13776,7 @@ msgid ""
 "The country set on the the foreign VAT fiscal position must match the one "
 "set on the report."
 msgstr ""
-"Het land dat is ingesteld op de buitenlandse btw-fiscale positie moet "
+"Het land dat is ingesteld op de buitenlandse BTW-fiscale positie moet "
 "overeenkomen met het land dat op het rapport is ingesteld."
 
 #. module: account
@@ -13816,7 +13835,7 @@ msgid ""
 msgstr ""
 "Het huidige totaal is %s, maar het verwachte totaal is %s. Om de "
 "factuur/aanrekening te boeken, kun je de regels of het verwachte totaal "
-"(incl. btw) aanpassen."
+"(incl. BTW) aanpassen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14033,7 +14052,7 @@ msgstr "De boeking van waaruit deze kasstelsel BTW boeking is aangemaakt."
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
-msgstr ""
+msgstr "De boekingsregel is niet gekoppeld aan de juiste grootboekrekening. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -14304,7 +14323,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
 msgid "The report this report is a variant of."
-msgstr ""
+msgstr "Het rapport waarvan dit rapport een variant is."
 
 #. module: account
 #: code:addons/account/controllers/terms.py:0
@@ -14456,7 +14475,7 @@ msgstr ""
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
-"Het btw-nummer van je bedrijf in de regio die door deze fiscale positie in "
+"Het BTW-nummer van je bedrijf in de regio die door deze fiscale positie in "
 "kaart wordt gebracht."
 
 #. module: account
@@ -14464,7 +14483,7 @@ msgstr ""
 #, python-format
 msgid "The tax group must have the same country_id as the tax using it."
 msgstr ""
-"De btw-groep moet dezelfde country_id hebben als de btw die deze gebruikt."
+"De BTW-groep moet dezelfde country_id hebben als de BTW die deze gebruikt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__invoice_tax_id
@@ -14720,9 +14739,9 @@ msgid ""
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"Dit item bevat een of meer btw's die niet compatibel zijn met de fiscale "
+"Dit item bevat een of meer BTW's die niet compatibel zijn met de fiscale "
 "land. Controleer het fiscale land van het bedrijf in de instellingen en het "
-"belastingland in de btw-configuratie."
+"belastingland in de BTW-configuratie."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14731,8 +14750,8 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
-"Deze invoer bevat btw's die niet verenigbaar zijn met de fiscale positie. "
-"Controleer het land dat is ingesteld in fiscale positie en in de btw-"
+"Deze invoer bevat BTW's die niet verenigbaar zijn met de fiscale positie. "
+"Controleer het land dat is ingesteld in fiscale positie en in de BTW-"
 "configuratie."
 
 #. module: account
@@ -14795,6 +14814,8 @@ msgstr "Dit dagboek bevind zich niet in de strikte modus."
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
 msgstr ""
+"Deze regel en zijn onderliggende items worden verborgen wanneer al hun "
+"kolommen op 0 staan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -15235,7 +15256,7 @@ msgstr "Allemaal uitvouwen"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
-msgstr ""
+msgstr "Unieke identificatie van deze regel."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
@@ -15471,7 +15492,7 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Wordt gebruikt in rapporten om te bepalen of boekingen vanaf het begin "
+"Wordt gebruikt in rapportages om te bepalen of boekingen vanaf het begin "
 "moeten worden mee opgenomen of enkel binnen het huidige boekjaar. Bij "
 "rekeningen die bij het begin van een nieuw boekjaar terug op nul moeten "
 "worden gezet (zoals kosten, omzet...) moet je deze optie niet aanvinken."
@@ -15787,7 +15808,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__blank_if_zero
 msgid "When checked, 0 values will not show in this column."
-msgstr ""
+msgstr "Indien aangevinkt, worden nulwaarden niet weergegeven in deze kolom."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -16062,6 +16083,7 @@ msgstr ""
 #, python-format
 msgid "You can't delete a report that has variants."
 msgstr ""
+"Het is niet mogelijk om een rapport te verwijderen die varianten heeft."
 
 #. module: account
 #: code:addons/account/models/account_payment_method.py:0
@@ -16178,6 +16200,8 @@ msgid ""
 "You cannot change the type of an account set as Bank Account on a journal to"
 " Receivable or Payable."
 msgstr ""
+"Je kan het type niet wijzigen van een rekening ingesteld als een debiteuren-"
+" of crediteurenbankrekening op een dagboek."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -16186,7 +16210,7 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Je kunt geen fiscale positie aanmaken met een buitenlandse btw binnen je "
+"Je kunt geen fiscale positie aanmaken met een buitenlandse BTW binnen je "
 "fiscale land zonder er een staat aan toe te kennen."
 
 #. module: account
@@ -16197,7 +16221,7 @@ msgid ""
 "country."
 msgstr ""
 "Je kunt binnen het fiscale land geen fiscale positie aanmaken met een "
-"buitenlandse btw."
+"buitenlandse BTW."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -16207,7 +16231,7 @@ msgid ""
 " VAT number as the main one set on your company."
 msgstr ""
 "Je kunt geen fiscale positie aanmaken binnen het fiscale land met hetzelfde "
-"btw-nummer als het hoofdnummer van je bedrijf."
+"BTW-nummer als het hoofdnummer van je bedrijf."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16863,7 +16887,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr "btw"
+msgstr "BTW"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16888,7 +16912,7 @@ msgstr "te controleren"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "to create the taxes for this country."
-msgstr "om de btw's voor dit land te maken."
+msgstr "om de BTW's voor dit land te maken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
 from odoo.tools import date_utils
 
-from odoo import api, Command, fields, models, tools, SUPERUSER_ID
+from odoo import api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -693,13 +693,29 @@ class HolidaysRequest(models.Model):
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
-            mapped_days = self.holiday_status_id.get_employees_days(holiday.employee_id.ids, holiday.date_from.date())
-            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.requires_allocation == 'no':
+            mapped_days = self.holiday_status_id.get_employees_days((holiday.employee_id | holiday.employee_ids).ids, holiday.date_from.date())
+            if holiday.holiday_type != 'employee'\
+                    or not holiday.employee_id and not holiday.employee_ids\
+                    or holiday.holiday_status_id.requires_allocation == 'no':
                 continue
-            leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
-            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
-                raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
-                                        'Please also check the time off waiting for validation.'))
+            if holiday.employee_id:
+                leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
+                if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1\
+                        or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
+                    raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
+                                            'Please also check the time off waiting for validation.'))
+            else:
+                unallocated_employees = []
+                for employee in holiday.employee_ids:
+                    leave_days = mapped_days[employee.id][holiday.holiday_status_id.id]
+                    if float_compare(leave_days['remaining_leaves'], self.number_of_days, precision_digits=2) == -1\
+                            or float_compare(leave_days['virtual_remaining_leaves'], self.number_of_days, precision_digits=2) == -1:
+                        unallocated_employees.append(employee.name)
+                if unallocated_employees:
+                    raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
+                                            'Please also check the time off waiting for validation.')
+                                        + _('\nThe employees that lack allocation days are:\n%s',
+                                            (', '.join(unallocated_employees))))
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
@@ -957,7 +973,7 @@ class HolidaysRequest(models.Model):
             raise UserError(_("You can't manually archive/unarchive a time off."))
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
-        if not is_officer and values.keys() - {'supported_attachment_ids', 'message_main_attachment_id'}:
+        if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 

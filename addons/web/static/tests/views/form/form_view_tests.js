@@ -42,7 +42,7 @@ const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
 const widgetRegistry = registry.category("view_widgets");
 
-const { Component, xml, EventBus } = owl;
+import { Component, xml, EventBus } from "@odoo/owl";
 
 let target;
 let serverData;
@@ -2756,6 +2756,37 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_dialog .o_form_button_save"));
         assert.containsNone(target, ".o_dialog .o_form_view", "the dialog has been closed");
     });
+
+    QUnit.test(
+        "form views in dialogs closes on discard on existing record",
+        async function (assert) {
+            serverData.models.partner.records[0].foo = undefined;
+            delete serverData.models.partner.fields.foo.default;
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            };
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partner",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                    target: "new",
+                    res_id: 1,
+                },
+            };
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_dialog .o_form_view", "the dialog has been opened");
+
+            await click(target.querySelector(".o_dialog .o_form_button_cancel"));
+            assert.containsNone(target, ".o_dialog .o_form_view", "the dialog has been closed");
+        }
+    );
 
     QUnit.test("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
         const bus = new EventBus();
@@ -9223,6 +9254,44 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test('buttons with "confirm" attribute: click twice on "Ok"', async function (assert) {
+        const actionService = {
+            start() {
+                return {
+                    async doActionButton(args) {
+                        assert.step("execute_action"); // should be called only once
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object" confirm="U sure?"/>
+                    </header>
+                </form>`,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.verifySteps(["get_views", "onchange"]);
+
+        await click(target.querySelector(".o_statusbar_buttons button"));
+        assert.verifySteps([]);
+
+        click(target.querySelector(".modal-footer button.btn-primary"));
+        await Promise.resolve();
+        await click(target.querySelector(".modal-footer button.btn-primary"));
+        assert.verifySteps(["create", "read", "execute_action"]);
+    });
+
     QUnit.test(
         "buttons are disabled until action is resolved (in dialogs)",
         async function (assert) {
@@ -12495,15 +12564,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent,
-            ""
-        );
+        assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await editInput(target, ".o_field_widget input", "");
-        assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent,
-            ""
-        );
+        assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_form_status_indicator").textContent.trim(),

@@ -63,7 +63,7 @@ import { debounce, setRecurringAnimationFrame } from "@web/core/utils/timing";
  * @property {Function} helpers.execHandler
  */
 
-const { useEffect, useEnv, useExternalListener, onWillUnmount, reactive } = owl;
+import { useEffect, useEnv, useExternalListener, onWillUnmount, reactive } from "@odoo/owl";
 
 const DEFAULT_ACCEPTED_PARAMS = {
     enable: ["boolean", "function"],

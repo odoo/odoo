@@ -12,7 +12,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 
-const { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv, reactive } = owl;
+import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv, reactive } from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config

@@ -3,6 +3,7 @@
 
 from odoo import models, fields, _
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
+from odoo.exceptions import UserError
 
 import logging
 
@@ -175,9 +176,15 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
 
         if not journal:
-            # infer the journal
+            context_move_type = self._context.get("default_move_type", "entry")
+            if context_move_type in self.env['account.move'].get_sale_types():
+                journal_type = "sale"
+            elif context_move_type in self.env['account.move'].get_purchase_types():
+                journal_type = "purchase"
+            else:
+                raise UserError(_("The journal in which to upload should either be a sale or a purchase journal."))
             journal = self.env['account.journal'].search([
-                ('company_id', '=', self.env.company.id), ('type', '=', 'purchase')
+                ('company_id', '=', self.env.company.id), ('type', '=', journal_type)
             ], limit=1)
 
         if not self._is_ubl_cii_available(journal.company_id) and self.code != 'facturx_1_0_05':

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { formatFloat } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FloatToggleField extends Component {
     // TODO perf issue (because of update round trip)

@@ -22,7 +22,7 @@ import {
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
 import { loadJS } from '@web/core/assets';
-const {
+import {
     markup,
     Component,
     useRef,
@@ -33,7 +33,7 @@ const {
     onWillUpdateProps,
     useEffect,
     onWillUnmount,
-} = owl;
+} from "@odoo/owl";
 
 export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     setup() {
@@ -51,11 +51,17 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
 
     updateWidget(newProps) {
         const lastValue = String(this.props.widgetArgs[0].value || '');
+        const lastRecordInfo = this.props.widgetArgs[0].recordInfo;
         const lastCollaborationChannel = this.props.widgetArgs[0].collaborationChannel;
         const newValue = String(newProps.widgetArgs[0].value || '');
+        const newRecordInfo = newProps.widgetArgs[0].recordInfo;
         const newCollaborationChannel = newProps.widgetArgs[0].collaborationChannel;
 
-        if ((newValue !== newProps.editingValue && lastValue !== newValue) || !_.isEqual(lastCollaborationChannel, newCollaborationChannel)) {
+        if (
+            (newValue !== newProps.editingValue && lastValue !== newValue) ||
+            !_.isEqual(lastRecordInfo, newRecordInfo) ||
+            !_.isEqual(lastCollaborationChannel, newCollaborationChannel))
+        {
             this.widget.resetEditor(newValue, {
                 collaborationChannel: newCollaborationChannel,
             });
@@ -99,13 +105,23 @@ export class HtmlField extends Component {
                 this.cssEditAsset = await ajax.loadAsset(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
             }
         });
+        this._lastRecordInfo = {
+            res_model: this.props.record.resModel,
+            res_id: this.props.record.resId,
+        };
         onWillUpdateProps((newProps) => {
             if (!newProps.readonly && this.state.iframeVisible) {
                 this.state.iframeVisible = false;
             }
-            if (!this._selfUpdating) {
+
+            const newRecordInfo = {
+                res_model: this.props.record.resModel,
+                res_id: this.props.record.resId,
+            };
+            if (!_.isEqual(this._lastRecordInfo, newRecordInfo)) {
                 this.currentEditingValue = undefined;
             }
+            this._lastRecordInfo = newRecordInfo;
         });
         useEffect(() => {
             (async () => {
@@ -266,9 +282,7 @@ export class HtmlField extends Component {
                 this.props.setDirty(true);
             }
             this.currentEditingValue = value;
-            this._selfUpdating = true;
             await this.props.update(value);
-            this._selfUpdating = false;
         }
     }
     async startWysiwyg(wysiwyg) {
@@ -340,10 +354,13 @@ export class HtmlField extends Component {
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
             if (this.wysiwyg) {
+                // Avoid listening to changes made during the _toInline process.
+                this.wysiwyg.odooEditor.observerUnactive('commitChanges');
                 await this.wysiwyg.saveModifiedImages();
                 if (this.props.isInlineStyle) {
                     await this._toInline();
                 }
+                this.wysiwyg.odooEditor.observerActive('commitChanges');
             }
             await this.updateValue();
         }

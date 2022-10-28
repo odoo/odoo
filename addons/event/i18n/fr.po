@@ -84,14 +84,14 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
-"'Billet pleine page - %s - %s' % ((object.event_id.name or "
+"'Ticket pleine page - %s - %s' % ((object.event_id.name or "
 "'Événement').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
-"'Billet pleine page - %s' % (object.name or 'Évenement').replace('/','')"
+" 'Ticket pleine page - %s' % (object.name or 'Événement').replace('/','')"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2240,7 +2240,7 @@ msgstr "Badge Pliable"
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
-"Badge Pliable - {{ (object.event_id.name or 'Event').replace('/','_') }}"
+"Badge Pliable - {{ (object.event_id.name or 'Événement').replace('/','_') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
@@ -2338,7 +2338,8 @@ msgstr "Ticket Pleine Page"
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
-"Ticket Pleine Page - {{ (object.event_id.name or 'Event').replace('/','') }}"
+"Ticket Pleine Page - {{ (object.event_id.name or "
+"'Événement').replace('/','') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket

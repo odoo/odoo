@@ -36,13 +36,9 @@ class AccountMove(models.Model):
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
-        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+        readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,
+        compute="_compute_kode_transaksi", store=True)
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        self.l10n_id_kode_transaksi = self.partner_id.l10n_id_kode_transaksi
-        return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('l10n_id_tax_number')
     def _onchange_l10n_id_tax_number(self):
@@ -54,6 +50,11 @@ class AccountMove(models.Model):
     def _compute_csv_created(self):
         for record in self:
             record.l10n_id_csv_created = bool(record.l10n_id_attachment_id)
+
+    @api.depends('partner_id')
+    def _compute_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
 
     @api.depends('partner_id')
     def _compute_need_kode_transaksi(self):
@@ -177,7 +178,7 @@ class AccountMove(models.Model):
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
-            lines = move.line_ids.filtered(lambda x: x.is_downpayment and x.price_unit < 0 and not x.display_type)
+            lines = move.line_ids.filtered(lambda x: x.move_id._is_downpayment() and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))

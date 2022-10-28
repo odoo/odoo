@@ -902,18 +902,6 @@ class Lead(models.Model):
         return super(Lead, self).unlink()
 
     @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        if self._context.get('opportunity_id'):
-            opportunity = self.browse(self._context['opportunity_id'])
-            action = opportunity.get_formview_action()
-            if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
-                view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'form':
-            arch = self._view_get_address(arch)
-        return arch, view
-
-    @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         # retrieve team_id from the context and write the domain
         # - ('id', 'in', stages.ids): add columns that should be present

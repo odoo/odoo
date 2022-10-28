@@ -18,7 +18,7 @@ import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 
-const { markup, toRaw } = owl;
+import { markup, toRaw } from "@odoo/owl";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -1351,7 +1351,11 @@ export class RelationalModel extends Model {
             const legacyOptions = mapDoActionOptionAPI(payload.options);
             return this.actionService.doAction(payload.action, legacyOptions);
         } else if (evType === "reload") {
-            return this.load();
+            return this.load().then(() => {
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            });
         }
         throw new Error(`trigger_up(${evType}) not handled in relational model`);
     }

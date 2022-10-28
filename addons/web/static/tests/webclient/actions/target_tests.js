@@ -11,7 +11,7 @@ import { errorService } from "@web/core/errors/error_service";
 import { useService } from "@web/core/utils/hooks";
 import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
 
-const { Component, onMounted, xml } = owl;
+import { Component, onMounted, xml } from "@odoo/owl";
 
 let serverData;
 let target;
@@ -285,6 +285,10 @@ QUnit.module("ActionManager", (hooks) => {
             assert.strictEqual($(".modal:last .modal-body").text(), "Are you sure?");
 
             await testUtils.dom.click($(".modal:last .modal-footer .btn-primary"));
+            // needs two renderings to close the ConfirmationDialog:
+            //  - 1 to open the next dialog (the action in target="new")
+            //  - 1 to close the ConfirmationDialog, once the next action is executed
+            await nextTick();
             assert.containsOnce(document.body, ".modal");
             assert.strictEqual(
                 target.querySelector(".modal main .o_content").innerText.trim(),

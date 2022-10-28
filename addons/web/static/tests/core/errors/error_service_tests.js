@@ -22,7 +22,7 @@ import {
 } from "../../helpers/mock_services";
 import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 const serviceRegistry = registry.category("services");

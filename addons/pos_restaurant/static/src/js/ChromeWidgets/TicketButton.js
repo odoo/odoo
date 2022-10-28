@@ -25,7 +25,7 @@ odoo.define('pos_restaurant.TicketButton', function (require) {
                             });
                         }
                     } finally {
-                        this.env.pos.setLoadingOrderState(true);
+                        this.env.pos.setLoadingOrderState(false);
                         this.showScreen('TicketScreen');
                     }
                 } else {

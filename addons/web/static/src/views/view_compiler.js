@@ -16,7 +16,7 @@ import { toStringExpression } from "./utils";
  * @property {(el: Element, params: Record<string, any>) => Element} fn
  */
 
-const { xml } = owl;
+import { xml } from "@odoo/owl";
 
 const BUTTON_CLICK_PARAMS = [
     "name",

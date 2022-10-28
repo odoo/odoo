@@ -472,9 +472,9 @@ class Users(models.Model):
                         # skip SpecialValue (e.g. for missing record or access right)
                         pass
 
-    @api.constrains('company_id', 'company_ids')
+    @api.constrains('company_id', 'company_ids', 'active')
     def _check_company(self):
-        for user in self:
+        for user in self.filtered(lambda u: u.active):
             if user.company_id not in user.company_ids:
                 raise ValidationError(
                     _('Company %(company_name)s is not in the allowed companies for user %(user_name)s (%(company_allowed)s).',
@@ -701,7 +701,7 @@ class Users(models.Model):
     def _get_company_ids(self):
         # use search() instead of `self.company_ids` to avoid extra query for `active_test`
         domain = [('active', '=', True), ('user_ids', 'in', self.id)]
-        return frozenset(self.env['res.company'].search(domain).ids)
+        return self.env['res.company'].search(domain)._ids
 
     @api.model
     def action_get(self):
@@ -1116,7 +1116,7 @@ class Users(models.Model):
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
                     "Odoo in Proxy Mode and that the proxy is properly configured, see "
-                    "https://www.odoo.com/documentation/master/administration/install/deploy.html#https for details.",
+                    "https://www.odoo.com/documentation/16.0/administration/install/deploy.html#https for details.",
                     source
                 )
             raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
@@ -1940,7 +1940,8 @@ class APIKeysUser(models.Model):
         }
 
 class APIKeys(models.Model):
-    _name = _description = 'res.users.apikeys'
+    _name = 'res.users.apikeys'
+    _description = 'Users API Keys'
     _auto = False # so we can have a secret column
 
     name = fields.Char("Description", required=True, readonly=True)
@@ -2028,7 +2029,8 @@ class APIKeys(models.Model):
         return k
 
 class APIKeyDescription(models.TransientModel):
-    _name = _description = 'res.users.apikeys.description'
+    _name = 'res.users.apikeys.description'
+    _description = 'API Key Description'
 
     name = fields.Char("Description", required=True)
 
@@ -2057,7 +2059,8 @@ class APIKeyDescription(models.TransientModel):
             raise AccessError(_("Only internal users can create API keys"))
 
 class APIKeyShow(models.AbstractModel):
-    _name = _description = 'res.users.apikeys.show'
+    _name = 'res.users.apikeys.show'
+    _description = 'Show API Key'
 
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()

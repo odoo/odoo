@@ -17,7 +17,7 @@ import { loadLanguages } from "@web/core/l10n/translation";
 transitionConfig.disabled = true;
 
 import { patch } from "@web/core/utils/patch";
-const { App, whenReady } = owl;
+import { App, whenReady } from "@odoo/owl";
 
 const { prepareRegistriesWithCleanup } = utils;
 

@@ -15,14 +15,16 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <group name="general_information">
-                        <field name="payment_details"/>
-                        <field name="partner_id" />
-                    </group>
-                    <group name="technical_information">
-                        <field name="provider_id"/>
-                        <field name="provider_ref"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                    <group>
+                        <group name="general_information">
+                            <field name="payment_details"/>
+                            <field name="partner_id" />
+                        </group>
+                        <group name="technical_information">
+                            <field name="provider_id"/>
+                            <field name="provider_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

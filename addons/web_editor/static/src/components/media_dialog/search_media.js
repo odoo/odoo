@@ -3,7 +3,7 @@
 import { debounce } from '@web/core/utils/timing';
 import { useAutofocus } from '@web/core/utils/hooks';
 
-const { Component, onWillUnmount, xml } = owl;
+import { Component, onWillUnmount, xml } from "@odoo/owl";
 
 export class SearchMedia extends Component {
     setup() {

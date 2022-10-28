@@ -6,6 +6,7 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,13 +111,13 @@ msgstr "(exclusief belastingen)"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
 msgid "10% Discount Coupons"
-msgstr ""
+msgstr "10% Kortingsbonnen"
 
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
 msgid "10% on your order"
-msgstr ""
+msgstr "10% op je order"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -280,7 +281,7 @@ msgid ""
 msgstr ""
 "<span class=\"fw-bold text-decoration-underline\">Toekennen</span>\n"
 "                                    <br/>\n"
-"                                    de waarde van de coupon"
+"                                    de waarde van de kortingsbon"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -301,8 +302,8 @@ msgid ""
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">eWallets</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('coupons', 'next_order_coupons'))]}\">Coupons</span>\n"
-"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">Loyaliteitskaarten</span>\n"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('coupons', 'next_order_coupons'))]}\">Kortingsbonnen</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">Klantenkaarten</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('promotion', 'buy_x_get_y'))]}\">Promo's</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'promo_code')]}\">Korting</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Cadeaubonnen</span>\n"
@@ -324,6 +325,9 @@ msgid ""
 "'coupons')]}\">Grant the amount of coupon points defined as the coupon "
 "value</span>"
 msgstr ""
+"<span colspan=\"2\" attrs=\"{'invisible': [('program_type', '!=', "
+"'coupons')]}\">Verleen het aantal kortingsbonpunten gedefinieerd als de "
+"kortingsbonwaarde</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -465,12 +469,12 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
-msgstr "Er is een coupon met dezelfde code gevonden."
+msgstr "Er is een kortingsbon met dezelfde code gevonden."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr "Een coupon/klantenkaart moet een unieke code hebben."
+msgstr "Een kortingsbon/klantenkaart moet een unieke code hebben."
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -482,7 +486,8 @@ msgstr "Een programma moet minimaal één beloning hebben."
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "A trigger with the same code as one of your coupon already exists."
-msgstr "Er bestaat al een trigger met dezelfde code als een van je coupons."
+msgstr ""
+"Er bestaat al een trigger met dezelfde code als een van je kortingsbonnen."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
@@ -612,7 +617,7 @@ msgstr "Koop X Krijg Y"
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Can not generate coupon, no program is set."
-msgstr "Kan geen coupon genereren, er is geen programma ingesteld."
+msgstr "Kan geen kortingsbon genereren, er is geen programma ingesteld."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -703,41 +708,41 @@ msgstr "Controlepaneel knoppen"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_ids
 msgid "Coupon"
-msgstr "Coupon"
+msgstr "Kortingsbon"
 
 #. module: loyalty
 #: model:ir.actions.report,name:loyalty.report_loyalty_card
 msgid "Coupon Code"
-msgstr "coupon code"
+msgstr "Code kortingsbon"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count
 msgid "Coupon Count"
-msgstr "Coupon Telling"
+msgstr "Telling kortingsbon"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Coupon point(s)"
-msgstr "Coupon punt(en)"
+msgstr "Punt(en) kortingsbon"
 
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
 #: model:loyalty.reward,point_name:loyalty.10_percent_coupon_reward
 #: model:loyalty.rule,reward_point_name:loyalty.10_percent_coupon_rule
 msgid "Coupon points"
-msgstr ""
+msgstr "Punten kortingsbon"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
-msgstr "waarde coupon"
+msgstr "Waarde kortingsbon"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
 msgid "Coupon: Coupon Information"
-msgstr ""
+msgstr "Kortingsbon: Informatie kortingsbon"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -943,7 +948,7 @@ msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
 msgstr ""
-"Stimuleer herhalingsaankopen door een unieke couponcode voor eenmalig "
+"Stimuleer herhalingsaankopen door een unieke kortingsboncode voor eenmalig "
 "gebruik te sturen voor de volgende aankoop wanneer een klant iets in je "
 "winkel koopt."
 
@@ -1055,16 +1060,16 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
-"Genereer & couponcodes handmatig delen. Het kan worden gebruikt in "
-"eCommerce, Point of Sale of reguliere bestellingen om de beloning te "
-"claimen. Je kunt beperkingen op het gebruik ervan definiëren door middel van"
-" een voorwaardelijke regel."
+"Kortingsboncodes handmatig genereren & delen. Het kan worden gebruikt in "
+"eCommerce, Kassa of reguliere bestellingen om de beloning te claimen. Je "
+"kunt beperkingen op het gebruik ervan definiëren door middel van een "
+"voorwaardelijke regel."
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Coupons"
-msgstr "Genereer coupons"
+msgstr "Genereer kortingsbonnen"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1099,22 +1104,22 @@ msgstr "Cadeau & E-wallet"
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
 #, python-format
 msgid "Gift Card"
-msgstr "Cadeaukaart"
+msgstr "Cadeaubon"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Gift Card Products"
-msgstr "Cadeaukaartproducten"
+msgstr "Cadeaubon Producten"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Gift Card value"
-msgstr "Waarde cadeaukaart"
+msgstr "Waarde cadeaubon"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Gift Card Information"
-msgstr ""
+msgstr "Cadeaubon: Informatie cadeaubon"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -1383,12 +1388,12 @@ msgstr "Meerdere producten"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
 #, python-format
 msgid "Next Order Coupons"
-msgstr "Volgende bestelling coupons"
+msgstr "Kortingsbonnen Volgende Order"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "No Coupons Found."
-msgstr "Geen coupons gevonden."
+msgstr "Geen kortingsbonnen gevonden."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
@@ -1654,24 +1659,25 @@ msgstr "Verzenden"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send unique coupons that give access to rewards"
-msgstr "Stuur unieke coupons die toegang geven tot beloningen"
+msgstr "Stuur unieke kortingsbonnen die toegang geven tot beloningen"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send unique, single-use coupon code for the next purchase"
 msgstr ""
-"Stuur een unieke couponcode voor eenmalig gebruik voor de volgende aankoop"
+"Stuur een unieke kortingsboncode voor eenmalig gebruik voor de volgende "
+"aankoop"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
 msgid "Sent to customer who purchased a gift card"
-msgstr ""
+msgstr "Verzonden naar klanten die een cadeaubon hebben gekocht"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_loyalty_card
 msgid "Sent to customer with coupon information"
-msgstr ""
+msgstr "Verzonden naar klanten met informatie over kortingsbonnen"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
@@ -1744,7 +1750,7 @@ msgstr "De hoeveelheid beloningsproduct moet strikt positief zijn."
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "There haven't been any coupons generated yet."
-msgstr "Er zijn nog geen coupons gegenereerd."
+msgstr "Er zijn nog geen korttingsbonnen gegenereerd."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__reward_product_ids
@@ -1865,8 +1871,8 @@ msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
 msgstr ""
-"Bij het genereren van coupons kun je een specifieke puntenwaarde definiëren "
-"die kan worden ingewisseld voor beloningen."
+"Bij het genereren van kortingsbonnen kun je een specifieke puntenwaarde "
+"definiëren die kan worden ingewisseld voor beloningen."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -1874,9 +1880,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"Of beloningscoupons per overeenkomende eenheid worden gescheiden, is alleen "
-"van toepassing op 'toekomstige' programma's en triggermodus per uitgegeven "
-"geld of betaalde eenheid."
+"Of beloningen per overeenkomende eenheid worden gescheiden, is alleen van "
+"toepassing op 'toekomstige' programma's en triggermodus per uitgegeven geld "
+"of betaalde eenheid."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -1903,22 +1909,22 @@ msgstr "Je kunt een programma in een actieve staat niet verwijderen"
 #. module: loyalty
 #: model:mail.template,report_name:loyalty.mail_template_loyalty_card
 msgid "Your Coupon Code"
-msgstr "Je couponcode"
+msgstr "Je kortingsboncode"
 
 #. module: loyalty
 #: model:mail.template,report_name:loyalty.mail_template_gift_card
 msgid "Your Gift Card"
-msgstr "Je cadeaukaart"
+msgstr "Je cadeaubon"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr "Je cadeaukaart bij {{ object.company_id.name }}"
+msgstr "Je cadeaubon bij {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "Je beloningscoupon van {{ object.program_id.company_id.name }} "
+msgstr "Je beloningsbon van {{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban

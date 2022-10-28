@@ -8,7 +8,7 @@ import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {

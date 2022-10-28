@@ -9,7 +9,7 @@ import select_create_controllers_registry from 'web.select_create_controllers_re
 
 var _t = core._t;
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
 /**
  * Class with everything which is common between FormViewDialog and

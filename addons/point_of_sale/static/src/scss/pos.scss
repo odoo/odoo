@@ -882,6 +882,11 @@ td {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
+    flex-direction: row-reverse;
+}
+
+.pos .rightpane-header .categories-header {
+    display: flex;
 }
 
 .pos .rightpane-header .breadcrumbs {
@@ -3529,6 +3534,8 @@ td {
     width: 75%;
     max-width: 250px;
     justify-content: flex-start;
+    height: 100%;
+    min-height: 48px;
 }
 
 .pos .search-bar-container.sb-product .icon {

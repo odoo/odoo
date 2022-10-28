@@ -2175,7 +2175,7 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     _isHoveringTdBorder(ev) {
-        if (ev.target && ev.target.nodeName === 'TD') {
+        if (ev.target && ev.target.nodeName === 'TD' && ev.target.isContentEditable) {
             const SENSITIVITY = 5;
             const targetRect = ev.target.getBoundingClientRect();
             if (ev.clientX <= targetRect.x + SENSITIVITY) {
@@ -3277,7 +3277,7 @@ export class OdooEditor extends EventTarget {
             // Move selection if next character is zero-width space
             if (nextCharacter === '\u200B') {
                 focusOffset += 1;
-                while (focusNode && !focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable) {
+                while (focusNode && (!focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable)) {
                     focusNode = nextLeaf(focusNode);
                     focusOffset = 0;
                 }
@@ -3854,7 +3854,7 @@ export class OdooEditor extends EventTarget {
         }
         if (!this._rowUi.classList.contains('o_open') && !this._columnUi.classList.contains('o_open')) {
             const column = closestElement(ev.target, 'td');
-            if (this._isResizingTable || !column || !ev.target || ev.target.nodeType !== Node.ELEMENT_NODE) {
+            if (this._isResizingTable || !column || !column.isContentEditable || !ev.target || ev.target.nodeType !== Node.ELEMENT_NODE) {
                 this._toggleTableUi(false, false);
             } else {
                 const row = closestElement(column, 'tr');

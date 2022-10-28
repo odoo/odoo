@@ -48,17 +48,17 @@ registerModel({
             const webRecord = this.webRecord;
             const thread = this.activity.thread;
             const activityListViewOwner = this.activityListViewItemOwner && this.activityListViewItemOwner.activityListViewOwner;
-            await this.activity.markAsDoneAndScheduleNext({
-                feedback: this.feedbackTextareaRef.el.value,
-            });
+            const activity = this.activity;
+            const feedback = this.feedbackTextareaRef.el.value;
+            if (activityListViewOwner && activityListViewOwner.exists()) {
+                activityListViewOwner.popoverViewOwner.delete();
+            }
+            await activity.markAsDoneAndScheduleNext({ feedback });
             if (chatter && chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
             }
             if (webRecord) {
                 webRecord.model.load({ resId: thread.id });
-            }
-            if (activityListViewOwner && activityListViewOwner.exists()) {
-                activityListViewOwner.popoverViewOwner.delete();
             }
         },
         /**

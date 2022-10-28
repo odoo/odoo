@@ -62,7 +62,7 @@ export class ComposerSuggestedRecipient extends Component {
             return;
         }
         const isChecked = this._checkboxRef.el.checked;
-        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isSelected: isChecked });
+        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isChecked });
         if (!this.composerSuggestedRecipientView.suggestedRecipientInfo.partner) {
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
@@ -88,8 +88,9 @@ export class ComposerSuggestedRecipient extends Component {
 
     /**
      * @private
+     * @param {object} record the newly-created record
      */
-    _onDialogSaved() {
+    _onDialogSaved(record) {
         if (!this.composerSuggestedRecipientView.exists()) {
             return;
         }
@@ -101,6 +102,18 @@ export class ComposerSuggestedRecipient extends Component {
             return;
         }
         thread.fetchData(['suggestedRecipients']);
+        if (!this.suggestedRecipientInfo.partner) {
+            this.messaging.notify({
+                title: this.env._t('Invalid Partner'),
+                message: this.env._t('The information you have entered does not match the existing contact information for this record. The partner was not created.'),
+                type: 'warning'
+            });
+            this.messaging.rpc({
+                args: [[record.res_id]],
+                model: 'res.partner',
+                method: 'unlink',
+            });
+        }
     }
 }
 

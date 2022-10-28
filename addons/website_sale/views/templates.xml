@@ -3,6 +3,7 @@
     <template id="header_cart_link" name="Header Cart Link">
         <t t-nocache="The number of products is dynamic, this rendering cannot be cached."
            t-nocache-_icon="_icon"
+           t-nocache-_text="_text"
            t-nocache-_item_class="_item_class"
            t-nocache-_link_class="_link_class">
             <t t-set="website_sale_cart_quantity" t-value="request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else website.sale_get_order().cart_quantity or 0"/>
@@ -870,10 +871,8 @@
 
     <!-- /shop/product page -->
     <template id="base_unit_price" name="Product Bas eunit price">
-        <t>
-            (<span class="o_base_unit_price" t-field="product.base_unit_price" t-options="{'display_currency': website.currency_id}"/>
-            / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
-        </t>
+        (<span class="o_base_unit_price" t-esc="combination_info['base_unit_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
     </template>
 
     <template id="product" name="Product" track="1">
@@ -1451,6 +1450,9 @@
                             </div>
                         </td>
                         <td class="text-center td-price" name="price">
+                            <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
+                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
+
                             <t groups="account.group_show_line_subtotals_tax_excluded">
                                 <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
@@ -1806,6 +1808,25 @@
                                             <label class="col-form-label" for="phone">Phone</label>
                                             <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="'phone' in checkout and checkout['phone']" />
                                         </div>
+                                        <t t-if="website._display_partner_b2b_fields()">
+                                            <div class="w-100"/>
+                                            <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
+                                            <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
+                                                <div t-attf-class="mb-3 #{error.get('company_name') and 'o_has_error' or ''} col-lg-6 mb-0">
+                                                    <label class="col-form-label fw-normal label-optional" for="company_name">Company Name</label>
+                                                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if vat_warning else None" />
+                                                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                                                </div>
+                                                <div t-attf-class="mb-3 #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
+                                                    <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
+                                                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
+                                                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                                                </div>
+                                                <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
+                                                    <small class="form-text text-muted">Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                                                </div>
+                                            </t>
+                                        </t>
                                         <div class="w-100"/>
                                         <div t-attf-class="mb-3 #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
                                             <label class="col-form-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
@@ -1895,27 +1916,7 @@
         </t>
     </template>
 
-    <template id="address_b2b" inherit_id="address" name="Show b2b fields">
-        <xpath expr="//div[@id='div_phone']" position="after">
-            <div class="w-100"/>
-            <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
-            <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
-                <div t-attf-class="mb-3 #{error.get('company_name') and 'o_has_error' or ''} col-lg-6 mb-0">
-                    <label class="col-form-label fw-normal label-optional" for="company_name">Company Name</label>
-                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if vat_warning else None" />
-                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
-                </div>
-                <div t-attf-class="mb-3 #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
-                    <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
-                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
-                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
-                </div>
-                <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
-                    <small class="form-text text-muted">Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
-                </div>
-            </t>
-        </xpath>
-    </template>
+    <template id="address_b2b" inherit_id="address" name="Show b2b fields" />
 
     <template id="address_on_payment" name="Address on payment">
         <div class="card">

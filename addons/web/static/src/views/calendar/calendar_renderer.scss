@@ -1,3 +1,11 @@
+// Generated with http://phrogz.net/css/distinct-colors.html
+// Do not modify the first 12 colors of this list or it will break the colors in the Time Off Calendar
+$o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814968, #eb7e7f, #2c8397, #475577, #d6145f,
+    #30c381, #9365b8, #ff1e00, #bf9600, #0003b3, #ff006a, #cc3300, #ffea00, #00cc85, #007ab3, #6900cc, #ff0048, #c2cc00,
+    #00ffc8, #008cff, #bf0036, #b24400, #d0ff00, #00ffea, #0062b3, #ea00ff, #ff0026, #8bcc00, #00bfaf, #006aff, #af00bf,
+    #bf001d, #bf6300, #8cff00, #00f2ff, #004ab3, #ff00d0, #ffa600, #3acc00, #00b6bf, #0048ff, #bf7c00, #04ff00, #00d0ff,
+    #0036bf, #ff008c, #00bf49, #0092b3, #0004ff, #b20062, #649173 !default;
+
 .o_calendar_renderer {
     flex: 1 1 auto;
     min-width: 0;
@@ -235,8 +243,7 @@
             }
 
             // Expand tiny events on hover/select
-            .fc-event:not(.fc-h-event).o_cw_custom_highlight,
-            .fc-event:not(.fc-h-event).o_cw_custom_hover {
+            .fc-event:not(.fc-h-event).o_cw_custom_highlight {
                 transition: margin 0.1s 0.3s, left 0.1s 0.3s, right 0.1s 0.3s;
                 margin: 0 !important;
                 right: 1px !important;
@@ -340,16 +347,6 @@
                     @include text-truncate();
                 }
 
-                &.o_cw_nobg {
-                    &.o_cw_custom_hover,
-                    &.o_cw_custom_highlight,
-                    &:hover {
-                        .fc-bg {
-                            visibility: visible;
-                        }
-                    }
-                }
-
                 &.fc-not-start {
                     border-right-width: 3px;
 
@@ -381,43 +378,6 @@
             @include media-breakpoint-down(md) {
                 padding-right: 5px;
                 padding-left: 5px;
-            }
-
-            @for $i from 1 through length($o-colors-complete) {
-                $color: nth($o-colors-complete, $i);
-
-                .fc-bgevent.o_calendar_striked {
-                    background: linear-gradient(transparent 0 40%, $color 40% 60%, transparent 60% 100%);
-                }
-
-                .o_cw_popover_link.o_calendar_color_#{$i - 1} {
-                    border: solid 2px;
-                    padding-left: 5px;
-                    border-color: $color;
-                    margin-top: 2px;
-                    background: $color;
-                    color: black;
-
-                    &.o_attendee_status_tentative {
-                        color: color-contrast($color);
-                        background: repeating-linear-gradient(
-                            45deg,
-                            $color,
-                            $color 10px,
-                            rgba($color, 0.7) 10px,
-                            rgba($color, 0.7) 20px
-                        ) !important;
-                    }
-
-                    &.o_attendee_status_needsAction {
-                        background-color: rgba($o-view-background-color, 0.9) !important;
-                    }
-
-                    &.o_attendee_status_declined {
-                        text-decoration: line-through;
-                        background-color: rgba($o-view-background-color, 0.9) !important;
-                    }
-                }
             }
 
             > table {
@@ -550,124 +510,68 @@
     }
 }
 
-// Generated with http://phrogz.net/css/distinct-colors.html
-// Do not modify the first 12 colors of this list or it will break the colors in the Time Off Calendar
-$o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814968, #eb7e7f, #2c8397, #475577, #d6145f,
-    #30c381, #9365b8, #ff1e00, #bf9600, #0003b3, #ff006a, #cc3300, #ffea00, #00cc85, #007ab3, #6900cc, #ff0048, #c2cc00,
-    #00ffc8, #008cff, #bf0036, #b24400, #d0ff00, #00ffea, #0062b3, #ea00ff, #ff0026, #8bcc00, #00bfaf, #006aff, #af00bf,
-    #bf001d, #bf6300, #8cff00, #00f2ff, #004ab3, #ff00d0, #ffa600, #3acc00, #00b6bf, #0048ff, #bf7c00, #04ff00, #00d0ff,
-    #0036bf, #ff008c, #00bf49, #0092b3, #0004ff, #b20062, #649173 !default;
-
 // ===============  Generate color classes ===============
 @for $i from 1 through length($o-filter_colors) {
     $color: nth($o-filter_colors, $i);
 
     .o_calendar_renderer .fc-view {
-        .o_calendar_hatched_#{$i - 1} {
-            background: repeating-linear-gradient(
-                45deg,
-                $color,
-                $color 10px,
-                rgba($color, 0.4) 10px,
-                rgba($color, 0.4) 20px
-            ) !important;
-
-            .fc-bg {
-                background: repeating-linear-gradient(
-                    45deg,
-                    $color,
-                    $color 10px,
-                    rgba($color, 0.5) 10px,
-                    rgba($color, 0.5) 20px
-                );
-            }
-        }
-        .o_calendar_striked_#{$i - 1} {
-            background: linear-gradient(transparent 0 45%, $color 45% 55%, transparent 55% 100%);
-
-            .fc-bg {
-                background: none;
-            }
-        }
-        .fc-bgevent.o_calendar_color_#{$i - 1} {
+        .o_calendar_color_#{$i - 1} {
             border-color: $color;
-            background-color: $color;
-            opacity: 0.5;
-        }
-        .fc-event.o_calendar_striked_#{$i - 1} {
-            border: none;
-        }
-        .fc-event.o_calendar_color_#{$i - 1} {
-            border-color: $color;
-            color: darken($color, 45%);
-            opacity: 1;
-
-            &.o_event_highlight {
+            &.fc-bgevent {
+                background-color: $color;
+                opacity: 0.5;
+            }
+            &.fc-event {
+                color: darken($color, 45%);
                 opacity: 1;
-
-                .fc-content {
-                    font-weight: bold;
-                }
-            }
-
-            &:not(.o_calendar_hatched):not(.o_calendar_striked) {
                 background: scale-color($color, $lightness: 50%);
                 .fc-bg {
                     background: scale-color($color, $lightness: 50%);
                 }
-            }
 
-            &.o_cw_custom_hover,
-            &.o_cw_custom_highlight {
-                box-shadow: 0 12px 12px -5px rgba($color, 0.3);
-                color: color-contrast($color);
-                z-index: 10 !important;
-                opacity: 1;
-                right: 1px !important;
-                left: 1px !important;
-                margin-right: 0 !important;
-            }
-
-            &.o_attendee_status_needsAction,
-            &.o_attendee_status_tentative,
-            &.o_attendee_status_declined,
-            &.o_attendee_status_alone {
-                border-width: 2px 2px 2px !important;
+                &.o_event_highlight {
+                    opacity: 1;
+                    .fc-content {
+                        font-weight: bold;
+                    }
+                }
 
                 &.o_cw_custom_highlight {
-                    background-color: $color;
+                    box-shadow: 0 12px 12px -5px rgba($color, 0.3);
+                    color: color-contrast($color);
+                    z-index: 10 !important;
+                    opacity: 1;
+                    right: 1px !important;
+                    left: 1px !important;
+                    margin-right: 0 !important;
                 }
             }
 
-            &.o_attendee_status_tentative {
-                color: color-contrast($color);
+            &.o_event_hatched {
+                background: repeating-linear-gradient(
+                    45deg,
+                    $color,
+                    $color 10px,
+                    rgba($color, 0.4) 10px,
+                    rgba($color, 0.4) 20px
+                ) !important;
+
                 .fc-bg {
                     background: repeating-linear-gradient(
                         45deg,
                         $color,
                         $color 10px,
-                        rgba(white, 0.4) 10px,
-                        rgba(white, 0.4) 20px
-                    ) !important;
+                        rgba($color, 0.5) 10px,
+                        rgba($color, 0.5) 20px
+                    );
                 }
             }
 
-            &.o_attendee_status_alone,
-            &.o_attendee_status_needsAction {
-                background-color: rgba($o-view-background-color, 0.9) !important;
-                color: $o-black;
-                .fc-bg {
-                    background-color: rgba($o-view-background-color, 0.9) !important;
-                }
-            }
-
-            &.o_attendee_status_declined {
-                text-decoration: line-through;
-                background-color: rgba($o-view-background-color, 0.9) !important;
-                color: $o-black;
-                .fc-bg {
-                    background-color: rgba($o-view-background-color, 0.9) !important;
-                }
+            &.o_event_striked {
+                background: linear-gradient(
+                    transparent 0 45%,
+                    $color 45% 55%,
+                    transparent 55% 100%);
             }
         }
     }

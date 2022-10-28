@@ -11,7 +11,7 @@ import {
 import { ErrorDialog } from "../core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
 
-const { useComponent } = owl;
+import { useComponent } from "@odoo/owl";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 

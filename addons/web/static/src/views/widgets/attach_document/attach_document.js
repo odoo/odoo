@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class AttachDocumentWidget extends Component {
     setup() {
@@ -14,12 +14,13 @@ class AttachDocumentWidget extends Component {
     }
 
     async onFileUploaded(files) {
-        const { action } = this.props;
+        const { action, record } = this.props;
         if (action) {
-            const { model, resId, resModel } = this.props.record;
+            const { model, resId, resModel } = record;
             await this.orm.call(resModel, action, [resId], {
                 attachment_ids: files.map((file) => file.id),
             });
+            await record.load();
             model.notify();
         }
     }

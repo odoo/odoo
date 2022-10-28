@@ -2349,6 +2349,29 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test(`Colors: dynamic filters without any color attr`, async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="user_id" filters="1" invisible="1"/>
+                </calendar>
+            `,
+        });
+        assert.hasClass(findEvent(target, 1), "o_calendar_color_0");
+        assert.hasClass(findEvent(target, 2), "o_calendar_color_0");
+        assert.hasClass(findEvent(target, 3), "o_calendar_color_0");
+        assert.hasClass(findEvent(target, 4), "o_calendar_color_0");
+        assert.hasClass(findEvent(target, 5), "o_calendar_color_0");
+        assert.containsOnce(target, ".o_calendar_filter[data-name=user_id]");
+        assert.containsNone(
+            findFilterPanelSection(target, "user_id"),
+            "[class*='o_cw_filter_color_']"
+        );
+    });
+
     QUnit.test(`Colors: dynamic filters without color attr (related)`, async (assert) => {
         serverData.models.event.records = [
             {

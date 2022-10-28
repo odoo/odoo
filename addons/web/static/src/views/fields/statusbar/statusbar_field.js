@@ -10,7 +10,7 @@ import { Domain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class StatusBarField extends Component {
     setup() {
@@ -45,8 +45,8 @@ export class StatusBarField extends Component {
     get currentName() {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one": {
-                const item = this.options.find((item) => item.isSelected);
-                return item ? item.name : "";
+                const item = this.options.find((item) => this.props.value && item.id === this.props.value[0]);
+                return item ? item.display_name : "";
             }
             case "selection": {
                 const item = this.options.find((item) => item[0] === this.props.value);

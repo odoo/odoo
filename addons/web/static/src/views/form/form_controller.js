@@ -18,7 +18,7 @@ import { useSetupView } from "@web/views/view_hook";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
+import { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -441,7 +441,7 @@ export class FormController extends Component {
         if (this.props.onDiscard) {
             this.props.onDiscard(this.model.root);
         }
-        if (this.model.root.isVirtual) {
+        if (this.model.root.isVirtual || this.env.inDialog) {
             this.env.config.historyBack();
         }
     }

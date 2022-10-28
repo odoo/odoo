@@ -17,7 +17,7 @@ import {
 } from "./utils/dates";
 import { FACET_ICONS } from "./utils/misc";
 
-const { EventBus, toRaw } = owl;
+import { EventBus, toRaw } from "@odoo/owl";
 const { DateTime } = luxon;
 
 /**

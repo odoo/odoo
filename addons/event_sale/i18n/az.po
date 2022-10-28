@@ -30,7 +30,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Satışlar</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -59,6 +59,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Saxlanması mümkün olan məhsul ethiyatlarını idarə etdiyiniz məhsuldur. Anbar tətbiqi quraşdırılmalıdır.\n"
+"Sərfiyyat məhsulu ehtiyatları idarə olunmayan məhsuldur.\n"
+"Xidmət təqdim etdiyiniz qeyri- maddi məhsuldur."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
@@ -68,7 +71,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
 msgid "Attended"
-msgstr ""
+msgstr "İştirak olundu"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
@@ -78,7 +81,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_name
 msgid "Attendee Name"
-msgstr ""
+msgstr "İştirakçının Adı"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
@@ -116,7 +119,7 @@ msgstr "Ləğv olundu"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr ""
+msgstr "Bir tədbir seçin və avtomatik olaraq bu tədbir üçün qeyd yaradılacaq."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -124,6 +127,8 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
+"Bir tədbir bileti seçin və avtomatik olaraq bu tədbir bileti üçün qeyd "
+"yaradılacaq."
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
@@ -138,7 +143,7 @@ msgstr "Şirkət"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Configure an event"
-msgstr ""
+msgstr "Tədbiri konfiqurasiya edin"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
@@ -192,17 +197,17 @@ msgstr "Ekran Adı"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr ""
+msgstr "Satış Təsdiqinə dair İştirakçı Təfərrüatlarını redaktə edin"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr ""
+msgstr "Satış Təsdiqində İştirakçı Xəttini redaktə edin"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
 msgid "Editor"
-msgstr ""
+msgstr "Redaktor"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
@@ -218,18 +223,18 @@ msgstr "Elektron poçt"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event"
-msgstr ""
+msgstr "Tədbir"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr ""
+msgstr "Tədbir Konfiquratoru"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event End Date"
-msgstr ""
+msgstr "Tədbirin Bitmə Tarixi "
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
@@ -241,7 +246,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
 #: model:product.product,name:event_sale.product_product_event
 msgid "Event Registration"
-msgstr ""
+msgstr "Tədbir qeydiyyatı"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.product_product_event_standard
@@ -258,7 +263,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr ""
+msgstr "Tədbir Qeydiyyatları"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -274,7 +279,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Start Date"
-msgstr ""
+msgstr "Tədbirin Başlama Tarixi "
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type_ticket
@@ -289,18 +294,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 #: model:ir.model.fields.selection,name:event_sale.selection__product_template__detailed_type__event
 msgid "Event Ticket"
-msgstr ""
+msgstr "Tədbir Bileti"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Tədbir Biletləri"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Type"
-msgstr ""
+msgstr "Tədbir Növü"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -330,7 +335,7 @@ msgstr "Aşağıdakılara görə Qrupla"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event_sale
 #: code:addons/event_sale/wizard/event_configurator.py:0
@@ -347,7 +352,7 @@ msgstr "Qaimə Ünvanı"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__is_paid
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__is_paid
 msgid "Is Paid"
-msgstr ""
+msgstr "Ödənilib"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -384,7 +389,7 @@ msgstr "Son Yenilənmə tarixi"
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__done
 msgid "Locked"
-msgstr ""
+msgstr "Blok edilib"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
@@ -431,17 +436,17 @@ msgstr "OK"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Date"
-msgstr ""
+msgstr "Sifariş Tarixi"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Ref"
-msgstr ""
+msgstr "Sifariş  Rəyi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "Orijinal Qeydiyyat "
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__paid
@@ -459,7 +464,7 @@ msgstr "İştirakçı"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Past Events"
-msgstr ""
+msgstr "KeçmişTədbirlər"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
@@ -488,12 +493,12 @@ msgstr "Qiymət"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "Qiymətin Düşməsi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Vergi daxil Qiymətin Düşməsi"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
@@ -510,12 +515,12 @@ msgstr "Məhsul"
 #: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:event_sale.field_product_template__detailed_type
 msgid "Product Type"
-msgstr ""
+msgstr "Məhsulun Növü"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Məhsul Çeşidi"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
@@ -536,13 +541,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Registration"
-msgstr ""
+msgstr "Qeydiyyat"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_create_date
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Date"
-msgstr ""
+msgstr "Qeydiyyat Tarixi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
@@ -558,7 +563,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "Redaktə Edilən Qeydiyyatlar"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_sale_report_action
@@ -569,14 +574,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_tree
 msgid "Revenues"
-msgstr ""
+msgstr "Gəlirlər"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Sale Order"
-msgstr ""
+msgstr "satış sifarişi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
@@ -602,7 +607,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
 msgid "Sales End"
-msgstr ""
+msgstr "Satış Sonu"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -610,14 +615,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sale
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Sifarişi"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Satış Sifarişi Sətri"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -676,7 +681,7 @@ msgstr ""
 #: model:product.template,uom_name:event_sale.product_product_event_standard_product_template
 #: model:product.template,uom_name:event_sale.product_product_event_vip_product_template
 msgid "Units"
-msgstr ""
+msgstr "Vahidlər"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
@@ -686,12 +691,12 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Bu gündən bəri gələcək hadisələr"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Gələcək / İşləyən"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

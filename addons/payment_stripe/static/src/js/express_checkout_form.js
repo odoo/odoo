@@ -3,7 +3,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
-import { _prepareStripeOptions } from 'payment_stripe.payment_form';
+import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
 paymentExpressCheckoutForm.include({
 
@@ -55,7 +55,8 @@ paymentExpressCheckoutForm.include({
         }
 
         const stripeJS = Stripe(
-            providerData.stripePublishableKey, _prepareStripeOptions(providerData)
+            providerData.stripePublishableKey,
+            new StripeOptions()._prepareStripeOptions(providerData),
         );
         const paymentRequest = stripeJS.paymentRequest({
             country: providerData.countryCode,

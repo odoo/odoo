@@ -15,7 +15,7 @@ import { PropertyTags } from "./property_tags";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { Component, useState, onWillUpdateProps, useEffect, useRef } = owl;
+import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
 export class PropertyDefinition extends Component {
     setup() {
@@ -383,6 +383,7 @@ PropertyDefinition.props = {
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
     propertyDefinition: { optional: true },
+    hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },
     isNewlyCreated: { type: Boolean, optional: true },
     // index and number of properties, to hide the move arrows when needed

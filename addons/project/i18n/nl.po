@@ -8,6 +8,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_calendar/project_calendar_controller.js:0
 #, python-format
 msgid " - Tasks by Deadline"
-msgstr ""
+msgstr " - Taken per Deadline"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
@@ -463,6 +464,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Het is mij een genoegen je te laten weten dat we het project \"<strong t-out=\"object.name or ''\">Renovatie</strong>\" met succes hebben afgerond.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Je ontvangt deze e-mail omdat je project naar de fase <b t-out=\"object.stage_id.name or ''\">Voltooid</b> werd verplaatst</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -1054,7 +1065,7 @@ msgstr "Assembleren"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Assign a responsible to your task"
-msgstr ""
+msgstr "Wijs een verantwoordelijke toe aan je taak"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1293,7 +1304,7 @@ msgstr "Brainstorm"
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "Bug"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1457,7 +1468,7 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
 "Verzamel feedback van je klanten door hen een beoordelingsverzoek te sturen wanneer een taak een bepaalde fase ingaat. Om dit te doen, definieer je een beoordelings-e-mailsjabloon op de overeenkomstige fasen.\n"
-"Beoordeling bij verandering van fase: er wordt automatisch een e-mail verzonden wanneer de taak het stadium bereikt waarop de beoordelingsmailsjabloon is ingesteld.\n"
+"Beoordeling bij verandering van fase: er wordt automatisch een e-mail verzonden wanneer de taak de fase bereikt waarop de beoordelingsmailsjabloon is ingesteld.\n"
 "Periodieke beoordeling: er wordt automatisch een e-mail verzonden met regelmatige tussenpozen, zolang de taak in de fase blijft waarin de beoordelingsmailsjabloon is ingesteld."
 
 #. module: project
@@ -3203,7 +3214,7 @@ msgid ""
 "tasks reach a certain stage."
 msgstr ""
 "Meet je klanttevredenheid door beoordelingsverzoeken te verzenden wanneer je"
-" taken een bepaald stadium bereiken."
+" taken een bepaalde fase bereiken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3426,7 +3437,7 @@ msgstr "Nieuw"
 #. module: project
 #: model:project.tags,name:project.project_tags_01
 msgid "New Feature"
-msgstr ""
+msgstr "Nieuwe functie"
 
 #. module: project
 #. openerp-web
@@ -4175,7 +4186,7 @@ msgstr "Project zichtbaarheid"
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "Projectstatus - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4192,12 +4203,12 @@ msgstr "Project: Maak terugkerende taken"
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
 msgid "Project: Project Completed"
-msgstr ""
+msgstr "Project: Project voltooid"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr ""
+msgstr "Project: Vraag ontvangstbevestiging aan"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -4209,7 +4220,7 @@ msgstr "Project: verzend beoordeling"
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Project: Task Rating Request"
-msgstr ""
+msgstr "Project: Beoordelingsverzoek taak"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -4814,6 +4825,8 @@ msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
 msgstr ""
+"Bepaald op de fases van het project om klanten in te lichten wanneer een "
+"project die fase bereikt"
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4821,6 +4834,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"Definieer dit sjabloon op de fase van een project om feedback te vragen van "
+"je klanten. Activeer de \"klantenbeoordelingsfunctie\" op het project"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -5170,7 +5185,7 @@ msgstr "Taak logs"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
 msgid "Task Properties"
-msgstr ""
+msgstr "Taak eigenschappen"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
@@ -5742,7 +5757,7 @@ msgstr "Update gemaakt"
 #. module: project
 #: model:project.tags,name:project.project_tags_03
 msgid "Usability"
-msgstr ""
+msgstr "Gebruiksvriendelijkheid"
 
 #. module: project
 #. openerp-web

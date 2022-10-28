@@ -10,7 +10,7 @@ import { formatMany2one } from "@web/views/fields/formatters";
 import { evalDomain } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component, onWillStart, useState, xml } = owl;
+import { Component, onWillStart, useState, xml } from "@odoo/owl";
 
 const debugRegistry = registry.category("debug");
 

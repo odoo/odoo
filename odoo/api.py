@@ -638,7 +638,7 @@ class Environment(Mapping):
         if company_ids:
             if not self.su:
                 user_company_ids = self.user._get_company_ids()
-                if any(cid not in user_company_ids for cid in company_ids):
+                if set(company_ids) - set(user_company_ids):
                     raise AccessError(_("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids[0])
         return self.user.company_id.with_env(self)
@@ -668,7 +668,7 @@ class Environment(Mapping):
         user_company_ids = self.user._get_company_ids()
         if company_ids:
             if not self.su:
-                if any(cid not in user_company_ids for cid in company_ids):
+                if set(company_ids) - set(user_company_ids):
                     raise AccessError(_("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids)
         # By setting the default companies to all user companies instead of the main one

@@ -230,7 +230,7 @@ No CSRF validation token provided for path %r
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/master/developer/reference/addons/http.html#csrf
+https://www.odoo.com/documentation/16.0/developer/reference/addons/http.html#csrf
 for more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -1525,7 +1525,11 @@ class Request:
             self.db = None
             self.session.db = None
             root.session_store.save(self.session)
-            return self.redirect('/web/database/selector')
+            if request.httprequest.path == '/web':
+                # Internal Server Error
+                raise
+            else:
+                return self._serve_nodb()
 
         with contextlib.closing(self.registry.cursor()) as cr:
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
@@ -1782,7 +1786,6 @@ class JsonRPCDispatcher(Dispatcher):
             'data': serialize_exception(exc),
         }
         if isinstance(exc, NotFound):
-            error['http_status'] = 404
             error['code'] = 404
             error['message'] = "404: Not Found"
         elif isinstance(exc, SessionExpiredException):
@@ -1793,11 +1796,9 @@ class JsonRPCDispatcher(Dispatcher):
 
     def _response(self, result=None, error=None):
         request_id = self.jsonrequest.get('id')
-        status = 200
         response = {'jsonrpc': '2.0', 'id': request_id}
         if error is not None:
             response['error'] = error
-            status = error.pop('http_status', 200)
         if result is not None:
             response['result'] = result
 

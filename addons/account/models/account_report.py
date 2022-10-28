@@ -93,7 +93,7 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_analytic = fields.Boolean(
-        string="Filter Analytic",
+        string="Analytic Filter",
         compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_hierarchy = fields.Selection(
@@ -357,7 +357,7 @@ class AccountReportLine(models.Model):
                 'report_line_id': report_line.id,
                 'label': 'balance',
                 'engine': engine,
-                'formula': formula,
+                'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
             vals_list.append(vals)

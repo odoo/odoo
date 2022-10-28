@@ -4,7 +4,6 @@
 <t t-name="mail.CallMainView" owl="1">
     <t t-if="callMainView">
         <div class="o_CallMainView d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative bg-black-50" t-ref="root" t-on-mouseleave="callMainView.onMouseleave">
-            <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
             <div
                 class="o_CallMainView_grid d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                 t-attf-style="--height:{{callMainView.tileHeight}}px; --width:{{callMainView.tileWidth}}px;"

@@ -495,7 +495,7 @@ class PosConfig(models.Model):
         # check if there's any product for this PoS
         domain = [('available_in_pos', '=', True)]
         if self.limit_categories and self.iface_available_categ_ids:
-            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids))
+            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
         if not self.env['product.product'].search(domain):
             return {
                 'name': _("There is no products linked to your PoS"),

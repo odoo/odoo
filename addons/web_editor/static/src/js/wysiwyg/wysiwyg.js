@@ -353,13 +353,15 @@ const Wysiwyg = Widget.extend({
                     // editor root widget / the popover should not depend on
                     // editor panel (like originally intended but...) / ...
                     (async () => {
+                        let container;
                         if (this.snippetsMenu) {
                             // Await for the editor panel to be fully updated
                             // as some buttons of the link popover we create
                             // here relies on clicking in that editor panel...
                             await this.snippetsMenu._mutex.exec(() => null);
+                            container = this.options.document.getElementById('oe_manipulators');
                         }
-                        this.linkPopover = await weWidgets.LinkPopoverWidget.createFor(this, $target[0], { wysiwyg: this });
+                        this.linkPopover = await weWidgets.LinkPopoverWidget.createFor(this, $target[0], { wysiwyg: this, container });
                         $target.data('popover-widget-initialized', this.linkPopover);
                     })();
                 }
@@ -2368,8 +2370,6 @@ const Wysiwyg = Widget.extend({
         }
     },
     _signalOffline: function () {
-        // todo: Fix later.
-        return;
         if (!this._isOnline) {
             return;
         }
@@ -2382,8 +2382,6 @@ const Wysiwyg = Widget.extend({
         });
     },
     _signalOnline: async function () {
-        // todo: Fix later.
-        return;
         clearTimeout(this._offlineTimeout);
         this._offlineTimeout = undefined;
 

@@ -41,7 +41,7 @@
             <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
         </button>
         <div class="dropdown-menu">
-            <t t-foreach="websiteSelection" t-as="website" t-key="website">
+            <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
                 <a role="menuitem" href="#" class="dropdown-item" t-on-click="() => this.onSelectWebsite(website)"><t t-esc="website.name"/></a>
                 <div t-if="!website.id" class="dropdown-divider"/>
             </t>

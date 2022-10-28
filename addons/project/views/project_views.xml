@@ -1140,7 +1140,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pe-0">
                         <h1 class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
+                            <div class="d-flex w-100">
                                 <field name="priority" widget="priority" class="me-3"/>
                                 <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
                             </div>
@@ -1179,7 +1179,7 @@
                         </group>
                     </group>
                     <field attrs="{'invisible': [('project_id', '=', False)]}"
-                        name="task_properties" nolabel="1" columns="2"/>
+                        name="task_properties" nolabel="1" columns="2" hideKanbanOption="1"/>
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Task description..."/>
@@ -1526,11 +1526,28 @@
             </field>
         </record>
 
+        <!--
+            The below view is invalid since `multi_edit="1"` has been set on the tree
+            https://github.com/odoo/odoo/commit/972e097dbe7cdc7afdae722391692f9b3bf063b8#diff-db3b2f2e90f34ffef22194c3eac5a34b17af9b9a0a644d77da9e80738963931eL859
+            because `activity_type_id` uses in his domain a field `res_model`
+            which is not available in the view and not even in the model.
+            It has not been detected because:
+            - this view is unused / impossible to reach since Odoo 12.0,
+              and therefore nobody tried to edit the many2one field `activity_type_id` which would trigger the issue
+            - the field domains were not validated because `multi_edit="1"` tree views were not considered as editable,
+              and therefore their field domains were not validated in the views validation, as they should have been.
+            This view has been removed in master as it was no longer used,
+            through https://github.com/odoo/odoo/pull/103702.
+            We cannot remove it in 16.0 because it would require an upgrade script.
+            Hence we just remove the multi_edit="1" so the view is not validated
+            and the domain is not used in the web client.
+        -->
         <record id="project_task_view_tree_activity" model="ir.ui.view">
             <field name="name">project.task.tree.activity</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline" multi_edit="1">
+                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                    <field name="company_id" invisible="1"/>
                     <field name="is_closed"/>
                     <field name="name"/>
                     <field name="project_id" options="{'no_open': 1}"/>

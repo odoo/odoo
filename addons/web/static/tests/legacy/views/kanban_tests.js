@@ -23,7 +23,7 @@ const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
 const { Markup } = require("web.utils");
-const { markup, xml } = owl;
+const { markup, xml } = require("@odoo/owl");
 
 QUnit.module('LegacyViews', {
     before: function () {

@@ -18,7 +18,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
  * @property {string} string
  */
 
-const { EventBus, markRaw } = owl;
+import { EventBus, markRaw } from "@odoo/owl";
 
 const FALSE = Symbol("false");
 
@@ -263,8 +263,14 @@ class KanbanGroup extends Group {
      * @returns {Promise<void>}
      */
     async updateProgressData(progressData) {
+        let value = this.displayName || this.value;
+        if (value === true) {
+            value = "True";
+        } else if (value === false) {
+            value = "False";
+        }
         /** @type {Record<string, number>} */
-        const groupProgressData = progressData[this.displayName || this.value] || {};
+        const groupProgressData = progressData[value] || {};
         /** @type {Map<string | symbol, number>} */
         const counts = new Map(
             groupProgressData ? Object.entries(groupProgressData) : [[FALSE, this.count]]
@@ -443,7 +449,9 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
             // Quick update: moves the record at the right position and notifies components
             targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
-            const value = isRelational(this.groupByField) ? [targetGroup.value] : targetGroup.value;
+            const value = isRelational(this.groupByField)
+                ? [targetGroup.value, targetGroup.displayName]
+                : targetGroup.value;
 
             const abort = () => {
                 this.model.transaction.abort(dataRecordId);

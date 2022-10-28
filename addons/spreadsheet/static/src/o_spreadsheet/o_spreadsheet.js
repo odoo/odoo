@@ -607,6 +607,152 @@
         const delta = date.getTime() - INITIAL_1900_DAY.getTime();
         return Math.round(delta / MS_PER_DAY);
     }
+    /** Return the number of days in the current month of the given date */
+    function getDaysInMonth(date) {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    }
+    function isLastDayOfMonth(date) {
+        return getDaysInMonth(date) === date.getDate();
+    }
+    /**
+     * Add a certain number of months to a date. This will adapt the month number, and possibly adapt
+     * the day of the month to keep it in the month.
+     *
+     * For example "31/12/2020" minus one month will be "30/11/2020", and not "31/11/2020"
+     *
+     * @param keepEndOfMonth if true, if the given date was the last day of a month, the returned date will
+     *          also always be the last day of a month.
+     */
+    function addMonthsToDate(date, months, keepEndOfMonth) {
+        const yStart = date.getFullYear();
+        const mStart = date.getMonth();
+        const dStart = date.getDate();
+        const jsDate = new Date(yStart, mStart + months);
+        if (keepEndOfMonth && dStart === getDaysInMonth(date)) {
+            jsDate.setDate(getDaysInMonth(jsDate));
+        }
+        else if (dStart > getDaysInMonth(jsDate)) {
+            // 31/03 minus one month should be 28/02, not 31/02
+            jsDate.setDate(getDaysInMonth(jsDate));
+        }
+        else {
+            jsDate.setDate(dStart);
+        }
+        return jsDate;
+    }
+    function isLeapYear(year) {
+        const _year = Math.trunc(year);
+        return (_year % 4 === 0 && _year % 100 != 0) || _year % 400 == 0;
+    }
+    function getYearFrac(startDate, endDate, _dayCountConvention) {
+        if (startDate === endDate) {
+            return 0;
+        }
+        if (startDate > endDate) {
+            const stack = endDate;
+            endDate = startDate;
+            startDate = stack;
+        }
+        const jsStartDate = numberToJsDate(startDate);
+        const jsEndDate = numberToJsDate(endDate);
+        let dayStart = jsStartDate.getDate();
+        let dayEnd = jsEndDate.getDate();
+        const monthStart = jsStartDate.getMonth(); // january is 0
+        const monthEnd = jsEndDate.getMonth(); // january is 0
+        const yearStart = jsStartDate.getFullYear();
+        const yearEnd = jsEndDate.getFullYear();
+        let yearsStart = 0;
+        let yearsEnd = 0;
+        switch (_dayCountConvention) {
+            // 30/360 US convention --------------------------------------------------
+            case 0:
+                if (dayStart === 31)
+                    dayStart = 30;
+                if (dayStart === 30 && dayEnd === 31)
+                    dayEnd = 30;
+                // If jsStartDate is the last day of February
+                if (monthStart === 1 && dayStart === (isLeapYear(yearStart) ? 29 : 28)) {
+                    dayStart = 30;
+                    // If jsEndDate is the last day of February
+                    if (monthEnd === 1 && dayEnd === (isLeapYear(yearEnd) ? 29 : 28)) {
+                        dayEnd = 30;
+                    }
+                }
+                yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
+                yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
+                break;
+            // actual/actual convention ----------------------------------------------
+            case 1:
+                let daysInYear = 365;
+                const isSameYear = yearStart === yearEnd;
+                const isOneDeltaYear = yearStart + 1 === yearEnd;
+                const isMonthEndBigger = monthStart < monthEnd;
+                const isSameMonth = monthStart === monthEnd;
+                const isDayEndBigger = dayStart < dayEnd;
+                // |-----|  <-- one Year
+                // 'A' is start date
+                // 'B' is end date
+                if ((!isSameYear && !isOneDeltaYear) ||
+                    (!isSameYear && isMonthEndBigger) ||
+                    (!isSameYear && isSameMonth && isDayEndBigger)) {
+                    // |---A-|-----|-B---|  <-- !isSameYear && !isOneDeltaYear
+                    // |---A-|----B|-----|  <-- !isSameYear && isMonthEndBigger
+                    // |---A-|---B-|-----|  <-- !isSameYear && isSameMonth && isDayEndBigger
+                    let countYears = 0;
+                    let countDaysInYears = 0;
+                    for (let y = yearStart; y <= yearEnd; y++) {
+                        countYears++;
+                        countDaysInYears += isLeapYear(y) ? 366 : 365;
+                    }
+                    daysInYear = countDaysInYears / countYears;
+                }
+                else if (!isSameYear) {
+                    // |-AF--|B----|-----|
+                    if (isLeapYear(yearStart) && monthStart < 2) {
+                        daysInYear = 366;
+                    }
+                    // |--A--|FB---|-----|
+                    if (isLeapYear(yearEnd) && (monthEnd > 1 || (monthEnd === 1 && dayEnd === 29))) {
+                        daysInYear = 366;
+                    }
+                }
+                else {
+                    // remaining cases:
+                    //
+                    // |-F-AB|-----|-----|
+                    // |AB-F-|-----|-----|
+                    // |A-F-B|-----|-----|
+                    // if February 29 occurs between date1 (exclusive) and date2 (inclusive)
+                    // daysInYear --> 366
+                    if (isLeapYear(yearStart)) {
+                        daysInYear = 366;
+                    }
+                }
+                yearsStart = startDate / daysInYear;
+                yearsEnd = endDate / daysInYear;
+                break;
+            // actual/360 convention -------------------------------------------------
+            case 2:
+                yearsStart = startDate / 360;
+                yearsEnd = endDate / 360;
+                break;
+            // actual/365 convention -------------------------------------------------
+            case 3:
+                yearsStart = startDate / 365;
+                yearsEnd = endDate / 365;
+                break;
+            // 30/360 European convention --------------------------------------------
+            case 4:
+                if (dayStart === 31)
+                    dayStart = 30;
+                if (dayEnd === 31)
+                    dayEnd = 30;
+                yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
+                yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
+                break;
+        }
+        return yearsEnd - yearsStart;
+    }
 
     //------------------------------------------------------------------------------
     /**
@@ -1022,6 +1168,11 @@
     /** Transform a string to lower case. If the string is undefined, return an empty string */
     function toLowerCase(str) {
         return str ? str.toLowerCase() : "";
+    }
+    function transpose2dArray(matrix) {
+        if (!matrix.length)
+            return matrix;
+        return matrix[0].map((_, i) => matrix.map((row) => row[i]));
     }
 
     const colors$1 = [
@@ -9694,12 +9845,10 @@
             this.env.model.dispatch("SELECT_SEARCH_NEXT_MATCH");
         }
         updateSearch() {
-            if (this.state.toSearch) {
-                this.env.model.dispatch("UPDATE_SEARCH", {
-                    toSearch: this.state.toSearch,
-                    searchOptions: this.state.searchOptions,
-                });
-            }
+            this.env.model.dispatch("UPDATE_SEARCH", {
+                toSearch: this.state.toSearch,
+                searchOptions: this.state.searchOptions,
+            });
         }
         debouncedUpdateSearch() {
             clearTimeout(this.inDebounce);
@@ -13424,10 +13573,6 @@
 
     const DEFAULT_TYPE = 1;
     const DEFAULT_WEEKEND = 1;
-    function isLeapYear(year) {
-        const _year = Math.trunc(year);
-        return (_year % 4 === 0 && _year % 100 != 0) || _year % 400 == 0;
-    }
     // -----------------------------------------------------------------------------
     // DATE
     // -----------------------------------------------------------------------------
@@ -13507,6 +13652,27 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // DAYS360
+    // -----------------------------------------------------------------------------
+    const DEFAULT_DAY_COUNT_METHOD = 0;
+    const DAYS360 = {
+        description: _lt("Number of days between two dates on a 360-day year (months of 30 days)."),
+        args: args(`
+      start_date (date) ${_lt("The start date to consider in the calculation.")}
+      end_date (date) ${_lt("The end date to consider in the calculation.")}
+      method (number, default=${DEFAULT_DAY_COUNT_METHOD}) ${_lt("An indicator of what day count method to use. (0) US NASD method (1) European method")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (startDate, endDate, method = DEFAULT_DAY_COUNT_METHOD) {
+            const _startDate = toNumber(startDate);
+            const _endDate = toNumber(endDate);
+            const dayCountConvention = toBoolean(method) ? 4 : 0;
+            const yearFrac = YEARFRAC.compute(startDate, endDate, dayCountConvention);
+            return Math.sign(_endDate - _startDate) * Math.round(yearFrac * 360);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // EDATE
     // -----------------------------------------------------------------------------
     const EDATE = {
@@ -13520,10 +13686,7 @@
         compute: function (startDate, months) {
             const _startDate = toJsDate(startDate);
             const _months = Math.trunc(toNumber(months));
-            const yStart = _startDate.getFullYear();
-            const mStart = _startDate.getMonth();
-            const dStart = _startDate.getDate();
-            const jsDate = new Date(yStart, mStart + _months, dStart);
+            const jsDate = addMonthsToDate(_startDate, _months, false);
             return jsDateToRoundNumber(jsDate);
         },
         isExported: true,
@@ -14030,113 +14193,7 @@
             assert(() => _startDate >= 0, _lt("The start_date (%s) must be positive or null.", _startDate.toString()));
             assert(() => _endDate >= 0, _lt("The end_date (%s) must be positive or null.", _endDate.toString()));
             assert(() => 0 <= _dayCountConvention && _dayCountConvention <= 4, _lt("The day_count_convention (%s) must be between 0 and 4 inclusive.", _dayCountConvention.toString()));
-            if (_startDate === _endDate) {
-                return 0;
-            }
-            if (_startDate > _endDate) {
-                const stack = _endDate;
-                _endDate = _startDate;
-                _startDate = stack;
-            }
-            const jsStartDate = toJsDate(_startDate);
-            const jsEndDate = toJsDate(_endDate);
-            let dayStart = jsStartDate.getDate();
-            let dayEnd = jsEndDate.getDate();
-            const monthStart = jsStartDate.getMonth(); // january is 0
-            const monthEnd = jsEndDate.getMonth(); // january is 0
-            const yearStart = jsStartDate.getFullYear();
-            const yearEnd = jsEndDate.getFullYear();
-            let yearsStart = 0;
-            let yearsEnd = 0;
-            switch (_dayCountConvention) {
-                // 30/360 US convention --------------------------------------------------
-                case 0:
-                    if (dayStart === 31)
-                        dayStart = 30;
-                    if (dayStart === 30 && dayEnd === 31)
-                        dayEnd = 30;
-                    // If jsStartDate is the last day of February
-                    if (monthStart === 1 && dayStart === (isLeapYear(yearStart) ? 29 : 28)) {
-                        dayStart = 30;
-                        // If jsEndDate is the last day of February
-                        if (monthEnd === 1 && dayEnd === (isLeapYear(yearEnd) ? 29 : 28)) {
-                            dayEnd = 30;
-                        }
-                    }
-                    yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
-                    yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
-                    break;
-                // actual/actual convention ----------------------------------------------
-                case 1:
-                    let daysInYear = 365;
-                    const isSameYear = yearStart === yearEnd;
-                    const isOneDeltaYear = yearStart + 1 === yearEnd;
-                    const isMonthEndBigger = monthStart < monthEnd;
-                    const isSameMonth = monthStart === monthEnd;
-                    const isDayEndBigger = dayStart < dayEnd;
-                    // |-----|  <-- one Year
-                    // 'A' is start date
-                    // 'B' is end date
-                    if ((!isSameYear && !isOneDeltaYear) ||
-                        (!isSameYear && isMonthEndBigger) ||
-                        (!isSameYear && isSameMonth && isDayEndBigger)) {
-                        // |---A-|-----|-B---|  <-- !isSameYear && !isOneDeltaYear
-                        // |---A-|----B|-----|  <-- !isSameYear && isMonthEndBigger
-                        // |---A-|---B-|-----|  <-- !isSameYear && isSameMonth && isDayEndBigger
-                        let countYears = 0;
-                        let countDaysInYears = 0;
-                        for (let y = yearStart; y <= yearEnd; y++) {
-                            countYears++;
-                            countDaysInYears += isLeapYear(y) ? 366 : 365;
-                        }
-                        daysInYear = countDaysInYears / countYears;
-                    }
-                    else if (!isSameYear) {
-                        // |-AF--|B----|-----|
-                        if (isLeapYear(yearStart) && monthStart < 2) {
-                            daysInYear = 366;
-                        }
-                        // |--A--|FB---|-----|
-                        if (isLeapYear(yearEnd) && (monthEnd > 1 || (monthEnd === 1 && dayEnd === 29))) {
-                            daysInYear = 366;
-                        }
-                    }
-                    else {
-                        // remaining cases:
-                        //
-                        // |-F-AB|-----|-----|
-                        // |AB-F-|-----|-----|
-                        // |A-F-B|-----|-----|
-                        // if February 29 occurs between date1 (exclusive) and date2 (inclusive)
-                        // daysInYear --> 366
-                        if (isLeapYear(yearStart)) {
-                            daysInYear = 366;
-                        }
-                    }
-                    yearsStart = _startDate / daysInYear;
-                    yearsEnd = _endDate / daysInYear;
-                    break;
-                // actual/360 convention -------------------------------------------------
-                case 2:
-                    yearsStart = _startDate / 360;
-                    yearsEnd = _endDate / 360;
-                    break;
-                // actual/365 convention -------------------------------------------------
-                case 3:
-                    yearsStart = _startDate / 365;
-                    yearsEnd = _endDate / 365;
-                    break;
-                // 30/360 European convention --------------------------------------------
-                case 4:
-                    if (dayStart === 31)
-                        dayStart = 30;
-                    if (dayEnd === 31)
-                        dayEnd = 30;
-                    yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
-                    yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
-                    break;
-            }
-            return yearsEnd - yearsStart;
+            return getYearFrac(_startDate, _endDate, _dayCountConvention);
         },
     };
     // -----------------------------------------------------------------------------
@@ -14257,6 +14314,7 @@
         DATEVALUE: DATEVALUE,
         DAY: DAY,
         DAYS: DAYS,
+        DAYS360: DAYS360,
         EDATE: EDATE,
         EOMONTH: EOMONTH,
         HOUR: HOUR,
@@ -14309,26 +14367,508 @@
         DELTA: DELTA
     });
 
+    /** Assert maturity date > settlement date */
+    function assertMaturityAndSettlementDatesAreValid(settlement, maturity) {
+        assert(() => settlement < maturity, _lt("The maturity (%s) must be strictly greater than the settlement (%s).", maturity.toString(), settlement.toString()));
+    }
+    /** Assert settlement date > issue date */
+    function assertSettlementAndIssueDatesAreValid(settlement, issue) {
+        assert(() => issue < settlement, _lt("The settlement date (%s) must be strictly greater than the issue date (%s).", settlement.toString(), issue.toString()));
+    }
+    /** Assert coupon frequency is in [1, 2, 4] */
+    function assertCouponFrequencyIsValid(frequency) {
+        assert(() => [1, 2, 4].includes(frequency), _lt("The frequency (%s) must be one of %s", frequency.toString(), [1, 2, 4].toString()));
+    }
+    /** Assert dayCountConvention is between 0 and 4 */
+    function assertDayCountConventionIsValid(dayCountConvention) {
+        assert(() => 0 <= dayCountConvention && dayCountConvention <= 4, _lt("The day_count_convention (%s) must be between 0 and 4 inclusive.", dayCountConvention.toString()));
+    }
+    function assertRedemptionStrictlyPositive(redemption) {
+        assert(() => redemption > 0, _lt("The redemption (%s) must be strictly positive.", redemption.toString()));
+    }
+    function assertPriceStrictlyPositive(price) {
+        assert(() => price > 0, _lt("The price (%s) must be strictly positive.", price.toString()));
+    }
+    function assertNumberOfPeriodsStrictlyPositive(nPeriods) {
+        assert(() => nPeriods > 0, _lt("The number_of_periods (%s) must be greater than 0.", nPeriods.toString()));
+    }
+    function assertRateStrictlyPositive(rate) {
+        assert(() => rate > 0, _lt("The rate (%s) must be strictly positive.", rate.toString()));
+    }
+    function assertLifeStrictlyPositive(life) {
+        assert(() => life > 0, _lt("The life (%s) must be strictly positive.", life.toString()));
+    }
+    function assertCostStrictlyPositive(cost) {
+        assert(() => cost > 0, _lt("The cost (%s) must be strictly positive.", cost.toString()));
+    }
+    function assertCostPositiveOrZero(cost) {
+        assert(() => cost >= 0, _lt("The cost (%s) must be positive or null.", cost.toString()));
+    }
+    function assertPeriodStrictlyPositive(period) {
+        assert(() => period > 0, _lt("The period (%s) must be strictly positive.", period.toString()));
+    }
+    function assertPeriodPositiveOrZero(period) {
+        assert(() => period >= 0, _lt("The period (%s) must be positive or null.", period.toString()));
+    }
+    function assertSalvagePositiveOrZero(salvage) {
+        assert(() => salvage >= 0, _lt("The salvage (%s) must be positive or null.", salvage.toString()));
+    }
+    function assertSalvageSmallerOrEqualThanCost(salvage, cost) {
+        assert(() => salvage <= cost, _lt("The salvage (%s) must be smaller or equal than the cost (%s).", salvage.toString(), cost.toString()));
+    }
+    function assertPresentValueStrictlyPositive(pv) {
+        assert(() => pv > 0, _lt("The present value (%s) must be strictly positive.", pv.toString()));
+    }
+    function assertPeriodSmallerOrEqualToLife(period, life) {
+        assert(() => period <= life, _lt("The period (%s) must be less than or equal life (%.", period.toString(), life.toString()));
+    }
+    function assertInvestmentStrictlyPositive(investment) {
+        assert(() => investment > 0, _lt("The investment (%s) must be strictly positive.", investment.toString()));
+    }
+    function assertDiscountStrictlyPositive(discount) {
+        assert(() => discount > 0, _lt("The discount (%s) must be strictly positive.", discount.toString()));
+    }
+    function assertDiscountStrictlySmallerThanOne(discount) {
+        assert(() => discount < 1, _lt("The discount (%s) must be smaller than 1.", discount.toString()));
+    }
+    function assertDeprecationFactorStrictlyPositive(factor) {
+        assert(() => factor > 0, _lt("The depreciation factor (%s) must be strictly positive.", factor.toString()));
+    }
+    function assertSettlementLessThanOneYearBeforeMaturity(settlement, maturity) {
+        const startDate = toJsDate(settlement);
+        const endDate = toJsDate(maturity);
+        const startDatePlusOneYear = new Date(startDate);
+        startDatePlusOneYear.setFullYear(startDate.getFullYear() + 1);
+        assert(() => endDate.getTime() <= startDatePlusOneYear.getTime(), _lt("The settlement date (%s) must at most one year after the maturity date (%s).", settlement.toString(), maturity.toString()));
+    }
+    /**
+     * Check if the given periods are valid. This will assert :
+     *
+     * - 0 < numberOfPeriods
+     * - 0 < firstPeriod <= lastPeriod
+     * - 0 < lastPeriod <= numberOfPeriods
+     *
+     */
+    function assertFirstAndLastPeriodsAreValid(firstPeriod, lastPeriod, numberOfPeriods) {
+        assertNumberOfPeriodsStrictlyPositive(numberOfPeriods);
+        assert(() => firstPeriod > 0, _lt("The first_period (%s) must be strictly positive.", firstPeriod.toString()));
+        assert(() => lastPeriod > 0, _lt("The last_period (%s) must be strictly positive.", lastPeriod.toString()));
+        assert(() => firstPeriod <= lastPeriod, _lt("The first_period (%s) must be smaller or equal to the last_period (%s).", firstPeriod.toString(), lastPeriod.toString()));
+        assert(() => lastPeriod <= numberOfPeriods, _lt("The last_period (%s) must be smaller or equal to the number_of_periods (%s).", firstPeriod.toString(), numberOfPeriods.toString()));
+    }
+    /**
+     * Check if the given periods are valid. This will assert :
+     *
+     * - 0 < life
+     * - 0 <= startPeriod <= endPeriod
+     * - 0 <= endPeriod <= life
+     *
+     */
+    function assertStartAndEndPeriodAreValid(startPeriod, endPeriod, life) {
+        assertLifeStrictlyPositive(life);
+        assert(() => startPeriod >= 0, _lt("The start_period (%s) must be greater or equal than 0.", startPeriod.toString()));
+        assert(() => endPeriod >= 0, _lt("The end_period (%s) must be greater or equal than 0.", endPeriod.toString()));
+        assert(() => startPeriod <= endPeriod, _lt("The start_period (%s) must be smaller or equal to the end_period (%s).", startPeriod.toString(), endPeriod.toString()));
+        assert(() => endPeriod <= life, _lt("The end_period (%s) must be smaller or equal to the life (%s).", startPeriod.toString(), life.toString()));
+    }
+    function assertRateGuessStrictlyGreaterThanMinusOne(guess) {
+        assert(() => guess > -1, _lt("The rate_guess (%s) must be strictly greater than -1.", guess.toString()));
+    }
+    function assertCashFlowsAndDatesHaveSameDimension(cashFlows, dates) {
+        assert(() => cashFlows.length === dates.length && cashFlows[0].length === dates[0].length, _lt("The cashflow_amounts and cashflow_dates ranges must have the same dimensions."));
+    }
+    function assertCashFlowsHavePositiveAndNegativesValues(cashFlow) {
+        assert(() => cashFlow.some((val) => val > 0) && cashFlow.some((val) => val < 0), _lt("There must be both positive and negative values in cashflow_amounts."));
+    }
+    function assertEveryDateGreaterThanFirstDateOfCashFlowDates(dates) {
+        assert(() => dates.every((date) => date >= dates[0]), _lt("All the dates should be greater or equal to the first date in cashflow_dates (%s).", dates[0].toString()));
+    }
+
     const DEFAULT_DAY_COUNT_CONVENTION = 0;
     const DEFAULT_END_OR_BEGINNING = 0;
-    function newtonMethod(func, derivFunc, startValue, interMax, epsMax = 1e-10) {
+    const DEFAULT_FUTURE_VALUE = 0;
+    const COUPON_FUNCTION_ARGS = args(`
+settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+frequency (number) ${_lt("The number of interest or coupon payments per year (1, 2, or 4).")}
+day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+`);
+    /**
+     * Use the Newton–Raphson method to find a root of the given function in an iterative manner.
+     *
+     * @param func the function to find a root of
+     * @param derivFunc the derivative of the function
+     * @param startValue the initial value for the first iteration of the algorithm
+     * @param maxIterations the maximum number of iterations
+     * @param epsMax the epsilon for the root
+     * @param nanFallback a function giving a fallback value to use if func(x) returns NaN. Useful if the
+     *                       function is not defined for some range, but we know approximately where the root is when the Newton
+     *                       algorithm ends up in this range.
+     */
+    function newtonMethod(func, derivFunc, startValue, maxIterations, epsMax = 1e-10, nanFallback) {
         let x = startValue;
         let newX;
         let xDelta;
         let y;
         let yEqual0 = false;
         let count = 0;
+        let previousFallback = undefined;
         do {
             y = func(x);
+            if (isNaN(y)) {
+                assert(() => count < maxIterations && nanFallback !== undefined, _lt(`Function [[FUNCTION_NAME]] didn't find any result.`));
+                count++;
+                x = nanFallback(previousFallback);
+                previousFallback = x;
+                continue;
+            }
             newX = x - y / derivFunc(x);
             xDelta = Math.abs(newX - x);
             x = newX;
             yEqual0 = xDelta < epsMax || Math.abs(y) < epsMax;
-            assert(() => count < interMax, _lt(`Function [[FUNCTION_NAME]] didn't find any result`));
+            assert(() => count < maxIterations, _lt(`Function [[FUNCTION_NAME]] didn't find any result.`));
             count++;
         } while (!yEqual0);
         return x;
     }
+    // -----------------------------------------------------------------------------
+    // ACCRINTM
+    // -----------------------------------------------------------------------------
+    const ACCRINTM = {
+        description: _lt("Accrued interest of security paying at maturity."),
+        args: args(`
+        issue (date) ${_lt("The date the security was initially issued.")}
+        maturity (date) ${_lt("The maturity date of the security.")}
+        rate (number) ${_lt("The annualized rate of interest.")}
+        redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
+        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (issue, maturity, rate, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(issue));
+            const end = Math.trunc(toNumber(maturity));
+            const _redemption = toNumber(redemption);
+            const _rate = toNumber(rate);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertSettlementAndIssueDatesAreValid(end, start);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            assertRedemptionStrictlyPositive(_redemption);
+            assertRateStrictlyPositive(_rate);
+            const yearFrac = YEARFRAC.compute(start, end, dayCountConvention);
+            return _redemption * _rate * yearFrac;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // AMORLINC
+    // -----------------------------------------------------------------------------
+    const AMORLINC = {
+        description: _lt("Depreciation for an accounting period."),
+        args: args(`
+        cost (number) ${_lt("The initial cost of the asset.")}
+        purchase_date (date) ${_lt("The date the asset was purchased.")}
+        first_period_end (date) ${_lt("The date the first period ended.")}
+        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
+        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
+        rate (number) ${_lt("The deprecation rate.")}
+        day_count_convention  (number, optional) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (cost, purchaseDate, firstPeriodEnd, salvage, period, rate, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const _cost = toNumber(cost);
+            const _purchaseDate = Math.trunc(toNumber(purchaseDate));
+            const _firstPeriodEnd = Math.trunc(toNumber(firstPeriodEnd));
+            const _salvage = toNumber(salvage);
+            const _period = toNumber(period);
+            const _rate = toNumber(rate);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertCostStrictlyPositive(_cost);
+            assertSalvagePositiveOrZero(_salvage);
+            assertSalvageSmallerOrEqualThanCost(_salvage, _cost);
+            assertPeriodPositiveOrZero(_period);
+            assertRateStrictlyPositive(_rate);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            assert(() => _purchaseDate <= _firstPeriodEnd, _lt("The purchase_date (%s) must be before the first_period_end (%s).", _purchaseDate.toString(), _firstPeriodEnd.toString()));
+            /**
+             * https://wiki.documentfoundation.org/Documentation/Calc_Functions/AMORLINC
+             *
+             * AMORLINC period 0 = cost * rate * YEARFRAC(purchase date, first period end)
+             * AMORLINC period n = cost * rate
+             * AMORLINC at the last period is such that the remaining deprecated cost is equal to the salvage value.
+             *
+             * The period is and rounded to 1 if < 1 truncated if > 1,
+             *
+             * Compatibility note :
+             * If (purchase date) === (first period end), on GSheet the deprecation at the first period is 0, and on Excel
+             * it is a full period deprecation. We choose to use the Excel behaviour.
+             */
+            const roundedPeriod = _period < 1 && _period > 0 ? 1 : Math.trunc(_period);
+            const deprec = _cost * _rate;
+            const yearFrac = YEARFRAC.compute(_purchaseDate, _firstPeriodEnd, _dayCountConvention);
+            const firstDeprec = _purchaseDate === _firstPeriodEnd ? deprec : deprec * yearFrac;
+            const valueAtPeriod = _cost - firstDeprec - deprec * roundedPeriod;
+            if (valueAtPeriod >= _salvage) {
+                return roundedPeriod === 0 ? firstDeprec : deprec;
+            }
+            return _salvage - valueAtPeriod < deprec ? deprec - (_salvage - valueAtPeriod) : 0;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // COUPDAYS
+    // -----------------------------------------------------------------------------
+    const COUPDAYS = {
+        description: _lt("Days in coupon period containing settlement date."),
+        args: COUPON_FUNCTION_ARGS,
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const _frequency = Math.trunc(toNumber(frequency));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            // https://wiki.documentfoundation.org/Documentation/Calc_Functions/COUPDAYS
+            if (_dayCountConvention === 1) {
+                const before = COUPPCD.compute(settlement, maturity, frequency, dayCountConvention);
+                const after = COUPNCD.compute(settlement, maturity, frequency, dayCountConvention);
+                return after - before;
+            }
+            const daysInYear = _dayCountConvention === 3 ? 365 : 360;
+            return daysInYear / _frequency;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // COUPDAYBS
+    // -----------------------------------------------------------------------------
+    const COUPDAYBS = {
+        description: _lt("Days from settlement until next coupon."),
+        args: COUPON_FUNCTION_ARGS,
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const _frequency = Math.trunc(toNumber(frequency));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            const couponBeforeStart = COUPPCD.compute(start, end, frequency, dayCountConvention);
+            if ([1, 2, 3].includes(_dayCountConvention)) {
+                return start - couponBeforeStart;
+            }
+            if (_dayCountConvention === 4) {
+                const yearFrac = getYearFrac(couponBeforeStart, start, _dayCountConvention);
+                return Math.round(yearFrac * 360);
+            }
+            const startDate = toJsDate(start);
+            const dateCouponBeforeStart = toJsDate(couponBeforeStart);
+            const y1 = dateCouponBeforeStart.getFullYear();
+            const y2 = startDate.getFullYear();
+            const m1 = dateCouponBeforeStart.getMonth() + 1; // +1 because months in js start at 0 and it's confusing
+            const m2 = startDate.getMonth() + 1;
+            let d1 = dateCouponBeforeStart.getDate();
+            let d2 = startDate.getDate();
+            /**
+             * Rules based on https://en.wikipedia.org/wiki/Day_count_convention#30/360_US
+             *
+             * These are slightly modified (no mention of if investment is EOM and rules order is modified),
+             * but from my testing this seems the rules used by Excel/GSheet.
+             */
+            if (m1 === 2 &&
+                m2 === 2 &&
+                isLastDayOfMonth(dateCouponBeforeStart) &&
+                isLastDayOfMonth(startDate)) {
+                d2 = 30;
+            }
+            if (d2 === 31 && (d1 === 30 || d1 === 31)) {
+                d2 = 30;
+            }
+            if (m1 === 2 && isLastDayOfMonth(dateCouponBeforeStart)) {
+                d1 = 30;
+            }
+            if (d1 === 31) {
+                d1 = 30;
+            }
+            return (y2 - y1) * 360 + (m2 - m1) * 30 + (d2 - d1);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // COUPDAYSNC
+    // -----------------------------------------------------------------------------
+    const COUPDAYSNC = {
+        description: _lt("Days from settlement until next coupon."),
+        args: COUPON_FUNCTION_ARGS,
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const _frequency = Math.trunc(toNumber(frequency));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            const couponAfterStart = COUPNCD.compute(start, end, frequency, dayCountConvention);
+            if ([1, 2, 3].includes(_dayCountConvention)) {
+                return couponAfterStart - start;
+            }
+            if (_dayCountConvention === 4) {
+                const yearFrac = getYearFrac(start, couponAfterStart, _dayCountConvention);
+                return Math.round(yearFrac * 360);
+            }
+            const coupDayBs = COUPDAYBS.compute(settlement, maturity, frequency, _dayCountConvention);
+            const coupDays = COUPDAYS.compute(settlement, maturity, frequency, _dayCountConvention);
+            return coupDays - coupDayBs;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // COUPNCD
+    // -----------------------------------------------------------------------------
+    const COUPNCD = {
+        description: _lt("Next coupon date after the settlement date."),
+        args: COUPON_FUNCTION_ARGS,
+        returns: ["NUMBER"],
+        computeFormat: () => "m/d/yyyy",
+        compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const _frequency = Math.trunc(toNumber(frequency));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            const monthsPerPeriod = 12 / _frequency;
+            const coupNum = COUPNUM.compute(settlement, maturity, frequency, dayCountConvention);
+            const date = addMonthsToDate(toJsDate(end), -(coupNum - 1) * monthsPerPeriod, true);
+            return jsDateToRoundNumber(date);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // COUPNUM
+    // -----------------------------------------------------------------------------
+    const COUPNUM = {
+        description: _lt("Number of coupons between settlement and maturity."),
+        args: COUPON_FUNCTION_ARGS,
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const _frequency = Math.trunc(toNumber(frequency));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            let num = 1;
+            let currentDate = end;
+            const monthsPerPeriod = 12 / _frequency;
+            while (currentDate > start) {
+                currentDate = jsDateToRoundNumber(addMonthsToDate(toJsDate(currentDate), -monthsPerPeriod, false));
+                num++;
+            }
+            return num - 1;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // COUPPCD
+    // -----------------------------------------------------------------------------
+    const COUPPCD = {
+        description: _lt("Last coupon date prior to or on the settlement date."),
+        args: COUPON_FUNCTION_ARGS,
+        returns: ["NUMBER"],
+        computeFormat: () => "m/d/yyyy",
+        compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const _frequency = Math.trunc(toNumber(frequency));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            const monthsPerPeriod = 12 / _frequency;
+            const coupNum = COUPNUM.compute(settlement, maturity, frequency, dayCountConvention);
+            const date = addMonthsToDate(toJsDate(end), -coupNum * monthsPerPeriod, true);
+            return jsDateToRoundNumber(date);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // CUMIPMT
+    // -----------------------------------------------------------------------------
+    const CUMIPMT = {
+        description: _lt("Cumulative interest paid over a set of periods."),
+        args: args(`
+  rate (number) ${_lt("The interest rate.")}
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  first_period (number) ${_lt("The number of the payment period to begin the cumulative calculation.")}
+  last_period (number) ${_lt("The number of the payment period to end the cumulative calculation.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (rate, numberOfPeriods, presentValue, firstPeriod, lastPeriod, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
+            const first = toNumber(firstPeriod);
+            const last = toNumber(lastPeriod);
+            const _rate = toNumber(rate);
+            const pv = toNumber(presentValue);
+            const nOfPeriods = toNumber(numberOfPeriods);
+            assertFirstAndLastPeriodsAreValid(first, last, nOfPeriods);
+            assertRateStrictlyPositive(_rate);
+            assertPresentValueStrictlyPositive(pv);
+            let cumSum = 0;
+            for (let i = first; i <= last; i++) {
+                const impt = IPMT.compute(rate, i, nOfPeriods, presentValue, 0, endOrBeginning);
+                cumSum += impt;
+            }
+            return cumSum;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // CUMPRINC
+    // -----------------------------------------------------------------------------
+    const CUMPRINC = {
+        description: _lt("Cumulative principal paid over a set of periods."),
+        args: args(`
+  rate (number) ${_lt("The interest rate.")}
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  first_period (number) ${_lt("The number of the payment period to begin the cumulative calculation.")}
+  last_period (number) ${_lt("The number of the payment period to end the cumulative calculation.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (rate, numberOfPeriods, presentValue, firstPeriod, lastPeriod, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
+            const first = toNumber(firstPeriod);
+            const last = toNumber(lastPeriod);
+            const _rate = toNumber(rate);
+            const pv = toNumber(presentValue);
+            const nOfPeriods = toNumber(numberOfPeriods);
+            assertFirstAndLastPeriodsAreValid(first, last, nOfPeriods);
+            assertRateStrictlyPositive(_rate);
+            assertPresentValueStrictlyPositive(pv);
+            let cumSum = 0;
+            for (let i = first; i <= last; i++) {
+                const ppmt = PPMT.compute(rate, i, nOfPeriods, presentValue, 0, endOrBeginning);
+                cumSum += ppmt;
+            }
+            return cumSum;
+        },
+        isExported: true,
+    };
     // -----------------------------------------------------------------------------
     // DB
     // -----------------------------------------------------------------------------
@@ -14351,10 +14891,10 @@
             const _period = Math.trunc(toNumber(period));
             const _month = args.length ? Math.trunc(toNumber(args[0])) : 12;
             const lifeLimit = _life + (_month === 12 ? 0 : 1);
-            assert(() => _cost > 0, _lt("The cost (%s) must be strictly positive.", _cost.toString()));
-            assert(() => _salvage >= 0, _lt("The salvage (%s) must be positive or null.", _salvage.toString()));
-            assert(() => _life > 0, _lt("The life (%s) must be strictly positive.", _life.toString()));
-            assert(() => _period > 0, _lt("The period (%s) must be strictly positive.", _period.toString()));
+            assertCostPositiveOrZero(_cost);
+            assertSalvagePositiveOrZero(_salvage);
+            assertPeriodStrictlyPositive(_period);
+            assertLifeStrictlyPositive(_life);
             assert(() => 1 <= _month && _month <= 12, _lt("The month (%s) must be between 1 and 12 inclusive.", _month.toString()));
             assert(() => _period <= lifeLimit, _lt("The period (%s) must be less than or equal to %s.", _period.toString(), lifeLimit.toString()));
             const monthPart = _month / 12;
@@ -14372,6 +14912,132 @@
             }
             return before - after;
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // DDB
+    // -----------------------------------------------------------------------------
+    const DEFAULT_DDB_DEPRECIATION_FACTOR = 2;
+    const DDB = {
+        description: _lt("Depreciation via double-declining balance method."),
+        args: args(`
+        cost (number) ${_lt("The initial cost of the asset.")}
+        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
+        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
+        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
+        factor (number, default=${DEFAULT_DDB_DEPRECIATION_FACTOR}) ${_lt("The factor by which depreciation decreases.")}
+    `),
+        returns: ["NUMBER"],
+        computeFormat: () => "#,##0.00",
+        compute: function (cost, salvage, life, period, factor = DEFAULT_DDB_DEPRECIATION_FACTOR) {
+            factor = factor || 0;
+            const _cost = toNumber(cost);
+            const _salvage = toNumber(salvage);
+            const _life = toNumber(life);
+            const _period = toNumber(period);
+            const _factor = toNumber(factor);
+            assertCostPositiveOrZero(_cost);
+            assertSalvagePositiveOrZero(_salvage);
+            assertPeriodStrictlyPositive(_period);
+            assertLifeStrictlyPositive(_life);
+            assertPeriodSmallerOrEqualToLife(_period, _life);
+            assertDeprecationFactorStrictlyPositive(_factor);
+            if (_cost === 0 || _salvage >= _cost)
+                return 0;
+            const deprecFactor = _factor / _life;
+            if (deprecFactor > 1) {
+                return period === 1 ? _cost - _salvage : 0;
+            }
+            if (_period <= 1) {
+                return _cost * deprecFactor;
+            }
+            const previousCost = _cost * Math.pow(1 - deprecFactor, _period - 1);
+            const nextCost = _cost * Math.pow(1 - deprecFactor, _period);
+            const deprec = nextCost < _salvage ? previousCost - _salvage : previousCost - nextCost;
+            return Math.max(deprec, 0);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // DISC
+    // -----------------------------------------------------------------------------
+    const DISC = {
+        description: _lt("Discount rate of a security based on price."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      price (number) ${_lt("The price at which the security is bought per 100 face value.")}
+      redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
+      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, price, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const _settlement = Math.trunc(toNumber(settlement));
+            const _maturity = Math.trunc(toNumber(maturity));
+            const _price = toNumber(price);
+            const _redemption = toNumber(redemption);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            assertPriceStrictlyPositive(_price);
+            assertRedemptionStrictlyPositive(_redemption);
+            /**
+             * https://support.microsoft.com/en-us/office/disc-function-71fce9f3-3f05-4acf-a5a3-eac6ef4daa53
+             *
+             * B = number of days in year, depending on year basis
+             * DSM = number of days from settlement to maturity
+             *
+             *        redemption - price          B
+             * DISC = ____________________  *    ____
+             *            redemption             DSM
+             */
+            const yearsFrac = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            return (_redemption - _price) / _redemption / yearsFrac;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // DOLLARDE
+    // -----------------------------------------------------------------------------
+    const DOLLARDE = {
+        description: _lt("Convert a decimal fraction to decimal value."),
+        args: args(`
+      fractional_price (number) ${_lt("The price quotation given using fractional decimal conventions.")}
+      unit (number) ${_lt("The units of the fraction, e.g. 8 for 1/8ths or 32 for 1/32nds.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (fractionalPrice, unit) {
+            const price = toNumber(fractionalPrice);
+            const _unit = Math.trunc(toNumber(unit));
+            assert(() => _unit > 0, _lt("The unit (%s) must be strictly positive.", _unit.toString()));
+            const truncatedPrice = Math.trunc(price);
+            const priceFractionalPart = price - truncatedPrice;
+            const frac = 10 ** Math.ceil(Math.log10(_unit)) / _unit;
+            return truncatedPrice + priceFractionalPart * frac;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // DOLLARFR
+    // -----------------------------------------------------------------------------
+    const DOLLARFR = {
+        description: _lt("Convert a decimal value to decimal fraction."),
+        args: args(`
+  decimal_price (number) ${_lt("The price quotation given as a decimal value.")}
+      unit (number) ${_lt("The units of the desired fraction, e.g. 8 for 1/8ths or 32 for 1/32nds.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (decimalPrice, unit) {
+            const price = toNumber(decimalPrice);
+            const _unit = Math.trunc(toNumber(unit));
+            assert(() => _unit > 0, _lt("The unit (%s) must be strictly positive.", _unit.toString()));
+            const truncatedPrice = Math.trunc(price);
+            const priceFractionalPart = price - truncatedPrice;
+            const frac = _unit / 10 ** Math.ceil(Math.log10(_unit));
+            return truncatedPrice + priceFractionalPart * frac;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // DURATION
@@ -14395,11 +15061,11 @@
             const _yield = toNumber(securityYield);
             const _frequency = Math.trunc(toNumber(frequency));
             const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
-            assert(() => start < end, _lt("The maturity (%s) must be strictly greater than the settlement (%s).", end.toString(), start.toString()));
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
             assert(() => _yield >= 0, _lt("The yield (%s) must be positive or null.", _yield.toString()));
-            assert(() => [1, 2, 4].includes(_frequency), _lt("The frequency (%s) must be one of %s", _frequency.toString(), [1, 2, 4].toString()));
-            assert(() => 0 <= _dayCountConvention && _dayCountConvention <= 4, _lt("The day_count_convention (%s) must be between 0 and 4 inclusive.", _dayCountConvention.toString()));
             const years = YEARFRAC.compute(start, end, _dayCountConvention);
             const timeFirstYear = years - Math.trunc(years) || 1 / _frequency;
             const nbrCoupons = Math.ceil(years * _frequency);
@@ -14417,6 +15083,27 @@
             }
             return count === 0 ? 0 : sum / count;
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // EFFECT
+    // -----------------------------------------------------------------------------
+    const EFFECT = {
+        description: _lt("Annual effective interest rate."),
+        args: args(`
+  nominal_rate (number) ${_lt("The nominal interest rate per year.")}
+  periods_per_year (number) ${_lt("The number of compounding periods per year.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (nominal_rate, periods_per_year) {
+            const nominal = toNumber(nominal_rate);
+            const periods = Math.trunc(toNumber(periods_per_year));
+            assert(() => nominal > 0, _lt("The nominal rate (%s) must be strictly greater than 0.", nominal.toString()));
+            assert(() => periods > 0, _lt("The number of periods by year (%s) must strictly greater than 0.", periods.toString()));
+            // https://en.wikipedia.org/wiki/Nominal_interest_rate#Nominal_versus_effective_interest_rate
+            return Math.pow(1 + nominal / periods, periods) - 1;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // FV
@@ -14444,6 +15131,78 @@
             const type = toBoolean(endOrBeginning) ? 1 : 0;
             return r ? -pv * (1 + r) ** n - (p * (1 + r * type) * ((1 + r) ** n - 1)) / r : -(pv + p * n);
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // FVSCHEDULE
+    // -----------------------------------------------------------------------------
+    const FVSCHEDULE = {
+        description: _lt("Future value of principal from series of rates."),
+        args: args(`
+  principal (number) ${_lt("The amount of initial capital or value to compound against.")}
+  rate_schedule (number, range<number>) ${_lt("A series of interest rates to compound against the principal.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (principalAmount, rateSchedule) {
+            const principal = toNumber(principalAmount);
+            return reduceAny([rateSchedule], (acc, rate) => acc * (1 + toNumber(rate)), principal);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // INTRATE
+    // -----------------------------------------------------------------------------
+    const INTRATE = {
+        description: _lt("Calculates effective interest rate."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      investment (number) ${_lt("The amount invested in the security.")}
+      redemption (number) ${_lt("The amount to be received at maturity.")}
+      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, investment, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            const _settlement = Math.trunc(toNumber(settlement));
+            const _maturity = Math.trunc(toNumber(maturity));
+            const _redemption = toNumber(redemption);
+            const _investment = toNumber(investment);
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertInvestmentStrictlyPositive(_investment);
+            assertRedemptionStrictlyPositive(_redemption);
+            /**
+             * https://wiki.documentfoundation.org/Documentation/Calc_Functions/INTRATE
+             *
+             *             (Redemption  - Investment) / Investment
+             * INTRATE =  _________________________________________
+             *              YEARFRAC(settlement, maturity, basis)
+             */
+            const yearFrac = YEARFRAC.compute(_settlement, _maturity, dayCountConvention);
+            return (_redemption - _investment) / _investment / yearFrac;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // IPMT
+    // -----------------------------------------------------------------------------
+    const IPMT = {
+        description: _lt("Payment on the principal of an investment."),
+        args: args(`
+  rate (number) ${_lt("The annualized rate of interest.")}
+  period (number) ${_lt("The amortization period, in terms of number of periods.")}
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  `),
+        returns: ["NUMBER"],
+        computeFormat: () => "#,##0.00",
+        compute: function (rate, currentPeriod, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
+            const payment = PMT.compute(rate, numberOfPeriods, presentValue, futureValue, endOrBeginning);
+            const ppmt = PPMT.compute(rate, currentPeriod, numberOfPeriods, presentValue, futureValue, endOrBeginning);
+            return payment - ppmt;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // IRR
@@ -14459,7 +15218,7 @@
         computeFormat: () => "0%",
         compute: function (cashFlowAmounts, rateGuess = DEFAULT_RATE_GUESS) {
             const _rateGuess = toNumber(rateGuess);
-            assert(() => _rateGuess > -1, _lt("The rate_guess (%s) must be strictly greater than -1.", _rateGuess.toString()));
+            assertRateGuessStrictlyGreaterThanMinusOne(_rateGuess);
             // check that values contains at least one positive value and one negative value
             // and extract number present in the cashFlowAmount argument
             let positive = false;
@@ -14502,6 +15261,30 @@
             }
             return newtonMethod(func, derivFunc, _rateGuess + 1, 20, 1e-5) - 1;
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // ISPMT
+    // -----------------------------------------------------------------------------
+    const ISPMT = {
+        description: _lt("Returns the interest paid at a particular period of an investment."),
+        args: args(`
+  rate (number) ${_lt("The interest rate.")}
+  period (number) ${_lt("The period for which you want to view the interest payment.")}
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (rate, currentPeriod, numberOfPeriods, presentValue) {
+            const interestRate = toNumber(rate);
+            const period = toNumber(currentPeriod);
+            const nOfPeriods = toNumber(numberOfPeriods);
+            const investment = toNumber(presentValue);
+            assert(() => nOfPeriods !== 0, _lt("The number of periods must be different than 0.", nOfPeriods.toString()));
+            const currentInvestment = investment - investment * (period / nOfPeriods);
+            return -1 * currentInvestment * interestRate;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // MDURATION
@@ -14523,6 +15306,120 @@
             const k = Math.trunc(toNumber(frequency));
             return duration / (1 + y / k);
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // MIRR
+    // -----------------------------------------------------------------------------
+    const MIRR = {
+        description: _lt("Modified internal rate of return."),
+        args: args(`
+  cashflow_amounts (range<number>) ${_lt("A range containing the income or payments associated with the investment. The array should contain bot payments and incomes.")}
+  financing_rate (number) ${_lt("The interest rate paid on funds invested.")}
+  reinvestment_return_rate (number) ${_lt("The return (as a percentage) earned on reinvestment of income received from the investment.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (cashflowAmount, financingRate, reinvestmentRate) {
+            const fRate = toNumber(financingRate);
+            const rRate = toNumber(reinvestmentRate);
+            const cashFlow = transpose2dArray(cashflowAmount).flat().filter(isDefined$1).map(toNumber);
+            const n = cashFlow.length;
+            /**
+             * https://en.wikipedia.org/wiki/Modified_internal_rate_of_return
+             *
+             *         /  FV(positive cash flows, reinvestment rate) \  ^ (1 / (n - 1))
+             * MIRR = |  ___________________________________________  |                 - 1
+             *         \   - PV(negative cash flows, finance rate)   /
+             *
+             * with n the number of cash flows.
+             *
+             * You can compute FV and PV as :
+             *
+             * FV =    SUM      [ (cashFlow[i]>0 ? cashFlow[i] : 0) * (1 + rRate)**(n - i-1) ]
+             *       i= 0 => n
+             *
+             * PV =    SUM      [ (cashFlow[i]<0 ? cashFlow[i] : 0) / (1 + fRate)**i ]
+             *       i= 0 => n
+             */
+            let fv = 0;
+            let pv = 0;
+            for (const i of range(0, n)) {
+                const amount = cashFlow[i];
+                if (amount >= 0) {
+                    fv += amount * (rRate + 1) ** (n - i - 1);
+                }
+                else {
+                    pv += amount / (fRate + 1) ** i;
+                }
+            }
+            assert(() => pv !== 0 && fv !== 0, _lt("There must be both positive and negative values in cashflow_amounts."));
+            const exponent = 1 / (n - 1);
+            return (-fv / pv) ** exponent - 1;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // NOMINAL
+    // -----------------------------------------------------------------------------
+    const NOMINAL = {
+        description: _lt("Annual nominal interest rate."),
+        args: args(`
+  effective_rate (number) ${_lt("The effective interest rate per year.")}
+  periods_per_year (number) ${_lt("The number of compounding periods per year.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (effective_rate, periods_per_year) {
+            const effective = toNumber(effective_rate);
+            const periods = Math.trunc(toNumber(periods_per_year));
+            assert(() => effective > 0, _lt("The effective rate (%s) must must strictly greater than 0.", effective.toString()));
+            assert(() => periods > 0, _lt("The number of periods by year (%s) must strictly greater than 0.", periods.toString()));
+            // https://en.wikipedia.org/wiki/Nominal_interest_rate#Nominal_versus_effective_interest_rate
+            return (Math.pow(effective + 1, 1 / periods) - 1) * periods;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // NPER
+    // -----------------------------------------------------------------------------
+    const NPER = {
+        description: _lt("Number of payment periods for an investment."),
+        args: args(`
+  rate (number) ${_lt("The interest rate.")}
+  payment_amount (number) ${_lt("The amount of each payment made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (rate, paymentAmount, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
+            futureValue = futureValue || 0;
+            endOrBeginning = endOrBeginning || 0;
+            const r = toNumber(rate);
+            const p = toNumber(paymentAmount);
+            const pv = toNumber(presentValue);
+            const fv = toNumber(futureValue);
+            const t = toBoolean(endOrBeginning) ? 1 : 0;
+            /**
+             * https://wiki.documentfoundation.org/Documentation/Calc_Functions/NPER
+             *
+             * 0 = pv * (1 + r)^N + fv + [ p * (1 + r * t) * ((1 + r)^N - 1) ] / r
+             *
+             * We solve the equation for N:
+             *
+             * with C = [ p * (1 + r * t)] / r and
+             *      R = 1 + r
+             *
+             * => 0 = pv * R^N + C * R^N - C + fv
+             * <=> (C - fv) = R^N * (pv + C)
+             * <=> log[(C - fv) / (pv + C)] = N * log(R)
+             */
+            if (r === 0) {
+                return -(fv + pv) / p;
+            }
+            const c = (p * (1 + r * t)) / r;
+            return Math.log((c - fv) / (pv + c)) / Math.log(1 + r);
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // NPV
@@ -14549,6 +15446,7 @@
             assert(() => _discount !== -1, _lt("The discount (%s) must be different from -1.", _discount.toString()));
             return npvResult(_discount, 0, values);
         },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // PDURATION
@@ -14565,16 +15463,92 @@
             const _rate = toNumber(rate);
             const _presentValue = toNumber(presentValue);
             const _futureValue = toNumber(futureValue);
-            assert(() => _rate > 0, _lt("The rate (%s) must be strictly positive.", _rate.toString()));
+            assertRateStrictlyPositive(_rate);
             assert(() => _presentValue > 0, _lt("The present_value (%s) must be strictly positive.", _presentValue.toString()));
             assert(() => _futureValue > 0, _lt("The future_value (%s) must be strictly positive.", _futureValue.toString()));
             return (Math.log(_futureValue) - Math.log(_presentValue)) / Math.log(1 + _rate);
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // PMT
+    // -----------------------------------------------------------------------------
+    const PMT = {
+        description: _lt("Periodic payment for an annuity investment."),
+        args: args(`
+  rate (number) ${_lt("The annualized rate of interest.")}
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  `),
+        returns: ["NUMBER"],
+        computeFormat: () => "#,##0.00",
+        compute: function (rate, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
+            futureValue = futureValue || 0;
+            endOrBeginning = endOrBeginning || 0;
+            const n = toNumber(numberOfPeriods);
+            const r = toNumber(rate);
+            const t = toBoolean(endOrBeginning) ? 1 : 0;
+            let fv = toNumber(futureValue);
+            let pv = toNumber(presentValue);
+            assertNumberOfPeriodsStrictlyPositive(n);
+            /**
+             * https://wiki.documentfoundation.org/Documentation/Calc_Functions/PMT
+             *
+             * 0 = pv * (1 + r)^N + fv + [ p * (1 + r * t) * ((1 + r)^N - 1) ] / r
+             *
+             * We simply the equation for p
+             */
+            if (r === 0) {
+                return -(fv + pv) / n;
+            }
+            let payment = -(pv * (1 + r) ** n + fv);
+            payment = (payment * r) / ((1 + r * t) * ((1 + r) ** n - 1));
+            return payment;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // PPMT
+    // -----------------------------------------------------------------------------
+    const PPMT = {
+        description: _lt("Payment on the principal of an investment."),
+        args: args(`
+  rate (number) ${_lt("The annualized rate of interest.")}
+  period (number) ${_lt("The amortization period, in terms of number of periods.")}
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  `),
+        returns: ["NUMBER"],
+        computeFormat: () => "#,##0.00",
+        compute: function (rate, currentPeriod, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
+            futureValue = futureValue || 0;
+            endOrBeginning = endOrBeginning || 0;
+            const n = toNumber(numberOfPeriods);
+            const r = toNumber(rate);
+            const period = toNumber(currentPeriod);
+            const type = toBoolean(endOrBeginning) ? 1 : 0;
+            const fv = toNumber(futureValue);
+            const pv = toNumber(presentValue);
+            assertNumberOfPeriodsStrictlyPositive(n);
+            assert(() => period > 0 && period <= n, _lt("The period must be between 1 and number_of_periods", n.toString()));
+            const payment = PMT.compute(r, n, pv, fv, endOrBeginning);
+            if (type === 1 && period === 1)
+                return payment;
+            const eqPeriod = type === 0 ? period - 1 : period - 2;
+            const eqPv = pv + payment * type;
+            const capitalAtPeriod = -FV.compute(r, eqPeriod, payment, eqPv, 0);
+            const currentInterest = capitalAtPeriod * r;
+            return payment + currentInterest;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // PV
     // -----------------------------------------------------------------------------
-    const DEFAULT_FUTURE_VALUE = 0;
     const PV = {
         description: _lt("Present value of an annuity investment."),
         args: args(`
@@ -14595,8 +15569,10 @@
             const p = toNumber(paymentAmount);
             const fv = toNumber(futureValue);
             const type = toBoolean(endOrBeginning) ? 1 : 0;
+            // https://wiki.documentfoundation.org/Documentation/Calc_Functions/PV
             return r ? -((p * (1 + r * type) * ((1 + r) ** n - 1)) / r + fv) / (1 + r) ** n : -(fv + p * n);
         },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // PRICE
@@ -14622,12 +15598,12 @@
             const _redemption = toNumber(redemption);
             const _frequency = Math.trunc(toNumber(frequency));
             const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
-            assert(() => _maturity > _settlement, _lt("The maturity (%s) must be strictly greater than the settlement (%s).", _maturity.toString(), _settlement.toString()));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
             assert(() => _yield >= 0, _lt("The yield (%s) must be positive or null.", _yield.toString()));
-            assert(() => _redemption > 0, _lt("The redemption (%s) must be strictly positive.", _redemption.toString()));
-            assert(() => [1, 2, 4].includes(_frequency), _lt("The frequency (%s) must be one of %s.", _frequency.toString(), [1, 2, 4].toString()));
-            assert(() => 0 <= _dayCountConvention && _dayCountConvention <= 4, _lt("The day_count_convention (%s) must be between 0 and 4 inclusive.", _dayCountConvention.toString()));
+            assertRedemptionStrictlyPositive(_redemption);
             const years = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
             const nbrRealCoupons = years * _frequency;
             const nbrFullCoupons = Math.ceil(nbrRealCoupons);
@@ -14646,6 +15622,609 @@
             const redemptionPresentValue = _redemption / yieldFactorPerPeriod ** (nbrFullCoupons - 1 + timeFirstCoupon);
             return (redemptionPresentValue + cashFlowsPresentValue - cashFlowFromCoupon * (1 - timeFirstCoupon));
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // PRICEDISC
+    // -----------------------------------------------------------------------------
+    const PRICEDISC = {
+        description: _lt("Price of a discount security."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      discount (number) ${_lt("The discount rate of the security at time of purchase.")}
+      redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
+      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, discount, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const _settlement = Math.trunc(toNumber(settlement));
+            const _maturity = Math.trunc(toNumber(maturity));
+            const _discount = toNumber(discount);
+            const _redemption = toNumber(redemption);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            assertDiscountStrictlyPositive(_discount);
+            assertRedemptionStrictlyPositive(_redemption);
+            /**
+             * https://support.microsoft.com/en-us/office/pricedisc-function-d06ad7c1-380e-4be7-9fd9-75e3079acfd3
+             *
+             * B = number of days in year, depending on year basis
+             * DSM = number of days from settlement to maturity
+             *
+             * PRICEDISC = redemption - discount * redemption * (DSM/B)
+             */
+            const yearsFrac = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            return _redemption - _discount * _redemption * yearsFrac;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // PRICEMAT
+    // -----------------------------------------------------------------------------
+    const PRICEMAT = {
+        description: _lt("Calculates the price of a security paying interest at maturity, based on expected yield."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      issue (date) ${_lt("The date the security was initially issued.")}
+      rate (number) ${_lt("The annualized rate of interest.")}
+      yield (number) ${_lt("The expected annual yield of the security.")}
+      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, issue, rate, securityYield, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const _settlement = Math.trunc(toNumber(settlement));
+            const _maturity = Math.trunc(toNumber(maturity));
+            const _issue = Math.trunc(toNumber(issue));
+            const _rate = toNumber(rate);
+            const _yield = toNumber(securityYield);
+            const _dayCount = Math.trunc(toNumber(dayCountConvention));
+            assertSettlementAndIssueDatesAreValid(_settlement, _issue);
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertDayCountConventionIsValid(_dayCount);
+            assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
+            assert(() => _yield >= 0, _lt("The yield (%s) must be positive or null.", _yield.toString()));
+            /**
+             * https://support.microsoft.com/en-us/office/pricemat-function-52c3b4da-bc7e-476a-989f-a95f675cae77
+             *
+             * B = number of days in year, depending on year basis
+             * DSM = number of days from settlement to maturity
+             * DIM = number of days from issue to maturity
+             * DIS = number of days from issue to settlement
+             *
+             *             100 + (DIM/B * rate * 100)
+             *  PRICEMAT =  __________________________   - (DIS/B * rate * 100)
+             *              1 + (DSM/B * yield)
+             *
+             * The ratios number_of_days / days_in_year are computed using the YEARFRAC function, that handle
+             * differences due to day count conventions.
+             *
+             * Compatibility note :
+             *
+             * Contrary to GSheet and OpenOffice, Excel doesn't seems to always use its own YEARFRAC function
+             * to compute PRICEMAT, and give different values for some combinations of dates and day count
+             * conventions ( notably for leap years and dayCountConvention = 1 (Actual/Actual)).
+             *
+             * Our function PRICEMAT give us the same results as LibreOffice Calc.
+             * Google Sheet use the formula with YEARFRAC, but its YEARFRAC function results are different
+             * from the results of Excel/LibreOffice, thus we get different values with PRICEMAT.
+             *
+             */
+            const settlementToMaturity = YEARFRAC.compute(_settlement, _maturity, _dayCount);
+            const issueToSettlement = YEARFRAC.compute(_settlement, _issue, _dayCount);
+            const issueToMaturity = YEARFRAC.compute(_issue, _maturity, _dayCount);
+            const numerator = 100 + issueToMaturity * _rate * 100;
+            const denominator = 1 + settlementToMaturity * _yield;
+            const term2 = issueToSettlement * _rate * 100;
+            return numerator / denominator - term2;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // RATE
+    // -----------------------------------------------------------------------------
+    const RATE_GUESS_DEFAULT = 0.1;
+    const RATE = {
+        description: _lt("Interest rate of an annuity investment."),
+        args: args(`
+  number_of_periods (number) ${_lt("The number of payments to be made.")}
+  payment_per_period (number) ${_lt("The amount per period to be paid.")}
+  present_value (number) ${_lt("The current value of the annuity.")}
+  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
+  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
+  rate_guess (number, default=${RATE_GUESS_DEFAULT}) ${_lt("An estimate for what the interest rate will be.")}
+  `),
+        returns: ["NUMBER"],
+        computeFormat: () => "0%",
+        compute: function (numberOfPeriods, paymentPerPeriod, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING, rateGuess = RATE_GUESS_DEFAULT) {
+            futureValue = futureValue || 0;
+            endOrBeginning = endOrBeginning || 0;
+            rateGuess = rateGuess || RATE_GUESS_DEFAULT;
+            const n = toNumber(numberOfPeriods);
+            const payment = toNumber(paymentPerPeriod);
+            const type = toBoolean(endOrBeginning) ? 1 : 0;
+            const guess = toNumber(rateGuess);
+            let fv = toNumber(futureValue);
+            let pv = toNumber(presentValue);
+            assertNumberOfPeriodsStrictlyPositive(n);
+            assert(() => [payment, pv, fv].some((val) => val > 0) && [payment, pv, fv].some((val) => val < 0), _lt("There must be both positive and negative values in [payment_amount, present_value, future_value].", n.toString()));
+            assertRateGuessStrictlyGreaterThanMinusOne(guess);
+            fv -= payment * type;
+            pv += payment * type;
+            // https://github.com/apache/openoffice/blob/trunk/main/sc/source/core/tool/interpr2.cxx
+            const func = (rate) => {
+                const powN = Math.pow(1 + rate, n);
+                const intResult = (powN - 1) / rate;
+                return fv + pv * powN + payment * intResult;
+            };
+            const derivFunc = (rate) => {
+                const powNMinus1 = Math.pow(1 + rate, n - 1);
+                const powN = Math.pow(1 + rate, n);
+                const intResult = (powN - 1) / rate;
+                const intResultDeriv = (n * powNMinus1) / rate - intResult / rate;
+                const fTermDerivation = pv * n * powNMinus1 + payment * intResultDeriv;
+                return fTermDerivation;
+            };
+            return newtonMethod(func, derivFunc, guess, 40, 1e-5);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // RECEIVED
+    // -----------------------------------------------------------------------------
+    const RECEIVED = {
+        description: _lt("Amount received at maturity for a security."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      investment (number) ${_lt("The amount invested (irrespective of face value of each security).")}
+      discount (number) ${_lt("The discount rate of the security invested in.")}
+      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, investment, discount, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const _settlement = Math.trunc(toNumber(settlement));
+            const _maturity = Math.trunc(toNumber(maturity));
+            const _investment = toNumber(investment);
+            const _discount = toNumber(discount);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            assertInvestmentStrictlyPositive(_investment);
+            assertDiscountStrictlyPositive(_discount);
+            /**
+             * https://support.microsoft.com/en-us/office/received-function-7a3f8b93-6611-4f81-8576-828312c9b5e5
+             *
+             *                    investment
+             * RECEIVED = _________________________
+             *              1 - discount * DSM / B
+             *
+             * with DSM = number of days from settlement to maturity and B = number of days in a year
+             *
+             * The ratio DSM/B can be computed with the YEARFRAC function to take the dayCountConvention into account.
+             */
+            const yearsFrac = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            return _investment / (1 - _discount * yearsFrac);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // RRI
+    // -----------------------------------------------------------------------------
+    const RRI = {
+        description: _lt("Computes the rate needed for an investment to reach a specific value within a specific number of periods."),
+        args: args(`
+      number_of_periods (number) ${_lt("The number of periods.")}
+      present_value (number) ${_lt("The present value of the investment.")}
+      future_value (number) ${_lt("The future value of the investment.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (numberOfPeriods, presentValue, futureValue) {
+            const n = toNumber(numberOfPeriods);
+            const pv = toNumber(presentValue);
+            const fv = toNumber(futureValue);
+            assertNumberOfPeriodsStrictlyPositive(n);
+            /**
+             * https://support.microsoft.com/en-us/office/rri-function-6f5822d8-7ef1-4233-944c-79e8172930f4
+             *
+             * RRI = (future value / present value) ^ (1 / number of periods) - 1
+             */
+            return (fv / pv) ** (1 / n) - 1;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // SLN
+    // -----------------------------------------------------------------------------
+    const SLN = {
+        description: _lt("Depreciation of an asset using the straight-line method."),
+        args: args(`
+        cost (number) ${_lt("The initial cost of the asset.")}
+        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
+        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
+    `),
+        returns: ["NUMBER"],
+        computeFormat: () => "#,##0.00",
+        compute: function (cost, salvage, life) {
+            const _cost = toNumber(cost);
+            const _salvage = toNumber(salvage);
+            const _life = toNumber(life);
+            // No assertion is done on the values of the arguments to be compatible with Excel/Gsheet that don't check the values.
+            // It's up to the user to make sure the arguments make sense, which is good design because the user is smart.
+            return (_cost - _salvage) / _life;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // SYD
+    // -----------------------------------------------------------------------------
+    const SYD = {
+        description: _lt("Depreciation via sum of years digit method."),
+        args: args(`
+        cost (number) ${_lt("The initial cost of the asset.")}
+        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
+        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
+        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
+    `),
+        returns: ["NUMBER"],
+        computeFormat: () => "#,##0.00",
+        compute: function (cost, salvage, life, period) {
+            const _cost = toNumber(cost);
+            const _salvage = toNumber(salvage);
+            const _life = toNumber(life);
+            const _period = toNumber(period);
+            assertPeriodStrictlyPositive(_period);
+            assertLifeStrictlyPositive(_life);
+            assertPeriodSmallerOrEqualToLife(_period, _life);
+            /**
+             * This deprecation method use the sum of digits of the periods of the life as the deprecation factor.
+             * For example for a life = 5, we have a deprecation factor or 1 + 2 + 3 + 4 + 5 = 15 = life * (life + 1) / 2 = F.
+             *
+             * The deprecation for a period p is then computed based on F and the remaining lifetime at the period P.
+             *
+             * deprecation = (cost - salvage) * (number of remaining periods / F)
+             */
+            const deprecFactor = (_life * (_life + 1)) / 2;
+            const remainingPeriods = _life - _period + 1;
+            return (_cost - _salvage) * (remainingPeriods / deprecFactor);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // TBILLPRICE
+    // -----------------------------------------------------------------------------
+    const TBILLPRICE = {
+        description: _lt("Price of a US Treasury bill."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      discount (number) ${_lt("The discount rate of the bill at time of purchase.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, discount) {
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const disc = toNumber(discount);
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertSettlementLessThanOneYearBeforeMaturity(start, end);
+            assertDiscountStrictlyPositive(disc);
+            assertDiscountStrictlySmallerThanOne(disc);
+            /**
+             * https://support.microsoft.com/en-us/office/tbillprice-function-eacca992-c29d-425a-9eb8-0513fe6035a2
+             *
+             * TBILLPRICE = 100 * (1 - discount * DSM / 360)
+             *
+             * with DSM = number of days from settlement to maturity
+             *
+             * The ratio DSM/360 can be computed with the YEARFRAC function with dayCountConvention = 2 (actual/360).
+             */
+            const yearFrac = YEARFRAC.compute(start, end, 2);
+            return 100 * (1 - disc * yearFrac);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // TBILLEQ
+    // -----------------------------------------------------------------------------
+    const TBILLEQ = {
+        description: _lt("Equivalent rate of return for a US Treasury bill."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      discount (number) ${_lt("The discount rate of the bill at time of purchase.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, discount) {
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const disc = toNumber(discount);
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertSettlementLessThanOneYearBeforeMaturity(start, end);
+            assertDiscountStrictlyPositive(disc);
+            assertDiscountStrictlySmallerThanOne(disc);
+            /**
+             * https://support.microsoft.com/en-us/office/tbilleq-function-2ab72d90-9b4d-4efe-9fc2-0f81f2c19c8c
+             *
+             *               365 * discount
+             * TBILLEQ = ________________________
+             *            360 - discount * DSM
+             *
+             * with DSM = number of days from settlement to maturity
+             *
+             * What is not indicated in the Excel documentation is that this formula only works for duration between settlement
+             * and maturity that are less than 6 months (182 days). This is because US Treasury bills use semi-annual interest,
+             * and thus we have to take into account the compound interest for the calculation.
+             *
+             * For this case, the formula becomes (Treasury Securities and Derivatives, by Frank J. Fabozzi, page 49)
+             *
+             *            -2X + 2* SQRT[ X² - (2X - 1) * (1 - 100/p) ]
+             * TBILLEQ = ________________________________________________
+             *                            2X - 1
+             *
+             * with X = DSM / (number of days in a year),
+             *  and p is the price, computed with TBILLPRICE
+             *
+             * Note that from my tests in Excel, we take (number of days in a year) = 366 ONLY if DSM is 366, not if
+             * the settlement year is a leap year.
+             *
+             */
+            const nDays = DAYS.compute(end, start);
+            if (nDays <= 182) {
+                return (365 * disc) / (360 - disc * nDays);
+            }
+            const p = TBILLPRICE.compute(start, end, disc) / 100;
+            const daysInYear = nDays === 366 ? 366 : 365;
+            const x = nDays / daysInYear;
+            const num = -2 * x + 2 * Math.sqrt(x ** 2 - (2 * x - 1) * (1 - 1 / p));
+            const denom = 2 * x - 1;
+            return num / denom;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // TBILLYIELD
+    // -----------------------------------------------------------------------------
+    const TBILLYIELD = {
+        description: _lt("The yield of a US Treasury bill based on price."),
+        args: args(`
+      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+      price (number) ${_lt("The price at which the security is bought per 100 face value.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, price) {
+            const start = Math.trunc(toNumber(settlement));
+            const end = Math.trunc(toNumber(maturity));
+            const p = toNumber(price);
+            assertMaturityAndSettlementDatesAreValid(start, end);
+            assertSettlementLessThanOneYearBeforeMaturity(start, end);
+            assertPriceStrictlyPositive(p);
+            /**
+             * https://support.microsoft.com/en-us/office/tbillyield-function-6d381232-f4b0-4cd5-8e97-45b9c03468ba
+             *
+             *              100 - price     360
+             * TBILLYIELD = ____________ * _____
+             *                 price        DSM
+             *
+             * with DSM = number of days from settlement to maturity
+             *
+             * The ratio DSM/360 can be computed with the YEARFRAC function with dayCountConvention = 2 (actual/360).
+             *
+             */
+            const yearFrac = YEARFRAC.compute(start, end, 2);
+            return ((100 - p) / p) * (1 / yearFrac);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // VDB
+    // -----------------------------------------------------------------------------
+    const DEFAULT_VDB_NO_SWITCH = false;
+    const VDB = {
+        description: _lt("Variable declining balance. WARNING : does not handle decimal periods."),
+        args: args(`
+        cost (number) ${_lt("The initial cost of the asset.")}
+        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
+        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
+        start (number) ${_lt("Starting period to calculate depreciation.")}
+        end (number) ${_lt("Ending period to calculate depreciation.")}
+        factor (number, default=${DEFAULT_DDB_DEPRECIATION_FACTOR}) ${_lt("The number of months in the first year of depreciation.")}
+  no_switch (number, default=${DEFAULT_VDB_NO_SWITCH}) ${_lt("Whether to switch to straight-line depreciation when the depreciation is greater than the declining balance calculation.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (cost, salvage, life, startPeriod, endPeriod, factor = DEFAULT_DDB_DEPRECIATION_FACTOR, noSwitch = DEFAULT_VDB_NO_SWITCH) {
+            factor = factor || 0;
+            const _cost = toNumber(cost);
+            const _salvage = toNumber(salvage);
+            const _life = toNumber(life);
+            /* TODO : handle decimal periods
+             * on end_period it looks like it is a simple linear function, but I cannot understand exactly how
+             * decimals periods are handled with start_period.
+             */
+            const _startPeriod = Math.trunc(toNumber(startPeriod));
+            const _endPeriod = Math.trunc(toNumber(endPeriod));
+            const _factor = toNumber(factor);
+            const _noSwitch = toBoolean(noSwitch);
+            assertCostPositiveOrZero(_cost);
+            assertSalvagePositiveOrZero(_salvage);
+            assertStartAndEndPeriodAreValid(_startPeriod, _endPeriod, _life);
+            assertDeprecationFactorStrictlyPositive(_factor);
+            if (_cost === 0)
+                return 0;
+            if (_salvage >= _cost) {
+                return _startPeriod < 1 ? _cost - _salvage : 0;
+            }
+            const doubleDeprecFactor = _factor / _life;
+            if (doubleDeprecFactor >= 1) {
+                return _startPeriod < 1 ? _cost - _salvage : 0;
+            }
+            let previousCost = _cost;
+            let currentDeprec = 0;
+            let resultDeprec = 0;
+            let isLinearDeprec = false;
+            for (let i = 0; i < _endPeriod; i++) {
+                // compute the current deprecation, or keep the last one if we reached a stage of linear deprecation
+                if (!isLinearDeprec || _noSwitch) {
+                    const doubleDeprec = previousCost * doubleDeprecFactor;
+                    const remainingPeriods = _life - i;
+                    const linearDeprec = (previousCost - _salvage) / remainingPeriods;
+                    if (!_noSwitch && linearDeprec > doubleDeprec) {
+                        isLinearDeprec = true;
+                        currentDeprec = linearDeprec;
+                    }
+                    else {
+                        currentDeprec = doubleDeprec;
+                    }
+                }
+                const nextCost = Math.max(previousCost - currentDeprec, _salvage);
+                if (i >= _startPeriod) {
+                    resultDeprec += previousCost - nextCost;
+                }
+                previousCost = nextCost;
+            }
+            return resultDeprec;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // XIRR
+    // -----------------------------------------------------------------------------
+    const XIRR = {
+        description: _lt("Internal rate of return given non-periodic cash flows."),
+        args: args(`
+  cashflow_amounts (range<number>) ${_lt("An range containing the income or payments associated with the investment.")}
+  cashflow_dates (range<number>) ${_lt("An range with dates corresponding to the cash flows in cashflow_amounts.")}
+  rate_guess (number, default=${RATE_GUESS_DEFAULT}) ${_lt("An estimate for what the internal rate of return will be.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (cashflowAmounts, cashflowDates, rateGuess = RATE_GUESS_DEFAULT) {
+            rateGuess = rateGuess || 0;
+            const guess = toNumber(rateGuess);
+            const _cashFlows = cashflowAmounts.flat().map(toNumber);
+            const _dates = cashflowDates.flat().map(toNumber);
+            assertCashFlowsAndDatesHaveSameDimension(cashflowAmounts, cashflowDates);
+            assertCashFlowsHavePositiveAndNegativesValues(_cashFlows);
+            assertEveryDateGreaterThanFirstDateOfCashFlowDates(_dates);
+            assertRateGuessStrictlyGreaterThanMinusOne(guess);
+            const map = new Map();
+            for (const i of range(0, _dates.length)) {
+                const date = _dates[i];
+                if (map.has(date))
+                    map.set(date, map.get(date) + _cashFlows[i]);
+                else
+                    map.set(date, _cashFlows[i]);
+            }
+            const dates = Array.from(map.keys());
+            const values = dates.map((date) => map.get(date));
+            /**
+             * https://support.microsoft.com/en-us/office/xirr-function-de1242ec-6477-445b-b11b-a303ad9adc9d
+             *
+             * The rate is computed iteratively by trying to solve the equation
+             *
+             *
+             * 0 =    SUM     [ P_i * (1 + rate) ^((d_0 - d_i) / 365) ]  + P_0
+             *     i = 1 => n
+             *
+             * with P_i = price number i
+             *      d_i = date number i
+             *
+             * This function is not defined for rate < -1. For the case where we get rates < -1 in the Newton method, add
+             * a fallback for a number very close to -1 to continue the Newton method.
+             *
+             */
+            const func = (rate) => {
+                let value = values[0];
+                for (const i of range(1, values.length)) {
+                    const dateDiff = (dates[0] - dates[i]) / 365;
+                    value += values[i] * (1 + rate) ** dateDiff;
+                }
+                return value;
+            };
+            const derivFunc = (rate) => {
+                let deriv = 0;
+                for (const i of range(1, values.length)) {
+                    const dateDiff = (dates[0] - dates[i]) / 365;
+                    deriv += dateDiff * values[i] * (1 + rate) ** (dateDiff - 1);
+                }
+                return deriv;
+            };
+            const nanFallback = (previousFallback) => {
+                // -0.9 => -0.99 => -0.999 => ...
+                if (!previousFallback)
+                    return -0.9;
+                return previousFallback / 10 - 0.9;
+            };
+            return newtonMethod(func, derivFunc, guess, 40, 1e-5, nanFallback);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // XNPV
+    // -----------------------------------------------------------------------------
+    const XNPV = {
+        description: _lt("Net present value given to non-periodic cash flows.."),
+        args: args(`
+  discount (number) ${_lt("The discount rate of the investment over one period.")}
+  cashflow_amounts (number, range<number>) ${_lt("An range containing the income or payments associated with the investment.")}
+  cashflow_dates (number, range<number>) ${_lt("An range with dates corresponding to the cash flows in cashflow_amounts.")}
+  `),
+        returns: ["NUMBER"],
+        compute: function (discount, cashflowAmounts, cashflowDates) {
+            const rate = toNumber(discount);
+            const _cashFlows = Array.isArray(cashflowAmounts)
+                ? cashflowAmounts.flat().map(strictToNumber)
+                : [strictToNumber(cashflowAmounts)];
+            const _dates = Array.isArray(cashflowDates)
+                ? cashflowDates.flat().map(strictToNumber)
+                : [strictToNumber(cashflowDates)];
+            if (Array.isArray(cashflowDates) && Array.isArray(cashflowAmounts)) {
+                assertCashFlowsAndDatesHaveSameDimension(cashflowAmounts, cashflowDates);
+            }
+            else {
+                assert(() => _cashFlows.length === _dates.length, _lt("There must be the same number of values in cashflow_amounts and cashflow_dates."));
+            }
+            assertEveryDateGreaterThanFirstDateOfCashFlowDates(_dates);
+            assertRateStrictlyPositive(rate);
+            if (_cashFlows.length === 1)
+                return _cashFlows[0];
+            // aggregate values of the same date
+            const map = new Map();
+            for (const i of range(0, _dates.length)) {
+                const date = _dates[i];
+                if (map.has(date))
+                    map.set(date, map.get(date) + _cashFlows[i]);
+                else
+                    map.set(date, _cashFlows[i]);
+            }
+            const dates = Array.from(map.keys());
+            const values = dates.map((date) => map.get(date));
+            /**
+             * https://support.microsoft.com/en-us/office/xirr-function-de1242ec-6477-445b-b11b-a303ad9adc9d
+             *
+             * The present value is computed using
+             *
+             *
+             * NPV =    SUM     [ P_i *(1 + rate) ^((d_0 - d_i) / 365) ]  + P_0
+             *       i = 1 => n
+             *
+             * with P_i = price number i
+             *      d_i = date number i
+             *
+             *
+             */
+            let pv = values[0];
+            for (const i of range(1, values.length)) {
+                const dateDiff = (dates[0] - dates[i]) / 365;
+                pv += values[i] * (1 + rate) ** dateDiff;
+            }
+            return pv;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // YIELD
@@ -14671,12 +16250,12 @@
             const _redemption = toNumber(redemption);
             const _frequency = Math.trunc(toNumber(frequency));
             const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
-            assert(() => _maturity > _settlement, _lt("The maturity (%s) must be strictly greater than the settlement (%s).", _maturity.toString(), _settlement.toString()));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertCouponFrequencyIsValid(_frequency);
+            assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
-            assert(() => _price > 0, _lt("The price (%s) must be strictly positive.", _price.toString()));
-            assert(() => _redemption > 0, _lt("The redemption (%s) must be strictly positive.", _redemption.toString()));
-            assert(() => [1, 2, 4].includes(_frequency), _lt("The frequency (%s) must be one of %s.", _frequency.toString(), [1, 2, 4].toString()));
-            assert(() => 0 <= _dayCountConvention && _dayCountConvention <= 4, _lt("The day_count_convention (%s) must between 0 and 4 inclusive.", _dayCountConvention.toString()));
+            assertPriceStrictlyPositive(_price);
+            assertRedemptionStrictlyPositive(_redemption);
             const years = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
             const nbrRealCoupons = years * _frequency;
             const nbrFullCoupons = Math.ceil(nbrRealCoupons);
@@ -14722,6 +16301,43 @@
             const methodResult = newtonMethod(func, derivFunc, initYieldFactorPerPeriod, 100, 1e-5);
             return (methodResult - 1) * _frequency;
         },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // YIELDDISC
+    // -----------------------------------------------------------------------------
+    const YIELDDISC = {
+        description: _lt("Annual yield of a discount security."),
+        args: args(`
+        settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
+        maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
+        price (number) ${_lt("The price at which the security is bought per 100 face value.")}
+        redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
+        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
+    `),
+        returns: ["NUMBER"],
+        compute: function (settlement, maturity, price, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
+            dayCountConvention = dayCountConvention || 0;
+            const _settlement = Math.trunc(toNumber(settlement));
+            const _maturity = Math.trunc(toNumber(maturity));
+            const _price = toNumber(price);
+            const _redemption = toNumber(redemption);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertDayCountConventionIsValid(_dayCountConvention);
+            assertPriceStrictlyPositive(_price);
+            assertRedemptionStrictlyPositive(_redemption);
+            /**
+             * https://wiki.documentfoundation.org/Documentation/Calc_Functions/YIELDDISC
+             *
+             *                    (redemption / price) - 1
+             * YIELDDISC = _____________________________________
+             *             YEARFRAC(settlement, maturity, basis)
+             */
+            const yearFrac = YEARFRAC.compute(settlement, maturity, dayCountConvention);
+            return (_redemption / _price - 1) / yearFrac;
+        },
+        isExported: true,
     };
     // -----------------------------------------------------------------------------
     // YIELDMAT
@@ -14745,31 +16361,70 @@
             const _rate = toNumber(rate);
             const _price = toNumber(price);
             const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
+            assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _settlement >= _issue, _lt("The settlement (%s) must be greater than or equal to the issue (%s).", _settlement.toString(), _issue.toString()));
-            assert(() => _maturity > _settlement, _lt("The maturity (%s) must be strictly greater than the settlement (%s).", _maturity.toString(), _settlement.toString()));
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
-            assert(() => _price > 0, _lt("The price (%s) must be strictly positive.", _price.toString()));
-            assert(() => 0 <= _dayCountConvention && _dayCountConvention <= 4, _lt("The day_count_convention (%s) must be between 0 and 4 inclusive.", _dayCountConvention.toString()));
+            assertPriceStrictlyPositive(_price);
             const issueToMaturity = YEARFRAC.compute(_issue, _maturity, _dayCountConvention);
             const issueToSettlement = YEARFRAC.compute(_issue, _settlement, _dayCountConvention);
             const settlementToMaturity = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
             const numerator = (100 * (1 + _rate * issueToMaturity)) / (_price + 100 * _rate * issueToSettlement) - 1;
             return numerator / settlementToMaturity;
         },
+        isExported: true,
     };
 
     var financial = /*#__PURE__*/Object.freeze({
         __proto__: null,
+        ACCRINTM: ACCRINTM,
+        AMORLINC: AMORLINC,
+        COUPDAYS: COUPDAYS,
+        COUPDAYBS: COUPDAYBS,
+        COUPDAYSNC: COUPDAYSNC,
+        COUPNCD: COUPNCD,
+        COUPNUM: COUPNUM,
+        COUPPCD: COUPPCD,
+        CUMIPMT: CUMIPMT,
+        CUMPRINC: CUMPRINC,
         DB: DB,
+        DDB: DDB,
+        DISC: DISC,
+        DOLLARDE: DOLLARDE,
+        DOLLARFR: DOLLARFR,
         DURATION: DURATION,
+        EFFECT: EFFECT,
         FV: FV,
+        FVSCHEDULE: FVSCHEDULE,
+        INTRATE: INTRATE,
+        IPMT: IPMT,
         IRR: IRR,
+        ISPMT: ISPMT,
         MDURATION: MDURATION,
+        MIRR: MIRR,
+        NOMINAL: NOMINAL,
+        NPER: NPER,
         NPV: NPV,
         PDURATION: PDURATION,
+        PMT: PMT,
+        PPMT: PPMT,
         PV: PV,
         PRICE: PRICE,
+        PRICEDISC: PRICEDISC,
+        PRICEMAT: PRICEMAT,
+        RATE: RATE,
+        RECEIVED: RECEIVED,
+        RRI: RRI,
+        SLN: SLN,
+        SYD: SYD,
+        TBILLPRICE: TBILLPRICE,
+        TBILLEQ: TBILLEQ,
+        TBILLYIELD: TBILLYIELD,
+        VDB: VDB,
+        XIRR: XIRR,
+        XNPV: XNPV,
         YIELD: YIELD,
+        YIELDDISC: YIELDDISC,
         YIELDMAT: YIELDMAT
     });
 
@@ -19964,7 +21619,7 @@
 
     function useGridDrawing(refName, model, canvasSize) {
         const canvasRef = owl.useRef(refName);
-        owl.useEffect(() => drawGrid());
+        owl.useEffect(drawGrid);
         function drawGrid() {
             const canvas = canvasRef.el;
             const dpr = window.devicePixelRatio || 1;
@@ -20998,7 +22653,7 @@
                 switch (typeof value) {
                     case "number":
                         return {
-                            value,
+                            value: value || 0,
                             format,
                             type: CellValueType.number,
                         };
@@ -30698,13 +32353,26 @@
             return 0 /* CommandResult.Success */;
         }
         handle(cmd) {
+            var _a;
             switch (cmd.type) {
                 case "UNDO":
                 case "REDO":
                 case "UPDATE_CELL":
                 case "EVALUATE_CELLS":
                 case "ACTIVATE_SHEET":
+                case "REMOVE_FILTER_TABLE":
                     this.isEvaluationDirty = true;
+                    break;
+                case "START":
+                    for (const sheetId of this.getters.getSheetIds()) {
+                        this.filterValues[sheetId] = {};
+                        for (const filter of this.getters.getFilters(sheetId)) {
+                            this.filterValues[sheetId][filter.id] = [];
+                        }
+                    }
+                    break;
+                case "CREATE_SHEET":
+                    this.filterValues[cmd.sheetId] = {};
                     break;
                 case "UPDATE_FILTER":
                     this.updateFilter(cmd);
@@ -30715,7 +32383,7 @@
                     for (const copiedFilter of this.getters.getFilters(cmd.sheetId)) {
                         const zone = copiedFilter.zoneWithHeaders;
                         const newFilter = this.getters.getFilter(cmd.sheetIdTo, zone.left, zone.top);
-                        filterValues[newFilter.id] = this.filterValues[cmd.sheetId][copiedFilter.id];
+                        filterValues[newFilter.id] = ((_a = this.filterValues[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[copiedFilter.id]) || [];
                     }
                     this.filterValues[cmd.sheetIdTo] = filterValues;
                     break;
@@ -33652,7 +35320,7 @@
             this.sheetViewHeight = DEFAULT_SHEETVIEW_SIZE;
             this.gridOffsetX = 0;
             this.gridOffsetY = 0;
-            this.sheetsWithDirtyViewports = [];
+            this.sheetsWithDirtyViewports = new Set();
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -33703,6 +35371,7 @@
             }
         }
         handle(cmd) {
+            var _a;
             this.cleanViewports();
             switch (cmd.type) {
                 case "START":
@@ -33744,8 +35413,8 @@
                     break;
                 case "UPDATE_CELL":
                     // update cell content or format can change hidden rows because of data filters
-                    if ("content" in cmd || "format" in cmd) {
-                        this.sheetsWithDirtyViewports.push(cmd.sheetId);
+                    if ("content" in cmd || "format" in cmd || ((_a = cmd.style) === null || _a === void 0 ? void 0 : _a.fontSize) !== undefined) {
+                        this.sheetsWithDirtyViewports.add(cmd.sheetId);
                     }
                     break;
                 case "ACTIVATE_SHEET":
@@ -33765,7 +35434,7 @@
             for (const sheetId of this.sheetsWithDirtyViewports) {
                 this.resetViewports(sheetId);
             }
-            this.sheetsWithDirtyViewports = [];
+            this.sheetsWithDirtyViewports = new Set();
             this.setViewports();
         }
         setViewports() {
@@ -34579,11 +36248,13 @@
             if (isFilterHeader) {
                 contentWidth += ICON_EDGE_LENGTH + FILTER_ICON_MARGIN;
             }
-            contentWidth += 2 * PADDING_AUTORESIZE_HORIZONTAL;
-            if (this.getters.getCellStyle(cell).wrapping === "wrap") {
-                const zone = positionToZone({ col, row });
-                const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), zone.left);
-                return Math.min(colWidth, contentWidth);
+            if (contentWidth > 0) {
+                contentWidth += 2 * PADDING_AUTORESIZE_HORIZONTAL;
+                if (this.getters.getCellStyle(cell).wrapping === "wrap") {
+                    const zone = positionToZone({ col, row });
+                    const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), zone.left);
+                    return Math.min(colWidth, contentWidth);
+                }
             }
             return contentWidth;
         }
@@ -40128,8 +41799,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-10-10T07:42:59.012Z';
-    exports.__info__.hash = '22b4de0';
+    exports.__info__.date = '2022-10-27T09:50:07.954Z';
+    exports.__info__.hash = 'dc0fe1f';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

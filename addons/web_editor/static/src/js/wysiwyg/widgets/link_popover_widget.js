@@ -22,6 +22,7 @@ const LinkPopoverWidget = Widget.extend({
         this.options = options;
         this.target = target;
         this.$target = $(target);
+        this.container = this.options.container || this.target.ownerDocument.body;
         this.href = this.$target.attr('href'); // for template
         this._dp = new DropPrevious();
     },
@@ -48,14 +49,12 @@ const LinkPopoverWidget = Widget.extend({
                 message: _t("Link copied to clipboard."),
             });
         });
-        const targetWindow = this.target.ownerDocument.defaultView;
-        const popoverContainer = targetWindow.frameElement ? targetWindow.frameElement.parentElement : targetWindow.document.body;
 
         // init tooltips & popovers
         this.$('[data-bs-toggle="tooltip"]').tooltip({
             delay: 0,
             placement: 'bottom',
-            container: popoverContainer,
+            container: this.container,
         });
         const tooltips = [];
         for (const el of this.$('[data-bs-toggle="tooltip"]').toArray()) {
@@ -74,7 +73,7 @@ const LinkPopoverWidget = Widget.extend({
             // 5. Close when the user click somewhere on the page (not being the link or the popover content)
             trigger: 'manual',
             boundary: 'viewport',
-            container: popoverContainer,
+            container: this.container,
         })
         .on('show.bs.popover.link_popover', () => {
             this.options.wysiwyg.odooEditor.observerUnactive('show.bs.popover');

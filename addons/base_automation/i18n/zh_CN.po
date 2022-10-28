@@ -172,6 +172,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"选择短信息发送的方法：\n"
+"短信息：群发短信息\n"
+"作为消息发布：登录文件\n"
+"发布为备注：群发短信息与归档"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -181,6 +185,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"选择发送电子邮件的方法：\n"
+"电子邮件：直接发送电子邮件\n"
+"作为信息发布：在文档上发布并通知关注者\n"
+"发布为注释：在文档上记录注释"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -204,6 +212,8 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"触发器日期之后的延迟。\n"
+"    如果您需要在触发器日期之前延迟，您可以输入负数，例如在会议前15分钟发送提醒。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -270,7 +280,7 @@ msgstr "EMail模板"
 msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
-msgstr ""
+msgstr "删除记录时，不能使用电子邮件、关注者或活动动作类型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -287,7 +297,7 @@ msgstr "触发一次更改的字段。"
 #, python-format
 msgid ""
 "Form Modification based actions can only be used with code action type."
-msgstr ""
+msgstr "基于表单修改的动作只能与代码动作类型一起使用。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -395,7 +405,7 @@ msgstr "笔记"
 #, python-format
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
-msgstr ""
+msgstr "请注意，此动作最多可在其计划安排后%d分钟触发。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -454,12 +464,12 @@ msgstr "短信模板"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "发送为"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "发送为（短信息）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -491,7 +501,7 @@ msgstr "建立一个新的自动化系统"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "订阅收件人"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -521,7 +531,7 @@ msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value
 msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
-msgstr ""
+msgstr "当且仅当这些字段之一被更新时，该动作将被触发。如果是空的，所有字段都会被关注"
 
 #. module: base_automation
 #. openerp-web
@@ -660,6 +670,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"该条件应该在什么时候被触发。\n"
+"                如果存在，将由调度器检查。如果是空的，将在创建和更新时被检查"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

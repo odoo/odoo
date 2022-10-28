@@ -3,7 +3,7 @@
 import fonts from 'wysiwyg.fonts';
 import { SearchMedia } from './search_media';
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class IconSelector extends Component {
     setup() {

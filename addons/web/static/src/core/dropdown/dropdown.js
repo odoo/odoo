@@ -5,7 +5,7 @@ import { usePosition } from "../position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { localization } from "../l10n/localization";
 
-const {
+import {
     Component,
     EventBus,
     onWillStart,
@@ -14,7 +14,7 @@ const {
     useRef,
     useState,
     useChildSubEnv,
-} = owl;
+} from "@odoo/owl";
 
 const DIRECTION_CARET_CLASS = {
     bottom: "dropdown",
@@ -304,6 +304,10 @@ Dropdown.props = {
         type: String,
         optional: true,
         validate: (prop) => ["parent"].includes(prop),
+    },
+    skipTogglerTabbing: {
+        type: Boolean,
+        optional: true,
     },
     startOpen: {
         type: Boolean,

@@ -8,7 +8,7 @@ import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
 import { isBinarySize } from "@web/core/utils/binary";
 import { session } from "@web/session";
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -229,24 +229,24 @@ export function formatFloatTime(value, options = {}) {
         return "";
     }
     const isNegative = value < 0;
-    if (isNegative) {
-        value = Math.abs(value);
-    }
+    value = Math.abs(value);
+
     let hour = Math.floor(value);
+    const milliSecLeft = Math.round(value * 3600000) - hour * 3600000;
     // Although looking quite overkill, the following line ensures that we do
     // not have float issues while still considering that 59s is 00:00.
-    let min = Math.floor((Math.round((value % 1) * 100) / 100) * 60);
+    let min = Math.floor(milliSecLeft / 60000);
     if (min === 60) {
         min = 0;
         hour = hour + 1;
     }
-    min = `${min}`.padStart(2, "0");
+    min = String(min).padStart(2, "0");
     if (!options.noLeadingZeroHour) {
-        hour = `${hour}`.padStart(2, "0");
+        hour = String(hour).padStart(2, "0");
     }
     let sec = "";
     if (options.displaySeconds) {
-        sec = ":" + `${Math.round((value % 1) * 3600) - min * 60}`.padStart(2, "0");
+        sec = ":" + String(Math.floor((milliSecLeft % 60000) / 1000)).padStart(2, "0");
     }
     return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }

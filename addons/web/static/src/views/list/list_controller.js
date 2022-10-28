@@ -16,7 +16,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
-const { Component, onWillStart, useSubEnv, useEffect, useRef } = owl;
+import { Component, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -97,7 +97,7 @@ export class ListController extends Component {
                 const editedRecord = list.editedRecord;
                 if (editedRecord) {
                     if (!(await list.unselectRecord(true))) {
-                        throw new Error("View can't be saved");
+                        return false;
                     }
                 }
             },
@@ -328,7 +328,7 @@ export class ListController extends Component {
             name: field.name || field.id,
             label: field.label || field.string,
             store: field.store,
-            type: field.field_type,
+            type: field.field_type || field.type,
         }));
         if (import_compat) {
             exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
@@ -379,12 +379,11 @@ export class ListController extends Component {
      * @private
      */
     async onDirectExportData() {
-        const fields = await this.getExportedFields(this.model.root.resModel, false);
-        await this.downloadExport(
-            fields.filter((field) => this.model.root.activeFields[field.id]),
-            false,
-            "xlsx"
-        );
+        const fields = this.props.archInfo.columns
+            .filter((col) => col.type === "field")
+            .map((col) => this.props.fields[col.name])
+            .filter((field) => field.exportable !== false);
+        await this.downloadExport(fields, false, "xlsx");
     }
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.

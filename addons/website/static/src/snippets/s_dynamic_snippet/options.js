@@ -52,6 +52,12 @@ const dynamicSnippetOptions = options.Class.extend({
         // Default values depend on the templates and filters available.
         // Therefore, they cannot be computed prior the start of the option.
         await this._setOptionsDefaultValues();
+        // TODO Remove in master: adapt dropped snippet template.
+        if (this.$target[0].classList.contains('d-none') && !this.$target[0].classList.contains('d-md-block')) {
+            // Remove the 'd-none' of the old template if it is not related to
+            // the visible on mobile option.
+            this.$target[0].classList.remove('d-none');
+        }
         // The target needs to be restarted when the correct
         // template values are applied (numberOfElements, rowPerSlide, etc.)
         return this._refreshPublicWidgets();

@@ -4,10 +4,10 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 16.0    | :white_check_mark: |
 | 15.0    | :white_check_mark: |
 | 14.0    | :white_check_mark: |
-| 13.0    | :white_check_mark: |
-| <=12.0  | :x:                |
+| <=13.0  | :x:                |
 
 ## Reporting a Vulnerability
 

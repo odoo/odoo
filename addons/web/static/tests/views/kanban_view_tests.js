@@ -39,7 +39,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -359,6 +359,53 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(target, ".o_kanban_ghost", 6);
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
+    });
+
+    QUnit.test("display full is supported on fields", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo" display="full"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target.querySelector(".o_kanban_record"), "span.o_text_block");
+        assert.strictEqual(target.querySelector("span.o_text_block").textContent, "yop");
+    });
+
+    QUnit.test("dropdown without toggler are correctly rendered", async (assert) => {
+        serverData.models.partner.records = [serverData.models.partner.records[0]];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <div class="dropdown">
+                                <div class="dropdown-menu">
+                                    <a class="someItem" />
+                                </div>
+                            </div>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target, ".o-dropdown.dropdown.o_dropdown_kanban");
+        await click(target, ".o_kanban_record .o-dropdown button.dropdown-toggle");
+        assert.containsOnce(
+            target,
+            ".o_kanban_record .o-dropdown .o-dropdown--menu > div > a.someItem"
+        );
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
@@ -6701,7 +6748,7 @@ QUnit.module("Views", (hooks) => {
 
         await toggleColumnActions(0);
 
-        assert.containsNone(target, '[tabindex]:not([tabindex="-1"])');
+        assert.containsN(target, ".o_kanban_record", 16);
         assert.hasClass(document.activeElement, "o_searchview_input");
 
         await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowDown" });
@@ -7553,6 +7600,70 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "xmo");
         assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
     });
+
+    QUnit.test(
+        "resequence all when create(ing) a new record + partial resequencing",
+        async (assert) => {
+            let resequenceOffset;
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="id"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+                groupBy: ["product_id"],
+                mockRPC(route, params) {
+                    if (route === "/web/dataset/resequence") {
+                        assert.step(JSON.stringify({ ids: params.ids, offset: params.offset }));
+                        resequenceOffset = params.offset || 0;
+                        return true;
+                    }
+                    if (params.method === "read") {
+                        // Important to simulate the server returning the new sequence.
+                        const [ids, fields] = params.args;
+                        return ids.map((id, index) => ({
+                            id,
+                            [fields[0]]: resequenceOffset + index,
+                        }));
+                    }
+                },
+            });
+
+            await createColumn();
+            await editColumnName("foo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
+
+            await editColumnName("bar");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
+
+            await editColumnName("baz");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
+
+            await editColumnName("boo");
+            await validateColumn();
+            assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
+
+            // When rearranging, only resequence the affected records. In this example,
+            // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
+            // with offset 1.
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_column_title",
+                ".o_kanban_group:nth-child(4)"
+            );
+            assert.verifySteps([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]);
+        }
+    );
 
     QUnit.test("prevent resequence columns if groups_draggable=false", async (assert) => {
         serverData.models.product.fields.sequence = { type: "integer" };
@@ -11942,4 +12053,66 @@ QUnit.module("Views", (hooks) => {
             ["1", "2", "3"]
         );
     });
+
+    QUnit.test(
+        "drag & drop records grouped by m2o with m2o displayed in records",
+        async (assert) => {
+            const prom = makeDeferred();
+            const readIds = [[2], [1, 3, 2]];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="product_id" widget="many2one"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                groupBy: ["product_id"],
+                mockRPC: async (route, args) => {
+                    assert.step(args.method || route);
+                    if (args.method === "read") {
+                        assert.deepEqual(args.args[0], readIds.shift());
+                        await prom;
+                    }
+                },
+            });
+
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "web_search_read",
+                "web_search_read",
+            ]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "xmo", "xmo"]
+            );
+
+            await dragAndDrop(
+                ".o_kanban_group:nth-child(2) .o_kanban_record",
+                ".o_kanban_group:first-child"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+
+            prom.resolve();
+            await nextTick();
+
+            assert.verifySteps(["write", "read", "/web/dataset/resequence", "read"]);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
+                ["hello", "hello", "hello", "xmo"]
+            );
+        }
+    );
 });

@@ -16,7 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-const { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } = owl;
+import { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } from "@odoo/owl";
 
 export class FormRenderer extends Component {
     setup() {
@@ -39,8 +39,8 @@ export class FormRenderer extends Component {
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
-        const { autofocusFieldId, disableAutofocus } = archInfo;
-        if (!disableAutofocus) {
+        const { autofocusFieldId } = archInfo;
+        if (this.shouldAutoFocus) {
             const rootRef = useRef("compiled_view_root");
             useEffect(
                 (isVirtual, rootEl) => {
@@ -60,6 +60,10 @@ export class FormRenderer extends Component {
                 () => [this.props.record.isVirtual, rootRef.el]
             );
         }
+    }
+
+    get shouldAutoFocus() {
+        return !this.props.archInfo.disableAutofocus;
     }
 
     evalDomainFromRecord(record, expr) {

@@ -2,6 +2,7 @@
 import base64
 
 from freezegun import freeze_time
+from collections import Counter
 
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo import fields
@@ -70,11 +71,12 @@ class TestUBLCommon(AccountEdiTestCommon):
     @freeze_time('2017-01-01')
     def _assert_imported_invoice_from_etree(self, invoice, attachment):
         """
-        Create an account.move directly from an xml file, asserts the invoice obtained is the same as the expected
+        Create an account.move directly from an attachment file, asserts the invoice obtained is the same as the expected
         invoice.
         """
-        self.company_data['default_journal_purchase'].create_document_from_attachment(attachment.ids)
-        new_invoice = self.env['account.move'].search([], order='id desc', limit=1)
+        new_invoice = self.edi_format\
+            .with_context(default_move_type=invoice.move_type)\
+            ._create_document_from_attachment(attachment)
 
         self.assertTrue(new_invoice)
         self.assert_same_invoice(invoice, new_invoice)
@@ -108,7 +110,10 @@ class TestUBLCommon(AccountEdiTestCommon):
             'amount_tax': amount_tax,
             'currency_id': currency_id,
         }])
-        self.assertEqual(invoice.invoice_line_ids.mapped('price_subtotal'), list_line_subtotals)
+        self.assertEqual(
+            Counter(invoice.invoice_line_ids.mapped('price_subtotal')),
+            Counter(list_line_subtotals),
+        )
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS

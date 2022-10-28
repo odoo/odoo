@@ -2314,6 +2314,10 @@ body.editor_enable.editor_has_snippets {
             }
         }
     }
+
+    .o_edit_menu_popover {
+        pointer-events: auto;
+    }
 }
 .oe_overlay.ui-draggable-dragging .o_handles {
     display: none;
@@ -2508,7 +2512,6 @@ we-button:hover .o_we_shape_animated_label > span {
     // be over the content being reloaded (with a covering similar to the editor
     // overlay covering).
     position: fixed;
-    right: $o-we-sidebar-width;
 }
 
 .o_we_force_no_transition {

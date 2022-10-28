@@ -53,6 +53,7 @@ class AccountMove(models.Model):
     _mail_post_access = 'read'
     _check_company_auto = True
     _sequence_index = "journal_id"
+    _rec_names_search = ['name', 'partner_id.name', 'ref']
 
     @property
     def _sequence_monthly_regex(self):
@@ -136,6 +137,7 @@ class AccountMove(models.Model):
         comodel_name='res.company',
         string='Company',
         compute='_compute_company_id', inverse='_inverse_company_id', store=True, readonly=False, precompute=True,
+        index=True,
     )
     line_ids = fields.One2many(
         'account.move.line',
@@ -1118,12 +1120,16 @@ class AccountMove(models.Model):
                         reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
                     else:
                         reconciliation_ref = counterpart_line.move_id.name
+                    if counterpart_line.amount_currency and counterpart_line.currency_id != counterpart_line.company_id.currency_id:
+                        foreign_currency = counterpart_line.currency_id
+                    else:
+                        foreign_currency = False
 
                     reconciled_vals.append({
                         'name': counterpart_line.name,
                         'journal_name': counterpart_line.journal_id.name,
                         'amount': reconciled_partial['amount'],
-                        'currency_id': reconciled_partial['currency'].id,
+                        'currency_id': move.company_id.currency_id.id if reconciled_partial['is_exchange'] else reconciled_partial['currency'].id,
                         'date': counterpart_line.date,
                         'partial_id': reconciled_partial['partial_id'],
                         'account_payment_id': counterpart_line.payment_id.id,
@@ -1133,7 +1139,7 @@ class AccountMove(models.Model):
                         # these are necessary for the views to change depending on the values
                         'is_exchange': reconciled_partial['is_exchange'],
                         'amount_company_currency': formatLang(self.env, abs(counterpart_line.balance), currency_obj=counterpart_line.company_id.currency_id),
-                        'amount_foreign_currency': formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=counterpart_line.currency_id) if counterpart_line.currency_id != counterpart_line.company_id.currency_id else False
+                        'amount_foreign_currency': foreign_currency and formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=foreign_currency)
                     })
                 payments_widget_vals['content'] = reconciled_vals
 
@@ -1229,14 +1235,14 @@ class AccountMove(models.Model):
             if invoice.show_payment_term_details:
                 sign = 1 if invoice.is_inbound(include_receipts=True) else -1
                 payment_term_details = []
-                for line in invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term'):
+                for line in invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('date_maturity'):
                     payment_term_details.append({
                         'date': format_date(self.env, line.date_maturity),
                         'amount': sign * line.amount_currency,
                         'discount_date': format_date(self.env, line.discount_date),
                         'discount_amount_currency': sign * line.discount_amount_currency,
                     })
-                invoice.payment_term_details = sorted(payment_term_details, key=lambda t: t.get('date'))
+                invoice.payment_term_details = payment_term_details
 
     @api.depends('move_type', 'payment_state', 'invoice_payment_term_id')
     def _compute_show_payment_term_details(self):
@@ -1687,8 +1693,8 @@ class AccountMove(models.Model):
                     "The total of debits equals %s and the total of credits equals %s.\n"
                     "You might want to specify a default account on journal \"%s\" to automatically balance each move.",
                     move.display_name,
-                    format_amount(self.env, sum_debit, move.currency_id),
-                    format_amount(self.env, sum_credit, move.currency_id),
+                    format_amount(self.env, sum_debit, move.company_id.currency_id),
+                    format_amount(self.env, sum_credit, move.company_id.currency_id),
                     move.journal_id.name)
             raise UserError(error_msg)
 
@@ -3056,6 +3062,11 @@ class AccountMove(models.Model):
             name += '(* %s)' % str(self.id)
         else:
             name += self.name
+            if self.env.context.get('input_full_display_name'):
+                if self.partner_id:
+                    name += f', {self.partner_id.name}'
+                if self.date:
+                    name += f', {format_date(self.env, self.date)}'
         return name + (f" ({shorten(self.ref, width=50)})" if show_ref and self.ref else '')
 
     def _get_reconciled_amls(self):

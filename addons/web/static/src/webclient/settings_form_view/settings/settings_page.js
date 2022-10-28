@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
-const { Component, useState } = owl;
+import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
 export class SettingsPage extends Component {
     setup() {
@@ -13,6 +13,20 @@ export class SettingsPage extends Component {
         if (this.props.modules) {
             this.state.selectedTab = this.props.initialTab || this.props.modules[0].key;
         }
+
+        this.settingsRef = useRef("settings");
+        this.scrollMap = Object.create(null);
+        useEffect(
+            (settingsEl, currentTab) => {
+                if (!settingsEl) {
+                    return;
+                }
+
+                const { scrollTop } = this.scrollMap[currentTab] || 0;
+                settingsEl.scrollTop = scrollTop;
+            },
+            () => [this.settingsRef.el, this.state.selectedTab]
+        );
     }
 
     getCurrentIndex() {
@@ -41,6 +55,10 @@ export class SettingsPage extends Component {
     }
 
     onSettingTabClick(key) {
+        if (this.settingsRef.el) {
+            const { scrollTop } = this.settingsRef.el;
+            this.scrollMap[this.state.selectedTab] = { scrollTop };
+        }
         this.state.selectedTab = key;
         this.env.searchState.value = "";
     }
