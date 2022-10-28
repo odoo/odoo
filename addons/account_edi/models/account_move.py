@@ -212,11 +212,376 @@ class AccountMove(models.Model):
                     'group_tax_details':    The list of all tax values aggregated into this group.
 
         '''
+<<<<<<< HEAD
         return self._prepare_invoice_aggregated_taxes(
             filter_invl_to_apply=filter_invl_to_apply,
             filter_tax_values_to_apply=filter_to_apply,
             grouping_key_generator=grouping_key_generator,
         )
+||||||| parent of 90ba5bd54394... temp
+        self.ensure_one()
+
+        def _serialize_python_dictionary(vals):
+            return '-'.join(str(vals[k]) for k in sorted(vals.keys()))
+
+        def default_grouping_key_generator(tax_values):
+            return {'tax': tax_values['tax_id']}
+
+        def compute_invoice_lines_tax_values_dict_from_tax_details(invoice_lines):
+            invoice_lines_tax_values_dict = defaultdict(list)
+            tax_details_query, tax_details_params = invoice_lines._get_query_tax_details_from_domain([('move_id', '=', self.id)])
+            self._cr.execute(tax_details_query, tax_details_params)
+            for row in self._cr.dictfetchall():
+                invoice_line = invoice_lines.browse(row['base_line_id'])
+                tax_line = invoice_lines.browse(row['tax_line_id'])
+                src_line = invoice_lines.browse(row['src_line_id'])
+                tax = self.env['account.tax'].browse(row['tax_id'])
+                src_tax = self.env['account.tax'].browse(row['group_tax_id']) if row['group_tax_id'] else tax
+
+                invoice_lines_tax_values_dict[invoice_line].append({
+                    'base_line_id': invoice_line,
+                    'tax_line_id': tax_line,
+                    'src_line_id': src_line,
+                    'tax_id': tax,
+                    'src_tax_id': src_tax,
+                    'tax_repartition_line_id': tax_line.tax_repartition_line_id,
+                    'base_amount': row['base_amount'],
+                    'tax_amount': row['tax_amount'],
+                    'base_amount_currency': row['base_amount_currency'],
+                    'tax_amount_currency': row['tax_amount_currency'],
+                })
+            return invoice_lines_tax_values_dict
+
+        def compute_invoice_lines_tax_values_dict_from_compute_all(invoice_lines):
+            invoice_lines_tax_values_dict = {}
+            sign = -1 if self.is_inbound() else 1
+            for invoice_line in invoice_lines:
+                taxes_res = invoice_line.tax_ids.compute_all(
+                    invoice_line.price_unit * (1 - (invoice_line.discount / 100.0)),
+                    currency=invoice_line.currency_id,
+                    quantity=invoice_line.quantity,
+                    product=invoice_line.product_id,
+                    partner=invoice_line.partner_id,
+                    is_refund=invoice_line.move_id.move_type in ('in_refund', 'out_refund'),
+                )
+                invoice_lines_tax_values_dict[invoice_line] = []
+                rate = abs(invoice_line.balance) / abs(invoice_line.amount_currency) if invoice_line.amount_currency else 0.0
+                for tax_res in taxes_res['taxes']:
+                    invoice_lines_tax_values_dict[invoice_line].append({
+                        'base_line_id': invoice_line,
+                        'tax_id': self.env['account.tax'].browse(tax_res['id']),
+                        'tax_repartition_line_id': self.env['account.tax.repartition.line'].browse(tax_res['tax_repartition_line_id']),
+                        'base_amount': sign * invoice_line.company_currency_id.round(tax_res['base'] * rate),
+                        'tax_amount': sign * invoice_line.company_currency_id.round(tax_res['amount'] * rate),
+                        'base_amount_currency': sign * tax_res['base'],
+                        'tax_amount_currency': sign * tax_res['amount'],
+                    })
+            return invoice_lines_tax_values_dict
+
+        # Compute the taxes values for each invoice line.
+        invoice_lines = self.invoice_line_ids.filtered(lambda line: not line.display_type)
+        if filter_invl_to_apply:
+            invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
+
+        if compute_mode == 'compute_all':
+            invoice_lines_tax_values_dict = compute_invoice_lines_tax_values_dict_from_compute_all(invoice_lines)
+        else:
+            invoice_lines_tax_values_dict = compute_invoice_lines_tax_values_dict_from_tax_details(invoice_lines)
+
+        grouping_key_generator = grouping_key_generator or default_grouping_key_generator
+
+        # Apply 'filter_to_apply'.
+
+        if self.move_type in ('out_refund', 'in_refund'):
+            tax_rep_lines_field = 'refund_repartition_line_ids'
+        else:
+            tax_rep_lines_field = 'invoice_repartition_line_ids'
+
+        filtered_invoice_lines_tax_values_dict = {}
+        for invoice_line in invoice_lines:
+            tax_values_list = invoice_lines_tax_values_dict.get(invoice_line, [])
+            filtered_invoice_lines_tax_values_dict[invoice_line] = []
+
+            # Search for unhandled taxes.
+            taxes_set = set(invoice_line.tax_ids.flatten_taxes_hierarchy())
+            for tax_values in tax_values_list:
+                taxes_set.discard(tax_values['tax_id'])
+
+                if not filter_to_apply or filter_to_apply(tax_values):
+                    filtered_invoice_lines_tax_values_dict[invoice_line].append(tax_values)
+
+            # Restore zero-tax tax details.
+            for zero_tax in taxes_set:
+
+                affect_base_amount = 0.0
+                affect_base_amount_currency = 0.0
+                for tax_values in tax_values_list:
+                    if zero_tax in tax_values['tax_line_id'].tax_ids:
+                        affect_base_amount += tax_values['tax_amount']
+                        affect_base_amount_currency += tax_values['tax_amount_currency']
+
+                for tax_rep in zero_tax[tax_rep_lines_field].filtered(lambda x: x.repartition_type == 'tax'):
+                    tax_values = {
+                        'base_line_id': invoice_line,
+                        'tax_line_id': self.env['account.move.line'],
+                        'src_line_id': invoice_line,
+                        'tax_id': zero_tax,
+                        'src_tax_id': zero_tax,
+                        'tax_repartition_line_id': tax_rep,
+                        'base_amount': invoice_line.balance + affect_base_amount,
+                        'tax_amount': 0.0,
+                        'base_amount_currency': invoice_line.amount_currency + affect_base_amount_currency,
+                        'tax_amount_currency': 0.0,
+                    }
+
+                    if not filter_to_apply or filter_to_apply(tax_values):
+                        filtered_invoice_lines_tax_values_dict[invoice_line].append(tax_values)
+
+        # Initialize the results dict.
+
+        invoice_global_tax_details = {
+            'base_amount': 0.0,
+            'tax_amount': 0.0,
+            'base_amount_currency': 0.0,
+            'tax_amount_currency': 0.0,
+            'tax_details': defaultdict(lambda: {
+                'base_amount': 0.0,
+                'tax_amount': 0.0,
+                'base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'group_tax_details': [],
+            }),
+            'invoice_line_tax_details': defaultdict(lambda: {
+                'base_amount': 0.0,
+                'tax_amount': 0.0,
+                'base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'tax_details': defaultdict(lambda: {
+                    'base_amount': 0.0,
+                    'tax_amount': 0.0,
+                    'base_amount_currency': 0.0,
+                    'tax_amount_currency': 0.0,
+                    'group_tax_details': [],
+                }),
+            }),
+        }
+
+        # Apply 'grouping_key_generator' to 'invoice_lines_tax_values_list' and add all values to the final results.
+
+        for invoice_line in invoice_lines:
+            tax_values_list = filtered_invoice_lines_tax_values_dict[invoice_line]
+
+            key_by_tax = {}
+
+            # Add to invoice global tax amounts.
+            invoice_global_tax_details['base_amount'] += invoice_line.balance
+            invoice_global_tax_details['base_amount_currency'] += invoice_line.amount_currency
+
+            for tax_values in tax_values_list:
+                grouping_key = grouping_key_generator(tax_values)
+                serialized_grouping_key = _serialize_python_dictionary(grouping_key)
+                key_by_tax[tax_values['tax_id']] = serialized_grouping_key
+
+                # Add to invoice line global tax amounts.
+                if serialized_grouping_key not in invoice_global_tax_details['invoice_line_tax_details'][invoice_line]:
+                    invoice_line_global_tax_details = invoice_global_tax_details['invoice_line_tax_details'][invoice_line]
+                    invoice_line_global_tax_details.update({
+                        'base_amount': invoice_line.balance,
+                        'base_amount_currency': invoice_line.amount_currency,
+                    })
+                else:
+                    invoice_line_global_tax_details = invoice_global_tax_details['invoice_line_tax_details'][invoice_line]
+
+                self._add_edi_tax_values(invoice_global_tax_details, grouping_key, serialized_grouping_key, tax_values,
+                                         key_by_tax=key_by_tax if compute_mode == 'tax_details' else None)
+                self._add_edi_tax_values(invoice_line_global_tax_details, grouping_key, serialized_grouping_key, tax_values,
+                                         key_by_tax=key_by_tax if compute_mode == 'tax_details' else None)
+
+        return invoice_global_tax_details
+=======
+        self.ensure_one()
+
+        def _serialize_python_dictionary(vals):
+            return '-'.join(str(vals[k]) for k in sorted(vals.keys()))
+
+        def default_grouping_key_generator(tax_values):
+            return {'tax': tax_values['tax_id']}
+
+        def compute_invoice_lines_tax_values_dict_from_tax_details(invoice_lines):
+            invoice_lines_tax_values_dict = defaultdict(list)
+            tax_details_query, tax_details_params = invoice_lines._get_query_tax_details_from_domain([('move_id', '=', self.id)])
+            self._cr.execute(tax_details_query, tax_details_params)
+            for row in self._cr.dictfetchall():
+                invoice_line = invoice_lines.browse(row['base_line_id'])
+                tax_line = invoice_lines.browse(row['tax_line_id'])
+                src_line = invoice_lines.browse(row['src_line_id'])
+                tax = self.env['account.tax'].browse(row['tax_id'])
+                src_tax = self.env['account.tax'].browse(row['group_tax_id']) if row['group_tax_id'] else tax
+
+                invoice_lines_tax_values_dict[invoice_line].append({
+                    'base_line_id': invoice_line,
+                    'tax_line_id': tax_line,
+                    'src_line_id': src_line,
+                    'tax_id': tax,
+                    'src_tax_id': src_tax,
+                    'tax_repartition_line_id': tax_line.tax_repartition_line_id,
+                    'base_amount': row['base_amount'],
+                    'tax_amount': row['tax_amount'],
+                    'base_amount_currency': row['base_amount_currency'],
+                    'tax_amount_currency': row['tax_amount_currency'],
+                })
+            return invoice_lines_tax_values_dict
+
+        def compute_invoice_lines_tax_values_dict_from_compute_all(invoice_lines):
+            invoice_lines_tax_values_dict = {}
+            sign = -1 if self.is_inbound() else 1
+            for invoice_line in invoice_lines:
+                taxes_res = invoice_line.tax_ids.compute_all(
+                    invoice_line.price_unit * (1 - (invoice_line.discount / 100.0)),
+                    currency=invoice_line.currency_id,
+                    quantity=invoice_line.quantity,
+                    product=invoice_line.product_id,
+                    partner=invoice_line.partner_id,
+                    is_refund=invoice_line.move_id.move_type in ('in_refund', 'out_refund'),
+                )
+                invoice_lines_tax_values_dict[invoice_line] = []
+                rate = abs(invoice_line.balance) / abs(invoice_line.amount_currency) if invoice_line.amount_currency else 0.0
+                for tax_res in taxes_res['taxes']:
+                    tax_amount = tax_res['amount'] * rate
+                    if self.company_id.tax_calculation_rounding_method == 'round_per_line':
+                        tax_amount = invoice_line.company_currency_id.round(tax_amount)
+                    invoice_lines_tax_values_dict[invoice_line].append({
+                        'base_line_id': invoice_line,
+                        'tax_id': self.env['account.tax'].browse(tax_res['id']),
+                        'tax_repartition_line_id': self.env['account.tax.repartition.line'].browse(tax_res['tax_repartition_line_id']),
+                        'base_amount': sign * invoice_line.company_currency_id.round(tax_res['base'] * rate),
+                        'tax_amount': sign * tax_amount,
+                        'base_amount_currency': sign * tax_res['base'],
+                        'tax_amount_currency': sign * tax_res['amount'],
+                    })
+            return invoice_lines_tax_values_dict
+
+        # Compute the taxes values for each invoice line.
+        invoice_lines = self.invoice_line_ids.filtered(lambda line: not line.display_type)
+        if filter_invl_to_apply:
+            invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
+
+        if compute_mode == 'compute_all':
+            invoice_lines_tax_values_dict = compute_invoice_lines_tax_values_dict_from_compute_all(invoice_lines)
+        else:
+            invoice_lines_tax_values_dict = compute_invoice_lines_tax_values_dict_from_tax_details(invoice_lines)
+
+        grouping_key_generator = grouping_key_generator or default_grouping_key_generator
+
+        # Apply 'filter_to_apply'.
+
+        if self.move_type in ('out_refund', 'in_refund'):
+            tax_rep_lines_field = 'refund_repartition_line_ids'
+        else:
+            tax_rep_lines_field = 'invoice_repartition_line_ids'
+
+        filtered_invoice_lines_tax_values_dict = {}
+        for invoice_line in invoice_lines:
+            tax_values_list = invoice_lines_tax_values_dict.get(invoice_line, [])
+            filtered_invoice_lines_tax_values_dict[invoice_line] = []
+
+            # Search for unhandled taxes.
+            taxes_set = set(invoice_line.tax_ids.flatten_taxes_hierarchy())
+            for tax_values in tax_values_list:
+                taxes_set.discard(tax_values['tax_id'])
+
+                if not filter_to_apply or filter_to_apply(tax_values):
+                    filtered_invoice_lines_tax_values_dict[invoice_line].append(tax_values)
+
+            # Restore zero-tax tax details.
+            for zero_tax in taxes_set:
+
+                affect_base_amount = 0.0
+                affect_base_amount_currency = 0.0
+                for tax_values in tax_values_list:
+                    if zero_tax in tax_values['tax_line_id'].tax_ids:
+                        affect_base_amount += tax_values['tax_amount']
+                        affect_base_amount_currency += tax_values['tax_amount_currency']
+
+                for tax_rep in zero_tax[tax_rep_lines_field].filtered(lambda x: x.repartition_type == 'tax'):
+                    tax_values = {
+                        'base_line_id': invoice_line,
+                        'tax_line_id': self.env['account.move.line'],
+                        'src_line_id': invoice_line,
+                        'tax_id': zero_tax,
+                        'src_tax_id': zero_tax,
+                        'tax_repartition_line_id': tax_rep,
+                        'base_amount': invoice_line.balance + affect_base_amount,
+                        'tax_amount': 0.0,
+                        'base_amount_currency': invoice_line.amount_currency + affect_base_amount_currency,
+                        'tax_amount_currency': 0.0,
+                    }
+
+                    if not filter_to_apply or filter_to_apply(tax_values):
+                        filtered_invoice_lines_tax_values_dict[invoice_line].append(tax_values)
+
+        # Initialize the results dict.
+
+        invoice_global_tax_details = {
+            'base_amount': 0.0,
+            'tax_amount': 0.0,
+            'base_amount_currency': 0.0,
+            'tax_amount_currency': 0.0,
+            'tax_details': defaultdict(lambda: {
+                'base_amount': 0.0,
+                'tax_amount': 0.0,
+                'base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'group_tax_details': [],
+            }),
+            'invoice_line_tax_details': defaultdict(lambda: {
+                'base_amount': 0.0,
+                'tax_amount': 0.0,
+                'base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'tax_details': defaultdict(lambda: {
+                    'base_amount': 0.0,
+                    'tax_amount': 0.0,
+                    'base_amount_currency': 0.0,
+                    'tax_amount_currency': 0.0,
+                    'group_tax_details': [],
+                }),
+            }),
+        }
+
+        # Apply 'grouping_key_generator' to 'invoice_lines_tax_values_list' and add all values to the final results.
+
+        for invoice_line in invoice_lines:
+            tax_values_list = filtered_invoice_lines_tax_values_dict[invoice_line]
+
+            key_by_tax = {}
+
+            # Add to invoice global tax amounts.
+            invoice_global_tax_details['base_amount'] += invoice_line.balance
+            invoice_global_tax_details['base_amount_currency'] += invoice_line.amount_currency
+
+            for tax_values in tax_values_list:
+                grouping_key = grouping_key_generator(tax_values)
+                serialized_grouping_key = _serialize_python_dictionary(grouping_key)
+                key_by_tax[tax_values['tax_id']] = serialized_grouping_key
+
+                # Add to invoice line global tax amounts.
+                if serialized_grouping_key not in invoice_global_tax_details['invoice_line_tax_details'][invoice_line]:
+                    invoice_line_global_tax_details = invoice_global_tax_details['invoice_line_tax_details'][invoice_line]
+                    invoice_line_global_tax_details.update({
+                        'base_amount': invoice_line.balance,
+                        'base_amount_currency': invoice_line.amount_currency,
+                    })
+                else:
+                    invoice_line_global_tax_details = invoice_global_tax_details['invoice_line_tax_details'][invoice_line]
+
+                self._add_edi_tax_values(invoice_global_tax_details, grouping_key, serialized_grouping_key, tax_values,
+                                         key_by_tax=key_by_tax if compute_mode == 'tax_details' else None)
+                self._add_edi_tax_values(invoice_line_global_tax_details, grouping_key, serialized_grouping_key, tax_values,
+                                         key_by_tax=key_by_tax if compute_mode == 'tax_details' else None)
+
+        return invoice_global_tax_details
+>>>>>>> 90ba5bd54394... temp
 
     def _prepare_edi_vals_to_export(self):
         ''' The purpose of this helper is to prepare values in order to export an invoice through the EDI system.
