@@ -135,6 +135,14 @@ class IrMailServer(models.Model):
 
     def _get_test_email_addresses(self):
         self.ensure_one()
+        if self.from_filter:
+            if "@" in self.from_filter:
+                # All emails will be sent from the same address
+                return self.from_filter, "noreply@odoo.com"
+            # All emails will be sent from any address in the same domain
+            default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
+            return f"{default_from}@{self.from_filter}", "noreply@odoo.com"
+        # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
             raise UserError(_('Please configure an email on the current user to simulate '
