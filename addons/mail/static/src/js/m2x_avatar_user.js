@@ -5,7 +5,7 @@ import fieldRegistry from 'web.field_registry';
 import { FieldMany2ManyTagsAvatar, KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar, Many2OneAvatar } from 'web.relational_fields';
 import session from 'web.session';
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 
 // This module defines extensions of the Many2OneAvatar and Many2ManyAvatar

@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 class ActivityException extends Component {
 

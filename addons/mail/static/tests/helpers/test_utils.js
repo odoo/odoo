@@ -11,7 +11,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-const { App, EventBus } = owl;
+import { App, EventBus } from '@odoo/owl';
 const { afterNextRender } = App;
 
 //------------------------------------------------------------------------------

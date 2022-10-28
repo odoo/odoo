@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Popover from "web.Popover";
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 export class ActivityView extends Component {
 

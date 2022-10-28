@@ -2,7 +2,7 @@
 
 import emojis from '@mail/js/emojis';
 
-const { Component, useRef, onMounted } = owl;
+import { Component, useRef, onMounted } from '@odoo/owl';
 
 export class EmojisDropdown extends Component {
     setup() {

@@ -3,7 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount } = owl;
+import { Component, onMounted, onWillUnmount } from '@odoo/owl';
 
 export class AutocompleteInputView extends Component {
 

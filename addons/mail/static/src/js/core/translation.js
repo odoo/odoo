@@ -2,7 +2,7 @@
 
 import { TranslationDataBase } from 'web.translation';
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 TranslationDataBase.include({
     /**

@@ -6,7 +6,7 @@ import { makeDeferred } from '@mail/utils/deferred';
 
 import { browser } from '@web/core/browser/browser';
 
-const { EventBus } = owl;
+import { EventBus } from '@odoo/owl';
 
 registerModel({
     name: 'Messaging',

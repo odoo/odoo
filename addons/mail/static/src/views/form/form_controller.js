@@ -15,7 +15,7 @@ import { evalDomain } from "@web/views/utils";
 
 import { MailFormCompiler } from "./form_compiler";
 
-const { onMounted, onWillDestroy, onWillUnmount } = owl;
+import { onMounted, onWillDestroy, onWillUnmount } from '@odoo/owl';
 
 patch(FormController.prototype, "mail", {
     setup() {

@@ -6,7 +6,7 @@ import '@mail/components/chatter/chatter';
 import { clear } from '@mail/model/model_field_command';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component, onWillDestroy, onWillUpdateProps } = owl;
+import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
 export const getChatterNextTemporaryId = (function () {
     let tmpId = 0;

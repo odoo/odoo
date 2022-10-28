@@ -7,7 +7,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Transition } from "@web/core/transition";
 
-const { Component, onWillPatch } = owl;
+import { Component, onWillPatch } from '@odoo/owl';
 
 export class MessageList extends Component {
 
