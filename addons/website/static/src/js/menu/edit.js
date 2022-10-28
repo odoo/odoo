@@ -341,10 +341,23 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         $('body').addClass('editor_started');
     },
 
-    _getContentEditableAreas () {
-        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
-            return !$(el).closest('.o_not_editable').length;
-        }).toArray();
+    _getContentEditableAreas() {
+        const $savableZones = $(this.savableSelector);
+        const $editableSavableZones = $savableZones
+            .not('input, [data-oe-readonly], ' +
+                 '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
+            .filter((_, el) => {
+                return !$(el).closest('.o_not_editable').length;
+            });
+
+        // TODO review in master. This stable fix restores the possibility to
+        // edit the company team snippet images on subsequent editions. Indeed
+        // this badly relies on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save.
+        // grep: COMPANY_TEAM_CONTENTEDITABLE
+        const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+
+        return $editableSavableZones.add($extraEditableZones).toArray();
     },
 
     _getReadOnlyAreas () {

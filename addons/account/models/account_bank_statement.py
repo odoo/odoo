@@ -1073,7 +1073,7 @@ class AccountBankStatementLine(models.Model):
         reconciliation_overview = []
 
         total_balance = liquidity_lines.balance
-        total_amount_currency = liquidity_lines.amount_currency
+        total_amount_currency = -self._prepare_move_line_default_vals()[1]['amount_currency']
         sign = 1 if liquidity_lines.balance > 0.0 else -1
 
         # Step 1: Split 'lines_vals_list' into two batches:
