@@ -864,10 +864,20 @@ class AccountPayment(models.Model):
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
-            line_ids_commands = [
-                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
-                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
-            ]
+            line_ids_commands = []
+            if len(liquidity_lines) == 1:
+                line_ids_commands.append((1, liquidity_lines.id, line_vals_list[0]))
+            else:
+                for line in liquidity_lines:
+                    line_ids_commands.append((2, line.id, 0))
+                line_ids_commands.append((0, 0, line_vals_list[0]))
+
+            if len(counterpart_lines) == 1:
+                line_ids_commands.append((1, counterpart_lines.id, line_vals_list[1]))
+            else:
+                for line in counterpart_lines:
+                    line_ids_commands.append((2, line.id, 0))
+                line_ids_commands.append((0, 0, line_vals_list[1]))
 
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
