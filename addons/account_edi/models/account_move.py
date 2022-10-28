@@ -188,12 +188,15 @@ class AccountMove(models.Model):
             tax_values_list = invoice_lines_tax_values_dict[invoice_line] = []
             rate = abs(invoice_line.balance) / abs(invoice_line.amount_currency) if invoice_line.amount_currency else 0.0
             for tax_res in taxes_res['taxes']:
+                tax_amount = tax_res['amount'] * rate
+                if self.company_id.tax_calculation_rounding_method == 'round_per_line':
+                    tax_amount = invoice_line.company_currency_id.round(tax_amount)
                 tax_values_list.append({
                     'base_line_id': invoice_line,
                     'tax_id': self.env['account.tax'].browse(tax_res['id']),
                     'tax_repartition_line_id': self.env['account.tax.repartition.line'].browse(tax_res['tax_repartition_line_id']),
                     'base_amount': sign * invoice_line.company_currency_id.round(tax_res['base'] * rate),
-                    'tax_amount': sign * invoice_line.company_currency_id.round(tax_res['amount'] * rate),
+                    'tax_amount': sign * tax_amount,
                     'base_amount_currency': sign * tax_res['base'],
                     'tax_amount_currency': sign * tax_res['amount'],
                 })
