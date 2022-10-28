@@ -85,6 +85,68 @@ class TestResConfig(TransactionCase):
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
 
+    def test_40_view_expected_architecture(self):
+        """Tests the res.config.settings form view architecture expected by the web client.
+        The res.config.settings form view is handled with a custom widget expecting a very specific
+        structure. This architecture is tested extensively in Javascript unit tests.
+        Here we briefly ensure the view sent by the server to the web client has the right architecture,
+        the right blocks with the right classes in the right order.
+        This tests is to ensure the specification/requirements are listed and tested server side, and
+        if a change occurs in future development, this test will need to be adapted to specify these changes."""
+        view = self.env['ir.ui.view'].create({
+            'name': 'foo',
+            'type': 'form',
+            'model': 'res.config.settings',
+            'inherit_id': self.env.ref('base.res_config_settings_view_form').id,
+            'arch': """
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <t groups="base.group_system">
+                        <div class="app_settings_block" data-string="Foo" string="Foo" data-key="foo">
+                            <h2>Foo</h2>
+                        </div>
+                    </t>
+                </xpath>
+            """,
+        })
+        arch = self.env['res.config.settings'].get_view(view.id)['arch']
+        tree = etree.fromstring(arch)
+        self.assertTrue(tree.xpath("""
+            //form[@class="oe_form_configuration o_base_settings"]
+            /div[@class="o_setting_container"]
+            /div[@class="settings"]
+            /div[@class="app_settings_block"][@data-key="foo"]
+        """), 'The res.config.settings form view architecture is not what is expected by the web client.')
+
+    def test_50_view_expected_architecture_t_node_groups(self):
+        """Tests the behavior of the res.config.settings form view postprocessing when a block `app_settings_block`
+        is wrapped in a `<t groups="...">`, which is used when you need to display an app settings section
+        only for users part of two groups at the same time."""
+        view = self.env['ir.ui.view'].create({
+            'name': 'foo',
+            'type': 'form',
+            'model': 'res.config.settings',
+            'inherit_id': self.env.ref('base.res_config_settings_view_form').id,
+            'arch': """
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <t groups="base.group_system">
+                        <div class="app_settings_block" data-string="Foo"
+                            string="Foo" data-key="foo" groups="base.group_no_one">
+                            <h2>Foo</h2>
+                        </div>
+                    </t>
+                </xpath>
+            """,
+        })
+        with self.debug_mode():
+            arch = self.env['res.config.settings'].get_view(view.id)['arch']
+            tree = etree.fromstring(arch)
+            # The <t> must be removed from the structure
+            self.assertFalse(tree.xpath('//t'), 'The `<t groups="...">` block must not remain in the view')
+            self.assertTrue(tree.xpath("""
+                //div[@class="settings"]
+                /div[@class="app_settings_block"][@data-key="foo"]
+            """), 'The `class="app_settings_block"` block must be a direct child of the `class="settings"` block')
+
 
 @tagged('post_install', '-at_install')
 class TestResConfigExecute(TransactionCase):
