@@ -11,7 +11,7 @@
                         <attribute name="invisible">True</attribute>
                     </field>
                     <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="employee_id" nolabel="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" />
+                        <field name="employee_id" nolabel="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" colspan="2"/>
                     </xpath>
                 </data>
             </field>
