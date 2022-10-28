@@ -38,6 +38,31 @@
             </field>
         </record>
 
+        <record id="report_project_task_user_view_form" model="ir.ui.view">
+            <field name="name">report.project.task.user.view.form</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <form string="Tasks Analysis" create="false" edit="false" delete="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="project_id"/>
+                                <field name="task_id"/>
+                            </group>
+                            <group>
+                                <field name="user_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="stage_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
