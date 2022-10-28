@@ -49,9 +49,9 @@ class ResPartner(models.Model):
                         error_message = ""
                         if partner.l10n_latam_identification_type_id.id == it_dni.id:
                             error_message = _("VAT %s is not valid for an Ecuadorian DNI, "
-                                              "it must be like this form 0123456782") % partner.vat
+                                              "it must be like this form 1234567897") % partner.vat
                         if partner.l10n_latam_identification_type_id.id == it_ruc.id:
                             error_message = _("VAT %s is not valid for an Ecuadorian company, "
-                                              "it must be like this form 0123456782001") % partner.vat
+                                              "it must be like this form 1234567897001") % partner.vat
                         raise ValidationError(error_message)
         return super(ResPartner, self - ecuadorian_partners).check_vat()
