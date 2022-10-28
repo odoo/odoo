@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='applicability_ids']//field[@name='business_domain']" position="after">
-                        <field name="account_prefix"/>
+                        <field name="display_account_prefix" invisible="True"/>
+                        <field name="account_prefix" attrs="{'invisible': [('display_account_prefix','=', False)]}"/>
                         <field name="product_categ_id"/>
                     </xpath>
                 </data>

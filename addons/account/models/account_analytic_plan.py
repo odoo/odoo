@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class AccountAnalyticApplicability(models.Model):
@@ -25,6 +25,10 @@ class AccountAnalyticApplicability(models.Model):
         'product.category',
         string='Product Category'
     )
+    display_account_prefix = fields.Boolean(
+        compute='_compute_display_account_prefix',
+        help='Defines if the field account prefix should be displayed'
+    )
 
     def _get_score(self, **kwargs):
         score = super(AccountAnalyticApplicability, self)._get_score(**kwargs)
@@ -43,3 +47,8 @@ class AccountAnalyticApplicability(models.Model):
             else:
                 return -1
         return score
+
+    @api.depends('business_domain')
+    def _compute_display_account_prefix(self):
+        for applicability in self:
+            applicability.display_account_prefix = applicability.business_domain in ('general', 'invoice', 'bill')
