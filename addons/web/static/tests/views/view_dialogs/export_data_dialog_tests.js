@@ -43,43 +43,12 @@ QUnit.module("ViewDialogs", (hooks) => {
                         display_name: { string: "Displayed name", type: "char" },
                         foo: { string: "Foo", type: "char" },
                         bar: { string: "Bar", type: "boolean" },
-                        instrument: {
-                            string: "Instruments",
-                            type: "many2one",
-                            relation: "instrument",
-                        },
                     },
                     records: [
                         { id: 1, foo: "blip", display_name: "blipblip", bar: true },
                         { id: 2, foo: "ta tata ta ta", display_name: "macgyver", bar: false },
                         { id: 3, foo: "piou piou", display_name: "Jack O'Neill", bar: true },
                     ],
-                },
-                instrument: {
-                    fields: {
-                        name: { string: "name", type: "char" },
-                        badassery: {
-                            string: "level",
-                            type: "many2many",
-                            relation: "badassery",
-                            domain: [["level", "=", "Awsome"]],
-                        },
-                    },
-                },
-
-                badassery: {
-                    fields: {
-                        level: { string: "level", type: "char" },
-                    },
-                    records: [{ id: 1, level: "Awsome" }],
-                },
-
-                product: {
-                    fields: {
-                        name: { string: "name", type: "char" },
-                        partner: { string: "Doors", type: "one2many", relation: "partner" },
-                    },
-                    records: [{ id: 1, name: "The end" }],
                 },
                 "ir.exports": {
                     fields: {
@@ -692,7 +661,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                         {
                             name: "bar",
                             label: "Bar",
-                            type: "char",
+                            type: "boolean",
                         },
                     ],
                 },
@@ -712,11 +681,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="bar"/>
                 </tree>`,
             domain: [["bar", "!=", "glou"]],
-            mockRPC(route) {
-                if (route === "/web/export/get_fields") {
-                    return Promise.resolve(fetchedFields.root);
-                }
-            },
         });
 
         await click(target.querySelector(".o_list_export_xlsx"));
@@ -749,7 +713,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                         {
                             name: "bar",
                             label: "Bar",
-                            type: "char",
+                            type: "boolean",
                         },
                     ],
                 },
@@ -769,11 +733,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                 </tree>`,
             groupBy: ["foo", "bar"],
             domain: [["bar", "!=", "glou"]],
-            mockRPC(route) {
-                if (route === "/web/export/get_fields") {
-                    return Promise.resolve(fetchedFields.root);
-                }
-            },
         });
 
         await click(target.querySelector(".o_list_export_xlsx"));
