@@ -76,14 +76,14 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     });
     await openDiscuss({ waitUntilMessagesLoaded: false });
     assert.hasClass(
-        document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),
+        document.querySelector('.o_MobileMessagingNavbarView_tab[data-tab-id="channel"]'),
         'o-active',
         "'channel' tab should be active initially when loading discuss with channel id as active_id"
     );
 
-    await click('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]');
+    await click('.o_MobileMessagingNavbarView_tab[data-tab-id="mailbox"]');
     assert.hasClass(
-        document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]'),
+        document.querySelector('.o_MobileMessagingNavbarView_tab[data-tab-id="mailbox"]'),
         'o-active',
         "'mailbox' tab should be selected after click on mailbox tab"
     );
