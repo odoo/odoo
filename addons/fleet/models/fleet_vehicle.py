@@ -138,7 +138,7 @@ class FleetVehicle(models.Model):
                 write_vals = {MODEL_FIELDS_TO_VEHICLE[key]: vehicle.model_id[key] for key in MODEL_FIELDS_TO_VEHICLE\
                     if vehicle.model_id[key]}
                 model_values[vehicle.model_id.id] = write_vals
-            vehicle.write(write_vals)
+            vehicle.update(write_vals)
 
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
