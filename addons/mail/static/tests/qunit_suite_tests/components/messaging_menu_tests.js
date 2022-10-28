@@ -787,11 +787,11 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
     await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display a notification in the messaging menu"
     );
     assert.strictEqual(
-        document.querySelector('.o_NotificationRequest_name').textContent.trim(),
+        document.querySelector('.o_NotificationRequestView_name').textContent.trim(),
         'OdooBot has a request',
         "notification should display that OdooBot has a request"
     );
@@ -816,7 +816,7 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display no notification in the messaging menu"
     );
 });
@@ -840,7 +840,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display no notification in the messaging menu"
     );
 });
@@ -868,7 +868,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     });
 
     await click('.o_MessagingMenu_toggler');
-    await click('.o_NotificationRequest');
+    await click('.o_NotificationRequestView');
     assert.verifySteps([
         "should display a toast notification with the deny confirmation",
     ]);
@@ -882,7 +882,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
-        '.o_NotificationRequest',
+        '.o_NotificationRequestView',
         "should display no notification in the messaging menu"
     );
 });

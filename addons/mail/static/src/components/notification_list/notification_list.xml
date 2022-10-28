@@ -33,7 +33,7 @@
                             />
                         </t>
                         <t t-if="notificationView.constructor.name === 'NotificationRequestView'">
-                            <NotificationRequest
+                            <NotificationRequestView
                                 className="'o_NotificationList_notificationRequest'"
                                 classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
                                 record="notificationView"
