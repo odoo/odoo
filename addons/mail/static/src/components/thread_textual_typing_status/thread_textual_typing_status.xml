@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ThreadTextualTypingStatus" owl="1">
+    <t t-name="mail.ThreadTextualTypingStatusView" owl="1">
         <t t-if="threadTextualTypingStatusView">
-            <div class="o_ThreadTextualTypingStatus d-flex" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_ThreadTextualTypingStatusView d-flex" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="threadTextualTypingStatusView.threadTypingIconView">
                     <ThreadTypingIcon record="threadTextualTypingStatusView.threadTypingIconView"/>
-                    <span class="o_ThreadTextualTypingStatus_separator ms-1"/>
+                    <span class="o_ThreadTextualTypingStatusView_separator ms-1"/>
                     <span class="text-truncate" t-esc="threadTextualTypingStatusView.thread.typingStatusText"/>
                 </t>
             </div>
