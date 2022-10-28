@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ThreadNeedactionPreview extends Component {
+export class ThreadNeedactionPreviewView extends Component {
 
     /**
      * @override
@@ -46,9 +46,9 @@ export class ThreadNeedactionPreview extends Component {
 
 }
 
-Object.assign(ThreadNeedactionPreview, {
+Object.assign(ThreadNeedactionPreviewView, {
     props: { record: Object },
-    template: 'mail.ThreadNeedactionPreview',
+    template: 'mail.ThreadNeedactionPreviewView',
 });
 
-registerMessagingComponent(ThreadNeedactionPreview);
+registerMessagingComponent(ThreadNeedactionPreviewView);

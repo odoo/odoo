@@ -19,7 +19,7 @@
                             />
                         </t>
                         <t t-if="notificationView.constructor.name === 'ThreadNeedactionPreviewView'">
-                            <ThreadNeedactionPreview
+                            <ThreadNeedactionPreviewView
                                 className="'o_NotificationList_preview'"
                                 classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
                                 record="notificationView"
