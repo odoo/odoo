@@ -175,8 +175,9 @@ class AccountReport(models.Model):
             default = {}
         default['name'] = self._get_copied_name()
         copied_report = super().copy(default=default)
+        code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(copied_report)
+            line._copy_hierarchy(copied_report, code_mapping=code_mapping)
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
         return copied_report
@@ -296,7 +297,7 @@ class AccountReportLine(models.Model):
         })
 
         # Keep track of old_code -> new_code in a mutable dict
-        if not code_mapping:
+        if code_mapping is None:
             code_mapping = {}
         if self.code:
             code_mapping[self.code] = copied_line.code
