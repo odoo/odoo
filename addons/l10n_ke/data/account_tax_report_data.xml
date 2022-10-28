@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_ke" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ke"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_base_column" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tax_report_tax_column" model="account.report.column">
+                <field name="name">VAT</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_general_rate_sales" model="account.report.line">
+                <field name="name">1. Taxable Sales (General Rate 16%)</field>
+                <field name="sequence">1</field>
+                <field name="code">box_1</field>
+                <field name="expression_ids">
+                        <record id="tax_report_general_rate_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">16% Sales Base</field>
+                    </record>
+                    <record id="tax_report_general_rate_sales_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">16% Sales Tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_other_rate_sales" model="account.report.line">
+                <field name="name">2. Taxable Sales (Other Rate 8%)</field>
+                <field name="sequence">2</field>
+                <field name="code">box_2</field>
+                <field name="expression_ids">
+                        <record id="tax_report_other_rate_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">8% Sales Base</field>
+                    </record>
+                    <record id="tax_report_other_rate_sales_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">8% Sales Tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_zero_rated_sales" model="account.report.line">
+                <field name="name">3. Sales (Zero Rated 0%)</field>
+                <field name="sequence">3</field>
+                <field name="code">box_3</field>
+                <field name="expression_ids">
+                        <record id="tax_report_zero_rated_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Zero Rated Sales Base</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_exempt_sales" model="account.report.line">
+                <field name="name">4. Sales (Exempt)</field>
+                <field name="sequence">4</field>
+                <field name="code">box_4</field>
+                <field name="expression_ids">
+                        <record id="tax_report_exempt_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Exempt Sales Base</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_total_sales" model="account.report.line">
+                <field name="name">5. Total Sales</field>
+                <field name="sequence">5</field>
+                <field name="code">box_5</field>
+                <field name="expression_ids">
+                        <record id="tax_report_total_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_1.base + box_2.base + box_3.base + box_4.base</field>
+                    </record>
+                    <record id="tax_report_total_sales_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_1.tax + box_2.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_output_vat" model="account.report.line">
+                <field name="name">6. Total Output VAT</field>
+                <field name="sequence">6</field>
+                <field name="code">box_6</field>
+                <field name="expression_ids">
+                        <record id="tax_report_output_vat_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_1.base + box_2.base + box_3.base</field>
+                    </record>
+                    <record id="tax_report_output_vat_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_1.tax + box_2.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_general_rate_purchases" model="account.report.line">
+                <field name="name">7. Taxable Purchases (General Rate 16%)</field>
+                <field name="sequence">7</field>
+                <field name="code">box_7</field>
+                <field name="expression_ids">
+                        <record id="tax_report_general_rate_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">16% Purchases Base</field>
+                    </record>
+                    <record id="tax_report_general_rate_purchases_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">16% Purchases Tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_other_rate_purchases" model="account.report.line">
+                <field name="name">8. Taxable Purchases (Other Rate 8%)</field>
+                <field name="sequence">8</field>
+                <field name="code">box_8</field>
+                <field name="expression_ids">
+                        <record id="tax_report_other_rate_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">8% purchases Base</field>
+                    </record>
+                    <record id="tax_report_other_rate_purchases_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">8% Purchases Tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_zero_rated_purchases" model="account.report.line">
+                <field name="name">9. Purchases (Zero Rated 0%)</field>
+                <field name="sequence">9</field>
+                <field name="code">box_9</field>
+                <field name="expression_ids">
+                        <record id="tax_report_zero_rated_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Zero Rated Purchases Base</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_exempt_purchases" model="account.report.line">
+                <field name="name">10. Purchases (Exempt)</field>
+                <field name="sequence">10</field>
+                <field name="code">box_10</field>
+                <field name="expression_ids">
+                        <record id="tax_report_exempt_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Exempt Purchases Base</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_total_purchases" model="account.report.line">
+                <field name="name">11. Total Purchases</field>
+                <field name="sequence">11</field>
+                <field name="code">box_11</field>
+                <field name="expression_ids">
+                        <record id="tax_report_total_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_7.base + box_8.base + box_9.base + box_10.base</field>
+                    </record>
+                    <record id="tax_report_total_purchases_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_7.tax + box_8.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_input_vat" model="account.report.line">
+                <field name="name">12. Total Input VAT</field>
+                <field name="sequence">12</field>
+                <field name="code">box_12</field>
+                <field name="expression_ids">
+                        <record id="tax_report_input_vat_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_7.base + box_8.base + box_9.base</field>
+                    </record>
+                    <record id="tax_report_input_vat_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_7.tax + box_8.tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
