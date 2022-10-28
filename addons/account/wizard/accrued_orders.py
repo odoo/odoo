@@ -5,6 +5,7 @@ import json
 from odoo import models, fields, api, _, Command
 from odoo.tools import format_date
 from odoo.exceptions import UserError
+from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
 
 class AccruedExpenseRevenue(models.TransientModel):
@@ -26,6 +27,9 @@ class AccruedExpenseRevenue(models.TransientModel):
     def _get_default_journal(self):
         return self.env['account.journal'].search([('company_id', '=', self.env.company.id), ('type', '=', 'general')], limit=1)
 
+    def _get_default_date(self):
+        return date_utils.get_month(fields.Date.context_today(self))[0] - relativedelta(days=1)
+
     company_id = fields.Many2one('res.company', default=_get_default_company)
     journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -38,7 +42,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         company_dependent=True,
         string='Journal',
     )
-    date = fields.Date(default=fields.Date.today, required=True)
+    date = fields.Date(default=_get_default_date, required=True)
     reversal_date = fields.Date(
         compute="_compute_reversal_date",
         required=True,
