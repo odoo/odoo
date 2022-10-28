@@ -1422,6 +1422,51 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 {'name': 'whatever', 'account_id': random_acc_1.id, 'balance': -100.0},
             ])
 
+    def test_reconciliation_statement_line_foreign_currency(self):
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': -80.0,
+                    'amount_currency': -120.0,
+                }),
+            ],
+        })
+        statement.button_post()
+        statement_line = statement.line_ids
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_2.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': 'counterpart line, same amount',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'quantity': 1,
+                    'price_unit': 120.0,
+                }),
+            ],
+        })
+        invoice.action_post()
+        invoice_line = invoice.line_ids.filtered(lambda line: line.account_internal_type == 'payable')
+
+        statement_line.reconcile([{'id': invoice_line.id}], allow_partial=True)
+
+        self.assertRecordValues(statement_line.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'amount_currency': -80.0, 'currency_id': self.currency_1.id,   'balance': -80.0,   'reconciled': False},
+            {'amount_currency': 120.0, 'currency_id': self.currency_2.id,   'balance': 80.0,    'reconciled': True},
+        ])
+
     def test_conversion_rate_rounding_issue(self):
         ''' Ensure the reconciliation is well handling the rounding issue due to multiple currency conversion rates.
 

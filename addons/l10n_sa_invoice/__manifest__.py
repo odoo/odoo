@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'K.S.A - Invoice',
+    'name': 'Saudi Arabia - Invoice',
     'version': '1.0.0',
     'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations',

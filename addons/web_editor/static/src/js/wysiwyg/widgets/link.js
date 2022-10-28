@@ -300,7 +300,10 @@ const Link = Widget.extend({
             (type && size ? (' btn-' + size) : '');
         var isNewWindow = this._isNewWindow(url);
         var doStripDomain = this._doStripDomain();
-        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
+        if (
+            url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i) ||
+            this._link && this._link.href.includes('mailto:') && !url.includes('mailto:')
+        ) {
             url = ('mailto:' + url);
         } else if (url.indexOf(location.origin) === 0 && doStripDomain) {
             url = url.slice(location.origin.length);
