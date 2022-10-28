@@ -428,6 +428,10 @@ class AccountReportExpression(models.Model):
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
+        for vals in vals_list:
+            if 'formula' in vals and isinstance(vals['formula'], str):
+                vals['formula'] = vals['formula'].replace('\n', '').strip()
+
         result = super().create(vals_list)
 
         for expression in result:
