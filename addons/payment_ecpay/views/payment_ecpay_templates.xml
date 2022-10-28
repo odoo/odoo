@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="MerchantID" t-att-value="MerchantID"/>
+            <input type="hidden" name="MerchantTradeNo" t-att-value="MerchantTradeNo"/>
+            <input type="hidden" name="MerchantTradeDate" t-att-value="MerchantTradeDate"/>
+            <input type="hidden" name="PaymentType" t-att-value="PaymentType"/>
+            <input type="hidden" name="TotalAmount" t-att-value="TotalAmount"/>
+            <input type="hidden" name="TradeDesc" t-att-value="TradeDesc"/>
+            <input type="hidden" name="ItemName" t-att-value="ItemName"/>
+            <input type="hidden" name="ReturnURL" t-att-value="ReturnURL"/>
+            <input type="hidden" name="ChoosePayment" t-att-value="ChoosePayment"/>
+            <input type="hidden" name="CheckMacValue" t-att-value="CheckMacValue"/>
+            <input type="hidden" name="ClientBackURL" t-att-value="ClientBackURL"/>
+            <input type="hidden" name="PaymentInfoURL" t-att-value="PaymentInfoURL"/>
+            <input type="hidden" name="Language" t-if="Language" t-att-value="Language"/>
+            <input type="hidden" name="EncryptType" t-att-value="EncryptType"/>
+        </form>
+    </template>
+
+</odoo>

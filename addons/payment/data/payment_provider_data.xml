@@ -111,6 +111,20 @@
             ])]"/>
     </record>
 
+    <record id="payment_provider_ecpay" model="payment.provider">
+        <field name="name">ECPay</field>
+        <field name="display_as">Credit Card (powered by ECPay)</field>
+        <field name="image_128" type="base64" file="payment_ecpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_ecpay"/>
+        <!-- See https://www.ecpay.com.tw/CreditCardIntro -->
+        <field name="payment_icon_ids" eval="[(6, 0, [
+                ref('payment.payment_icon_cc_mastercard'),
+                ref('payment.payment_icon_cc_visa'),
+                ref('payment.payment_icon_cc_jcb'),
+                ref('payment.payment_icon_cc_unionpay'),
+            ])]"/>
+    </record>
+
     <record id="payment_provider_mercado_pago" model="payment.provider">
         <field name="name">Mercado Pago</field>
         <field name="display_as">Credit Card (powered by Mercado Pago)</field>
