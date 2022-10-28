@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
 
 
+@freeze_time('2022-01-01')
 @tagged('post_install', '-at_install')
 class TestAccruedSaleOrders(AccountTestInvoicingCommon):
 
@@ -73,7 +75,7 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
         ])
 
         # delivered products invoiced, nothing to invoice left
-        self.sale_order._create_invoices().action_post()
+        self.sale_order.with_context(default_invoice_date=self.wizard.date)._create_invoices().action_post()
         with self.assertRaises(UserError):
             self.wizard.create_entries()
         self.assertTrue(self.wizard.display_amount)
