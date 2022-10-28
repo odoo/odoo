@@ -116,10 +116,6 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             dispatch_rpc('db', 'drop', [master_pwd, name])
-            if request.db == name:
-                request.env.cr._closed = True  # the underlying connection was closed
-            if request.session.db == name:
-                request.session.logout()
             return request.redirect('/web/database/manager')
         except Exception as e:
             _logger.exception("Database deletion error.")

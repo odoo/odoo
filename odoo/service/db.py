@@ -207,6 +207,14 @@ def exp_drop(db_name):
     fs = odoo.tools.config.filestore(db_name)
     if os.path.exists(fs):
         shutil.rmtree(fs)
+
+    # In case if database drop was invoked from web (via web ui or via rpc),
+    # then we have to ensure that cursor attached to http request's
+    # env is closed and session (if active) was logged out (cleaned)
+    if odoo.http.request and odoo.http.request.db == db_name:
+        odoo.http.request.env.cr._closed = True
+    if odoo.http.request and odoo.http.request.session.db == db_name:
+        odoo.http.request.session.logout()
     return True
 
 @check_db_management_enabled
