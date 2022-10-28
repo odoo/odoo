@@ -707,7 +707,7 @@ class IrActionsReport(models.Model):
                     self.name,
                 ))
 
-            pdf_content = self._run_wkhtmltopdf(
+            pdf_content = report_sudo._run_wkhtmltopdf(
                 bodies,
                 header=header,
                 footer=footer,
