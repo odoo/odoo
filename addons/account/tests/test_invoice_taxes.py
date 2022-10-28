@@ -681,11 +681,11 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 567.38,      # 155.32 * 1 / (1 / 0.273748)
-            'balance': -119.15,             # tax_base_amount * 0.21
+            'balance': -119.16,             # tax_base_amount * 0.21
         }])
 
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: not l.name), [{
-            'balance': 686.53,
+            'balance': 686.54,
         }])
 
         with Form(invoice) as invoice_form:
@@ -693,9 +693,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 567.38,
-            'balance': -119.15,
+            'balance': -119.16,
         }])
 
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable'), [{
-            'balance': 686.53
+            'balance': 686.54,
         }])
