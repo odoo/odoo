@@ -229,7 +229,7 @@ class TestMailComposerRendering(TestMailComposer):
             'subject': 'MSO FTW',
         })
 
-        values = mail_compose_message.get_mail_values(self.partner_employee.ids)
+        values = mail_compose_message._prepare_mail_values(self.partner_employee.ids)
 
         self.assertIn(
             self.body_html,
@@ -254,7 +254,7 @@ class TestMailComposerRendering(TestMailComposer):
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
-        values = composer.get_mail_values(self.partner_employee.ids)
+        values = composer._prepare_mail_values(self.partner_employee.ids)
 
         self.assertIn(
             self.body_html,

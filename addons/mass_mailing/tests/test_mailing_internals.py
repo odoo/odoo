@@ -52,7 +52,7 @@ class TestMassMailValues(MassMailCommon):
             'mass_mailing_id': mailing.id
         })
 
-        mail_values = composer.get_mail_values([recipient.id])
+        mail_values = composer._prepare_mail_values([recipient.id])
         body_html = mail_values[recipient.id]['body_html']
 
         self.assertIn('<!DOCTYPE html>', body_html)
