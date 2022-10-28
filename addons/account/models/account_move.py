@@ -78,7 +78,7 @@ class AccountMove(models.Model):
         compute='_compute_name', readonly=False, store=True,
         copy=False,
         tracking=True,
-        index='btree',  # We need the btree index for unicity constraint (`_check_unique_sequence_number`)
+        index='trigram',
     )
     ref = fields.Char(string='Reference', copy=False, tracking=True)
     date = fields.Date(
@@ -549,10 +549,6 @@ class AccountMove(models.Model):
 
     def _auto_init(self):
         super()._auto_init()
-        if self.pool.has_trigram:
-            # This index is for human searches
-            sql.create_index(self._cr, 'account_move_name_trigram_index', self._table, ['"name" gin_trgm_ops'], 'gin')
-
         self.env.cr.execute("""
             CREATE INDEX IF NOT EXISTS account_move_to_check_idx
             ON account_move(journal_id) WHERE to_check = true;
@@ -663,22 +659,6 @@ class AccountMove(models.Model):
 
     @api.depends('posted_before', 'state', 'journal_id', 'date')
     def _compute_name(self):
-        def journal_key(move):
-            return (move.journal_id, move.journal_id.refund_sequence and move.move_type)
-
-        def date_key(move):
-            return (move.date.year, move.date.month)
-
-        grouped = defaultdict(  # key: journal_id, move_type
-            lambda: defaultdict(  # key: first adjacent (date.year, date.month)
-                lambda: {
-                    'records': self.env['account.move'],
-                    'format': False,
-                    'format_values': False,
-                    'reset': False
-                }
-            )
-        )
         self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
         highest_name = self[0]._get_last_sequence(lock=False) if self else False
 
@@ -699,45 +679,9 @@ class AccountMove(models.Model):
                 except ValidationError:
                     # Has never been posted and the name doesn't match the date: recompute it
                     pass
-            group = grouped[journal_key(move)][date_key(move)]
-            if not group['records']:
-                # Compute all the values needed to sequence this whole group
-                move._set_next_sequence()
-                group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
-                group['reset'] = move._deduce_sequence_number_reset(move.name)
-            group['records'] += move
-
-        # Fusion the groups depending on the sequence reset and the format used because `seq` is
-        # the same counter for multiple groups that might be spread in multiple months.
-        final_batches = []
-        for journal_group in grouped.values():
-            journal_group_changed = True
-            for date_group in journal_group.values():
-                if (
-                    journal_group_changed
-                    or final_batches[-1]['format'] != date_group['format']
-                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
-                ):
-                    final_batches += [date_group]
-                    journal_group_changed = False
-                elif date_group['reset'] == 'never':
-                    final_batches[-1]['records'] += date_group['records']
-                elif (
-                    date_group['reset'] == 'year'
-                    and final_batches[-1]['records'][0].date.year == date_group['records'][0].date.year
-                ):
-                    final_batches[-1]['records'] += date_group['records']
-                else:
-                    final_batches += [date_group]
-
-        # Give the name based on previously computed values
-        for batch in final_batches:
-            for move in batch['records']:
-                move.name = batch['format'].format(**batch['format_values'])
-                batch['format_values']['seq'] += 1
+            move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
-        self._compute_split_sequence()
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
@@ -1710,7 +1654,6 @@ class AccountMove(models.Model):
             raise UserError(error_msg)
 
     def _get_unbalanced_moves(self, container):
-
         moves = container['records'].filtered(lambda move: move.line_ids)
         if not moves:
             return

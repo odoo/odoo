@@ -280,7 +280,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.errors.IntegrityError), mute_logger('odoo.sql_db'), self.env.cr.savepoint():
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date
@@ -468,11 +468,24 @@ class TestSequenceMixinConcurrency(TransactionCase):
             moves.name = '/'
             moves[0].action_post()
             self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', '/', '/'])
+
+            payments = env['account.payment'].create([{
+                'payment_type': 'inbound',
+                'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+                'partner_type': 'customer',
+                'partner_id': self.env.ref("base.res_partner_12").id,
+                'date': fields.Date.from_string('2016-01-01'),
+                'amount': 600,
+            }] * 3)
+            payments[0].action_post()
+            self.assertEqual(payments.mapped('name'), ['PBNK1/2016/00001', '/', '/'])
+
             env.cr.commit()
         self.data = {
             'move_ids': moves.ids,
             'account_id': account.id,
             'journal_id': journal.id,
+            'payment_ids': payments.ids,
             'envs': [
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
@@ -492,6 +505,9 @@ class TestSequenceMixinConcurrency(TransactionCase):
             journal.unlink()
             account = env['account.account'].browse(self.data['account_id'])
             account.unlink()
+            payments = env['account.payment'].browse(self.data['payment_ids'])
+            payments.action_draft()
+            payments.unlink()
             env.cr.commit()
         for env in self.data['envs']:
             env.cr.close()
@@ -508,14 +524,14 @@ class TestSequenceMixinConcurrency(TransactionCase):
         move.action_post()
         env2.cr.commit()
 
-        # try to post in cr1, should fail because this transaction started before the post in cr2
+        # try to post in cr1, the retry sould find the right number
         move = env1['account.move'].browse(self.data['move_ids'][2])
-        with self.assertRaises(psycopg2.OperationalError), mute_logger('odoo.sql_db'):
-            move.action_post()
+        move.action_post()
+        env1.cr.commit()
 
         # check the values
         moves = env0['account.move'].browse(self.data['move_ids'])
-        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
+        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
 
     def test_sequence_concurency_no_useless_lock(self):
         """Do not lock needlessly when the sequence is not computed"""
