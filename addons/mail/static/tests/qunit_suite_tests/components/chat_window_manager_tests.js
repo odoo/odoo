@@ -416,7 +416,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
     const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationList_preview`);
+    await click(`.o_NotificationListView_preview`);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
         1,
@@ -508,7 +508,7 @@ QUnit.test('chat window: fold', async function (assert) {
     });
     // Open Thread
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationListView_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -562,7 +562,7 @@ QUnit.test('chat window: open / close', async function (assert) {
         "should not have a chat window initially"
     );
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationListView_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -587,7 +587,7 @@ QUnit.test('chat window: open / close', async function (assert) {
 
     // Reopen chat window
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationListView_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -614,7 +614,7 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
     patchUiSize({ size: SIZES.SM });
     const { click } = await start();
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationList_preview`);
+    await click(`.o_NotificationListView_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -643,7 +643,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
     patchUiSize({ size: SIZES.SM });
     const { click } = await start();
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationList_preview`);
+    await click(`.o_NotificationListView_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -859,7 +859,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     const mailChannelId = pyEnv['mail.channel'].create({});
     const { click, insertText, messaging, openDiscuss, openView } = await start();
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationListView_preview`);
     // Set content of the composer of the chat window
     await insertText('.o_ComposerTextInput_textarea', 'XDU for the win !');
     assert.containsNone(
@@ -935,7 +935,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_NotificationListView_preview').click(),
         message: "should wait until channel scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
@@ -1389,7 +1389,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_NotificationListView_preview').click(),
         message: "should wait until channel scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
@@ -1507,7 +1507,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     const { click, insertText } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationListView_preview`);
     // insert some HTML in editable
     await insertText('.o_ComposerTextInput_textarea', "Test");
     await afterNextRender(() => {
@@ -1537,7 +1537,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_NotificationListView_preview').click(),
         message: "should wait until channel scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');

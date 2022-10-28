@@ -645,7 +645,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         async func() {
-            await click(`.o_NotificationList_preview`);
+            await click(`.o_NotificationListView_preview`);
         },
         message: "should wait until channel scrolled initially",
         predicate: data => thread === data.threadViewer.thread,
@@ -711,7 +711,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         async func() {
-            await click(`.o_NotificationList_preview`);
+            await click(`.o_NotificationListView_preview`);
         },
         message: "should wait until channel scrolled initially",
         predicate: data => thread === data.threadViewer.thread,
