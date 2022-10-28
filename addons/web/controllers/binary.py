@@ -90,7 +90,13 @@ class Binary(http.Controller):
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
-            domain = [('url', '=like', '/web/assets/%/' + (f'{extra}/{filename}' if extra else filename))]
+            if extra:
+                domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+            else:
+                domain = [
+                    ('url', '=like', f'/web/assets/%/{filename}'),
+                    ('url', 'not like', f'/web/assets/%/%/{filename}')
+                ]
             attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
             if not attachment:
                 raise request.not_found()
