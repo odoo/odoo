@@ -26,7 +26,7 @@ import * as AbstractService from 'web.AbstractService';
 import * as legacyEnv from 'web.env';
 import * as legacySession from 'web.session';
 
-const { Component, mount, whenReady } = owl;
+import { Component, mount, whenReady } from '@odoo/owl';
 
 Component.env = legacyEnv;
 

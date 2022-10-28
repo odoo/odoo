@@ -5,7 +5,7 @@ import '@mail/backend_components/activity_cell_view/activity_cell_view';
 import { insert } from '@mail/model/model_field_command';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onWillDestroy, onWillUpdateProps } = owl;
+import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
 const getNextId = (function () {
     let tmpId = 0;

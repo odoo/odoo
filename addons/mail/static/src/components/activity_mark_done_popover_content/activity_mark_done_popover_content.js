@@ -3,7 +3,7 @@
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted } = owl;
+import { Component, onMounted } from '@odoo/owl';
 
 export class ActivityMarkDonePopoverContent extends Component {
 

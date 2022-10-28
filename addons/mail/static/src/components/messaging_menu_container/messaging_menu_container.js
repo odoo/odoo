@@ -5,7 +5,7 @@ import { useModels } from '@mail/component_hooks/use_models';
 import '@mail/components/messaging_menu/messaging_menu';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 
 export class MessagingMenuContainer extends Component {
 

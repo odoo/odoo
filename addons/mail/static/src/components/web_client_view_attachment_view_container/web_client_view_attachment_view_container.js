@@ -5,7 +5,7 @@ import { useModels } from '@mail/component_hooks/use_models';
 import '@mail/components/web_client_view_attachment_view/web_client_view_attachment_view';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onWillDestroy, onWillUpdateProps } = owl;
+import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
 const getNextId = (function () {
     let tmpId = 0;

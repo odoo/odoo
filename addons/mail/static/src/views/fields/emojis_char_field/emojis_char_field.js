@@ -7,7 +7,7 @@ import { EmojisDropdown } from '@mail/js/emojis_dropdown';
 import { EmojisFieldCommon } from '@mail/views/fields/emojis_field_common';
 import { registry } from "@web/core/registry";
 
-const { useRef } = owl;
+import { useRef } from '@odoo/owl';
 
 /**
  * Extension of the FieldChar that will add emojis support

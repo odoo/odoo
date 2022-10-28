@@ -2,7 +2,7 @@
 
 import { useModels } from '@mail/component_hooks/use_models';
 
-const { useRef } = owl;
+import { useRef } from '@odoo/owl';
 
 const componentRegistry = {};
 

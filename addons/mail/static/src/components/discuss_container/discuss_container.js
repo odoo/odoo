@@ -5,7 +5,7 @@ import { useModels } from '@mail/component_hooks/use_models';
 import '@mail/components/discuss/discuss';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component, onWillDestroy } = owl;
+import { Component, onWillDestroy } from '@odoo/owl';
 
 export class DiscussContainer extends Component {
 

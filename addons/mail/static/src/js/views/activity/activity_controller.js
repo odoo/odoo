@@ -8,7 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 import { SelectCreateDialog } from '@web/views/view_dialogs/select_create_dialog';
 
-const { Component } = owl;
+import { Component } from '@odoo/owl';
 var _t = core._t;
 
 var ActivityController = BasicController.extend({
