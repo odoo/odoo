@@ -37877,11 +37877,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return `grid-template-rows: ${TOPBAR_HEIGHT}px auto ${BOTTOMBAR_HEIGHT + 1}px`;
         }
         setup() {
-<<<<<<< HEAD
-            var _a, _b;
-            (_b = (_a = this.props).exposeSpreadsheet) === null || _b === void 0 ? void 0 : _b.call(_a, this);
-=======
->>>>>>> 793aeb011671 (m)
             this.sidePanel = owl.useState({ isOpen: false, panelProps: {} });
             this.composer = owl.useState({
                 topBarFocus: "inactive",
@@ -38033,10 +38028,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Spreadsheet._t = t;
     Spreadsheet.props = {
         model: Object,
-<<<<<<< HEAD
-        exposeSpreadsheet: { type: Function, optional: true },
-=======
->>>>>>> 793aeb011671 (m)
     };
 
     class LocalTransportService {
@@ -42074,13 +42065,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-<<<<<<< HEAD
-    exports.__info__.date = '2022-10-27T09:50:44.339Z';
-    exports.__info__.hash = '1f8e5fa';
-=======
     exports.__info__.date = '2022-10-28T09:04:13.415Z';
     exports.__info__.hash = 'a488003';
->>>>>>> 793aeb011671 (m)
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
