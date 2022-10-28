@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationAlertContainer" owl="1">
-        <NotificationAlert/>
+        <t t-if="messaging and messaging.notificationAlertView">
+            <NotificationAlertView record="messaging.notificationAlertView"/>
+        </t>
     </t>
 
 </templates>

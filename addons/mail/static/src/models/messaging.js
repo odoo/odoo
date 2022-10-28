@@ -398,6 +398,9 @@ registerPatch({
             default: {},
             isCausal: true,
         }),
+        notificationAlertView: one('NotificationAlertView', {
+            default: {},
+        }),
         notificationHandler: one('MessagingNotificationHandler', {
             compute() {
                 return {};
