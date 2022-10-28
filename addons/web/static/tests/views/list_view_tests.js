@@ -1668,7 +1668,7 @@ QUnit.module("Views", (hooks) => {
             { force: true }
         );
 
-        serverData.models.foo.fields.m2m.sortable = true;
+        serverData.models.foo.fields.m2m.store = true;
 
         await makeView({
             type: "list",
