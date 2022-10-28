@@ -539,7 +539,11 @@ class MrpProduction(models.Model):
 
     def _set_move_byproduct_ids(self):
         move_finished_ids = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
-        self.move_finished_ids = move_finished_ids | self.move_byproduct_ids
+        move_byproduct_ids = self.move_byproduct_ids.filtered(lambda m: isinstance(m.id, models.NewId))
+        if move_byproduct_ids:
+            self.move_finished_ids = move_finished_ids | move_byproduct_ids
+        else:
+            self.move_finished_ids = move_finished_ids | self.move_byproduct_ids
 
     @api.depends('state')
     def _compute_show_lock(self):
