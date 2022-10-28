@@ -225,7 +225,7 @@ class ResourceCalendar(models.Model):
     def _compute_attendance_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
-            calendar.write({
+            calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
                 'hours_per_day': company_calendar.hours_per_day,
                 'tz': company_calendar.tz,
@@ -236,7 +236,7 @@ class ResourceCalendar(models.Model):
     @api.depends('company_id')
     def _compute_global_leave_ids(self):
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
-            calendar.write({
+            calendar.update({
                 'global_leave_ids': [(5, 0, 0)] + [
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
