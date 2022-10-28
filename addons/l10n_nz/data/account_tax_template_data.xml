@@ -259,21 +259,12 @@
     </record>
     <record id="nz_tax_purchase_gst_only" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_nz_chart_template"/>
-        <field name="name">GST Only – Imports</field>
+        <field name="name">GST Only - Imports</field>
         <field name="sequence">5</field>
         <field name="description">GST Only on Imports</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">100000000000</field>
-        <!--
-          The tax percentage is so high because on imported goods we
-          needed to link the tax line acknowledgment (not to be paid)
-          on the customer invoice and what need to actually be
-          paid from another invoice given by a clearance house
-          (i.e. customs)
-          For more info see the complete discussion below
-          https://github.com/odoo/odoo/pull/48700#issuecomment-607586417
-        -->
+        <field name="amount_type">division</field>
+        <field name="amount">100</field>
         <field name="price_include">TRUE</field>
         <field name="tax_group_id" ref="tax_group_100000000"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
