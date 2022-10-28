@@ -21,6 +21,10 @@ registerModel({
             },
             default: '',
         }),
+        callInviteRequestPopupList: one('CallInviteRequestPopupList', {
+            default: {},
+            inverse: 'callSystrayMenuOwner',
+        }),
         rtc: one('Rtc', {
             identifying: true,
             inverse: 'callSystrayMenu',
