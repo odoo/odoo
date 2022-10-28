@@ -599,7 +599,7 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment':
-                    self.assertEqual(composer.body, 'Back to my amazing body')
+                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name>/></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_global)
                     self.assertEqual(composer.record_name, 'Manual update')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
