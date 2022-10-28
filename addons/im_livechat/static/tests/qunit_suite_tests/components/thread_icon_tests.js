@@ -31,12 +31,12 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_ThreadViewTopbar .o_ThreadIcon',
+        '.o_ThreadViewTopbar .o_ThreadIconView',
         "should have thread icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon .fa.fa-comments',
+        '.o_ThreadIconView .fa.fa-comments',
         "should have default livechat icon"
     );
 
@@ -54,11 +54,11 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     }));
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_typing',
+        '.o_ThreadIconView_typing',
         "should have thread icon with visitor currently typing"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadIcon_typing').title,
+        document.querySelector('.o_ThreadIconView_typing').title,
         "Visitor 20 is typing...",
         "title of icon should tell visitor is currently typing"
     );

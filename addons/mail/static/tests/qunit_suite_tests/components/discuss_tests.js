@@ -268,12 +268,12 @@ QUnit.test('sidebar: basic mailbox rendering', async function (assert) {
         }"]
     `);
     assert.strictEqual(
-        inbox.querySelectorAll(`:scope .o_ThreadIcon`).length,
+        inbox.querySelectorAll(`:scope .o_ThreadIconView`).length,
         1,
         "mailbox should have an icon"
     );
     assert.strictEqual(
-        inbox.querySelectorAll(`:scope .o_ThreadIcon_mailboxInbox`).length,
+        inbox.querySelectorAll(`:scope .o_ThreadIconView_mailboxInbox`).length,
         1,
         "inbox should have 'inbox' icon"
     );
@@ -562,7 +562,7 @@ QUnit.test('sidebar: public channel rendering', async function (assert) {
         .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
     `);
     assert.ok(
-        channel1.querySelectorAll(`:scope .o_ThreadIcon_publicChannel`).length,
+        channel1.querySelectorAll(`:scope .o_ThreadIconView_publicChannel`).length,
         "channel1 (public) should have globe icon"
     );
 });
@@ -591,7 +591,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
     `);
     assert.ok(chat, "should have channel 1 in the sidebar");
     assert.strictEqual(
-        chat.querySelectorAll(`:scope .o_ThreadIcon`).length,
+        chat.querySelectorAll(`:scope .o_ThreadIconView`).length,
         1,
         "should have an icon"
     );
@@ -741,17 +741,17 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
         .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId3}"]
     `);
     assert.strictEqual(
-        chat1.querySelectorAll(`:scope .o_ThreadIcon_offline`).length,
+        chat1.querySelectorAll(`:scope .o_ThreadIconView_offline`).length,
         1,
         "chat1 should have offline icon"
     );
     assert.strictEqual(
-        chat2.querySelectorAll(`:scope .o_ThreadIcon_online`).length,
+        chat2.querySelectorAll(`:scope .o_ThreadIconView_online`).length,
         1,
         "chat2 should have online icon"
     );
     assert.strictEqual(
-        chat3.querySelectorAll(`:scope .o_ThreadIcon_away`).length,
+        chat3.querySelectorAll(`:scope .o_ThreadIconView_away`).length,
         1,
         "chat3 should have away icon"
     );

@@ -434,7 +434,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
     );
     const chatWindowHeader = chatWindow.querySelector(`:scope .o_ChatWindow_header`);
     assert.strictEqual(
-        chatWindowHeader.querySelectorAll(`:scope .o_ThreadIcon`).length,
+        chatWindowHeader.querySelectorAll(`:scope .o_ThreadIconView`).length,
         1,
         "should have thread icon in header part"
     );
