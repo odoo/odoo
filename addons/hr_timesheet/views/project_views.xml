@@ -119,31 +119,27 @@
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="progressbar" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
+                <xpath expr="//field[@name='date_deadline']" position="before" groups="hr_timesheet.group_hr_timesheet_user">
+                    <field name="encode_uom_in_days" invisible="1"/>
+                    <field name="subtask_count" invisible="1"/>
+                    <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                    <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                    <div class="text-nowrap">
+                        <field name="planned_hours" class="oe_inline" widget="float_time"/>
+                        <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
+                            (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
+                            <span class="fw-bold text-dark"> Sub-tasks</span>)
+                        </span>
+                        <span>(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
+                    </div>
+                </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                     <field name="allow_subtasks" invisible="1"/>
                     <t groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="analytic_account_active" invisible="1"/>
-                        <field name="encode_uom_in_days" invisible="1"/>
-                        <field name="subtask_count" invisible="1"/>
                     </t>
                     <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
-                        <group>
-                            <group>
-                                <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
-                                <div class="o_row">
-                                    <field name="planned_hours" class="oe_inline ms-2" widget="timesheet_uom_no_toggle"/>
-                                    <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
-                                        (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
-                                        <span class="fw-bold text-dark"> Sub-tasks</span>)
-                                    </span>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="progress" widget="progressbar"/>
-                            </group>
-                        </group>
                         <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">
                             <div class="alert alert-warning" role="alert" colspan="2">
                                 You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project.
