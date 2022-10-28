@@ -13,22 +13,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_general_rate_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'plus_report_line_ids': [ref('tax_report_line_general_rate_sales_tax')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_general_rate_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'minus_report_line_ids': [ref('tax_report_line_general_rate_sales_tax')],
                 }),
             ]"/>
     </record>
@@ -45,22 +49,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_other_rate_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'plus_report_line_ids': [ref('tax_report_line_other_rate_sales_tax')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_other_rate_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'minus_report_line_ids': [ref('tax_report_line_other_rate_sales_tax')],
                 }),
             ]"/>
     </record>
@@ -77,20 +85,24 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_zero_rated_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_line_zero_rated_sales_tax')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_zero_rated_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('tax_report_line_zero_rated_sales_tax')],
                 }),
             ]"/>
     </record>
@@ -107,6 +119,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_exempt_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -117,6 +130,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_exempt_sales_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -137,22 +151,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_general_rate_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'plus_report_line_ids': [ref('tax_report_line_general_rate_purchases_tax')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_general_rate_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'minus_report_line_ids': [ref('tax_report_line_general_rate_purchases_tax')],
                 }),
             ]"/>
     </record>
@@ -169,22 +187,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_other_rate_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'plus_report_line_ids': [ref('tax_report_line_other_rate_purchases_tax')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_other_rate_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'minus_report_line_ids': [ref('tax_report_line_other_rate_purchases_tax')],
                 }),
             ]"/>
     </record>
@@ -201,20 +223,24 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_zero_rated_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_line_zero_rated_purchases_tax')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_zero_rated_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('tax_report_line_zero_rated_purchases_tax')],
                 }),
             ]"/>
     </record>
@@ -231,6 +257,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_line_exempt_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -241,6 +268,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_line_exempt_purchases_base')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -248,5 +276,4 @@
                 }),
             ]"/>
     </record>
-
 </odoo>
