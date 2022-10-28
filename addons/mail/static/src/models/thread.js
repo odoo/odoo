@@ -1123,9 +1123,7 @@ registerModel({
         areAttachmentsLoaded: attr({
             default: false,
         }),
-        attachments: many('Attachment', {
-            inverse: 'threads',
-        }),
+        attachments: many('Attachment'),
         attachmentsInWebClientView: many('Attachment', {
             inverse: 'threadsAsAttachmentsInWebClientView',
             readonly: true,

@@ -2,46 +2,10 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
-    modelMethods: {
-        /**
-         * @static
-         * @param {Object} data
-         * @return {Object}
-         */
-        convertData(data) {
-            const data2 = {};
-            if ('checksum' in data) {
-                data2.checksum = data.checksum;
-            }
-            if ('filename' in data) {
-                data2.filename = data.filename;
-            }
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-            if ('mimetype' in data) {
-                data2.mimetype = data.mimetype;
-            }
-            if ('name' in data) {
-                data2.name = data.name;
-            }
-            // relation
-            if ('res_id' in data && 'res_model' in data) {
-                data2.originThread = insert({
-                    id: data.res_id,
-                    model: data.res_model,
-                });
-            }
-            if ('originThread' in data) {
-                data2.originThread = data.originThread;
-            }
-            return data2;
-        },
-    },
     recordMethods: {
         /**
          * Send the attachment for the browser to download.
@@ -126,7 +90,7 @@ registerModel({
                     return `/web/image/${this.id}?signature=${this.checksum}`;
                 }
                 if (this.isPdf) {
-                    const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`
+                    const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`;
                     if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
                         return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
                     }
@@ -309,9 +273,6 @@ registerModel({
             inverse: 'originThreadAttachments',
         }),
         size: attr(),
-        threads: many('Thread', {
-            inverse: 'attachments',
-        }),
         threadsAsAttachmentsInWebClientView: many('Thread', {
             compute() {
                 return (this.isPdf || this.isImage) && !this.isUploading ? this.allThreads : clear();
