@@ -230,7 +230,8 @@ class Import(models.TransientModel):
                 return getattr(self, '_read_' + file_extension)(options)
             except Exception:
                 filename = self.file_name or '<unknown>'
-                _logger.warn(f'Failed to read file {filename} (transient id {self.id}) as type {filetype}')
+                fstring = f'Failed to read file {filename} (transient id {self.id}) as type {filetype}'
+                _logger.debug(fstring)
 
     def _read_file(self, options):
         """ Dispatch to specific method to read file content, according to its mimetype or file type
