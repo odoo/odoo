@@ -938,17 +938,7 @@ class AccountMoveLine(models.Model):
                 include_caba_tags=line.move_id.always_tax_exigible,
                 fixed_multiplicator=sign,
             )
-            compute_all = line.tax_ids.compute_all(
-                amount,
-                currency=line.company_id.currency_id,
-                quantity=quantity,
-                product=line.product_id,
-                partner=line.move_id.partner_id or line.partner_id,
-                is_refund=line.is_refund,
-                handle_price_include=handle_price_include,
-                include_caba_tags=line.move_id.always_tax_exigible,
-                fixed_multiplicator=sign/line.currency_rate,
-            )
+            rate = line.amount_currency / line.balance if line.balance else 1
             line.compute_all_tax_dirty = True
             line.compute_all_tax = {
                 frozendict({
@@ -963,16 +953,16 @@ class AccountMoveLine(models.Model):
                     'move_id': line.move_id.id,
                 }): {
                     'name': tax['name'],
-                    'balance': tax['amount'],
-                    'amount_currency': tax_currency['amount'],
-                    'tax_base_amount': tax['base'] * (-1 if line.tax_tag_invert else 1),
+                    'balance': tax['amount'] / rate,
+                    'amount_currency': tax['amount'],
+                    'tax_base_amount': tax['base'] / rate * (-1 if line.tax_tag_invert else 1),
                 }
-                for tax, tax_currency in zip(compute_all['taxes'], compute_all_currency['taxes'])
-                if tax['amount'] or tax_currency['amount']
+                for tax in compute_all_currency['taxes']
+                if tax['amount']
             }
             if not line.tax_repartition_line_id:
                 line.compute_all_tax[frozendict({'id': line.id})] = {
-                    'tax_tag_ids': [(6, 0, compute_all['base_tags'])],
+                    'tax_tag_ids': [(6, 0, compute_all_currency['base_tags'])],
                 }
 
     @api.depends('tax_ids', 'account_id', 'company_id')
