@@ -1104,21 +1104,13 @@ registerModel({
         }),
         allAttachments: many('Attachment', {
             compute() {
-                const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
-                    .sort((a1, a2) => {
-                        // "uploading" before "uploaded" attachments.
-                        if (!a1.isUploading && a2.isUploading) {
-                            return 1;
-                        }
-                        if (a1.isUploading && !a2.isUploading) {
-                            return -1;
-                        }
-                        // "most-recent" before "oldest" attachments.
-                        return Math.abs(a2.id) - Math.abs(a1.id);
-                    });
-                return allAttachments;
+                return [...new Set(this.originThreadAttachments.concat(this.attachments))];
             },
             inverse: 'allThreads',
+            sort: [
+                ['truthy-first', 'isUploading'],
+                ['greater-first', 'id'],
+            ],
         }),
         areAttachmentsLoaded: attr({
             default: false,
