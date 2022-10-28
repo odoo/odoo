@@ -1104,7 +1104,7 @@ registerModel({
         }),
         allAttachments: many('Attachment', {
             compute() {
-                return [...new Set(this.originThreadAttachments.concat(this.attachments))];
+                return this.originThreadAttachments;
             },
             inverse: 'allThreads',
             sort: [
@@ -1115,7 +1115,6 @@ registerModel({
         areAttachmentsLoaded: attr({
             default: false,
         }),
-        attachments: many('Attachment'),
         attachmentsInWebClientView: many('Attachment', {
             inverse: 'threadsAsAttachmentsInWebClientView',
             readonly: true,
