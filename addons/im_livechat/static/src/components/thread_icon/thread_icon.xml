@@ -4,7 +4,7 @@
         <xpath expr="//*[@name='root']" position="inside">
             <t t-elif="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'livechat'">
                 <t t-if="threadIconView.threadTypingIconView">
-                    <ThreadTypingIcon
+                    <ThreadTypingIconView
                         className="'o_ThreadIcon_typing'"
                         record="threadIconView.threadTypingIconView"
                     />

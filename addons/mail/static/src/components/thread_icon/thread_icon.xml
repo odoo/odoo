@@ -14,7 +14,7 @@
                 </t>
                 <t t-elif="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'chat' and threadIconView.thread.channel.correspondent">
                     <t t-if="threadIconView.threadTypingIconView">
-                        <ThreadTypingIcon
+                        <ThreadTypingIconView
                             className="'o_ThreadIcon_typing flex-grow-1'"
                             record="threadIconView.threadTypingIconView"
                         />

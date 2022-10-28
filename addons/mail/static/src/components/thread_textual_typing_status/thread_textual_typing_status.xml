@@ -5,7 +5,7 @@
         <t t-if="threadTextualTypingStatusView">
             <div class="o_ThreadTextualTypingStatus d-flex" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="threadTextualTypingStatusView.threadTypingIconView">
-                    <ThreadTypingIcon record="threadTextualTypingStatusView.threadTypingIconView"/>
+                    <ThreadTypingIconView record="threadTextualTypingStatusView.threadTypingIconView"/>
                     <span class="o_ThreadTextualTypingStatus_separator ms-1"/>
                     <span class="text-truncate" t-esc="threadTextualTypingStatusView.thread.typingStatusText"/>
                 </t>

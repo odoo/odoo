@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ThreadTypingIcon extends Component {
+export class ThreadTypingIconView extends Component {
 
     /**
      * @returns {ThreadTypingIconView}
@@ -15,9 +15,9 @@ export class ThreadTypingIcon extends Component {
 
 }
 
-Object.assign(ThreadTypingIcon, {
+Object.assign(ThreadTypingIconView, {
     props: { record: Object },
-    template: 'mail.ThreadTypingIcon',
+    template: 'mail.ThreadTypingIconView',
 });
 
-registerMessagingComponent(ThreadTypingIcon);
+registerMessagingComponent(ThreadTypingIconView);
