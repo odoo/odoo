@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, mute_logger
+from odoo.tools import frozendict, mute_logger, date_utils
 
 import re
 from collections import defaultdict
@@ -23,6 +24,7 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
+    _sequence_year_range_regex = r'^(?:(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D)(?P<year_end>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix3>\D+?))?(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
@@ -47,8 +49,24 @@ class SequenceMixin(models.AbstractModel):
                     field=sql.Identifier(self._sequence_field),
                 ))
 
+    def _get_sequence_date_range(self, reset):
+        ref_date = fields.Date.to_date(self[self._sequence_date_field])
+        if reset in ('year', 'year_range'):
+            return (date(ref_date.year, 1, 1), date(ref_date.year, 12, 31))
+        if reset == 'month':
+            return date_utils.get_month(ref_date)
+        if reset == 'never':
+            return (date(1, 1, 1), date(9999, 1, 1))
+        raise NotImplementedError(reset)
+
     def _must_check_constrains_date_sequence(self):
         return True
+
+    def _year_match(self, format_value, date):
+        return format_value == self._truncate_year_to_length(date.year, len(str(format_value)))
+
+    def _truncate_year_to_length(self, year, length):
+        return year % (10 ** length)
 
     def _sequence_matches_date(self):
         self.ensure_one()
@@ -59,9 +77,11 @@ class SequenceMixin(models.AbstractModel):
             return True
 
         format_values = self._get_sequence_format_param(sequence)[1]
+        sequence_number_reset = self._deduce_sequence_number_reset(sequence)
+        year_start, year_end = self._get_sequence_date_range(sequence_number_reset)
         year_match = (
-            not format_values["year"]
-            or format_values["year"] == date.year % 10 ** len(str(format_values["year"]))
+            (not format_values["year"] or self._year_match(format_values["year"], year_start))
+            and (not format_values["year_end"] or self._year_match(format_values["year_end"], year_end))
         )
         month_match = not format_values['month'] or format_values['month'] == date.month
         return year_match and month_match
@@ -115,13 +135,23 @@ class SequenceMixin(models.AbstractModel):
         """
         for regex, ret_val, requirements in [
             (self._sequence_monthly_regex, 'month', ['seq', 'month', 'year']),
+            (self._sequence_year_range_regex, 'year_range', ['seq', 'year', 'year_end']),
             (self._sequence_yearly_regex, 'year', ['seq', 'year']),
             (self._sequence_fixed_regex, 'never', ['seq']),
         ]:
             match = re.match(regex, name or '')
             if match:
                 groupdict = match.groupdict()
-                if all(req in groupdict for req in requirements):
+                if (
+                    groupdict.get('year_end') and groupdict.get('year')
+                    and (
+                        len(groupdict['year']) < len(groupdict['year_end'])
+                        or self._truncate_year_to_length((int(groupdict['year']) + 1), len(groupdict['year_end'])) != int(groupdict['year_end'])
+                    )
+                ):
+                    # year and year_end are not compatible for range (the difference is not 1)
+                    continue
+                if all(groupdict.get(req) is not None for req in requirements):
                     return ret_val
         raise ValidationError(_(
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
@@ -211,24 +241,27 @@ class SequenceMixin(models.AbstractModel):
         regex = self._sequence_fixed_regex
         if sequence_number_reset == 'year':
             regex = self._sequence_yearly_regex
+        elif sequence_number_reset == 'year_range':
+            regex = self._sequence_year_range_regex
         elif sequence_number_reset == 'month':
             regex = self._sequence_monthly_regex
-
         format_values = re.match(regex, previous).groupdict()
         format_values['seq_length'] = len(format_values['seq'])
-        format_values['year_length'] = len(format_values.get('year', ''))
+        format_values['year_length'] = len(format_values.get('year') or '')
+        format_values['year_end_length'] = len(format_values.get('year_end') or '')
         if not format_values.get('seq') and 'prefix1' in format_values and 'suffix' in format_values:
             # if we don't have a seq, consider we only have a prefix and not a suffix
             format_values['prefix1'] = format_values['suffix']
             format_values['suffix'] = ''
-        for field in ('seq', 'year', 'month'):
+        for field in ('seq', 'year', 'month', 'year_end'):
             format_values[field] = int(format_values.get(field) or 0)
 
-        placeholders = re.findall(r'(prefix\d|seq|suffix\d?|year|month)', regex)
+        placeholders = re.findall(r'\b(prefix\d|seq|suffix\d?|year|year_end|month)\b', regex)
         format = ''.join(
             "{seq:0{seq_length}d}" if s == 'seq' else
             "{month:02d}" if s == 'month' else
             "{year:0{year_length}d}" if s == 'year' else
+            "{year_end:0{year_end_length}d}" if s == 'year_end' else
             "{%s}" % s
             for s in placeholders
         )
@@ -250,10 +283,13 @@ class SequenceMixin(models.AbstractModel):
             last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
 
         format_string, format_values = self._get_sequence_format_param(last_sequence)
+        sequence_number_reset = self._deduce_sequence_number_reset(last_sequence)
         if new:
+            date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
             format_values['seq'] = 0
-            format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
-            format_values['month'] = self[self._sequence_date_field].month
+            format_values['year'] = self._truncate_year_to_length(date_start.year, format_values['year_length'])
+            format_values['year_end'] = self._truncate_year_to_length(date_end.year, format_values['year_end_length'])
+            format_values['month'] = date_start.month
 
         # before flushing inside the savepoint (which may be rolled back!), make sure everything
         # is already flushed, otherwise we could lose non-sequence fields values, as the ORM believes
