@@ -87,7 +87,7 @@ registerModel({
         }),
         backgroundOpacity: attr({
             compute() {
-                if (this.attachmentViewer) {
+                if (this.attachmentViewer || this.messageContextMenu) {
                     return 0.7;
                 }
                 return 0.5;
@@ -123,6 +123,9 @@ registerModel({
                 }
                 if (this.linkPreviewDeleteConfirmView) {
                     return 'LinkPreviewDeleteConfirmView';
+                }
+                if (this.messageContextMenu) {
+                    return 'MessageContextMenu';
                 }
                 return clear();
             },
@@ -180,6 +183,19 @@ registerModel({
             identifying: true,
             inverse: 'deleteConfirmDialog',
         }),
+        messageContextMenu: one('MessageContextMenu', {
+            compute() {
+                if (this.messageViewOwnerAsContextMenu) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'messageContextMenuDialog',
+        }),
+        messageViewOwnerAsContextMenu: one('MessageView', {
+            // identifying: true,
+            inverse: 'messageViewDialog',
+        }),
         /**
          * Content of dialog that is directly linked to a record that models
          * a UI component, such as AttachmentViewer. These records must be
@@ -196,12 +212,15 @@ registerModel({
                 if (this.deleteMessageConfirmView) {
                     return this.deleteMessageConfirmView;
                 }
-                if (this.linkPreviewDeleteConfirmView) {
-                    return this.linkPreviewDeleteConfirmView;
-                }
                 if (this.followerSubtypeList) {
                     return this.followerSubtypeList;
                 }
+                if (this.linkPreviewDeleteConfirmView) {
+                    return this.linkPreviewDeleteConfirmView;
+                }
+                if (this.messageContextMenu) {
+                        return this.messageContextMenu;
+                    }
             },
             isCausal: true,
             required: true,

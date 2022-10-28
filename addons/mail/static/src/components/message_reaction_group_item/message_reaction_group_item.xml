@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageReactionGroupItem" owl="1">
+        <div class="o_MessageReactionGroupItem" t-attf-class="{{ className }}" t-ref="root">
+                <button class="btn p-1 rounded-1" t-att-title="messageReactionGroupItem.messageReactionGroup.content" t-on-click="() => messageReactionGroupItem.onClickReactionGroupItem(messageReactionGroupItem.messageReactionGroup)">
+                    <span class="o_MessageReactionGroupItem_content mx-1">
+                        <t t-esc="messageReactionGroupItem.messageReactionGroup.content" />
+                    </span>
+                    <span class="o_MessageReactionGroupItem_count mx-1">
+                        <t t-esc="messageReactionGroupItem.messageReactionGroup.count" />
+                    </span>
+                </button>
+        </div>
+    </t>
+
+</templates>

@@ -2,8 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageContextMenu" owl="1">
-        <div class="o_MessageContextMenu d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
-            <MessageContextReactionSummary record="messageContextMenu.reactionSummaryView" />
+        <div class="o_MessageContextMenu d-flex align-items-center justify-content-center w-100 h-100 " t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_MessageContextContainer d-flex bg-100 ">
+                <div class="text-center w-25 m-2">
+                    <t t-if="messageContextMenu.messageContextReactionItems.length > 0" t-foreach="messageContextMenu.messageContextReactionItems" t-as="messageReactionGroupItem" t-key="messageReactionGroupItem.localId">
+                        <MessageReactionGroupItem record="messageReactionGroupItem" />
+                    </t>
+                </div>
+                <div>
+                    <!-- <t t-if="messageContextMenu.messageContextReactionPartners.length > 0" t-foreach="messageContextMenu.messageContextState.partners" t-as="partner" t-key="partner.localId">
+                        <t t-esc='partner'/>
+                        </t> -->
+                </div>
+            </div>
         </div>
     </t>
 

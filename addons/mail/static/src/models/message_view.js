@@ -59,6 +59,7 @@ registerModel({
                 !isEventHandled(ev, 'Message.ClickFailure') &&
                 !isEventHandled(ev, 'MessageActionList.Click') &&
                 !isEventHandled(ev, 'MessageReactionGroupView.Click') &&
+                !isEventHandled(ev, 'MessageReactionGroupItem.Click') &&
                 !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo') &&
                 !isEventHandled(ev, 'PersonaImStatusIcon.Click')
             ) {
@@ -127,7 +128,12 @@ registerModel({
          */
          async onContextMenu(ev) {
             ev.stopPropagation();
-            // ev.preventDefault();
+            ev.preventDefault();
+            if (this.message.messageReactionGroups.length > 0)  {
+                this.update({ messageViewDialog: {} });
+            } else {
+                this.update({ messageViewDialog: clear() });
+            }      
              
             
            
@@ -500,6 +506,10 @@ registerModel({
             inverse: 'messageViews',
             required: true,
         }),
+        messageViewDialog: one('Dialog', {
+            identifying: true,
+            inverse: 'messageViewOwnerAsContextMenu',
+        }),
         /**
          * States the message in reply to view that displays the message of
          * which this message is a reply to (if any).
@@ -530,7 +540,9 @@ registerModel({
             },
             inverse: 'Owner',
         }),
-            
+        // messageContextMenu: one('MessageContextMenu', {
+        //     inverse: 'messageViewOwner',
+        // }),
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
             compute() {
                 if (
