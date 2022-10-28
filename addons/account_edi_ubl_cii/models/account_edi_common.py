@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import _, models
-from odoo.tools import float_repr
+from odoo.tools import float_repr, float_compare
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
@@ -531,6 +531,9 @@ class AccountEdiCommon(models.AbstractModel):
         # respected, and the result will not be correct, so we just follow the simple rule below:
         if net_price_unit == 0 and price_subtotal != net_price_unit * (billed_qty / basis_qty) - allow_charge_amount:
             invoice_line_form.price_unit = price_subtotal / billed_qty
+
+        return float_compare(gross_price_unit, net_price_unit,
+                             precision_rounding=self.env.company.currency_id.rounding) != 0
 
     # -------------------------------------------------------------------------
     # Check xml using the free API from Ph. Helger, don't abuse it !

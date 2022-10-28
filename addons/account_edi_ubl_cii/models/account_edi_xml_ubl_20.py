@@ -587,7 +587,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'allowance_charge_amount': './{*}Amount',  # below allowance_charge node
             'line_total_amount': './{*}LineExtensionAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
+        tax_included = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
 
         if not invoice_line_form.product_uom_id:
             logs.append(
@@ -608,6 +608,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 ('amount', '=', float(tax_node.text)),
                 ('amount_type', '=', 'percent'),
                 ('type_tax_use', '=', journal.type),
+                ('price_included', '=', tax_included)
             ], limit=1)
             if tax:
                 taxes.append(tax)
@@ -615,6 +616,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line_form.name))
 
         invoice_line_form.tax_ids.clear()
+        invoice_line_form.discount = 0.0
         for tax in taxes:
             invoice_line_form.tax_ids.add(tax)
         return logs
