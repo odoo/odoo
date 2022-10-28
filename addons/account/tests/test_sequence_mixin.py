@@ -18,6 +18,7 @@ class TestSequenceMixinCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.company_data['company'].write({'fiscalyear_last_day': "31", 'fiscalyear_last_month': "3"})
         cls.test_move = cls.create_move()
 
     @classmethod
@@ -44,6 +45,15 @@ class TestSequenceMixinCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixin(TestSequenceMixinCommon):
+    def assertNameAtDate(self, date, name):
+        test = self.create_move(date=date)
+        test.action_post()
+        self.assertEqual(test.name, name)
+        return test
+
+    def set_sequence(self, date, name):
+        return self.create_move(date=date, name=name)._post(soft=False)
+
     def test_sequence_change_date(self):
         """Change the sequence when we change the date iff it has never been posted."""
         # Check setup
@@ -280,6 +290,9 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         """Test different format of sequences and what it becomes on another period"""
         sequences = [
             ('JRNL/2016/00001', 'JRNL/2016/00002', 'JRNL/2016/00003', 'JRNL/2017/00001'),
+            ('JRNL/2015-2016/00001', 'JRNL/2015-2016/00002', 'JRNL/2016-2017/00001', 'JRNL/2016-2017/00002'),
+            ('JRNL/2015-16/00001', 'JRNL/2015-16/00002', 'JRNL/2016-17/00001', 'JRNL/2016-17/00002'),
+            ('JRNL/15-16/00001', 'JRNL/15-16/00002', 'JRNL/16-17/00001', 'JRNL/16-17/00002'),
             ('1234567', '1234568', '1234569', '1234570'),
             ('20190910', '20190911', '20190912', '20190913'),
             ('2016-0910', '2016-0911', '2016-0912', '2017-0001'),
@@ -475,32 +488,82 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/10005')
         self.assertEqual(copies[5].state, 'draft')
 
+    def test_journal_resequence_in_between_2_years_pattern(self):
+        """Resequence XMISC/2023-2024/00001 into XMISC/23-24/00001."""
+        self.test_move.name = 'XMISC/2015-2016/00001'
+        invoices = (
+            self.create_move(date="2023-03-01", post=True)
+            + self.create_move(date="2023-03-02", post=True)
+            + self.create_move(date="2023-03-03", post=True)
+            + self.create_move(date="2023-04-01", post=True)
+            + self.create_move(date="2023-04-02", post=True)
+        )
+        self.assertRecordValues(invoices, (
+            {'name': 'XMISC/2022-2023/00001', 'state': 'posted'},
+            {'name': 'XMISC/2022-2023/00002', 'state': 'posted'},
+            {'name': 'XMISC/2022-2023/00003', 'state': 'posted'},
+            {'name': 'XMISC/2023-2024/00001', 'state': 'posted'},
+            {'name': 'XMISC/2023-2024/00002', 'state': 'posted'},
+        ))
+
+        # Call the resequence wizard and change the sequence to XMISC/22-23/00001
+        # By default the sequence order should be kept
+        resequence_wizard = Form(self.env['account.resequence.wizard'].with_context(active_ids=invoices.ids, active_model='account.move'))
+        resequence_wizard.first_name = "XMISC/22-23/00001"
+        new_values = json.loads(resequence_wizard.new_values)
+        # Ensure consistencies of sequence displayed in the UI
+        self.assertEqual(new_values[str(invoices[0].id)]['new_by_name'], 'XMISC/22-23/00001')
+        self.assertEqual(new_values[str(invoices[1].id)]['new_by_name'], 'XMISC/22-23/00002')
+        self.assertEqual(new_values[str(invoices[2].id)]['new_by_name'], 'XMISC/22-23/00003')
+        self.assertEqual(new_values[str(invoices[3].id)]['new_by_name'], 'XMISC/23-24/00001')
+        self.assertEqual(new_values[str(invoices[4].id)]['new_by_name'], 'XMISC/23-24/00002')
+        resequence_wizard.save().resequence()
+
+        # Ensure the resequencing gave the same result as what was expected
+        self.assertRecordValues(invoices, (
+            {'name': 'XMISC/22-23/00001', 'state': 'posted'},
+            {'name': 'XMISC/22-23/00002', 'state': 'posted'},
+            {'name': 'XMISC/22-23/00003', 'state': 'posted'},
+            {'name': 'XMISC/23-24/00001', 'state': 'posted'},
+            {'name': 'XMISC/23-24/00002', 'state': 'posted'},
+        ))
+
     def test_sequence_get_more_specific(self):
         """There is the ability to change the format (i.e. from yearly to montlhy)."""
-        def test_date(date, name):
-            test = self.create_move(date=date)
-            test.action_post()
-            self.assertEqual(test.name, name)
-
-        def set_sequence(date, name):
-            return self.create_move(date=date, name=name)._post()
-
         # Start with a continuous sequence
         self.test_move.name = 'MISC/00001'
 
         # Change the prefix to reset every year starting in 2017
-        new_year = set_sequence(self.test_move.date + relativedelta(years=1), 'MISC/2017/00001')
+        new_year = self.set_sequence(self.test_move.date + relativedelta(years=1), 'MISC/2017/00001')
 
         # Change the prefix to reset every month starting in February 2017
-        new_month = set_sequence(new_year.date + relativedelta(months=1), 'MISC/2017/02/00001')
+        new_month = self.set_sequence(new_year.date + relativedelta(months=1), 'MISC/2017/02/00001')
 
-        test_date(self.test_move.date, 'MISC/00002')  # Keep the old prefix in 2016
-        test_date(new_year.date, 'MISC/2017/00002')  # Keep the new prefix in 2017
-        test_date(new_month.date, 'MISC/2017/02/00002')  # Keep the new prefix in February 2017
+        self.assertNameAtDate(self.test_move.date, 'MISC/00002')  # Keep the old prefix in 2016
+        self.assertNameAtDate(new_year.date, 'MISC/2017/00002')  # Keep the new prefix in 2017
+        self.assertNameAtDate(new_month.date, 'MISC/2017/02/00002')  # Keep the new prefix in February 2017
+
+        # Go fiscal year in March
+        # This will break the prefix of 2017 set previously and we will use the fiscal year prefix as of now
+        start_fiscal = self.set_sequence(new_year.date + relativedelta(months=2), 'MISC/2016-2017/00001')
+
+        self.assertNameAtDate(self.test_move.date, 'MISC/00003')  # Keep the old prefix in 2016
+        self.assertNameAtDate(new_year.date, 'MISC/2016-2017/00002')  # Prefix in January 2017 changed!
+        self.assertNameAtDate(new_month.date, 'MISC/2017/02/00003')  # Keep the new prefix in February 2017
+        self.assertNameAtDate(start_fiscal.date, 'MISC/2016-2017/00003')  # Keep the new prefix in March 2017
 
         # Change the prefix to never reset (again) year starting in 2018 (Please don't do that)
-        reset_never = set_sequence(self.test_move.date + relativedelta(years=2), 'MISC/00100')
-        test_date(reset_never.date, 'MISC/00101')  # Keep the new prefix in 2018
+        reset_never = self.set_sequence(self.test_move.date + relativedelta(years=2), 'MISC/00100')
+        self.assertNameAtDate(reset_never.date, 'MISC/00101')  # Keep the new prefix in 2018
+
+    def test_fiscal_vs_monthly(self):
+        """Monthly sequence has priority over 2 digit financial year sequence but can be overridden."""
+        self.set_sequence('2101-02-01', 'MISC/01-02/00001')
+        move = self.assertNameAtDate('2101-03-01', 'MISC/01-03/00001')
+
+        move.journal_id.sequence_override_regex = move._sequence_year_range_regex
+        move.name = 'MISC/00-01/00001'
+        self.assertNameAtDate('2101-03-01', 'MISC/00-01/00002')
 
     def test_resequence_clash(self):
         """Resequence doesn't clash when it uses a name set in the same batch
