@@ -2063,7 +2063,12 @@ class ReportController(http.Controller):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(html_escape(json.dumps(error)))
+            res = werkzeug.wrappers.Response(
+                json.dumps(error),
+                status=500,
+                headers=[("Content-Type", "application/json")]
+            )
+            raise werkzeug.exceptions.InternalServerError(response=res) from e
 
     @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):
