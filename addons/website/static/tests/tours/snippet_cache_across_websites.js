@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
         content: "Switch to website 2",
         // Ensure data-website-id exists
         extra_trigger: 'iframe html[data-website-id="1"]',
-        trigger: '.o_website_switcher_container .dropdown-item:nth-child(2)'
+        trigger: '.o_website_switcher_container .dropdown-item:contains("My Website 2")'
     },
     {
         content: "Wait for the iframe to be loaded",
