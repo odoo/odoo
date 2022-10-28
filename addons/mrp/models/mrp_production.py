@@ -693,20 +693,28 @@ class MrpProduction(models.Model):
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
-        if self.product_id.tracking == 'serial':
+        res = self._can_produce_serial_number()
+        if res is not True:
+            return res
+
+    def _can_produce_serial_number(self, sn=None):
+        self.ensure_one()
+        sn = sn or self.lot_producing_id
+        if self.product_id.tracking == 'serial' and sn:
             if self.env['stock.move.line'].search([
-                ('lot_id', '=', self.lot_producing_id.id),
+                ('lot_id', '=', sn.id),
                 ('qty_done', '=', 1),
                 ('state', '=', 'done'),
                 ('location_id.usage', '!=', 'production'),
                 ('location_dest_id.usage', '!=', 'production'),
-            ], limit=1) or self._is_finished_sn_already_produced(self.lot_producing_id):
+            ], limit=1) or self._is_finished_sn_already_produced(sn):
                 return {
                     'warning': {
                         'title': _('Warning'),
-                        'message': _('Existing Serial number (%s). Please correct the serial numbers encoded.') % self.lot_producing_id.name
+                        'message': _('Serial number (%s) has already been produced.') % sn.name,
                     }
                 }
+        return True
 
     @api.onchange('bom_id')
     def _onchange_workorder_ids(self):
