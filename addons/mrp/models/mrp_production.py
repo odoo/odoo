@@ -775,11 +775,17 @@ class MrpProduction(models.Model):
     def create(self, values):
         # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
         # into `move_finished_ids` to avoid duplicate and inconsistency.
+        values_copy = values.copy()
+        vl_byprodct = []
         if values.get('move_finished_ids', False):
-            values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values['move_finished_ids']))
+            values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values_copy['move_finished_ids']))
+            vl_byprodct = list(filter(lambda move: bool(move[2].get('byproduct_id', False)), values_copy['move_finished_ids']))
         if values.get('move_byproduct_ids', False):
             values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
             del values['move_byproduct_ids']
+        else:
+            if bool(vl_byprodct):
+                values['move_finished_ids'] = values.get('move_finished_ids', []) + vl_byprodct
         if not values.get('name', False) or values['name'] == _('New'):
             picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
             picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
