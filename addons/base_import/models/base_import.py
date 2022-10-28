@@ -224,27 +224,26 @@ class Import(models.TransientModel):
         # TODO: cache on model?
         return importable_fields
 
+    def _import_handler(self, file_extension, handler, options, filetype):
+        if handler:
+            try:
+                return getattr(self, '_read_' + file_extension)(options)
+            except Exception:
+                filename = self.file_name or '<unknown>'
+                _logger.warn(f'Failed to read file {filename} (transient id {self.id}) as type {filetype}')
+
     def _read_file(self, options):
         """ Dispatch to specific method to read file content, according to its mimetype or file type
             :param options : dict of reading options (quoting, separator, ...)
         """
         self.ensure_one()
-        # guess mimetype from file content
         mimetype = guess_mimetype(self.file or b'')
-        (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
-        if handler:
-            try:
-                return getattr(self, '_read_' + file_extension)(options)
-            except Exception:
-                _logger.warn("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
-
-        # try reading with user-provided mimetype
-        (file_extension, handler, req) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
-        if handler:
-            try:
-                return getattr(self, '_read_' + file_extension)(options)
-            except Exception:
-                _logger.warn("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
+        if mimetype in FILE_TYPE_DICT:
+            filetype = mimetype
+        else:
+            filetype = self.file_type
+        (file_extension, handler, req) = FILE_TYPE_DICT.get(filetype, (None, None, None))
+        self._import_handler(file_extension, handler, options, filetype)
 
         # fallback on file extensions as mime types can be unreliable (e.g.
         # software setting incorrect mime types, or non-installed software
