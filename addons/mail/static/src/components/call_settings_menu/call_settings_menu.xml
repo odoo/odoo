@@ -11,8 +11,8 @@
                         <div>
                             <select name="inputDevice" class="o_CallSettingsMenu_optionDeviceSelect form-select" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="callSettingsMenu.onChangeSelectAudioInput">
                                 <option value="">Browser default</option>
-                                <t t-foreach="callSettingsMenu.userDevices" t-as="device" t-key="device_index">
-                                    <CallSettingsMenuDevice device="device"/>
+                                <t t-foreach="callSettingsMenu.devices" t-as="device" t-key="device">
+                                    <CallSettingsMenuDevice record="device"/>
                                 </t>
                             </select>
                         </div>
