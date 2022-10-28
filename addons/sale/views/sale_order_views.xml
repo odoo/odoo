@@ -142,7 +142,7 @@
         <field name="model">sale.order</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <tree string="Quotation" class="o_sale_order" sample="1"
+            <tree string="Quotation" class="o_sale_order" sample="1" js_class="sale_list"
                 decoration-info="state in ['draft', 'sent']"
                 decoration-muted="state == 'cancel'">
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
@@ -925,7 +925,6 @@
     </record>
 
     <!-- ACTIONS (SERVER) -->
-
     <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
         <field name="name">Mark Quotation as Sent</field>
         <field name="model_id" ref="sale.model_sale_order"/>
