@@ -108,7 +108,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_loadMore',
+        '.o_MessageListView_loadMore',
         "should not have the 'load more' button"
     );
 

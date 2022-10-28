@@ -69,13 +69,13 @@ QUnit.test('message list asc order', async function (assert) {
             );
         },
     });
-    const messageItems = document.querySelectorAll(`.o_MessageList_item`);
+    const messageItems = document.querySelectorAll(`.o_MessageListView_item`);
     assert.notOk(
-        messageItems[messageItems.length - 1].classList.contains("o_MessageList_loadMore"),
+        messageItems[messageItems.length - 1].classList.contains("o_MessageListView_loadMore"),
         "load more link should be before messages"
     );
     assert.ok(
-        messageItems[0].classList.contains("o_MessageList_loadMore"),
+        messageItems[0].classList.contains("o_MessageListView_loadMore"),
         "load more link should NOT be after messages"
     );
     assert.strictEqual(
@@ -355,7 +355,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
@@ -374,7 +374,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "still no separator shown when current partner posted a message"
     );
 });
@@ -417,12 +417,12 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
 
     assert.containsOnce(
         document.body,
-        '.o_MessageList_message',
+        '.o_MessageListView_message',
         "should have an initial message"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
@@ -460,13 +460,13 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "'new messages' separator should be shown"
     );
 
     assert.containsOnce(
         document.body,
-        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-id="${mailMessageId1 + 1}"]`,
+        `.o_MessageListView_separatorNewMessages ~ .o_Message[data-message-id="${mailMessageId1 + 1}"]`,
         "'new messages' separator should be shown above new message received"
     );
 
@@ -483,7 +483,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     }));
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "'new messages' separator should no longer be shown as last message has been seen"
     );
 });
@@ -511,12 +511,12 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_MessageList_message',
+        '.o_MessageListView_message',
         "should have no messages"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
@@ -529,7 +529,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "still no separator shown when current partner posted a message"
     );
 });
@@ -1147,7 +1147,7 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageList_empty',
+        '.o_MessageListView_empty',
         "message list empty placeholder should be shown as thread does not contain any messages"
     );
     assert.containsNone(
@@ -1185,7 +1185,7 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageList_empty',
+        '.o_MessageListView_empty',
         "message list empty placeholder should be shown as thread contain only empty messages"
     );
     assert.containsNone(
@@ -1283,7 +1283,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_loadMore',
+        '.o_MessageListView_loadMore',
         "Load more button should be shown as there are more messages to show"
     );
 });
@@ -1341,14 +1341,14 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "separator should be shown as a message has been received"
     );
     assert.containsOnce(
         document.body,
         `.o_Message[data-message-id="${
             transientMessage.id
-        }"] + .o_MessageList_separatorNewMessages`,
+        }"] + .o_MessageListView_separatorNewMessages`,
         "separator should be shown just after transient message"
     );
 });
@@ -1461,7 +1461,7 @@ QUnit.test('failure on loading more messages should not alter message list displ
     await openDiscuss();
 
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
+    await click('.o_MessageListView_loadMore');
     assert.containsN(
         document.body,
         '.o_Message',
@@ -1504,20 +1504,20 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     await openDiscuss();
 
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
+    await click('.o_MessageListView_loadMore');
     assert.containsOnce(
         document.body,
-        '.o_MessageList_alertLoadingFailed',
+        '.o_MessageListView_alertLoadingFailed',
         "should show loading error message"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_alertLoadingFailedRetryButton',
+        '.o_MessageListView_alertLoadingFailedRetryButton',
         "should show loading error message button"
     );
     assert.containsNone(
         document.body,
-        '.o_MessageList_loadMore',
+        '.o_MessageListView_loadMore',
         "should not show load more buttton"
     );
 });
@@ -1555,12 +1555,12 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     });
     await openDiscuss();
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
+    await click('.o_MessageListView_loadMore');
 
     messageFetchShouldFail = false;
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_MessageList_alertLoadingFailedRetryButton').click(),
+        func: () => document.querySelector('.o_MessageListView_alertLoadingFailedRetryButton').click(),
         message: "should wait until channel loaded more messages after clicked on load more",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1598,7 +1598,7 @@ QUnit.test("highlight the message mentioning the current user inside the channel
     });
     await openDiscuss();
     assert.hasClass(
-        document.querySelector(`.o_MessageList .o_Message`),
+        document.querySelector(`.o_MessageListView .o_Message`),
         'o-highlighted',
         "message should be highlighted"
     );
@@ -1631,7 +1631,7 @@ QUnit.test("not highlighting the message if not mentioning the current user insi
     });
     await openDiscuss();
     assert.doesNotHaveClass(
-        document.querySelector(`.o_MessageList .o_Message`),
+        document.querySelector(`.o_MessageListView .o_Message`),
         'o-highlighted',
         "message should not be highlighted"
     );

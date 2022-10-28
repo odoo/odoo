@@ -218,7 +218,7 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageList',
+        '.o_MessageListView',
         "should have a message list",
     );
     assert.containsNone(
@@ -243,7 +243,7 @@ QUnit.test('non-livechat channel should not show visitor banner', async function
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_MessageList',
+        '.o_MessageListView',
         "should have a message list",
     );
     assert.containsNone(

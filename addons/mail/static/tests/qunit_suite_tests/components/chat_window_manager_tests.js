@@ -1484,7 +1484,7 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
             { key: 'Enter' },
         )
     );
-    const messageList = document.querySelector('.o_MessageList');
+    const messageList = document.querySelector('.o_MessageListView');
     assert.ok(
         isScrolledToBottom(messageList),
         "chat window should scroll to the newly posted message just after posting it"
@@ -1751,7 +1751,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should display 'new messages' separator in the conversation, from reception of new messages"
     );
 });
@@ -1785,7 +1785,7 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
     }));
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should not display 'new messages' separator in the conversation of a chat on receiving new message if there is no history of conversation"
     );
 });
@@ -1828,7 +1828,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     }));
     assert.containsOnce(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "should display 'new messages' separator in the conversation, from reception of new messages"
     );
 
@@ -1845,7 +1845,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     }));
     assert.containsNone(
         document.body,
-        '.o_MessageList_separatorNewMessages',
+        '.o_MessageListView_separatorNewMessages',
         "new message separator should no longer be shown, after focus on composer text input of chat window"
     );
 });

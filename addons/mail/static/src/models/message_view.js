@@ -385,7 +385,7 @@ registerModel({
         extraClass: attr({
             compute() {
                 if (this.messageListViewItemOwner) {
-                    return 'o_MessageList_item o_MessageList_message';
+                    return 'o_MessageListView_item o_MessageListView_message';
                 }
                 return clear();
             },
