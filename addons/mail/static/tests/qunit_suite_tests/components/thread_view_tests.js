@@ -590,26 +590,26 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     await click('.o_Message_notificationIconClickable');
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent',
+        '.o_MessageNotificationPopoverContentView',
         "notification popover should be opened after notification has been clicked"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationIcon',
+        '.o_MessageNotificationPopoverContentView_notificationIcon',
         "an icon should be shown in notification popover"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationIcon.fa.fa-trash-o',
+        '.o_MessageNotificationPopoverContentView_notificationIcon.fa.fa-trash-o',
         "the icon shown in notification popover should be the canceled icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageNotificationPopoverContent_notificationPartnerName',
+        '.o_MessageNotificationPopoverContentView_notificationPartnerName',
         "partner name should be shown in notification popover"
     );
     assert.strictEqual(
-        document.querySelector('.o_MessageNotificationPopoverContent_notificationPartnerName').textContent.trim(),
+        document.querySelector('.o_MessageNotificationPopoverContentView_notificationPartnerName').textContent.trim(),
         "Someone",
         "partner name shown in notification popover should be the one concerned by the notification"
     );

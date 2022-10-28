@@ -228,7 +228,7 @@ registerModel({
                     return 'ActivityListView';
                 }
                 if (this.messageNotificationPopoverContentView) {
-                    return 'MessageNotificationPopoverContent';
+                    return 'MessageNotificationPopoverContentView';
                 }
                 return clear();
             },
