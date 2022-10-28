@@ -2476,6 +2476,8 @@ exports.Orderline = Backbone.Model.extend({
             product_name:       this.get_product().display_name,
             product_name_wrapped: this.generate_wrapped_product_name(),
             price_lst:          this.get_lst_price(),
+            fixed_lst_price:    this.get_fixed_lst_price(),
+            price_manually_set: this.price_manually_set,
             display_discount_policy:    this.display_discount_policy(),
             price_display_one:  this.get_display_price_one(),
             price_display :     this.get_display_price(),
