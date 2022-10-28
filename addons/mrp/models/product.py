@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 import operator as py_operator
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
@@ -30,6 +30,19 @@ class ProductTemplate(models.Model):
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+
+    @api.depends('product_variant_count', 'bom_ids', 'bom_ids.type')
+    def _compute_show_on_hand_qty_status_button(self):
+        super()._compute_show_on_hand_qty_status_button()
+        # If the `super` call defines the field as True, in case this is a kit, we need to check some additional
+        # conditions: we hide all information relative to the kit quantity if a template has more than one variant and
+        # if at least one of the variants is a kit
+        for template in self:
+            if not template.show_on_hand_qty_status_button or template.product_variant_count <= 1:
+                continue
+            domain = self.env['mrp.bom']._bom_find_domain(product_tmpl=template, bom_type='phantom', company_id=self.env.company.id)
+            kit_count = self.env['mrp.bom'].search_count(domain)
+            template.show_on_hand_qty_status_button = kit_count == 0
 
     def _compute_bom_count(self):
         for product in self:

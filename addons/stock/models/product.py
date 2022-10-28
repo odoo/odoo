@@ -635,6 +635,12 @@ class ProductTemplate(models.Model):
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids', readonly=False, related_sudo=False)
+    show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_on_hand_qty_status_button')
+
+    @api.depends('type')
+    def _compute_show_on_hand_qty_status_button(self):
+        for template in self:
+            template.show_on_hand_qty_status_button = template.type == 'product'
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):
