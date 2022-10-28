@@ -32,6 +32,12 @@ registerModel({
         messageReactionGroupViews: many('MessageReactionGroupView', {
             inverse: 'messageReactionGroup',
         }),
+        messageContextReactionItems: many('MessageReactionGroupItem', {
+            inverse: 'messageReactionGroup',
+        }),
+        messageContextReactionPartners: many('MessageReactionGroupPartner', {
+            inverse: 'messageReactionGroup',
+        }),
         /**
          * States the partners that have used this reaction on this message.
          */
