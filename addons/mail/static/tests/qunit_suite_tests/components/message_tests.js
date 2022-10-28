@@ -270,7 +270,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     );
     assert.containsNone(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message component should not have any check (V) as message is not yet received"
     );
 
@@ -286,7 +286,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message seen indicator component should only contain one check (V) as message is just received"
     );
 });
@@ -325,7 +325,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     );
     assert.containsNone(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message component should not have any check (V) as message is not yet received"
     );
 
@@ -340,7 +340,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     });
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "message seen indicator component should contain two checks (V) as message is seen"
     );
@@ -380,7 +380,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     );
     assert.containsNone(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message component should not have any check (V) as message is not yet received"
     );
 
@@ -395,7 +395,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         "message seen indicator component should only contain one check (V) as message is just received"
     );
 
@@ -409,7 +409,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received are correc
     });
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         2,
         "message seen indicator component should contain two checks (V) as message is now seen"
     );
@@ -505,7 +505,7 @@ QUnit.test('do not show message seen indicator on all the messages of the curren
     );
     assert.containsNone(
         document.body,
-        `.o_Message[data-id=${beforeLastMailMessageId}] .o_MessageSeenIndicator_icon`,
+        `.o_Message[data-id=${beforeLastMailMessageId}] .o_MessageSeenIndicatorView_icon`,
         "message component should not have any check (V) because it is older than the last message seen by everyone"
     );
 });
@@ -554,7 +554,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     );
     assert.containsN(
         document.body,
-        '.o_MessageSeenIndicator_icon',
+        '.o_MessageSeenIndicatorView_icon',
         1,
         "message component should have one check (V) because the message was fetched by everyone but no other member than author has seen the message"
     );

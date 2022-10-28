@@ -55,7 +55,7 @@
                             </t>
                             <t t-if="!messageView.isActive and messageView.messageSeenIndicatorView">
                                 <div t-att-class="{ 'position-absolute bottom-0 mb-1': !messageView.isInChatter }">
-                                    <MessageSeenIndicator className="'o_Message_seenIndicator me-1'" record="messageView.messageSeenIndicatorView"/>
+                                    <MessageSeenIndicatorView className="'o_Message_seenIndicator me-1'" record="messageView.messageSeenIndicatorView"/>
                                 </div>
                             </t>
                         </t>
@@ -96,7 +96,7 @@
                                     </small>
                                 </t>
                                 <t t-if="messageView.messageSeenIndicatorView">
-                                    <MessageSeenIndicator className="'o_Message_seenIndicator ms-1'" record="messageView.messageSeenIndicatorView"/>
+                                    <MessageSeenIndicatorView className="'o_Message_seenIndicator ms-1'" record="messageView.messageSeenIndicatorView"/>
                                 </t>
                                 <t t-if="messageView.messageListViewItemOwner and messageView.message.originThread and messageView.message.originThread !== messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread">
                                     <small class="o_Message_originThread me-2" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
