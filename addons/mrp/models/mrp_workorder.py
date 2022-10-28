@@ -433,6 +433,12 @@ class MrpWorkorder(models.Model):
     def _onchange_expected_duration(self):
         self.duration_expected = self._get_duration_expected()
 
+    @api.onchange('finished_lot_id')
+    def _onchange_finished_lot_id(self):
+        res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+        if res is not True:
+            return res
+
     def write(self, values):
         if 'production_id' in values:
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
@@ -870,16 +876,8 @@ class MrpWorkorder(models.Model):
             )
 
     def _check_sn_uniqueness(self):
-        """ Alert the user if the serial number as already been produced """
-        if self.product_tracking == 'serial' and self.finished_lot_id:
-            sml = self.env['stock.move.line'].search_count([
-                ('lot_id', '=', self.finished_lot_id.id),
-                ('location_id.usage', '=', 'production'),
-                ('qty_done', '=', 1),
-                ('state', '=', 'done')
-            ])
-            if sml:
-                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
+        # todo master: remove
+        pass
 
     def _update_qty_producing(self, quantity):
         self.ensure_one()
