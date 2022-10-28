@@ -66,7 +66,7 @@ import {
     hasTableSelection,
     pxToFloat,
     parseHTML,
-    splitTextNode,
+    splitTextNode
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -185,15 +185,9 @@ function defaultOptions(defaultObject, object) {
     return newObject;
 }
 function getImageFiles(dataTransfer) {
-    let files;
-    if (!dataTransfer.items) {
-        files = [...dataTransfer.items]
-            .filter(item => item.kind === 'file' && item.type.includes('image/'))
-            .map((item) => item.getAsFile());
-    } else {
-        files = [...dataTransfer.files];
-    }
-    return files || [];
+    return [...dataTransfer.items]
+        .filter(item => item.kind === 'file' && item.type.includes('image/'))
+        .map((item) => item.getAsFile());
 }
 function getImageUrl (file) {
     return new Promise((resolve, reject) => {
@@ -588,6 +582,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'mouseup', this._onMouseup);
         this.addDomListener(this.editable, 'mousemove', this._onMousemove);
         this.addDomListener(this.editable, 'paste', this._onPaste);
+        this.addDomListener(this.editable, 'dragstart', this._onDragStart);
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
         this.addDomListener(this.document, 'copy', this._onClipboardCopy);
@@ -3934,15 +3929,18 @@ export class OdooEditor extends EventTarget {
      * @param {File[]} imageFiles
      */
     addImagesFiles(imageFiles) {
+        const promises = [];
         for (const imageFile of imageFiles) {
             const imageNode = document.createElement('img');
             imageNode.style.width = '100%';
+            imageNode.classList.add('img-fluid');
             imageNode.dataset.fileName = imageFile.name;
-            getImageUrl(imageFile).then((url)=> {
+            promises.push(getImageUrl(imageFile).then(url => {
                 imageNode.src = url;
-                this.execCommand('insert', imageNode);
-            });
+                return imageNode.outerHTML;
+            }));
         }
+        return Promise.all(promises).then(html => html.join(''));
     }
     /**
      * Handle safe pasting of html or plain text into the editor.
@@ -3972,10 +3970,10 @@ export class OdooEditor extends EventTarget {
             if (fragment.hasChildNodes()) {
                 this.execCommand('insert', fragment);
             }
+        } else if (files.length) {
+            this.addImagesFiles(files).then(html => this.execCommand('insert', this._prepareClipboardData(html)));
         } else if (clipboardHtml) {
             this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
-        } else if (files.length) {
-            this.addImagesFiles(files);
         } else {
             const text = ev.clipboardData.getData('text/plain');
             let splitAroundUrl = [text];
@@ -4143,17 +4141,16 @@ export class OdooEditor extends EventTarget {
             this.historyStep();
         }
     }
+    _onDragStart(ev) {
+        if (ev.target.nodeName === 'IMG') {
+            ev.dataTransfer.setData('text/plain', `oid:${ev.target.oid}`);
+        }
+    }
     /**
      * Handle safe dropping of html into the editor.
      */
     _onDrop(ev) {
         ev.preventDefault();
-
-        const imageFiles = getImageFiles(ev.dataTransfer);
-        if (imageFiles.length) {
-            this.addImagesFiles(imageFiles);
-            return;
-        }
 
         const sel = this.document.getSelection();
         let isInEditor = false;
@@ -4164,21 +4161,36 @@ export class OdooEditor extends EventTarget {
             }
             ancestor = ancestor.parentNode;
         }
-        const transferItem = [...(ev.originalEvent || ev).dataTransfer.items].find(
+        const dataTransfer = (ev.originalEvent || ev).dataTransfer;
+        const imageOidMatch = (dataTransfer.getData('text') || '').match('oid:(.*)');
+        const imageOid = imageOidMatch && imageOidMatch[1];
+        const image = imageOid && [...this.editable.querySelectorAll('*')].find(
+            node => node.oid === imageOid,
+        );
+        const fileTransferItems = getImageFiles(dataTransfer);
+        const htmlTransferItem = [...dataTransfer.items].find(
             item => item.type === 'text/html',
         );
-        if (transferItem) {
-            transferItem.getAsString(pastedText => {
-                if (isInEditor && !sel.isCollapsed) {
-                    this.deleteRange(sel);
-                }
-                if (this.document.caretPositionFromPoint) {
-                    const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
-                    setSelection(range.offsetNode, range.offset);
-                } else if (this.document.caretRangeFromPoint) {
-                    const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
-                    setSelection(range.startContainer, range.startOffset);
-                }
+        if (image || fileTransferItems.length || htmlTransferItem) {
+            if (this.document.caretPositionFromPoint) {
+                const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                setSelection(range.offsetNode, range.offset);
+            } else if (this.document.caretRangeFromPoint) {
+                const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
+                setSelection(range.startContainer, range.startOffset);
+            }
+        }
+        if (image) {
+            image.classList.toggle('img-fluid', true);
+            const html = image.outerHTML;
+            image.remove();
+            this.execCommand('insert', this._prepareClipboardData(html));
+        } else if (fileTransferItems.length) {
+            this.addImagesFiles(fileTransferItems).then(html => {
+                this.execCommand('insert', this._prepareClipboardData(html));
+            });
+        } else if (htmlTransferItem) {
+            htmlTransferItem.getAsString(pastedText => {
                 this.execCommand('insert', this._prepareClipboardData(pastedText));
             });
         }
