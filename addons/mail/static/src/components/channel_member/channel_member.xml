@@ -7,7 +7,7 @@
                 <img class="o_ChannelMember_avatar rounded-circle w-100 h-100" t-att-src="channelMemberView.channelMember.avatarUrl" alt="Avatar"/>
 
                 <t t-if="channelMemberView.personaImStatusIconView">
-                    <PersonaImStatusIcon
+                    <PersonaImStatusIconView
                         className="'o_ChannelMember_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-light'"
                         classNameObj="{
                             'o-isDeviceSmall': messaging.device.isSmall,

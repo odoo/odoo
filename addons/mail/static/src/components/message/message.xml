@@ -34,7 +34,7 @@
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative">
                                 <img class="o_Message_authorAvatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-class="{ 'cursor-pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.authorTitleText" t-att-alt="messageView.authorTitleText"/>
                                 <t t-if="messageView.personaImStatusIconView">
-                                    <PersonaImStatusIcon
+                                    <PersonaImStatusIconView
                                         className="'o_Message_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"
                                         classNameObj="{
                                             'o-message-selected': messageView.isSelected,

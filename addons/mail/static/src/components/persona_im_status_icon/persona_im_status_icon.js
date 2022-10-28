@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class PersonaImStatusIcon extends Component {
+export class PersonaImStatusIconView extends Component {
 
     /**
      * @returns {PersonaImStatusIconView}
@@ -15,9 +15,9 @@ export class PersonaImStatusIcon extends Component {
 
 }
 
-Object.assign(PersonaImStatusIcon, {
+Object.assign(PersonaImStatusIconView, {
     props: { record: Object },
-    template: 'mail.PersonaImStatusIcon',
+    template: 'mail.PersonaImStatusIconView',
 });
 
-registerMessagingComponent(PersonaImStatusIcon);
+registerMessagingComponent(PersonaImStatusIconView);
