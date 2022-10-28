@@ -736,12 +736,18 @@ class MrpProduction(models.Model):
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
-        if self.product_id.tracking == 'serial' and self.lot_producing_id:
-            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
-                                                                                 self.lot_producing_id,
-                                                                                 self.company_id)
+        res = self._can_produce_serial_number()
+        if res is not True:
+            return res
+
+    def _can_produce_serial_number(self, sn=None):
+        self.ensure_one()
+        sn = sn or self.lot_producing_id
+        if self.product_id.tracking == 'serial' and sn:
+            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
+        return True
 
     @api.onchange('product_id', 'move_raw_ids')
     def _onchange_product_id(self):
