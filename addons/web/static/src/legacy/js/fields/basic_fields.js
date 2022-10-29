@@ -3952,10 +3952,6 @@ var AceEditor = DebouncedField.extend({
             showPrintMargin: false,
         });
         if (this.mode === 'readonly') {
-            this.aceEditor.renderer.setOptions({
-                displayIndentGuides: false,
-                showGutter: false,
-            });
             this.aceEditor.setOptions({
                 highlightActiveLine: false,
                 highlightGutterLine: false,
