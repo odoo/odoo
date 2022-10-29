@@ -81,7 +81,7 @@ class Http(models.AbstractModel):
             'web.max_file_upload_size',
             default=128 * 1024 * 1024,  # 128MiB
         ))
-        mods = odoo.conf.server_wide_modules or []
+        mods = list(request.env.registry._init_modules) + (odoo.conf.server_wide_modules or [])
         session_info = {
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,
