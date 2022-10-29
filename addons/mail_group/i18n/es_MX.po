@@ -26,6 +26,8 @@ msgid ""
 ") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">and send them "
 "an email</span>."
 msgstr ""
+") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">y enviarles un"
+" correo</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -47,7 +49,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hola,<br/><br/>\n"
-"                Pidió  suscribirse a la lista de envíos. <strong t-out=\"object.name or ''\"/>.\n"
+"                Pidió  suscribirse a la lista de correos. <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
 "                Para confirmar vaya al siguiente enlace: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
@@ -101,8 +103,8 @@ msgid ""
 "<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
 "title=\"Previous message\"/>"
 msgstr ""
-"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
-"title=\"Previous message\"/>"
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Mensaje previo\" "
+"title=\"Mensaje previo\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -110,13 +112,13 @@ msgid ""
 "<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
-"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
-"title=\"Next message\"/>"
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Mensaje siguiente\""
+" title=\"Mensaje siguiente\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Fecha\" title=\"Fecha\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -124,8 +126,8 @@ msgid ""
 "<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
 " title=\"Show attachments\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
-" title=\"Show attachments\"/>"
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Mostrar archivos "
+"adjuntos\" title=\"Mostrar archivos adjuntos\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -133,8 +135,8 @@ msgid ""
 "<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
 "title=\"Show replies\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
-"title=\"Show replies\"/>"
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Mostrar "
+"respuestas\" title=\"Mostrar respuestas\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -142,8 +144,8 @@ msgid ""
 "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
-"attachments\" title=\"Hide attachments\"/>"
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Ocultar archivos "
+"adjuntos\" title=\"Ocultar archivos adjuntos\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -151,18 +153,22 @@ msgid ""
 "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
 "title=\"Hide replies\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
-"title=\"Hide replies\"/>"
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Ocultar "
+"respuestas\" title=\"Ocultar respuestas\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Seudónimo\" "
+"title=\"Seudónimo\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
 msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Seudónimo\" "
+"title=\"Seudónimo\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -170,8 +176,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
-"title=\"Recipients\"/>"
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Destinatarios\" "
+"title=\"Destinatarios\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -184,6 +190,8 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">En la lista blanca</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Desautorizado</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -284,13 +292,13 @@ msgstr "Todos los mensajes de este grupo"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Allowed Emails"
-msgstr "Correo electrónicos permitidos"
+msgstr "Correos electrónicos permitidos"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Alone we can do so little, together we can do so much"
 msgstr ""
-"No es mucho lo que podemos hacer solos, pero juntos podemos hacer tanto."
+"No es mucho lo que podemos hacer solos, pero juntos podemos hacer mucho más."
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
@@ -638,7 +646,7 @@ msgstr "Dirección de correo electrónico inválida %r"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr "Enlace de confirmación inválido o caducado."
+msgstr "Enlace de confirmación inválido o vencido."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -720,12 +728,12 @@ msgstr "Enviar correo al administrador del grupo"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "Grupo de correo: suscripción a la lista de correos"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "Grupo de correos: cancelar la suscripción a la lista de correos"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -946,6 +954,9 @@ msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
+"¿Necesita cancelar la suscripción? <br/>¡Está justo aquí!  <span class=\"fa "
+"fa-2x fa-arrow-down float-end\" role=\"igm\" aria-label=\"\" title=\"¡Lea "
+"esto!\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
@@ -1050,12 +1061,12 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr "Partners que son miemnro"
+msgstr "Contactos que son miembros"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
@@ -1152,7 +1163,7 @@ msgstr "Rechazar mensaje grupal"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject Silently"
-msgstr ""
+msgstr "Rechazar sin notificar"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -1241,11 +1252,14 @@ msgstr "Enviar lineamientos a los nuevos suscriptores "
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
+"Se le envía a personas que cancelaron su suscripción a un grupo de correos "
+"con reaglas de grupo"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
 msgstr ""
+"Enviado a personas que cancelaron su suscripción de un grupo de correo"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1277,7 +1291,7 @@ msgstr "Suscribirse"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "Confirmación de suscripción a un grupo de correo"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
@@ -1466,7 +1480,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr "Tiene mensajes que moderar, por favor, siga los procedimientos."
+msgstr "Tiene mensajes que moderar, siga los procedimientos."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1491,7 +1505,7 @@ msgstr "por"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr "p. ej. \"Newsletter\""
+msgstr "p. ej. \"Boletín\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search

@@ -24,9 +24,9 @@
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
 # Pedro Filipe <pedro2.10@hotmail.com>, 2022
-# Nuno Silva <nuno.silva@arxi.pt>, 2022
 # Pedro Castro Silva <pedrocs@exo.pt>, 2022
 # Manuela Silva <mmsrs@sky.com>, 2022
+# Nuno Silva <nuno.silva@arxi.pt>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2022\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,7 +97,7 @@ msgstr "Faturas Reconciliadas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr ""
+msgstr "# Linhas de Extrato Reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -186,6 +186,8 @@ msgid ""
 "%s has reached its Credit Limit of : %s\n"
 "Total amount due "
 msgstr ""
+"%s chegou ao Limite de Crédito de : %s\n"
+"Valor total vencido "
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -2490,6 +2492,11 @@ msgid "Analytic Distribution Stored Char"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
+msgid "Analytic Filter"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
 msgstr "Items Analíticos"
@@ -2995,7 +3002,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_cash
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_cash
 msgid "Bank and Cash"
-msgstr "Bancos e Caixa"
+msgstr "Banco e Caixa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -6110,11 +6117,6 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
-msgid "Filter Analytic"
 msgstr ""
 
 #. module: account
@@ -13060,7 +13062,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Termos & Condições: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration
@@ -13133,7 +13135,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
-msgstr ""
+msgstr "A conta %s (%s) está descontinuada."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -13141,6 +13143,7 @@ msgstr ""
 #, python-format
 msgid "The account code can only contain alphanumeric characters and dots."
 msgstr ""
+"O código da conta deve conter apenas caracteres alfanuméricos e pontos."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -15923,7 +15926,7 @@ msgstr "p.ex.: Taxas Bancárias"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
-msgstr ""
+msgstr "ex. Ativos Correntes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -16033,7 +16036,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "on"
-msgstr "no(a)"
+msgstr "de"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

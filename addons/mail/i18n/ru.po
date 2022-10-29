@@ -19,11 +19,11 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
 # ILMIR <karamov@it-projects.info>, 2022
 # Sergo S, 2022
-# Валерий Хохлов, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
+# Валерий Хохлов, 2022
+# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ivan Kropotkin <yelizariev@itpp.dev>, 2022\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -433,7 +433,7 @@ msgstr "<span class=\"o_form_label\">Действия</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Дополнительные ICE серверы</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1272,7 +1272,7 @@ msgstr "Далеко"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Background blur intensity"
-msgstr ""
+msgstr "Интенсивность размытия"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -1329,7 +1329,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Blur video background"
-msgstr ""
+msgstr "Размыть фон вашего видео"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -1787,7 +1787,7 @@ msgstr "Настройки"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr ""
+msgstr "Настроить собственные ICE серверы для webRTC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2266,7 +2266,7 @@ msgstr "Delay Type"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Delay after releasing push-to-talk"
-msgstr ""
+msgstr "Задержка после отпускания клавиши"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
@@ -2609,7 +2609,7 @@ msgstr "Продолжительность активации голосом в 
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Edge blur intensity"
-msgstr ""
+msgstr "Порог размытия"
 
 #. module: mail
 #. openerp-web
@@ -2849,7 +2849,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
-msgstr ""
+msgstr "Включить Нажми-и-говори"
 
 #. module: mail
 #. openerp-web
@@ -3468,19 +3468,19 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "ICE Servers"
-msgstr ""
+msgstr "ICE серверы"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE server"
-msgstr ""
+msgstr "ICE сервер"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
 #: model:ir.ui.menu,name:mail.mail_channel_ice_servers_menu
 msgid "ICE servers"
-msgstr ""
+msgstr "ICE серверы"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__id
@@ -4279,6 +4279,7 @@ msgstr "Загрузка"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
+#: code:addons/mail/static/src/models/emoji_grid_loading_screen.js:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
@@ -5791,6 +5792,22 @@ msgid "Please complete customer's information"
 msgstr "Пожалуйста, заполните информацию по клиенту"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid "Invalid Partner"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid ""
+"The information you have entered does not match the existing contact "
+"information for this record. The partner was not created."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
 msgstr "Пожалуйста, свяжитесь с нами вместо этого"
@@ -6969,7 +6986,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Show video participants only"
-msgstr ""
+msgstr "Показать только участников с видео"
 
 #. module: mail
 #. openerp-web
@@ -8011,15 +8028,15 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Используйте `Конкретный пользователь`, чтобы всегда назначать одного и того "
-"же пользователя для следующего действия. Используйте `Пользователь из "
-"записи`, чтобы указать поле записи, в котором  содержится ответственный "
+"Используйте 'Конкретный пользователь', чтобы всегда назначать одного и того "
+"же пользователя для следующего действия. Используйте 'Пользователь из "
+"записи', чтобы указать поле записи, в котором  содержится ответственный "
 "пользователь."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "Use Twilio ICE servers"
-msgstr ""
+msgstr "Использовать ICE серверы Twilio"
 
 #. module: mail
 #: code:addons/mail/models/fetchmail.py:0
@@ -8174,7 +8191,7 @@ msgstr "Видео"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Video Settings"
-msgstr ""
+msgstr "Настройки видео"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -8226,7 +8243,7 @@ msgstr "Голос"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Voice Settings"
-msgstr ""
+msgstr "Настройки звука"
 
 #. module: mail
 #. openerp-web
@@ -8235,7 +8252,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Voice detection threshold"
-msgstr ""
+msgstr "Чувствительность определения голоса"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__volume
@@ -8799,7 +8816,7 @@ msgstr "для %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr ""
+msgstr "Был создан из:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link

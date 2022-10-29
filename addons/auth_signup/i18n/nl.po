@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +100,7 @@ msgstr ""
 "<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "<div>\n"
 "Beste <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
-"U heeft de volgende gebruiker(s) toegevoegd aan je database, maar ze hebben zich nog niet geregistreerd:\n"
+"Je hebt de volgende gebruiker(s) toegevoegd aan je database, maar ze hebben zich nog niet geregistreerd:\n"
 "<ul>\n"
 "<t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "<li t-out=\"invited_user or ''\">demo@voorbeeld.com</li>\n"
@@ -109,7 +109,7 @@ msgstr ""
 "Volg ze op, zodat ze toegang krijgen tot je database en met je kunnen gaan werken.\n"
 "<br/><br/>\n"
 "Nog een fijne dag!<br/>\n"
-"--<br/>The <t t-out=\"object.company_id.name or ''\">UwBedrijf</t> Team\n"
+"--<br/>The <t t-out=\"object.company_id.name or ''\">Bedrijf</t> Team\n"
 "</div>\n"
 "</td></tr>\n"
 "<tr><td style=\"text-align:center;\">\n"
@@ -871,19 +871,19 @@ msgstr "Aanmeld vervallen"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr "Aanmeld token"
+msgstr "Aanmeldtoken"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Aanmeld token soort"
+msgstr "Aanmeldtoken soort"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "Aanmeld token is geldig"
+msgstr "Aanmeldtoken is geldig"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
@@ -895,37 +895,37 @@ msgstr "URL voor aanmelden"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr "Registratie is niet toegestaan voor gebruikers zonder uitnodiging"
+msgstr "Aanmelden is niet toegestaan voor gebruikers zonder uitnodiging"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr "Registratie token '%s' is niet meer geldig"
+msgstr "Aanmeldentoken '%s' is niet meer geldig"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr "Registratie token '%s' is niet geldig."
+msgstr "Aanmeldentoken '%s' is niet geldig."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr "Inschrijven: foutieve sjabloon gebruiker"
+msgstr "Aanmelden: foutieve sjabloon gebruiker"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr "Inschrijven: geen login opgegeven voor nieuwe gebruiker"
+msgstr "Aanmelden: geen login opgegeven voor nieuwe gebruiker"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "Inschrijven: geen naam of partner opgegeven voor nieuwe gebruiker"
+msgstr "Aanmelden: geen naam of partner opgegeven voor nieuwe gebruiker"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -982,12 +982,12 @@ msgstr "Je kunt deze actie niet uitvoeren op een gearchiveerde gebruiker."
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Jouw e-mail"
+msgstr "Je e-mail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Jouw naam"
+msgstr "Je naam"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

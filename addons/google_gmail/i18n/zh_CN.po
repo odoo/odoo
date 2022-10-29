@@ -28,6 +28,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Gmail account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        连接您的Gmail账户"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -42,6 +44,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                    Gmail令牌有效\n"
+"                </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -50,6 +55,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                      Gmail令牌有效\n"
+"                  </span>"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_access_token
@@ -70,13 +78,13 @@ msgstr "访问令牌到期时间戳"
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process: %s."
-msgstr ""
+msgstr "身份验证过程：%s中发生错误。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "获取访问令牌时发生错误。"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -102,6 +110,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
+"用OAuth 身份验证过程连接您的Gmail账户。\n"
+"您将被重定向到Gmail登录页面，在那里您需要接受该权限。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -110,6 +120,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"用OAuth身份验证过程连接您的Gmail账户。\n"
+"默认情况下只有拥有匹配电子邮件地址的用户才能使用该服务器。为了扩大其使用范围，您应该设置一个“mail.default.from\"系统参数。"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -125,7 +137,7 @@ msgstr "Gmail客户端Secret"
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "Gmail OAuth身份验证"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
@@ -140,7 +152,7 @@ msgstr "ID"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "您的Google应用ID"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
@@ -153,7 +165,7 @@ msgstr "收件服务器"
 msgid ""
 "Incorrect Connection Security for Gmail mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
-msgstr ""
+msgstr "Gmail邮件服务器%r 的连接安全性不正确。请将其设置为“TLS (STARTTLS)”。"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -164,13 +176,13 @@ msgstr "邮件服务器"
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "只有管理员可以链接一个Gmail邮件服务器。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "请配置您的Gmail凭据。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -178,7 +190,7 @@ msgstr ""
 msgid ""
 "Please leave the password field empty for Gmail mail server %r. The OAuth "
 "process does not require it"
-msgstr ""
+msgstr "请将Gmail邮件服务器%r的密码字段留空。OAuth过程不需要它。"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -200,7 +212,7 @@ msgstr "密匙"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "您的Google应用程序的秘密"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type

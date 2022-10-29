@@ -16,7 +16,6 @@
 # Adi Sharashov <Adi@laylinetech.com>, 2022
 # Jonathan Spier, 2022
 # Sagi Ahiel, 2022
-# Roy Sayag, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # שהאב חוסיין <shhab89@gmail.com>, 2022
@@ -28,6 +27,7 @@
 # Moshe Flam <pashute@gmail.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
 # NoaFarkash, 2022
+# Roy Sayag, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: Roy Sayag, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -633,7 +633,7 @@ msgstr "<strong>הוזמן</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
-msgstr ""
+msgstr "<strong>תאריך חבילה</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -711,7 +711,7 @@ msgstr "? זה עלול להוביל לחוסר עקביות במלאי שלך."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type !"
-msgstr ""
+msgstr "ברקוד יכול להיות משויך לסוג חבילה אחד!"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -722,7 +722,7 @@ msgstr "בשורת תנועה שבוצעה לא צריכה להיות כמות �
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
+msgstr "חוק עיתוד מלאי כבר קיים למוצר זה באיתור/מיקום זה"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -1812,7 +1812,7 @@ msgstr "ליצור הזמנה חוזרת?"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Create New"
-msgstr ""
+msgstr "צור חדש"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -2046,7 +2046,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Expressחיבור ל"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3868,7 +3868,7 @@ msgstr "יוני"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep Counted Quantity"
-msgstr ""
+msgstr "שמור כמות שנספרה "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4473,7 +4473,7 @@ msgstr "משקל מקסימלי"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Max Weight (kg)"
-msgstr ""
+msgstr "משקל מקסימלי (Kg)"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_max_weight
@@ -4612,7 +4612,7 @@ msgstr "תנועות"
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 msgid "Moves History"
-msgstr ""
+msgstr "היסטוריית תנועות"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -5304,12 +5304,12 @@ msgstr "חבילה"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "תאריך חבילה"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Pack Date:"
-msgstr ""
+msgstr "תאריך חבילה:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pack_type_id
@@ -6566,12 +6566,12 @@ msgstr ""
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr ""
+msgstr "דו\"ח עיתוד מלאי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr ""
+msgstr "חיפוש דו\"ח עיתוד מלאי"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -6736,7 +6736,7 @@ msgstr "החזרות"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Returns Type"
-msgstr ""
+msgstr "סוג החזרות"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__reusable
@@ -7309,7 +7309,7 @@ msgstr "הצג פעולות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
 msgid "Show Reception Report at Validation"
-msgstr ""
+msgstr "הצג דוח קבלה לאחר תיקוף"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
@@ -7465,7 +7465,7 @@ msgstr "מסומן בכוכב"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Starred Products"
-msgstr ""
+msgstr "מוצרים שסומנו בכוכב"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -7648,7 +7648,7 @@ msgstr "תנועות מלאי שעובדו"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "סוג חבילת מלאי"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -8137,7 +8137,7 @@ msgstr "השימוש באיתור זה אינו ניתן לשינוי כתצוג
 #, python-format
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
-msgstr ""
+msgstr "אצווה זו%(lot_name)sלא מותאמת עם המוצר%(product_name)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8202,6 +8202,9 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"מוצר זה היה בשימוש לפחות בתנועת מלאי אחת. לא מומלץ לשנות את סוג המוצר מכיוון"
+" שהוא עלול להוביל לחוסר עקביות. פתרון טוב יותר יכול להיות להעביר את המוצר "
+"לארכיון וליצור חדש במקום זאת."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8537,7 +8540,7 @@ msgstr "הפעל כלל אחר אם אין מלאי"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger Manual"
-msgstr ""
+msgstr "מופעל ידנית"
 
 #. module: stock
 #. openerp-web
@@ -8736,7 +8739,7 @@ msgstr "השתמש במספרים סידוריים או אצוות קיימות"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Use Existing ones"
-msgstr ""
+msgstr "השתמש בקיימים"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8777,7 +8780,7 @@ msgstr "השתמש במסלולים שלך"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Used by"
-msgstr ""
+msgstr "היה בשימוש של"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
@@ -9059,7 +9062,7 @@ msgstr "משקל"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr ""
+msgstr "משקל של סוג החבילה"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9595,7 +9598,7 @@ msgstr "עדיין יש לך מוצר באיתורים %s"
 msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
-msgstr ""
+msgstr " .אתה מנסה ליצור רשומה שכבר קיימת. הרשומה הקיימת השתנתה במקום"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Андрей Гусев <gaussgss@gmail.com>, 2022
-# Валерий Хохлов, 2022
 # Константин Коровин <korovin74@gmail.com>, 2022
 # Иван Дроздов <hiraetari@gmail.com>, 2022
 # Ekaterina <nawsikaya@bk.ru>, 2022
@@ -28,10 +27,11 @@
 # GulShar Mungatova <mungatova@gmail.com>, 2022
 # Sergey Vilizhanin, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
-# ILMIR <karamov@it-projects.info>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Martin Trigaux, 2022
 # Максим Дронь <dronmax@gmail.com>, 2022
+# Валерий Хохлов, 2022
+# ILMIR <karamov@it-projects.info>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
@@ -1258,9 +1258,8 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Пользователь не может иметь сразу налог B2B и B2C. Вам необходимо перейти в "
-"Общие настройки, и выбрать отображение цен на товарах или в режиме `С НДС` "
-"или в `Без НДС` (или дважды переключите режим, если вы уже в желаемом)."
+"Пользователь не может иметь сразу налог B2B и B2C. Вам необходимо перейти в Общие настройки, и выбрать отображение цен на товарах\n"
+" неважно в режиме 'С НДС' или 'Без НДС' (или дважды переключите режим, если он выбран правильно)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -2445,6 +2444,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
+msgid "Analytic Filter"
+msgstr "Аналитический фильтр"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
@@ -5192,9 +5196,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"Определяет, где можно выбрать налог. Примечание: `Нет` означает, что налог "
+"Определяет, где можно выбрать налог. Примечание: 'Нет' означает, что налог "
 "не может быть использован сам по себе, однако он может быть использован в "
-"группе. `Корректировки` используется для осуществления налогового "
+"группе. 'Корректировки' используется для осуществления налогового "
 "регулирования."
 
 #. module: account
@@ -6055,11 +6059,6 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
-msgid "Filter Analytic"
 msgstr ""
 
 #. module: account
@@ -9515,8 +9514,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"После установки установите `Банковские выписки` на `Импорт файла` в "
-"настройках банковского счета. Это придаст кнопку для импорта из "
+"После установки установите 'Банковские выписки' в значение 'Импорт из файла'"
+" в настройках банковского счета. Это добавить кнопку импорта в "
 "информационной панели бухучета."
 
 #. module: account
@@ -10434,7 +10433,7 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
-msgstr "Процент в строках Условия оплат `должен быть от 0 до 100."
+msgstr "Процент в строках Условия оплаты должен быть от 0 до 100."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10994,7 +10993,7 @@ msgstr "Элементы Согласования"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr "Рекурсия найдена для налога ` %s `."
+msgstr "Рекурсия обнаружена для налога '%s'."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
@@ -11974,9 +11973,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
-msgstr ""
-"Установите активное значение `Неверный`, чтобы скрыть аналитический тег, не "
-"удаляя его."
+msgstr "Снимите флаг Активно, чтобы скрыть аналитический тег, не удаляя его."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -13690,10 +13687,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Модель согласования будет применена только тогда, когда метка: Содержит: "
-"Метка предложения должна содержать эту строку (нечувствителен). Не содержит:"
-" Отклонение `содержит`. * Сопоставление регулярного выражения: Определите "
-"свой регулярное выражение."
+"Модель согласования будет применена только тогда, когда метка:\n"
+" * Содержит: Метка предложения должна содержать эту строку (без учета регистра).\n"
+" * Не содержит: Обратное к 'Cодержит'.\n"
+" * Соответствует регулярному выражению: Определите свое регулярное выражение."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -14225,7 +14222,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
-msgstr ""
+msgstr "Этот платеж был создан из %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15594,7 +15591,7 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"Вы не можете иметь более одного счета с `прибыли текущего периода` как тип. "
+"Вы не можете иметь более одного счета с типом \"Прибыли текущего периода\". "
 "(Счета:%s )"
 
 #. module: account

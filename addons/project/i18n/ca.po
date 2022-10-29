@@ -7,7 +7,6 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # M Palau <mpalau@tda.ad>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# Pere Martínez, 2022
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
 # Josep Sànchez <papapep@gmx.com>, 2022
 # Susanna Pujol, 2022
@@ -25,6 +24,7 @@
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2022
 # Arnau Ros, 2022
 # marcescu, 2022
+# Cristian Cruz, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # 
 msgid ""
@@ -78,8 +78,11 @@ msgid "# Tasks"
 msgstr "# Tasques"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
 #: model:ir.model.fields,field_description:project.field_project_milestone__task_count
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
+#, python-format
 msgid "# of Tasks"
 msgstr "# de tasques"
 
@@ -838,7 +841,7 @@ msgstr "Tots"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr "Tots/es els/les usaris/àries interns/es"
+msgstr "Tots els usuaris interns"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
@@ -1110,7 +1113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Valoració mitjana"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
@@ -3548,7 +3551,7 @@ msgstr "Octubre"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr "Fora de la pista"
+msgstr "Fora de termini"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
@@ -3583,7 +3586,7 @@ msgstr "En espera"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr "A la pista"
+msgstr "En termini"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly

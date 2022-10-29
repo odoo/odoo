@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Miku Laitinen <miku.laitinen@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,32 +27,35 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid ""
-"<br/>\n"
-"                            on our services on \""
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
+msgid "# Ratings"
+msgstr "# arvostelua"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-msgid "<span class=\"o_stat_text\">Resource</span>"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__access_token
-msgid "Access token to set the rating of the value"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "A star"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__message_id
-msgid ""
-"Associated message when posting a review. Mainly used in website addons."
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
+msgid "Average Rating"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__partner_id
-msgid "Author of the rating"
-msgstr "Arvostelun laatija"
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -62,15 +68,16 @@ msgid "Created by"
 msgstr "Luonut"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
-msgid "Created on"
-msgstr "Luotu"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
 msgstr "Asiakas"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Customer rated %r."
+msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -78,20 +85,29 @@ msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Dissatisfied"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Document"
 msgstr "Dokumentti"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
 msgid "Document Model"
-msgstr ""
+msgstr "Dokumentin malli"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
@@ -99,8 +115,8 @@ msgid "Email Thread"
 msgstr "Sähköpostiviestiketju"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__consumed
-msgid "Enabled if the rating has been filled."
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to write a feedback on your experience:"
 msgstr ""
 
 #. module: rating
@@ -110,7 +126,7 @@ msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go to our website"
+msgid "Go back to the Homepage"
 msgstr ""
 
 #. module: rating
@@ -119,21 +135,20 @@ msgid "Group By"
 msgstr "Ryhmittely"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
-msgid "Highly dissatisfied"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "Half a star"
+msgstr "Puolikas tähti"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
-msgstr "Tunniste (ID)"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__res_id
-msgid "Identifier of the rated object"
-msgstr ""
+msgstr "ID"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
@@ -141,7 +156,28 @@ msgid "Image"
 msgstr "Kuva"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
+msgid "Image URL"
+msgstr "Kuvan URL"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
+msgstr ""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 30 days"
+msgstr "Viimeiset 30 päivää"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 days"
+msgstr "Viimeiset 7 päivää"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Viimeksi muokattu"
@@ -157,19 +193,10 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
-msgid "Linked message"
-msgstr ""
-
-#. module: rating
 #: model:ir.model,name:rating.model_mail_message
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
 msgstr "Viesti"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
-msgid "Model of the followed resource"
-msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -177,24 +204,28 @@ msgid "My Ratings"
 msgstr ""
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
 msgid "No Rating yet"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
 msgid "No rating yet"
 msgstr ""
 
 #. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
-msgid "Not satisfied"
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
-msgid "Owner of the rated resource"
+#, python-format
+msgid "Okay"
 msgstr ""
 
 #. module: rating
@@ -213,51 +244,65 @@ msgid "Parent Document Name"
 msgstr ""
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Rated User"
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr ""
+
+#. module: rating
+#: code:addons/rating/models/mail_thread.py:0
+#, python-format
+msgid "Posting a rating should be done using message post API."
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
-msgid "Rated person"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
 msgstr ""
 
 #. module: rating
-#: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
 msgstr "Arvostelu"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
-msgid "Rating Average"
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
+msgid "Rating Avg Text"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Arvion viimeisin palaute"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Arvion viimeisin kuva"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Arvion viimeisin arvo"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
@@ -265,42 +310,64 @@ msgid "Rating Mixin"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
-msgid "Rating Number"
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
+msgid "Rating Text"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
+msgstr "Rating Value"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating Value (/5)"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
+msgstr "Arvioiden määrä"
+
+#. module: rating
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
+msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
-#: sql_constraint:rating.rating:0
-msgid "Rating should be between 0 to 10"
-msgstr "Arvosanan pitäisi olla välillä 0 - 10"
+#. openerp-web
+#: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
+#: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
+#, python-format
+msgid "Rating:"
+msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__rating
-msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr "Arvosana: 0=Tyytymätön, 10=Tyytyväinen"
-
-#. module: rating
+#: model:ir.actions.act_window,name:rating.rating_rating_action
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
+#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
+#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
 msgstr "Arviointi"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
-#: model:ir.model.fields,help:rating.field_rating_rating__feedback
-msgid "Reason of the rating"
-msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
@@ -308,11 +375,10 @@ msgid "Related Document Model"
 msgstr "Liittyvä dokumenttimalli"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Related ratings"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -320,20 +386,28 @@ msgid "Resource"
 msgstr "Resurssi"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
+msgid "Resource Ref"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
 msgstr ""
 
 #. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
+#, python-format
 msgid "Satisfied"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Turvatunnus"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -341,43 +415,36 @@ msgid "Send Feedback"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Submitted on"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Thanks! We appreciate your feedback."
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__res_name
-msgid "The name of the rated resource."
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
-msgid "There is no rating for this object at the moment."
+msgid "Thank you for rating our services!"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "We appreciate your feedback!"
+msgid "Thank you, we appreciate your feedback!"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Would be great if you can provide more information:"
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
+msgid "There is no rating for this object at the moment."
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Your rating has been submitted."
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Today"
+msgstr "Tänään"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
+msgid "Visible Internally Only"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
 msgstr "kirjoittaja"
@@ -385,32 +452,9 @@ msgstr "kirjoittaja"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:21
-#, python-format
-msgid "highly dissatisfied"
-msgstr ""
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:20
-#, python-format
-msgid "not satisfied"
-msgstr ""
+msgstr "tekijänä"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
 msgstr "päiväyksellä"
-
-#. module: rating
-#: code:addons/rating/controllers/main.py:22
-#, python-format
-msgid "satisfied"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "you are"
-msgstr ""

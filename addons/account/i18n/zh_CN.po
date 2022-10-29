@@ -7,14 +7,14 @@
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # liAnGjiA <liangjia@qq.com>, 2022
 # keecome <7017511@qq.com>, 2022
-# Martin Trigaux, 2022
 # 宇洛 李, 2022
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # lonely落叶 <liu--qiong@hotmail.com>, 2022
 # YIMIN XUAN, 2022
 # 226408 台北 <226408@so8d.com>, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -2573,6 +2573,11 @@ msgstr "分析分布模型"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
 msgstr "分析分布存储字符"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
+msgid "Analytic Filter"
+msgstr "分析过滤器"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
@@ -6146,11 +6151,6 @@ msgid "Fill in the details of the line."
 msgstr "填写该行的详细信息。"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
-msgid "Filter Analytic"
-msgstr "过滤分析"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
 msgstr "过滤器多缸"
@@ -9621,12 +9621,12 @@ msgstr "仅适用税项"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
 msgid "Matching categories"
-msgstr ""
+msgstr "匹配的类别"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 msgid "Matching partners"
-msgstr ""
+msgstr "匹配的合作伙伴"
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
@@ -10154,7 +10154,7 @@ msgstr "对账模型的业务伙伴映射"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 msgid "Partner is Set"
-msgstr ""
+msgstr "合作伙伴已设置"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -16134,13 +16134,13 @@ msgstr "以结算单的 pdf 作为附件。"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {date}"
-msgstr "{label}：调整 {date} 的条目."
+msgstr "{label}： {date} 调整分录"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {new_date}"
-msgstr "{label}：调整 {new_date} 的条目"
+msgstr "{label}： {new_date} 调整分录"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16152,7 +16152,7 @@ msgstr "{percent:0.2f}% 确认于 {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"
-msgstr "{percent:0.2f}% 在 {new_date} 识别"
+msgstr "{percent:0.2f}% 确认于 {new_date} "
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt

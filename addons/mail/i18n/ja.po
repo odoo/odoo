@@ -8,8 +8,8 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # ook rio <riokoko5@gmail.com>, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -779,7 +779,7 @@ msgstr "新しい%(document)sを追加するか、%(email_link)sにメールを�
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address to the blacklist"
-msgstr ""
+msgstr "ブラックリストにメールアドレスを追加する"
 
 #. module: mail
 #. openerp-web
@@ -2734,7 +2734,7 @@ msgstr "一括でメールを送信する際に、返信先となるメールア
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
-msgstr ""
+msgstr "ブラックリストに登録されたメールアドレスには、今後メールが届かなくなります。"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -3251,7 +3251,7 @@ msgstr "グループ"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__guest_id
 #, python-format
 msgid "Guest"
-msgstr ""
+msgstr "ゲスト"
 
 #. module: mail
 #: code:addons/mail/models/mail_guest.py:0
@@ -3515,7 +3515,7 @@ msgstr "追従するリソースのID"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 msgid "Identity"
-msgstr ""
+msgstr "識別"
 
 #. module: mail
 #. openerp-web
@@ -4216,6 +4216,7 @@ msgstr "ロード中"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
+#: code:addons/mail/static/src/models/emoji_grid_loading_screen.js:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
@@ -5692,6 +5693,22 @@ msgstr "予定日"
 #, python-format
 msgid "Please complete customer's information"
 msgstr "お客様の情報を入力してください"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid "Invalid Partner"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid ""
+"The information you have entered does not match the existing contact "
+"information for this record. The partner was not created."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall

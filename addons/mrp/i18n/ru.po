@@ -14,10 +14,10 @@
 # ILMIR <karamov@it-projects.info>, 2022
 # Martin Trigaux, 2022
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
-# Валерий Хохлов, 2022
 # Максим Дронь <dronmax@gmail.com>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
+# Валерий Хохлов, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
@@ -219,7 +219,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Произвести</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -255,7 +255,7 @@ msgstr "<span class=\"o_stat_text\">ОЭО</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Operations<br/>Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Эффективность<br/> операций</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -674,7 +674,7 @@ msgstr "Одобрить"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Archive Operation"
-msgstr ""
+msgstr "Архивировать операцию"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1250,12 +1250,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
 msgid "Compute based on tracked time"
-msgstr ""
+msgstr "Вычисление на основе отслеживаемого времени"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "Compute from BoM"
-msgstr ""
+msgstr "Рассчитать из спецификации"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
@@ -1621,7 +1621,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,field_description:mrp.field_product_template__days_to_prepare_mo
 msgid "Days to prepare Manufacturing Order"
-msgstr ""
+msgstr "Дней на составление производственного заказа"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -2134,6 +2134,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
 msgid "Get statistics about the work orders duration related to this routing."
 msgstr ""
+"Получите статистику о продолжительности выполнения заказов, связанных с этим"
+" маршрутом."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__sequence
@@ -3178,7 +3180,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "No work orders to do!"
-msgstr ""
+msgstr "Нет производственных заданий!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -5617,10 +5619,10 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"Когда в закупке является маршрут `производить` с набором типов операций, он "
-"будет пытаться создать заказ на производство для этого товара, используя "
-"спецификацию того же типа операции. Это позволяет определить складские "
-"правила, которые запускают различные заявки на производство с различными "
+"Когда в восполнении есть маршрут 'производство' с набором типов операций, он"
+" будет пытаться создать заказ на производство для этого товара, используя "
+"спецификацию того же типа операции. Это позволяет создать складские правила,"
+" которые запускают различные заявки на производство с различными "
 "спецификациями."
 
 #. module: mrp
@@ -6005,7 +6007,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Вы не можете удалить заказ на разборку, если состояние - `Выполнено`."
+msgstr "Вы не можете удалить заказ на разборку, если состояние - 'Выполнено'."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

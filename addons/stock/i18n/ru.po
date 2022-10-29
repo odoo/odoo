@@ -24,8 +24,8 @@
 # Martin Trigaux, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2022
-# Валерий Хохлов, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
+# Валерий Хохлов, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
@@ -74,6 +74,9 @@ msgid ""
 "\n"
 "Transfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities."
 msgstr ""
+"\n"
+"\n"
+"Перемещения %s: Вы не можете подтвердить эти переводы, если не зарезервировано количество, которое не было выполнено. Чтобы принудительно перенести их, переключитесь в режим редактирования и запишите выбранное количество."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -91,6 +94,8 @@ msgid ""
 "\n"
 "(%s) exists in location %s"
 msgstr ""
+"\n"
+"(%s) существует в месте хранения %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -190,7 +195,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr "'Местоположение - %s' % object.name"
+msgstr "'Место хранения - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -252,20 +257,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* Местоположение поставщика: виртуальное местоположение, представляющее "
-"исходное местоположение для продуктов, поступающих от ваших поставщиков. * "
-"Просмотр: виртуальное местоположение, используемое для создания "
-"иерархических структур для вашего склада, объединяя его дочерние "
-"местоположения; не может напрямую содержать продукты * Внутреннее "
-"местоположение: физические местоположения внутри ваших собственных складов, "
-"* Местоположение клиента: виртуальное местоположение, представляющее "
-"конечное местоположение для продуктов, отправленных вашим клиентам * Потеря "
-"запасов: виртуальное местоположение, служащее аналогом для операций с "
-"запасами, используемых для корректировки уровней запасов (Физические запасы)"
-" * Производство: виртуальное место-аналог для производственных операций: это"
-" местоположение потребляет сырье и производит готовую продукцию * Транзитное"
-" местоположение: местоположение-контрагент, которое должно использоваться в "
-"межфирменных или межскладских операциях"
+"* Место хранения поставщика: виртуальное местоположение, представляющее исходное местоположение для продуктов, поступающих от ваших поставщиков.\n"
+"* Виртуальное место хранения: виртуальное местоположение, используемое для создания иерархических структур для вашего склада, объединяя его дочерние местоположения; не может напрямую содержать продукты\n"
+"* Внутреннее место хранения: физические местоположение внутри ваших собственных складов\n"
+"* Место хранения клиента: виртуальное местоположение, представляющее конечное местоположение для продуктов, отправленных вашим клиентам\n"
+"* Потери: виртуальное местоположение, служащее аналогом для операций с запасами, используемых для корректировки уровней запасов (Физические запасы)\n"
+"* Производство: виртуальное место-аналог для производственных операций: это местоположение потребляет сырье и производит готовую продукцию\n"
+"* Транзитное место хранения: местоположение-контрагент, которое должно использоваться в межфирменных или межскладских операциях"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -570,6 +568,9 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
+"<strong>Из-за некоторых перемещений запасов, произведенных между вашим "
+"первоначальным обновлением количества и настоящим моментом, разница в "
+"количестве больше не является согласованной.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -579,7 +580,7 @@ msgstr "<strong>Из</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr "<strong>Место Размещения</strong>"
+msgstr "<strong>Место хранения</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -797,7 +798,7 @@ msgstr "Добавить партию / серийный номер"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
 msgid "Add a new location"
-msgstr "Добавить новое местонахождение"
+msgstr "Добавить новое место хранения"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -939,7 +940,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr "Разрешенное местоположение"
+msgstr "Разрешенное место хранения"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1281,11 +1282,12 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"По умолчанию, система будет брать из запаса в исходном месте и пассивно "
-"ждать наличия. Другая возможность позволяет напрямую создать закупку на "
-"исходном месте хранения (и таким образом игнорировать его текущего запаса), "
-"чтобы собрать продукты. Если мы хотим, чтобы была цепь перемещения и один "
-"должен дождаться предыдущего, то должен быть выбран второй вариант."
+"По умолчанию, система будет брать из текущего наличия в исходном месте "
+"хранения и пассивно ждать доступности товара. Другая опция позволяет "
+"напрямую создать восполнение в исходном месте хранения (и таким образом "
+"игнорировать его текущий запас), чтобы собрать продукты. Если нам нужно, "
+"чтобы было перемещение по цепочке и это перемещение должно дождаться "
+"предыдущего, то обязательно выберите второй вариант."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1671,7 +1673,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Conflict in Inventory Adjustment"
-msgstr ""
+msgstr "Конфликт при корректировке запасов"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__quant_to_fix_ids
@@ -1802,7 +1804,7 @@ msgstr "Подсчитанное количество"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr "Местонахождение"
+msgstr "Места хранения с другой стороны"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
@@ -2170,12 +2172,12 @@ msgstr "Декабрь"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
 msgid "Default Destination Location"
-msgstr "Место Назначения По умолчанию"
+msgstr "Целевое место хранения по умолчанию"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
-msgstr "Исходное местоположение по умолчанию"
+msgstr "Исходное место хранения по умолчанию"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -2229,12 +2231,12 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
-"Определите свои местоположения, чтобы отразить структуру склада и\n"
-"             организации. Odoo может управлять физическими местоположениями\n"
-"             (склады, полки, бункер и т. д.), места партнеров (клиенты,\n"
-"             поставщиками) и виртуальными объектами, которые являются аналогами\n"
-"             операции с запасами, такие как производственные заказы\n"
-"             потребления, запасов и т. д."
+"Определите свои места хранения, чтобы отразить структуру склада и\n"
+"           организации. Odoo может управлять физическими местами хранения\n"
+"           (склады, полки, контейнеры и т. д.), места хранения партнеров (клиентов,\n"
+"           поставщиков) и виртуальными объектами, которые являются смежными\n"
+"           операциями, такими как использование в производственных заказах,\n"
+"инвентаризация и т. д."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
@@ -2456,7 +2458,7 @@ msgstr "Тип места хранения назначения"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr "Расположение назначения:"
+msgstr "Место назначения:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_dest_ids
@@ -2530,7 +2532,7 @@ msgstr "Отменить"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Discard and manually resolve the conflict"
-msgstr ""
+msgstr "Отмените и устраните конфликт вручную"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
@@ -2685,8 +2687,9 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
-"Редактирование количеств в месте сборки запасов запрещено, эти "
-"местоположения используются в качестве аналогов при корректировке количеств."
+"Редактирование в Инвентаризационном месте хранения запрещено, это место "
+"хранения используется в качестве целевого при инвентаризационной "
+"корректировке."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2753,11 +2756,10 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
-"Каждая операция на складе в Odoo перемещает продукты с одного\n"
-"             расположение к другому. Например, если вы получаете продукты\n"
-"             от поставщика, Odoo будет перемещать продукты от Вендора\n"
-"             местоположение к месту склада. Каждый отчет может быть\n"
-"             физического, партнерского или виртуального местоположения."
+"Каждая операция на складе в Odoo перемещает продукты из одного\n"
+"места хранения в другое. Например, если вы получаете продукты\n"
+"от поставщика, Odoo будет перемещать продукты из места хранения поставщика\n"
+"в место хранения на складе. Каждый отчет может быть построен для физического, партнерского или виртуального места хранения."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2841,7 +2843,7 @@ msgstr "коннектор FedEx"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
-msgstr "отфильтрованные местонахождение"
+msgstr "Отфильтрованное место хранения"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -3371,7 +3373,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
 msgid "If the location is empty"
-msgstr ""
+msgstr "Если место хранения пусто"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3902,18 +3904,19 @@ msgstr "Июнь"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep Counted Quantity"
-msgstr ""
+msgstr "Сохранить подсчитанное количество"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep Difference"
-msgstr ""
+msgstr "Сохранить разницу"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
 msgstr ""
+"Сохранить <strong>подсчитанное количество</strong>(Разница будет обновлена)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -3921,6 +3924,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
+"Сохраните <strong>разницу</strong> (подсчитанное количество будет обновлено,"
+" чтобы отразить ту же разницу, что и при подсчете)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -4229,7 +4234,7 @@ msgstr "Просмотр списка операций"
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Location"
-msgstr "Место"
+msgstr "Место хранения"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
@@ -4879,7 +4884,7 @@ msgid ""
 "can be returned)."
 msgstr ""
 "Нет товаров для возврата (могут быть возвращены только строки в состоянии "
-"`Выполнено` и не полностью)."
+"'Выполнено' и не полностью возвращенные)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -4905,7 +4910,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "No source location defined on stock rule: %s!"
-msgstr "Местонахождение источника не определено по правилу запаса:%s !"
+msgstr "Исходное место хранения не определено для складского правила:%s!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -5227,7 +5232,7 @@ msgstr "Происхождение Перемещения Возврата"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr "происхождение местонахождение"
+msgstr "Исходное место хранения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
@@ -5536,7 +5541,7 @@ msgstr "Параметры"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__parent_location_id
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "Главное место хранения"
+msgstr "Родительское место хранения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
@@ -6206,7 +6211,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities To Reset"
-msgstr ""
+msgstr "Сброс подсчета"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
@@ -7501,7 +7506,7 @@ msgstr "Документ-источник"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Source Location"
-msgstr "Первоначальное расположение"
+msgstr "Исходное место хранения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_usage
@@ -7512,7 +7517,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "Местонахождение источника:"
+msgstr "Исходное место хранения:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_id
@@ -7894,9 +7899,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
-"Значение 'Ручная операция `создаст движение запасов после текущего. С "
-"помощью пункта `Автоматически не приложены шага` расположение заменяется в "
-"оригинальном перемещении."
+"Значение 'Ручная операция' создаст движение запасов после текущего. С "
+"помощью пункта 'Автоматически без добавления шага' место хранения будет "
+"заменено в оригинальном перемещении."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7916,7 +7921,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company !"
-msgstr "Штрих-код для местоположения должен быть уникальным в компании!"
+msgstr ""
+"Штрих-код для места хранения должен быть уникальным в пределах компании!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -8014,8 +8020,9 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
-"Родительское местоположение, которое включает это местоположение. Пример: "
-"'Зоной отправки' является родительское местоположение 'Gate 1'."
+"Родительское место хранения, которое включает в себя это место хранения. "
+"Пример: 'Зона отправки' является родительским местом хранения для 'Ворота "
+"1'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -8052,8 +8059,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
-"Запрошенная операция не может быть обработана из-за ошибки программирования,"
-" устанавливающей поле `product_qty` вместо` product_uom_qty`."
+"Запрошенная операция не может быть обработана из-за программной ошибки, "
+"устанавливающей поле `product_qty` вместо `product_uom_qty`."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8170,10 +8177,10 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"Это место назначения по умолчанию, когда вы создаете комплектования вручную "
-"с помощью этого типа операции. Однако можно изменить его или назначить "
-"другое местонахождение маршрутам. Если оно пустое, то проверит "
-"местонахождение клиента в партнера."
+"Это место назначения по умолчанию, когда вы создаете перемещение вручную с "
+"помощью этого типа операции. Однако вы можете изменить его или оно может "
+"быть переопределено складским правилом. Если оно пустое, то будет "
+"использовано место хранения клиента у партнера."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8183,10 +8190,10 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Это местонахождение источника по умолчанию, когда вы создаете комплектования"
-" вручную с помощью этого типа операции. Однако можно изменить его или "
-"приначиты другое местонахождение маршрутам. Если оно пустое, то проверит "
-"местонахождение поставщика в партнера."
+"Это исходное место хранения по умолчанию, когда вы создаете перемещение "
+"вручную с помощью этого типа операции. Однако вы можете изменить его или оно"
+" будет изменено складским правилом. Если оно пустое, то будет использовано "
+"место хранения поставщика у партнера."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -8223,8 +8230,8 @@ msgstr ""
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
 msgstr ""
-"Использование этого местонахождение нельзя изменить на просмотр, поскольку "
-"оно содержит товары."
+"Использование этого местонахождение нельзя изменить на виртуальное место "
+"хранения, поскольку оно содержит товары."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8362,6 +8369,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
 msgstr ""
+"Это действие сбросит все непримененные значения. вы хотите продолжить?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -8935,7 +8943,7 @@ msgstr "Поставщик"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
 msgid "Vendor Location"
-msgstr "Расположение поставщика"
+msgstr "Место хранения поставщика"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -8946,7 +8954,7 @@ msgstr "Места хранения Поставщика"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "View"
-msgstr "Осмотр"
+msgstr "Виртуальное место хранения"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -8956,7 +8964,7 @@ msgstr "Просмотр диаграммы"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Зона осмотра"
+msgstr "Виртуальное место хранения"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9048,7 +9056,7 @@ msgstr "Управление складом"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__warehouse_view_ids
 msgid "Warehouse View"
-msgstr ""
+msgstr "Виртуальное место хранения склада"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_warehouse_id
@@ -9058,7 +9066,7 @@ msgstr "Склад для распространения"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse view location"
-msgstr "Зона осмотра склада"
+msgstr "Виртуальное место хранения склада"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -9370,8 +9378,8 @@ msgid ""
 " Lots/Serial Numbers\"."
 msgstr ""
 "Вам не разрешается создавать номер партии или серийный номер с этим типом "
-"операции. Чтобы изменить это, перейдите к типу операции и отметьте `Создать "
-"новую партию / серийный номер`."
+"операции. Чтобы изменить это, перейдите к типу операции и отметьте \"Создать"
+" новую партию / серийный номер\"."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -9379,7 +9387,8 @@ msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
 msgstr ""
-"Вы пытаетесь разместить товары в разных местоположением в одном пакете"
+"Вы пытаетесь объединить товары, перемещаемые в разные места хранения, в один"
+" пакет"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9413,7 +9422,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "You can either :"
-msgstr ""
+msgstr "Вы можете :"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -9469,8 +9478,8 @@ msgstr ""
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
 msgstr ""
-"Вы не можете заархивировать это местоположение %s поскольку оно используется"
-" вашим складом %s"
+"Вы не можете архивировать место хранения %s, поскольку оно используется "
+"вашим складом %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9479,6 +9488,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
+"Вы не можете отменить перемещение товара, для которого было установлено "
+"значение \"Готово\". Создайте возврат, чтобы отменить имевшие место ходы."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9502,9 +9513,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
-"Вы не можете изменить тип местонахождение или использовать его как место "
-"расположения, поскольку в нем есть товары, зарезервированные в этом "
-"местонахождении. Пожалуйста, отвечайте сначала товары."
+"Вы не можете изменить тип места хранения или использовать его как место "
+"хранения брака, поскольку в нем есть зарезервированные товары. Пожалуйста, "
+"сначала разрезервируйте товары."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -9545,8 +9556,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
-"Вы не можете переместить тот самый содержание пакета более одного раза в "
-"одном перемещении или разделить тот же пакет на два местонахождения."
+"Вы не можете переместить одно и то же содержимое пакета более одного раза в "
+"одном перемещении или разделите этот пакет на два места хранения."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9586,8 +9597,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr ""
-"Невозможно разбить складское перемещение, установленное на `Выполнено`."
+msgstr "Невозможно разбить складское перемещение, отмеченное как 'Выполнено'."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9596,14 +9606,16 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\" (%s)."
 msgstr ""
+"Вы не можете брать продукты из и отправлять их в виртуальное место хранения "
+"(%s)."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
-"Невозможно зарезервировать складское перемещение, установленное на "
-"`Выполнено`."
+"Невозможно разрезервировать складское перемещение, отмеченное как "
+"'Выполнено'."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9728,7 +9740,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
-msgstr "У вас все еще есть товар в расположении %s"
+msgstr "У вас все еще есть товары в месте хранения %s"
 
 #. module: stock
 #. openerp-web

@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Thomas Pot <thomas@open2bizz.nl>, 2022
-# Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Dylan Kiss, 2022
+# Jolien De Paepe, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,9 +36,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"De boeking (%s) is niet evenwichtig.\n"
-"Het totale debet bedraagt %s en het totale krediet bedraagt %s.\n"
-"Misschien wil je een standaardrekening op het dagboek \"%s\" opgeven om elke boeking automatisch sluitend te maken."
+"De boeking (%s) is niet in balans.\n"
+"Het totale debet bedraagt %s en het totale credit bedraagt %s.\n"
+"Misschien wil je een standaardrekening op het dagboek \"%s\" opgeven om elke boeking automatisch in balans te brengen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -54,31 +55,31 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Groep van BTW's: de BTW is een set van sub BTW's.\n"
-"    - Vast: Het BTW bedrag is gelijk ongeacht de prijs.\n"
-"    - Percentage van prijs: Het BTW bedrag is een percentage van de prijs:\n"
-"        Bijv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
-"        Bijv. 110 / (1 + 10%) = 100 (Percentage van de prijs)\n"
-"    - Percentage van de prijs is inclusief BTW: Het BTW bedrag is een gedeelte van de prijs:\n"
-"        Bijv. 180 / (1 - 10%) = 200 (exclusief BTW)\n"
-"        Bijv. 200 * (1 - 10%) = 180 (inclusief BTW)\n"
+"    - Groep van btw's: de btw is een set van sub-btw's.\n"
+"    - Vast: Het btw-bedrag is gelijk ongeacht de prijs.\n"
+"    - Percentage van de prijs: Het btw-bedrag is een percentage van de prijs:\n"
+"        bv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
+"        bv. 110 / (1 + 10%) = 100 (inbegrepen in de prijs)\n"
+"    - Percentage van de prijs inclusief btw: Het btw-bedrag is een deel van de prijs:\n"
+"        bv. 180 / (1 - 10%) = 200 (niet inbegrepen in de prijs)\n"
+"        bv. 200 * (1 - 10%) = 180 (inbegrepen in de prijs)\n"
 "        "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " De %(lock_type)s blokkerdatum is ingesteld op .%(lock_date)s."
+msgstr " De %(lock_type)s blokkeerdatum is ingesteld op %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Afgeletterde facturen"
+msgstr "# Afgeletterde inkoopfacturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Afgeletterde facturen"
+msgstr "# Afgeletterde verkoopfacturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
@@ -88,7 +89,7 @@ msgstr "# Afgeletterde afschriftregels"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "# aantal cijfers"
+msgstr "# Cijfers"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -106,7 +107,7 @@ msgstr "%(action)s voor dagboek %(journal)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s verschuldigd %(date)s"
+msgstr "%(amount)s verschuldigd op %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -145,13 +146,13 @@ msgstr "%s (afronding)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr "%s - %s; %s Gefactureerd, %s Ontvangen voor %s ieder"
+msgstr "%s - %s; %s gefactureerd, %s ontvangen aan %s per stuk"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr "%s - %s; %s Gefactureerd, %s Geleverd op %s iedere"
+msgstr "%s - %s; %s gefactureerd, %s afgeleverd aan %s per stuk"
 
 #. module: account
 #: code:addons/account/models/product.py:0
@@ -172,7 +173,7 @@ msgid ""
 "%s has reached its Credit Limit of : %s\n"
 "Total amount due "
 msgstr ""
-"%s heeft zijn kredietlimiet van : %s . bereikt\n"
+"%s heeft de kredietlimiet van %s bereikt.\n"
 "Totaal verschuldigd bedrag "
 
 #. module: account
@@ -192,7 +193,7 @@ msgstr "%s.kopie"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "(copy)"
-msgstr "(kopiëren)"
+msgstr "(kopie)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -217,8 +218,8 @@ msgid ""
 ",\n"
 "                                the due date(s) and amount(s) will be:"
 msgstr ""
-",\n"
-"                                de vervaldatum(s) en het/de bedrag(en) zijn:"
+" \n"
+"                                zullen de bedragen en vervaldata de volgende zijn:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -233,19 +234,19 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- Een nieuw veld «Totaal (Incl. BTW.)» om de invoer en controle te "
-"versnellen door het maken van regels te automatiseren met de juiste rekening"
-" &amp; BTW."
+"- Een nieuw veld «Totaal (incl. btw)» om de invoer en controle te versnellen"
+" door het maken van regels te automatiseren met de juiste rekening &amp; "
+"btw."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr "- De volgorde van het document wordt bewerkbaar op alle documenten."
+msgstr "- Het documentnummer wordt bewerkbaar op alle documenten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Zie de gedeeltelijk afgeletterde boekingen"
+msgstr "-> Gedeeltelijk afgeletterde boekingen bekijken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -264,7 +265,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ". Misschien wil je hier een hoger nummer neerzetten."
+msgstr ". Misschien wil je hier een hoger nummer ingeven."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -290,7 +291,7 @@ msgstr "2 maanden"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
-msgstr "2/7 Netto 30"
+msgstr "2/7 netto 30"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -300,7 +301,7 @@ msgstr "21 dagen"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr "30 Dagen"
+msgstr "30 dagen"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
@@ -325,7 +326,7 @@ msgstr "45 dagen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Vroegbetalingskorting toegepast.</b>"
+msgstr "<b>Vroege betalingskorting toegepast.</b>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -363,34 +364,34 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"Beste\n"
-"<t t-if=\"object.partner_id.parent_id\">\n"
-"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"</t>\n"
-"<t t-else=\"\">\n"
-"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
-"</t>\n"
-"<br/><br/>\n"
-"Hier is je\n"
-"<t t-if=\"object.name\">\n"
-"Creditfactuur <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
-"</t>\n"
-"<t t-else=\"\">\n"
-"kredietnota\n"
-"</t>\n"
-"<t t-if=\"object.invoice_origin\">\n"
-"(met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"</t>\n"
-"voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"van <t t-out=\"object.company_id.name or ''\">Bedrijf</t>.\n"
-"<br/><br/>\n"
-"Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
-"<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"<br/><br/>\n"
-"<t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"</t>\n"
-"</p>\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Hierbij vind je je\n"
+"        <t t-if=\"object.name\">\n"
+"            creditfactuur <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            creditfactuur\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        voor een bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        van <t t-out=\"object.company_id.name or ''\">Bedrijf</t>.\n"
+"        <br/><br/>\n"
+"        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
 "</div>\n"
 "            "
 
@@ -440,44 +441,44 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"Beste\n"
-"<t t-if=\"object.partner_id.parent_id\">\n"
-"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"</t>\n"
-"<t t-else=\"\">\n"
-"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
-"</t>\n"
-"<br/><br/>\n"
-"Hier is je\n"
-"<t t-if=\"object.name\">\n"
-"factuur <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"</t>\n"
-"<t t-else=\"\">\n"
-"factuur\n"
-"</t>\n"
-"<t t-if=\"object.invoice_origin\">\n"
-"(met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"</t>\n"
-"voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"van <t t-out=\"object.company_id.name or ''\">Bedrijf</t>.\n"
-"<t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"Deze factuur is al betaald.\n"
-"</t>\n"
-"<t t-else=\"\">\n"
-"Gelieve de betaling zo snel mogelijk over te maken..\n"
-"<t t-if=\"object.payment_reference\">\n"
-"<br/><br/>\n"
-"Gelieve de volgende mededeling te gebruiken voor je betaling: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
-"</t>\n"
-"</t>\n"
-"<br/><br/>\n"
-"Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
-"<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"<br/><br/>\n"
-"<t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"</t>\n"
-"</p>\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Hierbij vind je je\n"
+"        <t t-if=\"object.name\">\n"
+"            factuur <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factuur\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        voor een bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        van <t t-out=\"object.company_id.name or ''\">Bedrijf</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Deze factuur is al betaald.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Gelieve de betaling zo snel mogelijk over te maken.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Gelieve de volgende mededeling te gebruiken voor je betaling: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
 "</div>\n"
 "            "
 
@@ -502,26 +503,26 @@ msgid ""
 "</div>\n"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"Beste <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
-"Dank je voor je betaling.\n"
-"Hier is je betalingsbewijs <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> voor het bedrag van \n"
-"tot <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> van <t t-out=\"object.company_id.name or ''\">Bedrijf</t>.\n"
-"<br/><br/>\n"
-"Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
-"<br/><br/>\n"
-"Met vriendelijke groet,\n"
-"<t t-if=\"not is_html_empty(user.signature)\">\n"
-"<br/><br/>\n"
-"<t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"</t>\n"
-"</p>\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Bedankt voor je betaling.\n"
+"        Hierbij vind je je betalingsbewijs <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> voor een bedrag van\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> van <t t-out=\"object.company_id.name or ''\">Bedrijf</t>.\n"
+"        <br/><br/>\n"
+"        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"        <br/><br/>\n"
+"        Met vriendelijke groet,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
 "</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>Concept factuur</em>"
+msgstr "<em>Conceptfactuur</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -576,15 +577,15 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Verzend bericht</b>"
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Bericht verzenden</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configureer e-mail "
-"servers"
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> E-mailservers "
+"configureren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -598,7 +599,7 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
-"<li>{amount} ({debit_credit}) van <strong>%s</strong> zijn overgemaakt aan "
+"<li>{amount} ({debit_credit}) van <strong>%s</strong> is overgeboekt op "
 "<strong>{account_target_name}</strong> door {link}</li>"
 
 #. module: account
@@ -663,8 +664,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Statement line</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Statement lines</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Statementregel</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Statementregels</span>"
+"<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Afschriftregel</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Afschriftregels</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -674,8 +675,8 @@ msgid ""
 "class=\"d-none d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge round-pill text-bg-info\"><i class=\"fa fa-fw fa-"
-"clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/> <span "
-"class=\"d-none d-md-inline\"> Wachten op betaling</span></span>"
+"clock-o\" aria-label=\"Open\" title=\"Open\" role=\"img\"/> <span "
+"class=\"d-none d-md-inline\"> Wachtend op betaling</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -696,8 +697,9 @@ msgid ""
 "class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
 "<span class=\"badge round-pill text-bg-success\"><i class=\"fa fa-fw fa-"
-"check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> Omgekeerd</span></span>"
+"check\" aria-label=\"Teruggedraaid\" title=\"Teruggedraaid\" "
+"role=\"img\"/><span class=\"d-none d-md-inline\"> "
+"Teruggedraaid</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -707,8 +709,8 @@ msgid ""
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
 "<span class=\"badge round-pill text-bg-warning\"><i class=\"fa fa-fw fa-"
-"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> Geannuleerd</span></span>"
+"remove\" aria-label=\"Geannuleerd\" title=\"Geannuleerd\" "
+"role=\"img\"/><span class=\"d-none d-md-inline\"> Geannuleerd</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -717,10 +719,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Waardes die hier ingesteld "
-"staan zijn bedrijfsspecifiek.\" aria-label=\"Waardes die hier ingesteld "
-"staan zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, "
+"zijn bedrijfsspecifiek.\" aria-label=\"Waardes die je hier instelt, zijn "
+"bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -729,9 +730,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Waarden die hier worden "
-"ingesteld, zijn bedrijfsspecifiek.\" aria-label=\"De hier ingestelde waarden"
-" zijn bedrijfsspecifiek.\" role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, "
+"zijn bedrijfsspecifiek.\" aria-label=\"Waardes die je hier instelt, zijn "
+"bedrijfsspecifiek.\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -739,8 +740,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"De waardes die je hier "
-"instelt zijn bedrijf specifiek.\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, "
+"zijn bedrijfsspecifiek.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -750,7 +751,7 @@ msgid ""
 "                                <span class=\"mx-1\"/>"
 msgstr ""
 "<span class=\"mx-1\"/>\n"
-"                                gedateerd\n"
+"                                op datum\n"
 "                                <span class=\"mx-1\"/>"
 
 #. module: account
@@ -761,8 +762,8 @@ msgid ""
 "</span>"
 msgstr ""
 "<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
-"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> "
-"of</span>"
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> of "
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -812,8 +813,8 @@ msgid ""
 "<span class=\"o_form_label\">Cash Discount Tax Reduction</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Contante korting belastingvermindering</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" role=\"img\" aria-label=\"De hier ingestelde waarden zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"o_form_label\">Btw-vermindering op contante korting</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" role=\"img\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -832,7 +833,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Algemene BTW</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" aria-label=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -841,7 +842,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Fiscaal land</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" role=\"img\" aria-label=\"De hier ingestelde waarden zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" role=\"img\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -850,7 +851,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Fiscale lokalisatie</span>\n"
-"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -859,7 +860,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Hoofdvaluta</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" aria-label=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -873,7 +874,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Afrondmethode</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -997,12 +998,12 @@ msgstr "<span role=\"separator\">Afletteringen</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr "<span role=\"separator\">Bekijk</span>"
+msgstr "<span role=\"separator\">Bekijken</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Saldo in grootboekrekening\">Saldo in GB</span>"
+msgstr "<span title=\"Saldo in grootboek\">Saldo in GB</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1015,7 +1016,7 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Outstanding Payments/Receipts\">Openstaande "
+"<span title=\"Openstaande betalingen/ontvangsten\">Openstaande "
 "betalingen/ontvangsten</span>"
 
 #. module: account
@@ -1036,7 +1037,7 @@ msgstr "<span> Van </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "<span> T/m </span>"
+msgstr "<span> tot </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1145,7 +1146,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr "<span>Dit is een voorbeeld van je voorwaarden &amp; condities.</span>"
+msgstr "<span>Dit is een voorbeeld van je algemene voorwaarden.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1156,17 +1157,17 @@ msgstr "<span>Prijs</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr "<span>Upload facturen</span>"
+msgstr "<span>Facturen uploaden</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload</span>"
-msgstr "<span>Upload</span>"
+msgstr "<span>Uploaden</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr "<span>Overzicht</span>"
+msgstr "<span>Bekijken</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1878,7 +1879,7 @@ msgstr "Grootboekrekeningen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr "Boekhoudkundige modus"
+msgstr "Accountant-modus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1920,7 +1921,7 @@ msgstr "Boekhoudkundige rapportregel"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
-msgstr "De boekhoudingsfirma zal de codering van facturen/facturen wijzigen:"
+msgstr "De accountant-modus zal de codering van facturen wijzigen:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2656,6 +2657,11 @@ msgid "Analytic Distribution Stored Char"
 msgstr "Kostenplaatsdistributie Opgeslagen Char"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
+msgid "Analytic Filter"
+msgstr "Kostenplaatsfilter"
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
 msgstr "Kostenplaatsenboekingen"
@@ -2900,14 +2906,14 @@ msgstr "Automatisch gegenereerde betalingen"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Auto-post"
-msgstr "Automatisch posten"
+msgstr "Automatisch boeken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_until
 msgid "Auto-post until"
-msgstr "Automatisch posten tot"
+msgstr "Automatisch boeken tot"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3690,7 +3696,7 @@ msgstr "Kassasystemen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Cash Rounding"
-msgstr "Kas afronding"
+msgstr "Cash afronding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -4726,7 +4732,7 @@ msgstr "Creditfacturen"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Creditdagboek items die overeenkomen met dit dagboek item."
+msgstr "Creditdagboek items die afgeletterd zijn met dit dagboek item."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
@@ -5174,7 +5180,7 @@ msgstr "Debet boeking"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Debet dagboek items die overeenkomen met dit dagboek item."
+msgstr "Debet dagboek items die afgeletterd zijn met dit dagboek item."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -5935,7 +5941,7 @@ msgstr "EXCH"
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
 #, python-format
 msgid "Early Payment Discount"
-msgstr "Vroegboekkorting"
+msgstr "Vroegtijdige betalingskorting"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5949,7 +5955,7 @@ msgstr "Vroegtijdige betalingskorting (%s)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Early Payment Discount (Exchange Difference)"
-msgstr "Vroegboekkorting (wisselverschil)"
+msgstr "Vroegtijdige betalingskosting (koersverschil)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__early_payment_discount_mode
@@ -6338,11 +6344,6 @@ msgid "Fill in the details of the line."
 msgstr "Vul de details van de regel in."
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
-msgid "Filter Analytic"
-msgstr "Filteranalyse"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
 msgstr "Multivat filteren"
@@ -6619,7 +6620,7 @@ msgstr "Geef een ratio in tussen 0-100 voor percentage."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "For this entry to be automatically posted, it required a bill date."
-msgstr "Om dit item automatisch te posten, was een factuurdatum vereist."
+msgstr "Om deze boeking automatisch te boeken, is een factuurdatum vereist."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -9111,19 +9112,19 @@ msgstr "Matched credits"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_debit_ids
 msgid "Matched Debits"
-msgstr "Overeenkomende debets"
+msgstr "Afgeletterde debets"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Bijbehorende boekingen"
+msgstr "Afgeletterde boekingen"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Transactions"
-msgstr "Overeenkomende transacties"
+msgstr "Afgeletterde transacties"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -9156,7 +9157,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
 msgid "Max Date of Matched Lines"
-msgstr "Maximale datum van overeenkomende regels"
+msgstr "Maximale datum van afgeletterde regels"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -10721,7 +10722,7 @@ msgstr "Toelichting bij betaaltermijn voor de klant...."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Payment terms"
-msgstr "Betalingstermijn"
+msgstr "Betalingscondities"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_15days
@@ -10731,7 +10732,7 @@ msgstr "Betalingsconditie: 15 dagen"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_2months
 msgid "Payment terms: 2 Months"
-msgstr "Betalingstermijn: 2 maanden"
+msgstr "Betalingsconditie: 2 maanden"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_21days
@@ -10747,37 +10748,38 @@ msgstr "Betalingsconditie: 30 dagen"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
-msgstr "Betalingsvoorwaarden: 30 dagen, 2% vroegboekkorting onder 7 dagen"
+msgstr ""
+"Betalingsconditie: 30 dagen, 2% vroege betalingskorting binnen 7 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 30 days End of Month on the 10th"
-msgstr "Betalingsvoorwaarden: 30 dagen Einde van de maand op de 10e"
+msgstr "Betalingsconditie: 30 dagen, op het einde van de maand, op de 10e"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "Betaaltermijn: 30% voorschot einde van de volgende maand"
+msgstr "Betalingsconditie: 30% voorschot op het einde van de volgende maand"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Betaaltermijn: 30% direct, resterend saldo na 60 Dagen"
+msgstr "Betalingsconditie: 30% nu, resterend saldo binnen 60 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
-msgstr "Betalingstermijn: 45 dagen"
+msgstr "Betalingsconditie: 45 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
 msgid "Payment terms: End of Following Month"
-msgstr "Betaaltermijn: Eind van volgende maand"
+msgstr "Betalingsconditie: Eind van volgende maand"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Betaaltermijn: directe betaling"
+msgstr "Betalingsconditie: Directe betaling"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
@@ -12831,7 +12833,7 @@ msgstr "Afschriften"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Statements lines matched to this payment"
-msgstr "Afschriftregels die overeenkomen met deze betaling"
+msgstr "Afschriftregels die afgeletterd zijn met deze betaling"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -14131,8 +14133,8 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
-"De volgorde waarin de verdelingsregels worden weergegeven en op elkaar "
-"worden afgestemd. Voor het correct werken van creditfacturen, moeten "
+"De volgorde waarin de verdelingsregels worden weergegeven en afgeletterd "
+"zijn. Voor het correct werken van creditfacturen, moeten "
 "factuurverdelingsregels in dezelfde volgorde worden gerangschikt als de "
 "creditfactuurverdelingsregels waarmee ze overeenkomen."
 
@@ -14962,8 +14964,8 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
-"Tip: Je hoeft je facturen niet af te drukken, in een envelop te plaatsen en "
-"te posten"
+"Tip: Je hoeft je facturen niet af te drukken, in een envelop te stoppen en "
+"op te sturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -16664,7 +16666,7 @@ msgstr "toewijzen aan factuur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "auto-posting enabled. Next accounting date:"
-msgstr "automatisch posten ingeschakeld. Volgende boekhouddatum:"
+msgstr "automatisch boeken ingeschakeld. Volgende boekhouddatum:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

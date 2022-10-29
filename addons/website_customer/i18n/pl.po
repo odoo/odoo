@@ -3,24 +3,24 @@
 # 	* website_customer
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Tomasz Leppich <t.leppich@gmail.com>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
-# Maksym <ms@myodoo.pl>, 2019
+# Piotr Strębski <strebski@gmail.com>, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2022
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,8 +39,8 @@ msgid ""
 "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
 "link\" title=\"External link\"/>"
 msgstr ""
-"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
-"link\" title=\"External link\"/>"
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"Zewnętrzny "
+"odnośnik\" title=\"Zewnętrzny odnośnik\"/>"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
@@ -56,13 +56,13 @@ msgstr "Wszystkie kraje"
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
-msgstr "Wszystkie sektory aktywności"
+msgid "All Industries"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Archived"
-msgstr "Archiwalne"
+msgstr "Zarchiwizowane"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
@@ -72,7 +72,7 @@ msgstr "Klasa bootstrap dla dostosowania koloru"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Można publikować"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -95,6 +95,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Countries Filter"
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
 msgstr "Utwórz nowy znacznik kontaktu"
@@ -102,7 +107,7 @@ msgstr "Utwórz nowy znacznik kontaktu"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
@@ -125,9 +130,14 @@ msgid "Implemented By"
 msgstr "Przygotowane przez"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Industry Filter"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Opublikowane"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
@@ -184,10 +194,16 @@ msgid "Partners"
 msgstr "Partnerzy"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
 msgstr "Odnośniki"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "References Page"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
@@ -196,8 +212,8 @@ msgstr "Referencje wg krajów"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
-msgstr "Referencje według sektorów działalności"
+msgid "References by Industries"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -215,6 +231,16 @@ msgid "Search Partner Tag"
 msgstr ""
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Show Map"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+msgid "Tags Filter"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
@@ -228,6 +254,11 @@ msgstr "Zaufanie milionów na całym świecie"
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
 msgstr "Widoczne na obecnej stronie"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Strona WWW"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form

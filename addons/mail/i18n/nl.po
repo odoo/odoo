@@ -3,9 +3,9 @@
 # 	* mail
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4380,6 +4380,7 @@ msgstr "Laden"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
+#: code:addons/mail/static/src/models/emoji_grid_loading_screen.js:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
@@ -5911,6 +5912,24 @@ msgstr "Gepland na"
 #, python-format
 msgid "Please complete customer's information"
 msgstr "Vul de informatie van de klant in"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid "Invalid Partner"
+msgstr "Ongeldige partner"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid ""
+"The information you have entered does not match the existing contact "
+"information for this record. The partner was not created."
+msgstr ""
+"De ingevoerde informatie komt niet overeen met de bestaande "
+"contactinformatie voor deze record. De partner is niet aangemaakt."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -8653,7 +8672,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "You do not have access to"
-msgstr "U heeft geen toegang tot"
+msgstr "Je hebt geen toegang tot"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_blacklist.py:0

@@ -67,8 +67,11 @@ msgid "# Tasks"
 msgstr "# 任务"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
 #: model:ir.model.fields,field_description:project.field_project_milestone__task_count
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
+#, python-format
 msgid "# of Tasks"
 msgstr "#  任务"
 
@@ -1286,7 +1289,7 @@ msgstr "头脑风暴"
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "程序错误"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1418,7 +1421,7 @@ msgid ""
 "Collaborate efficiently with key stakeholders by sharing with them the "
 "Kanban view of your tasks. Collaborators will be able to edit parts of tasks"
 " and send messages."
-msgstr ""
+msgstr "通过与关键利益相关者分享你的任务的看板视图，与他们进行有效的合作。合作者将能够编辑任务的部分内容并发送消息。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_id
@@ -1471,7 +1474,7 @@ msgstr "商业实体"
 msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
-msgstr ""
+msgstr "使用电子邮件网关与客户就任务进行沟通。 将徽标设计附加到任务中，以便信息从设计师流向打印t恤的工人。 使用"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1565,7 +1568,7 @@ msgstr "封面图像"
 #, python-format
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
-msgstr ""
+msgstr "创建<b>活动</b>为自己设定待办事项或安排会议"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1794,20 +1797,22 @@ msgid ""
 "Date on which the stage of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another."
 msgstr ""
+"您的任务的阶段最后被修改的日期。\n"
+"根据这些信息，你可以识别那些停滞不前的任务，并获得将任务从一个阶段移动到另一个阶段通常所需时间的统计数据。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
 msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
-msgstr ""
+msgstr "该项目结束的日期。在查看项目的计划时，会考虑到项目上定义的时间框架。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
 msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
-msgstr ""
+msgstr "上次分配（或未分配）此任务的日期。 基于此，您可以获得分配任务通常需要的时间的统计信息"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -1965,7 +1970,7 @@ msgstr "说明"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
-msgstr ""
+msgstr "描述以提供有关此项目的更多信息和上下文"
 
 #. module: project
 #. openerp-web
@@ -2141,7 +2146,7 @@ msgstr "EMail模板"
 msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
-msgstr ""
+msgstr "在该任务接收的电子邮件的抄送名单中的电子邮件地址，并且目前没有与现有客户联系"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -2181,7 +2186,7 @@ msgstr "错误！ 您不能创建递归的任务层次结构。"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr ""
+msgstr "每个人都可以提出想法，编辑将最好的标记为"
 
 #. module: project
 #. openerp-web
@@ -2281,7 +2286,7 @@ msgstr "关注的任务"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Followed Updates"
-msgstr ""
+msgstr "关注的更新"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2352,7 +2357,7 @@ msgstr "获取客户反馈"
 #, python-format
 msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
-msgstr ""
+msgstr "通过将员工添加为关注者，授予他们对项目或任务的访问权限"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2360,7 +2365,7 @@ msgstr ""
 msgid ""
 "Grant portal users access to your project or tasks by adding them as "
 "followers."
-msgstr ""
+msgstr "通过将门户用户添加为关注者，授予他们对项目或任务的访问权限。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
@@ -2389,7 +2394,7 @@ msgstr "分组"
 msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks. Use the"
-msgstr ""
+msgstr "在您的新项目的任务中处理你的想法收集，并在任务的聊天中讨论它们。使用"
 
 #. module: project
 #. openerp-web
@@ -2408,7 +2413,7 @@ msgstr "笑脸"
 #: model:ir.model.fields,field_description:project.field_project_task__has_late_and_unreached_milestone
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__has_late_and_unreached_milestone
 msgid "Has Late And Unreached Milestone"
-msgstr ""
+msgstr "有逾期未达的里程碑"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -3285,14 +3290,14 @@ msgstr "任务名称"
 msgid ""
 "Name of your project. It can be anything you want e.g. the name of a "
 "customer or a service."
-msgstr ""
+msgstr "您的项目名称，它可以是任何您想要东西，例如客户名称或服务"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
-msgstr ""
+msgstr "用来指代项目任务的名称，如任务、票据、冲刺等等……"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_1_task_10
@@ -3812,7 +3817,7 @@ msgstr "电话"
 msgid ""
 "Plan resource allocation across projects and estimate deadlines more "
 "accurately"
-msgstr ""
+msgstr "计划跨项目的资源分配，更准确地估计截止日期"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3869,7 +3874,7 @@ msgstr "门户网站用户名称"
 msgid ""
 "Portal users will be removed from the followers of the project and its "
 "tasks."
-msgstr ""
+msgstr "门户用户将从项目及其任务的关注者中删除。"
 
 #. module: project
 #. openerp-web
@@ -4074,7 +4079,7 @@ msgstr "项目可见性"
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "项目状态 - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4694,7 +4699,7 @@ msgstr "设置封面图像"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "设定状态"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4707,14 +4712,14 @@ msgstr "设置阶段的评分邮件模版"
 msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
-msgstr ""
+msgstr "设置在项目的阶段，以便在项目到达该阶段时通知客户"
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
 msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
-msgstr ""
+msgstr "在项目阶段设置此模板以请求客户的反馈。 在项目上启用\"客户评级\"功能"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -5380,7 +5385,7 @@ msgstr "这将存档以下项目中的阶段及其包含的所有任务："
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
-msgstr ""
+msgstr "这些代表了你必须做的不同类别的事情（例如，\"打电话 \"或 \"发送电子邮件\"）"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -5404,7 +5409,7 @@ msgstr "时间管理"
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr ""
+msgstr "提示：从收到的电子邮件中创建任务"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -5425,7 +5430,7 @@ msgstr "称谓"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "To Bill"
-msgstr ""
+msgstr "开账单"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
@@ -5680,7 +5685,7 @@ msgstr "使用标签来对您的任务进行分类。"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr ""
+msgstr "使用"
 
 #. module: project
 #. openerp-web
@@ -5955,7 +5960,7 @@ msgstr "and"
 msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
-msgstr ""
+msgstr "以及哪些反馈被移至 \"拒绝 \"栏"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -6069,7 +6074,7 @@ msgstr "以下里程碑的截止日期已被更新："
 msgid ""
 "to define if the project is\n"
 "      ready for the next step."
-msgstr ""
+msgstr "定义项目是否已准备好进行下一步。"
 
 #. module: project
 #. openerp-web
@@ -6088,7 +6093,7 @@ msgstr "来表明你的想法的当前状态是什么。"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
-msgstr ""
+msgstr "将创建任务在您的"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
