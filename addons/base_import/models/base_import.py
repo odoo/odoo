@@ -224,39 +224,41 @@ class Import(models.TransientModel):
         # TODO: cache on model?
         return importable_fields
 
-    def _import_handler(self, file_extension, handler, options, filetype):
-        if handler:
-            try:
-                return getattr(self, '_read_' + file_extension)(options)
-            except Exception:
-                filename = self.file_name or '<unknown>'
-                fstring = f'Failed to read file {filename} (transient id {self.id}) as type {filetype}'
-                _logger.debug(fstring)
+    def _import_handler(self, file_extension, options, filetype=''):
+        try:
+            return getattr(self, '_read_' + file_extension)(options)
+        except Exception:
+            filename = self.file_name or '<unknown>'
+            filetype = filetype or file_extension
+            fstring = f'Failed to read file {filename} (transient id {self.id}) as type {filetype}'
+            _logger.debug(fstring)
+            return None
 
     def _read_file(self, options):
         """ Dispatch to specific method to read file content, according to its mimetype or file type
             :param options : dict of reading options (quoting, separator, ...)
         """
         self.ensure_one()
+
         mimetype = guess_mimetype(self.file or b'')
-        if mimetype in FILE_TYPE_DICT:
-            filetype = mimetype
-        else:
-            filetype = self.file_type
-        (file_extension, handler, req) = FILE_TYPE_DICT.get(filetype, (None, None, None))
-        self._import_handler(file_extension, handler, options, filetype)
+        (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
+        if handler:
+            handled = self._import_handler(file_extension, options, mimetype)
+            if handled:
+                return handled
 
-        # fallback on file extensions as mime types can be unreliable (e.g.
-        # software setting incorrect mime types, or non-installed software
-        # leading to browser not sending mime types)
+        (file_extension, handler, req) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
+        if handler:
+            handled = self._import_handler(file_extension, options, self.file_type)
+            if handled:
+                return handled
+
         if self.file_name:
-            p, ext = os.path.splitext(self.file_name)
-            if ext in EXTENSIONS:
-                try:
-                    return getattr(self, '_read_' + ext[1:])(options)
-                except Exception:
-                    _logger.warn("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
-
+            fext = os.path.splitext(self.file_name)[-1]
+            if fext in EXTENSIONS:
+                handled = self._import_handler(fext[1:], options)
+                if handled:
+                    return handled
         if req:
             raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
         raise ValueError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(self.file_type))
