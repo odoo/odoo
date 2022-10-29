@@ -1107,9 +1107,11 @@ class Request:
         self.dispatcher = _dispatchers['http'](self)  # until we match
         #self.params = {}  # set by the Dispatcher
 
-        self.session, self.db = self._get_session_and_dbname()
         self.registry = None
         self.env = None
+
+    def _post_init(self):
+        self.session, self.db = self._get_session_and_dbname()
 
     def _get_session_and_dbname(self):
         # The session is explicit when it comes from the query-string or
@@ -1951,6 +1953,7 @@ class Application:
             werkzeug.datastructures.ImmutableOrderedMultiDict)
         request = Request(httprequest)
         _request_stack.push(request)
+        request._post_init()
         current_thread.url = httprequest.url
 
         try:
