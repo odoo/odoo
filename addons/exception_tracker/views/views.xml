@@ -4,9 +4,10 @@
       <field name="name">exception list</field>
       <field name="model">exception_tracker.exception</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree create="0" >
           <field name="name"/>
           <field name="message"/>
+          <field name="source"/>
         </tree>
       </field>
     </record>
@@ -15,16 +16,30 @@
       <field name="name">exception form</field>
       <field name="model">exception_tracker.exception</field>
       <field name="arch" type="xml">
-        <form>
+        <form create="0">
+          <header>
+            <button class="btn btn-secondary" name="share_project" string="Share">Share</button>
+          </header>
           <sheet>
             <group>
+                <field name="source"/>
                 <field name="name"/>
                 <field name="message"/>
                 <field name="traceback" widget="traceback" />
+                <field name="logs" widget="log" />
                 <field name="user_context" widget="json" />
                 <field name="action_context" widget="json" />
             </group>
+            <notebook>
+              <page name="Notes">
+                <field name="notes" placeholder="Add some notes about the exception" />
+              </page>
+            </notebook>
           </sheet>
+          <div class="oe_chatter">
+              <field name="message_follower_ids" />
+              <field name="message_ids" options="{ 'post_refresh': 'recipients' }" />
+          </div>
         </form>
       </field>
     </record>
@@ -33,6 +48,13 @@
       <field name="name">Exceptions</field>
       <field name="res_model">exception_tracker.exception</field>
       <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+          No logged exceptions
+        </p><p>
+          Odoo is super stable!
+        </p>
+      </field>
     </record>
 
     <menuitem id="exception_tracker.menu_root" name="Exceptions" action="exception_tracker.action_window" sequence="1" />
