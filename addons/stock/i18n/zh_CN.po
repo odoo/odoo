@@ -1362,6 +1362,12 @@ msgid "Change to a better name"
 msgstr "变更为更好名称"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -3498,7 +3504,7 @@ msgstr "库存位置"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "库存位置"
+msgstr "盘点位置"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -4493,7 +4499,7 @@ msgstr "下一活动类型"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected Inventory"
-msgstr "预计下一次盘点"
+msgstr "下一次预计的盘点"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
@@ -4940,7 +4946,7 @@ msgstr "转出的草稿调拨"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
 msgid "Outgoing Move Line"
-msgstr "出向调拨行"
+msgstr "出向移动行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
@@ -5363,7 +5369,7 @@ msgstr "在此日期处理以保证准时"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "使用条码更快的处理作业【亲，这是企业版的付费功能】"
+msgstr "使用条码更快的处理作业"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8377,7 +8383,7 @@ msgstr "供应商位置"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "View"
-msgstr "查看"
+msgstr "视图"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
