@@ -95,6 +95,7 @@ class Note(models.Model):
                     '__domain': domain + [('stage_ids.id', '=', stage.id)],
                     'stage_id': (stage.id, stage.name),
                     'stage_id_count': self.search_count(domain + [('stage_ids', '=', stage.id)]),
+                    '__count': self.search_count(domain + [('stage_ids', '=', stage.id)]),
                     '__fold': stage.fold,
                 } for stage in stages]
 
@@ -107,6 +108,7 @@ class Note(models.Model):
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
                         result[0]['stage_id_count'] += nb_notes_ws
+                        result[0]['__count'] += nb_notes_ws
                     else:
                         # add the first stage column
                         result = [{
@@ -114,6 +116,7 @@ class Note(models.Model):
                             '__domain': domain + [dom_not_in],
                             'stage_id': (stages[0].id, stages[0].name),
                             'stage_id_count': nb_notes_ws,
+                            '__count': nb_notes_ws,
                             '__fold': stages[0].name,
                         }] + result
             else:  # if stage_ids is empty, get note without user's stage
@@ -123,7 +126,8 @@ class Note(models.Model):
                         '__context': {'group_by': groupby[1:]},
                         '__domain': domain,
                         'stage_id': False,
-                        'stage_id_count': nb_notes_ws
+                        'stage_id_count': nb_notes_ws,
+                        '__count': nb_notes_ws
                     }]
                 else:
                     result = []
