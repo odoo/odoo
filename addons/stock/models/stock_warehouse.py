@@ -6,6 +6,7 @@ from collections import namedtuple
 
 from odoo import _, _lt, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -128,7 +129,7 @@ class Warehouse(models.Model):
 
         for warehouse, vals in zip(warehouses, vals_list):
             # create sequences and operation types
-            new_vals = warehouse._create_or_update_sequences_and_picking_types()
+            new_vals = warehouse.with_context(clean_context(self.env.context))._create_or_update_sequences_and_picking_types()
             warehouse.write(new_vals)  # TDE FIXME: use super ?
             # create routes and push/stock rules
             route_vals = warehouse._create_or_update_route()
