@@ -47,7 +47,7 @@ msgstr "有効"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Add a phone number in the blacklist"
-msgstr ""
+msgstr "ブラックリストに電話番号を追加する"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -252,6 +252,12 @@ msgstr "メッセージ配信エラー"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_ids
 msgid "Messages"
 msgstr "メッセージ"
+
+#. module: phone_validation
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid "Missing definition of phone fields."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number

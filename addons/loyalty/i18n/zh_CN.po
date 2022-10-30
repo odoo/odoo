@@ -100,7 +100,7 @@ msgstr "（不含税）"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
-msgstr ""
+msgstr "2+1 免费"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
@@ -131,6 +131,31 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                这是您的礼品卡!\n"
+"            </div>\n"
+"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                    <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                    <strong>礼品卡代码</strong>\n"
+"                </p>\n"
+"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"            </div>\n"
+"            <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">卡有效期 <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                    <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">现在就使用吧！</a>\n"
+"                </span>\n"
+"            </div>\n"
+"        "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -211,7 +236,7 @@ msgstr "<span>产品</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "<span>tax</span>"
-msgstr ""
+msgstr "<span>税</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -430,7 +455,7 @@ msgstr "沟通计划"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Communications"
-msgstr ""
+msgstr "沟通"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__company_id
@@ -575,7 +600,7 @@ msgstr "折扣模式"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "折扣产品领域"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -773,7 +798,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
 msgid "Included"
-msgstr ""
+msgstr "包括"
 
 #. module: loyalty
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
@@ -913,7 +938,7 @@ msgstr "消息"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
 msgid "Minimum Amount Tax Mode"
-msgstr ""
+msgstr "最小额度税收模式"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
@@ -1122,7 +1147,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr ""
+msgstr "奖励产品数量"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id

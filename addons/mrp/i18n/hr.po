@@ -23,14 +23,15 @@
 # Alberto Poljak <albertopoljak@gmail.com>, 2022
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Matej Mijoč, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Matej Mijoč, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2862,7 +2863,7 @@ msgstr "Sljedeća aktivnost"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_calendar_event_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Događaj sljedećeg kalendara aktivnosti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
@@ -3035,9 +3036,11 @@ msgstr "Broj poruka sa greškama pri isporuci"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+"Number of pieces (in product UoM) that can be produced in parallel (at the "
+"same time) at this work center. For example: the capacity is 5 and you need "
+"to produce 10 units, then the operation time listed on the BOM will be "
+"multiplied by two. However, note that both time before and after production "
+"will only be counted once."
 msgstr ""
 
 #. module: mrp
@@ -4537,6 +4540,15 @@ msgid "The record id this is attached to."
 msgstr "Id ovog zapisa pridružen je"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
@@ -4659,6 +4671,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate."
 msgstr ""
 
 #. module: mrp
@@ -5125,6 +5145,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"

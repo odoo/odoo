@@ -15,14 +15,15 @@
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2021
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2021
-# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2021
-# Bole <bole@dajmi5.com>, 2021
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2021
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2021
 # Tina Milas, 2021
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2021
-# Martin Trigaux, 2022
 # Vladimir Vrgoč, 2022
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
+# Matej Mijoč, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
-"Last-Translator: Vladimir Vrgoč, 2022\n"
+"Last-Translator: Matej Mijoč, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1610,6 +1611,15 @@ msgid "After"
 msgstr "Nakon"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
+msgid "Alert"
+msgstr "Alarm"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Align Bottom"
@@ -1889,7 +1899,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Naziv arch datoteke"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch_fs
@@ -2018,6 +2028,15 @@ msgid "Background Shape"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
+msgid "Badge"
+msgstr "Značka"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Bags"
 msgstr ""
@@ -2107,6 +2126,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Block"
 msgstr "Blokiraj"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Blockquote"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -2352,6 +2378,33 @@ msgid "Cannot load google map."
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
+msgid "Card"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 msgid "Card Style"
 msgstr ""
@@ -2432,7 +2485,10 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#, python-format
 msgid "Chart"
 msgstr ""
 
@@ -3497,7 +3553,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover more"
-msgstr ""
+msgstr "Otkrijte još"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -4185,6 +4241,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Datoteka odakle potječe prikaz.\n"
+"Korisno za (tvrdi) reset slomljenih prikaza na izvorno ili za čitanje luka iz datoteke u dev-xml načinu rada."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -5215,6 +5273,76 @@ msgid "Inputs"
 msgstr "Ulazi"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a badge snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a blockquote snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a card snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a chart snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a progress bar snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a rating snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a share snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a text Highlight snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert an alert snippet."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert an horizontal separator sippet."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid ""
 "Insert text styles like headers, bold, italic, lists, and fonts with\n"
@@ -5329,7 +5457,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__is_published
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Is Published"
-msgstr ""
+msgstr "je objavljeno"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_visible
@@ -5721,7 +5849,7 @@ msgstr "Izgled"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background"
-msgstr ""
+msgstr "Izgled pozadine"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -5781,7 +5909,7 @@ msgstr "Omogućite prijavu svojim korisnicima kako bi vidjeli svoje dokumente"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Let's do it"
-msgstr ""
+msgstr "Učinimo to!"
 
 #. module: website
 #. openerp-web
@@ -5942,7 +6070,7 @@ msgstr "Glavne radnje"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__parent_id
 msgid "Main identity"
-msgstr ""
+msgstr "Glavni identitet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -6116,6 +6244,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Min Axis"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
 msgstr ""
 
 #. module: website
@@ -6341,7 +6476,7 @@ msgstr "Moja web stranica"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "MyCompany"
-msgstr ""
+msgstr "Moja tvrtka"
 
 #. module: website
 #. openerp-web
@@ -6579,7 +6714,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Not published"
-msgstr ""
+msgstr "nije objavljeno"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -7244,6 +7379,13 @@ msgid "Profile"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Progress Bar"
+msgstr "Traka napretka"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Progress Bar Color"
 msgstr ""
@@ -7374,6 +7516,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Radio Buttons"
 msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Rating"
+msgstr "Ocjena"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -7954,6 +8103,19 @@ msgid "Separate email addresses with a comma."
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Separator"
+msgstr "Separator"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website__sequence
@@ -7963,6 +8125,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Sekvenca"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -8024,7 +8193,11 @@ msgid "Shake"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
+#, python-format
 msgid "Share"
 msgstr "Podjeli"
 
@@ -8648,7 +8821,10 @@ msgid "Text Color"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+#, python-format
 msgid "Text Highlight"
 msgstr ""
 
@@ -8942,7 +9118,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Ovo je polje isto kao i polje \"luk\" bez prijevoda"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
@@ -8966,6 +9142,15 @@ msgstr ""
 msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
+msgstr ""
+"Ovo će polje spremiti trenutnu 'arch_db' prije pisanja na njega.\n"
+"Korisno za (meko) resetiranje slomljenog prikaza."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
 msgstr ""
 
 #. module: website
@@ -9435,7 +9620,7 @@ msgstr "Url"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__country_flag
 msgid "Url of static flag image"
-msgstr ""
+msgstr "URL slike statičke zastavice"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -9642,7 +9827,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Prikazi koji nasljeđuju od ovog"
 
 #. module: website
 #. openerp-web
@@ -9906,6 +10091,16 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
@@ -11152,4 +11347,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
 msgstr ""

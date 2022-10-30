@@ -117,6 +117,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Christophe Klopfert, 2022
 # Jolien De Paepe, 2022
+# HASSAN ABDELLAH <aitabdellahhassan@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -124,7 +125,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: HASSAN ABDELLAH <aitabdellahhassan@gmail.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2049,7 +2050,7 @@ msgstr "Assistant des commandes à recevoir"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued total"
-msgstr ""
+msgstr "Total accumulé"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -3664,7 +3665,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Carryover lines"
-msgstr ""
+msgstr "Lignes de report"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7108,6 +7109,9 @@ msgid ""
 " balance in the report. This means that the carryover could affect other "
 "lines if they are using this one in their computation."
 msgstr ""
+"Si elle est établie, le montant reporté pour cette ligne sera utilisé pour "
+"calculer son solde dans le rapport. Cela signifie que le report pourrait "
+"affecter d’autres lignes si elles utilisent celle-ci dans leur calcul."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -7123,6 +7127,10 @@ msgid ""
 "excluding this tax group before displaying it. If not set, the tax group "
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
+"Si définie, cette valeur sera utilisée sur les documents comme étiquette "
+"d’un sous-total hors ce groupe fiscal avant de l’afficher. Si ce n’est pas "
+"le cas, le groupe fiscal s’affichera après le sous-total 'Montant non "
+"imposable'."
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
@@ -13314,6 +13322,9 @@ msgid ""
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
 msgstr ""
+"Les lignes de répartition des taxes doivent s'appliquer aux factures ou aux "
+"remboursements, et non aux deux en même temps. invoce_tax_id et "
+"refund_tax_id ne doivent pas être définis ensemble."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
@@ -13329,7 +13340,7 @@ msgstr "Taxe sur l'article"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_carryover_line__tax_report_line_id
 msgid "Tax report line"
-msgstr ""
+msgstr "Ligne de rapport de Tax"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -13400,6 +13411,8 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal"
 " item if they share some tag."
 msgstr ""
+"Les taxes exigibles sur paiement et sur facture ne peuvent pas être "
+"mélangées sur le même article de journal s’ils partagent une étiquette."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
@@ -14320,11 +14333,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this carryover is made."
 msgstr ""
+"La position budgétaire extérieure pour laquelle ce report est effectué."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__group_tax_id
 msgid "The group of taxes that generated this tax line"
-msgstr ""
+msgstr "Le groupe de taxes qui a généré cette ligne de taxe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14833,6 +14847,8 @@ msgid ""
 "The sum of total residual amount propositions and the statement line amount "
 "allowed gap type."
 msgstr ""
+"La somme des propositions de montant résiduel total et le type d'écart "
+"autorisé du montant de la ligne de relevé ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_param
@@ -14842,6 +14858,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this amount/percentage."
 msgstr ""
+"La somme des propositions de montant résiduel total correspond au montant de"
+" la ligne de relevé sous ce montant/pourcentage."
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
@@ -16494,6 +16512,8 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
+"Vous ne pouvez pas enregistrer des paiements pour des éléments de journal "
+"qui sont soit tous entrants, soit tous sortants."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -16593,6 +16613,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
+"Vous ne pouvez pas créer un mouvement déjà dans l'état posté. Veuillez créer"
+" un brouillon de mouvement et le poster après."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
