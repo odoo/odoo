@@ -143,14 +143,14 @@ class AccountMove(models.Model):
                 identification_code = "01"
             elif idtype == 'cedula':
                 identification_code = "02"
-            elif idtype in ['foreign','passport']:
+            elif idtype in ['foreign', 'passport']:
                 identification_code = "03"
         elif self.move_type in ("out_invoice", "out_refund"):
             if idtype == 'ruc': # includes final consumer
                 identification_code = "04"
             elif idtype == 'cedula':
                 identification_code = "05"
-            elif idtype in ['foreign','passport']:
+            elif idtype in ['foreign', 'passport']:
                 identification_code = "06"
         return identification_code
 
@@ -174,9 +174,6 @@ class AccountMove(models.Model):
             elif self.move_type in ('out_invoice', 'in_invoice'):
                 domain.extend([("internal_type", "=", 'invoice')])
             allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_ats_identification_type())
-            
-            
-            #if allowed_documents: #TODO Joss, Andres suggest to remove the condition, so that if no ID matches then no document is available
             domain.extend([("id", "in", allowed_documents.ids)])
         return domain
 

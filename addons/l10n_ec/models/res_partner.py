@@ -65,7 +65,7 @@ class ResPartner(models.Model):
             idtype = 'ruc' # RUC
         elif self.l10n_latam_identification_type_id == self.env.ref('l10n_latam_base.it_pass'):
             idtype = 'passport'  # Pasaporte
-        elif self.l10n_latam_identification_type_id == self.env.ref('l10n_latam_base.it_fid','l10n_latam_base.it_vat'):
+        elif self.l10n_latam_identification_type_id == self.env.ref('l10n_latam_base.it_fid', 'l10n_latam_base.it_vat'):
             idtype = 'foreign' # Identificacion del exterior
         elif self.l10n_latam_identification_type_id.country_id != self.env.ref('base.ec'):
             idtype = 'foreign' # Identificacion del exterior

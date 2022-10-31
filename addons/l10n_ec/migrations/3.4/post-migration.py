@@ -33,8 +33,8 @@ def update_type_tax_use(env):
         WHERE tax_group_id IN (SELECT id FROM account_tax_group WHERE l10n_ec_type IN ('withhold_income_purchase','withhold_vat_purchase','withhold_income_sale','withhold_vat_sale'))
     ''')
 
-def update_vat_withhold_base_percent(env):
-    # For vat withhold taxes, replace factor_percent=12% with factor_percent=100%
+def update_tax_repartition_line_vat_withhold(env):
+    # For tax repartition lines in vat withhold taxes, replace factor_percent=12% with factor_percent=100%
     env.cr.execute('''
         --for invoice_tax_id
         UPDATE account_tax_repartition_line
@@ -70,4 +70,4 @@ def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
     update_withhold_type(env)
     update_type_tax_use(env)
-    update_vat_withhold_base_percent(env)
+    update_tax_repartition_line_vat_withhold(env)
