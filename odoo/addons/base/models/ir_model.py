@@ -1415,6 +1415,10 @@ class IrModelSelection(models.Model):
                 records.invalidate_cache([fname])
 
         for selection in self:
+            if selection.field_id.model not in self.env:
+                _logger.warning('Selection field "%s" references to non-existing model "%s". You may need to add migration script', selection.field_id.name, selection.field_id.model)
+                continue
+
             Model = self.env[selection.field_id.model]
             # The field may exist in database but not in registry. In this case
             # we allow the field to be skipped, but for production this should
