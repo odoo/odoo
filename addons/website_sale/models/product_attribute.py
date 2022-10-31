@@ -30,3 +30,18 @@ class ProductTemplateAttributeLine(models.Model):
         for ptal in single_value_lines:
             single_value_attributes[ptal.attribute_id] |= ptal
         return single_value_attributes
+
+class ProductAttributeValue(models.Model):
+    _inherit = 'product.attribute.value'
+
+    def is_product_variant_in_category(self, category):
+        # All products category
+        if(not category.name):
+            return True
+        # Specific category
+        for child in category.child_id:
+            if(self.is_product_variant_in_category(child)):
+                return True
+        attributes_products = self.pav_attribute_line_ids.product_tmpl_id
+        # Check if at least one element of this attribute value is displayed in the selected category
+        return any(product in attributes_products for product in category.product_tmpl_ids)
