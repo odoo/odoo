@@ -24,7 +24,18 @@ class Deploy(Command):
         finally:
             os.remove(module_file)
 
+    def get_session_id(self, url, db):
+        print("Get session id for db: %s..." % db)
+        endpoint = url + '/web?db=%s' % db
+
+        res = self.session.get(endpoint, allow_redirects=False)
+        session_id = res.cookies.get('session_id')
+
+        res.raise_for_status()
+        return session_id
+
     def login_upload_module(self, module_file, url, login, password, db, force=False):
+        session_id = self.get_session_id(url, db)
         print("Uploading module file...")
         endpoint = url + '/base_import_module/login_upload'
         post_data = {
@@ -34,7 +45,7 @@ class Deploy(Command):
             'force': '1' if force else '',
         }
         with open(module_file, 'rb') as f:
-            res = self.session.post(endpoint, files={'mod_file': f}, data=post_data)
+            res = self.session.post(endpoint, files={'mod_file': f}, data=post_data, headers={'X-Openerp-Session-Id': session_id})
 
         if res.status_code == 404:
             raise Exception(
