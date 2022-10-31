@@ -32,7 +32,6 @@ class PosPayment(models.Model):
     ticket = fields.Char('Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
 
-    @api.model
     def name_get(self):
         res = []
         for payment in self:
