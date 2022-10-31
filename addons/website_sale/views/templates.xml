@@ -679,7 +679,7 @@
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 mr-auto">
-                                            <a role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+                                            <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
                                                 <i class="fa fa-shopping-cart mr-2"/>
                                                 <span style="font-weight: bold">ADD TO CART</span>
                                             </a>
