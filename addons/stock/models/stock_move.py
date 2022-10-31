@@ -72,7 +72,7 @@ class StockMove(models.Model):
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
-        related='product_id.product_tmpl_id', readonly=False,
+        related='product_id.product_tmpl_id', readonly=True,
         help="Technical: used in views")
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
