@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from 'web.utils';
+import { KeepLast } from "@web/core/utils/concurrency";
 import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
 import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
 import { useService } from '@web/core/utils/hooks';
@@ -40,6 +41,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
     setup() {
         this._super();
         this.unsplash = useService('unsplash');
+        this.keepLastUnsplash = new KeepLast();
 
         this.state.unsplashRecords = [];
         this.state.isFetchingUnsplash = false;
@@ -146,9 +148,11 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
 
     async loadMore(...args) {
         await this._super(...args);
-        const { records, isMaxed } = await this.fetchUnsplashRecords(this.state.unsplashRecords.length);
-        this.state.unsplashRecords.push(...records);
-        this.state.isMaxed = isMaxed;
+        return this.keepLastUnsplash.add(this.fetchUnsplashRecords(this.state.unsplashRecords.length)).then(({ records, isMaxed }) => {
+            // This is never reached if another search or loadMore occurred.
+            this.state.unsplashRecords.push(...records);
+            this.state.isMaxed = isMaxed;
+        });
     },
 
     async search(...args) {
@@ -162,9 +166,11 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
             this.state.unsplashRecords = [];
             this.state.isMaxed = false;
         }
-        const { records, isMaxed } = await this.fetchUnsplashRecords(0);
-        this.state.unsplashRecords = records;
-        this.state.isMaxed = isMaxed;
+        return this.keepLastUnsplash.add(this.fetchUnsplashRecords(0)).then(({ records, isMaxed }) => {
+            // This is never reached if a new search occurred.
+            this.state.unsplashRecords = records;
+            this.state.isMaxed = isMaxed;
+        });
     },
 
     async onClickRecord(media) {
