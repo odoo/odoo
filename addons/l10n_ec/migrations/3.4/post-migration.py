@@ -46,7 +46,7 @@ def update_vat_withhold_base_percent(env):
             FROM account_tax
             WHERE country_id = (SELECT id FROM res_country WHERE code = 'EC' LIMIT 1) --Country is Ecuador)
             AND tax_group_id IN (
-                SELECT id FROM account_tax_group WHERE l10n_ec_type IN ('withhold_vat_sale','withhold_vat_purchase')
+                SELECT id FROM account_tax_group WHERE l10n_ec_type IN ('withhold_vat_sale', 'withhold_vat_purchase')
                 )
             )
     ''')
