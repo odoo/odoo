@@ -144,7 +144,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("BinaryField is correctly rendered", async function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         async function send(data) {
             assert.ok(data instanceof FormData);
@@ -204,6 +204,22 @@ QUnit.module("Fields", (hooks) => {
             "coucou.txt",
             "the filename field should have the file name as value"
         );
+
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(target.querySelector(".fa-download"));
+        await prom;
 
         await click(target.querySelector(".o_field_binary .o_clear_file_button"));
 
