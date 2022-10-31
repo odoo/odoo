@@ -415,11 +415,13 @@ class MrpBomLine(models.Model):
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
+        products = self.product_id
+        bom_by_product = self.env['mrp.bom']._bom_find(products)
         for line in self:
             if not line.product_id:
                 line.child_bom_id = False
             else:
-                line.child_bom_id = self.env['mrp.bom']._bom_find(line.product_id)[line.product_id]
+                line.child_bom_id = bom_by_product.get(line.product_id, False)
 
     @api.depends('product_id')
     def _compute_attachments_count(self):
