@@ -3787,7 +3787,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.env.company.tax_exigibility = True
 
         # Create an invoice with a CABA tax using 'Include in analytic cost'
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = fields.Date.from_string('2019-01-01')
         move_form.partner_id = self.partner_a
         self.cash_basis_tax_a_third_amount.analytic = True
@@ -4000,7 +4000,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.tax_account_1.reconcile = True
 
         # Create an invoice with a CABA tax using 'Include in analytic cost'
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = fields.Date.from_string('2019-01-01')
         move_form.partner_id = self.partner_a
 
