@@ -1697,18 +1697,29 @@ class PosSession(models.Model):
             'search_params': {
                 'domain': [('company_id', '=', self.company_id.id)],
                 'fields': [
-                    'name', 'real_amount', 'price_include', 'include_base_amount', 'is_base_affected',
-                    'amount_type', 'children_tax_ids'
+                    'name', 'price_include', 'include_base_amount', 'is_base_affected',
+                    'amount_type', 'children_tax_ids', 'amount', 'id'
                 ],
             },
         }
 
     def _get_pos_ui_account_tax(self, params):
         taxes = self.env['account.tax'].search_read(**params['search_params'])
-        # TODO: rename amount to real_amount in front end
+
+        # Add the 'sum_repartition_factor' as needed in the compute_all
+        # Note that the factor = factor_percent/100
+        tax_ids = tuple([t['id'] for t in taxes])
+        self.env.cr.execute("""
+            SELECT invoice_tax_id AS tax_id, sum(factor_percent)/100 AS factor_sum
+            FROM account_tax_repartition_line 
+            WHERE invoice_tax_id IN %s AND repartition_type = 'tax' 
+            GROUP BY invoice_tax_id
+        """, [tax_ids])
+        res = self.env.cr.dictfetchall()
+        tax_id_to_factor_sum = {d['tax_id']: d['factor_sum'] for d in res}
         for tax in taxes:
-            tax['amount'] = tax['real_amount']
-            del tax['real_amount']
+            tax['sum_repartition_factor'] = tax_id_to_factor_sum[tax['id']]
+
         return taxes
 
     def _loader_params_pos_session(self):
