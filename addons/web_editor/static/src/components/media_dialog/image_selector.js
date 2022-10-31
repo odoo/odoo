@@ -53,6 +53,7 @@ export class ImageSelector extends FileSelector {
         this.state.isFetchingLibrary = false;
         this.state.searchService = 'all';
         this.state.showOptimized = false;
+        this.NUMBER_OF_MEDIA_TO_DISPLAY = 10;
 
         this.uploadText = this.env._t("Upload an image");
         this.urlPlaceholder = "https://www.odoo.com/logo.png";
@@ -169,7 +170,8 @@ export class ImageSelector extends FileSelector {
                 }
             );
             this.state.isFetchingLibrary = false;
-            return { media: response.media || [], results: response.results };
+            const media = (response.media || []).slice(0, this.NUMBER_OF_MEDIA_TO_DISPLAY);
+            return { media, results: response.results };
         } catch {
             // Either API endpoint doesn't exist or is misconfigured.
             console.error(`Couldn't reach API endpoint.`);
