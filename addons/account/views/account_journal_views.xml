@@ -93,7 +93,7 @@
                                         <field name="code" placeholder="e.g. INV"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
-                                    <group string="Bank Account Number" attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                    <group name="bank_account_number" string="Bank Account Number" attrs="{'invisible': [('type', '!=', 'bank')]}">
                                         <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" string="Account Number" context="{'default_partner_id': company_partner_id}"/>
                                         <field name="bank_id" attrs="{'invisible': [('bank_account_id', '=', False)]}"/>
