@@ -8,6 +8,7 @@ Model({
         allEmojiInCategoryOfCurrent: many("EmojiInCategory", { inverse: "category" }),
         allEmojiPickerViewCategory: many("EmojiPickerView.Category", { inverse: "category" }),
         allEmojis: many("Emoji", { inverse: "emojiCategories" }),
+        displayName: attr(),
         emojiRegistry: one("EmojiRegistry", {
             inverse: "allCategories",
             required: true,
