@@ -972,11 +972,8 @@ class TranslationModuleReader:
         self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
         self._to_translate = []
         self._path_list = [(path, True) for path in odoo.addons.__path__]
-        self._installed_modules = [
-            m['name']
-            for m in self.env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
-        ]
 
+        self._export_module_description_terms()
         self._export_translatable_records()
         self._export_translatable_resources()
 
@@ -1001,6 +998,27 @@ class TranslationModuleReader:
         if not sanitized_term or len(sanitized_term) <= 1:
             return
         self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+
+    def _export_module_description_terms(self):
+        """ Export translations of module shortdesc and summary """
+        module_descs = {
+            module.name: (module.id,
+                          module.shortdesc, module.with_context(lang=self._lang).shortdesc,
+                          module.summary, module.with_context(lang=self._lang).summary)
+            for module in self.env["ir.module.module"].search([('state', '=', 'installed')])
+        }
+        self._installed_modules = module_descs.keys()
+
+        if 'all' not in self._modules:
+            modules = list(self._modules)
+        else:
+            modules = self._installed_modules
+        for module in modules:
+            desc = module_descs[module]
+            self._push_translation(module, "model", "ir_module_module,shortdesc", f"base.module_{module}",
+                                   desc[1], record_id=desc[0], value=desc[2] if desc[2] != desc[1] else '')
+            self._push_translation(module, "model", "ir_module_module,summary", f"base.module_{module}",
+                                   desc[3], record_id=desc[0], value=desc[4] if desc[4] != desc[3] else '')
 
     def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
