@@ -966,6 +966,7 @@ class Meeting(models.Model):
         attendee = self.attendee_ids.filtered(lambda att: att.partner_id in event_checked_attendees and att.state != "needsAction")
         return attendee[:1]
 
+<<<<<<< HEAD
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
         If no starting time is assigned (yet), return today as default
@@ -979,6 +980,61 @@ class Meeting(models.Model):
             start = self.start if not self.allday else self.start.replace(hour=12)
             return pytz.utc.localize(start).astimezone(tz).date()
         return self.start.date()
+||||||| parent of 3feaa846b538... temp
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        # get list of models ids and filter out None values directly
+        model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
+        model_name = defaults.get('res_model')
+        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        if meeting_activity_type and not defaults.get('activity_ids'):
+            for values in vals_list:
+                # created from calendar: try to create an activity on the related record
+                if values.get('activity_ids'):
+                    continue
+                res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
+                res_id = values.get('res_id', defaults.get('res_id'))
+                user_id = values.get('user_id', defaults.get('user_id'))
+                if not res_model_id or not res_id:
+                    continue
+                if res_model_id not in valid_activity_model_ids:
+                    continue
+                activity_vals = {
+                    'res_model_id': res_model_id,
+                    'res_id': res_id,
+                    'activity_type_id': meeting_activity_type.id,
+                }
+                if user_id:
+                    activity_vals['user_id'] = user_id
+                values['activity_ids'] = [(0, 0, activity_vals)]
+=======
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        # get list of models ids and filter out None values directly
+        model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
+        model_name = defaults.get('res_model')
+        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        if meeting_activity_type and not defaults.get('activity_ids'):
+            for values in vals_list:
+                # created from calendar: try to create an activity on the related record
+                if values.get('activity_ids'):
+                    continue
+                res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
+                values['res_id'] = res_id = values.get('res_id') or defaults.get('res_id')
+                user_id = values.get('user_id', defaults.get('user_id'))
+                if not res_model_id or not res_id:
+                    continue
+                if res_model_id not in valid_activity_model_ids:
+                    continue
+                activity_vals = {
+                    'res_model_id': res_model_id,
+                    'res_id': res_id,
+                    'activity_type_id': meeting_activity_type.id,
+                }
+                if user_id:
+                    activity_vals['user_id'] = user_id
+                values['activity_ids'] = [(0, 0, activity_vals)]
+>>>>>>> 3feaa846b538... temp
 
     def _range(self):
         self.ensure_one()
