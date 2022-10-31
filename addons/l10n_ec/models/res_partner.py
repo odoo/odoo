@@ -55,3 +55,18 @@ class ResPartner(models.Model):
                                               "it must be like this form 1234567897001") % partner.vat
                         raise ValidationError(error_message)
         return super(ResPartner, self - ecuadorian_partners).check_vat()
+
+    def _l10n_ec_get_identification_type(self):
+        # Maps Odoo identification types to Ecuadorian ones, useful for document type domains, electronic documents, ats, others
+        idtype = False
+        if self.l10n_latam_identification_type_id == self.env.ref('l10n_ec.ec_dni'):
+            idtype = 'cedula' #dni
+        elif self.l10n_latam_identification_type_id == self.env.ref('l10n_ec.ec_ruc'):
+            idtype = 'ruc' # RUC
+        elif self.l10n_latam_identification_type_id == self.env.ref('l10n_latam_base.it_pass'):
+            idtype = 'passport'  # Pasaporte
+        elif self.l10n_latam_identification_type_id == self.env.ref('l10n_latam_base.it_fid','l10n_latam_base.it_vat'):
+            idtype = 'foreign' # Identificacion del exterior
+        elif self.l10n_latam_identification_type_id.country_id != self.env.ref('base.ec'):
+            idtype = 'foreign' # Identificacion del exterior
+        return idtype
