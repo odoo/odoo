@@ -599,12 +599,12 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     do {
         node = iterator.nextNode();
     } while (node && node !== range.startContainer);
-    const traversedNodes = [node];
+    const traversedNodes = new Set([node, ...descendants(node)]);
     while (node && node !== range.endContainer) {
         node = iterator.nextNode();
-        node && traversedNodes.push(node);
+        node && traversedNodes.add(node);
     }
-    return traversedNodes;
+    return [...traversedNodes];
 }
 /**
  * Returns an array containing all the nodes fully contained in the selection.
