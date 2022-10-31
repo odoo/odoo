@@ -1212,17 +1212,24 @@ const Wysiwyg = Widget.extend({
                 // Focus the link after the dialog element is removed because
                 // if the dialog element is still in the DOM at the time of
                 // doing link.focus(), because there is the attribute tabindex
-                // on the dialog element, the focus cannot occurs.
+                // on the dialog element, the focus cannot occur.
                 // Using a microtask to set the focus is hackish and might break
-                // if another microtask wich focus an elemen in the dom occurs
-                // at the same time (but this case seems unlikely).
+                // if another microtask which focuses an element in the dom
+                // occurs at the same time (but this case seems unlikely).
                 Promise.resolve().then(() => link.focus());
             });
             linkDialog.on('closed', this, function () {
                 // If the linkDialog content has been saved
                 // the previous selection in not relevant anymore.
                 if (linkDialog.destroyAction !== 'save') {
-                    restoreSelection();
+                    // Restore the selection after the dialog element isremoved
+                    // because if the dialog element is still in the DOM at the
+                    // time of doing restoreSelection(), it will trigger a new
+                    // selection change which will undo this one. Using a
+                    // microtask to set the focus is hackish and might break if
+                    // another microtask which changes the selection in the dom
+                    // occurs at the same time (but this case seems unlikely).
+                    Promise.resolve().then(() => restoreSelection());
                 }
             });
         }
