@@ -3,6 +3,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { Dialog } from '@web/core/dialog/dialog';
+import { KeepLast } from "@web/core/utils/concurrency";
 import { SearchMedia } from './search_media';
 
 import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
@@ -136,6 +137,7 @@ export class FileSelector extends Component {
     setup() {
         this.orm = useService('orm');
         this.uploadService = useService('upload');
+        this.keepLast = new KeepLast();
 
         this.state = useState({
             attachments: [],
@@ -216,13 +218,21 @@ export class FileSelector extends Component {
     }
 
     async loadMore() {
-        const newAttachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.state.attachments.length);
-        this.state.attachments.push(...newAttachments);
+        return this.keepLast.add(this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.state.attachments.length)).then((newAttachments) => {
+            // This is never reached if another search or loadMore occurred.
+            this.state.attachments.push(...newAttachments);
+        });
     }
 
     async search(needle) {
+        // Prepare in case loadMore results are obtained instead.
+        this.state.attachments = [];
+        // Fetch attachments relies on the state's needle.
         this.state.needle = needle;
-        this.state.attachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0);
+        return this.keepLast.add(this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0)).then((attachments) => {
+            // This is never reached if a new search occurred.
+            this.state.attachments = attachments;
+        });
     }
 
     async uploadFiles(files) {
