@@ -157,6 +157,8 @@ class SaleOrderLine(models.Model):
         # kits that are currently in delivery
         bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom:
+            if not self.product_uom_qty or (previous_product_uom_qty and not previous_product_uom_qty.get(self.id, 0.0)):
+                return (previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)) or self.qty_delivered
             moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
             filters = {
                 'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
