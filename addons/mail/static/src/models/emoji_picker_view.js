@@ -113,11 +113,15 @@ Model({
             },
         }),
         emojiGridView: one('EmojiGridView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
+        hoveredEmojiView: one('EmojiView', { inverse: 'emojiPickerViewAsHovered' }),
         inputRef: attr({ ref: 'input' }),
         isDoFocus: attr({ default: false }),
         isFocused: attr({ default: false }),
         placeholder: attr({ required: true,
             compute() {
+                if (this.hoveredEmojiView) {
+                    return this.hoveredEmojiView.emoji.shortcodes.join(" ");
+                }
                 return this.env._t("Search an emoji");
             },
         }),

@@ -29,7 +29,7 @@ Model({
             if (!this.exists()) {
                 return;
             }
-            this.update({ emojiGridViewAsHovered: this.emojiGridRowViewOwner.emojiGridViewOwner });
+            this.update({ emojiPickerViewAsHovered: this.emojiPickerViewOwner });
         },
         /**
          * @param {MouseEvent} ev
@@ -38,7 +38,7 @@ Model({
             if (!this.exists()) {
                 return;
             }
-            this.update({ emojiGridViewAsHovered: clear() });
+            this.update({ emojiPickerViewAsHovered: clear() });
         },
     },
     fields: {
@@ -53,9 +53,9 @@ Model({
                 return clear();
             },
         }),
-        emojiGridViewAsHovered: one('EmojiGridView', { inverse: 'hoveredEmojiView' }),
         emojiOrEmojiInCategory: one('EmojiOrEmojiInCategory', { identifying: true, inverse: 'emojiViews' }),
         emojiGridRowViewOwner: one('EmojiGridRowView', { identifying: true, inverse: 'items' }),
+        emojiPickerViewAsHovered: one('EmojiPickerView', { inverse: 'hoveredEmojiView' }),
         emojiPickerViewOwner: one('EmojiPickerView', {
             compute() {
                 return this.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner;
