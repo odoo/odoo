@@ -262,7 +262,6 @@ class AccountEdiCommon(models.AbstractModel):
             return
 
         with (existing_invoice or self.env['account.move']).with_context(
-            account_predictive_bills_disable_prediction=True,
             default_move_type=move_type,
             default_journal_id=journal.id,
         )._get_edi_creation() as invoice:

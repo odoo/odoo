@@ -151,7 +151,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     @freeze_time('2021-09-16')
     def test_in_invoice_onchange_invoice_date_2(self):
-        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.partner_id = self.partner_a
         invoice_form.invoice_payment_term_id = self.env.ref('account.account_payment_term_30days')
         with invoice_form.invoice_line_ids.new() as line_form:
