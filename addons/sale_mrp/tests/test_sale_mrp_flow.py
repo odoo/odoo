@@ -2119,3 +2119,41 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.assertEqual(so.order_line.purchase_price, 60)
         so.action_confirm()
         self.assertEqual(so.order_line.purchase_price, 60)
+
+    def test_kit_decrease_sol_qty_to_zero(self):
+        """
+        Create and confirm a SO with a kit product. Increasing/Decreasing the SOL qty
+        should update the qty on the delivery.
+        """
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+
+        grp_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+
+        # 10 kit_3 = 10 x compo_f + 20 x compo_g
+        self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_g, stock_location, 20)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = self.kit_3
+            line.product_uom_qty = 2
+            line.product_uom = self.uom_ten
+        so = so_form.save()
+        so.action_confirm()
+
+        delivery = so.picking_ids
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.component_f.id, 'product_uom_qty': 20},
+            {'product_id': self.component_g.id, 'product_uom_qty': 40},
+        ])
+
+        # Decrease the qty to 0
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 0
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.component_f.id, 'product_uom_qty': 0},
+            {'product_id': self.component_g.id, 'product_uom_qty': 0},
+        ])
