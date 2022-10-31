@@ -40,13 +40,25 @@ tour.register('project_tour', {
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
     content: Markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
+    position: 'bottom',
+    run: function (actions) {
+        actions.text("Test", this.$anchor.find("input"));
+    }
+},{
+    trigger: '.o_kanban_add',
+    content: Markup(_t('Let\'s create your first <b>column</b>.')),
     position: 'right',
+},{
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
+    content: Markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
+    position: 'bottom',
     run: function (actions) {
         actions.text("Test", this.$anchor.find("input"));
     },
 }, {
-    trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
-    auto: true,
+    trigger: '.o_kanban_add',
+    content: Markup(_t('Let\'s create your secound <b>column</b>.')),
+    position: 'right',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
     extra_trigger: '.o_kanban_group',
