@@ -32,7 +32,10 @@ class AccountReport(models.Model):
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
-    only_tax_exigible = fields.Boolean(string="Only Tax Exigible Lines")
+    only_tax_exigible = fields.Boolean(
+        string="Only Tax Exigible Lines",
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id'],
+    )
     availability_condition = fields.Selection(
         string="Availability",
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
