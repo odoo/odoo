@@ -1197,11 +1197,11 @@ export class PosGlobalState extends PosModel {
                 }
                 if (tax.price_include) {
                     if (tax.amount_type === "percent") {
-                        incl_percent_amount += tax.amount;
+                        incl_percent_amount += tax.amount * tax.sum_repartition_factor;
                     } else if (tax.amount_type === "division") {
-                        incl_division_amount += tax.amount;
+                        incl_division_amount += tax.amount * tax.sum_repartition_factor;
                     } else if (tax.amount_type === "fixed") {
-                        incl_fixed_amount += Math.abs(quantity) * tax.amount;
+                        incl_fixed_amount += Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
                     } else {
                         var tax_amount = self._compute_all(tax, base, quantity);
                         incl_fixed_amount += tax_amount;
@@ -1241,7 +1241,8 @@ export class PosGlobalState extends PosModel {
             if (
                 !skip_checkpoint &&
                 tax.price_include &&
-                total_included_checkpoints[i] !== undefined
+                total_included_checkpoints[i] !== undefined &&
+                tax.sum_repartition_factor != 0
             ) {
                 var tax_amount =
                     total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
@@ -1251,26 +1252,27 @@ export class PosGlobalState extends PosModel {
             }
 
             tax_amount = round_pr(tax_amount, currency_rounding);
+            var factorized_tax_amount = round_pr(tax_amount * tax.sum_repartition_factor, currency_rounding)
 
             if (tax.price_include && total_included_checkpoints[i] === undefined) {
-                cumulated_tax_included_amount += tax_amount;
+                cumulated_tax_included_amount += factorized_tax_amount;
             }
 
             taxes_vals.push({
                 id: tax.id,
                 name: tax.name,
-                amount: sign * tax_amount,
+                amount: sign * factorized_tax_amount,
                 base: sign * round_pr(tax_base_amount, currency_rounding),
             });
 
             if (tax.include_base_amount) {
-                base += tax_amount;
+                base += factorized_tax_amount;
                 if (!tax.price_include) {
                     skip_checkpoint = true;
                 }
             }
 
-            total_included += tax_amount;
+            total_included += factorized_tax_amount;
             i += 1;
         });
 
