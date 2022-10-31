@@ -1047,7 +1047,7 @@
                                            'kanban_view_ref': 'account.account_move_line_view_kanban_mobile',
                                        }"
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
-                                    <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, id">
+                                    <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, id" delete="0">
                                         <!-- Displayed fields -->
                                         <field name="account_id"
                                                attrs="{
