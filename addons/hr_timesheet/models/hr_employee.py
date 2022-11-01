@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import models, _
 from odoo.exceptions import UserError
 
@@ -24,3 +26,10 @@ class HrEmployee(models.Model):
             'target': 'new',
             'context': self.env.context,
         }
+
+    def action_timesheet_from_employee(self):
+        action = self.env["ir.actions.act_window"]._for_xml_id("hr_timesheet.timesheet_action_from_employee")
+        context = literal_eval(action['context'].replace('active_id', str(self.id)))
+        context['create'] = context.get('create', True) and self.active
+        action['context'] = context
+        return action
