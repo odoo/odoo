@@ -5,10 +5,8 @@
         <field name="name">Timesheets</field>
         <field name="res_model">account.analytic.line</field>
         <field name="search_view_id" ref="hr_timesheet_line_search"/>
-        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="domain">[('project_id', '!=', False), ('employee_id', '=', active_id)]</field>
         <field name="context">{
-            'search_default_month':1,
-            'search_default_employee_id': [active_id],
             'default_employee_id': active_id,
             "is_timesheet": 1,
         }</field>
@@ -38,7 +36,7 @@
                 <attribute name="delete">0</attribute>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar" groups="hr_timesheet.group_hr_timesheet_user">
+                <button class="oe_stat_button" type="object" name="action_timesheet_from_employee" icon="fa-calendar" groups="hr_timesheet.group_hr_timesheet_user">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Timesheets</span>
                     </div>
