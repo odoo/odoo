@@ -281,8 +281,8 @@ export class MassMailingHtmlField extends HtmlField {
                     layoutStyles: $theme.data('layout-styles'),
                 };
             });
-            $themes.parent().remove();
         }
+        $themes.parent().remove();
 
         if (!this._themeParams.length) {
             return;
