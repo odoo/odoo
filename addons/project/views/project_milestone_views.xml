@@ -15,6 +15,7 @@
                                 attrs="{'invisible': [('task_count', '=', 0)]}"
                                 context="{'default_project_id': project_id}"
                                 groups="project.group_project_milestone"
+                                close="1"
                         >
                             <field name="task_count" string="Tasks" widget="statinfo"/>
                         </button>
