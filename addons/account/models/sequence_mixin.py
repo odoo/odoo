@@ -7,7 +7,7 @@ from odoo.tools import frozendict
 
 import re
 from collections import defaultdict
-from psycopg2 import sql
+from psycopg2 import sql, OperationalError
 
 
 class SequenceMixin(models.AbstractModel):
@@ -138,7 +138,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True): #TODO: deprecate lock
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -174,19 +174,12 @@ class SequenceMixin(models.AbstractModel):
                 SELECT {{field}} FROM {self._table}
                 {where_string}
                 AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
+                AND name not in ('/', '0')
                 ORDER BY sequence_number DESC
                 LIMIT 1
-        """
-        if lock:
-            query = f"""
-            UPDATE {self._table} SET write_date = write_date WHERE id = (
-                {query.format(field='id')}
-            )
-            RETURNING {self._sequence_field};
-            """
-        else:
-            query = query.format(field=self._sequence_field)
+        """ #TODO change name by _sequence_field
 
+        query = query.format(field=self._sequence_field)
         self.flush_model([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)
         return (self.env.cr.fetchone() or [None])[0]
@@ -237,6 +230,19 @@ class SequenceMixin(models.AbstractModel):
         :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
+        cron = self.env.ref('account.ir_cron_assign_numbers')
+        cron_id = cron.id
+        try:
+            with self.env.cr.savepoint(flush=False):
+                self._cr.execute('SELECT * FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT',
+                                 [cron_id])
+        except OperationalError as e:
+            self[self._sequence_field] = ""
+            cron._trigger()
+            return
+        self._calculate_set_sequence()
+
+    def _calculate_set_sequence(self):
         last_sequence = self._get_last_sequence()
         new = not last_sequence
         if new:

@@ -1648,30 +1648,6 @@ class AccountMove(models.Model):
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
-    @api.constrains('name', 'journal_id', 'state')
-    def _check_unique_sequence_number(self):
-        moves = self.filtered(lambda move: move.state == 'posted')
-        if not moves:
-            return
-
-        self.flush_model(['name', 'journal_id', 'move_type', 'state'])
-
-        # /!\ Computed stored fields are not yet inside the database.
-        self._cr.execute('''
-            SELECT move2.id, move2.name
-            FROM account_move move
-            INNER JOIN account_move move2 ON
-                move2.name = move.name
-                AND move2.journal_id = move.journal_id
-                AND move2.move_type = move.move_type
-                AND move2.id != move.id
-            WHERE move.id IN %s AND move2.state = 'posted'
-        ''', [tuple(moves.ids)])
-        res = self._cr.fetchall()
-        if res:
-            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
-                                    'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
-
     @contextmanager
     def _check_balanced(self, container):
         ''' Assert the move is fully balanced debit = credit.
@@ -4124,3 +4100,11 @@ class AccountMove(models.Model):
         :return: an array of ir.model.fields for which the user should provide values.
         """
         return []
+
+    def _assign_locked_numbers(self):
+        print('in cron')
+        moves_to_assign = self.search([('state', '=', 'posted'), ('name', 'in', ('/', '0'))])
+        for move in moves_to_assign:
+            move._calculate_set_sequence()
+            self._cr.commit()
+        print("unlocking for cron")
