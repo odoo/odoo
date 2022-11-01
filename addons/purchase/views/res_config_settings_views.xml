@@ -160,6 +160,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="sell_purchase_uom">
+                            <div class="o_setting_left_pane">
+                                <field name="group_uom"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_uom"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/products/uom.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Sell and purchase products in different units of measure
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                        <button name="%(uom.product_uom_categ_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </xpath>
