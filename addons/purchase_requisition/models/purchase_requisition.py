@@ -181,6 +181,10 @@ class PurchaseRequisitionLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # TODO: replace with computes in master
+        for vals in vals_list:
+            if not vals.get('product_uom_id'):
+                vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
         lines = super().create(vals_list)
         for line, vals in zip(lines, vals_list):
             if line.requisition_id.state not in ['draft', 'cancel', 'done'] and line.requisition_id.is_quantity_copy == 'none':
@@ -195,6 +199,9 @@ class PurchaseRequisitionLine(models.Model):
         return lines
 
     def write(self, vals):
+        # TODO: replace with computes in master
+        if vals.get('product_id') and not vals.get('product_uom_id'):
+            vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
             if vals['price_unit'] <= 0.0 and any(
