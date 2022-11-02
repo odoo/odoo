@@ -168,7 +168,10 @@ class PurchaseRequisitionLine(models.Model):
     _rec_name = 'product_id'
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_id = fields.Many2one(
+        'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
+        domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
     product_description_variants = fields.Char('Custom Description')
@@ -239,6 +242,11 @@ class PurchaseRequisitionLine(models.Model):
                 line_found.add(line.product_id)
             else:
                 line.qty_ordered = 0
+
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for line in self:
+            line.product_uom_id = line.product_id.uom_id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
