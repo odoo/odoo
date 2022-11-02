@@ -71,6 +71,30 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo09.id)]), 'The supplier info should be removed')
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo13.id)]), 'The supplier info should be removed')
 
+    def test_03_blanket_order_rfq(self):
+        """ Create a blanket order + an RFQ for it """
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none'
+        })
+
+        bo_form = Form(self.env['purchase.requisition'])
+        bo_form.vendor_id = self.res_partner_1
+        bo_form.type_id = requisition_type
+        with bo_form.line_ids.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+            line.price_unit = 21
+        bo = bo_form.save()
+        bo.action_in_progress()
+
+        # lazy reproduction of clicking on "New Quotation" act_window button
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
+        po = po_form.save()
+        po.button_confirm()
+        self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should have been copied to purchase order')
+        self.assertEqual(po.partner_id, bo.vendor_id, 'The blanket order vendor should have been copied to purchase order')
+
     def test_06_purchase_requisition(self):
         """ Create a blanket order for a product and a vendor already linked via
         a supplier info"""
