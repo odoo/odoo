@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussSidebarMailboxView',
+    template: 'mail.DiscussSidebarMailboxView',
+    templateGetter: 'discussSidebarMailboxView',
     identifyingMode: 'xor',
     fields: {
         discussViewOwnerAsHistory: one('DiscussView', {

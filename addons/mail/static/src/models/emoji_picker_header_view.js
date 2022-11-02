@@ -5,6 +5,8 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiPickerHeaderView',
+    template: 'mail.EmojiPickerHeaderView',
+    templateGetter: 'emojiPickerHeaderView',
     fields: {
         actionListView: one('EmojiPickerHeaderActionListView', {
             default: {},

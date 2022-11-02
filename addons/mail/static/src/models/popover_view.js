@@ -1,11 +1,27 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { usePosition } from '@web/core/position_hook';
+
 registerModel({
     name: 'PopoverView',
+    template: 'mail.PopoverView',
+    templateGetter: 'popoverView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        usePosition(
+            () => this.popoverView.anchorRef && this.popoverView.anchorRef.el,
+            {
+                popper: "root",
+                margin: 16,
+                position: this.popoverView.position,
+            }
+        );
+    },
     identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {

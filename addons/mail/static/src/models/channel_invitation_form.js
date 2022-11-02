@@ -1,5 +1,8 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, link, unlink } from '@mail/model/model_field_command';
@@ -9,6 +12,13 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ChannelInvitationForm',
+    template: 'mail.ChannelInvitationForm',
+    templateGetter: 'channelInvitationForm',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'searchInputRef', refName: 'searchInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     identifyingMode: 'xor',
     recordMethods: {
         /**

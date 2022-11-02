@@ -8,6 +8,8 @@ import session from 'web.session';
 
 registerModel({
     name: 'ActivityListView',
+    template: 'mail.ActivityListView',
+    templateGetter: 'activityListView',
     lifecycleHooks: {
         async _created() {
             if (this.activities.length === 0) {

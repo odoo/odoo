@@ -89,11 +89,11 @@ export function registerMessagingComponent(ComponentClass) {
  * unpatched as the main purpose of this method is to clean up the registry
  * when using one-off components in tests.
  *
- * @param {function} ComponentClass the constructor of the component to be
+ * @param {function} componentName the constructor of the component to be
  *      unregistered. Its name will be used as its key in the registry.
  */
-export function unregisterMessagingComponent(ComponentClass) {
-    delete componentRegistry[ComponentClass.name];
+export function unregisterMessagingComponent(componentName) {
+    delete componentRegistry[componentName];
 }
 
 /**

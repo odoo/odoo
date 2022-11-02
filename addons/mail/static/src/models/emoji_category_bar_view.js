@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryBarView',
+    template: 'mail.EmojiCategoryBarView',
+    templateGetter: 'emojiCategoryBarView',
     fields: {
         emojiCategoryViews: many('EmojiCategoryView', {
             compute() {

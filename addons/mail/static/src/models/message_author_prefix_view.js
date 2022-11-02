@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageAuthorPrefixView',
+    template: 'mail.MessageAuthorPrefixView',
+    templateGetter: 'messageAuthorPrefixView',
     identifyingMode: 'xor',
     fields: {
         channelPreviewViewOwner: one('ChannelPreviewView', {

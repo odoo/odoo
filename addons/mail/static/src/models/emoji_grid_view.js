@@ -1,11 +1,21 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, increment } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiGridView',
+    template: 'mail.EmojiGridView',
+    templateGetter: 'emojiGridView',
+    componentSetup() {
+        useRefToModel({ fieldName: 'containerRef', refName: 'containerRef'});
+        useRefToModel({ fieldName: 'listRef', refName: 'listRef'});
+        useRefToModel({ fieldName: 'viewBlockRef', refName: 'viewBlockRef'});
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     recordMethods: {
         doJumpToCategorySelectedByUser() {
             this.containerRef.el.scrollTo({
@@ -212,7 +222,7 @@ registerModel({
         scrollRecomputeCount: attr({
             default: 0,
         }),
-        searchNoContentView: one('EmojiGridNoSearchContentView', {
+        searchNoContentView: one('EmojiGridSearchNoContentView', {
             compute() {
                 if (this.emojiPickerViewOwner.emojiSearchBarView.currentSearch !== "" && this.rows.length === 0) {
                     return {};

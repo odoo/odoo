@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'SnailmailNotificationPopoverContentView',
+    template: 'snailmail.SnailmailNotificationPopoverContentView',
+    templateGetter: 'snailmailNotificationPopoverContentView',
     fields: {
         iconClass: attr({
             compute() {

@@ -1,10 +1,16 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowerListMenuView',
+    template: 'mail.FollowerListMenuView',
+    templateGetter: 'followerListMenuView',
+    componentSetup() {
+        useRefToModel({ fieldName: 'dropdownRef', refName: 'dropdown' });
+    },
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);

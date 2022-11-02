@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadIconView',
+    template: 'mail.ThreadIconView',
+    templateGetter: 'threadIconView',
     identifyingMode: 'xor',
     fields: {
         chatWindowHeaderViewOwner: one('ChatWindowHeaderView', {
