@@ -368,6 +368,9 @@ registerPatch({
                 return Boolean(!this.currentPartner && this.currentGuest);
             },
         }),
+        isInPublicDiscuss: attr({
+            default: false,
+        }),
         isInQUnitTest: attr({
             default: false,
         }),

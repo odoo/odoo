@@ -29,10 +29,16 @@ class ResUsersSettings(models.Model):
             settings = self.sudo().create({'user_id': user.id})
         return settings
 
+    def _get_backend_only_field_names(self):
+        return set()
+
     def _res_users_settings_format(self, fields_to_format=None):
         self.ensure_one()
         if not fields_to_format:
-            fields_to_format = [name for name, field in self._fields.items() if name == 'id' or not field.automatic]
+            unwanted_fields = {'__last_update', 'display_name', 'create_uid', 'create_date', 'write_uid', 'write_date'}
+            if self.env.context.get('is_public_discuss', False):
+                unwanted_fields |= self._get_backend_only_field_names()
+            fields_to_format = [name for name in self._fields.keys() if not name in unwanted_fields]
         res = self._read_format(fnames=fields_to_format)[0]
         if 'user_id' in fields_to_format:
             res['user_id'] = {'id': self.user_id.id}

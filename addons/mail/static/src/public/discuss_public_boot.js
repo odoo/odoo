@@ -35,8 +35,10 @@ Component.env = legacyEnv;
 
     const messagingValuesService = {
         start() {
-            return {};
-        }
+            return {
+                isInPublicDiscuss: true,
+            };
+        },
     };
 
     AbstractService.prototype.deployServices(Component.env);

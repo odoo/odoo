@@ -3,6 +3,8 @@
 import { registerModel } from '@mail/model/model_core';
 import { insert } from '@mail/model/model_field_command';
 
+import { user_context } from 'web.session';
+
 registerModel({
     name: 'MessagingInitializer',
     recordMethods: {
@@ -12,6 +14,12 @@ registerModel({
         async performInitRpc() {
             return await this.messaging.rpc({
                 route: '/mail/init_messaging',
+                params: {
+                    context: {
+                        ...user_context,
+                        is_public_discuss: this.messaging.isInPublicDiscuss,
+                    },
+                },
             }, { shadow: true });
         },
         /**
