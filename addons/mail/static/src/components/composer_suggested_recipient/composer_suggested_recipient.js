@@ -102,7 +102,7 @@ export class ComposerSuggestedRecipient extends Component {
             return;
         }
         thread.fetchData(['suggestedRecipients']);
-        if (!this.suggestedRecipientInfo.partner) {
+        if (record && (!this.suggestedRecipientInfo || !this.suggestedRecipientInfo.partner)) {
             this.messaging.notify({
                 title: this.env._t('Invalid Partner'),
                 message: this.env._t('The information you have entered does not match the existing contact information for this record. The partner was not created.'),
