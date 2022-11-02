@@ -35,8 +35,7 @@ export class CalendarYearRenderer extends Component {
 
     get options() {
         return {
-            columnHeaderFormat: (info) =>
-                luxon.DateTime.fromJSDate(info.date.marker).toFormat("EEEEE"),
+            columnHeaderFormat: "EEEEE",
             contentHeight: 0,
             dateClick: this.onDateClick,
             dayRender: this.onDayRender,
