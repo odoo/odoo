@@ -107,6 +107,7 @@
             'web/static/src/views/*.xml',
             'web/static/src/views/*.scss',
             'web/static/src/views/fields/**/*',
+            ('remove', 'web/static/src/views/fields/journal_dashboard_graph/**/*'),  # only works with graph view in assets
             'web/static/src/views/form/**/*',
             'web/static/src/views/kanban/**/*',
             'web/static/src/views/list/**/*',
