@@ -28,10 +28,6 @@ class HrExpense(models.Model):
         return self.env['uom.uom'].search([], limit=1, order='id')
 
     @api.model
-    def _default_account_id(self):
-        return self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
-
-    @api.model
     def _get_employee_id_domain(self):
         res = [('id', '=', 0)] # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
@@ -83,7 +79,7 @@ class HrExpense(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
-        default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
+        domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
