@@ -74,29 +74,13 @@
                                     <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
-                            <page string="Settings" name="email_configuration">
-                                <group col="2">
-                                    <group>
-                                        <field name="email_from"
-                                                placeholder="Override author's email"/>
-                                        <field name="use_default_to"/>
-                                        <field name="email_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
-                                                placeholder="Comma-separated recipient addresses"/>
-                                        <field name="partner_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
-                                                placeholder="Comma-separated ids of recipient partners"/>
-                                        <field name="email_cc" attrs="{'invisible': [('use_default_to', '=', True)]}"
-                                                placeholder="Comma-separated carbon copy recipients addresses"/>
-                                        <field name="reply_to"
-                                                placeholder="Email address to which replies will be redirected when sending emails in mass"/>
-                                        <field name="scheduled_date" string="Scheduled Send Date"/>
-                                    </group>
-                                    <group>
-                                        <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
-                                        <field name="mail_server_id"/>
-                                        <field name="auto_delete"/>
-                                        <field name="report_template" domain="[('model','=',model)]"/>
-                                        <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
-                                    </group>
+                            <page string="Settings" name="email_settings">
+                                <group>
+                                    <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
+                                    <field name="mail_server_id"/>
+                                    <field name="auto_delete"/>
+                                    <field name="report_template" domain="[('model','=',model)]"/>
+                                    <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
                                 </group>
                             </page>
                         </notebook>
