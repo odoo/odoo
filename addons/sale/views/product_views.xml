@@ -18,14 +18,14 @@
                 <field name="expense_policy" widget="radio" attrs="{'invisible': [('visible_expense_policy', '=', False)]}"/>
             </field>
             <field name="product_tooltip" position="after">
-                <!-- <label for="product_tooltip" string=""
-                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"/> -->
+                <label for="product_tooltip" string=""
+                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"/>
                 <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"
                     class="fst-italic text-muted">
                     You can invoice them before they are delivered.
                 </div>
-                <!-- <label for="product_tooltip" string=""
-                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"/> -->
+                <label for="product_tooltip" string=""
+                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"/>
                 <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"
                     class="fst-italic text-muted">
                     Invoice after delivery, based on quantities delivered, not ordered.
