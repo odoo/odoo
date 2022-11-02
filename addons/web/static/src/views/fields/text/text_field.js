@@ -94,7 +94,7 @@ export class TextField extends Component {
         });
         textarea.style.height = "auto";
         const height = Math.max(this.minimumHeight, textarea.scrollHeight + heightOffset);
-        Object.assign(textarea.style, previousStyle, { height: `${height}px` });
+        Object.assign(textarea.style, previousStyle, { height: `${height}px`, display: "inline-block" });
     }
 
     onInput() {
