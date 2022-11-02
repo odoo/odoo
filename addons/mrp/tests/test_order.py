@@ -2395,3 +2395,27 @@ class TestMrpOrder(TestMrpCommon):
             ('raw_material_production_id', '=', mo_backorder.id)])
         self.assertEqual(sum(move_prod_1_bo.mapped('product_uom_qty')), 60.0)
         self.assertEqual(sum(move_prod_2_bo.mapped('product_uom_qty')), 40.0)
+
+    def test_update_qty_to_consume_of_component(self):
+        """
+        The UoM of the finished product has a rounding precision equal to 1.0
+        and the UoM of the component has a decimal one. When the producing qty
+        is set, an onchange autocomplete the consumed quantity of the component.
+        Then, when updating the 'to consume' quantity of the components, their
+        consumed quantity is updated again. The test ensures that this update
+        respects the rounding precisions
+        """
+        self.uom_dozen.rounding = 1
+        self.bom_4.product_uom_id = self.uom_dozen
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1
+            with mo_form.move_raw_ids.edit(0) as raw:
+                raw.product_uom_qty = 1.25
+
+        self.assertEqual(mo.move_raw_ids.quantity_done, 1.25)
