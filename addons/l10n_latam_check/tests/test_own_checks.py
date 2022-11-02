@@ -19,7 +19,6 @@ class TestOwnChecks(L10nLatamCheckTest):
             'payment_method_line_id': self.bank_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'check_printing').id,
         }, {
             'ref': 'Current check',
-            'l10n_latam_checkbook_id': self.current_checkbook.id,
             'partner_id': self.partner_a.id,
             'amount': '00000001',
             'check_number': '120',
@@ -28,7 +27,6 @@ class TestOwnChecks(L10nLatamCheckTest):
             'payment_method_line_id': self.bank_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'check_printing').id,
         }, {
             'ref': 'Electronic check',
-            'l10n_latam_checkbook_id': self.electronic_checkbook.id,
             'partner_id': self.partner_a.id,
             'amount': '00000001',
             'payment_type': 'outbound',

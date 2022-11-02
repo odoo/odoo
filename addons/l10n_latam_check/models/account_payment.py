@@ -117,7 +117,7 @@ class AccountPayment(models.Model):
         """ Compute warning message for latam checks checks """
         self.l10n_latam_check_warning_msg = False
         latam_draft_checks = self.filtered(
-            lambda x: x.state == 'draft' and (x.l10n_latam_checkbook_id or x.payment_method_line_id.code in [
+            lambda x: x.state == 'draft' and (x.l10n_latam_use_checkbooks or x.payment_method_line_id.code in [
                 'in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks']))
         for rec in latam_draft_checks:
             msgs = rec._get_blocking_l10n_latam_warning_msg()
@@ -268,7 +268,7 @@ class AccountPayment(models.Model):
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         """ Add check name and operation on liquidity line """
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-        check = self if (self.payment_method_line_id.code == 'new_third_party_checks' or self.l10n_latam_checkbook_id) \
+        check = self if (self.payment_method_line_id.code == 'new_third_party_checks' or self.l10n_latam_use_checkbooks) \
             else self.l10n_latam_check_id
         if check:
             document_name = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (
@@ -276,7 +276,6 @@ class AccountPayment(models.Model):
             res[0].update({
                 'name': document_name + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
             })
-            res[0].update({})
         return res
 
     def name_get(self):
