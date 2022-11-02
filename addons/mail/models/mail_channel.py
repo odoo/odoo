@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.tools import ormcache, formataddr
 from odoo.exceptions import AccessError
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.tools import html_escape
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
 _logger = logging.getLogger(__name__)
@@ -1114,13 +1115,13 @@ class Channel(models.Model):
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
         if self.channel_type == 'channel':
-            msg = _("You are in channel <b>#%s</b>.", self.name)
+            msg = _("You are in channel <b>#%s</b>.", html_escape(self.name))
             if self.public == 'private':
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
+            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name) for member in channel_partners) if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
             Type <b>#channel</b> to mention a channel.<br>
