@@ -13,6 +13,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from '@web/core/position_hook';
+import { archParseBoolean } from '@web/views/utils';
 
 import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
@@ -447,6 +448,7 @@ export class PropertiesField extends Component {
                 isNewlyCreated: isNewlyCreated,
                 propertyIndex: propertyIndex,
                 propertiesSize: propertiesList.length,
+                hideKanbanOption: this.props.hideKanbanOption,
             },
             {
                 preventClose: this.checkPopoverClose,
@@ -471,10 +473,12 @@ PropertiesField.components = {
 PropertiesField.props = {
     ...standardFieldProps,
     columns: { type: Number, optional: true },
+    hideKanbanOption: { type: Boolean, optional: true },
 };
 PropertiesField.extractProps = ({ attrs, field }) => {
     const columns = parseInt(attrs.columns || "1");
-    return { columns };
+    const hideKanbanOption = archParseBoolean(attrs.hideKanbanOption);
+    return { columns, hideKanbanOption };
 };
 
 PropertiesField.displayName = _lt("Properties");

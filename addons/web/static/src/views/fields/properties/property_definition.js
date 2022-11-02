@@ -383,6 +383,7 @@ PropertyDefinition.props = {
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
     propertyDefinition: { optional: true },
+    hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },
     isNewlyCreated: { type: Boolean, optional: true },
     // index and number of properties, to hide the move arrows when needed
