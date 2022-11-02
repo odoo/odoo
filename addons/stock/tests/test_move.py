@@ -4367,7 +4367,7 @@ class StockMove(TransactionCase):
         scrap = self.env['stock.scrap'].create({
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_uom_id': self.uom_unit.id or self.product.uom_id.id,
             'scrap_qty': 5.0,
         })
         scrap.do_scrap()
@@ -4675,10 +4675,9 @@ class StockMove(TransactionCase):
         })
 
         self.env['stock.quant']._update_available_quantity(self.product_serial, child_loc1, 1, lot1)
-
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product_serial.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_uom_id': self.uom_unit.id or self.product_serial.uom_id.id,
             'location_id': child_loc2.id,
             'lot_id': lot1.id
         })
@@ -5484,7 +5483,7 @@ class StockMove(TransactionCase):
 
     def test_move_line_aggregated_product_quantities_duplicate_stock_move(self):
         """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
-        which returns data used to print delivery slips, with two stock moves of the same product
+            which returns data used to print delivery slips, with two stock moves of the same product
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 25)
         picking = self.env['stock.picking'].create({
