@@ -20,7 +20,7 @@ class StockValuationLayer(models.Model):
     quantity = fields.Float('Quantity', readonly=True, digits='Product Unit of Measure')
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
-    unit_cost = fields.Monetary('Unit Value', readonly=True)
+    unit_cost = fields.Monetary('Unit Value', readonly=True, group_operator=None)
     value = fields.Monetary('Total Value', readonly=True)
     remaining_qty = fields.Float(readonly=True, digits='Product Unit of Measure')
     remaining_value = fields.Monetary('Remaining Value', readonly=True)
@@ -61,12 +61,6 @@ class StockValuationLayer(models.Model):
     def _validate_analytic_accounting_entries(self):
         for svl in self:
             svl.stock_move_id._account_analytic_entry_move()
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if 'unit_cost' in fields:
-            fields.remove('unit_cost')
-        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     def action_open_layer(self):
         self.ensure_one()
