@@ -3,7 +3,7 @@
 import json
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round, format_date
+from odoo.tools import float_compare, float_round, format_date, float_is_zero
 from datetime import timedelta
 
 class ReportBomStructure(models.AbstractModel):
@@ -23,7 +23,10 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _compute_current_production_capacity(self, bom_data):
         # Get the maximum amount producible product of the selected bom given each component's stock levels.
-        stockable_components = filter(lambda c: c['product'].detailed_type == 'product', bom_data.get('components', []))
+        stockable_components = filter(
+            lambda c: c['product'].detailed_type == 'product'
+            and not float_is_zero(c['base_bom_line_qty'], precision_digits=c['uom'].rounding),
+            bom_data.get('components', []))
         producibles = [float_round(comp['quantity_available'] / comp['base_bom_line_qty'], precision_digits=0, rounding_method='DOWN') for comp in stockable_components]
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
