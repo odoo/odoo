@@ -818,6 +818,7 @@ class PaymentTransaction(models.Model):
         - `state`: The transaction state: `draft`, `pending`, `authorized`, `done`, `cancel`, or
           `error`.
         - `state_message`: The information message about the state.
+        - `operation`: The operation of the transaction.
         - `is_post_processed`: Whether the transaction has already been post-processed.
         - `landing_route`: The route the user is redirected to after the transaction.
         - Additional provider-specific entries.
@@ -836,6 +837,7 @@ class PaymentTransaction(models.Model):
             'currency_code': self.currency_id.name,
             'state': self.state,
             'state_message': self.state_message,
+            'operation': self.operation,
             'is_post_processed': self.is_post_processed,
             'landing_route': self.landing_route,
         }
