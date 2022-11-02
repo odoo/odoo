@@ -281,7 +281,7 @@ class AccountMove(models.Model):
             'document_total': document_total,
             'representative': company.l10n_it_tax_representative_partner_id,
             'codice_destinatario': codice_destinatario,
-            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF01',
+            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
             'is_self_invoice': is_self_invoice,
             'partner_bank': self.partner_bank_id,
             'format_date': format_date,
