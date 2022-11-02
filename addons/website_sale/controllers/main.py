@@ -438,6 +438,14 @@ class WebsiteSale(http.Controller):
         else:
             attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
 
+        ProductAttributeValue = request.env['product.attribute.value']
+        if products:
+            attributes_values = lazy(lambda: ProductAttributeValue.search([
+                ('pav_attribute_line_ids.product_tmpl_id', 'in', search_product.ids),
+            ]))
+        else:
+            attributes_values = lazy(lambda: ProductAttributeValue.browse(attrib_set))
+
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
             if website.viewref('website_sale.products_list_view').active:
@@ -465,6 +473,7 @@ class WebsiteSale(http.Controller):
             'ppr': ppr,
             'categories': categs,
             'attributes': attributes,
+            'attributes_values' : attributes_values,
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
