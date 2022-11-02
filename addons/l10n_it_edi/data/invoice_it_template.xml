@@ -166,7 +166,7 @@
                     <ImponibileImporto t-esc="format_monetary(tax_dict['base_amount'] if currency.name == 'EUR' else tax_dict['base_amount_currency'], currency)"/>
                     <Imposta t-esc="format_monetary(tax_dict['tax_amount'] if currency.name == 'EUR' else tax_dict['base_amount_currency'], currency)"/>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
-                    <RiferimentoNormativo t-if="has_exoneration" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
+                    <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
             </t>
         </DatiBeniServizi>
