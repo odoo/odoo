@@ -875,6 +875,7 @@ class AccountTax(models.Model):
         for grouping_key, tax_values in base_line_map.items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
+                tax_values['tax_amount'] = currency.round(tax_values['tax_amount'])
                 res['totals'][currency]['amount_tax'] += currency.round(tax_values['tax_amount'])
 
             if grouping_key in existing_tax_line_map:
