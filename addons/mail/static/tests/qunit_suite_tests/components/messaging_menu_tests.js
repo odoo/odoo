@@ -50,11 +50,11 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(2);
 
+    const messaginginitializedDeferred = makeTestPromise();
     const { click } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
-                // simulate messaging never initialized
-                return new Promise(resolve => {});
+                await messaginginitializedDeferred; // simulate messaging never initialized
             }
         },
         waitUntilMessagingCondition: 'created',
@@ -71,6 +71,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         "Please wait...",
         "should prompt loading when opening messaging menu"
     );
+    messaginginitializedDeferred.resolve(); // ensure proper teardown
 });
 
 QUnit.test('messaging becomes initialized', async function (assert) {

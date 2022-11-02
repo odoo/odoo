@@ -8,6 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ChannelMemberListCategoryView',
+    template: 'mail.ChannelMemberListCategoryView',
     identifyingMode: 'xor',
     fields: {
         channel: one('Channel', {

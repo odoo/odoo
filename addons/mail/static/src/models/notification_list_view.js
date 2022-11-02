@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'NotificationListView',
+    template: 'mail.NotificationListView',
+    templateGetter: 'notificationListView',
     identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {

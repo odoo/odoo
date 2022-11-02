@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadView',
+    template: 'mail.ThreadView',
+    templateGetter: 'threadView',
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearTimeout(this.loaderTimeout);

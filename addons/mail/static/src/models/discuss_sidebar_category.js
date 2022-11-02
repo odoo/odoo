@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussSidebarCategory',
+    template: 'mail.DiscussSidebarCategory',
+    templateGetter: 'category',
     identifyingMode: 'xor',
     modelMethods: {
         /**

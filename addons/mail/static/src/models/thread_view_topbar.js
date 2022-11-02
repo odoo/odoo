@@ -1,11 +1,22 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewTopbar',
+    template: 'mail.ThreadViewTopbar',
+    templateGetter: 'threadViewTopbar',
+    componentSetup() {
+        useRefToModel({ fieldName: 'guestNameInputRef', refName: 'guestNameInput' });
+        useRefToModel({ fieldName: 'inviteButtonRef', refName: 'inviteButton' });
+        useRefToModel({ fieldName: 'threadNameInputRef', refName: 'threadNameInput' });
+        useRefToModel({ fieldName: 'threadDescriptionInputRef', refName: 'threadDescriptionInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);

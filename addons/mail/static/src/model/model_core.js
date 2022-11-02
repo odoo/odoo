@@ -379,6 +379,7 @@ function patchRecordMethods(patch) {
 
 /**
  * @param {Object} definition The JSON definition of the model to register.
+ * @param {function} [definition.componentSetup]
  * @param {Object} [definition.fields]
  * @param {string} [definition.identifyingMode='and']
  * @param {Object} [definition.lifecycleHooks]
@@ -388,15 +389,17 @@ function patchRecordMethods(patch) {
  * @param {Object[]} [definition.onChanges]
  * @param {Object} [definition.recordGetters] Deprecated; use fields instead.
  * @param {Object} [definition.recordMethods]
+ * @param {string} [definition.template]
+ * @param {string} [definition.templateGetter]
  */
-export function registerModel({ fields, identifyingMode = 'and', lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
+export function registerModel({ componentSetup, fields, identifyingMode = 'and', lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template, templateGetter }) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
     }
-    const sectionNames = ['name', 'identifyingMode', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
+    const sectionNames = ['name', 'template', 'templateGetter', 'componentSetup', 'identifyingMode', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
     const invalidSectionNames = Object.keys(arguments[0]).filter(x => !sectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
         throw new Error(`Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(", ")}`);
@@ -412,6 +415,15 @@ export function registerModel({ fields, identifyingMode = 'and', lifecycleHooks,
         ['fields', new Map()],
         ['onChanges', []],
     ]));
+    if (template) {
+        registry.get(name).set('template', template);
+        if (templateGetter) {
+            registry.get(name).set('templateGetter', templateGetter);
+        }
+        if (componentSetup) {
+            registry.get(name).set('componentSetup', componentSetup);
+        }
+    }
     if (lifecycleHooks) {
         addLifecycleHooks(name, lifecycleHooks);
     }

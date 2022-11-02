@@ -5,6 +5,8 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'AttachmentCard',
+    template: 'mail.AttachmentCard',
+    templateGetter: 'attachmentCard',
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.

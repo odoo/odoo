@@ -7,6 +7,8 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'AttachmentImage',
+    template: 'mail.AttachmentImage',
+    templateGetter: 'attachmentImage',
     recordMethods: {
         /**
          * Called when clicking on download icon.

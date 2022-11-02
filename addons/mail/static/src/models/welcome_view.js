@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -11,6 +13,12 @@ const getNextGuestNameInputId = (function () {
 
 registerModel({
     name: 'WelcomeView',
+    template: 'mail.WelcomeView',
+    templateGetter: 'welcomeView',
+    componentSetup() {
+        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', refName: 'guestNameInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView' });
+    },
     recordMethods: {
         /**
          * Updates guest if needed then displays the thread view instead of the

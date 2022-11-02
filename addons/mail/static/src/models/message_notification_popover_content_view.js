@@ -5,6 +5,8 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'MessageNotificationPopoverContentView',
+    template: 'mail.MessageNotificationPopoverContentView',
+    templateGetter: 'messageNotificationPopoverContentView',
     fields: {
         messageView: one('MessageView', {
             related: 'popoverViewOwner.messageViewOwnerAsNotificationContent',

@@ -9,6 +9,8 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ActivityListViewItem',
+    template: 'mail.ActivityListViewItem',
+    templateGetter: 'activityListViewItem',
     recordMethods: {
         onClickEditActivityButton() {
             const popoverViewOwner = this.activityListViewOwner.popoverViewOwner;

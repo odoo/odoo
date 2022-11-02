@@ -1,11 +1,60 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { onMounted, onWillUnmount } from '@odoo/owl';
+
 registerModel({
     name: 'AutocompleteInputView',
+    template: 'mail.AutocompleteInputView',
+    templateGetter: 'autocompleteInputView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        onMounted(() => {
+            if (!this.root.el) {
+                return;
+            }
+            if (this.autocompleteInputView.isFocusOnMount) {
+                this.root.el.focus();
+            }
+    
+            const args = {
+                autoFocus: true,
+                select: (ev, ui) => {
+                    if (this.autocompleteInputView) {
+                        this.autocompleteInputView.onSelect(ev, ui);
+                    }
+                },
+                source: (req, res) => {
+                    if (this.autocompleteInputView) {
+                        this.autocompleteInputView.onSource(req, res);
+                    }
+                },
+                html: this.autocompleteInputView.isHtml,
+            };
+    
+            if (this.autocompleteInputView.customClass) {
+                args.classes = { 'ui-autocomplete': this.autocompleteInputView.customClass };
+            }
+    
+            const autoCompleteElem = $(this.root.el).autocomplete(args);
+            // Resize the autocomplete dropdown options to handle the long strings
+            // By setting the width of dropdown based on the width of the input element.
+            autoCompleteElem.data('ui-autocomplete')._resizeMenu = function () {
+                const ul = this.menu.element;
+                ul.outerWidth(this.element.outerWidth());
+            };
+        });
+        onWillUnmount(() => {
+            if (!this.root.el) {
+                return;
+            }
+            $(this.root.el).autocomplete('destroy');
+        });
+    },
     identifyingMode: 'xor',
     recordMethods: {
         onBlur() {

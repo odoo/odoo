@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageActionList',
+    template: "mail.MessageActionList",
+    templateGetter: 'messageActionList',
     fields: {
         actionViewsCount: attr({
             default: 0,

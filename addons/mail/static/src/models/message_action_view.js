@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -7,6 +8,11 @@ import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageActionView',
+    template: "mail.MessageActionView",
+    templateGetter: 'messageActionView',
+    componentSetup() {
+        useRefToModel({ fieldName: 'actionRef', refName: 'action' });
+    },
     recordMethods: {
         /**
          * @private

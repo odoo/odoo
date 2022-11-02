@@ -9,6 +9,10 @@ import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
 import { makeDeferred } from '@mail/utils/deferred';
+import { registerMessagingComponent, unregisterMessagingComponent } from '@mail/utils/messaging_component';
+
+import { Component } from '@odoo/owl';
+
 /**
  * Object that manage models and records, notably their update cycle: whenever
  * some records are requested for update (either with model static method
@@ -167,6 +171,10 @@ export class ModelManager {
     destroy() {
         this.messaging.delete();
         for (const model of Object.values(this.models)) {
+            if (model.hasComponent) {
+                unregisterMessagingComponent(model.name);
+                model.hasComponent = false;
+            }
             delete model.__fieldList;
             delete model.__fieldMap;
             delete model.__identifyingFieldNames;
@@ -385,6 +393,27 @@ export class ModelManager {
      */
     _applyModelDefinition(model) {
         const definition = registry.get(model.name);
+        if (definition.get('template')) {
+            const ModelComponent = { [model.name]: class extends Component {} }[model.name];
+            if (definition.get('componentSetup')) {
+                Object.assign(ModelComponent.prototype, { setup() {
+                    return definition.get('componentSetup').call(this);
+                } });
+            }
+            Object.defineProperty(
+                ModelComponent.prototype,
+                definition.get('templateGetter') ? definition.get('templateGetter') : 'record',
+                { get() {
+                    return this.props.record;
+                } },
+            );
+            Object.assign(ModelComponent, {
+                props: { record: Object },
+                template: definition.get('template'),
+            });
+            registerMessagingComponent(ModelComponent);
+            model.hasComponent = true;
+        }
         Object.assign(model, Object.fromEntries(definition.get('modelMethods')));
         Object.assign(model.prototype, Object.fromEntries(definition.get('recordMethods')));
         for (const [getterName, getter] of definition.get('modelGetters')) {

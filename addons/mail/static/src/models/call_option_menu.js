@@ -1,10 +1,16 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'CallOptionMenu',
+    template: 'mail.CallOptionMenu',
+    templateGetter: 'callOptionMenu',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+    },
     recordMethods: {
         /**
          * Creates and download a file that contains the logs of the current RTC call.

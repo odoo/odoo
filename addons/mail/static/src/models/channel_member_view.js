@@ -7,6 +7,8 @@ import { isEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChannelMemberView',
+    template: 'mail.ChannelMemberView',
+    templateGetter: 'channelMemberView',
     recordMethods: {
         /**
          * Handles click on channel member in the member list of this channel.
