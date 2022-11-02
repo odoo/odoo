@@ -980,6 +980,52 @@ class TestBoM(TestMrpCommon):
 
         self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.92)
 
+    def test_bom_report_capacity_with_quantity_of_0(self):
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        location = self.env.ref('stock.stock_location_stock')
+
+        target = self.env['product.product'].create({
+            'name': 'Target',
+            'type': 'product',
+        })
+
+        product_one = self.env['product.product'].create({
+            'name': 'Component one',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product_one, location, 3.0)
+
+        product_two = self.env['product.product'].create({
+            'name': 'Component two',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product_two, location, 4.0)
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': target.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': product_one.id,
+                    'product_qty': 0,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': product_two.id,
+                    'product_qty': 1,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+
+        # The first product shouldn't affect the producible quantity because the target needs none of it
+        # So with 4 of the second product available, we can produce 4 items
+        self.assertEqual(report_values["lines"]["producible_qty"], 4)
+
     def test_validate_no_bom_line_with_same_product(self):
         """
         Cannot set a BOM line on a BOM with the same product as the BOM itself
