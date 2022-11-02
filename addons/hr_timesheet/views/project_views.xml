@@ -312,7 +312,7 @@
                     <t t-set="badgeColor" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
-                    <div t-if="record.allocated_hours.raw_value &gt; 0"
+                    <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
                         t-attf-class="oe_kanban_align badge {{ badgeColor }}" t-att-title="title">
                         <field name="remaining_hours" widget="timesheet_uom"/>
                     </div>
