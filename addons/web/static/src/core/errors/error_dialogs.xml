@@ -68,4 +68,15 @@
       </Dialog>
     </t>
 
+    <t t-name="web.ScssErrorDialog" owl="1">
+      <Dialog title="this.constructor.title">
+        <div role="alert">
+          <p>
+            The style compilation failed, see the error below. This is an administrator or developer error that must be fixed for the entire database before continuing working.
+          </p>
+          <pre t-esc="props.message"/>
+        </div>
+      </Dialog>
+    </t>
+
 </templates>
