@@ -55,9 +55,6 @@ class AccountPayment(models.Model):
     l10n_latam_use_checkbooks = fields.Boolean(
         related='journal_id.l10n_latam_use_checkbooks',
     )
-    l10n_latam_checkbook_type = fields.Selection(
-        related='l10n_latam_checkbook_id.type',
-    )
     l10n_latam_checkbook_id = fields.Many2one(
         comodel_name='l10n_latam.checkbook',
         string='Checkbook',
@@ -79,23 +76,6 @@ class AccountPayment(models.Model):
         for rec in self:
             rec.check_number = rec.l10n_latam_check_number
 
-    @api.depends('payment_method_line_id.code', 'journal_id.l10n_latam_use_checkbooks')
-    def _compute_l10n_latam_checkbook(self):
-        for payment in self:
-            if payment.payment_method_line_id.code == 'check_printing' and payment.journal_id.l10n_latam_use_checkbooks:
-                checkbooks = payment.journal_id.l10n_latam_checkbook_ids
-                if payment.l10n_latam_checkbook_id and payment.l10n_latam_checkbook_id in checkbooks:
-                    continue
-                payment.l10n_latam_checkbook_id = checkbooks[:1]
-            else:
-                payment.l10n_latam_checkbook_id = False
-
-    @api.onchange('l10n_latam_checkbook_id', 'journal_id', 'payment_method_code')
-    def _onchange_suggest_checknumber(self):
-        for pay in self.filtered(lambda x: x.l10n_latam_checkbook_id):
-            pay.check_number = pay.l10n_latam_checkbook_id.sequence_id.get_next_char(
-                pay.l10n_latam_checkbook_id.next_number)
-
     def _compute_check_number(self):
         """ Override from account_check_printing.
         For own checks with checkbooks get next number from the checkbook
@@ -109,7 +89,7 @@ class AccountPayment(models.Model):
         """ On third party checks or own checks with checkbooks, avoid calling super because is not needed to write the
         sequence for these use case. """
         avoid_inverse = self.filtered(
-            lambda x: x.l10n_latam_checkbook_id or x.payment_method_line_id.code == 'new_third_party_checks')
+            lambda x: x.l10n_latam_use_checkbooks or x.payment_method_line_id.code == 'new_third_party_checks')
         return super(AccountPayment, self - avoid_inverse)._inverse_check_number()
 
     @api.depends('payment_method_line_id.code', 'partner_id')
@@ -174,12 +154,6 @@ class AccountPayment(models.Model):
                         "Other checks were found with same number, issuer and bank. Please double check you are not "
                         "encoding the same check more than once. List of other payments/checks: %s",
                         ", ".join(same_checks.mapped('display_name'))))
-            # own check with checkbooks
-            elif rec.l10n_latam_checkbook_id.range_to and rec.check_number and rec.check_number.isdecimal() and \
-                    int(rec.check_number) > rec.l10n_latam_checkbook_id.range_to:
-                msgs.append(_(
-                        "The check number %s is bigger than max number for this checkbook.\n"
-                        "Please check you're using the right check number and the right checkbook", rec.check_number))
             rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
 
     def _get_blocking_l10n_latam_warning_msg(self):
@@ -236,7 +210,7 @@ class AccountPayment(models.Model):
             else:
                 rec.l10n_latam_check_current_journal_id = False
 
-    @api.depends('l10n_latam_checkbook_id')
+    @api.depends('l10n_latam_use_checkbooks')
     def _compute_show_check_number(self):
         latam_checks = self.filtered(
             lambda x: x.payment_method_line_id.code == 'new_third_party_checks' or
@@ -276,7 +250,7 @@ class AccountPayment(models.Model):
     def action_unmark_sent(self):
         """ Unmarking as sent for check with checkbooks would give the option to print and re-number check but
         it's not implemented yet for this kind of checks"""
-        if self.filtered('l10n_latam_checkbook_id'):
+        if self.filtered('l10n_latam_use_checkbooks'):
             raise UserError(_('Unmark sent is not implemented for checks that use checkbooks'))
         return super().action_unmark_sent()
 
@@ -288,13 +262,7 @@ class AccountPayment(models.Model):
         res = super().action_post()
 
         # mark own checks that are not printed as sent
-        for rec in self.filtered('l10n_latam_checkbook_id'):
-            # the constraint is not called by default when posting and the uniqueness is check only for posted payments
-            # we call it after payment post to check the uniqueness for checks with checkbooks
-            rec._constrains_check_number()
-            sequence = rec.l10n_latam_checkbook_id.sequence_id
-            sequence.sudo().write({'number_next_actual': int(rec.check_number) + 1})
-            rec.write({'is_move_sent': True})
+        self.filtered('l10n_latam_use_checkbooks').write({'is_move_sent': True})
         return res
 
     @api.model

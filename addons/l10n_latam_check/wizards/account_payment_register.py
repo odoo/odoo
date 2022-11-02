@@ -19,46 +19,13 @@ class AccountPaymentRegister(models.TransientModel):
     )
     l10n_latam_check_number = fields.Char(
         string="Check Number",
-        compute='_compute_l10n_latam_check_number', inverse='_inverse_l10n_latam_check_number', store=True, readonly=False,
     )
     l10n_latam_use_checkbooks = fields.Boolean(
         related='journal_id.l10n_latam_use_checkbooks',
     )
-    l10n_latam_checkbook_type = fields.Selection(
-        related='l10n_latam_checkbook_id.type',
-    )
-    l10n_latam_checkbook_id = fields.Many2one(
-        comodel_name='l10n_latam.checkbook',
-        string='Checkbook',
-        compute='_compute_l10n_latam_checkbook', store=True,
-        readonly=False,
-    )
     l10n_latam_check_payment_date = fields.Date(
         string='Check Payment Date',
     )
-
-    @api.depends('payment_method_line_id.code', 'journal_id.l10n_latam_use_checkbooks')
-    def _compute_l10n_latam_checkbook(self):
-        for payment in self:
-            if payment.payment_method_line_id.code == 'check_printing' and payment.journal_id.l10n_latam_use_checkbooks:
-                checkbooks = payment.journal_id.l10n_latam_checkbook_ids
-                if payment.l10n_latam_checkbook_id and payment.l10n_latam_checkbook_id in checkbooks:
-                    continue
-                payment.l10n_latam_checkbook_id = checkbooks[:1]
-            else:
-                payment.l10n_latam_checkbook_id = False
-
-    @api.depends('journal_id', 'payment_method_code', 'l10n_latam_checkbook_id')
-    def _compute_l10n_latam_check_number(self):
-        for rec in self.filtered('l10n_latam_checkbook_id'):
-            rec.l10n_latam_check_number = rec.l10n_latam_checkbook_id.sequence_id.get_next_char(
-                rec.l10n_latam_checkbook_id.next_number)
-
-    def _inverse_l10n_latam_check_number(self):
-        for rec in self:
-            if rec.l10n_latam_check_number:
-                sequence = rec.journal_id.check_sequence_id.sudo()
-                sequence.padding = len(rec.l10n_latam_check_number)
 
     @api.depends('payment_method_line_id.code', 'partner_id')
     def _compute_l10n_latam_check_data(self):
@@ -82,7 +49,6 @@ class AccountPaymentRegister(models.TransientModel):
             'l10n_latam_check_bank_id': self.l10n_latam_check_bank_id.id,
             'l10n_latam_check_issuer_vat': self.l10n_latam_check_issuer_vat,
             'check_number': self.l10n_latam_check_number,
-            'l10n_latam_checkbook_id': self.l10n_latam_checkbook_id.id,
             'l10n_latam_check_payment_date': self.l10n_latam_check_payment_date,
         })
         return vals

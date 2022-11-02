@@ -11,11 +11,6 @@ class AccountJournal(models.Model):
         help="Check this option if you want to have a checkbook control and/or need to use deferred checks.\n"
         "This option disables the printing functionality."
     )
-    l10n_latam_checkbook_ids = fields.One2many(
-        comodel_name='l10n_latam.checkbook',
-        inverse_name='journal_id',
-        string='Checkbooks',
-    )
 
     @api.constrains('l10n_latam_use_checkbooks', 'check_manual_sequencing')
     def _check_l10n_latam_use_checkbooks(self):

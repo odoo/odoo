@@ -69,22 +69,13 @@
             <field name="payment_method_line_id" position="after">
                 <!-- Checkbooks -->
                 <field name="l10n_latam_use_checkbooks" invisible="1"/>
-                <field name="l10n_latam_checkbook_type" invisible="1"/>
-                <field name="l10n_latam_checkbook_id" options="{'no_create': True, 'no_open': True}"
-                    attrs="{
-                        'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_use_checkbooks', '=', False)],
-                        'required': [('payment_method_code', '=', 'check_printing'), ('l10n_latam_use_checkbooks', '=', True)]}"
-                    domain="[('journal_id', '=', journal_id)]"/>
                 <field name="l10n_latam_check_number"
                     string='Check Number'
                     attrs="{
                         'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_use_checkbooks', '=', False)],
                         'required': ['|', ('payment_method_code', '=', 'new_third_party_checks'), ('payment_method_code', '=', 'check_printing'), ('l10n_latam_use_checkbooks', '=', True)],
                         'readonly': [('state', '!=', 'draft')]}"/>
-                <field name="l10n_latam_check_payment_date"
-                    attrs="{
-                        'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), ('l10n_latam_checkbook_type', 'not in', ['deferred', 'electronic'])],
-                        'required': [('l10n_latam_checkbook_type', 'in', ['deferred', 'electronic'])]}"/>
+                <field name="l10n_latam_check_payment_date"/> <!-- TODO: always in case of checkbooks-->
                 <field name="l10n_latam_check_bank_id" string="Check Bank"
                     attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
                 <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat"

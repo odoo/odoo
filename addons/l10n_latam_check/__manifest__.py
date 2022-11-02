@@ -54,7 +54,6 @@ There are 2 main Payment Methods additions:
         'data/account_payment_method_data.xml',
         'security/ir.model.access.csv',
         'views/account_payment_view.xml',
-        'views/l10n_latam_checkbook_view.xml',
         'views/account_journal_view.xml',
         'wizards/account_payment_register_views.xml',
         'wizards/l10n_latam_payment_mass_transfer_views.xml',
