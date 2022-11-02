@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from '@web/core/registry';
-
 export function makeBusServiceToLegacyEnv(legacyEnv) {
     return {
         dependencies: ['bus_service'],
@@ -10,5 +8,3 @@ export function makeBusServiceToLegacyEnv(legacyEnv) {
         },
     };
 }
-
-registry.category('wowlToLegacyServiceMappers').add('bus_service_to_legacy_env', makeBusServiceToLegacyEnv);

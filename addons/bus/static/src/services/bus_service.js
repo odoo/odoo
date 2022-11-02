@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { registry } from '@web/core/registry';
 import { session } from '@web/session';
 import { isIosApp } from '@web/core/browser/feature_detection';
 
@@ -117,4 +116,3 @@ export const busService = {
         };
     },
 };
-registry.category('services').add('bus_service', busService);

@@ -47,6 +47,9 @@ export const legacySetupProm = new Promise((resolve) => {
     const legacyCommandService = makeLegacyCommandService(legacyEnv);
     serviceRegistry.add("legacy_command", legacyCommandService);
     serviceRegistry.add("legacy_dropdown", makeLegacyDropdownService(legacyEnv));
+    // wait for synchronous code to be loaded before adding mappers to
+    // the service registry.
+    await Promise.resolve();
     const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));

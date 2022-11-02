@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
 import { data } from 'mail.discuss_public_channel_template';
-import { messagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
 
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
 import { DiscussPublicViewContainer } from '@mail/components/discuss_public_view_container/discuss_public_view_container';
 import { PopoverManagerContainer } from '@mail/components/popover_manager_container/popover_manager_container';
-import { messagingService } from '@mail/services/messaging_service';
+import { setupCoreMessaging } from '@mail/setup/core/setup_core_helpers';
 
 import { MainComponentsContainer } from '@web/core/main_components_container';
 import { registry } from '@web/core/registry';
@@ -30,34 +29,25 @@ import { Component, mount, whenReady } from '@odoo/owl';
 
 Component.env = legacyEnv;
 
-(async function boot() {
+export function setupPublicMessaging() {
+    setupCoreMessaging();
+    registry.category('services')
+        .add('legacy_rpc', makeLegacyRpcService(Component.env))
+        .add('legacy_session', makeLegacySessionService(Component.env, legacySession))
+        .add('legacy_notification', makeLegacyNotificationService(Component.env))
+        .add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env))
+        .add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
+    registry.category('main_components')
+        .add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer, props: { data } })
+        // needed by the attachment viewer
+        .add('DialogManagerContainer', { Component: DialogManagerContainer })
+        .add('PopoverManagerContainer', { Component: PopoverManagerContainer });
+}
+
+export async function bootPublicMessaging() {
     await whenReady();
-
-    const messagingValuesService = {
-        start() {
-            return {};
-        }
-    };
-
     AbstractService.prototype.deployServices(Component.env);
-    const serviceRegistry = registry.category('services');
-    serviceRegistry.add('legacy_rpc', makeLegacyRpcService(Component.env));
-    serviceRegistry.add('legacy_session', makeLegacySessionService(Component.env, legacySession));
-    serviceRegistry.add('legacy_notification', makeLegacyNotificationService(Component.env));
-    serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
-    serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
-
-    serviceRegistry.add('messaging', messagingService);
-    serviceRegistry.add('messagingValues', messagingValuesService);
-
-    registry.category('wowlToLegacyServiceMappers').add('make_messaging_to_legacy_env', messagingToLegacyEnv);
-
-    const mainComponentsRegistry = registry.category('main_components');
-    mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer, props: { data } });
-    // needed by the attachment viewer
-    mainComponentsRegistry.add('DialogManagerContainer', { Component: DialogManagerContainer });
-    mainComponentsRegistry.add('PopoverManagerContainer', { Component: PopoverManagerContainer });
-
+    setupPublicMessaging();
     await legacySession.is_bound;
     Object.assign(odoo, {
         info: {
@@ -73,4 +63,4 @@ Component.env = legacyEnv;
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
-})();
+}

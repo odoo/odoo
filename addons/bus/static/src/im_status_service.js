@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from '@web/core/browser/browser';
-import { registry } from '@web/core/registry';
 
 export const UPDATE_BUS_PRESENCE_DELAY = 60000;
 /**
@@ -68,5 +67,3 @@ export const imStatusService = {
         };
     },
 };
-
-registry.category('services').add('im_status', imStatusService);

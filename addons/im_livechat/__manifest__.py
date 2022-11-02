@@ -51,11 +51,11 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_frontend': [
             ('include', 'im_livechat.assets_public_livechat'),
-            'im_livechat/static/src/public/main.js',
             'im_livechat/static/src/services/*.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
             'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
+            'im_livechat/static/src/setup/frontend/*.js',
             'mail/static/src/utils/*.js',
             'mail/static/src/js/utils.js',
             'mail/static/src/component_hooks/*.js',
@@ -88,6 +88,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/public_models/*.js',
+            'im_livechat/static/src/setup/core/*.js',
         ],
         # Bundle of External Librairies of the Livechat (Odoo + required modules)
         'im_livechat.external_lib': [
@@ -180,12 +181,14 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/services/ajax_service.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
             # Bus, Mail, Livechat
-            'bus/static/src/im_status_service.js',
-            'bus/static/src/multi_tab_service.js',
+            'bus/static/src/*.js',
+            'bus/static/src/services/presence_service.js',
             'bus/static/src/services/bus_service.js',
             'bus/static/src/services/legacy/make_bus_service_to_legacy_env.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+            'bus/static/src/setup/core/*.js',
+            'bus/static/src/setup/public/*.js',
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
 
@@ -206,8 +209,6 @@ Help your customers with this chat, and analyse their feedback.
             ('include', 'im_livechat.assets_public_livechat'),
             'mail/static/src/services/messaging_service.js',
             # Framework JS
-            'bus/static/src/*.js',
-            'bus/static/src/services/presence_service.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/src/core/**/*',
             # FIXME: debug menu currently depends on webclient, once it doesn't we don't need to remove the contents of the debug folder
@@ -220,6 +221,7 @@ Help your customers with this chat, and analyse their feedback.
 
             'im_livechat/static/src/public/*.js',
             'im_livechat/static/src/services/*.js',
+                'im_livechat/static/src/setup/public/*.js',
         ]
     },
     'license': 'LGPL-3',

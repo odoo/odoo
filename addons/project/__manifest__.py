@@ -207,6 +207,13 @@
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
 
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            'bus/static/src/setup/core/*.js',
+            'bus/static/src/setup/public/*.js',
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
+
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/widgets/**/*.scss',
 

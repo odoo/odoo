@@ -10,11 +10,14 @@
     'installable': True,
     'auto_install': True,
     'assets': {
-        'web.assets_common': [
+        'web.assets_backend': [
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+            'bus/static/src/setup/core/*.js',
+            'bus/static/src/setup/common/*.js',
+            'bus/static/src/setup/backend/*.js',
         ],
         'web.assets_frontend': [
             'bus/static/src/*.js',
@@ -22,6 +25,10 @@
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+            'bus/static/src/setup/core/*.js',
+            'bus/static/src/setup/common/*.js',
+            'bus/static/src/setup/frontend/*.js',
+
         ],
         'web.qunit_suite_tests': [
             'bus/static/tests/**/*.js',

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from '@web/core/registry';
 import { browser } from '@web/core/browser/browser';
 
 const { EventBus } = owl;
@@ -220,5 +219,3 @@ export const multiTabService = {
         };
     },
 };
-
-registry.category('services').add('multi_tab', multiTabService);

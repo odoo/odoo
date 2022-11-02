@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from '@web/core/browser/browser';
-import { registry } from '@web/core/registry';
 import core from 'web.core';
 
 export const presenceService = {
@@ -58,5 +57,3 @@ export const presenceService = {
         };
     },
 };
-
-registry.category('services').add('presence', presenceService);

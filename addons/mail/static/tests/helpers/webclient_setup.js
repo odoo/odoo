@@ -1,19 +1,9 @@
 /** @odoo-module **/
 
-import { busService } from '@bus/services/bus_service';
-import { imStatusService } from '@bus/im_status_service';
-import { multiTabService } from '@bus/multi_tab_service';
-import { makeMultiTabToLegacyEnv } from '@bus/services/legacy/make_multi_tab_to_legacy_env';
-import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service_to_legacy_env';
-import { makeFakePresenceService } from '@bus/../tests/helpers/mock_services';
+import { setupBackendBus } from '@bus/setup/backend/setup_backend_helpers';
 
-import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
-import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
-import { DiscussContainer } from '@mail/components/discuss_container/discuss_container';
-import { PopoverManagerContainer } from '@mail/components/popover_manager_container/popover_manager_container';
 import { messagingService } from '@mail/services/messaging_service';
-import { systrayService } from '@mail/services/systray_service';
-import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
+import { setupBackendMessaging } from '@mail/setup/backend/setup_backend_helpers';
 
 import { registry } from '@web/core/registry';
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -31,18 +21,7 @@ const SERVICES_PARAMETER_NAMES = new Set([
 ]);
 
 /**
- * Add required components to the main component registry.
- */
- function setupMainComponentRegistry() {
-    const mainComponentRegistry = registry.category('main_components');
-    mainComponentRegistry.add('ChatWindowManagerContainer', { Component: ChatWindowManagerContainer });
-    mainComponentRegistry.add('DialogManagerContainer', { Component: DialogManagerContainer });
-    registry.category('actions').add('mail.action_discuss', DiscussContainer);
-    mainComponentRegistry.add('PopoverManagerContainer', { Component: PopoverManagerContainer });
-}
-
-/**
- * Setup both legacy and new service registries.
+ * Setup messaging dependencies: services, main components, actions...
  *
  * @param {Object} param0
  * @param {Object} [param0.services]
@@ -51,17 +30,13 @@ const SERVICES_PARAMETER_NAMES = new Set([
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing components behavior when messaging is not yet created.
  * @param {EventBus} [param0.messagingBus]
- * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
- * to the webClient as a legacy parameter.
  */
-function setupMessagingServiceRegistries({
+function setupMessagingDependencies({
     loadingBaseDelayDuration = 0,
     messagingBeforeCreationDeferred = Promise.resolve(),
     messagingBus,
-    services,
+    services = {},
  }) {
-    const serviceRegistry = registry.category('services');
-
     patchWithCleanup(messagingService, {
         async _startModelManager(modelManager, messagingValues) {
             modelManager.isDebug = true;
@@ -70,39 +45,19 @@ function setupMessagingServiceRegistries({
             return _super(modelManager, messagingValues);
         },
     });
+    setupBackendBus();
+    setupBackendMessaging({
+        isInQUnitTest: true,
+        disableAnimation: true,
+        loadingBaseDelayDuration,
+        messagingBus,
+        userNotificationManager: { canPlayAudio: false },
+    });
 
-    const messagingValues = {
-        start() {
-            return {
-                isInQUnitTest: true,
-                disableAnimation: true,
-                loadingBaseDelayDuration,
-                messagingBus,
-                userNotificationManager: { canPlayAudio: false },
-            };
-        }
-    };
-
-    services = {
-        bus_service: busService,
-        im_status: imStatusService,
-        messaging: messagingService,
-        messagingValues,
-        presence: makeFakePresenceService({
-            isOdooFocused: () => true,
-        }),
-        systrayService,
-        multi_tab: multiTabService,
-        ...services,
-    };
-
+    const serviceRegistry = registry.category('services');
     Object.entries(services).forEach(([serviceName, service]) => {
         serviceRegistry.add(serviceName, service);
     });
-
-    registry.category('wowlToLegacyServiceMappers').add('bus_service_to_legacy_env', makeBusServiceToLegacyEnv);
-    registry.category('wowlToLegacyServiceMappers').add('multi_tab_to_legacy_env', makeMultiTabToLegacyEnv);
-    registry.category('wowlToLegacyServiceMappers').add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv);
 }
 
 /**
@@ -118,8 +73,6 @@ function setupMessagingServiceRegistries({
  * @returns {WebClient}
  */
  async function getWebClientReady(param0) {
-    setupMainComponentRegistry();
-
     const servicesParameters = {};
     const param0Entries = Object.entries(param0);
     for (const [parameterName, value] of param0Entries) {
@@ -127,7 +80,7 @@ function setupMessagingServiceRegistries({
             servicesParameters[parameterName] = value;
         }
     }
-    setupMessagingServiceRegistries(servicesParameters);
+    setupMessagingDependencies(servicesParameters);
 
     const webClientParameters = {};
     for (const [parameterName, value] of param0Entries) {

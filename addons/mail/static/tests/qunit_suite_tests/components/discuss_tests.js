@@ -9,11 +9,9 @@ import {
 } from '@mail/../tests/helpers/test_utils';
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { destroy } from '@web/../tests/helpers/utils';
+import { destroy, patchWithCleanup } from '@web/../tests/helpers/utils';
 
 import { makeTestPromise, file } from 'web.test_utils';
-
-import { makeFakePresenceService } from '@bus/../tests/helpers/mock_services';
 
 const { createFile, inputFiles } = file;
 
@@ -3357,11 +3355,8 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
-    const { env, openDiscuss } = await start({
-        services: {
-            presence: makeFakePresenceService({ isOdooFocused: () => false }),
-        },
-    });
+    const { env, openDiscuss } = await start();
+    patchWithCleanup(env.services.presence, { isOdooFocused: () => false });
     await openDiscuss();
     env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         assert.step('set_title_part');
@@ -3389,11 +3384,8 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: "chat" });
-    const { env, openDiscuss } = await start({
-        services: {
-            presence: makeFakePresenceService({ isOdooFocused: () => false }),
-        },
-    });
+    const { env, openDiscuss } = await start();
+    patchWithCleanup(env.services.presence, { isOdooFocused: () => false });
     await openDiscuss();
     env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         assert.step('set_title_part');
@@ -3425,11 +3417,8 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         { channel_type: 'chat' },
         { channel_type: 'chat' },
     ]);
-    const { env, openDiscuss } = await start({
-        services: {
-            presence: makeFakePresenceService({ isOdooFocused: () => false }),
-        },
-    });
+    const { env, openDiscuss } = await start();
+    patchWithCleanup(env.services.presence, { isOdooFocused: () => false });
     await openDiscuss();
     env.bus.addEventListener('set_title_part', ({ detail: payload }) => {
         step++;
