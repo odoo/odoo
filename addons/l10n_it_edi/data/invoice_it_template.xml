@@ -171,7 +171,7 @@
                         <Imposta t-esc="format_monetary(abs(tax_line['tax_amount']), currency)"/>
                     </t>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
-                    <RiferimentoNormativo t-if="has_exoneration" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
+                    <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
             </t>
         </DatiBeniServizi>
