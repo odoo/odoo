@@ -343,9 +343,6 @@ class AccountReportLine(models.Model):
         # engine-related field. This makes xmls a bit shorter
         vals_list = []
         for report_line in self:
-            if report_line.expression_ids:
-                continue
-
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
                 # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
@@ -364,7 +361,16 @@ class AccountReportLine(models.Model):
                 'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
-            vals_list.append(vals)
+            if report_line.expression_ids:
+                # expressions already exists, update the first expression with the right engine
+                # since syntactic sugar aren't meant to be used with multiple expressions
+                for expression in report_line.expression_ids:
+                    if expression.engine == engine:
+                        expression.write(vals)
+                        break
+            else:
+                # else prepare batch creation
+                vals_list.append(vals)
 
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
