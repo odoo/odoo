@@ -297,6 +297,7 @@ class AccountEdiFormat(models.Model):
             ....
         }
         """
+        sign = line.move_id.is_inbound() and -1 or 1
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         full_discount_or_zero_quantity = line.discount == 100.00 or float_is_zero(line.quantity, 3)
         if full_discount_or_zero_quantity:
@@ -307,7 +308,7 @@ class AccountEdiFormat(models.Model):
                 line.date or fields.Date.context_today(self)
                 )
         else:
-            unit_price_in_inr = (abs(line.balance) / (1 - (line.discount / 100))) / line.quantity
+            unit_price_in_inr = ((sign * line.balance) / (1 - (line.discount / 100))) / line.quantity
         return {
             "SlNo": str(index),
             "PrdDesc": line.name.replace("\n", ""),
@@ -320,7 +321,7 @@ class AccountEdiFormat(models.Model):
             # total amount is before discount
             "TotAmt": self._l10n_in_round_value(unit_price_in_inr * line.quantity),
             "Discount": self._l10n_in_round_value((unit_price_in_inr * line.quantity) * (line.discount / 100)),
-            "AssAmt": self._l10n_in_round_value(abs(line.balance)),
+            "AssAmt": self._l10n_in_round_value((sign * line.balance)),
             "GstRt": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
                 tax_details_by_code.get("cgst_rate", 0.00) + tax_details_by_code.get("sgst_rate", 0.00)), 3),
             "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
@@ -335,7 +336,7 @@ class AccountEdiFormat(models.Model):
             "StateCesNonAdvlAmt": self._l10n_in_round_value(
                 tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
             "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "TotItemVal": self._l10n_in_round_value((abs(line.balance) + line_tax_details.get("tax_amount", 0.00))),
+            "TotItemVal": self._l10n_in_round_value(((sign * line.balance) + line_tax_details.get("tax_amount", 0.00))),
         }
 
     def _l10n_in_edi_generate_invoice_json(self, invoice):
