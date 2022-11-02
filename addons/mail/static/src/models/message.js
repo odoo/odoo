@@ -46,9 +46,6 @@ Model({
             if ('is_note' in data) {
                 data2.is_note = data.is_note;
             }
-            if ('is_notification' in data) {
-                data2.is_notification = data.is_notification;
-            }
             data2.linkPreviews = data.linkPreviews;
             if ('messageReactionGroups' in data) {
                 data2.messageReactionGroups = data.messageReactionGroups;
@@ -412,6 +409,14 @@ Model({
                 return !this.isTemporary && !this.isTransient;
             },
         }),
+        hasTextMuted: attr({ default: false,
+            compute() {
+                if (this.is_note) {
+                    return true;
+                }
+                return clear();
+            },
+        }),
         id: attr({ identifying: true }),
         isCurrentUserOrGuestAuthor: attr({ default: false,
             compute() {
@@ -473,9 +478,9 @@ Model({
                 return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
             },
         }),
-        isDiscussionOrNotification: attr({ default: false,
+        isDisplayedInChatBubble: attr({ default: false,
             compute() {
-                if (this.is_discussion || this.is_notification) {
+                if (this.is_discussion) {
                     return true;
                 }
                 return clear();
@@ -561,7 +566,6 @@ Model({
          */
         isNeedaction: attr({ default: false }),
         is_note: attr({ default: false }),
-        is_notification: attr({ default: false }),
         /**
          * Determine whether the current partner is mentioned.
          */
@@ -613,7 +617,10 @@ Model({
                 if (this.message_type === 'notification') {
                     return this.env._t("System notification");
                 }
-                if (!this.is_discussion && !this.is_notification) {
+                if (this.message_type === 'user_notification') {
+                    return this.env._t("User notification");
+                }
+                if (!this.is_discussion) {
                     return this.env._t("Note");
                 }
                 return this.env._t("Message");

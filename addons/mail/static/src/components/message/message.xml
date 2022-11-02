@@ -6,12 +6,12 @@
             t-att-class="{
                 'o_MessageView_active': isActive,
                 'o-clicked': messagingAsClickedMessageView,
-                'o-discussion': message.isDiscussionOrNotification,
+                'o-discussion': message.isDisplayedInChatBubble,
                 'o-has-message-selection': messageListViewItemOwner and messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
                 'o-highlighted': message.isHighlighted or isHighlighted,
                 'o-isReplyHighlighted bg-view shadow-lg': isHighlighted,
                 'o-isDeviceSmall': messaging.device.isSmall,
-                'o-not-discussion': !message.isDiscussionOrNotification,
+                'o-not-discussion': !message.isDisplayedInChatBubble,
                 'o-notification': message.message_type === 'notification',
                 'o-selected': isSelected,
                 'o-squashed pt-1': isSquashed,
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div
-                        class="o_MessageView_bubbleWrap position-relative d-flex align-items-start"
+                        class="position-relative d-flex align-items-start"
                         t-att-class="{
                             'd-flex justify-content-end': isInChatWindowAndIsAlignedRight,
                             'pe-4': isInChatWindowAndIsAlignedLeft and !composerViewInEditing,
@@ -96,27 +96,27 @@
                         }"
                     >
                         <div
-                            class="o_MessageView_bubble position-relative"
+                            class="position-relative"
                             t-att-class="{
                                 'flex-grow-1': composerViewInEditing,
-                                'w-100': !(message.isDiscussionOrNotification or message.message_type === 'sms') and !isInChatWindow,
+                                'w-100': !message.isDisplayedInChatBubble and !isInChatWindow,
                                 'me-2': isInChatWindowAndIsAlignedLeft and !composerViewInEditing,
                                 'ms-2': isInChatWindowAndIsAlignedRight and !composerViewInEditing,
-                                'p-3': message.prettyBody !== '' and !composerViewInEditing and (message.isDiscussionOrNotification or message.message_type === 'sms'),
+                                'p-3': message.prettyBody !== '' and !composerViewInEditing and message.isDisplayedInChatBubble,
                                 'p-2': composerViewInEditing,
-                                'text-muted': message.is_note and message.message_type !== 'sms',
+                                'text-muted': message.hasTextMuted,
                             }"
                         >
                             <div
                                 t-if="message.prettyBody !== '' || composerViewInEditing"
                                 class="o_MessageView_background position-absolute start-0 top-0 w-100 h-100"
                                 t-att-class="{
-                                    'rounded-end-3': !isInChatWindowAndIsAlignedRight and (message.isDiscussionOrNotification or message.message_type === 'sms'),
-                                    'rounded-start-3': isInChatWindowAndIsAlignedRight and (message.isDiscussionOrNotification or message.message_type === 'sms'),
-                                    'rounded-bottom-3 border': message.isDiscussionOrNotification or message.message_type === 'sms',
-                                    'o-isAuthorNotCurrentUserOrGuest border-info bg-info-light': !message.isCurrentUserOrGuestAuthor and !message.isHighlighted and (message.isDiscussionOrNotification or message.message_type === 'sms'),
-                                    'border-success bg-success-light opacity-25': message.isCurrentUserOrGuestAuthor and !message.isHighlighted and (message.isDiscussionOrNotification or message.message_type === 'sms'),
-                                    'border-warning bg-warning-light opacity-50': message.isHighlighted and (message.isDiscussionOrNotification or message.message_type === 'sms'),
+                                    'rounded-end-3': !isInChatWindowAndIsAlignedRight and message.isDisplayedInChatBubble,
+                                    'rounded-start-3': isInChatWindowAndIsAlignedRight and message.isDisplayedInChatBubble,
+                                    'rounded-bottom-3 border': message.isDisplayedInChatBubble,
+                                    'o-isAuthorNotCurrentUserOrGuest border-info bg-info-light': !message.isCurrentUserOrGuestAuthor and !message.isHighlighted and message.isDisplayedInChatBubble,
+                                    'border-success bg-success-light opacity-25': message.isCurrentUserOrGuestAuthor and !message.isHighlighted and message.isDisplayedInChatBubble,
+                                    'border-warning bg-warning-light opacity-50': message.isHighlighted and message.isDisplayedInChatBubble,
                                 }"
                             />
                             <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName" class="o_MessageView_subject position-relative mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
@@ -142,21 +142,21 @@
                                 'position-absolute top-0': !isInDiscuss,
                                 'start-0 ms-3': isInChatWindowAndIsAlignedRight,
                                 'end-0 me-3': isInChatWindowAndIsAlignedLeft || isInChatter,
-                                'mt-n4': isInChatter and (message.isDiscussionOrNotification or message.message_type === 'sms'),
-                                'mt-n5': isInChatter and !(message.isDiscussionOrNotification or message.message_type === 'sms'),
-                                'mt-2': isInDiscuss and (message.isDiscussionOrNotification or message.message_type === 'sms'),
+                                'mt-n4': isInChatter and message.isDisplayedInChatBubble,
+                                'mt-n5': isInChatter and !message.isDisplayedInChatBubble,
+                                'mt-2': isInDiscuss and message.isDisplayedInChatBubble,
                                 'mt-n3': isInChatWindow,
                                 'ms-2': isInDiscuss,
                             }"
                             t-attf-class="{{ isActive ? 'visible' : 'invisible' }}"
                         >
-                            <MessageActionList record="messageActionList" classNameObj="{ 'mt-3': isInChatter and !(message.isDiscussionOrNotification or message.message_type === 'sms') }"/>
+                            <MessageActionList record="messageActionList" classNameObj="{ 'mt-3': isInChatter and !message.isDisplayedInChatBubble }"/>
                         </div>
                     </div>
                     <AttachmentList t-if="attachmentList" record="attachmentList" className="'position-relative'"/>
                     <LinkPreviewListView t-if="linkPreviewListView" record="linkPreviewListView"/>
                     <div t-if="message.messageReactionGroups.length > 0" class="position-relative d-flex flex-wrap"
-                    t-att-class="{ 'flex-row-reverse me-3': isInChatWindowAndIsAlignedRight, 'ms-3': !isInChatWindowAndIsAlignedRight and (message.isDiscussionOrNotification or message.message_type === 'sms')}" t-attf-class="{{ message.isDiscussionOrNotification or message.message_type === 'sms' ? 'mt-n2' : 'mt-1' }}">
+                    t-att-class="{ 'flex-row-reverse me-3': isInChatWindowAndIsAlignedRight, 'ms-3': !isInChatWindowAndIsAlignedRight and message.isDisplayedInChatBubble }" t-attf-class="{{ message.isDisplayedInChatBubble ? 'mt-n2' : 'mt-1' }}">
                         <MessageReactionGroup t-foreach="message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId" className="'mb-1'" classNameObj="{ 'ms-1': isInChatWindowAndIsAlignedRight, 'me-1': !(isInChatWindowAndIsAlignedRight) }" record="messageReactionGroup"/>
                     </div>
                 </div>

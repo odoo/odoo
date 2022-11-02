@@ -69,7 +69,6 @@ insertModelFields('mail.message', {
     history_partner_ids: { relation: 'res.partner', string: "Partners with History", type: 'many2many' },
     is_discussion: { string: 'Discussion', type: 'boolean' },
     is_note: { string: "Discussion", type: 'boolean' },
-    is_notification: { string: "Note", type: 'boolean' },
     needaction_partner_ids: { relation: 'res.partner', string: "Partners with Need Action", type: 'many2many' },
     res_model_name: { string: "Res Model Name", type: 'char' },
 });

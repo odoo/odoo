@@ -26,7 +26,6 @@ const PublicLivechatMessage = Class.extend({
      *   If not provided, use current date time for this message.
      * @param {integer} data.id
      * @param {boolean} [data.is_discussion = false]
-     * @param {boolean} [data.is_notification = false]
      * @param {string} [data.message_type = undefined]
      */
     init(parent, messaging, data) {
@@ -36,7 +35,6 @@ const PublicLivechatMessage = Class.extend({
         this._date = data.date ? moment(time.str_to_datetime(data.date)) : moment();
         this._id = data.id;
         this._isDiscussion = data.is_discussion;
-        this._isNotification = data.is_notification;
         this._serverAuthor = data.author;
         this._type = data.message_type || undefined;
 
@@ -196,22 +194,6 @@ const PublicLivechatMessage = Class.extend({
      */
     isNote() {
         return this._isNote;
-    },
-    /**
-     * State whether this message is a notification
-     *
-     * User notifications are defined as either
-     *      - notes
-     *      - pushed to user Inbox or email through classic notification process
-     *      - not linked to any document, meaning model and res_id are void
-     *
-     * This is useful in order to display white background for user
-     * notifications in chatter
-     *
-     * @returns {boolean}
-     */
-    isNotification() {
-        return this._isNotification;
     },
     setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;
