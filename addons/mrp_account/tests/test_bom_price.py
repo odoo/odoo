@@ -6,7 +6,7 @@ from odoo.tests import common, Form
 from odoo.tools.float_utils import float_round, float_compare
 
 
-class TestBomPrice(common.TransactionCase):
+class TestBomPriceCommon(common.TransactionCase):
 
     @classmethod
     def _create_product(cls, name, price):
@@ -101,6 +101,8 @@ class TestBomPrice(common.TransactionCase):
             line.product_qty = 57
         cls.bom_2 = bom_form2.save()
 
+
+class TestBomPrice(TestBomPriceCommon):
     def test_00_compute_price(self):
         """Test multi-level BoM cost"""
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
