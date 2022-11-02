@@ -2273,6 +2273,6 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         with so_form.order_line.new() as line:
             line.product_id = super_kit
         so = so_form.save()
-        self.assertEqual(so.order_line.purchase_price, 60)
+        self.assertEqual(super_kit.standard_price, 60)
         so.action_confirm()
-        self.assertEqual(so.order_line.purchase_price, 60)
+        self.assertEqual(super_kit.standard_price, 60)
