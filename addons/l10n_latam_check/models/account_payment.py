@@ -55,12 +55,7 @@ class AccountPayment(models.Model):
     l10n_latam_use_checkbooks = fields.Boolean(
         related='journal_id.l10n_latam_use_checkbooks',
     )
-    l10n_latam_checkbook_id = fields.Many2one(
-        comodel_name='l10n_latam.checkbook',
-        string='Checkbook',
-        compute='_compute_l10n_latam_checkbook', store=True,
-        readonly=True, states={'draft': [('readonly', False)]},
-    )
+
 
     @api.depends('check_number')
     def _compute_l10n_latam_check_number(self):
