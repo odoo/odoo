@@ -213,6 +213,7 @@ export class ListRenderer extends Component {
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = "auto";
+            table.style.width = null;
             headers.forEach((th) => {
                 th.style.width = null;
                 th.style.maxWidth = null;
@@ -1616,14 +1617,13 @@ export class ListRenderer extends Component {
         const table = this.tableRef.el;
         const th = ev.target.closest("th");
         const handler = th.querySelector(".o_resize");
-        table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName("tr")]
             .filter((tr) => tr.children.length === th.parentNode.children.length)
             .map((tr) => tr.children[thPosition]);
-        const initialX = ev.clientX;
         const initialWidth = th.getBoundingClientRect().width;
         const initialTableWidth = table.getBoundingClientRect().width;
+        table.style.width = `${Math.floor(initialTableWidth)}px`;
         const resizeStoppingEvents = ["keydown", "mousedown", "mouseup"];
 
         // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
@@ -1644,8 +1644,10 @@ export class ListRenderer extends Component {
         const resizeHeader = (ev) => {
             ev.preventDefault();
             ev.stopPropagation();
-            const delta = ev.clientX - initialX;
-            const newWidth = Math.max(10, initialWidth + delta);
+            const clientRect = th.getBoundingClientRect();
+            const resizeBarCenterX = clientRect.right - 3; // 3px to the left from TH right side (resize bar is 3px)
+            const delta = ev.clientX - resizeBarCenterX;
+            const newWidth = Math.max(10, clientRect.width + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${Math.floor(newWidth)}px`;
             th.style.maxWidth = `${Math.floor(newWidth)}px`;
