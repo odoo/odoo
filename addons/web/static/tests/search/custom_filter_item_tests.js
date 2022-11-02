@@ -336,7 +336,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("selection field: default and updated value", async function (assert) {
-        assert.expect(10);
+        assert.expect(11);
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -370,6 +370,11 @@ QUnit.module("Search", (hooks) => {
         await toggleAddCustomFilter(target);
         await editConditionField(target, 0, "color");
         await editConditionValue(target, 0, "white");
+        assert.strictEqual(
+            target.querySelector(".o_generator_menu_value input,.o_generator_menu_value select")
+                .value,
+            "white"
+        );
         await applyFilter(target);
 
         assert.deepEqual(getFacetTexts(target), ['Color is "white"']);
