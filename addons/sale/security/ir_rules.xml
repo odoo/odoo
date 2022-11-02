@@ -176,4 +176,10 @@
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
 
+    <record id="sale_mass_cancel_orders_rule" model="ir.rule">
+        <field name="name">Sales Mass Cancel Orders: access only your own wizard</field>
+        <field name="model_id" ref="model_sale_mass_cancel_orders"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
 </odoo>
