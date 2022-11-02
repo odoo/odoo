@@ -10,7 +10,7 @@
     #
     -->
     <record model="account.tax.template" id="tva_sale_18">
-        <field name="name">TVA 18% (vente)</field>
+        <field name="name">VAT 18% (sale)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
@@ -32,7 +32,7 @@
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_purchase_18">
-        <field name="name">TVA 18% (achat)</field>
+        <field name="name">VAT 18% (purchase)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
@@ -54,7 +54,7 @@
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_exonere">
-        <field name="name">Exonéré de TVA (vente)</field>
+        <field name="name">Exempt from VAT (sale)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -69,7 +69,7 @@
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_achat_exonere">
-        <field name="name">Exonéré de TVA (achat)</field>
+        <field name="name">Exempt from VAT (purchase)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
         <field name="amount">0</field>
         <field name="type_tax_use">purchase</field>
