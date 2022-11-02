@@ -21,7 +21,6 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     _description = 'Microsoft Outlook Mixin'
 
     _OUTLOOK_SCOPE = None
-    _OUTLOOK_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/'
 
     use_microsoft_outlook_service = fields.Boolean('Outlook Authentication')
     is_microsoft_outlook_configured = fields.Boolean('Is Outlook Credential Configured',
@@ -53,7 +52,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 record.microsoft_outlook_uri = False
                 continue
 
-            record.microsoft_outlook_uri = url_join(self._OUTLOOK_ENDPOINT, 'authorize?%s' % url_encode({
+            record.microsoft_outlook_uri = url_join(self._get_microsoft_endpoint(), 'authorize?%s' % url_encode({
                 'client_id': microsoft_outlook_client_id,
                 'response_type': 'code',
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
@@ -127,7 +126,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
 
         response = requests.post(
-            url_join(self._OUTLOOK_ENDPOINT, 'token'),
+            url_join(self._get_microsoft_endpoint(), 'token'),
             data={
                 'client_id': microsoft_outlook_client_id,
                 'client_secret': microsoft_outlook_client_secret,
@@ -187,4 +186,11 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             env=self.env(su=True),
             scope='microsoft_outlook_oauth',
             message=(self._name, self.id),
+        )
+
+    @api.model
+    def _get_microsoft_endpoint(self):
+        return self.env["ir.config_parameter"].sudo().get_param(
+            'microsoft_outlook.endpoint',
+            'https://login.microsoftonline.com/common/oauth2/v2.0/',
         )
