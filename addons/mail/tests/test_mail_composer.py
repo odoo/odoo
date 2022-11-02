@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import users
+from odoo.tests import Form, users
 from odoo.addons.mail.tests.common import MailCommon
 
 
@@ -72,3 +72,22 @@ class TestMailComposer(MailCommon):
         self.assertIn(self.body_html,
             values[self.partner_employee.id]['body_html'],
             'We must preserve (mso) comments in email html')
+
+    def test_default_recipient_with_private_partner(self):
+        #Create a private partner
+        partner_private = self.env['res.partner'].create({
+            'name': 'Private',
+            'email': 'private@gmail.com',
+            'type': 'private',
+        })
+
+        form = Form(self.env['mail.compose.message'].with_context({
+            'default_partner_ids': partner_private.ids,
+            'active_ids': [self.test_record.id],
+            'active_model': self.test_record._name,
+            'active_id': self.test_record.id
+            }))
+        #assert partner_private is in the partner_ids
+        self.assertIn(partner_private, form.partner_ids)
+        saved_form = form.save()
+        self.assertIn(partner_private, saved_form.partner_ids)
