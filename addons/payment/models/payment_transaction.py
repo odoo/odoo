@@ -820,6 +820,7 @@ class PaymentTransaction(models.Model):
         - `state_message`: The information message about the state.
         - `is_post_processed`: Whether the transaction has already been post-processed.
         - `landing_route`: The route the user is redirected to after the transaction.
+        - `operation`: The type of operation the transaction is.
         - Additional provider-specific entries.
 
         Note: `self.ensure_one()`
@@ -838,6 +839,7 @@ class PaymentTransaction(models.Model):
             'state_message': self.state_message,
             'is_post_processed': self.is_post_processed,
             'landing_route': self.landing_route,
+            'operation': self.operation,
         }
         _logger.debug(
             "post-processing values of transaction with reference %s for provider with id %s:\n%s",

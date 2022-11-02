@@ -77,6 +77,15 @@ odoo.define('payment.post_processing', function (require) {
 
             // group the transaction according to their state
             display_values_list.forEach(function (display_values) {
+
+                // in case one of the tx is a validation operation (creation of a token)
+                // we immediately redirect to the landing route, no need of showing the
+                // payment status page
+                if (display_values.operation === 'validation') {
+                    window.location = display_values.landing_route;
+                    return;
+                }
+
                 var key = 'tx_' + display_values.state;
                 if(key in render_values) {
                     if (display_values["display_message"]) {
@@ -95,7 +104,7 @@ odoo.define('payment.post_processing', function (require) {
                 }
                 return nbTx;
             }
-                       
+
             /*
             * When the server sends the list of monitored transactions, it tries to post-process 
             * all the successful ones. If it succeeds or if the post-process has already been made, 
