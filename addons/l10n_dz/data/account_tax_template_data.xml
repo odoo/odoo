@@ -1,0 +1,1812 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sales -->
+    <!-- E3B22 -->
+    <record id="l10n_dz_vat_sale_19_resale" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% G Resale</field>
+        <field name="description">19% Resale as is: goods, products and commodities referred to in art. 21 of the C. TCA</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">1</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B22_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B22_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_resale" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% G Resale</field>
+        <field name="description">0% (exempt) - Resale as is: goods, products and commodities referred to in art. 21 of the C. TCA</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">2</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B22_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B11 -->
+    <record id="l10n_dz_vat_sale_9_G" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% G</field>
+        <field name="description">9% G (Goods, products and commodities covered by article 23 of the C. TCA)</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">3</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B11_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B11_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_G" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% G</field>
+        <field name="description">0% (exempt) - Goods, products and commodities covered by Article 23 of the C. TCA)</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">4</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B11_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B12 -->
+    <record id="l10n_dz_vat_sale_9_S" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% S</field>
+        <field name="description">9% S (Provision of services covered by Article 23 of the C. TCA)</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B12_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B12_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_S" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% S</field>
+        <field name="description">0% (exempt) - Provision of services covered by Article 23 of the C. TCA</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B11_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B13 -->
+    <record id="l10n_dz_vat_sale_9_IMMO" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% Real Estate</field>
+        <field name="description">9% (Real estate operations covered by article 23 of the C. TCA)</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">7</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B13_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B13_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_IMMO" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% Real Estate</field>
+        <field name="description">0% (exempt) - Real estate transactions covered by Article 23 of the C. TCA</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">8</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B13_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B14 -->
+    <record id="l10n_dz_vat_sale_9_MED" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% MED</field>
+        <field name="description">9% (Medical procedures)</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">9</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B14_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B14_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_MED" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% MED</field>
+        <field name="description">0% (exempt) - Medical procedures</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">10</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B14_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B15 -->
+    <record id="l10n_dz_vat_sale_9_COMMISSION_BROKERS" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% COMMISSIONS &amp; BROKERS</field>
+        <field name="description">9% - Commissionaires and brokers</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">11</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B15_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B15_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_COMMISSION_BROKERS" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% COMMISSIONS &amp; BROKERS</field>
+        <field name="description">0% (exempt) - Commissionaires and brokers</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">12</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B15_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B16 -->
+    <record id="l10n_dz_vat_sale_9_ENERGY" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% ENERGY</field>
+        <field name="description">9% Energy supply</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">13</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B16_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B16_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_ENERGY" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% ENERGY</field>
+        <field name="description">0% (exempt) - Energy supply</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">14</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B16_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B21 -->
+    <record id="l10n_dz_vat_sale_19_prod" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% G Prod</field>
+        <field name="description">19% G (Productions: goods, products and commodities referred to in art. 21 of the C. TCA)</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">15</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B21_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B21_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_prod" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% G Prod</field>
+        <field name="description">0% (exempt) - Productions: goods, products and commodities covered by art. 21 of the C. TCA</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">16</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B21_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B23 -->
+    <record id="l10n_dz_vat_sale_19_IMMO" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% Real Estate</field>
+        <field name="description">19% Real estate work other than those subject to the 9% rate</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">17</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B23_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B23_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_IMMO" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% Real Estate (19% Exempt)</field>
+        <field name="description">0% (exempt) - Real estate work other than that subject to the 9% rate</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">18</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B23_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B24 -->
+    <record id="l10n_dz_vat_sale_19_liberal_professions" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% LIBERAL PROF.</field>
+        <field name="description">19% Liberal professions</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">19</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B24_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B24_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_liberal_professions" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% LIBERAL PROF.</field>
+        <field name="description">0% Liberal professions</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">20</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B24_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B25 -->
+    <record id="l10n_dz_vat_sale_19_bank_insurance" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% BANK/INS</field>
+        <field name="description">19% Banking and insurance operations</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">21</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B25_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B25_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_bank_insurance" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% BANK/INS</field>
+        <field name="description">0% (exempt) - Banking and insurance</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">22</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B25_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B26 -->
+    <record id="l10n_dz_vat_sale_19_telephone" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% TEL</field>
+        <field name="description">19% Telephone and telex services</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">23</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B26_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B26_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_telephone" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% TEL</field>
+        <field name="description">0% (exempt) - Telephone and telex services</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">24</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B26_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B28 -->
+    <record id="l10n_dz_vat_sale_19_other_services" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% OTHER SERVICES</field>
+        <field name="description">19% Other services</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">25</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B28_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B28_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_other_services" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% OTHER SERVICES</field>
+        <field name="description">0% (exempt) - Other services</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">26</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B28_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B31 -->
+    <record id="l10n_dz_vat_sale_19_drink" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% DRINK</field>
+        <field name="description">19% Drinking places</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">27</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B31_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B31_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_drink" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% DRINK</field>
+        <field name="description">0% (exempt) - Drinking places</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">28</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B31_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- MISSING E3B32 and E3B33 because we do not understand their point in regards with E3B21 et E3B22 -->
+
+    <!-- E3B34 -->
+    <record id="l10n_dz_vat_sale_19_tobacco_matches" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% TOBACCO/MATCHES</field>
+        <field name="description">19% Tobacco and matches</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">29</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B34_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B34_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_tobacco_matches" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% TOBACCO/MATCHES</field>
+        <field name="description">0% (exempt) - Tobacco and matches</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">30</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B34_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B35 -->
+    <record id="l10n_dz_vat_sale_19_shows_games" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% SHOWS/GAMES</field>
+        <field name="description">19% Shows, games and entertainment other than those mentioned in art. 21 of the TCA</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">31</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B35_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B35_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_shows_games" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% SHOWS/GAMES</field>
+        <field name="description">0% (exempt) - Shows, games and entertainment other than those mentioned in art. 21 of the TCA</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">32</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B35_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B36 -->
+    <record id="l10n_dz_vat_sale_19_other_services_art21CTCA" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% OTHER SERVICES</field>
+        <field name="description">19% Other services referred to in article 21 of the C. TCA</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">33</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B36_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B36_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_other_services_art21CTCA" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% OTHER SERVICES</field>
+        <field name="description">0% (exempt) - Other services referred to in article 21 of the C. TCA</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">34</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B36_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- E3B37 -->
+    <record id="l10n_dz_vat_sale_19_on_site_consumption" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% ON-SITE CONSUMPT.</field>
+        <field name="description">19% On-site consumption</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">35</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B37_taxable_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B37_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44571'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_sale_0_on_site_consumption" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% ON-SITE CONSUMPT.</field>
+        <field name="description">0% (exempt) - On-site consumption</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence">36</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">sale</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B37_exempt_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- TIC (Taxe sur la consommation intérieure) -->
+    <!-- TIC must be in the base for VAT (art 27 CTCA LFC 2022)-->
+    <record id="l10n_dz_tic_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">TIC 10%</field>
+        <field name="description">10% Tax on domestic consumption</field>
+        <field name="amount" eval="10.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_tic_10"/>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">38</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_tic_10_balance_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_tic_10_balance_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_tic_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">TIC 20%</field>
+        <field name="description">20% Tax on domestic consumption</field>
+        <field name="amount" eval="20.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_tic_20"/>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">39</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_tic_20_balance_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_tic_20_balance_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_tic_30" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">TIC 30%</field>
+        <field name="description">30% Tax on domestic consumption</field>
+        <field name="amount" eval="30.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_tic_30"/>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">40</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_tic_30_balance_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_tic_30_balance_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_tic_60" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">TIC 60%</field>
+        <field name="description">60% Tax on domestic consumption</field>
+        <field name="amount" eval="60.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_tic_60"/>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">41</field>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_tic_60_balance_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_4478'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_tic_60_balance_tag')],
+            }),
+        ]"/>
+    </record>
+    <!-- Sales [END]-->
+
+    <!-- Purchase-->
+    <!-- Purchase Goods and Services-->
+    <record id="l10n_dz_vat_purchase_19" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19%</field>
+        <field name="description">19% VAT on purchases of goods, materials and services (Art. 29 C. TCA)</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">50</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B92_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_purchase_9" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9%</field>
+        <field name="description">9% VAT on purchases of goods, materials and services (Art. 29 C. TCA)</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">51</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'minus_report_expression_ids': [ref('l10n_dz_tax_report_E3B92_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'minus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_purchase_0" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0%</field>
+        <field name="description">0% VAT on purchases of goods, materials and services (Art. 29 C. TCA)</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">52</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- Purchase Fixed Assets-->
+    <record id="l10n_dz_vat_purchase_19_depr" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 19% Depreciable assets</field>
+        <field name="description">19% VAT on purchases of depreciable goods (Art. 38 C. TCA)</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_19"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">53</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B93_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'plus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_purchase_9_depr" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 9% Depreciable assets</field>
+        <field name="description">9% VAT on purchases of depreciable goods (Art. 38 C. TCA)</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_9"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">54</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'minus_report_expression_ids': [ref('l10n_dz_tax_report_E3B93_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_44566'),
+                'minus_report_expression_ids': [ref('l10n_dz_tax_report_E3B95_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_vat_purchase_0_depr" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">VAT 0% Depreciable assets</field>
+        <field name="description">0% VAT on purchases of depreciable goods (Art. 38 C. TCA)</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="l10n_dz_tax_group_vat_0"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">55</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- Purchase IMPORT-->
+    <record id="l10n_dz_import_0" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">0% IMPORT</field>
+        <field name="description">0% Import</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">80</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_0_total_turnover_tag')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_0_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_0_total_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_0_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_import_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">5% IMPORT</field>
+        <field name="description">5% Import</field>
+        <field name="amount" eval="5.0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">80</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_5_total_turnover_tag')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_5_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_5_total_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_5_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_import_15" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">15% IMPORT</field>
+        <field name="description">15% Import</field>
+        <field name="amount" eval="15.0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">80</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_15_total_turnover_tag')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_15_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_15_total_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_15_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_import_30" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">30% IMPORT</field>
+        <field name="description">30% Import</field>
+        <field name="amount" eval="30.0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">80</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_30_total_turnover_tag')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_30_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_30_total_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_30_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_dz_import_60" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="name">60% IMPORT</field>
+        <field name="description">60% Import</field>
+        <field name="amount" eval="60.0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">80</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_60_total_turnover_tag')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'plus_report_expression_ids': [ref('l10n_dz_tr_import_60_balance_tag')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_60_total_turnover_tag')],
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_dz_6452'),
+                'minus_report_expression_ids': [ref('l10n_dz_tr_import_60_balance_tag')]
+            }),
+        ]"/>
+    </record>
+    <!-- Purchase [END] -->
+</odoo>

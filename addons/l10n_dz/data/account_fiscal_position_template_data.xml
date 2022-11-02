@@ -2,7 +2,7 @@
 <odoo>
     <record id="fiscal_position_template_national" model="account.fiscal.position.template">
         <field name="sequence">1</field>
-        <field name="name">Régime National</field>
+        <field name="name">National Regime</field>
         <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
         <field name="auto_apply" eval="True"/>
         <field name="vat_required" eval="True"/>
@@ -10,72 +10,368 @@
     </record>
 
     <record id="fiscal_position_template_exo" model="account.fiscal.position.template">
-        <field name="name">EXO</field>
+        <field name="name">Exemption</field>
         <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
-        <field name="note">Exo de TVA</field>
+        <field name="note">VAT exemption</field>
+    </record>
+    <record id="fiscal_position_template_export" model="account.fiscal.position.template">
+        <field name="name">Export</field>
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="note">Export 0% VAT</field>
+    </record>
+    <record id="fiscal_position_template_eu_free_trade" model="account.fiscal.position.template">
+        <field name="name">EU Free Trade</field>
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="note">Import/Export 0% with the European Union (free trade agreement)</field>
     </record>
 
-    <record id="fiscal_position_template_import_export" model="account.fiscal.position.template">
-        <field name="name">Import/Export</field>
-        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
-        <field name="note">Import Export</field>
-    </record>
 
     <!-- Fiscal Position Tax Templates -->
-    <!-- ventes -->
-    <!-- 19% -->
-    <record id="fp_tax_ve_template_exo_normale19" model="account.fiscal.position.tax.template">
+    <!-- EXO -->
+    <record id="l10n_dz_fp_tax_exo_E3B22" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_exo" />
-        <field name="tax_src_id" ref="tva_normale19" />
-        <field name="tax_dest_id" ref="tva_0" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_resale" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_resale" />
     </record>
-    <!-- 09% -->
-    <record id="fp_tax_ve_template_exo_specifique9" model="account.fiscal.position.tax.template">
+    <record id="l10n_dz_fp_tax_exo_E3B11" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_exo" />
-        <field name="tax_src_id" ref="tva_specifique9" />
-        <field name="tax_dest_id" ref="tva_0" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_G" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_G" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_S" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_S" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_IMMO" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_IMMO" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_MED" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_MED" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_COMMISSION_BROKERS" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_COMMISSION_BROKERS" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_ENERGY" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_ENERGY" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_prod" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_prod" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B23" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_IMMO" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_IMMO" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_liberal_professions" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_liberal_professions" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B25" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_bank_insurance" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_bank_insurance" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B26" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_telephone" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_telephone" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B28" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_other_services" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_other_services" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B31" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_drink" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_drink" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B34" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_tobacco_matches" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_tobacco_matches" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B35" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_shows_games" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_shows_games" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B36" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_other_services_art21CTCA" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_other_services_art21CTCA" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_E3B37" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_on_site_consumption" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_on_site_consumption" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_purchase_19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_19" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_purchase_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_9" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_purchase_19_depr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_19_depr" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0_depr" />
+    </record>
+    <record id="l10n_dz_fp_tax_exo_purchase_9_depr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_9_depr" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0_depr"/>
     </record>
 
-    <!-- Achat -->
-    <!-- 19% -->
-    <record id="fp_tax_ac_template_exo_normale19" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_exo" />
-        <field name="tax_src_id" ref="tva_acq_normale19" />
-        <field name="tax_dest_id" ref="tva_exo_0" />
+    <!-- Export -->
+    <record id="l10n_dz_fp_tax_export_E3B22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_resale" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_resale" />
     </record>
-    <!-- 09% -->
-    <record id="fp_tax_ac_template_exo_specifique9" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_exo" />
-        <field name="tax_src_id" ref="tva_acq_specifique9" />
-        <field name="tax_dest_id" ref="tva_exo_0" />
+    <record id="l10n_dz_fp_tax_export_E3B11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_G" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_G" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_S" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_S" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_IMMO" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_IMMO" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_MED" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_MED" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_COMMISSION_BROKERS" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_COMMISSION_BROKERS" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_ENERGY" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_ENERGY" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_prod" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_prod" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B23" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_IMMO" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_IMMO" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_liberal_professions" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_liberal_professions" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B25" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_bank_insurance" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_bank_insurance" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B26" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_telephone" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_telephone" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B28" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_other_services" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_other_services" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B31" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_drink" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_drink" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B34" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_tobacco_matches" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_tobacco_matches" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B35" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_shows_games" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_shows_games" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B36" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_other_services_art21CTCA" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_other_services_art21CTCA" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_E3B37" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_on_site_consumption" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_on_site_consumption" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_purchase_19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_19" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0" />
+    </record>
+    <record id="l10n_dz_fp_tax_export_purchase_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_export" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_9" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0" />
     </record>
 
-    <!-- Import/Export -->
-    <!-- ventes -->
-    <!-- 19% -->
-    <record id="fp_tax_ve_template_imp_exp_normale19" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_import_export" />
-        <field name="tax_src_id" ref="tva_normale19" />
-        <field name="tax_dest_id" ref="tva_export_0" />
+<!-- EU Free Trade -->
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_resale" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_resale" />
     </record>
-    <!-- 09% -->
-    <record id="fp_tax_ve_template_imp_exp_specifique9" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_import_export" />
-        <field name="tax_src_id" ref="tva_specifique9" />
-        <field name="tax_dest_id" ref="tva_export_0" />
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_G" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_G" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_S" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_S" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_IMMO" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_IMMO" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_MED" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_MED" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_COMMISSION_BROKERS" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_COMMISSION_BROKERS" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_9_ENERGY" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_ENERGY" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_prod" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_prod" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B23" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_IMMO" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_IMMO" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_liberal_professions" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_liberal_professions" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B25" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_bank_insurance" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_bank_insurance" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B26" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_telephone" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_telephone" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B28" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_other_services" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_other_services" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B31" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_drink" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_drink" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B34" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_tobacco_matches" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_tobacco_matches" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B35" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_shows_games" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_shows_games" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B36" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_other_services_art21CTCA" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_other_services_art21CTCA" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_E3B37" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_sale_19_on_site_consumption" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_sale_0_on_site_consumption" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_purchase_19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_19" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_purchase_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_9" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0" />
     </record>
 
-    <!-- Achat -->
-    <!-- 19% -->
-    <record id="fp_tax_ac_template_imp_exp_normale19" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_import_export" />
-        <field name="tax_src_id" ref="tva_acq_normale19" />
-        <field name="tax_dest_id" ref="tva_import_0" />
+    <record id="l10n_dz_fp_tax_eu_free_trade_purchase_19_depr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_19_depr" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0_depr" />
     </record>
-    <!-- 09% -->
-    <record id="fp_tax_ac_template_imp_exp_specifique9" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_import_export" />
-        <field name="tax_src_id" ref="tva_acq_specifique9" />
-        <field name="tax_dest_id" ref="tva_import_0" />
+    <record id="l10n_dz_fp_tax_eu_free_trade_purchase_9_depr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_vat_purchase_9_depr" />
+        <field name="tax_dest_id" ref="l10n_dz_vat_purchase_0_depr" />
+    </record>
+
+    <record id="l10n_dz_fp_tax_eu_free_trade_import_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_import_5" />
+        <field name="tax_dest_id" ref="l10n_dz_import_0" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_import_15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_import_15" />
+        <field name="tax_dest_id" ref="l10n_dz_import_0" />
+    </record>
+    <record id="l10n_dz_fp_tax_eu_free_trade_import_30" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_import_30" />
+        <field name="tax_dest_id" ref="l10n_dz_import_0" />
+    </record>
+        <record id="l10n_dz_fp_tax_eu_free_trade_import_60" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_free_trade" />
+        <field name="tax_src_id" ref="l10n_dz_import_60" />
+        <field name="tax_dest_id" ref="l10n_dz_import_0" />
     </record>
 </odoo>

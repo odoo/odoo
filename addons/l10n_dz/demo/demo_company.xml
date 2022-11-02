@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_dz_demo_company" model="res.partner">
+        <field name="name">Algerian Best Company</field>
+        <field name="street">3233 Green Acres Road</field>
+        <field name="street2">Unit 07</field>
+        <field name="city">Algier</field>
+        <field name="zip">1000</field>
+        <field name="country_id" ref="base.dz"/>
+        <field name="phone">+04334934343</field>
+        <field name="email">info@company.algerianbestcompany.com</field>
+        <field name="website">www.algerianbestcompany.com</field>
+        <field name="vat">12312312312</field>
+    </record>
+
+    <record id="l10n_dz_demo_company_company" model="res.company">
+        <field name="name">Algerian Demo Company</field>
+        <field name="partner_id" ref="l10n_dz_demo_company"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('l10n_dz_demo_company_company')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_dz.l10n_dz_demo_company_company'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[ref('l10n_dz.l10n_dz_pcg_chart_template')]"/>
+        <value model="res.company" eval="obj().env.ref('l10n_dz.l10n_dz_demo_company_company')"/>
+    </function>
+</odoo>
