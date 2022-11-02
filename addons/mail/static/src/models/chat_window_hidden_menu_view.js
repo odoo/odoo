@@ -1,11 +1,21 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChatWindowHiddenMenuView',
+    template: 'mail.ChatWindowHiddenMenuView',
+    templateGetter: 'chatWindowHiddenMenuView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'listRef', refName: 'list' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);

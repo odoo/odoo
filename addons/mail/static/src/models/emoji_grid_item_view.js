@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiGridItemView',
+    template: 'mail.EmojiGridItemView',
+    templateGetter: 'emojiGridItemView',
     fields: {
         emojiOrEmojiInCategory: one('EmojiOrEmojiInCategory', {
             identifying: true,

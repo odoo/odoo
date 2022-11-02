@@ -6,6 +6,8 @@ import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageInReplyToView',
+    template: "mail.MessageInReplyToView",
+    templateGetter: 'messageInReplyToView',
     recordMethods: {
         /**
          * @private

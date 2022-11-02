@@ -7,6 +7,8 @@ import { isEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChatWindowHeaderView',
+    template: 'mail.ChatWindowHeaderView',
+    templateGetter: 'chatWindowHeaderView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

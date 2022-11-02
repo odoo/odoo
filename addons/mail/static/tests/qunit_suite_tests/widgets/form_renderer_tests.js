@@ -11,7 +11,7 @@ import {
 } from '@mail/../tests/helpers/test_utils';
 
 import fieldRegistry from 'web.field_registry';
-import { dom, nextTick } from 'web.test_utils';
+import { dom, makeTestPromise, nextTick } from 'web.test_utils';
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 const { triggerEvent } = dom;
@@ -82,6 +82,7 @@ QUnit.test('[technical] keep spinner on transition from messaging non-created to
      */
     assert.expect(4);
 
+    const messaginginitializedDeferred = makeTestPromise();
     const pyEnv = await startServer();
     const messagingBeforeCreationDeferred = makeDeferred();
     const resPartnerId1 = pyEnv['res.partner'].create({
@@ -100,7 +101,7 @@ QUnit.test('[technical] keep spinner on transition from messaging non-created to
         messagingBeforeCreationDeferred,
         async mockRPC(route, args) {
             if (route === '/mail/init_messaging') {
-                await new Promise(() => {}); // simulate messaging never initialized
+                await messaginginitializedDeferred; // simulate messaging never initialized
             }
         },
         serverData: { views },
@@ -135,11 +136,13 @@ QUnit.test('[technical] keep spinner on transition from messaging non-created to
         '.o_ChatterContainer_noChatter',
         "chatter container should still not display any chatter when messaging not initialized"
     );
+    messaginginitializedDeferred.resolve(); // ensure proper teardown
 });
 
 QUnit.test('spinner when messaging is created but not initialized', async function (assert) {
     assert.expect(3);
 
+    const messaginginitializedDeferred = makeTestPromise();
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({
         display_name: "second partner",
@@ -156,7 +159,7 @@ QUnit.test('spinner when messaging is created but not initialized', async functi
     const { openView } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/init_messaging') {
-                await new Promise(() => {}); // simulate messaging never initialized
+                await messaginginitializedDeferred; // simulate messaging never initialized
             }
         },
         serverData: { views },
@@ -182,6 +185,7 @@ QUnit.test('spinner when messaging is created but not initialized', async functi
         "Please wait...",
         "chatter container should display spinner when messaging not yet initialized"
     );
+    messaginginitializedDeferred.resolve(); // ensure proper teardown
 });
 
 QUnit.test('transition non-initialized messaging to initialized messaging: display spinner then chatter', async function (assert) {

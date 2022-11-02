@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMemberListView',
+    template: 'mail.ChannelMemberListView',
+    templateGetter: 'channelMemberListView',
     identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {

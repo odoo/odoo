@@ -5,6 +5,8 @@ import { registerModel } from '@mail/model/model_core';
 
 registerModel({
     name: 'MessagingMenuTabView',
+    template: 'mail.MessagingMenuTabView',
+    templateGetter: 'messagingMenuTabView',
     identifyingMode: 'xor',
     recordMethods: {
         /**

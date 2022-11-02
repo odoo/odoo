@@ -7,6 +7,8 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageReactionGroup',
+    template: 'mail.MessageReactionGroup',
+    templateGetter: 'messageReactionGroup',
     recordMethods: {
         /**
          * Handles click on the reaction group.

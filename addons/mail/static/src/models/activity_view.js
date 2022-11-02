@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -9,6 +10,11 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ActivityView',
+    template: 'mail.ActivityView',
+    templateGetter: 'activityView',
+    componentSetup() {
+        useRefToModel({ fieldName: 'markDoneButtonRef', refName: 'markDoneButton', });
+    },
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.

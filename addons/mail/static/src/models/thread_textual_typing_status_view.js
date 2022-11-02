@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadTextualTypingStatusView',
+    template: 'mail.ThreadTextualTypingStatusView',
+    templateGetter: 'threadTextualTypingStatusView',
     fields: {
         owner: one('ComposerView', {
             identifying: true,

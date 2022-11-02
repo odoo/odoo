@@ -1,10 +1,25 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ComposerTextInputView',
+    template: 'mail.ComposerTextInputView',
+    templateGetter: 'composerTextInputView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'mirroredTextareaRef', refName: 'mirroredTextarea' });
+        useRefToModel({ fieldName: 'textareaRef', refName: 'textarea' });
+        /**
+         * Updates the composer text input content when composer is mounted
+         * as textarea content can't be changed from the DOM.
+         */
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     recordMethods: {
         onComponentUpdate() {
             if (!this.component.root.el) {

@@ -1,13 +1,30 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
+import { onMounted, onWillUnmount } from '@odoo/owl';
+
 registerModel({
     name: 'CallMainView',
+    template: 'mail.CallMainView',
+    templateGetter: 'callMainView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'tileContainerRef', refName: 'tileContainer', });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+        onMounted(() => {
+            this.resizeObserver = new ResizeObserver(() => this.callMainView.onResize());
+            this.resizeObserver.observe(this.root.el);
+        });
+        onWillUnmount(() => this.resizeObserver.disconnect());
+    },
     recordMethods: {
         /**
          * Finds a tile layout and dimensions that respects param0.aspectRatio while maximizing

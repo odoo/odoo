@@ -36,7 +36,6 @@ Allows users to send documents by post
             'snailmail/static/src/js/snailmail_external_layout.js',
         ],
         'web.assets_backend': [
-            'snailmail/static/src/components/*/*.js',
             'snailmail/static/src/components/*/*.scss',
             'snailmail/static/src/components/*/*.xml',
         ],

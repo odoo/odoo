@@ -5,6 +5,8 @@ import { attr, many, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ActivityBoxView',
+    template: 'mail.ActivityBoxView',
+    templateGetter: 'activityBoxView',
     recordMethods: {
         /**
          * Handles click on activity box title.

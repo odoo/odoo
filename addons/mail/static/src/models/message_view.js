@@ -1,5 +1,8 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, increment } from '@mail/model/model_field_command';
@@ -7,6 +10,15 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageView',
+    template: 'mail.MessageView',
+    templateGetter: 'messageView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'contentRef', refName: 'content' });
+        useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
+        useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     identifyingMode: 'xor',
     recordMethods: {
         /**

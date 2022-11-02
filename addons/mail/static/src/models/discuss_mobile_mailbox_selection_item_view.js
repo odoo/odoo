@@ -5,6 +5,8 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'DiscussMobileMailboxSelectionItemView',
+    template: 'mail.DiscussMobileMailboxSelectionItemView',
+    templateGetter: 'discussMobileMailboxSelectionItemView',
     recordMethods: {
         onClick() {
             if (!this.exists()) {

@@ -46,7 +46,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/js/systray_items/*.js',
         ],
         'web.assets_backend': [
-            'website_livechat/static/src/components/*/*.js',
             'website_livechat/static/src/components/*/*.scss',
             'website_livechat/static/src/components/*/*.xml',
         ],

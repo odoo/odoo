@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiGridRowView',
+    template: 'mail.EmojiGridRowView',
+    templateGetter: 'emojiGridRowView',
     fields: {
         emojiGridViewOwner: one('EmojiGridView', {
             related: 'emojiGridViewRowRegistryOwner.emojiGridViewOwner',

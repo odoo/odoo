@@ -1,11 +1,20 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { onMounted } from '@odoo/owl';
+
 registerModel({
     name: 'ActivityMarkDonePopoverContentView',
+    template: 'mail.ActivityMarkDonePopoverContentView',
+    templateGetter: 'activityMarkDonePopoverContentView',
+    componentSetup() {
+        useRefToModel({ fieldName: 'feedbackTextareaRef', refName: 'feedbackTextarea' });
+        onMounted(this.activityMarkDonePopoverContentView.onMounted);
+    },
     identifyingMode: 'xor',
     recordMethods: {
         /**

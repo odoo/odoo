@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiView',
+    template: 'mail.EmojiView',
+    templateGetter: 'emojiView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

@@ -6,6 +6,8 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'LinkPreviewAsideView',
+    template: 'mail.LinkPreviewAsideView',
+    templateGetter: 'linkPreviewAsideView',
     identifyingMode: 'xor',
     recordMethods: {
         /**

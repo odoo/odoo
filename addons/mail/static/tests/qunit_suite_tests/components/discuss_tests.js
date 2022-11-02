@@ -68,10 +68,11 @@ QUnit.test('discuss should be marked as closed when the component is unmounted',
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(1);
 
+    const messaginginitializedDeferred = makeTestPromise();
     const { openDiscuss } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
-                await makeTestPromise(); // simulate messaging never initialized
+                await messaginginitializedDeferred; // simulate messaging never initialized
             }
         },
         waitUntilMessagingCondition: 'created',
@@ -82,6 +83,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         1,
         "should display messaging not initialized"
     );
+    messaginginitializedDeferred.resolve(); // ensure proper teardown
 });
 
 QUnit.test('messaging becomes initialized', async function (assert) {
