@@ -213,11 +213,10 @@ Model({
         },
         /**
          * @private
-         * @param {MouseEvent} ev
          */
-        onClickEmoji(ev) {
+        onClickEmoji({ codepoints }) {
             this.saveStateInStore();
-            this.insertIntoTextInput(ev.currentTarget.dataset.codepoints);
+            this.insertIntoTextInput(codepoints);
             if (!this.messaging.device.isMobileDevice) {
                 this.update({ doFocus: true });
             }

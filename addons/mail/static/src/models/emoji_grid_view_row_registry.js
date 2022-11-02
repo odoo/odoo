@@ -14,7 +14,7 @@ Model({
                 index++;
                 let currentItems = [];
                 for (let emojiInCategory of viewCategory.category.allEmojiInCategoryOfCurrent) {
-                    currentItems.push({ emojiOrEmojiInCategory: { emojiInCategory } });
+                    currentItems.push({ emojiOrEmojiInCategory: { emojiInCategory }, index: currentItems.length });
                     if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
                         value.push({ items: currentItems, index });
                         currentItems = [];
@@ -38,7 +38,7 @@ Model({
             let index = 0;
             let currentItems = [];
             for (let emoji of emojis) {
-                currentItems.push({ emojiOrEmojiInCategory: { emoji } });
+                currentItems.push({ emojiOrEmojiInCategory: { emoji }, index: currentItems.length });
                 if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
                     value.push({ items: currentItems, index });
                     currentItems = [];

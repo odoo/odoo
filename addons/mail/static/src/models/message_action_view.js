@@ -45,8 +45,8 @@ Model({
          * @private
          * @param {MouseEvent} ev
          */
-        onClickReaction(ev) {
-            this.messageAction.messageActionListOwner.message.addReaction(ev.currentTarget.dataset.codepoints);
+        onClickReaction({ codepoints }) {
+            this.messageAction.messageActionListOwner.message.addReaction(codepoints);
             this.update({ reactionPopoverView: clear() });
         },
     },

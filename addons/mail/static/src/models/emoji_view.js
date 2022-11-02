@@ -10,17 +10,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (!this.emojiGridRowViewOwner) {
-                return;
-            }
-            if (this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
-                this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
-                return;
-            }
-            if (this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
-                this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
-                return;
-            }
+            this.sendEmoji();
         },
         /**
          * @param {MouseEvent} ev
@@ -29,7 +19,7 @@ Model({
             if (!this.exists()) {
                 return;
             }
-            this.update({ emojiGridViewAsHovered: this.emojiGridRowViewOwner.emojiGridViewOwner });
+            this.update({ emojiGridViewAsLastSelected: this.emojiGridRowViewOwner.emojiGridViewOwner });
         },
         /**
          * @param {MouseEvent} ev
@@ -39,6 +29,19 @@ Model({
                 return;
             }
             this.update({ emojiGridViewAsHovered: clear() });
+        },
+        sendEmoji() {
+            if (!this.emojiGridRowViewOwner) {
+                return;
+            }
+            if (this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
+                this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction({ codepoints: this.emoji.codepoints });
+                return;
+            }
+            if (this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
+                this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji({ codepoints: this.emoji.codepoints });
+                return;
+            }
         },
     },
     fields: {
@@ -53,7 +56,8 @@ Model({
                 return clear();
             },
         }),
-        emojiGridViewAsHovered: one('EmojiGridView', { inverse: 'hoveredEmojiView' }),
+        emojiGridViewAsLastSelected: one('EmojiGridView', { inverse: 'lastSelectedEmojiView' }),
+        emojiGridViewAsSelected: one('EmojiGridView', { inverse: 'selectedEmojiView' }),
         emojiOrEmojiInCategory: one('EmojiOrEmojiInCategory', { identifying: true, inverse: 'emojiViews' }),
         emojiGridRowViewOwner: one('EmojiGridRowView', { identifying: true, inverse: 'items' }),
         emojiPickerViewOwner: one('EmojiPickerView', {
@@ -61,6 +65,7 @@ Model({
                 return this.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner;
             }
         }),
+        index: attr(),
         width: attr({ default: 0,
             compute() {
                 if (!this.emojiGridRowViewOwner.emojiGridViewOwner) {

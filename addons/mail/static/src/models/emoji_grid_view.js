@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
+
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, increment, many, one, Model } from '@mail/model';
 
@@ -9,7 +11,27 @@ Model({
     componentSetup() {
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
+    lifecycleHooks: {
+        _created() {
+            browser.addEventListener('keydown', this._onKeyDown);
+        },
+        async _willDelete() {
+            browser.removeEventListener('keydown', this._onKeyDown);
+        },
+    },
     recordMethods: {
+        adjustScroll() {
+            if (!this.selectedEmojiView) {
+                return;
+            }
+            const index = this.selectedEmojiView.emojiGridRowViewOwner.index;
+            if (this.scrollIndex <= index && index < this.scrollIndex + Math.floor(this.visibleMaxAmount)) {
+                return;
+            }
+            this.containerRef.el.scrollTo({
+                top: this.rowHeight * index,
+            });
+        },
         doJumpToCategorySelectedByUser() {
             this.containerRef.el.scrollTo({
                 top: this.rowHeight * this.categorySelectedByUser.emojiGridRowView.index,
@@ -33,6 +55,74 @@ Model({
             }
             this.onScrollThrottle.do();
         },
+        _getNextEmojiRow() {
+            if (this.rows.length === this.selectedEmojiView.emojiGridRowViewOwner.index + 1) {
+                return this.selectedEmojiView.emojiGridRowViewOwner;
+            } else {
+                for (let i = this.selectedEmojiView.emojiGridRowViewOwner.index + 1; i < this.rows.length; i++) {
+                    const row = this.rows[i];
+                    if (row.items.length) {
+                        return row;
+                    }
+                }
+                return this.selectedEmojiView.emojiGridRowViewOwner;
+            }
+        },
+        _getPreviousEmojiRow() {
+            if (this.selectedEmojiView.emojiGridRowViewOwner.index === 0) {
+                return this.selectedEmojiView.emojiGridRowViewOwner;
+            }
+            for (let i = this.selectedEmojiView.emojiGridRowViewOwner.index - 1; i >= 0; i--) {
+                const row = this.rows[i];
+                if (row.items.length) {
+                    return row;
+                }
+            }
+            return this.selectedEmojiView.emojiGridRowViewOwner;
+        },
+        _onArrowDown() {
+            if (!this.rows.length > this.selectedEmojiView.emojiGridRowViewOwner.index + 1) {
+                return;
+            }
+            const targetRow = this._getNextEmojiRow();
+            const targetIndex = Math.min(this.selectedEmojiView.index, targetRow.items.length - 1);
+            this.update({ lastSelectedEmojiView: targetRow.items[targetIndex] });
+        },
+        _onArrowLeft() {
+            if (this.selectedEmojiView.index === 0) {
+                if (this.selectedEmojiView.emojiGridRowViewOwner.index === 0) {
+                    return;
+                } else {
+                    const targetRow = this._getPreviousEmojiRow();
+                    this.update({ lastSelectedEmojiView: targetRow.items[targetRow.items.length - 1] });
+                }
+            } else {
+                const emojiView = this.selectedEmojiView.emojiGridRowViewOwner.items[this.selectedEmojiView.index - 1];
+                this.update({ lastSelectedEmojiView: emojiView });
+            }
+        },
+        _onArrowRight() {
+            if (this.selectedEmojiView.index === this.selectedEmojiView.emojiGridRowViewOwner.items.length - 1) {
+                if (this.selectedEmojiView.emojiGridRowViewOwner.index === this.rows.length - 1) {
+                    return;
+                } else {
+                    const targetRow = this._getNextEmojiRow();
+                    this.update({ lastSelectedEmojiView: targetRow.items[0] });
+                }
+            } else {
+                const emojiView = this.selectedEmojiView.emojiGridRowViewOwner.items[this.selectedEmojiView.index + 1];
+                this.update({ lastSelectedEmojiView: emojiView });
+            }
+        },
+        _onArrowUp() {
+            if (this.selectedEmojiView.emojiGridRowViewOwner.index === 0) {
+                return;
+            } else {
+                const targetRow = this._getPreviousEmojiRow();
+                const targetIndex = Math.min(this.selectedEmojiView.index, targetRow.items.length - 1);
+                this.update({ lastSelectedEmojiView: targetRow.items[targetIndex] });
+            }
+        },
         _onChangeScrollRecomputeCount() {
             for (const viewCategory of this.emojiPickerViewOwner.categories) {
                 if (
@@ -44,6 +134,31 @@ Model({
                     break;
                 }
             }
+        },
+        _onEnter() {
+            if (this.selectedEmojiView) {
+                this.selectedEmojiView.sendEmoji();
+            }
+        },
+        _onKeyDown(ev) {
+            switch (ev.key) {
+                case 'Enter':
+                    this._onEnter();
+                    return;
+                case 'ArrowDown':
+                    this._onArrowDown();
+                    break;
+                case 'ArrowUp':
+                    this._onArrowUp();
+                    break;
+                case 'ArrowLeft':
+                    this._onArrowLeft();
+                    break;
+                case 'ArrowRight':
+                    this._onArrowRight();
+                    break;
+            }
+            this.adjustScroll();
         },
         /**
          * @private
@@ -105,10 +220,33 @@ Model({
         }),
         height: attr({
             compute() {
-                return this.rowHeight * 9.5;
+                return this.rowHeight * this.visibleMaxAmount;
             },
         }),
-        hoveredEmojiView: one('EmojiView', { inverse: 'emojiGridViewAsHovered' }),
+        /**
+         * EmojiView selected through arrow navigation or hover
+         */
+        lastSelectedEmojiView: one('EmojiView', { inverse: 'emojiGridViewAsLastSelected' }),
+        /**
+         * lastSelectedEmojiView if valid, else the first rendered available
+         */
+        selectedEmojiView: one('EmojiView', {
+            inverse: 'emojiGridViewAsSelected',
+            compute() {
+                if (this.lastSelectedEmojiView) {
+                    return this.lastSelectedEmojiView;
+                }
+                if (this.rows && this.scrollIndex !== undefined) {
+                    for (let i = this.scrollIndex; i < this.rows.length; i++) {
+                        const row = this.rows[i];
+                        if (row.items.length) {
+                            return row.items[0];
+                        }
+                    }
+
+                }
+            }
+        }),
         itemWidth: attr({ default: 30 }),
         lastRenderedRowIndex: attr({ default: 0,
             compute() {

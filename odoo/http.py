@@ -1222,6 +1222,8 @@ class Request:
 
         When geolocalization fails, an empty dict is returned.
         """
+        if not hasattr(self, 'session'):
+            return {}
         if '_geoip' not in self.session:
             was_dirty = self.session.is_dirty
             self.session._geoip = (self.registry['ir.http']._geoip_resolve()
