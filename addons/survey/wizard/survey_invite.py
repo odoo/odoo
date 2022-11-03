@@ -19,12 +19,6 @@ class SurveyInvite(models.TransientModel):
     _description = 'Survey Invitation Wizard'
 
     @api.model
-    def _get_default_from(self):
-        if self.env.user.email:
-            return tools.formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to post message, please configure the sender's email address."))
-
-    @api.model
     def _get_default_author(self):
         return self.env.user.partner_id
 
@@ -33,7 +27,6 @@ class SurveyInvite(models.TransientModel):
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
         string='Attachments')
     # origin
-    email_from = fields.Char('From', default=_get_default_from)
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True,
         ondelete='set null', default=_get_default_author)
@@ -226,7 +219,7 @@ class SurveyInvite(models.TransientModel):
             'auto_delete': True,
             'author_id': self.author_id.id,
             'body_html': body,
-            'email_from': self.email_from,
+            'email_from': self.author_id.email_formatted,
             'model': None,
             'res_id': None,
             'subject': subject,
