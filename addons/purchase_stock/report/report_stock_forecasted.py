@@ -26,8 +26,7 @@ class ReplenishmentReport(models.AbstractModel):
         if product_variant_ids:
             return [('product_id', 'in', product_variant_ids)]
         elif product_template_ids:
-            products = self.env['product.product'].search_read(
-                [('product_tmpl_id', 'in', product_template_ids)], ['id']
+            subquery_products = self.env['product.product']._search(
+                [('product_tmpl_id', 'in', product_template_ids)]
             )
-            product_ids = [product['id'] for product in products]
-            return [('product_id', 'in', product_ids)]
+            return [('product_id', 'in', subquery_products)]

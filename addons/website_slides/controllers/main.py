@@ -221,11 +221,11 @@ class WebsiteSlides(WebsiteProfile):
         slides_domain = [('channel_id', '=', channel.id)]
         if slide:
             slides_domain = expression.AND([slides_domain, [('id', '=', slide.id)]])
-        slides = request.env['slide.slide'].search_read(slides_domain, ['id'])
+        slides = request.env['slide.slide'].search(slides_domain)
 
         session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
-        for slide in slides:
-            session_slide_answer_quiz.pop(str(slide['id']), None)
+        for slide_id in slides.ids:
+            session_slide_answer_quiz.pop(str(slide_id), None)
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     # TAG UTILITIES

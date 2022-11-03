@@ -79,10 +79,9 @@ class ReplenishmentReport(models.AbstractModel):
         else:
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
-        wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+        wh_location_ids = self.env['stock.location'].search(
             [('id', 'child_of', warehouse.view_location_id.id)],
-            ['id'],
-        )]
+        ).ids
 
         # Get the products we're working, fill the rendering context with some of their attributes.
         if product_template_ids:
