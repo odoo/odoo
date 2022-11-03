@@ -73,6 +73,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 }
                 this._setObserver();
 
+                // The jquery instance inside the iframe needs to be aware of the wysiwyg.
+                this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
+                await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
+                    editableMode: true,
+                    onSuccess: resolve,
+                    onFailure: reject,
+                }));
                 if (this.props.snippetSelector) {
                     const $snippetEl = $(this.websiteService.pageDocument).find(this.props.snippetSelector);
                     await this.widget.snippetsMenu.activateSnippet($snippetEl);
@@ -80,12 +87,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                         $snippetEl[0].scrollIntoView();
                     }
                 }
-                // The jquery instance inside the iframe needs to be aware of the wysiwyg.
-                this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
-                this._websiteRootEvent('widgets_start_request', {editableMode: true, onSuccess: () => {
-                    this.widget.odooEditor.observerActive();
-                }});
                 this.props.wysiwygReady();
+                this.widget.odooEditor.observerActive();
                 // Set utils functions' editable window to the current iframe's window.
                 // This allows those function to access the correct styles definitions,
                 // document element, etc.
