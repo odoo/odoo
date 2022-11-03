@@ -198,7 +198,7 @@ class WebsiteBlog(http.Controller):
         if not blog and len(blogs) == 1:
             return request.redirect('/blog/%s' % slug(blogs[0]), code=302)
 
-        date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
+        date_begin, date_end = opt.get('date_begin'), opt.get('date_end')
 
         if tag and request.httprequest.method == 'GET':
             # redirect get tag-1,tag-2 -> get tag-1
@@ -207,7 +207,7 @@ class WebsiteBlog(http.Controller):
                 url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end, search=search)()
                 return request.redirect(url, code=302)
 
-        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page, search=search, **opt)
+        values = self._prepare_blog_values(blogs=blogs, blog=blog, tags=tag, page=page, search=search, **opt)
 
         # in case of a redirection need by `_prepare_blog_values` we follow it
         if isinstance(values, werkzeug.wrappers.Response):
