@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-// ensure components are registered beforehand.
-import '@mail/backend_components/activity_cell_view/activity_cell_view';
+import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
 import { insert } from '@mail/model/model_field_command';
-import { getMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
@@ -25,6 +23,7 @@ export class ActivityCellViewContainer extends Component {
      * @override
      */
     setup() {
+        useMessagingContainer();
         super.setup();
         this.activityCellView = undefined;
         this.activityCellViewId = getNextId();
@@ -85,7 +84,6 @@ export class ActivityCellViewContainer extends Component {
 }
 
 Object.assign(ActivityCellViewContainer, {
-    components: { ActivityCellView: getMessagingComponent('ActivityCellView') },
     props: {
         activityIds: {
             type: Array,

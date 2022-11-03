@@ -44,6 +44,7 @@ export const BASE_VISUAL = {
 
 registerModel({
     name: 'ChatWindowManager',
+    template: 'mail.ChatWindowManager',
     recordMethods: {
         /**
          * Close all chat windows.

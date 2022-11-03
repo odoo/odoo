@@ -6,6 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussPublicView',
+    template: 'mail.DiscussPublicView',
     recordMethods: {
         /**
          * Creates and displays the thread view and clears the welcome view.

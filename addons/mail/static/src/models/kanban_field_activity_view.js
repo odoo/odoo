@@ -5,6 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'KanbanFieldActivityView',
+    template: 'mail.KanbanFieldActivityView',
     fields: {
         activityButtonView: one('ActivityButtonView', { default: {}, inverse: 'kanbanFieldActivityViewOwner', required: true }),
         id: attr({ identifying: true }),
