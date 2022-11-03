@@ -680,7 +680,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1">
+                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="sequence, name, id">
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -790,6 +790,7 @@
                     on_create="project.open_create_project"
                     action="action_view_tasks" type="object"
                     sample="1"
+                    default_order="sequence, name, id"
                 >
                     <field name="display_name"/>
                     <field name="partner_id"/>
