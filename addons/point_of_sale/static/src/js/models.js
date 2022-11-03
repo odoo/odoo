@@ -1369,10 +1369,21 @@ class PosGlobalState extends PosModel {
     }
     htmlToImgLetterRendering() {
         return false;
+<<<<<<< HEAD
     }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 Registries.Model.add(PosGlobalState);
+||||||| parent of 27d658d2e1f4... temp
+    },
+});
+=======
+    },
+    doNotAllowRefundAndSales() {
+        return false;
+    }
+});
+>>>>>>> 27d658d2e1f4... temp
 
 /**
  * Call this function to map your PaymentInterface implementation to
@@ -2668,7 +2679,13 @@ class Order extends PosModel {
             moment(this.validation_date), {}, {timezone: false});
     }
 
+<<<<<<< HEAD
     set_tip(tip) {
+||||||| parent of 27d658d2e1f4... temp
+    set_tip: function(tip) {
+=======
+    set_tip: async function(tip) {
+>>>>>>> 27d658d2e1f4... temp
         var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
         var lines = this.get_orderlines();
         if (tip_product) {
@@ -2681,7 +2698,7 @@ class Order extends PosModel {
                     return;
                 }
             }
-            return this.add_product(tip_product, {
+            return await this.add_product(tip_product, {
               is_tip: true,
               quantity: 1,
               price: tip,
@@ -2715,10 +2732,30 @@ class Order extends PosModel {
         line.set_unit_price(line.compute_fixed_price(line.price));
     }
 
+<<<<<<< HEAD
     add_product(product, options){
+||||||| parent of 27d658d2e1f4... temp
+    add_product: function(product, options){
+=======
+    _isRefundAndSaleOrder: function() {
+        if(this.orderlines.length && this.orderlines.models[0].refunded_orderline_id)
+            return true;
+        else
+            return false;
+    },
+
+    add_product: async function(product, options){
+        if(this.pos.doNotAllowRefundAndSales() && this._isRefundAndSaleOrder()) {
+            await Gui.showPopup('ErrorPopup',{
+                    'title': _t("POS error"),
+                    'body':  _t("Can't mix order with refund products with new products."),
+                });
+            return false;
+        }
+>>>>>>> 27d658d2e1f4... temp
         if(this._printed){
             this.destroy();
-            return this.pos.get_order().add_product(product, options);
+            return await this.pos.get_order().add_product(product, options);
         }
         this.assert_editable();
         options = options || {};

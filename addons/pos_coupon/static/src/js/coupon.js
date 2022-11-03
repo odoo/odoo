@@ -294,6 +294,7 @@ odoo.define('pos_coupon.pos', function (require) {
             let result = super.export_for_printing(...arguments);
             result.generated_coupons = this.generated_coupons;
             return result;
+<<<<<<< HEAD
         }
         add_product(product, options) {
             super.add_product(...arguments);
@@ -301,6 +302,25 @@ odoo.define('pos_coupon.pos', function (require) {
         }
         get_last_orderline() {
             const regularLines = this.get_orderlines(...arguments)
+||||||| parent of 27d658d2e1f4... temp
+        },
+        add_product: function (product, options) {
+            _order_super.add_product.apply(this, [product, options]);
+            this.trigger('update-rewards');
+        },
+        get_last_orderline: function () {
+            const regularLines = _order_super.get_orderlines
+                .apply(this, arguments)
+=======
+        },
+        add_product: async function (product, options) {
+            await _order_super.add_product.apply(this, [product, options]);
+            this.trigger('update-rewards');
+        },
+        get_last_orderline: function () {
+            const regularLines = _order_super.get_orderlines
+                .apply(this, arguments)
+>>>>>>> 27d658d2e1f4... temp
                 .filter((line) => !line.is_program_reward);
             return regularLines[regularLines.length - 1];
         }

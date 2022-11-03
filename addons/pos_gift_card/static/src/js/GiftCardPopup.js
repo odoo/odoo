@@ -72,7 +72,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
       }
 
       if (can_be_sold) {
-        this.env.pos.get_order().add_product(gift, {
+        await this.env.pos.get_order().add_product(gift, {
           price: this.state.amountToSet,
           quantity: 1,
           merge: false,
@@ -155,7 +155,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
       let lineUsed = await this.isGiftCardAlreadyUsed()
       if (lineUsed) currentOrder.remove_orderline(lineUsed);
 
-      currentOrder.add_product(gift, {
+      await currentOrder.add_product(gift, {
         price: this.getPriceToRemove(giftCard),
         quantity: 1,
         merge: false,

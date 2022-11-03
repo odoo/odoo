@@ -8,7 +8,13 @@ odoo.define('pos_sale_product_configurator.models', function (require) {
 
     const PosSaleProductConfiguratorOrder = (Order) => class PosSaleProductConfiguratorOrder extends Order {
         async add_product(product, options) {
+<<<<<<< HEAD
             super.add_product(...arguments);
+||||||| parent of 27d658d2e1f4... temp
+            super_order_model.add_product.apply(this, arguments);
+=======
+            await super_order_model.add_product.apply(this, arguments);
+>>>>>>> 27d658d2e1f4... temp
             if (this.pos.config.iface_open_product_info && product.optional_product_ids.length) {
                 // The `optional_product_ids` only contains ids of the product templates and not the product itself
                 // We don't load all the product template in the pos, so it'll be hard to know if the id comes from

@@ -1042,7 +1042,12 @@ class PosOrderLine(models.Model):
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
             'customer_note': orderline.customer_note,
             'refunded_qty': orderline.refunded_qty,
+<<<<<<< HEAD
             'price_extra': orderline.price_extra,
+||||||| parent of 27d658d2e1f4... temp
+=======
+            'refunded_orderline_id': orderline.refunded_orderline_id,
+>>>>>>> 27d658d2e1f4... temp
         }
 
     def export_for_ui(self):
