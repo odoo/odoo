@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
@@ -11,9 +10,6 @@ registerModel({
     template: 'mail.EmojiGridView',
     templateGetter: 'emojiGridView',
     componentSetup() {
-        useRefToModel({ fieldName: 'containerRef', refName: 'containerRef'});
-        useRefToModel({ fieldName: 'listRef', refName: 'listRef'});
-        useRefToModel({ fieldName: 'viewBlockRef', refName: 'viewBlockRef'});
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     recordMethods: {
@@ -64,7 +60,7 @@ registerModel({
     fields: {
         amountOfItemsPerRow: attr({ default: 9 }),
         categorySelectedByUser: one('EmojiPickerView.Category'),
-        containerRef: attr(),
+        containerRef: attr({ ref: 'containerRef' }),
         /**
          * Distance of the rendered rows from top.
          * This is from the PoV of 1st rendered row, including extra rendered rows!
@@ -125,7 +121,7 @@ registerModel({
                 return this.rowHeight * this.rows.length;
             },
         }),
-        listRef: attr(),
+        listRef: attr({ ref: 'listRef' }),
         loadingScreenView: one('EmojiGridLoadingScreen', { inverse: 'emojiGridViewOwner',
             compute() {
                 if (!this.messaging.emojiRegistry.isLoaded) {
@@ -202,7 +198,7 @@ registerModel({
             },
         }),
         searchRowRegistry: one('EmojiGridViewRowRegistry', { default: {}, inverse: 'emojiGridViewOwnerAsSearch' }),
-        viewBlockRef: attr(),
+        viewBlockRef: attr({ ref: 'viewBlockRef' }),
         /**
          * Amount of emoji that are visibly rendered in emoji grid.
          * Decimal determines the partial visibility of the last emoji.

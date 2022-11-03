@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
@@ -11,10 +10,6 @@ registerModel({
     template: 'mail.ThreadViewTopbar',
     templateGetter: 'threadViewTopbar',
     componentSetup() {
-        useRefToModel({ fieldName: 'guestNameInputRef', refName: 'guestNameInput' });
-        useRefToModel({ fieldName: 'inviteButtonRef', refName: 'inviteButton' });
-        useRefToModel({ fieldName: 'threadNameInputRef', refName: 'threadNameInput' });
-        useRefToModel({ fieldName: 'threadDescriptionInputRef', refName: 'threadDescriptionInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     lifecycleHooks: {
@@ -583,7 +578,7 @@ registerModel({
          * States the OWL ref of the "guest name" input of this top bar.
          * Useful to focus it, or to know when a click is done outside of it.
          */
-        guestNameInputRef: attr(),
+        guestNameInputRef: attr({ ref: 'guestNameInput' }),
         /**
          * Determines whether the guest's name has been updated.
          *
@@ -614,7 +609,7 @@ registerModel({
          * States the OWL ref of the invite button.
          * Useful to provide anchor for the invite popover positioning.
          */
-        inviteButtonRef: attr(),
+        inviteButtonRef: attr({ ref: 'inviteButton' }),
         /**
          * If set, this is the record of invite button popover that is currently
          * open in the topbar.
@@ -683,12 +678,12 @@ registerModel({
          * States the OWL ref of the "thread name" input of this top bar.
          * Useful to focus it, or to know when a click is done outside of it.
          */
-        threadNameInputRef: attr(),
+        threadNameInputRef: attr({ ref: 'threadNameInput' }),
         /**
          * States the OWL ref of the thread description input of this top bar.
          * Useful to focus it, or to know when a click is done outside of it.
          */
-        threadDescriptionInputRef: attr(),
+        threadDescriptionInputRef: attr({ ref: 'threadDescriptionInput' }),
         threadIconView: one('ThreadIconView', { inverse: 'threadViewTopbarOwner',
             compute() {
                 if (this.thread) {

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -9,9 +8,6 @@ registerModel({
     name: 'NotificationGroupView',
     template: 'mail.NotificationGroupView',
     templateGetter: 'notificationGroupView',
-    componentSetup() {
-        useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
-    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -51,7 +47,7 @@ registerModel({
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
          */
-        markAsReadRef: attr(),
+        markAsReadRef: attr({ ref: 'markAsRead' }),
         notificationGroup: one('NotificationGroup', { identifying: true, inverse: 'notificationGroupViews' }),
         notificationListViewOwner: one('NotificationListView', { identifying: true, inverse: 'notificationGroupViews' }),
     },
