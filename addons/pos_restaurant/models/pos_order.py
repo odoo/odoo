@@ -173,6 +173,7 @@ class PosOrder(models.Model):
         :type table_id: int.
         :returns: list -- list of dict representing the table orders
         """
+        self = self.with_context(prefetch_fields=False)
         table_orders = self.search_read(
                 domain=[('state', '=', 'draft'), ('table_id', '=', table_id)],
                 fields=self._get_fields_for_draft_order())
@@ -260,3 +261,9 @@ class PosOrder(models.Model):
         result = super(PosOrder, self)._export_for_ui(order)
         result['table_id'] = order.table_id.id
         return result
+
+    @api.model
+    def get_all_table_draft_orders(self, pos_config_id):
+        tables = self.env['restaurant.table'].search([('floor_id.pos_config_id', '=', pos_config_id)])
+        order_obj = self.env['pos.order']
+        return [order for table in tables for order in order_obj.get_table_draft_orders(table.id) if order]
