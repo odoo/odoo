@@ -3,9 +3,7 @@
 
     <t t-name="mail.WebClientViewAttachmentView" owl="1">
         <t t-if="webClientViewAttachmentView.thread.mainAttachment">
-            <t t-if="!webClientViewAttachmentView.thread.mainAttachment.isPdf">
-                <h3 class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="webClientViewAttachmentView.thread.mainAttachment.filename"/></h3>
-            </t>
+            <h3 t-if="!webClientViewAttachmentView.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="webClientViewAttachmentView.thread.mainAttachment.filename"/></h3>
             <div t-if="webClientViewAttachmentView.thread.mainAttachment.isImage" class="o_attachment_preview_img">
                 <img id="attachment_img" class="img img-fluid d-block" t-attf-src="/web/image/#{webClientViewAttachmentView.thread.mainAttachment.id}?unique=1"/>
             </div>

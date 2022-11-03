@@ -5,9 +5,7 @@
         <div class="o_EmojiGridRowView">
             <EmojiGridSectionView t-if="sectionView" record="sectionView"/>
             <t t-else="">
-                <t t-foreach="items" t-as="item" t-key="item">
-                    <EmojiGridItemView className="'o_EmojiGridRowView_item'" record="item"/>
-                </t>
+                <EmojiGridItemView t-foreach="items" t-as="item" t-key="item" className="'o_EmojiGridRowView_item'" record="item"/>
             </t>
         </div>
     </t>
