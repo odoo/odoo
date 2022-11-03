@@ -434,13 +434,16 @@ class AccountReportExpression(models.Model):
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
 
+    def _strip_formula(self, vals):
+        if 'formula' in vals and isinstance(vals['formula'], str):
+            vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
         for vals in vals_list:
-            if 'formula' in vals and isinstance(vals['formula'], str):
-                vals['formula'] = vals['formula'].replace('\n', '').strip()
+            self._strip_formula(vals)
 
         result = super().create(vals_list)
 
@@ -459,6 +462,8 @@ class AccountReportExpression(models.Model):
     def write(self, vals):
         if 'formula' not in vals:
             return super().write(vals)
+
+        self._strip_formula(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
