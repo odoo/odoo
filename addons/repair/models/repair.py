@@ -131,6 +131,9 @@ class Repair(models.Model):
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
 
+    # Used to display the total on the view thanks to the widget
+    tax_totals = fields.Binary(compute='_compute_tax_totals')
+
     def _compute_allowed_picking_type_ids(self):
         '''
             computes the ids of return picking types
@@ -183,6 +186,15 @@ class Repair(models.Model):
         for order in self:
             currency = order.pricelist_id.currency_id or self.env.company.currency_id
             order.amount_total = currency.round(order.amount_untaxed + order.amount_tax)
+
+    @api.depends('operations.tax_id', 'operations.price_unit', 'amount_total', 'amount_untaxed')
+    def _compute_tax_totals(self):
+        for order in self:
+            self.env['account.tax']
+            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+                [x._convert_to_tax_base_line_dict() for x in order.operations],
+                order.currency_id,
+            )
 
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
@@ -706,6 +718,24 @@ class RepairLine(models.Model):
         copy=False, readonly=True, required=True,
         help='The status of a repair line is set automatically to the one of the linked repair order.')
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking")
+
+    def _convert_to_tax_base_line_dict(self):
+        """ Convert the current record to a dictionary in order to use the generic taxes computation method
+        defined on account.tax.
+
+        :return: A python dictionary.
+        """
+        self.ensure_one()
+        return self.env['account.tax']._convert_to_tax_base_line_dict(
+            self,
+            partner=self.repair_id.partner_id,
+            currency=self.repair_id.currency_id,
+            product=self.product_id,
+            taxes=self.tax_id,
+            price_unit=self.price_unit,
+            quantity=self.product_uom_qty,
+            price_subtotal=self.price_subtotal,
+        )
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id', 'repair_id.invoice_method')
     def _compute_price_total_and_subtotal(self):
