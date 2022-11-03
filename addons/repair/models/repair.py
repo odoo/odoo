@@ -885,6 +885,20 @@ class RepairFee(models.Model):
             else:
                 self.price_unit = price
 
+    # TODO: replace with computes in master
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('product_uom'):
+                vals['product_uom'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().create(vals_list)
+
+    # TODO: replace with computes in master
+    def write(self, vals):
+        if vals.get('product_id') and not vals.get('product_uom'):
+            vals['product_uom'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().write(vals)
+
 
 class RepairTags(models.Model):
     """ Tags of Repair's tasks """

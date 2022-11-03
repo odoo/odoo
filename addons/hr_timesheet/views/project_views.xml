@@ -7,7 +7,10 @@
             <field name="view_mode">tree,kanban,pivot,graph,form</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="domain">[('project_id', '=', active_id)]</field>
-            <field name="context">{"default_project_id": active_id}</field>
+            <field name="context">{
+                "default_project_id": active_id,
+                "is_timesheet": 1,
+            }</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

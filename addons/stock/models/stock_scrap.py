@@ -54,7 +54,7 @@ class StockScrap(models.Model):
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
     scrap_qty = fields.Float(
         'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
-        compute='_compute_scrap_qty', precompute=True, store=True)
+        compute='_compute_scrap_qty', precompute=True, readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
@@ -122,6 +122,20 @@ class StockScrap(models.Model):
     def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
             raise UserError(_('You cannot delete a scrap which is done.'))
+
+    # TODO: replace with computes in master
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('product_uom_id'):
+                vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().create(vals_list)
+
+    # TODO: replace with computes in master
+    def write(self, vals):
+        if vals.get('product_id') and not vals.get('product_uom_id'):
+            vals['product_uom_id'] = self.env["product.product"].browse(vals.get('product_id')).uom_id.id
+        return super().write(vals)
 
     def _prepare_move_values(self):
         self.ensure_one()

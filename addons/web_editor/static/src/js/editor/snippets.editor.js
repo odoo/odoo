@@ -263,12 +263,6 @@ var SnippetEditor = Widget.extend({
         // a flickering when not needed.
         this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
 
-        // Set the `contenteditable` attribute to false for all the columns
-        // having the class `o_grid_item_image` (as it is removed when leaving
-        // the edit mode).
-        const imageColumnEls = this.$target[0].querySelectorAll('.o_grid_item_image');
-        imageColumnEls.forEach(imageColumnEl => imageColumnEl.contentEditable = false);
-
         return Promise.all(defs).then(() => {
             this.__isStartedResolveFunc(this);
         });
@@ -1308,12 +1302,8 @@ var SnippetEditor = Widget.extend({
             gridUtils._resizeGrid(rowEl);
         } else if (this.$target[0].classList.contains('o_grid_item') && this.dropped) {
             // Case when dropping a grid item in a non-grid dropzone.
-            this.$target[0].classList.remove('o_grid_item');
+            this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image');
             this.$target[0].style.removeProperty('grid-area');
-            if (this.$target[0].classList.contains('o_grid_item_image')) {
-                this.$target[0].classList.remove('o_grid_item_image');
-                this.$target[0].removeAttribute('contentEditable');
-            }
         }
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
@@ -1352,13 +1342,9 @@ var SnippetEditor = Widget.extend({
                     if (this.$target[0].classList.contains('o_grid_item')) {
                         // Case when a grid column is dropped near a non-grid
                         // dropzone.
-                        this.$target[0].classList.remove('o_grid_item');
+                        this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image');
                         this.$target[0].style.removeProperty('z-index');
                         this.$target[0].style.removeProperty('grid-area');
-                        if (this.$target[0].classList.contains('o_grid_item_image')) {
-                            this.$target[0].classList.remove('o_grid_item_image');
-                            this.$target[0].removeAttribute('contentEditable');
-                        }
                     }
                 }
 

@@ -204,6 +204,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -1021,6 +1022,7 @@ const Wysiwyg = Widget.extend({
             subtree: true,
             attributes: true,
             characterData: true,
+            attributeOldValue: true,
         };
         if (this.odooFieldObservers) {
             for (let observerData of this.odooFieldObservers) {
@@ -1032,7 +1034,11 @@ const Wysiwyg = Widget.extend({
             this.odooFieldObservers = [];
 
             $odooFields.each((i, field) => {
-                const observer = new MutationObserver(() => {
+                const observer = new MutationObserver((mutations) => {
+                    mutations = this.odooEditor.filterMutationRecords(mutations);
+                    if (!mutations.length) {
+                        return;
+                    }
                     let $node = $(field);
                     let $nodes = $odooFields.filter(function () {
                         return this !== field;
@@ -1212,17 +1218,24 @@ const Wysiwyg = Widget.extend({
                 // Focus the link after the dialog element is removed because
                 // if the dialog element is still in the DOM at the time of
                 // doing link.focus(), because there is the attribute tabindex
-                // on the dialog element, the focus cannot occurs.
+                // on the dialog element, the focus cannot occur.
                 // Using a microtask to set the focus is hackish and might break
-                // if another microtask wich focus an elemen in the dom occurs
-                // at the same time (but this case seems unlikely).
+                // if another microtask which focuses an element in the dom
+                // occurs at the same time (but this case seems unlikely).
                 Promise.resolve().then(() => link.focus());
             });
             linkDialog.on('closed', this, function () {
                 // If the linkDialog content has been saved
                 // the previous selection in not relevant anymore.
                 if (linkDialog.destroyAction !== 'save') {
-                    restoreSelection();
+                    // Restore the selection after the dialog element isremoved
+                    // because if the dialog element is still in the DOM at the
+                    // time of doing restoreSelection(), it will trigger a new
+                    // selection change which will undo this one. Using a
+                    // microtask to set the focus is hackish and might break if
+                    // another microtask which changes the selection in the dom
+                    // occurs at the same time (but this case seems unlikely).
+                    Promise.resolve().then(() => restoreSelection());
                 }
             });
         }
