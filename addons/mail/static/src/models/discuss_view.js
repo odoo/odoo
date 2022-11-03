@@ -6,6 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussView',
+    template: 'mail.DiscussView',
     recordMethods: {
         clearIsAddingItem() {
             this.update({

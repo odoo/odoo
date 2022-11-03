@@ -3,34 +3,34 @@
 
     <t t-name="mail.Chatter" owl="1">
         <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-view" t-attf-class="{{ className }}" t-ref="root">
-            <DropZoneView t-if="chatter.dropZoneView"
+            <DropZoneView t-if="dropZoneView"
                 className="'o_Chatter_dropZone'"
-                record="chatter.dropZoneView"
+                record="dropZoneView"
             />
             <div class="o_Chatter_fixedPanel">
                 <ChatterTopbar
-                    t-if="chatter.topbar"
+                    t-if="topbar"
                     className="'o_Chatter_topbar'"
-                    record="chatter.topbar"
+                    record="topbar"
                 />
-                <ComposerView t-if="chatter.composerView"
+                <ComposerView t-if="composerView"
                     className="'o_Chatter_composer border-bottom'"
-                    classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
-                    record="chatter.composerView"
+                    classNameObj="{ 'o-bordered': hasExternalBorder }"
+                    record="composerView"
                 />
             </div>
-            <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
-                <AttachmentBoxView t-if="chatter.attachmentBoxView"
+            <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="onScrollScrollPanel" t-ref="scrollPanel">
+                <AttachmentBoxView t-if="attachmentBoxView"
                     className="'o_Chatter_attachmentBox'"
-                    record="chatter.attachmentBoxView"
+                    record="attachmentBoxView"
                 />
-                <ActivityBoxView t-if="chatter.activityBoxView"
+                <ActivityBoxView t-if="activityBoxView"
                     className="'o_Chatter_activityBox'"
-                    record="chatter.activityBoxView"
+                    record="activityBoxView"
                 />
-                <ThreadView t-if="chatter.threadView"
+                <ThreadView t-if="threadView"
                     className="'o_Chatter_thread'"
-                    record="chatter.threadView"
+                    record="threadView"
                 />
             </div>
         </div>

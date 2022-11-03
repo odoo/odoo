@@ -8,6 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallSystrayMenu',
+    template: 'mail.CallSystrayMenu',
     fields: {
         buttonTitle: attr({ default: '',
             compute() {

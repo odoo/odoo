@@ -1,10 +1,7 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
-// ensure components are registered beforehand.
-import '@mail/components/chatter/chatter';
+import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
 import { clear } from '@mail/model/model_field_command';
-import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
@@ -30,7 +27,7 @@ export class ChatterContainer extends Component {
      * @override
      */
     setup() {
-        useModels();
+        useMessagingContainer();
         super.setup();
         this.localChatter = undefined;
         this._insertFromProps(this.props);
@@ -105,7 +102,6 @@ export class ChatterContainer extends Component {
 }
 
 Object.assign(ChatterContainer, {
-    components: { Chatter: getMessagingComponent('Chatter') },
     props: {
         chatter: {
             type: Object,

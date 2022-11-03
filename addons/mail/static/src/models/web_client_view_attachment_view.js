@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
@@ -7,6 +8,10 @@ import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 registerModel({
     name: 'WebClientViewAttachmentView',
+    template: 'mail.WebClientViewAttachmentView',
+    componentSetup() {
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -48,7 +53,7 @@ registerModel({
     },
     fields: {
         id: attr({ identifying: true }),
-        iframeViewerPdfRef: attr(),
+        iframeViewerPdfRef: attr({ ref: 'iframeViewerPdf' }),
         thread: one('Thread', { required: true }),
     },
     onChanges: [

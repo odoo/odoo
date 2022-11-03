@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -11,9 +10,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'ActivityView',
     template: 'mail.ActivityView',
-    componentSetup() {
-        useRefToModel({ fieldName: 'markDoneButtonRef', refName: 'markDoneButton', });
-    },
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.
@@ -155,7 +151,7 @@ registerModel({
                 return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
             },
         }),
-        markDoneButtonRef: attr(),
+        markDoneButtonRef: attr({ ref: 'markDoneButton' }),
         markDonePopoverView: one('PopoverView', { inverse: 'activityViewOwnerAsMarkDone', }),
         /**
          * Label for mark as done. This is just for translations purpose.

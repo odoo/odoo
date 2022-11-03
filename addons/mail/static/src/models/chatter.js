@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insert, link } from '@mail/model/model_field_command';
@@ -22,6 +23,11 @@ const getMessageNextTemporaryId = (function () {
 
 registerModel({
     name: 'Chatter',
+    template: 'mail.Chatter',
+    isLegacyComponent: true,
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+    },
     recordMethods: {
         focus() {
             if (this.composerView) {
@@ -345,7 +351,7 @@ registerModel({
             },
         }),
         isShowingAttachmentsLoading: attr({ default: false }),
-        scrollPanelRef: attr(),
+        scrollPanelRef: attr({ ref: 'scrollPanel' }),
         /**
          * Determines whether the view should reload after file changed in this chatter,
          * such as from a file upload.

@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ListFieldActivityViewContainer" owl="1">
-        <ListFieldActivityView t-if="listFieldActivityView" record="listFieldActivityView"/>
+        <t t-if="isLoaded">
+            <ListFieldActivityView t-if="listFieldActivityView" record="listFieldActivityView"/>
+        </t>
     </t>
 
 </templates>

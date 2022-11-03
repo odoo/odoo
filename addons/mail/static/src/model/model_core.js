@@ -411,6 +411,7 @@ function patchRecordMethods(patch) {
  * @param {function} [definition.componentSetup]
  * @param {Object} [definition.fields]
  * @param {string} [definition.identifyingMode='and']
+ * @param {string} [definition.isLegacyComponent=false]
  * @param {Object} [definition.lifecycleHooks]
  * @param {Object} [definition.modelGetters] Deprecated; use fields instead.
  * @param {Object} [definition.modelMethods]
@@ -420,14 +421,14 @@ function patchRecordMethods(patch) {
  * @param {Object} [definition.recordMethods]
  * @param {string} [definition.template]
  */
-export function registerModel({ componentSetup, fields, identifyingMode = 'and', lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
+export function registerModel({ componentSetup, fields, identifyingMode = 'and', isLegacyComponent = false, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
     }
-    const sectionNames = ['name', 'template', 'componentSetup', 'identifyingMode', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
+    const sectionNames = ['name', 'template', 'componentSetup', 'identifyingMode', 'isLegacyComponent', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
     const invalidSectionNames = Object.keys(arguments[0]).filter(x => !sectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
         throw new Error(`Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(", ")}`);
@@ -435,6 +436,7 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
     registry.set(name, new Map([
         ['name', name],
         ['identifyingMode', identifyingMode],
+        ['isLegacyComponent', isLegacyComponent],
         ['lifecycleHooks', new Map()],
         ['modelMethods', new Map()],
         ['modelGetters', new Map()],

@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 // ensure components are registered beforehand.
-import '@mail/backend_components/list_field_activity_view/list_field_activity_view';
-import { getMessagingComponent } from '@mail/utils/messaging_component';
+import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -28,6 +27,7 @@ export class ListFieldActivityViewContainer extends Component {
      */
     setup() {
         super.setup();
+        useMessagingContainer();
         this.listFieldActivityView = undefined;
         this.listFieldActivityViewId = getNextId();
         this._insertFromProps(this.props);
@@ -80,7 +80,6 @@ export class ListFieldActivityViewContainer extends Component {
 }
 
 Object.assign(ListFieldActivityViewContainer, {
-    components: { ListFieldActivityView: getMessagingComponent('ListFieldActivityView') },
     fieldDependencies: {
         activity_exception_decoration: { type: 'selection' },
         activity_exception_icon: { type: 'char' },
