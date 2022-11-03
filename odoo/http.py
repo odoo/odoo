@@ -760,6 +760,10 @@ class Session(collections.abc.MutableMapping):
         else:
             self[key] = val
 
+    def clear(self):
+        self.data.clear()
+        self.is_dirty = True
+
     #
     # Session methods
     #
