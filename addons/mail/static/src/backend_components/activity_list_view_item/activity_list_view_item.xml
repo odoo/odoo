@@ -4,12 +4,8 @@
         <div class="o_ActivityListViewItem d-flex flex-column border-bottom py-2">
             <div class="o_ActivityListViewItem_container d-flex align-items-baseline ms-3 me-1">
                 <i t-if="activity.icon" class="fa small me-2" t-attf-class="{{ activity.icon }}" role="img"/>
-                <t t-if="activity.summary">
-                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="activity.summary"/>
-                </t>
-                <t t-if="!activity.summary and activity.type">
-                    <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="activity.type.displayName"/>
-                </t>
+                <b t-if="activity.summary" class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="activity.summary"/>
+                <b t-if="!activity.summary and activity.type" class="text-900 me-2 text-truncate flex-grow-1" t-esc="activity.type.displayName"/>
                 <button t-if="hasEditButton" class="o_ActivityListViewItem_editButton btn btn-sm btn-link" t-on-click="onClickEditActivityButton">
                     <i class="fa fa-pencil"/>
                 </button>

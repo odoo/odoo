@@ -8,11 +8,9 @@
             </a>
             <div t-if="activityMenuView.isOpen" class="o_ActivityMenuView_dropdownMenu o-dropdown-menu dropdown-menu-end show bg-view" role="menu">
                 <div class="o_ActivityMenuView_activityGroups">
-                    <t t-if="activityMenuView.activityGroupViews.length === 0">
-                        <div class="o_ActivityMenuView_noActivity dropdown-item-text text-center d-flex justify-content-center">
-                            <span>Congratulations, you're done with your activities.</span>
-                        </div>
-                    </t>
+                    <div t-if="activityMenuView.activityGroupViews.length === 0" class="o_ActivityMenuView_noActivity dropdown-item-text text-center d-flex justify-content-center">
+                        <span>Congratulations, you're done with your activities.</span>
+                    </div>
                     <t t-foreach="activityMenuView.activityGroupViews" t-as="activityGroupView" t-key="activityGroupView.localId" name="activityGroupLoop">
                         <div class="o_ActivityMenuView_activityGroup" t-att-data-res_model="activityGroupView.activityGroup.irModel.model" t-att-data-model_name="activityGroupView.activityGroup.irModel.name" t-att-data-domain="activityGroupView.activityGroup.domain" data-filter='my' t-att-data-activity-group-view-local-id="activityGroupView.localId" t-on-click="activityGroupView.onClickFilterButton">
                             <div t-if="activityGroupView.activityGroup.irModel.iconUrl" class="o_ActivityMenuView_activityGroupIconContainer">
@@ -20,22 +18,18 @@
                             </div>
                             <div class="o_ActivityMenuView_activityGroupInfo">
                                 <div class="o_ActivityMenuView_activityGroupTitle">
-                                    <span class="o_ActivityMenuView_activityGroupName">
-                                        <t t-esc="activityGroupView.activityGroup.irModel.name"/>
-                                    </span>
+                                    <span class="o_ActivityMenuView_activityGroupName" t-esc="activityGroupView.activityGroup.irModel.name"/>
                                     <div t-if="activityGroupView.activityGroup.actions" class="o_ActivityMenuView_activityGroupActionButtons">
-                                        <t t-foreach="activityGroupView.activityGroup.actions" t-as="action" t-key="action.name">
-                                            <button type="button"
-                                                t-att-title="action.name"
-                                                t-att-class="'o_ActivityMenuView_activityGroupActionButton btn btn-link fa ' + action.icon"
-                                                t-att-data-action_xmlid="action.action_xmlid"
-                                                t-att-data-res_model="activityGroupView.activityGroup.irModel.model"
-                                                t-att-data-model_name="activityGroupView.activityGroup.irModel.name"
-                                                t-att-data-domain="activityGroupView.activityGroup.domain"
-                                                t-on-click="activityGroupView.onClick"
-                                            >
-                                            </button>
-                                        </t>
+                                        <button type="button"
+                                            t-foreach="activityGroupView.activityGroup.actions" t-as="action" t-key="action.name"
+                                            t-att-title="action.name"
+                                            t-att-class="'o_ActivityMenuView_activityGroupActionButton btn btn-link fa ' + action.icon"
+                                            t-att-data-action_xmlid="action.action_xmlid"
+                                            t-att-data-res_model="activityGroupView.activityGroup.irModel.model"
+                                            t-att-data-model_name="activityGroupView.activityGroup.irModel.name"
+                                            t-att-data-domain="activityGroupView.activityGroup.domain"
+                                            t-on-click="activityGroupView.onClick"
+                                        />
                                     </div>
                                 </div>
                                 <div t-if="activityGroupView.activityGroup.type == 'activity'">
