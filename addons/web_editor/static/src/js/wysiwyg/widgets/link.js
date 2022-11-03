@@ -421,6 +421,21 @@ const Link = Widget.extend({
      */
     _getLinkCustomClasses: function () {},
     /**
+     * @private
+     */
+    _isFromAnotherHostName: function (url) {
+        if (url.includes(window.location.hostname)) {
+            return false;
+        }
+        try {
+            const Url = URL || window.URL || window.webkitURL;
+            const urlObj = url.startsWith('/') ? new Url(url, window.location.origin) : new Url(url);
+            return (urlObj.origin !== window.location.origin);
+        } catch {
+            return true;
+        }
+    },
+    /**
      * Abstract method: return true if the link should open in a new window.
      *
      * @abstract
