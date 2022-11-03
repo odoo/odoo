@@ -2347,6 +2347,12 @@ export function getRangePosition(el, document, options = {}) {
         offset.left = marginLeft;
     }
 
+    if (options.getContextFromParentRect) {
+        const parentContextRect = options.getContextFromParentRect();
+        offset.left += parentContextRect.left;
+        offset.top += parentContextRect.top;
+    }
+
     if (
         offset.top - marginTop + offset.height + el.offsetHeight > window.innerHeight &&
         offset.top - el.offsetHeight - marginBottom > 0
