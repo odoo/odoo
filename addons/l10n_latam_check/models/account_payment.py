@@ -54,7 +54,7 @@ class AccountPayment(models.Model):
     # Check book
     l10n_latam_use_checkbooks = fields.Boolean(
         related='journal_id.l10n_latam_use_checkbooks',
-    )
+    ) #TODO: should be a computed based on the payment method?
 
 
     @api.depends('check_number')
