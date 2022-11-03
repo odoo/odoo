@@ -108,9 +108,7 @@ registerModel({
                 return audioElement;
             },
         }),
-        canPlayAudio: attr({
-            default: typeof(Audio) !== 'undefined',
-        }),
+        canPlayAudio: attr({ default: typeof(Audio) !== 'undefined' }),
         canSendNativeNotification: attr({
             /**
              * Determines whether or not sending native notification is
@@ -126,8 +124,6 @@ registerModel({
         /**
          * Icon to be displayed by the notification.
          */
-        icon: attr({
-            default: '/mail/static/src/img/odoobot_transparent.png',
-        }),
+        icon: attr({ default: '/mail/static/src/img/odoobot_transparent.png' }),
     },
 });

@@ -124,10 +124,7 @@ registerModel({
         /**
          * Determines the discuss sidebar category displaying this item.
          */
-        category: one('DiscussSidebarCategory', {
-            identifying: true,
-            inverse: 'categoryItems',
-        }),
+        category: one('DiscussSidebarCategory', { identifying: true, inverse: 'categoryItems' }),
         /**
          * Determines the contribution of this discuss sidebar category item to
          * the counter of this category.
@@ -146,10 +143,7 @@ registerModel({
                 }
             },
         }),
-        channel: one('Channel', {
-            identifying: true,
-            inverse: 'discussSidebarCategoryItem',
-        }),
+        channel: one('Channel', { identifying: true, inverse: 'discussSidebarCategoryItem' }),
         /**
          * Amount of unread/action-needed messages
          */
@@ -217,10 +211,8 @@ registerModel({
         /**
          * The related thread.
          */
-        thread: one('Thread', {
-            related: 'channel.thread'
-        }),
-        threadIconView: one('ThreadIconView', {
+        thread: one('Thread', { related: 'channel.thread' }),
+        threadIconView: one('ThreadIconView', { inverse: 'discussSidebarCategoryItemOwner',
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -234,7 +226,6 @@ registerModel({
                         return clear();
                 }
             },
-            inverse: 'discussSidebarCategoryItemOwner',
         }),
     },
 });

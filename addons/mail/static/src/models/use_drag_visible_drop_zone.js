@@ -68,26 +68,16 @@ registerModel({
         },
     },
     fields: {
-        chatterOwner: one('Chatter', {
-            identifying: true,
-            inverse: 'useDragVisibleDropZone',
-        }),
-        composerViewOwner: one('ComposerView', {
-            identifying: true,
-            inverse: 'useDragVisibleDropZone',
-        }),
+        chatterOwner: one('Chatter', { identifying: true, inverse: 'useDragVisibleDropZone' }),
+        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'useDragVisibleDropZone' }),
         /**
          * Counts how many drag enter/leave happened globally. This is the only
          * way to know if a file has been dragged out of the browser window.
          */
-        dragCount: attr({
-            default: 0
-        }),
+        dragCount: attr({ default: 0 }),
         /**
          * Determine whether the drop zone should be visible or not.
          */
-        isVisible: attr({
-            default: false,
-        }),
+        isVisible: attr({ default: false }),
     },
 });

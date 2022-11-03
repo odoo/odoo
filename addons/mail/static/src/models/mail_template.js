@@ -45,12 +45,8 @@ registerModel({
         },
     },
     fields: {
-        activities: many('Activity', {
-            inverse: 'mailTemplates',
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        activities: many('Activity', { inverse: 'mailTemplates' }),
+        id: attr({ identifying: true }),
         name: attr(),
     },
 });

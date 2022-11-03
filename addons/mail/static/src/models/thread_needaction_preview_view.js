@@ -37,14 +37,13 @@ registerModel({
         },
     },
     fields: {
-        inlineLastNeedactionMessageAsOriginThreadBody: attr({
+        inlineLastNeedactionMessageAsOriginThreadBody: attr({ default: "",
             compute() {
                 if (!this.thread.lastNeedactionMessageAsOriginThread) {
                     return clear();
                 }
                 return htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
             },
-            default: "",
         }),
         isEmpty: attr({
             compute() {
@@ -64,7 +63,7 @@ registerModel({
          * top-level click handler when clicking on this specific button.
          */
         markAsReadRef: attr(),
-        messageAuthorPrefixView: one('MessageAuthorPrefixView', {
+        messageAuthorPrefixView: one('MessageAuthorPrefixView', { inverse: 'threadNeedactionPreviewViewOwner',
             compute() {
                 if (
                     this.thread.lastNeedactionMessageAsOriginThread &&
@@ -74,13 +73,9 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'threadNeedactionPreviewViewOwner',
         }),
-        notificationListViewOwner: one('NotificationListView', {
-            identifying: true,
-            inverse: 'threadNeedactionPreviewViews',
-        }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
+        notificationListViewOwner: one('NotificationListView', { identifying: true, inverse: 'threadNeedactionPreviewViews' }),
+        personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'threadNeedactionPreviewViewOwner',
             compute() {
                 if (
                     this.thread.channel &&
@@ -91,11 +86,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'threadNeedactionPreviewViewOwner',
         }),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'threadNeedactionPreviewViews',
-        }),
+        thread: one('Thread', { identifying: true, inverse: 'threadNeedactionPreviewViews' }),
     },
 });

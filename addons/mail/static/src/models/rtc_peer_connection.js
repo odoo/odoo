@@ -52,10 +52,7 @@ registerModel({
          * If unset, this RTC Session is not considered as connected
          */
         peerConnection: attr(),
-        rtcSession: one('RtcSession', {
-            identifying: true,
-            inverse: 'rtcPeerConnection',
-        }),
+        rtcSession: one('RtcSession', { identifying: true, inverse: 'rtcPeerConnection' }),
     },
     onChanges: [
         {

@@ -58,14 +58,11 @@ registerModel({
     },
     fields: {
         component: attr(),
-        isOpen: attr({
-            default: false,
-        }),
-        items: many('ChatWindowHiddenMenuItemView', {
+        isOpen: attr({ default: false }),
+        items: many('ChatWindowHiddenMenuItemView', { inverse: 'owner',
             compute() {
                 return this.owner.hiddenChatWindowHeaderViews.map(chatWindowHeaderView => ({ chatWindowHeaderView }));
             },
-            inverse: 'owner',
         }),
         lastItem: one('ChatWindowHiddenMenuItemView', {
             compute() {
@@ -80,9 +77,6 @@ registerModel({
          * browser screen height.
          */
         listRef: attr(),
-        owner: one('ChatWindowManager', {
-            identifying: true,
-            inverse: 'hiddenMenuView',
-        }),
+        owner: one('ChatWindowManager', { identifying: true, inverse: 'hiddenMenuView' }),
     },
 });

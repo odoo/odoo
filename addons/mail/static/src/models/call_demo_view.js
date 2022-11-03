@@ -116,9 +116,7 @@ registerModel({
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
-        audioStream: attr({
-            default: null,
-        }),
+        audioStream: attr({ default: null }),
         /**
          * States whether the browser has the required APIs for
          * microphone/camera recording.
@@ -158,15 +156,10 @@ registerModel({
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
-        videoStream: attr({
-            default: null,
-        }),
+        videoStream: attr({ default: null }),
         /**
          * States the welcome view containing this media preview.
          */
-        welcomeView: one('WelcomeView', {
-            identifying: true,
-            inverse: 'callDemoView',
-        }),
+        welcomeView: one('WelcomeView', { identifying: true, inverse: 'callDemoView' }),
     },
 });

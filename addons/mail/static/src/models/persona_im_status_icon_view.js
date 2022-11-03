@@ -23,36 +23,23 @@ registerModel({
         },
     },
     fields: {
-        channelInvitationFormSelectablePartnerViewOwner: one('ChannelInvitationFormSelectablePartnerView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        channelMemberViewOwner: one('ChannelMemberView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        channelPreviewViewOwner: one('ChannelPreviewView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        composerSuggestionViewOwner: one('ComposerSuggestionView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        hasBackground: attr({
+        channelInvitationFormSelectablePartnerViewOwner: one('ChannelInvitationFormSelectablePartnerView', { identifying: true, inverse: 'personaImStatusIconView' }),
+        channelMemberViewOwner: one('ChannelMemberView', { identifying: true, inverse: 'personaImStatusIconView' }),
+        channelPreviewViewOwner: one('ChannelPreviewView', { identifying: true, inverse: 'personaImStatusIconView' }),
+        composerSuggestionViewOwner: one('ComposerSuggestionView', { identifying: true, inverse: 'personaImStatusIconView' }),
+        hasBackground: attr({ default: true,
             compute() {
                 if (this.composerSuggestionViewOwner) {
                     return false;
                 }
                 return clear();
             },
-            default: true,
         }),
         /**
          * Determines whether a click on this view should open a chat with the
          * corresponding persona.
          */
-        hasOpenChat: attr({
+        hasOpenChat: attr({ default: false,
             compute() {
                 if (this.channelMemberViewOwner) {
                     return this.channelMemberViewOwner.hasOpenChat;
@@ -62,17 +49,10 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
-        messageViewOwner: one('MessageView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        notificationRequestViewOwner: one('NotificationRequestView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        persona: one('Persona', {
+        messageViewOwner: one('MessageView', { identifying: true, inverse: 'personaImStatusIconView' }),
+        notificationRequestViewOwner: one('NotificationRequestView', { identifying: true, inverse: 'personaImStatusIconView' }),
+        persona: one('Persona', { required: true,
             compute() {
                 if (this.channelInvitationFormSelectablePartnerViewOwner) {
                     return this.channelInvitationFormSelectablePartnerViewOwner.partner.persona;
@@ -102,11 +82,7 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
+        threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', { identifying: true, inverse: 'personaImStatusIconView' }),
     },
 });

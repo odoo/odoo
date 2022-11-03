@@ -169,22 +169,14 @@ registerModel({
         /**
          * Amount of visible slots available for chat windows.
          */
-        availableVisibleSlots: attr({
+        availableVisibleSlots: attr({ default: 0,
             compute() {
                 return this.visual.availableVisibleSlots;
             },
-            default: 0,
         }),
-        betweenGapWidth: attr({
-            default: 5,
-        }),
-        chatWindows: many('ChatWindow', {
-            inverse: 'manager',
-            isCausal: true,
-        }),
-        chatWindowWidth: attr({
-            default: 340,
-        }),
+        betweenGapWidth: attr({ default: 5 }),
+        chatWindows: many('ChatWindow', { inverse: 'manager', isCausal: true }),
+        chatWindowWidth: attr({ default: 340 }),
         endGapWidth: attr({
             compute() {
                 if (this.messaging.device.isSmall) {
@@ -206,15 +198,12 @@ registerModel({
                 return clear();
             },
         }),
-        hiddenMenuView: one('ChatWindowHiddenMenuView', {
+        hiddenMenuView: one('ChatWindowHiddenMenuView', { inverse: 'owner',
             compute() {
                 return this.visual.isHiddenMenuVisible ? {} : clear();
             },
-            inverse: 'owner',
         }),
-        hiddenMenuWidth: attr({
-            default: 170, // max width, including width of dropup list items
-        }),
+        hiddenMenuWidth: attr({ default: 170 /* max width, including width of dropup list items */ }),
         lastVisible: one('ChatWindow', {
             compute() {
                 const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
@@ -224,9 +213,7 @@ registerModel({
                 return lastVisible;
             },
         }),
-        newMessageChatWindow: one('ChatWindow', {
-            inverse: 'managerAsNewMessage',
-        }),
+        newMessageChatWindow: one('ChatWindow', { inverse: 'managerAsNewMessage' }),
         startGapWidth: attr({
             compute() {
                 if (this.messaging.device.isSmall) {
@@ -249,7 +236,7 @@ registerModel({
                 return amount;
             },
         }),
-        visual: attr({
+        visual: attr({ default: BASE_VISUAL,
             compute() {
                 let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
                 if (!this.messaging || !this.messaging.device) {
@@ -305,7 +292,6 @@ registerModel({
                 }
                 return visual;
             },
-            default: BASE_VISUAL,
         }),
     },
 });

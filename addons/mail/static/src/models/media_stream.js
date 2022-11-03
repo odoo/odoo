@@ -13,12 +13,7 @@ registerModel({
         },
     },
     fields: {
-        id: attr({
-            identifying: true,
-        }),
-        webMediaStream: attr({
-            required: true,
-            readonly: true,
-        }),
+        id: attr({ identifying: true }),
+        webMediaStream: attr({ required: true, readonly: true }),
     },
 });

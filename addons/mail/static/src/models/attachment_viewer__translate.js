@@ -13,21 +13,10 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'AttachmentViewer.Translate',
     fields: {
-        dx: attr({
-            default: 0,
-        }),
-        dy: attr({
-            default: 0,
-        }),
-        owner: one('AttachmentViewer', {
-            identifying: true,
-            inverse: 'translate',
-        }),
-        x: attr({
-            default: 0,
-        }),
-        y: attr({
-            default: 0,
-        }),
+        dx: attr({ default: 0 }),
+        dy: attr({ default: 0 }),
+        owner: one('AttachmentViewer', { identifying: true, inverse: 'translate' }),
+        x: attr({ default: 0 }),
+        y: attr({ default: 0 }),
     },
 });

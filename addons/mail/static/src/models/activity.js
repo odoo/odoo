@@ -212,18 +212,10 @@ registerModel({
         },
     },
     fields: {
-        activityViews: many('ActivityView', {
-            inverse: 'activity',
-        }),
-        assignee: one('User', {
-            inverse: 'activitiesAsAssignee',
-        }),
-        attachments: many('Attachment', {
-            inverse: 'activities',
-        }),
-        canWrite: attr({
-            default: false,
-        }),
+        activityViews: many('ActivityView', { inverse: 'activity' }),
+        assignee: one('User', { inverse: 'activitiesAsAssignee' }),
+        attachments: many('Attachment', { inverse: 'activities' }),
+        canWrite: attr({ default: false }),
         category: attr(),
         creator: one('User'),
         dateCreate: attr(),
@@ -234,13 +226,9 @@ registerModel({
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
-        chaining_type: attr({
-            default: 'suggest',
-        }),
+        chaining_type: attr({ default: 'suggest' }),
         icon: attr(),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         isCurrentPartnerAssignee: attr({
             compute() {
                 if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
@@ -250,9 +238,7 @@ registerModel({
             },
             default: false,
         }),
-        mailTemplates: many('MailTemplate', {
-            inverse: 'activities',
-        }),
+        mailTemplates: many('MailTemplate', { inverse: 'activities' }),
         /**
          * This value is meant to be returned by the server
          * (and has been sanitized before stored into db).
@@ -292,11 +278,7 @@ registerModel({
          * Determines to which "thread" (using `mail.activity.mixin` on the
          * server) `this` belongs to.
          */
-        thread: one('Thread', {
-            inverse: 'activities',
-        }),
-        type: one('ActivityType', {
-            inverse: 'activities',
-        }),
+        thread: one('Thread', { inverse: 'activities' }),
+        type: one('ActivityType', { inverse: 'activities' }),
     },
 });

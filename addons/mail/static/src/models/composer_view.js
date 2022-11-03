@@ -992,13 +992,12 @@ registerModel({
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
-        attachmentList: one('AttachmentList', {
+        attachmentList: one('AttachmentList', { inverse: 'composerViewOwner',
             compute() {
                 return (this.composer && this.composer.attachments.length > 0)
                     ? {}
                     : clear();
             },
-            inverse: 'composerViewOwner',
         }),
         /**
          * States the ref to the html node of the emojis button.
@@ -1007,10 +1006,7 @@ registerModel({
         /**
          * States the chatter which this composer allows editing (if any).
          */
-        chatter: one('Chatter', {
-            identifying: true,
-            inverse: 'composerView',
-        }),
+        chatter: one('Chatter', { identifying: true, inverse: 'composerView' }),
         /**
          * States the OWL component of this composer view.
          */
@@ -1018,7 +1014,7 @@ registerModel({
         /**
          * States the composer state that is displayed by this composer view.
          */
-        composer: one('Composer', {
+        composer: one('Composer', { inverse: 'composerViews', required: true,
             compute() {
                 if (this.threadView) {
                     // When replying to a message, always use the composer from that message's thread
@@ -1037,26 +1033,22 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'composerViews',
-            required: true,
         }),
-        composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
+        composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', { inverse: 'composerViewOwner',
             compute() {
                 if (this.hasHeader && this.hasFollowers && !this.composer.isLog) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'composerViewOwner',
         }),
-        composerSuggestionListView: one('ComposerSuggestionListView', {
+        composerSuggestionListView: one('ComposerSuggestionListView', { inverse: 'composerViewOwner',
             compute() {
                 if (this.hasSuggestions) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'composerViewOwner',
         }),
         /**
          * Current partner image URL.
@@ -1077,29 +1069,21 @@ registerModel({
          * Determines whether this composer should be focused at next render.
          */
         doFocus: attr(),
-        dropZoneView: one('DropZoneView', {
+        dropZoneView: one('DropZoneView', { inverse: 'composerViewOwner',
             compute() {
                 if (this.useDragVisibleDropZone.isVisible) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'composerViewOwner',
         }),
         /**
          * Determines the emojis popover that is active on this composer view.
          */
-        emojisPopoverView: one('PopoverView', {
-            inverse: 'composerViewOwnerAsEmoji',
-        }),
+        emojisPopoverView: one('PopoverView', { inverse: 'composerViewOwnerAsEmoji' }),
         extraSuggestions: many('ComposerSuggestable'),
-        fileUploader: one('FileUploader', {
-            default: {},
-            inverse: 'composerView',
-            readonly: true,
-            required: true,
-        }),
-        hasCurrentPartnerAvatar: attr({
+        fileUploader: one('FileUploader', { default: {}, inverse: 'composerView', readonly: true, required: true }),
+        hasCurrentPartnerAvatar: attr({ default: true,
             compute() {
                 if (this.messageViewInEditing) {
                     return false;
@@ -1115,9 +1099,8 @@ registerModel({
                 }
                 return clear();
             },
-            default: true,
         }),
-        hasDiscardButton: attr({
+        hasDiscardButton: attr({ default: false,
             compute() {
                 if (this.messageViewInEditing) {
                     return false;
@@ -1133,16 +1116,14 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
-        hasFollowers: attr({
+        hasFollowers: attr({ default: false,
             compute() {
                 if (this.chatter) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Determines whether composer should display a footer.
@@ -1173,10 +1154,8 @@ registerModel({
          * Determines whether there is a mention RPC currently in progress.
          * Useful to queue a new call if there is already one pending.
          */
-        hasMentionRpcInProgress: attr({
-            default: false,
-        }),
-        hasMentionSuggestionsBelowPosition: attr({
+        hasMentionRpcInProgress: attr({ default: false }),
+        hasMentionSuggestionsBelowPosition: attr({ default: false,
             compute() {
                 if (this.chatter) {
                     return true;
@@ -1186,9 +1165,8 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
-        hasSendButton: attr({
+        hasSendButton: attr({ default: true,
             compute() {
                 if (this.messageViewInEditing) {
                     return false;
@@ -1198,35 +1176,31 @@ registerModel({
                 }
                 return clear();
             },
-            default: true,
         }),
         /**
          * States whether there is any result currently found for the current
          * suggestion delimiter and search term, if applicable.
          */
-        hasSuggestions: attr({
+        hasSuggestions: attr({ default: false,
             compute() {
                 return this.mainSuggestions.length > 0 || this.extraSuggestions.length > 0;
             },
-            default: false,
         }),
-        hasThreadName: attr({
+        hasThreadName: attr({ default: false,
             compute() {
                 if (this.threadView) {
                     return this.threadView.hasComposerThreadName;
                 }
                 return clear();
             },
-            default: false,
         }),
-        hasThreadTyping: attr({
+        hasThreadTyping: attr({ default: false,
             compute() {
                 if (this.threadView) {
                     return this.threadView.hasComposerThreadTyping;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Determines whether the content of this composer should be restored in
@@ -1235,10 +1209,8 @@ registerModel({
          * to its previous position after the user clicked on the textarea while
          * it didn't have the focus anymore.
          */
-        hasToRestoreContent: attr({
-            default: false,
-        }),
-        isCompact: attr({
+        hasToRestoreContent: attr({ default: false }),
+        isCompact: attr({ default: true,
             compute() {
                 if (this.chatter) {
                     return false;
@@ -1248,20 +1220,16 @@ registerModel({
                 }
                 return clear();
             },
-            default: true,
         }),
-        isExpandable: attr({
+        isExpandable: attr({ default: false,
             compute() {
                 if (this.chatter) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
-        isFocused: attr({
-            default: false,
-        }),
+        isFocused: attr({ default: false }),
         /**
          * Determines if we are in the Discuss view.
          */
@@ -1299,17 +1267,12 @@ registerModel({
          * Last content of textarea from input event. Useful to determine
          * whether the current partner is typing something.
          */
-        textareaLastInputValue: attr({
-            default: "",
-        }),
+        textareaLastInputValue: attr({ default: "" }),
         mainSuggestions: many('ComposerSuggestable'),
         /**
          * States the message view on which this composer allows editing (if any).
          */
-        messageViewInEditing: one('MessageView', {
-            identifying: true,
-            inverse: 'composerViewInEditing',
-        }),
+        messageViewInEditing: one('MessageView', { identifying: true, inverse: 'composerViewInEditing' }),
         /**
          * Determines the next function to execute after the current mention
          * RPC is done, if any.
@@ -1336,7 +1299,7 @@ registerModel({
          * The format is an array of string that can contain 'enter',
          * 'ctrl-enter', and/or 'meta-enter'.
          */
-        sendShortcuts: attr({
+        sendShortcuts: attr({ default: [],
             compute() {
                 if (this.chatter) {
                     return ['ctrl-enter', 'meta-enter'];
@@ -1365,7 +1328,6 @@ registerModel({
                 }
                 return clear();
             },
-            default: [],
         }),
         /**
          * States which type of suggestion is currently in progress, if any.
@@ -1428,32 +1390,20 @@ registerModel({
                 return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
             },
         }),
-        textInput: one('ComposerTextInputView', {
-            default: {},
-            inverse: 'owner',
-        }),
-        threadTextualTypingStatusView: one('ThreadTextualTypingStatusView', {
+        textInput: one('ComposerTextInputView', { default: {}, inverse: 'owner' }),
+        threadTextualTypingStatusView: one('ThreadTextualTypingStatusView', { inverse: 'owner',
             compute() {
                 if (this.hasThreadTyping) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'owner',
         }),
         /**
          * States the thread view on which this composer allows editing (if any).
          */
-        threadView: one('ThreadView', {
-            identifying: true,
-            inverse: 'composerView',
-        }),
-        useDragVisibleDropZone: one('UseDragVisibleDropZone', {
-            default: {},
-            inverse: 'composerViewOwner',
-            readonly: true,
-            required: true,
-        }),
+        threadView: one('ThreadView', { identifying: true, inverse: 'composerView' }),
+        useDragVisibleDropZone: one('UseDragVisibleDropZone', { default: {}, inverse: 'composerViewOwner', readonly: true, required: true }),
     },
     onChanges: [
         {

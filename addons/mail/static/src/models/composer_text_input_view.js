@@ -54,10 +54,7 @@ registerModel({
          * properly without flicker.
          */
         mirroredTextareaRef: attr(),
-        owner: one('ComposerView', {
-            identifying: true,
-            inverse: 'textInput',
-        }),
+        owner: one('ComposerView', { identifying: true, inverse: 'textInput' }),
         /**
          * Reference of the textarea. Useful to set height, selection and
          * content.

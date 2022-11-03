@@ -10,9 +10,7 @@ registerModel({
         /**
          * States the original field of changed tracking value, such as "Status", "Date".
          */
-        changedField: attr({
-            required: true,
-        }),
+        changedField: attr({ required: true }),
         /**
          * The translated `changedFiled` according to the language setting.
          */
@@ -21,19 +19,9 @@ registerModel({
                 return sprintf(this.env._t("%s"), this.changedField);
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
-        messageOwner: one('Message', {
-            inverse: 'trackingValues',
-            readonly: true,
-            required: true,
-        }),
-        newValue: one('TrackingValueItem', {
-            inverse: 'trackingValueAsNewValue',
-        }),
-        oldValue: one('TrackingValueItem', {
-            inverse: 'trackingValueAsOldValue',
-        }),
+        id: attr({ identifying: true }),
+        messageOwner: one('Message', { inverse: 'trackingValues', readonly: true, required: true }),
+        newValue: one('TrackingValueItem', { inverse: 'trackingValueAsNewValue' }),
+        oldValue: one('TrackingValueItem', { inverse: 'trackingValueAsOldValue' }),
     },
 });

@@ -184,10 +184,7 @@ registerModel({
                 );
             },
         }),
-        chatWindow: one('ChatWindow', {
-            identifying: true,
-            inverse: 'channelInvitationForm',
-        }),
+        chatWindow: one('ChatWindow', { identifying: true, inverse: 'channelInvitationForm' }),
         /**
          * States the OWL component of this channel invitation form.
          * Useful to be able to close it with popover trigger, or to know when
@@ -201,15 +198,11 @@ registerModel({
         /**
          * States whether there is a pending search RPC.
          */
-        hasPendingSearchRpc: attr({
-            default: false,
-        }),
+        hasPendingSearchRpc: attr({ default: false }),
         /**
          * States whether there is search RPC in progress.
          */
-        hasSearchRpcInProgress: attr({
-            default: false,
-        }),
+        hasSearchRpcInProgress: attr({ default: false }),
         /**
          * Determines the text of the invite button.
          */
@@ -230,11 +223,7 @@ registerModel({
         /**
          * If set, this channel invitation form is content of related popover view.
          */
-        popoverViewOwner: one('PopoverView', {
-            identifying: true,
-            inverse: 'channelInvitationForm',
-            isCausal: true,
-        }),
+        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'channelInvitationForm', isCausal: true }),
         /**
          * States the OWL ref of the "search" input of this channel invitation
          * form. Useful to be able to focus it.
@@ -243,46 +232,40 @@ registerModel({
         /**
          * States the number of results of the last search.
          */
-        searchResultCount: attr({
-            default: 0,
-        }),
+        searchResultCount: attr({ default: 0 }),
         /**
          * Determines the search term used to filter this list.
          */
-        searchTerm: attr({
-            default: "",
-        }),
+        searchTerm: attr({ default: "" }),
         /**
          * States all partners that are potential choices according to this
          * search term.
          */
         selectablePartners: many('Partner'),
-        selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
+        selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', { inverse: 'channelInvitationFormOwner',
             compute() {
                 if (this.selectablePartners.length === 0) {
                     return clear();
                 }
                 return this.selectablePartners.map(partner => ({ partner }));
             },
-            inverse: 'channelInvitationFormOwner',
         }),
         /**
          * Determines all partners that are currently selected.
          */
         selectedPartners: many('Partner'),
-        selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
+        selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', { inverse: 'channelInvitationFormOwner',
             compute() {
                 if (this.selectedPartners.length === 0) {
                     return clear();
                 }
                 return this.selectedPartners.map(partner => ({ partner }));
             },
-            inverse: 'channelInvitationFormOwner',
         }),
         /**
          * States the thread on which this list operates (if any).
          */
-        thread: one('Thread', {
+        thread: one('Thread', { required: true,
             compute() {
                 if (
                     this.popoverViewOwner &&
@@ -296,7 +279,6 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
     },
 });

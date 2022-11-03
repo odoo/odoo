@@ -8,15 +8,11 @@ registerModel({
     template: 'mail.CallSidebarView',
     templateGetter: 'callSidebarView',
     fields: {
-        callView: one('CallView', {
-            identifying: true,
-            inverse: 'callSidebarView',
-        }),
-        sidebarTiles: many('CallSidebarViewTile', {
+        callView: one('CallView', { identifying: true, inverse: 'callSidebarView' }),
+        sidebarTiles: many('CallSidebarViewTile', { inverse: 'callSidebarViewOwner',
             compute() {
                 return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
             },
-            inverse: 'callSidebarViewOwner',
         }),
     },
 });

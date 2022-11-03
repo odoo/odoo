@@ -9,30 +9,18 @@ registerModel({
     template: 'mail.EmojiGridRowView',
     templateGetter: 'emojiGridRowView',
     fields: {
-        emojiGridViewOwner: one('EmojiGridView', {
-            related: 'emojiGridViewRowRegistryOwner.emojiGridViewOwner',
-        }),
-        index: attr({
-            identifying: true,
-        }),
-        items: many('EmojiGridItemView', {
-            inverse: 'emojiGridRowViewOwner',
-        }),
-        sectionView: one('EmojiGridSectionView', {
+        emojiGridViewOwner: one('EmojiGridView', { related: 'emojiGridViewRowRegistryOwner.emojiGridViewOwner' }),
+        index: attr({ identifying: true }),
+        items: many('EmojiGridItemView', { inverse: 'emojiGridRowViewOwner' }),
+        sectionView: one('EmojiGridSectionView', { inverse: 'emojiGridRowViewOwner',
             compute() {
                 if (this.viewCategory) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'emojiGridRowViewOwner',
         }),
-        emojiGridViewRowRegistryOwner: one('EmojiGridViewRowRegistry', {
-            identifying: true,
-            inverse: 'rows',
-        }),
-        viewCategory: one('EmojiPickerView.Category', {
-            inverse: 'emojiGridRowView',
-        }),
+        emojiGridViewRowRegistryOwner: one('EmojiGridViewRowRegistry', { identifying: true, inverse: 'rows' }),
+        viewCategory: one('EmojiPickerView.Category', { inverse: 'emojiGridRowView' }),
     },
 });

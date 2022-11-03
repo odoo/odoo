@@ -42,23 +42,17 @@ registerModel({
         },
     },
     fields: {
-        allCategories: many('EmojiCategory', {
+        allCategories: many('EmojiCategory', { inverse: 'emojiRegistry',
             compute() {
                 return this.dataCategories;
             },
-            inverse: 'emojiRegistry',
             sort: [['smaller-first', 'sortId']],
         }),
-        allEmojis: many('Emoji', {
-            inverse: 'emojiRegistry',
+        allEmojis: many('Emoji', { inverse: 'emojiRegistry',
             sort: [['smaller-first', 'codepoints']],
         }),
         dataCategories: many('EmojiCategory'),
-        isLoaded: attr({
-            default: false,
-        }),
-        isLoading: attr({
-            default: false,
-        }),
+        isLoaded: attr({ default: false }),
+        isLoading: attr({ default: false }),
     },
 });

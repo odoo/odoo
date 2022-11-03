@@ -76,13 +76,7 @@ registerModel({
         },
     },
     fields: {
-        activityGroup: one('ActivityGroup', {
-            identifying: true,
-            inverse: 'activityGroupViews',
-        }),
-        activityMenuViewOwner: one('ActivityMenuView', {
-            identifying: true,
-            inverse: 'activityGroupViews',
-        }),
+        activityGroup: one('ActivityGroup', { identifying: true, inverse: 'activityGroupViews' }),
+        activityMenuViewOwner: one('ActivityMenuView', { identifying: true, inverse: 'activityGroupViews' }),
     },
 });

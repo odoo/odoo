@@ -71,25 +71,15 @@ registerModel({
         },
     },
     fields: {
-        currentSearch: attr({
-            default: "",
-        }),
-        emojiPickerView: one("EmojiPickerView", {
-            identifying: true,
-            inverse: "emojiSearchBarView",
-        }),
+        currentSearch: attr({ default: "" }),
+        emojiPickerView: one("EmojiPickerView", { identifying: true, inverse: "emojiSearchBarView" }),
         inputRef: attr(),
-        isDoFocus: attr({
-            default: false,
-        }),
-        isFocused: attr({
-            default: false,
-        }),
-        placeholder: attr({
+        isDoFocus: attr({ default: false }),
+        isFocused: attr({ default: false }),
+        placeholder: attr({ required: true,
             compute() {
                 return this.env._t("Search an emoji");
             },
-            required: true,
         }),
     },
 });

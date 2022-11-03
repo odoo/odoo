@@ -56,7 +56,7 @@ registerModel({
         },
     },
     fields: {
-        rows: many('EmojiGridRowView', {
+        rows: many('EmojiGridRowView', { inverse: 'emojiGridViewRowRegistryOwner',
             compute() {
                 if (!this.emojiGridViewOwner) {
                     return clear();
@@ -69,7 +69,6 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'emojiGridViewRowRegistryOwner',
             sort: [['smaller-first', 'index']],
         }),
         emojiGridViewOwner: one('EmojiGridView', {
@@ -77,13 +76,7 @@ registerModel({
                 return this.emojiGridViewOwnerAsNonSearch || this.emojiGridViewOwnerAsSearch;
             },
         }),
-        emojiGridViewOwnerAsNonSearch: one('EmojiGridView', {
-            identifying: true,
-            inverse: 'nonSearchRowRegistry',
-        }),
-        emojiGridViewOwnerAsSearch: one('EmojiGridView', {
-            identifying: true,
-            inverse: 'searchRowRegistry',
-        }),
+        emojiGridViewOwnerAsNonSearch: one('EmojiGridView', { identifying: true, inverse: 'nonSearchRowRegistry' }),
+        emojiGridViewOwnerAsSearch: one('EmojiGridView', { identifying: true, inverse: 'searchRowRegistry' }),
     },
 });

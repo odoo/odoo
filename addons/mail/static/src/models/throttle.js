@@ -44,13 +44,11 @@ registerModel({
         },
     },
     fields: {
-        cooldownTimer: one('Timer', {
-            inverse: 'throttleOwner',
-        }),
+        cooldownTimer: one('Timer', { inverse: 'throttleOwner' }),
         /**
          * Duration, in milliseconds, of the cool down phase.
          */
-        duration: attr({
+        duration: attr({ required: true,
             compute() {
                 if (this.emojiGridViewAsOnScroll) {
                     return 150;
@@ -66,30 +64,15 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        emojiGridViewAsOnScroll: one('EmojiGridView', {
-            identifying: true,
-            inverse: 'onScrollThrottle',
-        }),
+        emojiGridViewAsOnScroll: one('EmojiGridView', { identifying: true, inverse: 'onScrollThrottle' }),
         /**
          * Inner function to be invoked and throttled.
          */
         func: attr(),
-        messageListViewAsScroll: one('MessageListView', {
-            identifying: true,
-            inverse: 'scrollThrottle',
-        }),
-        messagingAsUpdateImStatusRegister: one('Messaging', {
-            identifying: true,
-            inverse: 'updateImStatusRegisterThrottle',
-        }),
-        shouldInvoke: attr({
-            default: false,
-        }),
-        threadAsThrottleNotifyCurrentPartnerTypingStatus: one('Thread', {
-            identifying: true,
-            inverse: 'throttleNotifyCurrentPartnerTypingStatus',
-        }),
+        messageListViewAsScroll: one('MessageListView', { identifying: true, inverse: 'scrollThrottle' }),
+        messagingAsUpdateImStatusRegister: one('Messaging', { identifying: true, inverse: 'updateImStatusRegisterThrottle' }),
+        shouldInvoke: attr({ default: false }),
+        threadAsThrottleNotifyCurrentPartnerTypingStatus: one('Thread', { identifying: true, inverse: 'throttleNotifyCurrentPartnerTypingStatus' }),
     },
 });

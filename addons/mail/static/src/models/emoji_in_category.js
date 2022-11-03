@@ -6,16 +6,8 @@ import { many, one } from '@mail/model/model_field';
 registerModel({
     name: 'EmojiInCategory',
     fields: {
-        category: one('EmojiCategory', {
-            identifying: true,
-            inverse: 'allEmojiInCategoryOfCurrent',
-        }),
-        emoji: one('Emoji', {
-            identifying: true,
-            inverse: 'allEmojiInCategoryOfCurrent',
-        }),
-        emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
-            inverse: 'emojiInCategory',
-        }),
+        category: one('EmojiCategory', { identifying: true, inverse: 'allEmojiInCategoryOfCurrent' }),
+        emoji: one('Emoji', { identifying: true, inverse: 'allEmojiInCategoryOfCurrent' }),
+        emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', { inverse: 'emojiInCategory' }),
     },
 });

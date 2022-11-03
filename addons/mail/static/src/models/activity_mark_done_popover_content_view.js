@@ -116,7 +116,7 @@ registerModel({
         },
     },
     fields: {
-        activity: one('Activity', {
+        activity: one('Activity', { required: true,
             compute() {
                 if (this.activityListViewItemOwner) {
                     return this.activityListViewItemOwner.activity;
@@ -126,12 +126,8 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        activityListViewItemOwner: one('ActivityListViewItem', {
-            identifying: true,
-            inverse: 'markDoneView',
-        }),
+        activityListViewItemOwner: one('ActivityListViewItem', { identifying: true, inverse: 'markDoneView', }),
         activityViewOwner: one('ActivityView', {
             compute() {
                 if (this.popoverViewOwner && this.popoverViewOwner.activityViewOwnerAsMarkDone) {
@@ -154,10 +150,7 @@ registerModel({
                 return this.env._t("Mark Done");
             },
         }),
-        popoverViewOwner: one('PopoverView', {
-            identifying: true,
-            inverse: 'activityMarkDonePopoverContentView',
-        }),
+        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'activityMarkDonePopoverContentView', }),
         reloadFunc: attr({
             compute() {
                 if (this.activityListViewItemOwner) {

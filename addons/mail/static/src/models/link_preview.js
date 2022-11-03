@@ -15,9 +15,7 @@ registerModel({
         },
     },
     fields: {
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         image_mimetype: attr(),
         isCard: attr({
             compute() {
@@ -48,18 +46,10 @@ registerModel({
                 return this.og_type.startsWith('video') && !this.isImage;
             },
         }),
-        linkPreviewCardView: many('LinkPreviewCardView', {
-            inverse: 'linkPreview',
-        }),
-        linkPreviewImageView: many('LinkPreviewImageView', {
-            inverse: 'linkPreview',
-        }),
-        linkPreviewVideoView: many('LinkPreviewVideoView', {
-            inverse: 'linkPreview',
-        }),
-        message: one('Message', {
-            inverse: 'linkPreviews',
-        }),
+        linkPreviewCardView: many('LinkPreviewCardView', { inverse: 'linkPreview' }),
+        linkPreviewImageView: many('LinkPreviewImageView', { inverse: 'linkPreview' }),
+        linkPreviewVideoView: many('LinkPreviewVideoView', { inverse: 'linkPreview' }),
+        message: one('Message', { inverse: 'linkPreviews' }),
         og_description: attr(),
         og_image: attr(),
         og_mimetype: attr(),

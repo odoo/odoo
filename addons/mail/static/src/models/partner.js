@@ -267,20 +267,14 @@ registerModel({
         },
     },
     fields: {
-        active: attr({
-            default: true,
-        }),
+        active: attr({ default: true }),
         avatarUrl: attr({
             compute() {
                 return `/web/image/res.partner/${this.id}/avatar_128`;
             },
         }),
-        channelInvitationFormSelectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
-            inverse: 'partner',
-        }),
-        channelInvitationFormSelectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
-            inverse: 'partner',
-        }),
+        channelInvitationFormSelectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', { inverse: 'partner' }),
+        channelInvitationFormSelectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', { inverse: 'partner' }),
         country: one('Country'),
         /**
          * Deprecated.
@@ -292,7 +286,7 @@ registerModel({
          * relevant fields instead.
          */
         display_name: attr(),
-        displayName: attr({
+        displayName: attr({ default: "",
             compute() {
                 if (this.display_name) {
                     return this.display_name;
@@ -302,22 +296,15 @@ registerModel({
                 }
                 return clear();
             },
-            default: "",
         }),
-        dmChatWithCurrentPartner: one('Channel', {
-            inverse: 'correspondentOfDmChat',
-        }),
+        dmChatWithCurrentPartner: one('Channel', { inverse: 'correspondentOfDmChat' }),
         email: attr(),
         /**
          * Whether an attempt was already made to fetch the user corresponding
          * to this partner. This prevents doing the same RPC multiple times.
          */
-        hasCheckedUser: attr({
-            default: false,
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        hasCheckedUser: attr({ default: false }),
+        id: attr({ identifying: true }),
         im_status: attr(),
         isImStatusSet: attr({
             compute() {
@@ -333,32 +320,16 @@ registerModel({
             },
         }),
         is_public: attr(),
-        model: attr({
-            default: 'res.partner',
-        }),
+        model: attr({ default: 'res.partner' }),
         name: attr(),
         nameOrDisplayName: attr({
             compute() {
                 return this.name || this.displayName;
             },
         }),
-        persona: one('Persona', {
-            default: {},
-            inverse: 'partner',
-            readonly: true,
-            required: true,
-        }),
-        suggestable: one('ComposerSuggestable', {
-            default: {},
-            inverse: 'partner',
-            readonly: true,
-            required: true,
-        }),
-        user: one('User', {
-            inverse: 'partner',
-        }),
-        volumeSetting: one('res.users.settings.volumes', {
-            inverse: 'partner_id',
-        }),
+        persona: one('Persona', { default: {}, inverse: 'partner', readonly: true, required: true }),
+        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'partner', readonly: true, required: true }),
+        user: one('User', { inverse: 'partner' }),
+        volumeSetting: one('res.users.settings.volumes', { inverse: 'partner_id' }),
     },
 });

@@ -11,15 +11,10 @@ registerModel({
         /**
          * Partner that this seen info is related to.
          */
-        partner: one('Partner', {
-            identifying: true,
-        }),
+        partner: one('Partner', { identifying: true }),
         /**
          * Thread (channel) that this seen info is related to.
          */
-        thread: one('Thread', {
-            inverse: 'partnerSeenInfos',
-            identifying: true,
-        }),
+        thread: one('Thread', { inverse: 'partnerSeenInfos', identifying: true }),
     },
 });

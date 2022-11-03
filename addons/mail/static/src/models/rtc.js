@@ -1124,28 +1124,20 @@ registerModel({
          * audio MediaStreamTrack of the current user
          */
         audioTrack: attr(),
-        blurManager: one('BlurManager', {
-            inverse: 'rtc',
-        }),
+        blurManager: one('BlurManager', { inverse: 'rtc' }),
         /**
          * The channel that is hosting the current RTC call.
          */
-        channel: one('Thread', {
-            inverse: 'rtc',
-        }),
+        channel: one('Thread', { inverse: 'rtc' }),
         /**
          * Contains the RTC Session that are connected.
          * Connected RTC Sessions have rtcPeerConnection set.
          */
-        connectedRtcSessions: many('RtcSession', {
-            inverse: 'rtcAsConnectedSession',
-        }),
+        connectedRtcSessions: many('RtcSession', { inverse: 'rtcAsConnectedSession' }),
         /**
          * String, peerToken of the current session used to identify them during the peer-to-peer transactions.
          */
-        currentRtcSession: one('RtcSession', {
-            inverse: 'rtcAsCurrentSession',
-        }),
+        currentRtcSession: one('RtcSession', { inverse: 'rtcAsCurrentSession' }),
         /**
          * callback to properly end the audio monitoring.
          * If set it indicates that we are currently monitoring the local
@@ -1156,46 +1148,24 @@ registerModel({
          * ICE servers used by RTCPeerConnection to retrieve the public IP address (STUN)
          * or to relay packets when necessary (TURN).
          */
-        iceServers: attr({
-            default: [
-                {
-                    urls: [
-                        'stun:stun1.l.google.com:19302',
-                        'stun:stun2.l.google.com:19302',
-                    ],
-                },
-            ],
-        }),
+        iceServers: attr({ default: [{ urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] }] }),
         /**
          * list of connection states considered invalid, which means that
          * no action should be taken on such peerConnection.
          */
-        invalidIceConnectionStates: attr({
-            default: new Set(['disconnected', 'failed', 'closed']),
-            readonly: true,
-        }),
-        isNotifyPeersRPCInProgress: attr({
-            default: false,
-        }),
+        invalidIceConnectionStates: attr({ default: new Set(['disconnected', 'failed', 'closed']), readonly: true }),
+        isNotifyPeersRPCInProgress: attr({ default: false }),
         /**
          * Contains the logs of the current session by token.
          * { token: { name<String>, logs<Array> } }
          */
-        logs: attr({
-            default: {},
-        }),
+        logs: attr({ default: {} }),
         /**
          * List of transceivers in ordered for consistent insertion and retrieval order, relevant for
          * RTCPeerConnection.getTransceivers which returns transceivers in insertion order as per webRTC specifications.
          */
-        orderedTransceiverNames: attr({
-            default: ['audio', 'video'],
-            readonly: true,
-            required: true,
-        }),
-        peerNotificationsToSend: many('RtcPeerNotification', {
-            isCausal: true,
-        }),
+        orderedTransceiverNames: attr({ default: ['audio', 'video'], readonly: true, required: true }),
+        peerNotificationsToSend: many('RtcPeerNotification', { isCausal: true }),
         /**
          * Determines the delay to wait (in ms) before sending peer
          * notifications to the server. Sending many notifications at once
@@ -1203,9 +1173,7 @@ registerModel({
          * handle too many requests at once, but handles much faster one bigger
          * request, even with a delay. The delay should however not be too high.
          */
-        peerNotificationWaitDelay: attr({
-            default: 50,
-        }),
+        peerNotificationWaitDelay: attr({ default: 50 }),
         /**
          * Interval to regularly ping and connect to RTC sessions.
          *
@@ -1224,16 +1192,7 @@ registerModel({
         /**
          * The protocols for each RTC ICE candidate types.
          */
-        protocolsByCandidateTypes: attr({
-            default: {
-                'host': "HOST",
-                'srflx': "STUN",
-                'prflx': "STUN",
-                'relay': "TURN",
-            },
-            readonly: true,
-            required: true,
-        }),
+        protocolsByCandidateTypes: attr({ default: { 'host': "HOST", 'srflx': "STUN", 'prflx': "STUN", 'relay': "TURN" }, readonly: true, required: true }),
         /**
          *  timeoutId for the push to talk release delay.
          */
@@ -1241,51 +1200,31 @@ registerModel({
         /**
          * How long to wait before considering a connection as needing recovery in ms.
          */
-        recoveryTimeout: attr({
-            default: 15000,
-        }),
+        recoveryTimeout: attr({ default: 15000 }),
         /**
          * How long to wait before recovering a connection that has failed in ms.
          */
-        recoveryDelay: attr({
-            default: 3000,
-        }),
-        callSystrayMenu: one('CallSystrayMenu', {
-            default: {},
-            inverse: 'rtc',
-        }),
+        recoveryDelay: attr({ default: 3000 }),
+        callSystrayMenu: one('CallSystrayMenu', { default: {}, inverse: 'rtc' }),
         /**
          * True if we want to enable the video track of the current partner.
          */
-        sendUserVideo: attr({
-            default: false,
-        }),
+        sendUserVideo: attr({ default: false }),
         /**
          * True if we want to enable the video track of the current partner.
          */
-        sendDisplay: attr({
-            default: false,
-        }),
+        sendDisplay: attr({ default: false }),
         /**
          * Ensures that we always have a single source stream and that replacing it will properly terminate its tracks.
          */
-        sourceVideoStream: one('MediaStream', {
-            isCausal: true,
-        }),
+        sourceVideoStream: one('MediaStream', { isCausal: true }),
         /**
          * MediaTrackConstraints for the user video track.
          * Some browsers do not support all constraints, for example firefox
          * does not support aspectRatio. Those constraints will be ignored
          * unless specified as mandatory (see doc ConstrainDOMString).
          */
-        videoConfig: attr({
-            default: {
-                aspectRatio: 16 / 9,
-                frameRate: {
-                    max: 30,
-                },
-            },
-        }),
+        videoConfig: attr({ default: { aspectRatio: 16 / 9, frameRate: { max: 30 } } }),
         /**
          * video MediaStreamTrack of the current user
          */

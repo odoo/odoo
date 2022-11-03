@@ -10,8 +10,7 @@ registerModel({
     templateGetter: 'threadTypingIconView',
     identifyingMode: 'xor',
     fields: {
-        size: attr({
-            default: 'small',
+        size: attr({ default: 'small',
             compute() {
                 if (this.threadTextualTypingStatusViewOwner) {
                     return 'medium';
@@ -19,14 +18,8 @@ registerModel({
                 return clear();
             },
         }),
-        threadIconViewOwner: one('ThreadIconView', {
-            identifying: true,
-            inverse: 'threadTypingIconView',
-        }),
-        threadTextualTypingStatusViewOwner: one('ThreadTextualTypingStatusView', {
-            identifying: true,
-            inverse: 'threadTypingIconView',
-        }),
+        threadIconViewOwner: one('ThreadIconView', { identifying: true, inverse: 'threadTypingIconView' }),
+        threadTextualTypingStatusViewOwner: one('ThreadTextualTypingStatusView', { identifying: true, inverse: 'threadTypingIconView' }),
         title: attr({
             compute() {
                 if (this.threadIconViewOwner) {

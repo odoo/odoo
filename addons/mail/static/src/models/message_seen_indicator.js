@@ -8,7 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'MessageSeenIndicator',
     fields: {
-        hasEveryoneFetched: attr({
+        hasEveryoneFetched: attr({ default: false,
             compute() {
                 if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
                     return false;
@@ -23,9 +23,8 @@ registerModel({
                 );
                 return otherPartnerSeenInfosDidNotFetch.length === 0;
             },
-            default: false,
         }),
-        hasEveryoneSeen: attr({
+        hasEveryoneSeen: attr({ default: false,
             compute() {
                 if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
                     return false;
@@ -40,9 +39,8 @@ registerModel({
                 );
                 return otherPartnerSeenInfosDidNotSee.length === 0;
             },
-            default: false,
         }),
-        hasSomeoneFetched: attr({
+        hasSomeoneFetched: attr({ default: false,
             compute() {
                 if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
                     return false;
@@ -55,9 +53,8 @@ registerModel({
                 );
                 return otherPartnerSeenInfosFetched.length > 0;
             },
-            default: false,
         }),
-        hasSomeoneSeen: attr({
+        hasSomeoneSeen: attr({ default: false,
             compute() {
                 if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
                     return false;
@@ -70,10 +67,9 @@ registerModel({
                 );
                 return otherPartnerSeenInfosSeen.length > 0;
             },
-            default: false,
         }),
         id: attr(),
-        isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone: attr({
+        isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone: attr({ default: false,
             compute() {
                 if (
                     !this.message ||
@@ -84,14 +80,11 @@ registerModel({
                 }
                 return this.message.id < this.thread.lastCurrentPartnerMessageSeenByEveryone.id;
             },
-            default: false,
         }),
         /**
          * The message concerned by this seen indicator.
          */
-        message: one('Message', {
-            identifying: true,
-        }),
+        message: one('Message', { identifying: true }),
         partnersThatHaveFetched: many('Partner', {
             compute() {
                 if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
@@ -139,7 +132,7 @@ registerModel({
                 return otherPartnersThatHaveSeen;
             },
         }),
-        text: attr({
+        text: attr({ default: '',
             compute() {
                 if (this.hasEveryoneSeen) {
                     return this.env._t("Seen by Everyone");
@@ -201,14 +194,10 @@ registerModel({
                 }
                 return clear();
             },
-            default: '',
         }),
         /**
          * The thread concerned by this seen indicator.
          */
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'messageSeenIndicators',
-        }),
+        thread: one('Thread', { identifying: true, inverse: 'messageSeenIndicators' }),
     },
 });

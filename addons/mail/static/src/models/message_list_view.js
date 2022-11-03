@@ -232,14 +232,13 @@ registerModel({
          * States the OWL component of this message list view
          */
         component: attr(),
-        hasScrollAdjust: attr({
+        hasScrollAdjust: attr({ default: true,
             compute() {
                 if (this.threadViewOwner.threadViewer.chatter) {
                     return this.threadViewOwner.threadViewer.chatter.hasMessageListScrollAdjust;
                 }
                 return clear();
             },
-            default: true,
         }),
         /**
          * States whether the message list scroll position is at the end of
@@ -266,9 +265,7 @@ registerModel({
          * Useful to avoid loading more messages or to incorrectly disabling the
          * auto-scroll feature when the scroll was not made by the user.
          */
-        isLastScrollProgrammatic: attr({
-            default: false,
-        }),
+        isLastScrollProgrammatic: attr({ default: false }),
         /**
          * Reference of the "load more" item. Useful to trigger load more
          * on scroll when it becomes visible.
@@ -277,7 +274,7 @@ registerModel({
         /**
          * States the message views used to display this thread view owner's messages.
          */
-        messageListViewItems: many('MessageListViewItem', {
+        messageListViewItems: many('MessageListViewItem', { inverse: 'messageListViewOwner',
             compute() {
                 if (!this.threadViewOwner.threadCache) {
                     return clear();
@@ -297,22 +294,15 @@ registerModel({
                 }
                 return messageViewsData;
             },
-            inverse: 'messageListViewOwner',
         }),
         scrollHeight: attr(),
-        scrollThrottle: one('Throttle', {
+        scrollThrottle: one('Throttle', { inverse: 'messageListViewAsScroll',
             compute() {
                 return { func: () => this._onThrottledScroll() };
             },
-            inverse: 'messageListViewAsScroll',
         }),
         scrollTop: attr(),
-        thread: one('Thread', {
-            related: 'threadViewOwner.thread',
-        }),
-        threadViewOwner: one('ThreadView', {
-            identifying: true,
-            inverse: 'messageListView',
-        }),
+        thread: one('Thread', { related: 'threadViewOwner.thread' }),
+        threadViewOwner: one('ThreadView', { identifying: true, inverse: 'messageListView' }),
     },
 });

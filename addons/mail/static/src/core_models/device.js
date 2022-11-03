@@ -40,9 +40,7 @@ registerModel({
     fields: {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
-        hasCanvasFilterSupport: attr({
-            default: typeof document.createElement('canvas').getContext('2d').filter !== 'undefined',
-        }),
+        hasCanvasFilterSupport: attr({ default: typeof document.createElement('canvas').getContext('2d').filter !== 'undefined' }),
         hasRtcSupport: attr({
             compute() {
                 return Boolean(window.RTCPeerConnection && window.MediaStream);
@@ -65,8 +63,6 @@ registerModel({
          * attribute.
          */
         sizeClass: attr(),
-        sizeClasses: attr({
-            default: SIZES,
-        }),
+        sizeClasses: attr({ default: SIZES }),
     },
 });

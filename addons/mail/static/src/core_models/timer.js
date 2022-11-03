@@ -36,18 +36,15 @@ registerModel({
         },
     },
     fields: {
-        doReset: attr({
-            default: false,
-        }),
+        doReset: attr({ default: false }),
         /**
          * Duration, in milliseconds, until timer times out and calls the
          * timeout function.
          */
-        duration: attr({
+        duration: attr({ required: true,
             compute() {
                 return clear();
             },
-            required: true,
         }),
         /**
          * Internal reference of `setTimeout()` that is used to invoke function

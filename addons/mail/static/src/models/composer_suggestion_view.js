@@ -47,7 +47,7 @@ registerModel({
     },
     fields: {
         component: attr(),
-        composerSuggestionListViewOwner: one('ComposerSuggestionListView', {
+        composerSuggestionListViewOwner: one('ComposerSuggestionListView', { required: true,
             compute() {
                 if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
                     return this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.composerSuggestionListViewOwner;
@@ -57,19 +57,10 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        composerSuggestionListViewOwnerAsActiveSuggestionView: one('ComposerSuggestionListView', {
-            inverse: 'activeSuggestionView',
-        }),
-        composerSuggestionListViewExtraComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
-            identifying: true,
-            inverse: 'composerSuggestionView',
-        }),
-        composerSuggestionListViewMainComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
-            identifying: true,
-            inverse: 'composerSuggestionView',
-        }),
+        composerSuggestionListViewOwnerAsActiveSuggestionView: one('ComposerSuggestionListView', { inverse: 'activeSuggestionView' }),
+        composerSuggestionListViewExtraComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewExtraComposerSuggestionViewItem', { identifying: true, inverse: 'composerSuggestionView' }),
+        composerSuggestionListViewMainComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewMainComposerSuggestionViewItem', { identifying: true, inverse: 'composerSuggestionView' }),
         /**
          * The text that identifies this suggestion in a mention.
          */
@@ -92,13 +83,12 @@ registerModel({
                 }
             },
         }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
+        personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'composerSuggestionViewOwner',
             compute() {
                 return this.suggestable && this.suggestable.partner && this.suggestable.partner.isImStatusSet ? {} : clear();
             },
-            inverse: 'composerSuggestionViewOwner',
         }),
-        suggestable: one('ComposerSuggestable', {
+        suggestable: one('ComposerSuggestable', { required: true,
             compute() {
                 if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
                     return this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.suggestable;
@@ -108,13 +98,12 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
         /**
          * Descriptive title for this suggestion. Useful to be able to
          * read both parts when they are overflowing the UI.
          */
-        title: attr({
+        title: attr({ default: "",
             compute() {
                 if (!this.suggestable) {
                     return clear();
@@ -136,7 +125,6 @@ registerModel({
                 }
                 return clear();
             },
-            default: "",
         }),
     },
 });

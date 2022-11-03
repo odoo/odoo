@@ -65,7 +65,7 @@ registerModel({
                 ['case-insensitive-asc', 'dateDeadline'],
             ],
         }),
-        activityListViewItems: many('ActivityListViewItem', {
+        activityListViewItems: many('ActivityListViewItem', { inverse: 'activityListViewOwner',
             compute() {
                 return this.activities.map(activity => {
                     return {
@@ -73,24 +73,16 @@ registerModel({
                     };
                 });
             },
-            inverse: 'activityListViewOwner',
         }),
-        overdueActivityListViewItems: many('ActivityListViewItem', {
-            inverse: 'activityListViewOwnerAsOverdue',
-        }),
-        plannedActivityListViewItems: many('ActivityListViewItem', {
-            inverse: 'activityListViewOwnerAsPlanned',
-        }),
-        popoverViewOwner: one('PopoverView', {
-            identifying: true,
-            inverse: 'activityListView',
-        }),
+        overdueActivityListViewItems: many('ActivityListViewItem', { inverse: 'activityListViewOwnerAsOverdue' }),
+        plannedActivityListViewItems: many('ActivityListViewItem', { inverse: 'activityListViewOwnerAsPlanned' }),
+        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'activityListView' }),
         reloadFunc: attr({
             compute() {
                 return this.popoverViewOwner.activityCellViewOwnerAsActivityList ? this.popoverViewOwner.activityCellViewOwnerAsActivityList.reloadFunc : clear();
             },
         }),
-        thread: one('Thread', {
+        thread: one('Thread', { required: true,
             compute() {
                 if (this.popoverViewOwner.activityButtonViewOwnerAsActivityList) {
                     return this.popoverViewOwner.activityButtonViewOwnerAsActivityList.thread;
@@ -100,11 +92,8 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        todayActivityListViewItems: many('ActivityListViewItem', {
-            inverse: 'activityListViewOwnerAsToday',
-        }),
+        todayActivityListViewItems: many('ActivityListViewItem', { inverse: 'activityListViewOwnerAsToday' }),
         webRecord: attr({
             compute() {
                 if (this.popoverViewOwner.activityButtonViewOwnerAsActivityList) {

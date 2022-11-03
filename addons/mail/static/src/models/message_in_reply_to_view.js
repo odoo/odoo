@@ -49,9 +49,6 @@ registerModel({
                 return !this.messageView.message.parentMessage.isBodyEmpty;
             },
         }),
-        messageView: one('MessageView', {
-            identifying: true,
-            inverse: 'messageInReplyToView',
-        }),
+        messageView: one('MessageView', { identifying: true, inverse: 'messageInReplyToView' }),
     },
 });

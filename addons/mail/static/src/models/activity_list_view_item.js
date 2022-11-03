@@ -39,39 +39,24 @@ registerModel({
         },
     },
     fields: {
-        activity: one('Activity', {
-            identifying: true,
-        }),
-        activityListViewOwner: one('ActivityListView', {
-            identifying: true,
-            inverse: 'activityListViewItems',
-        }),
-        activityListViewOwnerAsOverdue: one('ActivityListView', {
+        activity: one('Activity', { identifying: true }),
+        activityListViewOwner: one('ActivityListView', { identifying: true, inverse: 'activityListViewItems' }),
+        activityListViewOwnerAsOverdue: one('ActivityListView', { inverse: 'overdueActivityListViewItems',
             compute() {
                 return this.activity.state === 'overdue' ? this.activityListViewOwner : clear();
             },
-            inverse: 'overdueActivityListViewItems',
         }),
-        activityListViewOwnerAsPlanned: one('ActivityListView', {
+        activityListViewOwnerAsPlanned: one('ActivityListView', { inverse: 'plannedActivityListViewItems',
             compute() {
                 return this.activity.state === 'planned' ? this.activityListViewOwner : clear();
             },
-            inverse: 'plannedActivityListViewItems',
         }),
-        activityListViewOwnerAsToday: one('ActivityListView', {
+        activityListViewOwnerAsToday: one('ActivityListView', { inverse: 'todayActivityListViewItems',
             compute() {
                 return this.activity.state === 'today' ? this.activityListViewOwner : clear();
             },
-            inverse: 'todayActivityListViewItems',
         }),
-        clockWatcher: one('ClockWatcher', {
-            default: {
-                clock: {
-                    frequency: 60 * 1000,
-                },
-            },
-            inverse: 'activityListViewItemOwner',
-        }),
+        clockWatcher: one('ClockWatcher', { default: { clock: { frequency: 60 * 1000 } }, inverse: 'activityListViewItemOwner' }),
         /**
          * Compute the label for "when" the activity is due.
          */
@@ -100,11 +85,10 @@ registerModel({
                 }
             },
         }),
-        fileUploader: one('FileUploader', {
+        fileUploader: one('FileUploader', { inverse: 'activityListViewItemOwner',
             compute() {
                 return this.activity.category === 'upload_file' ? {} : clear();
             },
-            inverse: 'activityListViewItemOwner',
         }),
         hasEditButton: attr({
             compute() {
@@ -116,15 +100,12 @@ registerModel({
                 return !this.fileUploader;
             },
         }),
-        mailTemplateViews: many('MailTemplateView', {
+        mailTemplateViews: many('MailTemplateView', { inverse: 'activityListViewItemOwner',
             compute() {
                 return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
             },
-            inverse: 'activityListViewItemOwner',
         }),
-        markDoneView: one('ActivityMarkDonePopoverContentView', {
-            inverse: 'activityListViewItemOwner',
-        }),
+        markDoneView: one('ActivityMarkDonePopoverContentView', { inverse: 'activityListViewItemOwner' }),
         reloadFunc: attr({
             compute() {
                 return this.activityListViewOwner.reloadFunc ? this.activityListViewOwner.reloadFunc : clear();

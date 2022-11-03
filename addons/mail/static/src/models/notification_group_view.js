@@ -52,13 +52,7 @@ registerModel({
          * top-level click handler when clicking on this specific button.
          */
         markAsReadRef: attr(),
-        notificationGroup: one('NotificationGroup', {
-            identifying: true,
-            inverse: 'notificationGroupViews',
-        }),
-        notificationListViewOwner: one('NotificationListView', {
-            identifying: true,
-            inverse: 'notificationGroupViews',
-        }),
+        notificationGroup: one('NotificationGroup', { identifying: true, inverse: 'notificationGroupViews' }),
+        notificationListViewOwner: one('NotificationListView', { identifying: true, inverse: 'notificationGroupViews' }),
     },
 });

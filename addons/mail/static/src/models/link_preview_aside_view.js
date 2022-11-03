@@ -33,21 +33,9 @@ registerModel({
             },
             required: true,
         }),
-        linkPreviewCardView: one('LinkPreviewCardView', {
-            identifying: true,
-            inverse: 'linkPreviewAsideView',
-        }),
-        linkPreviewDeleteConfirmDialog: one('Dialog', {
-            inverse: 'linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm',
-            isCausal: true,
-        }),
-        linkPreviewImageView: one('LinkPreviewImageView', {
-            identifying: true,
-            inverse: 'linkPreviewAsideView',
-        }),
-        linkPreviewVideoView: one('LinkPreviewVideoView', {
-            identifying: true,
-            inverse: 'linkPreviewAsideView',
-        }),
+        linkPreviewCardView: one('LinkPreviewCardView', { identifying: true, inverse: 'linkPreviewAsideView' }),
+        linkPreviewDeleteConfirmDialog: one('Dialog', { inverse: 'linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm', isCausal: true }),
+        linkPreviewImageView: one('LinkPreviewImageView', { identifying: true, inverse: 'linkPreviewAsideView' }),
+        linkPreviewVideoView: one('LinkPreviewVideoView', { identifying: true, inverse: 'linkPreviewAsideView' }),
     },
 });

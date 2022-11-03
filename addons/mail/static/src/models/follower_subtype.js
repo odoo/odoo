@@ -37,25 +37,15 @@ registerModel({
         },
     },
     fields: {
-        followerSubtypeViews: many('FollowerSubtypeView', {
-            inverse: 'subtype',
-        }),
-        id: attr({
-            identifying: true,
-        }),
-        isDefault: attr({
-            default: false,
-        }),
-        isInternal: attr({
-            default: false,
-        }),
+        followerSubtypeViews: many('FollowerSubtypeView', { inverse: 'subtype' }),
+        id: attr({ identifying: true }),
+        isDefault: attr({ default: false }),
+        isInternal: attr({ default: false }),
         name: attr(),
         // AKU FIXME: use relation instead
         parentModel: attr(),
         // AKU FIXME: use relation instead
         resModel: attr(),
-        sequence: attr({
-            default: 1,
-        }),
+        sequence: attr({ default: 1 }),
     },
 });

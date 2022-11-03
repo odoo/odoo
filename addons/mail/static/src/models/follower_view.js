@@ -38,13 +38,7 @@ registerModel({
         },
     },
     fields: {
-        follower: one('Follower', {
-            identifying: true,
-            inverse: 'followerViews',
-        }),
-        followerListMenuViewOwner: one('FollowerListMenuView', {
-            identifying: true,
-            inverse: 'followerViews',
-        }),
+        follower: one('Follower', { identifying: true, inverse: 'followerViews' }),
+        followerListMenuViewOwner: one('FollowerListMenuView', { identifying: true, inverse: 'followerViews' }),
     },
 });

@@ -10,23 +10,11 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'EmojiPickerView.Category',
     fields: {
-        category: one('EmojiCategory', {
-            identifying: true,
-            inverse: 'allEmojiPickerViewCategory',
-        }),
-        emojiPickerViewOwner: one('EmojiPickerView', {
-            identifying: true,
-            inverse: 'categories',
-        }),
-        emojiPickerViewAsActive: one('EmojiPickerView', {
-            inverse: 'activeCategory',
-        }),
-        emojiCategoryView: one('EmojiCategoryView', {
-            inverse: 'viewCategory',
-        }),
-        emojiGridRowView: one('EmojiGridRowView', {
-            inverse: 'viewCategory',
-        }),
+        category: one('EmojiCategory', { identifying: true, inverse: 'allEmojiPickerViewCategory' }),
+        emojiPickerViewOwner: one('EmojiPickerView', { identifying: true, inverse: 'categories' }),
+        emojiPickerViewAsActive: one('EmojiPickerView', { inverse: 'activeCategory' }),
+        emojiCategoryView: one('EmojiCategoryView', { inverse: 'viewCategory' }),
+        emojiGridRowView: one('EmojiGridRowView', { inverse: 'viewCategory' }),
         emojiPickerViewOwnerAsLastCategory: one('EmojiPickerView', {
             compute() {
                 if (this.emojiPickerViewOwner.categories[this.emojiPickerViewOwner.categories.length - 1] === this) {
@@ -35,14 +23,13 @@ registerModel({
                 return clear();
             },
         }),
-        endSectionIndex: attr({
+        endSectionIndex: attr({ default: 0,
             compute() {
                 if (!this.nextViewCategory || !this.nextViewCategory.emojiGridRowView) {
                     return clear();
                 }
                 return this.nextViewCategory.emojiGridRowView.index - 1;
             },
-            default: 0,
         }),
         nextViewCategory: one('EmojiPickerView.Category', {
             compute() {

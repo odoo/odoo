@@ -7,15 +7,9 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ListFieldActivityView',
     fields: {
-        activityButtonView: one('ActivityButtonView', {
-            default: {},
-            inverse: 'listFieldActivityViewOwner',
-            required: true,
-        }),
-        id: attr({
-            identifying: true,
-        }),
-        summaryText: attr({
+        activityButtonView: one('ActivityButtonView', { default: {}, inverse: 'listFieldActivityViewOwner', required: true }),
+        id: attr({ identifying: true }),
+        summaryText: attr({ default: '',
             compute() {
                 if (this.thread.activities.length === 0) {
                     return clear();
@@ -31,13 +25,8 @@ registerModel({
                 }
                 return clear();
             },
-            default: '',
         }),
-        thread: one('Thread', {
-            required: true,
-        }),
-        webRecord: attr({
-            required: true,
-        }),
+        thread: one('Thread', { required: true }),
+        webRecord: attr({ required: true }),
     },
 });

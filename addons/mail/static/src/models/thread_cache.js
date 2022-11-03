@@ -206,9 +206,7 @@ registerModel({
         /**
          * Determines whether the last message fetch failed.
          */
-        hasLoadingFailed: attr({
-            default: false,
-        }),
+        hasLoadingFailed: attr({ default: false }),
         /**
          * Determines whether `this` should load initial messages.
          * @see `onChangeForHasToLoadMessages` value of this field is mainly set
@@ -216,26 +214,16 @@ registerModel({
          * @see `isCacheRefreshRequested` to request manual refresh of messages.
          */
         hasToLoadMessages: attr(),
-        isAllHistoryLoaded: attr({
-            default: false,
-        }),
-        isLoaded: attr({
-            default: false,
-        }),
-        isLoading: attr({
-            default: false,
-        }),
-        isLoadingMore: attr({
-            default: false,
-        }),
+        isAllHistoryLoaded: attr({ default: false }),
+        isLoaded: attr({ default: false }),
+        isLoading: attr({ default: false }),
+        isLoadingMore: attr({ default: false }),
         /**
          * Determines whether `this` should consider refreshing its messages.
          * This field is a hint that may or may not lead to an actual refresh.
          * @see `hasToLoadMessages`
          */
-        isCacheRefreshRequested: attr({
-            default: false,
-        }),
+        isCacheRefreshRequested: attr({ default: false }),
         /**
          * Last message that has been fetched by this thread cache.
          *
@@ -316,16 +304,11 @@ registerModel({
         }),
         rawFetchedMessages: many('Message'),
         temporaryMessages: many('Message'),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'cache',
-        }),
+        thread: one('Thread', { identifying: true, inverse: 'cache' }),
         /**
          * States the 'ThreadView' that are currently displaying `this`.
          */
-        threadViews: many('ThreadView', {
-            inverse: 'threadCache',
-        }),
+        threadViews: many('ThreadView', { inverse: 'threadCache' }),
     },
     onChanges: [
         {

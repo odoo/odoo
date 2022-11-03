@@ -179,11 +179,6 @@ registerModel({
          * States the messaging singleton. Automatically assigned by the model
          * manager at creation.
          */
-        messaging: one('Messaging', {
-            default: {},
-            inverse: 'allRecords',
-            readonly: true,
-            required: true,
-        }),
+        messaging: one('Messaging', { default: {}, inverse: 'allRecords', readonly: true, required: true }),
     },
 });

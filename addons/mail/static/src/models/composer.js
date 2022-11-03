@@ -28,7 +28,7 @@ registerModel({
         },
     },
     fields: {
-        activeThread: one('Thread', {
+        activeThread: one('Thread', { required: true,
             compute() {
                 if (this.messageViewInEditing && this.messageViewInEditing.message && this.messageViewInEditing.message.originThread) {
                     return this.messageViewInEditing.message.originThread;
@@ -38,27 +38,20 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
         /**
          * States which attachments are currently being created in this composer.
          */
-        attachments: many('Attachment', {
-            inverse: 'composer',
-        }),
-        canPostMessage: attr({
+        attachments: many('Attachment', { inverse: 'composer' }),
+        canPostMessage: attr({ default: false,
             compute() {
                 if (this.thread && !this.textInputContent && this.attachments.length === 0) {
                     return false;
                 }
                 return !this.hasUploadingAttachment && !this.isPostingMessage;
             },
-            default: false,
         }),
-        composerViews: many('ComposerView', {
-            inverse: 'composer',
-            isCausal: true,
-        }),
+        composerViews: many('ComposerView', { inverse: 'composer', isCausal: true }),
         /**
          * This field determines whether some attachments linked to this
          * composer are being uploaded.
@@ -71,9 +64,7 @@ registerModel({
         /**
          * If true composer will log a note, else a comment will be posted.
          */
-        isLog: attr({
-            default: true,
-        }),
+        isLog: attr({ default: true }),
         /**
          * Determines whether a post_message request is currently pending.
          */
@@ -126,10 +117,7 @@ registerModel({
                 return mentionedPartners;
             },
         }),
-        messageViewInEditing: one('MessageView', {
-            identifying: true,
-            inverse: 'composerForEditing',
-        }),
+        messageViewInEditing: one('MessageView', { identifying: true, inverse: 'composerForEditing' }),
         /**
          * Placeholder displayed in the composer textarea when it's empty
          */
@@ -170,24 +158,13 @@ registerModel({
                 return recipients;
             },
         }),
-        textInputContent: attr({
-            default: "",
-        }),
-        textInputCursorEnd: attr({
-            default: 0,
-        }),
-        textInputCursorStart: attr({
-            default: 0,
-        }),
-        textInputSelectionDirection: attr({
-            default: "none",
-        }),
+        textInputContent: attr({ default: "" }),
+        textInputCursorEnd: attr({ default: 0 }),
+        textInputCursorStart: attr({ default: 0 }),
+        textInputSelectionDirection: attr({ default: "none" }),
         /**
          * States the thread which this composer represents the state (if any).
          */
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'composer',
-        }),
+        thread: one('Thread', { identifying: true, inverse: 'composer' }),
     },
 });

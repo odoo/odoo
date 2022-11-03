@@ -80,33 +80,22 @@ registerModel({
                 return moment.max(dates);
             },
         }),
-        notification_type: attr({
-            identifying: true,
-        }),
-        notifications: many('Notification', {
-            inverse: 'notificationGroup',
-        }),
-        notificationGroupViews: many('NotificationGroupView', {
-            inverse: 'notificationGroup',
-        }),
-        res_id: attr({
-            identifying: true,
-        }),
-        res_model: attr({
-            identifying: true,
-        }),
+        notification_type: attr({ identifying: true }),
+        notifications: many('Notification', { inverse: 'notificationGroup' }),
+        notificationGroupViews: many('NotificationGroupView', { inverse: 'notificationGroup' }),
+        res_id: attr({ identifying: true }),
+        res_model: attr({ identifying: true }),
         res_model_name: attr(),
         /**
          * States the position of the group inside the notification list.
          */
-        sequence: attr({
+        sequence: attr({ default: 0,
             /**
              * Compute the position of the group inside the notification list.
              */
             compute() {
                 return -Math.max(...this.notifications.map(notification => notification.message.id));
             },
-            default: 0,
         }),
         /**
          * Related thread when the notification group concerns a single thread.

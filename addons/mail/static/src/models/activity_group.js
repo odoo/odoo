@@ -36,26 +36,13 @@ registerModel({
     },
     fields: {
         actions: attr(),
-        activityGroupViews: many('ActivityGroupView', {
-            inverse: 'activityGroup',
-        }),
+        activityGroupViews: many('ActivityGroupView', { inverse: 'activityGroup' }),
         domain: attr(),
-        irModel: one('ir.model', {
-            identifying: true,
-            inverse: 'activityGroup',
-        }),
-        overdue_count: attr({
-            default: 0,
-        }),
-        planned_count: attr({
-            default: 0,
-        }),
-        today_count: attr({
-            default: 0,
-        }),
-        total_count: attr({
-            default: 0,
-        }),
+        irModel: one('ir.model', { identifying: true, inverse: 'activityGroup' }),
+        overdue_count: attr({ default: 0 }),
+        planned_count: attr({ default: 0 }),
+        today_count: attr({ default: 0 }),
+        total_count: attr({ default: 0 }),
         type: attr(),
     },
     onChanges: [

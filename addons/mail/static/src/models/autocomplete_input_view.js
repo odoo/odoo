@@ -20,7 +20,6 @@ registerModel({
             if (this.autocompleteInputView.isFocusOnMount) {
                 this.root.el.focus();
             }
-    
             const args = {
                 autoFocus: true,
                 select: (ev, ui) => {
@@ -35,11 +34,9 @@ registerModel({
                 },
                 html: this.autocompleteInputView.isHtml,
             };
-    
             if (this.autocompleteInputView.customClass) {
                 args.classes = { 'ui-autocomplete': this.autocompleteInputView.customClass };
             }
-    
             const autoCompleteElem = $(this.root.el).autocomplete(args);
             // Resize the autocomplete dropdown options to handle the long strings
             // By setting the width of dropdown based on the width of the input element.
@@ -148,12 +145,9 @@ registerModel({
         },
     },
     fields: {
-        chatWindowOwnerAsNewMessage: one('ChatWindow', {
-            identifying: true,
-            inverse: 'newMessageAutocompleteInputView',
-        }),
+        chatWindowOwnerAsNewMessage: one('ChatWindow', { identifying: true, inverse: 'newMessageAutocompleteInputView' }),
         component: attr(),
-        customClass: attr({
+        customClass: attr({ default: '',
             compute() {
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
                     if (this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel) {
@@ -165,17 +159,10 @@ registerModel({
                 }
                 return clear();
             },
-            default: '',
         }),
-        discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', {
-            identifying: true,
-            inverse: 'addingItemAutocompleteInputView',
-        }),
-        discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
-            identifying: true,
-            inverse: 'mobileAddItemHeaderAutocompleteInputView',
-        }),
-        isFocusOnMount: attr({
+        discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', { identifying: true, inverse: 'addingItemAutocompleteInputView' }),
+        discussViewOwnerAsMobileAddItemHeader: one('DiscussView', { identifying: true, inverse: 'mobileAddItemHeaderAutocompleteInputView' }),
+        isFocusOnMount: attr({ default: false,
             compute() {
                 if (this.discussViewOwnerAsMobileAddItemHeader) {
                     return true;
@@ -188,9 +175,8 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
-        isHtml: attr({
+        isHtml: attr({ default: false,
             compute() {
                 if (this.discussViewOwnerAsMobileAddItemHeader) {
                     return this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel;
@@ -200,12 +186,8 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
-        messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'mobileNewMessageAutocompleteInputView',
-        }),
+        messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', { identifying: true, inverse: 'mobileNewMessageAutocompleteInputView' }),
         placeholder: attr({
             compute() {
                 if (this.chatWindowOwnerAsNewMessage) {

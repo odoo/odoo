@@ -34,42 +34,29 @@ registerModel({
         },
     },
     fields: {
-        isSquashed: attr({
-            required: true,
-        }),
-        message: one('Message', {
-            identifying: true,
-            inverse: 'messageListViewItems',
-        }),
-        messageListViewOwner: one('MessageListView', {
-            identifying: true,
-            inverse: 'messageListViewItems',
-        }),
-        notificationMessageView: one('NotificationMessageView', {
+        isSquashed: attr({ required: true }),
+        message: one('Message', { identifying: true, inverse: 'messageListViewItems' }),
+        messageListViewOwner: one('MessageListView', { identifying: true, inverse: 'messageListViewItems' }),
+        notificationMessageView: one('NotificationMessageView', { inverse: 'messageListViewItemOwner',
             compute() {
                 if (this.message.message_type === 'notification' && this.message.originThread.channel) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messageListViewItemOwner',
         }),
-        messageView: one('MessageView', {
+        messageView: one('MessageView', { inverse: 'messageListViewItemOwner',
             compute() {
                 if (this.message.message_type !== 'notification' || !this.message.originThread.channel) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messageListViewItemOwner',
         }),
         /**
          * States whether this message list view item is the last one of its thread view.
          * Computed from inverse relation.
          */
-        threadViewOwnerAsLastMessageListViewItem: one('ThreadView', {
-            inverse: 'lastMessageListViewItem',
-            readonly: true,
-        }),
+        threadViewOwnerAsLastMessageListViewItem: one('ThreadView', { inverse: 'lastMessageListViewItem', readonly: true }),
     },
 });

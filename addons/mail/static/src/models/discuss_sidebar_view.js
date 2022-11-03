@@ -21,10 +21,7 @@ registerModel({
         },
     },
     fields: {
-        owner: one('DiscussView', {
-            identifying: true,
-            inverse: 'sidebar',
-        }),
+        owner: one('DiscussView', { identifying: true, inverse: 'sidebar' }),
         /**
          * Reference to the quick search input. Useful to filter channels and
          * chats based on the content of the input.

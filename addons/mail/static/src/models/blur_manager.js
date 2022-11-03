@@ -173,16 +173,10 @@ registerModel({
         },
     },
     fields: {
-        canvas: attr({
-            default: document.createElement('canvas'),
-        }),
-        canvasBlur: attr({
-            default: document.createElement('canvas'),
-        }),
-        canvasMask: attr({
-            default: document.createElement('canvas'),
-        }),
-        canvasStream: one('MediaStream', {
+        canvas: attr({ default: document.createElement('canvas') }),
+        canvasBlur: attr({ default: document.createElement('canvas') }),
+        canvasMask: attr({ default: document.createElement('canvas') }),
+        canvasStream: one('MediaStream', { isCausal: true,
             compute() {
                 if (this.srcStream) {
                     this.canvas.getContext('2d'); // canvas.captureStream() doesn't work on firefox before getContext() is called.
@@ -191,14 +185,9 @@ registerModel({
                 }
                 return clear();
             },
-            isCausal: true,
         }),
-        frameRequestTimer: one('Timer', {
-            inverse: 'blurManagerOwnerAsFrameRequest',
-        }),
-        isVideoDataLoaded: attr({
-            default: false,
-        }),
+        frameRequestTimer: one('Timer', { inverse: 'blurManagerOwnerAsFrameRequest' }),
+        isVideoDataLoaded: attr({ default: false }),
         /**
          * promise reject function of this.stream promise
          */
@@ -207,10 +196,7 @@ registerModel({
          * promise resolve function of this.stream promise
          */
         resolveStreamPromise: attr(),
-        rtc: one('Rtc', {
-            identifying: true,
-            inverse: 'blurManager',
-        }),
+        rtc: one('Rtc', { identifying: true, inverse: 'blurManager' }),
         selfieSegmentation: attr({
             default: new window.SelfieSegmentation({
                 locateFile: (file) => {
@@ -221,20 +207,14 @@ registerModel({
         /**
          * mail.MediaStream, source stream for which the blur effect is computed.
          */
-        srcStream: one('MediaStream', {
-            isCausal: true,
-        }),
+        srcStream: one('MediaStream', { isCausal: true }),
         /**
          * Promise or undefined, based on this.srcStream, resolved when selfieSegmentation has started painting on the canvas,
          * resolves into a web.MediaStream that is the blurred version of this.srcStream.
          */
         stream: attr(),
-        userSetting: one('UserSetting', {
-            related: 'messaging.userSetting',
-        }),
-        video: attr({
-            default: document.createElement('video'),
-        }),
+        userSetting: one('UserSetting', { related: 'messaging.userSetting' }),
+        video: attr({ default: document.createElement('video') }),
     },
     onChanges: [
         {

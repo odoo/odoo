@@ -17,10 +17,7 @@ registerModel({
         },
     },
     fields: {
-        attachmentOwner: one("Attachment", {
-            identifying: true,
-            inverse: 'attachmentViewerViewable',
-        }),
+        attachmentOwner: one("Attachment", { identifying: true, inverse: 'attachmentViewerViewable' }),
         defaultSource: attr({
             compute() {
                 return this.attachmentOwner.defaultSource;

@@ -22,17 +22,13 @@ registerModel({
         },
     },
     fields: {
-        authoredMessages: many('Message', {
-            inverse: 'guestAuthor',
-        }),
+        authoredMessages: many('Message', { inverse: 'guestAuthor' }),
         avatarUrl: attr({
             compute() {
                 return `/web/image/mail.guest/${this.id}/avatar_128?unique=${this.name}`;
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         im_status: attr(),
         isOnline: attr({
             compute() {
@@ -40,14 +36,7 @@ registerModel({
             },
         }),
         name: attr(),
-        persona: one('Persona', {
-            default: {},
-            inverse: 'guest',
-            readonly: true,
-            required: true,
-        }),
-        volumeSetting: one('res.users.settings.volumes', {
-            inverse: 'guest_id',
-        }),
+        persona: one('Persona', { default: {}, inverse: 'guest', readonly: true, required: true }),
+        volumeSetting: one('res.users.settings.volumes', { inverse: 'guest_id' }),
     },
 });

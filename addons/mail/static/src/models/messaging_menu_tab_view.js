@@ -21,7 +21,7 @@ registerModel({
          * Note: when possible, better use the relations with MessagingMenu
          * rather than these hardcoded IDs.
          */
-        id: attr({
+        id: attr({ required: true,
             compute() {
                 if (this.ownerAsAll) {
                     return 'all';
@@ -33,14 +33,13 @@ registerModel({
                     return 'chat';
                 }
             },
-            required: true,
         }),
         isActive: attr({
             compute() {
                 return this.messaging.messagingMenu.activeTab === this;
             },
         }),
-        name: attr({
+        name: attr({ required: true,
             compute() {
                 if (this.ownerAsAll) {
                     return this.env._t("All");
@@ -52,19 +51,9 @@ registerModel({
                     return this.env._t("Chats");
                 }
             },
-            required: true,
         }),
-        ownerAsAll: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'allTab',
-        }),
-        ownerAsChannel: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'channelTab',
-        }),
-        ownerAsChat: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'chatTab',
-        }),
+        ownerAsAll: one('MessagingMenu', { identifying: true, inverse: 'allTab' }),
+        ownerAsChannel: one('MessagingMenu', { identifying: true, inverse: 'channelTab' }),
+        ownerAsChat: one('MessagingMenu', { identifying: true, inverse: 'chatTab' }),
     },
 });

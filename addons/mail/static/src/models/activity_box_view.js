@@ -17,20 +17,14 @@ registerModel({
         },
     },
     fields: {
-        activityViews: many('ActivityView', {
+        activityViews: many('ActivityView', { inverse: 'activityBoxView',
             compute() {
                 return this.chatter.thread.activities.map(activity => {
                     return { activity };
                 });
             },
-            inverse: 'activityBoxView',
         }),
-        chatter: one('Chatter', {
-            identifying: true,
-            inverse: 'activityBoxView',
-        }),
-        isActivityListVisible: attr({
-            default: true,
-        }),
+        chatter: one('Chatter', { identifying: true, inverse: 'activityBoxView' }),
+        isActivityListVisible: attr({ default: true }),
     },
 });

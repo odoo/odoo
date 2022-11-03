@@ -18,9 +18,7 @@ registerModel({
         },
     },
     fields: {
-        callParticipantCard: one('CallParticipantCard', {
-            related: 'popoverViewOwner.callParticipantCardOwner',
-        }),
+        callParticipantCard: one('CallParticipantCard', { related: 'popoverViewOwner.callParticipantCardOwner' }),
         /**
          * Determines whether or not we show the connection info.
          */
@@ -63,9 +61,6 @@ registerModel({
                 );
             },
         }),
-        popoverViewOwner: one('PopoverView', {
-            identifying: true,
-            inverse: 'callParticipantCardPopoverContentView',
-        })
+        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'callParticipantCardPopoverContentView' }),
     },
 });

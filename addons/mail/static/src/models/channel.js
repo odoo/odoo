@@ -80,13 +80,8 @@ registerModel({
                 ['smaller-first', 'rtcSession.id'],
             ],
         }),
-        channelMembers: many('ChannelMember', {
-            inverse: 'channel',
-            isCausal: true,
-        }),
-        channelPreviewViews: many('ChannelPreviewView', {
-            inverse: 'channel',
-        }),
+        channelMembers: many('ChannelMember', { inverse: 'channel', isCausal: true }),
+        channelPreviewViews: many('ChannelPreviewView', { inverse: 'channel' }),
         channel_type: attr(),
         correspondent: one('Partner', {
             compute() {
@@ -110,7 +105,7 @@ registerModel({
                 return clear();
             },
         }),
-        correspondentOfDmChat: one('Partner', {
+        correspondentOfDmChat: one('Partner', { inverse: 'dmChatWithCurrentPartner',
             compute() {
                 if (
                     this.channel_type === 'chat' &&
@@ -120,7 +115,6 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'dmChatWithCurrentPartner',
         }),
         custom_channel_name: attr(),
         /**
@@ -143,7 +137,7 @@ registerModel({
          * Determines the discuss sidebar category item that displays this
          * channel.
          */
-        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
+        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', { inverse: 'channel',
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -156,7 +150,6 @@ registerModel({
                 }
                 return { category: this.discussSidebarCategory };
             },
-            inverse: 'channel',
         }),
         displayName: attr({
             compute() {
@@ -175,9 +168,7 @@ registerModel({
                 return this.thread.name;
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         /**
          * Local value of message unread counter, that means it is based on
          * initial server value and updated with interface updates.
@@ -218,18 +209,14 @@ registerModel({
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
-        memberOfCurrentUser: one('ChannelMember', {
-            inverse: 'channelAsMemberOfCurrentUser',
-        }),
-        orderedOfflineMembers: many('ChannelMember', {
-            inverse: 'channelAsOfflineMember',
+        memberOfCurrentUser: one('ChannelMember', { inverse: 'channelAsMemberOfCurrentUser' }),
+        orderedOfflineMembers: many('ChannelMember', { inverse: 'channelAsOfflineMember',
             sort: [
                 ['truthy-first', 'persona.name'],
                 ['case-insensitive-asc', 'persona.name'],
             ],
         }),
-        orderedOnlineMembers: many('ChannelMember', {
-            inverse: 'channelAsOnlineMember',
+        orderedOnlineMembers: many('ChannelMember', { inverse: 'channelAsOnlineMember',
             sort: [
                 ['truthy-first', 'persona.name'],
                 ['case-insensitive-asc', 'persona.name'],
@@ -245,25 +232,18 @@ registerModel({
          *
          * @see localMessageUnreadCounter
          */
-        serverMessageUnreadCounter: attr({
-            default: 0,
-        }),
+        serverMessageUnreadCounter: attr({ default: 0 }),
         /**
          * Determines whether we only display the participants who broadcast a video or all of them.
          */
-        showOnlyVideo: attr({
-            default: false,
-        }),
-        thread: one('Thread', {
+        showOnlyVideo: attr({ default: false }),
+        thread: one('Thread', { inverse: 'channel', isCausal: true, required: true,
             compute() {
                 return {
                     id: this.id,
                     model: 'mail.channel',
                 };
             },
-            inverse: 'channel',
-            isCausal: true,
-            required: true,
         }),
         /**
          * States how many members are currently unknown on the client side.

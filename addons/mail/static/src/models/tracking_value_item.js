@@ -77,14 +77,8 @@ registerModel({
                 return this.formattedValue || this.env._t("None");
             },
         }),
-        trackingValueAsNewValue: one('TrackingValue', {
-            identifying: true,
-            inverse: 'newValue',
-        }),
-        trackingValueAsOldValue: one('TrackingValue', {
-            identifying: true,
-            inverse: 'oldValue',
-        }),
+        trackingValueAsNewValue: one('TrackingValue', { identifying: true, inverse: 'newValue' }),
+        trackingValueAsOldValue: one('TrackingValue', { identifying: true, inverse: 'oldValue' }),
         /**
          * The original value of the tracking value item.
          */

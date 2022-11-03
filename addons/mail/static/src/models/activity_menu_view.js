@@ -67,7 +67,7 @@ registerModel({
         activityGroups: many('ActivityGroup', {
             sort: [['smaller-first', 'irModel.id']],
         }),
-        activityGroupViews: many('ActivityGroupView', {
+        activityGroupViews: many('ActivityGroupView', { inverse: 'activityMenuViewOwner',
             compute() {
                 return this.activityGroups.map(activityGroup => {
                     return {
@@ -75,7 +75,6 @@ registerModel({
                     };
                 });
             },
-            inverse: 'activityMenuViewOwner',
         }),
         component: attr(),
         counter: attr({
@@ -91,8 +90,6 @@ registerModel({
          * counter of each group.
          */
         extraCount: attr(),
-        isOpen: attr({
-            default: false,
-        }),
+        isOpen: attr({ default: false }),
     },
 });

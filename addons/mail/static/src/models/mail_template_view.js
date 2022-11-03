@@ -42,14 +42,8 @@ registerModel({
                 }
             }
         }),
-        activityListViewItemOwner: one('ActivityListViewItem', {
-            inverse: 'mailTemplateViews',
-        }),
-        activityViewOwner: one('ActivityView', {
-            inverse: 'mailTemplateViews',
-        }),
-        mailTemplate: one('MailTemplate', {
-            identifying: true,
-        }),
+        activityListViewItemOwner: one('ActivityListViewItem', { inverse: 'mailTemplateViews' }),
+        activityViewOwner: one('ActivityView', { inverse: 'mailTemplateViews' }),
+        mailTemplate: one('MailTemplate', { identifying: true }),
     },
 });

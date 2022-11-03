@@ -12,15 +12,9 @@ registerModel({
         },
     },
     fields: {
-        activityListPopoverView: one('PopoverView', {
-            inverse: 'activityCellViewOwnerAsActivityList',
-        }),
-        activityType: one('ActivityType', {
-            required: true,
-        }),
-        closestDeadline: attr({
-            required: true,
-        }),
+        activityListPopoverView: one('PopoverView', { inverse: 'activityCellViewOwnerAsActivityList' }),
+        activityType: one('ActivityType', { required: true }),
+        closestDeadline: attr({ required: true }),
         closestDeadlineFormatted: attr({
             compute() {
                 const date = moment(this.closestDeadline).toDate();
@@ -40,14 +34,8 @@ registerModel({
                 return this.thread.activities.filter(activity => activity.type === this.activityType);
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
-        reloadFunc: attr({
-            required: true,
-        }),
-        thread: one('Thread', {
-            required: true,
-        }),
+        id: attr({ identifying: true }),
+        reloadFunc: attr({ required: true }),
+        thread: one('Thread', { required: true }),
     },
 });
