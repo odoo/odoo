@@ -497,13 +497,7 @@ export class ListRenderer extends Component {
         const aggregates = {};
         for (const fieldName in this.props.list.activeFields) {
             const field = this.fields[fieldName];
-            const fieldValues = [];
-            for (const value of values) {
-                const fieldValue = value[fieldName];
-                if (fieldValue) {
-                    fieldValues.push(fieldValue);
-                }
-            }
+            const fieldValues = values.map((v) => v[fieldName]).filter((v) => v || v === 0);
             if (!fieldValues.length) {
                 continue;
             }

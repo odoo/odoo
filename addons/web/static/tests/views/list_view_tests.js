@@ -2865,11 +2865,24 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("aggregates are computed correctly", async function (assert) {
+        // map: foo record id -> qux value
+        const quxVals = { 1: 1.0, 2: 2.0, 3: 3.0, 4: 0 };
+
+        serverData.models.foo.records = serverData.models.foo.records.map((r) => ({
+            ...r,
+            qux: quxVals[r.id],
+        }));
+
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/><field name="int_field" sum="Sum"/></tree>',
+            arch: /*xml*/ `
+                <tree>
+                    <field name="foo"/>
+                    <field name="int_field" sum="Sum"/>
+                    <field name="qux" avg="Average"/>
+                </tree>`,
             searchViewArch: `
                 <search>
                     <filter name="my_filter" string="My Filter" domain="[('id', '=', 0)]"/>
@@ -2878,23 +2891,23 @@ QUnit.module("Views", (hooks) => {
         const tbodySelectors = target.querySelectorAll("tbody .o_list_record_selector input");
         const theadSelector = target.querySelector("thead .o_list_record_selector input");
 
-        assert.strictEqual(target.querySelectorAll("tfoot td")[2].innerText, "32");
+        const getFooterTextArray = () => {
+            return [...target.querySelectorAll("tfoot td")].map((td) => td.innerText);
+        };
+
+        assert.deepEqual(getFooterTextArray(), ["", "", "32", "1.50"]);
 
         await click(tbodySelectors[0]);
         await click(tbodySelectors[3]);
-        assert.strictEqual(target.querySelectorAll("tfoot td")[2].innerText, "6");
+        assert.deepEqual(getFooterTextArray(), ["", "", "6", "0.50"]);
 
         await click(theadSelector);
-        assert.strictEqual(target.querySelectorAll("tfoot td")[2].innerText, "32");
+        assert.deepEqual(getFooterTextArray(), ["", "", "32", "1.50"]);
 
         // Let's update the view to dislay NO records
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "My Filter");
-        assert.strictEqual(
-            target.querySelectorAll("tfoot td")[2].innerText,
-            "",
-            "No records, so no total."
-        );
+        assert.deepEqual(getFooterTextArray(), ["", "", "", ""]);
     });
 
     QUnit.test("aggregates are computed correctly in grouped lists", async function (assert) {
