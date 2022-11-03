@@ -42,14 +42,14 @@ class StockValuationLayer(models.Model):
     def _validate_accounting_entries(self):
         am_vals = []
         for svl in self:
-            if not svl.product_id.valuation == 'real_time':
+            if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
             move = svl.stock_move_id
             if not move:
                 move = svl.stock_valuation_layer_id.stock_move_id
-            am_vals += move._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            am_vals += move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
