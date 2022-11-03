@@ -50,7 +50,7 @@ registerModel({
          * Handles click on the attachments button.
          */
         onClickButtonToggleAttachments() {
-            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
+            this.update({ hasAttachmentBox: this.hasAttachmentBox ? clear() : true });
         },
         /**
          * Handles click on top bar close button.
@@ -106,8 +106,8 @@ registerModel({
             }
             this.threadView.messageListView.onScroll();
         },
-        openAttachmentBoxView() {
-            this.update({ attachmentBoxView: {} });
+        openAttachmentBox() {
+            this.update({ hasAttachmentBox: true });
         },
         /**
          * Open a dialog to add partners as followers.
@@ -186,7 +186,7 @@ registerModel({
                     this.thread.delete();
                 }
                 this.update({
-                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? {} : clear(),
+                    hasAttachmentBox: this.isAttachmentBoxVisibleInitially ? true : clear(),
                     thread: insert({
                         // If the thread was considered to have the activity
                         // mixin once, it will have it forever.
@@ -205,7 +205,7 @@ registerModel({
                 });
                 const nextId = getThreadNextTemporaryId();
                 this.update({
-                    attachmentBoxView: clear(),
+                    hasAttachmentBox: clear(),
                     thread: insert({
                         areAttachmentsLoaded: true,
                         id: nextId,
@@ -248,7 +248,16 @@ registerModel({
                 return clear();
             },
         }),
-        attachmentBoxView: one('AttachmentBoxView', { inverse: 'chatter' }),
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one('AttachmentList', { inverse: 'chatterOwner',
+            compute() {
+                return (this.thread && this.thread.allAttachments.length > 0)
+                    ? {}
+                    : clear();
+            },
+        }),
         /**
          * Determines the label on the attachment button of the topbar.
          */
@@ -310,6 +319,7 @@ registerModel({
          * Determines whether `this` should display an activity box.
          */
         hasActivities: attr({ default: true }),
+        hasAttachmentBox: attr({ default: false }),
         hasExternalBorder: attr({ default: true }),
         /**
          * Determines whether `this` should display followers menu.

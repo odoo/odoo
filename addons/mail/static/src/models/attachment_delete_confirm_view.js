@@ -54,17 +54,15 @@ registerModel({
             compute() {
                 if (
                     this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm &&
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
+                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.chatterOwner
                 ) {
-                    return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
+                    return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.chatterOwner;
                 }
                 if (
                     this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm &&
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
+                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.chatterOwner
                 ) {
-                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
+                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.chatterOwner;
                 }
                 return clear();
             },
