@@ -10,14 +10,7 @@
                 <head>
                     <title><t t-esc="slide.name"/></title>
                     <t t-call-assets="web.assets_common" t-js="false"/>
-                    <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
-                    <!-- Using web.assets_common without assets_frontend or assets_backend creates a lot
-                         of module dependency errors. Either assets_common should be reworked to work
-                         as a standalone bundle, or this template should not use it and add what it needs
-                         from it into its own bundle. Silence these errors in the meantime -->
-                    <script>window.__odooIgnoreModuleErrors = true</script>
-                    <t t-call-assets="web.assets_common" t-css="false"/>
-                    <t t-call-assets="website_slides.slide_embed_assets" t-css="false"/>
+                    <t t-call-assets="website_slides.slide_embed_assets"/>
                 </head>
                 <body>
                     <div id="PDFViewer" class="o_wslides_fs_pdf_viewer d-flex flex-column h-100">

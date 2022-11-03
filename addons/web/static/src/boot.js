@@ -75,11 +75,10 @@
                     return dep.to;
                 });
         },
-        getWaitedJobs: function () {
-            return new Set(jobs.map((job) => job.name));
-        },
         getMissingJobs() {
-            const waited = this.getWaitedJobs();
+            const waited = new Set(
+                jobs.filter((job) => !job.ignoreMissingDeps).map((job) => job.name)
+            );
             const missing = new Set();
             for (const job of waited) {
                 for (const dep of this.getDependencies(job)) {
@@ -228,6 +227,7 @@
             deps: deps,
             resolve: promiseResolve,
             promise: promise,
+            ignoreMissingDeps: globalThis.__odooIgnoreMissingDependencies,
         });
 
         deps.forEach(function (dep) {
@@ -248,6 +248,9 @@
             var jobdep;
 
             for (var k = 0; k < jobs.length; k++) {
+                if (jobs[k].ignoreMissingDeps) {
+                    continue;
+                }
                 debugJobs[jobs[k].name] = job = {
                     dependencies: jobs[k].deps,
                     dependents: odoo.__DEBUG__.getDependents(jobs[k].name),
@@ -345,12 +348,7 @@
             cycle,
         };
         odoo.__DEBUG__.jsModules = moduleInfo;
-        // The assets_tests bundle contains a lot of module whose dependencies are in other bundles
-        // that may or may not be loaded. This global is used to silence module loading errors when
-        // this bundle is present
-        if (!window.__odooIgnoreModuleErrors) {
-            displayModuleErrors(moduleInfo);
-        }
+        displayModuleErrors(moduleInfo);
 
         didLogInfoResolve(true);
     };
@@ -454,7 +452,7 @@
             }
             const container = document.createElement("div");
             container.className =
-                "position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto";
+                "position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
             container.style.zIndex = "10000";
             const alert = document.createElement("div");
             alert.className = "alert alert-danger o_error_detail fw-bold m-auto";

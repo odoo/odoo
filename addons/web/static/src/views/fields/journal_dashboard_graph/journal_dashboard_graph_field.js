@@ -2,7 +2,7 @@
 
 import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { getColor, hexToRGBA } from "@web/views/graph/colors";
+import { getColor, hexToRGBA } from "@web/core/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 
