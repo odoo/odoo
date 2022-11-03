@@ -173,18 +173,18 @@ class RecordCapturer:
         self._domain = domain
 
     def __enter__(self):
-        self._before = self._model.search(self._domain)
+        self._before = self._model.search(self._domain, order='id')
         self._after = None
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         if exc_type is None:
-            self._after = self._model.search(self._domain) - self._before
+            self._after = self._model.search(self._domain, order='id') - self._before
 
     @property
     def records(self):
         if self._after is None:
-            return self._model.search(self._domain) - self._before
+            return self._model.search(self._domain, order='id') - self._before
         return self._after
 
 # ------------------------------------------------------------
