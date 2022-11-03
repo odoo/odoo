@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussPublicView" owl="1">
         <div class="o_DiscussPublicView d-flex flex-column h-100 w-100 position-absolute" t-attf-class="{{ className }}" t-ref="root">
-            <ThreadView t-if="discussPublicView.threadView"
-                record="discussPublicView.threadView"
+            <ThreadView t-if="threadView"
+                record="threadView"
             />
-            <WelcomeView t-if="discussPublicView.welcomeView"
-                record="discussPublicView.welcomeView"
+            <WelcomeView t-if="welcomeView"
+                record="welcomeView"
             />
         </div>
     </t>
