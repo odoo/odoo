@@ -161,6 +161,7 @@ class AccountPaymentRegister(models.TransientModel):
         default_domain = [
             ('type', 'in', ('bank', 'cash')),
             ('company_id', '=', batch_result['lines'].company_id.id),
+            ('id', 'in', self.available_journal_ids.ids)
         ]
 
         if partner_bank_id:
@@ -356,6 +357,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.journal_id = self.env['account.journal'].search([
                     ('type', 'in', ('bank', 'cash')),
                     ('company_id', '=', wizard.company_id.id),
+                    ('id', 'in', self.available_journal_ids.ids)
                 ], limit=1)
 
     @api.depends('can_edit_wizard', 'journal_id')
