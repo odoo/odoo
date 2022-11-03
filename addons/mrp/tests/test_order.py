@@ -1208,6 +1208,76 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
         mo2.button_mark_done()
 
+    def test_product_produce_duplicate_5(self):
+        """ Consuming the same serial number two times should not give an error if
+          - a repair order of the first production has been made before the second one
+          - the component was scrapped but also removed from scrap location into stock
+        """
+        mo1, bom, p_final, p1, p2 = self.generate_mo(tracking_base_2='serial', qty_final=1, qty_base_1=1,)
+        sn = self.env['stock.production.lot'].create({
+            'name': 'sn used twice',
+            'product_id': p2.id,
+            'company_id': self.env.company.id,
+        })
+        stock_location = self.env.ref("stock.stock_location_stock")
+        self.env["stock.quant"]._update_available_quantity(p2, stock_location, 1.0, lot_id=sn)
+        mo_form = Form(mo1)
+        mo_form.qty_producing = 1
+        mo1 = mo_form.save()
+        details_operation_form = Form(mo1.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = sn
+        details_operation_form.save()
+        mo1.button_mark_done()
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.product_id = p_final
+        unbuild_form.bom_id = bom
+        unbuild_form.product_qty = 1
+        unbuild_form.mo_id = mo1
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+
+        scrap_form = Form(self.env["stock.scrap"])
+        scrap_form.product_id = p2
+        scrap_form.lot_id = sn
+        scrap_form.scrap_qty = 1.0
+        scrap_order = scrap_form.save()
+        scrap_order.action_validate()
+
+        internal_transfer_type = self.env.ref("stock.picking_type_internal")
+        scrap_location = scrap_order.scrap_location_id
+        picking_form = Form(self.env["stock.picking"])
+        picking_form.picking_type_id = internal_transfer_type
+        picking_form.location_id = scrap_location
+        picking_form.location_dest_id = stock_location
+        with picking_form.move_ids_without_package.new() as move_form:
+            move_form.product_id = p2
+            move_form.product_uom_qty = 1.0
+        internal_picking = picking_form.save()
+        internal_picking.action_confirm()
+        details_operation_form = Form(internal_picking.move_ids_without_package, view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = sn
+        details_operation_form.save()
+        internal_picking.button_validate()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = p_final
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+
+        mo_form = Form(mo2)
+        mo_form.qty_producing = 1
+        mo2 = mo_form.save()
+        details_operation_form = Form(mo2.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = sn
+        details_operation_form.save()
+        mo2.button_mark_done()
+
     def test_product_produce_12(self):
         """ Checks that, the production is robust against deletion of finished move."""
 

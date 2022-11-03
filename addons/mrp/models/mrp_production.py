@@ -1786,6 +1786,10 @@ class MrpProduction(models.Model):
                         ('lot_id', '=', move_line.lot_id.id),
                         ('state', '=', 'done'),
                         ('location_dest_id.scrap_location', '=', True)
+                    ]) - self.env['stock.move.line'].search_count([
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('state', '=', 'done'),
+                        ('location_id.scrap_location', '=', True),
                     ])
                     # Either removed or unbuild
                     if not ((duplicates_returned or removed) and duplicates - duplicates_returned - removed == 0):
