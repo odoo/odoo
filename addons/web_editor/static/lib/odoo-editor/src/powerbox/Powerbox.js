@@ -344,17 +344,12 @@ export class Powerbox {
         return reorderedCommands;
     }
     _resetPosition() {
-        const position = getRangePosition(this.el, this.options.document);
+        const position = getRangePosition(this.el, this.options.document, this.options);
         if (!position) {
             this.hide();
             return;
         }
         let { left, top } = position;
-        if (this.options.getContextFromParentRect) {
-            const parentContextRect = this.options.getContextFromParentRect();
-            left += parentContextRect.left;
-            top += parentContextRect.top;
-        }
 
         this.el.style.left = `${left}px`;
         this.el.style.top = `${top}px`;
