@@ -436,6 +436,18 @@ export async function deleteBackward(editor) {
     editor.execCommand('oDeleteBackward');
 }
 
+export async function deleteBackwardMobile(editor) {
+    // Some mobile keyboard use input event to trigger delete.
+    // This is a way to simulate this behavior.
+    const inputEvent = new InputEvent('input', {
+        inputType: 'deleteContentBackward',
+        data: null,
+        bubbles: true,
+        cancelable: false,
+    });
+    editor._onInput(inputEvent);
+}
+
 export async function insertParagraphBreak(editor) {
     editor.execCommand('oEnter');
 }
