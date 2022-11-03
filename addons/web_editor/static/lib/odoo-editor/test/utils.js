@@ -423,17 +423,19 @@ export async function deleteForward(editor) {
 }
 
 export async function deleteBackward(editor) {
-    const selection = document.getSelection();
-    if (selection.isCollapsed) {
-        // Better representation of what append in the editor when the user
-        // press the backspace key.
-        await keydown(editor.editable, 'Backspace');
-    } else {
-        // We cannot use the fake keydown when we have a range because we rely
-        // on the browser to delete someting in the document for us, and the
-        // browser will not do it if the event is fake.
-        editor.execCommand('oDeleteBackward');
-    }
+    editor.execCommand('oDeleteBackward');
+}
+
+export async function deleteBackwardMobile(editor) {
+    // Some mobile keyboard use input event to trigger delete.
+    // This is a way to simulate this behavior.
+    const inputEvent = new InputEvent('input', {
+        inputType: 'deleteContentBackward',
+        data: null,
+        bubbles: true,
+        cancelable: false,
+    });
+    editor._onInput(inputEvent);
 }
 
 export async function insertParagraphBreak(editor) {
