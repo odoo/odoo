@@ -115,21 +115,6 @@ const _DialogLinkWidget = Link.extend({
         return this.$('input[name="link_style_color"]:checked').val() || '';
     },
     /**
-     * @private
-     */
-    _isFromAnotherHostName: function (url) {
-        if (url.includes(window.location.hostname)) {
-            return false;
-        }
-        try {
-            const Url = URL || window.URL || window.webkitURL;
-            const urlObj = url.startsWith('/') ? new Url(url, window.location.origin) : new Url(url);
-            return (urlObj.origin !== window.location.origin);
-        } catch {
-            return true;
-        }
-    },
-    /**
      * @override
      */
     _isNewWindow: function (url) {

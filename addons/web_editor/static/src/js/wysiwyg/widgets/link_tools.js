@@ -190,8 +190,12 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _isNewWindow: function () {
-        return this.$('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
+    _isNewWindow: function (url) {
+        if (this.options.forceNewWindow) {
+            return this._isFromAnotherHostName(url);
+        } else {
+            return this.$('we-checkbox[name="is_new_window"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
+        }
     },
     /**
      * @override
