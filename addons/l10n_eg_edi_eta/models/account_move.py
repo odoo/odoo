@@ -14,6 +14,8 @@ _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    l10n_eg_long_id = fields.Char(string='ETA Long ID', compute='_compute_eta_long_id')
+    l10n_eg_qr_code = fields.Char(string='ETA QR Code', compute='_compute_eta_qr_code_str')
     l10n_eg_submission_number = fields.Char(string='Submission ID', compute='_compute_eta_response_data', store=True, copy=False)
     l10n_eg_uuid = fields.Char(string='Document UUID', compute='_compute_eta_response_data', store=True, copy=False)
     l10n_eg_eta_json_doc_id = fields.Many2one('ir.attachment', copy=False)
@@ -28,15 +30,37 @@ class AccountMove(models.Model):
         return super()._auto_init()
 
     @api.depends('l10n_eg_eta_json_doc_id.raw')
+    def _compute_eta_long_id(self):
+        for rec in self:
+            response_data = rec.l10n_eg_eta_json_doc_id and json.loads(rec.l10n_eg_eta_json_doc_id.raw).get('response')
+            if response_data:
+                rec.l10n_eg_long_id = response_data.get('l10n_eg_long_id')
+            else:
+                rec.l10n_eg_long_id = False
+
+    @api.depends('invoice_date', 'l10n_eg_uuid', 'l10n_eg_long_id')
+    def _compute_eta_qr_code_str(self):
+        for move in self:
+            if move.invoice_date and move.l10n_eg_uuid and move.l10n_eg_long_id:
+                is_prod = move.company_id.l10n_eg_production_env
+                base_url = self.env['account.edi.format']._l10n_eg_get_eta_api_domain(production_enviroment=is_prod)
+                qr_code_str = '%s/documents/search/%s/share/%s' % (base_url, move.l10n_eg_uuid, move.l10n_eg_long_id)
+                move.l10n_eg_qr_code = qr_code_str
+            else:
+                move.l10n_eg_qr_code = ''
+
+    @api.depends('l10n_eg_eta_json_doc_id.raw')
     def _compute_eta_response_data(self):
         for rec in self:
             response_data = rec.l10n_eg_eta_json_doc_id and json.loads(rec.l10n_eg_eta_json_doc_id.raw).get('response')
             if response_data:
                 rec.l10n_eg_uuid = response_data.get('l10n_eg_uuid')
                 rec.l10n_eg_submission_number = response_data.get('l10n_eg_submission_number')
+                rec.l10n_eg_long_id = response_data.get('l10n_eg_long_id')
             else:
                 rec.l10n_eg_uuid = False
                 rec.l10n_eg_submission_number = False
+                rec.l10n_eg_long_id = False
 
     def button_draft(self):
         self.l10n_eg_eta_json_doc_id = False
