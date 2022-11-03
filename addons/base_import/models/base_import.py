@@ -224,14 +224,11 @@ class Import(models.TransientModel):
         # TODO: cache on model?
         return importable_fields
 
-    def _import_handler(self, file_extension, options, filetype=''):
+    def _import_handler(self, method, file_extension, options, filetype=''):
         try:
             return getattr(self, '_read_' + file_extension)(options)
         except Exception:
-            filename = self.file_name or '<unknown>'
-            filetype = filetype or file_extension
-            fstring = f'Failed to read file {filename} (transient id {self.id}) as type {filetype}'
-            _logger.debug(fstring)
+            _logger.debug('Failed to read file %s (transient id %d) as type %s based on %s', self.file_name or '<unknown>', self.id, filetype or file_extension, method)
             return None
 
     def _read_file(self, options):
@@ -243,20 +240,20 @@ class Import(models.TransientModel):
         mimetype = guess_mimetype(self.file or b'')
         (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
         if handler:
-            handled = self._import_handler(file_extension, options, mimetype)
+            handled = self._import_handler('mimetype', file_extension, options, mimetype)
             if handled:
                 return handled
 
         (file_extension, handler, req) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
         if handler:
-            handled = self._import_handler(file_extension, options, self.file_type)
+            handled = self._import_handler('given filetype', file_extension, options, self.file_type)
             if handled:
                 return handled
 
         if self.file_name:
             fext = os.path.splitext(self.file_name)[-1]
             if fext in EXTENSIONS:
-                handled = self._import_handler(fext[1:], options)
+                handled = self._import_handler('extension from the given filename', fext[1:], options)
                 if handled:
                     return handled
         if req:
@@ -328,7 +325,10 @@ class Import(models.TransientModel):
 
         encoding = options.get('encoding')
         if not encoding:
-            encoding = options['encoding'] = chardet.detect(csv_data)['encoding'].lower()
+            try:
+                encoding = options['encoding'] = chardet.detect(csv_data)['encoding'].lower()
+            except Exception as e:
+                _logger.debug('Chardet detection error while in _read_csv: %s', e)
             # some versions of chardet (e.g. 2.3.0 but not 3.x) will return
             # utf-(16|32)(le|be), which for python means "ignore / don't strip
             # BOM". We don't want that, so rectify the encoding to non-marked
@@ -337,8 +337,11 @@ class Import(models.TransientModel):
             if bom and csv_data.startswith(bom):
                 encoding = options['encoding'] = encoding[:-2]
 
-        if encoding != 'utf-8':
-            csv_data = csv_data.decode(encoding).encode('utf-8')
+        if encoding and encoding != 'utf-8':
+            try:
+                csv_data = csv_data.decode(encoding).encode('utf-8')
+            except Exception as e:
+                _logger.debug('Error while attempting to re-encode to utf-8 after decoding with char-detected encoder: %s', e)
 
         separator = options.get('separator')
         if not separator:
