@@ -2,27 +2,25 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentBoxView" owl="1">
-            <div class="o_AttachmentBoxView position-relative" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_AttachmentBoxView_title d-flex align-items-center">
-                    <hr class="o_AttachmentBoxView_dashedLine flex-grow-1"/>
-                    <span class="o_AttachmentBoxView_titleText p-3 fw-bold">
-                        Files
-                    </span>
-                    <hr class="o_AttachmentBoxView_dashedLine flex-grow-1"/>
-                </div>
-                <div class="o_AttachmentBoxView_content d-flex flex-column">
-                    <t t-if="attachmentList">
-                        <AttachmentList
-                            className="'o_attachmentBox_attachmentList'"
-                            record="attachmentList"
-                        />
-                    </t>
-                    <button class="o_AttachmentBoxView_buttonAdd btn btn-link" type="button" t-on-click="onClickAddAttachment" t-att-disabled="!chatter.hasWriteAccess">
-                        <i class="fa fa-plus-square"/>
-                        Attach files
-                    </button>
-                </div>
+        <div class="o_AttachmentBoxView position-relative" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_AttachmentBoxView_title d-flex align-items-center">
+                <hr class="o_AttachmentBoxView_dashedLine flex-grow-1"/>
+                <span class="o_AttachmentBoxView_titleText p-3 fw-bold">
+                    Files
+                </span>
+                <hr class="o_AttachmentBoxView_dashedLine flex-grow-1"/>
             </div>
+            <div class="o_AttachmentBoxView_content d-flex flex-column">
+                <AttachmentList t-if="attachmentList"
+                    className="'o_attachmentBox_attachmentList'"
+                    record="attachmentList"
+                />
+                <button class="o_AttachmentBoxView_buttonAdd btn btn-link" type="button" t-on-click="onClickAddAttachment" t-att-disabled="!chatter.hasWriteAccess">
+                    <i class="fa fa-plus-square"/>
+                    Attach files
+                </button>
+            </div>
+        </div>
     </t>
 
 </templates>
