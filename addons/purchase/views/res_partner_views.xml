@@ -96,14 +96,14 @@
                     </button>
                 </div>
                 <page name="internal_notes" position="inside">
-                    <t groups="purchase.group_purchase_user">
-                        <group colspan="2" col="2" groups="purchase.group_warning_purchase">
-                            <separator string="Warning on the Purchase Order" colspan="4"/>
-                            <field name="purchase_warn" nolabel="1" />
-                            <field name="purchase_warn_msg" colspan="3" nolabel="1"
+                    <group groups="purchase.group_purchase_user">
+                        <group groups="purchase.group_warning_purchase" col="2">
+                            <separator string="Warning on the Purchase Order" colspan="2"/>
+                            <field name="purchase_warn" nolabel="1" colspan="2" required="1"/>
+                            <field name="purchase_warn_msg" colspan="2" placeholder="Type a message..." nolabel="1"
                                 attrs="{'required':[('purchase_warn','!=', False), ('purchase_warn','!=','no-message')], 'invisible':[('purchase_warn','in',(False,'no-message'))]}"/>
                         </group>
-                    </t>
+                    </group>
                 </page>
             </field>
         </record>

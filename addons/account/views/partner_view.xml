@@ -158,14 +158,14 @@
                 </div>
 
                 <page name="internal_notes" position="inside">
-                    <t groups="account.group_account_invoice,account.group_account_readonly">
-                        <group colspan="2" col="2" groups="account.group_warning_account">
-                            <separator string="Warning on the Invoice" colspan="4"/>
-                            <field name="invoice_warn" nolabel="1" />
-                            <field name="invoice_warn_msg" colspan="3" nolabel="1"
+                    <group groups="account.group_account_invoice,account.group_account_readonly">
+                        <group groups="account.group_warning_account" col="2">
+                            <separator string="Warning on the Invoice" colspan="2"/>
+                            <field name="invoice_warn" nolabel="1" colspan="2" required="1"/>
+                            <field name="invoice_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
                                 attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
                         </group>
-                    </t>
+                    </group>
                 </page>
             </field>
         </record>
