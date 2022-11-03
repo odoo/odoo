@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
@@ -15,7 +14,6 @@ registerModel({
     name: 'WelcomeView',
     template: 'mail.WelcomeView',
     componentSetup() {
-        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', refName: 'guestNameInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView' });
     },
     recordMethods: {
@@ -113,7 +111,7 @@ registerModel({
          * States the OWL ref the to input element containing the
          * 'pendingGuestName'.
          */
-        guestNameInputRef: attr(),
+        guestNameInputRef: attr({ ref: 'guestNameInput' }),
         /**
          * States the value to use for `id`, `for`, and `name` attributes of
          * the guest name input and its label.

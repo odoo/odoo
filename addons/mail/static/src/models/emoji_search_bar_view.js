@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
@@ -9,7 +8,6 @@ registerModel({
     name: 'EmojiSearchBarView',
     template: 'mail.EmojiSearchBarView',
     componentSetup() {
-        useRefToModel({ fieldName: 'inputRef', refName: 'input' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'EmojiSearchBarView' });
     },
     lifecycleHooks: {
@@ -72,7 +70,7 @@ registerModel({
     fields: {
         currentSearch: attr({ default: "" }),
         emojiPickerView: one("EmojiPickerView", { identifying: true, inverse: "emojiSearchBarView" }),
-        inputRef: attr(),
+        inputRef: attr({ ref: 'input' }),
         isDoFocus: attr({ default: false }),
         isFocused: attr({ default: false }),
         placeholder: attr({ required: true,

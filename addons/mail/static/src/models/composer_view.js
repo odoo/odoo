@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, link } from '@mail/model/model_field_command';
@@ -16,7 +15,6 @@ registerModel({
     template: 'mail.ComposerView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useRefToModel({ fieldName: 'buttonEmojisRef', refName: 'buttonEmojis' });
     },
     identifyingMode: 'xor',
     lifecycleHooks: {
@@ -1001,7 +999,7 @@ registerModel({
         /**
          * States the ref to the html node of the emojis button.
          */
-        buttonEmojisRef: attr(),
+        buttonEmojisRef: attr({ ref: 'buttonEmojis' }),
         /**
          * States the chatter which this composer allows editing (if any).
          */

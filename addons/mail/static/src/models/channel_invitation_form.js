@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
@@ -15,7 +14,6 @@ registerModel({
     template: 'mail.ChannelInvitationForm',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useRefToModel({ fieldName: 'searchInputRef', refName: 'searchInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     identifyingMode: 'xor',
@@ -227,7 +225,7 @@ registerModel({
          * States the OWL ref of the "search" input of this channel invitation
          * form. Useful to be able to focus it.
          */
-        searchInputRef: attr(),
+        searchInputRef: attr({ ref: 'searchInput' }),
         /**
          * States the number of results of the last search.
          */

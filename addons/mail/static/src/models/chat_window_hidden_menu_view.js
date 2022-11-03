@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
@@ -12,7 +11,6 @@ registerModel({
     template: 'mail.ChatWindowHiddenMenuView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useRefToModel({ fieldName: 'listRef', refName: 'list' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     lifecycleHooks: {
@@ -75,7 +73,7 @@ registerModel({
          * Reference of the dropup list. Useful to auto-set max height based on
          * browser screen height.
          */
-        listRef: attr(),
+        listRef: attr({ ref: 'list' }),
         owner: one('ChatWindowManager', { identifying: true, inverse: 'hiddenMenuView' }),
     },
 });
