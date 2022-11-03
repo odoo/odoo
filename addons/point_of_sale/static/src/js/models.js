@@ -3325,7 +3325,7 @@ exports.Order = Backbone.Model.extend({
             moment(this.validation_date), {}, {timezone: false});
     },
 
-    set_tip: function(tip) {
+    set_tip: async function(tip) {
         var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
         var lines = this.get_orderlines();
         if (tip_product) {
@@ -3338,7 +3338,7 @@ exports.Order = Backbone.Model.extend({
                     return;
                 }
             }
-            return this.add_product(tip_product, {
+            return await this.add_product(tip_product, {
               is_tip: true,
               quantity: 1,
               price: tip,
@@ -3387,7 +3387,7 @@ exports.Order = Backbone.Model.extend({
         }
         if(this._printed){
             this.destroy();
-            return this.pos.get_order().add_product(product, options);
+            return await this.pos.get_order().add_product(product, options);
         }
         this.assert_editable();
         options = options || {};
