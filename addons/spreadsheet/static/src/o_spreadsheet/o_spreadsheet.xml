@@ -583,9 +583,12 @@
         sidePanelIsOpen="props.sidePanelIsOpen"
         onFigureDeleted.bind="focus"
       />
-      <HeadersOverlay onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"/>
+      <HeadersOverlay
+        t-if="!env.isDashboard()"
+        onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"
+      />
 
-      <t t-if="env.model.getters.getEditionMode() !== 'inactive'">
+      <t t-if="env.model.getters.getEditionMode() !== 'inactive' and !env.isDashboard()">
         <GridComposer
           onComposerUnmounted="() => this.focus()"
           onComposerContentFocused="props.onComposerContentFocused"
@@ -594,6 +597,7 @@
       </t>
       <canvas t-ref="canvas"/>
       <t
+        t-if="!env.isDashboard()"
         t-foreach="env.model.getters.getClientsToDisplay()"
         t-as="client"
         t-key="getClientPositionKey(client)">
@@ -612,10 +616,11 @@
         onMouseWheel.bind="onMouseWheel"
         onClosePopover.bind="onClosePopover"
       />
-      <t t-if="env.model.getters.getEditionMode() === 'inactive' and isAutoFillActive()">
+      <t
+        t-if="env.model.getters.getEditionMode() === 'inactive' and isAutoFillActive() and !env.isDashboard()">
         <Autofill position="getAutofillPosition()"/>
       </t>
-      <t t-if="env.model.getters.getEditionMode() !== 'inactive'">
+      <t t-if="env.model.getters.getEditionMode() !== 'inactive' and !env.isDashboard()">
         <t t-foreach="env.model.getters.getHighlights()" t-as="highlight" t-key="highlight_index">
           <t t-if="highlight.sheetId === env.model.getters.getActiveSheetId()">
             <Highlight zone="highlight.zone" color="highlight.color"/>
@@ -1378,18 +1383,10 @@
         t-att-title="cell.urlRepresentation">
         <t t-esc="cell.urlRepresentation"/>
       </a>
-      <span
-        t-if="!env.model.getters.isReadonly()"
-        class="o-link-icon o-unlink"
-        t-on-click="unlink"
-        title="Remove link">
+      <span class="o-link-icon o-unlink" t-on-click="unlink" title="Remove link">
         <t t-call="o-spreadsheet-Icon.UNLINK"/>
       </span>
-      <span
-        t-if="!env.model.getters.isReadonly()"
-        class="o-link-icon o-edit-link"
-        t-on-click="edit"
-        title="Edit link">
+      <span class="o-link-icon o-edit-link" t-on-click="edit" title="Edit link">
         <t t-call="o-spreadsheet-Icon.EDIT"/>
       </span>
     </div>
@@ -2888,10 +2885,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Spreadsheet" owl="1">
-    <div
-      class="o-spreadsheet"
-      t-on-keydown="(ev) => !env.isDashboard() and this.onKeydown(ev)"
-      t-att-style="getStyle()">
+    <div class="o-spreadsheet" t-on-keydown="onKeydown" t-att-style="getStyle()">
       <t t-if="env.isDashboard()">
         <SpreadsheetDashboard/>
       </t>
