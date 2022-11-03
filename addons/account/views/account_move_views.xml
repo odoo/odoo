@@ -851,6 +851,11 @@
                                            groups="base.group_multi_currency"
                                            attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('move_type', '=', 'entry')]}"/>
                                 </div>
+
+                                <field name="currency_id"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       groups="!account.group_account_readonly,base.group_multi_currency"/>
+
                             </group>
                         </group>
                         <notebook>
