@@ -1180,7 +1180,11 @@ const Wysiwyg = Widget.extend({
                         return
                     }
                     const linkToolsData = Object.assign({}, this.options.defaultDataForLinkTools);
-                    this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this, noFocusUrl: options.noFocusUrl}, this.odooEditor.editable, linkToolsData, $btn, link );
+                    this.linkTools = new weWidgets.LinkTools(this, {
+                        wysiwyg: this,
+                        noFocusUrl: options.noFocusUrl,
+                        forceNewWindow: this.options.linkForceNewWindow,
+                    }, this.odooEditor.editable, linkToolsData, $btn, link );
                 }
                 this.linkTools.noFocusUrl = options.noFocusUrl;
                 const _onClick = ev => {
