@@ -82,6 +82,8 @@ class Http(models.AbstractModel):
             default=128 * 1024 * 1024,  # 128MiB
         ))
         mods = odoo.conf.server_wide_modules or []
+        if request.db:
+            mods = list(request.registry._init_modules) + mods
         session_info = {
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,
@@ -120,8 +122,6 @@ class Http(models.AbstractModel):
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            if request.db:
-                mods = list(request.registry._init_modules) + mods
             menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
