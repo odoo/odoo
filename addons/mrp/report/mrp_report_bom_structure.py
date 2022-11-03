@@ -160,7 +160,7 @@ class ReportBomStructure(models.AbstractModel):
 
         bom_key = bom.id
         if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, product, current_quantity, bom)
+            product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, product, current_quantity, bom)
         route_info = product_info[key].get(bom_key, {})
         quantities_info = {}
         if not ignore_stock:
@@ -250,7 +250,7 @@ class ReportBomStructure(models.AbstractModel):
 
         bom_key = 'no_bom'
         if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
+            product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
         route_info = product_info[key].get(bom_key, {})
 
         quantities_info = {}
@@ -469,11 +469,23 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_resupply_route_info(self, warehouse, product, quantity, bom=False):
-        found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
+        found_rules = []
+        if self._need_special_rules(self.env.context.get('product_info'), self.env.context.get('parent_bom'), self.env.context.get('parent_product_id')):
+            found_rules = self._find_special_rules(product, self.env.context.get('product_info'), self.env.context.get('parent_bom'), self.env.context.get('parent_product_id'))
+        if not found_rules:
+            found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
         return self._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
+
+    @api.model
+    def _need_special_rules(self, product_info, parent_bom=False, parent_product_id=False):
+        return False
+
+    @api.model
+    def _find_special_rules(self, product, product_info, parent_bom=False, parent_product_id=False):
+        return False
 
     @api.model
     def _format_route_info(self, rules, rules_delay, warehouse, product, bom, quantity):
