@@ -9,7 +9,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'CallParticipantVideoView',
     template: 'mail.CallParticipantVideoView',
-    templateGetter: 'callParticipantVideoView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });

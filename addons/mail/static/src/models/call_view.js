@@ -9,7 +9,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'CallView',
     template: 'mail.CallView',
-    templateGetter: 'callView',
     lifecycleHooks: {
         _created() {
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);

@@ -8,7 +8,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'NotificationMessageView',
     template: 'mail.NotificationMessageView',
-    templateGetter: 'notificationMessageView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });

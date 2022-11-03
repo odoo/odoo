@@ -9,7 +9,6 @@ import { markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'MessageActionView',
     template: "mail.MessageActionView",
-    templateGetter: 'messageActionView',
     componentSetup() {
         useRefToModel({ fieldName: 'actionRef', refName: 'action' });
     },

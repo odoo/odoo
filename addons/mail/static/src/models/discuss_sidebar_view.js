@@ -8,7 +8,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'DiscussSidebarView',
     template: 'mail.DiscussSidebarView',
-    templateGetter: 'discussSidebarView',
     componentSetup() {
         useRefToModel({ fieldName: 'quickSearchInputRef', refName: 'quickSearchInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });

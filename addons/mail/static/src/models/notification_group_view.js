@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'NotificationGroupView',
     template: 'mail.NotificationGroupView',
-    templateGetter: 'notificationGroupView',
     componentSetup() {
         useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
     },

@@ -9,7 +9,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'NotificationRequestView',
     template: 'mail.NotificationRequestView',
-    templateGetter: 'notificationRequestView',
     recordMethods: {
         onClick() {
             this.messaging.requestNotificationPermission();

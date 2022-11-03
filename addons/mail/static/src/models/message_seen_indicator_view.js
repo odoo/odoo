@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessageSeenIndicatorView',
     template: 'mail.MessageSeenIndicatorView',
-    templateGetter: 'messageSeenIndicatorView',
     fields: {
         messageViewOwner: one('MessageView', { identifying: true, inverse: 'messageSeenIndicatorView' }),
         messageSeenIndicator: one('MessageSeenIndicator', {

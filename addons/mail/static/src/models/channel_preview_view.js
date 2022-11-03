@@ -9,7 +9,6 @@ import { htmlToTextContentInline } from '@mail/js/utils';
 registerModel({
     name: 'ChannelPreviewView',
     template: 'mail.ChannelPreviewView',
-    templateGetter: 'channelPreviewView',
     componentSetup() {
         useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
     },

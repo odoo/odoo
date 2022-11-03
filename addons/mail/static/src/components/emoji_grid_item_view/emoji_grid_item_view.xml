@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.EmojiGridItemView" owl="1">
-        <div class="o_EmojiGridItemView d-flex justify-content-center" t-attf-style="width: {{emojiGridItemView.width}}px;">
-            <EmojiView t-if="emojiGridItemView.emojiView" className="'o_EmojiGrid_emoji w-100 h-100'" record="emojiGridItemView.emojiView"/>
+        <div class="o_EmojiGridItemView d-flex justify-content-center" t-attf-style="width: {{width}}px;">
+            <EmojiView t-if="emojiView" className="'o_EmojiGrid_emoji w-100 h-100'" record="emojiView"/>
         </div>
     </t>
 </templates>

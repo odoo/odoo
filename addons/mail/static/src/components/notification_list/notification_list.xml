@@ -2,15 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationListView" owl="1">
-        <t t-if="notificationListView">
-            <div class="o_NotificationListView d-flex flex-column overflow-auto" t-att-class="{ 'o-empty justify-content-center': notificationListView.notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="notificationListView.notificationViews.length === 0">
+            <div class="o_NotificationListView d-flex flex-column overflow-auto" t-att-class="{ 'o-empty justify-content-center': notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="notificationViews.length === 0">
                     <div class="o_NotificationListView_noConversation d-flex align-items-center justify-content-center py-4 px-2 text-muted">
                         No conversation yet...
                     </div>
                 </t>
                 <t t-else="">
-                    <t t-foreach="notificationListView.notificationViews" t-as="notificationView" t-key="notificationView.localId">
+                    <t t-foreach="notificationViews" t-as="notificationView" t-key="notificationView.localId">
                         <t t-if="notificationView.constructor.name === 'ChannelPreviewView'">
                             <ChannelPreviewView
                                 className="'o_NotificationListView_preview'"
@@ -45,7 +44,6 @@
                     </t>
                 </t>
             </div>
-        </t>
     </t>
 
 </templates>

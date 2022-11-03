@@ -14,7 +14,6 @@ const getNextGuestNameInputId = (function () {
 registerModel({
     name: 'WelcomeView',
     template: 'mail.WelcomeView',
-    templateGetter: 'welcomeView',
     componentSetup() {
         useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', refName: 'guestNameInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView' });

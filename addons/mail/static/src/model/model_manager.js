@@ -171,9 +171,9 @@ export class ModelManager {
     destroy() {
         this.messaging.delete();
         for (const model of Object.values(this.models)) {
-            if (model.hasComponent) {
+            if (model.__messagingComponent) {
                 unregisterMessagingComponent(model.name);
-                model.hasComponent = false;
+                delete model.__messagingComponent;
             }
             delete model.__fieldList;
             delete model.__fieldMap;
@@ -400,19 +400,12 @@ export class ModelManager {
                     return definition.get('componentSetup').call(this);
                 } });
             }
-            Object.defineProperty(
-                ModelComponent.prototype,
-                definition.get('templateGetter') ? definition.get('templateGetter') : 'record',
-                { get() {
-                    return this.props.record;
-                } },
-            );
             Object.assign(ModelComponent, {
                 props: { record: Object },
                 template: definition.get('template'),
             });
             registerMessagingComponent(ModelComponent);
-            model.hasComponent = true;
+            model.__messagingComponent = ModelComponent;
         }
         Object.assign(model, Object.fromEntries(definition.get('modelMethods')));
         Object.assign(model.prototype, Object.fromEntries(definition.get('recordMethods')));
@@ -1285,7 +1278,7 @@ export class ModelManager {
                 if (field.identifying) {
                     model.__identifyingFieldNames.add(fieldName);
                 }
-                // Add field accessors.
+                // Add field accessors on model.
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
                         const record = this.modelManager.isDebug ? this.__proxifiedRecord : this;
@@ -1319,6 +1312,37 @@ export class ModelManager {
                         return field.get(record);
                     },
                 });
+                if (model.__messagingComponent) {
+                    // Add field accessors on related component
+                    Object.defineProperty(model.__messagingComponent.prototype, fieldName, {
+                        get: function getFieldValue() { // this is bound to record
+                            return this.props.record[fieldName];
+                        },
+                    });
+                }
+            }
+            if (model.__messagingComponent) {
+                // Add record method accessors + localId
+                Object.defineProperty(model.__messagingComponent.prototype, 'localId', {
+                    get: function getFieldValue() { // this is bound to record
+                        return this.props.record.localId;
+                    },
+                });
+                const definition = registry.get(model.name);
+                for (const name of definition.get('recordMethods').keys()) {
+                    Object.defineProperty(model.__messagingComponent.prototype, name, {
+                        get() {
+                            return this.props.record[name];
+                        },
+                    });
+                }
+                for (const name of definition.get('recordGetters').keys()) {
+                    Object.defineProperty(model.__messagingComponent.prototype, name, {
+                        get() {
+                            return this.props.record[name];
+                        },
+                    });
+                }
             }
             delete model.__combinedFields;
         }

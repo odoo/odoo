@@ -6,7 +6,6 @@ import { one } from '@mail/model/model_field';
 registerModel({
     name: 'FollowerSubtypeView',
     template: 'mail.FollowerSubtypeView',
-    templateGetter: 'followerSubtypeView',
     recordMethods: {
         /**
          * Called when clicking on cancel button.

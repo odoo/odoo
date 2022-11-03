@@ -2,16 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.CallParticipantVideoView" owl="1">
-        <t t-if="callParticipantVideoView">
             <video class="o_CallParticipantVideoView w-100 h-100 rounded-1 cursor-pointer"
                 t-attf-class="{{ className }}"
                 playsinline="true"
                 autoplay="true"
                 muted="true"
-                t-on-loadedmetadata="callParticipantVideoView.onVideoLoadedMetaData"
+                t-on-loadedmetadata="onVideoLoadedMetaData"
                 t-ref="root"
             />
-        </t>
     </t>
 
 </templates>

@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'FollowButtonView',
     template: 'mail.FollowButtonView',
-    templateGetter: 'followButtonView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

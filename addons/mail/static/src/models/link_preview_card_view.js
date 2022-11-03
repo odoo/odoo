@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'LinkPreviewCardView',
     template: 'mail.LinkPreviewCardView',
-    templateGetter: 'linkPreviewCardView',
     recordMethods: {
         /**
          * Handles mouse enter event for the container of this element.

@@ -9,7 +9,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'CallSettingsMenu',
     template: 'mail.CallSettingsMenu',
-    templateGetter: 'callSettingsMenu',
     identifyingMode: 'xor',
     lifecycleHooks: {
         async _created() {

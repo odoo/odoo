@@ -10,7 +10,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ChatWindowHiddenMenuView',
     template: 'mail.ChatWindowHiddenMenuView',
-    templateGetter: 'chatWindowHiddenMenuView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'listRef', refName: 'list' });

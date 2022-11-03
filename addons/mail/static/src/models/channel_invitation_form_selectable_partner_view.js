@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ChannelInvitationFormSelectablePartnerView',
     template: 'mail.ChannelInvitationFormSelectablePartnerView',
-    templateGetter: 'channelInvitationFormSelectablePartnerView',
     fields: {
         channelInvitationFormOwner: one('ChannelInvitationForm', { identifying: true, inverse: 'selectablePartnerViews' }),
         partner: one('Partner', { identifying: true, inverse: 'channelInvitationFormSelectablePartnerViews' }),

@@ -6,7 +6,6 @@ import { one } from '@mail/model/model_field';
 registerModel({
     name: 'CallInviteRequestPopup',
     template: 'mail.CallInviteRequestPopup',
-    templateGetter: 'callInviteRequestPopup',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

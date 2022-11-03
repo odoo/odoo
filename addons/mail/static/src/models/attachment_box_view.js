@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'AttachmentBoxView',
     template: 'mail.AttachmentBoxView',
-    templateGetter: 'attachmentBoxView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

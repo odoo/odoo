@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'EmojiPickerHeaderActionView',
     template: 'mail.EmojiPickerHeaderActionView',
-    templateGetter: 'emojiPickerHeaderActionView',
     identifyingMode: 'xor',
     fields: {
         // dummy identifying field, so that it works without defining one initially in mail

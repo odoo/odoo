@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebarView" t-inherit-mode="extension">
         <xpath expr="//*[@name='beforeCategoryChat']" position="before">
-            <t t-set="categoryLivechat" t-value="discussSidebarView.owner.discuss.categoryLivechat"/>
+            <t t-set="categoryLivechat" t-value="owner.discuss.categoryLivechat"/>
             <t t-if="categoryLivechat and categoryLivechat.categoryItems.length">
                 <DiscussSidebarCategory
                     className="'o_DiscussSidebarView_category o_DiscussSidebarView_categoryLivechat'"

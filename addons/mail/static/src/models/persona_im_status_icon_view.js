@@ -8,7 +8,6 @@ import { markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'PersonaImStatusIconView',
     template: 'mail.PersonaImStatusIconView',
-    templateGetter: 'personaImStatusIconView',
     identifyingMode: 'xor',
     recordMethods: {
         /**

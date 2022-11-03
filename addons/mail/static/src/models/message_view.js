@@ -11,7 +11,6 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'MessageView',
     template: 'mail.MessageView',
-    templateGetter: 'messageView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'contentRef', refName: 'content' });

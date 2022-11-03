@@ -10,10 +10,9 @@ import { onMounted } from '@odoo/owl';
 registerModel({
     name: 'ActivityMarkDonePopoverContentView',
     template: 'mail.ActivityMarkDonePopoverContentView',
-    templateGetter: 'activityMarkDonePopoverContentView',
     componentSetup() {
         useRefToModel({ fieldName: 'feedbackTextareaRef', refName: 'feedbackTextarea' });
-        onMounted(this.activityMarkDonePopoverContentView.onMounted);
+        onMounted(this.onMounted);
     },
     identifyingMode: 'xor',
     recordMethods: {

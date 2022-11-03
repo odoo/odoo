@@ -7,7 +7,6 @@ import { one } from '@mail/model/model_field';
 registerModel({
     name: 'CallOptionMenu',
     template: 'mail.CallOptionMenu',
-    templateGetter: 'callOptionMenu',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ComposerSuggestedRecipientListView',
     template: 'mail.ComposerSuggestedRecipientListView',
-    templateGetter: 'composerSuggestedRecipientListView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

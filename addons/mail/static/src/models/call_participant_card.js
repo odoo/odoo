@@ -9,7 +9,6 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'CallParticipantCard',
     template: 'mail.CallParticipantCard',
-    templateGetter: 'callParticipantCard',
     componentSetup() {
         useRefToModel({ fieldName: 'volumeMenuAnchorRef', refName: 'volumeMenuAnchor' });
     },

@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadIconView" t-inherit-mode="extension">
         <xpath expr="//*[@name='root']" position="inside">
-            <t t-elif="threadIconView.thread.channel and threadIconView.thread.channel.channel_type === 'livechat'">
-                <t t-if="threadIconView.threadTypingIconView">
+            <t t-elif="thread.channel and thread.channel.channel_type === 'livechat'">
+                <t t-if="threadTypingIconView">
                     <ThreadTypingIconView
                         className="'o_ThreadIconView_typing'"
-                        record="threadIconView.threadTypingIconView"
+                        record="threadTypingIconView"
                     />
                 </t>
                 <t t-else="">

@@ -9,7 +9,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'ComposerTextInputView',
     template: 'mail.ComposerTextInputView',
-    templateGetter: 'composerTextInputView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'mirroredTextareaRef', refName: 'mirroredTextarea' });

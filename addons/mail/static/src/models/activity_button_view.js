@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ActivityButtonView',
     template: 'mail.ActivityButtonView',
-    templateGetter: 'activityButtonView',
     componentSetup() {
         useRefToModel({ fieldName: 'buttonRef', refName: 'button' });
     },

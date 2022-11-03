@@ -10,15 +10,14 @@ import { usePosition } from '@web/core/position_hook';
 registerModel({
     name: 'PopoverView',
     template: 'mail.PopoverView',
-    templateGetter: 'popoverView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         usePosition(
-            () => this.popoverView.anchorRef && this.popoverView.anchorRef.el,
+            () => this.anchorRef && this.anchorRef.el,
             {
                 popper: "root",
                 margin: 16,
-                position: this.popoverView.position,
+                position: this.position,
             }
         );
     },

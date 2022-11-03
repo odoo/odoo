@@ -9,7 +9,6 @@ import { clear, increment } from '@mail/model/model_field_command';
 registerModel({
     name: 'EmojiGridView',
     template: 'mail.EmojiGridView',
-    templateGetter: 'emojiGridView',
     componentSetup() {
         useRefToModel({ fieldName: 'containerRef', refName: 'containerRef'});
         useRefToModel({ fieldName: 'listRef', refName: 'listRef'});

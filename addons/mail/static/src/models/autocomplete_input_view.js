@@ -10,32 +10,27 @@ import { onMounted, onWillUnmount } from '@odoo/owl';
 registerModel({
     name: 'AutocompleteInputView',
     template: 'mail.AutocompleteInputView',
-    templateGetter: 'autocompleteInputView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         onMounted(() => {
             if (!this.root.el) {
                 return;
             }
-            if (this.autocompleteInputView.isFocusOnMount) {
+            if (this.isFocusOnMount) {
                 this.root.el.focus();
             }
             const args = {
                 autoFocus: true,
                 select: (ev, ui) => {
-                    if (this.autocompleteInputView) {
-                        this.autocompleteInputView.onSelect(ev, ui);
-                    }
+                    this.onSelect(ev, ui);
                 },
                 source: (req, res) => {
-                    if (this.autocompleteInputView) {
-                        this.autocompleteInputView.onSource(req, res);
-                    }
+                    this.onSource(req, res);
                 },
-                html: this.autocompleteInputView.isHtml,
+                html: this.isHtml,
             };
-            if (this.autocompleteInputView.customClass) {
-                args.classes = { 'ui-autocomplete': this.autocompleteInputView.customClass };
+            if (this.customClass) {
+                args.classes = { 'ui-autocomplete': this.customClass };
             }
             const autoCompleteElem = $(this.root.el).autocomplete(args);
             // Resize the autocomplete dropdown options to handle the long strings
