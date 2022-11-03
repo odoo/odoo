@@ -3172,8 +3172,8 @@
         LAYERS[LAYERS["Clipboard"] = 2] = "Clipboard";
         LAYERS[LAYERS["Search"] = 3] = "Search";
         LAYERS[LAYERS["Chart"] = 4] = "Chart";
-        LAYERS[LAYERS["Selection"] = 5] = "Selection";
-        LAYERS[LAYERS["Autofill"] = 6] = "Autofill";
+        LAYERS[LAYERS["Autofill"] = 5] = "Autofill";
+        LAYERS[LAYERS["Selection"] = 6] = "Selection";
         LAYERS[LAYERS["Headers"] = 7] = "Headers";
     })(LAYERS || (LAYERS = {}));
 
@@ -22108,18 +22108,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     z-index: ${ComponentsImportance.ScrollBar};
     background-color: ${BACKGROUND_GRAY_COLOR};
 
-    // &.vertical {
-    //   right: 0;
-    //   bottom: ${SCROLLBAR_WIDTH$1}px;
-    //   width: ${SCROLLBAR_WIDTH$1}px;
-    //   overflow-x: hidden;
-    // }
-    // &.horizontal {
-    //   bottom: 0;
-    //   height: ${SCROLLBAR_WIDTH$1}px;
-    //   right: ${SCROLLBAR_WIDTH$1}px;
-    //   overflow-y: hidden;
-    // }
     &.corner {
       right: 0px;
       bottom: 0px;
@@ -23124,6 +23112,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         worksheet: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
         workbook: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
         drawing: "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing",
+        table: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        revision: "http://schemas.microsoft.com/office/spreadsheetml/2014/revision",
+        revision3: "http://schemas.microsoft.com/office/spreadsheetml/2016/revision3",
+        markupCompatibility: "http://schemas.openxmlformats.org/markup-compatibility/2006",
     };
     const DRAWING_NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main";
     const DRAWING_NS_C = "http://schemas.openxmlformats.org/drawingml/2006/chart";
@@ -23138,6 +23130,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         table: "application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml",
         pivot: "application/vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml",
         externalLink: "application/vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml",
+    };
+    const XLSX_RELATION_TYPE = {
+        document: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+        sheet: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet",
+        sharedStrings: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
+        styles: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+        drawing: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing",
+        chart: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
+        theme: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme",
+        table: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/table",
+        hyperlink: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
     };
     const RELATIONSHIP_NSR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     const HEIGHT_FACTOR = 0.75; // 100px => 75 u
@@ -24724,12 +24727,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     /**
      * Convert the imported XLSX tables.
      *
-     * As we don't support a concept similar to the XLSX tables, we will settle for applying a style in all
-     * the cells of the table and converting the table-specific formula references into standard reference.
+     * We will create a FilterTable if the imported table have filters, then apply a style in all the cells of the table
+     * and convert the table-specific formula references into standard references.
      *
      * Change the converted data in-place.
      */
     function convertTables(convertedData, xlsxData) {
+        for (const xlsxSheet of xlsxData.sheets) {
+            for (const table of xlsxSheet.tables) {
+                const sheet = convertedData.sheets.find((sheet) => sheet.name === xlsxSheet.sheetName);
+                if (!sheet || !table.autoFilter)
+                    continue;
+                if (!sheet.filterTables)
+                    sheet.filterTables = [];
+                sheet.filterTables.push({ range: table.ref });
+            }
+        }
         applyTableStyle(convertedData, xlsxData);
         convertTableFormulaReferences(convertedData.sheets, xlsxData.sheets);
     }
@@ -24748,6 +24761,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         for (let xlsxSheet of xlsxData.sheets) {
             for (let table of xlsxSheet.tables) {
                 const sheet = convertedData.sheets.find((sheet) => sheet.name === xlsxSheet.sheetName);
+                if (!sheet)
+                    continue;
                 const tableZone = toZone(table.ref);
                 // Table style
                 for (let i = 0; i < table.headerRowCount; i++) {
@@ -25636,6 +25651,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }).asNum(),
                     cols: this.extractTableCols(tableElement),
                     style: this.extractTableStyleInfo(tableElement),
+                    autoFilter: this.extractTableAutoFilter(tableElement),
                 };
             })[0];
         }
@@ -25659,6 +25675,32 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     showColumnStripes: (_e = this.extractAttr(tableStyleElement, "showColumnStripes")) === null || _e === void 0 ? void 0 : _e.asBool(),
                 };
             })[0];
+        }
+        extractTableAutoFilter(tableElement) {
+            return this.mapOnElements({ query: "autoFilter", parent: tableElement }, (autoFilterElement) => {
+                return {
+                    columns: this.extractFilterColumns(autoFilterElement),
+                    zone: this.extractAttr(autoFilterElement, "ref", { required: true }).asString(),
+                };
+            })[0];
+        }
+        extractFilterColumns(autoFilterElement) {
+            return this.mapOnElements({ query: "tableColumn", parent: autoFilterElement }, (filterColumnElement) => {
+                return {
+                    colId: this.extractAttr(autoFilterElement, "colId", { required: true }).asNum(),
+                    hiddenButton: this.extractAttr(autoFilterElement, "hiddenButton", {
+                        default: false,
+                    }).asBool(),
+                    filters: this.extractSimpleFilter(filterColumnElement),
+                };
+            });
+        }
+        extractSimpleFilter(filterColumnElement) {
+            return this.mapOnElements({ query: "filter", parent: filterColumnElement }, (filterColumnElement) => {
+                return {
+                    val: this.extractAttr(filterColumnElement, "val", { required: true }).asString(),
+                };
+            });
         }
     }
 
@@ -30576,7 +30618,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
     }
-    AutofillPlugin.layers = [6 /* LAYERS.Autofill */];
+    AutofillPlugin.layers = [5 /* LAYERS.Autofill */];
     AutofillPlugin.getters = ["getAutofillTooltip"];
 
     class AutomaticSumPlugin extends UIPlugin {
@@ -32731,6 +32773,58 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const value = (_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
             return (value === null || value === void 0 ? void 0 : value.toLowerCase()) || "";
         }
+        exportForExcel(data) {
+            var _a;
+            for (const sheetData of data.sheets) {
+                for (const tableData of sheetData.filterTables) {
+                    const tableZone = toZone(tableData.range);
+                    const filters = [];
+                    const headerNames = [];
+                    for (const i of range(0, zoneToDimension(tableZone).width)) {
+                        const filteredValues = this.getFilterValues(sheetData.id, tableZone.left + i, tableZone.top);
+                        const filter = this.getters.getFilter(sheetData.id, tableZone.left + i, tableZone.top);
+                        if (!filter)
+                            continue;
+                        const valuesInFilterZone = filter.filteredZone
+                            ? positions(filter.filteredZone)
+                                .map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
+                                .filter(isDefined$1)
+                            : [];
+                        // In xlsx, filtered values = values that are displayed, not values that are hidden
+                        const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
+                        filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
+                        // In xlsx, filter header should ALWAYS be a string and should be unique
+                        const headerPosition = { col: filter.col, row: filter.zoneWithHeaders.top };
+                        const headerString = (_a = this.getters.getCell(sheetData.id, headerPosition.col, headerPosition.row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
+                        const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
+                        headerNames.push(headerName);
+                        sheetData.cells[toXC(headerPosition.col, headerPosition.row)] = {
+                            ...sheetData.cells[toXC(headerPosition.col, headerPosition.row)],
+                            content: headerName,
+                            value: headerName,
+                            isFormula: false,
+                        };
+                    }
+                    tableData.filters = filters;
+                }
+            }
+        }
+        /**
+         * Get an unique column name for the column at colIndex. If the column name is already in the array of used column names,
+         * concatenate a number to the name until we find a new unique name (eg. "ColName" => "ColName1" => "ColName2" ...)
+         */
+        getUniqueColNameForExcel(colIndex, colName, usedColNames) {
+            if (!colName) {
+                colName = `Column${colIndex}`;
+            }
+            let currentColName = colName;
+            let i = 2;
+            while (usedColNames.includes(currentColName)) {
+                currentColName = colName + String(i);
+                i++;
+            }
+            return currentColName;
+        }
     }
     FilterEvaluationPlugin.getters = [
         "getCellBorderWithFilterBorder",
@@ -33103,6 +33197,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
             }
             return undefined;
+        }
+        exportForExcel(data) {
+            for (const sheetData of data.sheets) {
+                for (const [row, rowData] of Object.entries(sheetData.rows)) {
+                    const isHidden = this.isRowHidden(sheetData.id, Number(row));
+                    rowData.isHidden = isHidden;
+                }
+            }
         }
     }
     HeaderVisibilityUIPlugin.getters = [
@@ -34330,10 +34432,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ctx.fillStyle = onlyOneCell ? "#f3f7fe" : "#e9f0ff";
             ctx.strokeStyle = SELECTION_BORDER_COLOR;
             ctx.lineWidth = 1.5 * thinLineWidth;
-            ctx.globalCompositeOperation = "multiply";
             for (const zone of zones) {
                 const { x, y, width, height } = this.getters.getVisibleRect(zone);
+                ctx.globalCompositeOperation = "multiply";
                 ctx.fillRect(x, y, width, height);
+                ctx.globalCompositeOperation = "source-over";
                 ctx.strokeRect(x, y, width, height);
             }
             ctx.globalCompositeOperation = "source-over";
@@ -34360,7 +34463,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
     }
-    GridSelectionPlugin.layers = [5 /* LAYERS.Selection */];
+    GridSelectionPlugin.layers = [6 /* LAYERS.Selection */];
     GridSelectionPlugin.getters = [
         "getActiveSheet",
         "getActiveSheetId",
@@ -35238,7 +35341,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     SelectionMultiUserPlugin.getters = ["getClientsToDisplay"];
-    SelectionMultiUserPlugin.layers = [5 /* LAYERS.Selection */];
+    SelectionMultiUserPlugin.layers = [6 /* LAYERS.Selection */];
 
     class InternalViewport {
         constructor(getters, sheetId, boundaries, sizeInGrid, options, offsets) {
@@ -37487,7 +37590,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
           .o-dropdown-content {
             position: absolute;
-            top: calc(100% + 5px);
+            top: 100%;
             left: 0;
             z-index: ${ComponentsImportance.Dropdown};
             box-shadow: 1px 2px 5px 2px rgba(51, 51, 51, 0.15);
@@ -37883,8 +37986,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return `grid-template-rows: ${TOPBAR_HEIGHT}px auto ${BOTTOMBAR_HEIGHT + 1}px`;
         }
         setup() {
-            var _a, _b;
-            (_b = (_a = this.props).exposeSpreadsheet) === null || _b === void 0 ? void 0 : _b.call(_a, this);
             this.sidePanel = owl.useState({ isOpen: false, panelProps: {} });
             this.composer = owl.useState({
                 topBarFocus: "inactive",
@@ -38036,7 +38137,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Spreadsheet._t = t;
     Spreadsheet.props = {
         model: Object,
-        exposeSpreadsheet: { type: Function, optional: true },
     };
 
     class LocalTransportService {
@@ -40658,14 +40758,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return { attrs, node };
         }
     }
-    function addContent(content, sharedStrings) {
+    function addContent(content, sharedStrings, forceString = false) {
         let value = content;
         const attrs = [];
-        if (["TRUE", "FALSE"].includes(value.trim())) {
+        if (!forceString && ["TRUE", "FALSE"].includes(value.trim())) {
             value = value === "TRUE" ? "1" : "0";
             attrs.push(["t", "b"]);
         }
-        else if (!isNumber(value)) {
+        else if (forceString || !isNumber(value)) {
             const { id } = pushElement(content, sharedStrings);
             value = id.toString();
             attrs.push(["t", "s"]);
@@ -41262,6 +41362,80 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
   `;
     }
 
+    const TABLE_DEFAULT_STYLE = escapeXml /*xml*/ `<tableStyleInfo name="TableStyleLight8" showFirstColumn="0" showLastColumn="0" showRowStripes="0" showColumnStripes="0"/>`;
+    function createTable(table, tableId, sheetData) {
+        const tableAttributes = [
+            ["id", tableId],
+            ["name", `Table${tableId}`],
+            ["displayName", `Table${tableId}`],
+            ["ref", table.range],
+            ["xmlns", NAMESPACE.table],
+            ["xmlns:xr", NAMESPACE.revision],
+            ["xmlns:xr3", NAMESPACE.revision3],
+            ["xmlns:mc", NAMESPACE.markupCompatibility],
+        ];
+        const xml = escapeXml /*xml*/ `
+    <table ${formatAttributes(tableAttributes)}>
+      ${addAutoFilter(table)}
+      ${addTableColumns(table, sheetData)}
+      ${TABLE_DEFAULT_STYLE}
+    </table>
+    `;
+        return parseXML(xml);
+    }
+    function addAutoFilter(table) {
+        const autoFilterAttributes = [["ref", table.range]];
+        return escapeXml /*xml*/ `
+  <autoFilter ${formatAttributes(autoFilterAttributes)}>
+    ${joinXmlNodes(addFilterColumns(table))}
+  </autoFilter>
+  `;
+    }
+    function addFilterColumns(table) {
+        const tableZone = toZone(table.range);
+        const columns = [];
+        for (const i of range(0, zoneToDimension(tableZone).width)) {
+            const filter = table.filters[i];
+            if (!filter || !filter.filteredValues.length) {
+                continue;
+            }
+            const colXml = escapeXml /*xml*/ `
+      <filterColumn ${formatAttributes([["colId", i]])}>
+        ${addFilter(filter)}
+      </filterColumn>
+      `;
+            columns.push(colXml);
+        }
+        return columns;
+    }
+    function addFilter(filter) {
+        const filterValues = filter.filteredValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        return escapeXml /*xml*/ `
+  <filters>
+      ${joinXmlNodes(filterValues)}
+  </filters>
+`;
+    }
+    function addTableColumns(table, sheetData) {
+        var _a;
+        const tableZone = toZone(table.range);
+        const columns = [];
+        for (const i of range(0, zoneToDimension(tableZone).width)) {
+            const colHeaderXc = toXC(tableZone.left + i, tableZone.top);
+            const colName = ((_a = sheetData.cells[colHeaderXc]) === null || _a === void 0 ? void 0 : _a.content) || `col${i}`;
+            const colAttributes = [
+                ["id", i + 1],
+                ["name", colName],
+            ];
+            columns.push(escapeXml /*xml*/ `<tableColumn ${formatAttributes(colAttributes)}/>`);
+        }
+        return escapeXml /*xml*/ `
+        <tableColumns ${formatAttributes([["count", columns.length]])}>
+            ${joinXmlNodes(columns)}
+        </tableColumns>
+    `;
+    }
+
     function addColumns(cols) {
         if (!Object.values(cols).length) {
             return escapeXml ``;
@@ -41313,7 +41487,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         ({ attrs: additionalAttrs, node: cellNode } = addContent(label, construct.sharedStrings));
                     }
                     else if (cell.content && cell.content !== "") {
-                        ({ attrs: additionalAttrs, node: cellNode } = addContent(cell.content, construct.sharedStrings));
+                        const isTableHeader = isCellTableHeader(c, r, sheet);
+                        ({ attrs: additionalAttrs, node: cellNode } = addContent(cell.content, construct.sharedStrings, isTableHeader));
                     }
                     attributes.push(...additionalAttrs);
                     cellNodes.push(escapeXml /*xml*/ `
@@ -41337,6 +41512,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     </sheetData>
   `;
     }
+    function isCellTableHeader(col, row, sheet) {
+        return sheet.filterTables.some((table) => {
+            const zone = toZone(table.range);
+            const headerZone = { ...zone, bottom: zone.top };
+            return isInside(col, row, headerZone);
+        });
+    }
     function addHyperlinks(construct, data, sheetIndex) {
         var _a;
         const sheet = data.sheets[sheetIndex];
@@ -41357,7 +41539,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 else {
                     const linkRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
                         target: url,
-                        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+                        type: XLSX_RELATION_TYPE.hyperlink,
                         targetMode: "External",
                     });
                     linkNodes.push(escapeXml /*xml*/ `
@@ -41457,7 +41639,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       <sheet ${formatAttributes(attributes)} />
     `);
             addRelsToFile(construct.relsFiles, "xl/_rels/workbook.xml.rels", {
-                type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet",
+                type: XLSX_RELATION_TYPE.sheet,
                 target: `worksheets/sheet${index}.xml`,
             });
         }
@@ -41472,6 +41654,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     function createWorksheets(data, construct) {
         const files = [];
+        let currentTableIndex = 1;
         for (const [sheetIndex, sheet] of Object.entries(data.sheets)) {
             const namespaces = [
                 ["xmlns", NAMESPACE["worksheet"]],
@@ -41481,6 +41664,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["defaultRowHeight", convertHeightToExcel(DEFAULT_CELL_HEIGHT)],
                 ["defaultColWidth", convertWidthToExcel(DEFAULT_CELL_WIDTH)],
             ];
+            const tablesNode = createTablesForSheet(sheet, sheetIndex, currentTableIndex, construct, files);
+            currentTableIndex += sheet.filterTables.length;
             // Figures and Charts
             let drawingNode = escapeXml ``;
             const charts = sheet.charts;
@@ -41490,14 +41675,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const xlsxChartId = convertChartId(chart.id);
                     const chartRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
                         target: `../charts/chart${xlsxChartId}.xml`,
-                        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
+                        type: XLSX_RELATION_TYPE.chart,
                     });
                     chartRelIds.push(chartRelId);
                     files.push(createXMLFile(createChart(chart, sheetIndex, data), `xl/charts/chart${xlsxChartId}.xml`, "chart"));
                 }
                 const drawingRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
                     target: `../drawings/drawing${sheetIndex}.xml`,
-                    type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing",
+                    type: XLSX_RELATION_TYPE.drawing,
                 });
                 files.push(createXMLFile(createDrawing(chartRelIds, sheet, charts), `xl/drawings/drawing${sheetIndex}.xml`, "drawing"));
                 drawingNode = escapeXml /*xml*/ `<drawing r:id="${drawingRelId}" />`;
@@ -41512,19 +41697,46 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         ${joinXmlNodes(addConditionalFormatting(construct.dxfs, sheet.conditionalFormats))}
         ${addHyperlinks(construct, data, sheetIndex)}
         ${drawingNode}
+        ${tablesNode}
       </worksheet>
     `;
             files.push(createXMLFile(parseXML(sheetXml), `xl/worksheets/sheet${sheetIndex}.xml`, "sheet"));
         }
         addRelsToFile(construct.relsFiles, "xl/_rels/workbook.xml.rels", {
-            type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings",
+            type: XLSX_RELATION_TYPE.sharedStrings,
             target: "sharedStrings.xml",
         });
         addRelsToFile(construct.relsFiles, "xl/_rels/workbook.xml.rels", {
-            type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+            type: XLSX_RELATION_TYPE.styles,
             target: "styles.xml",
         });
         return files;
+    }
+    /**
+     * Create xlsx files for each tables contained in the given sheet, and add them to the XLSXStructure ans XLSXExportFiles.
+     *
+     * Return an XML string that should be added in the sheet to link these table to the sheet.
+     */
+    function createTablesForSheet(sheetData, sheetId, startingTableId, construct, files) {
+        let currentTableId = startingTableId;
+        if (!sheetData.filterTables.length)
+            return new XMLString("");
+        const sheetRelFile = `xl/worksheets/_rels/sheet${sheetId}.xml.rels`;
+        const tableParts = [];
+        for (const table of sheetData.filterTables) {
+            const tableRelId = addRelsToFile(construct.relsFiles, sheetRelFile, {
+                target: `../tables/table${currentTableId}.xml`,
+                type: XLSX_RELATION_TYPE.table,
+            });
+            files.push(createXMLFile(createTable(table, currentTableId, sheetData), `xl/tables/table${currentTableId}.xml`, "table"));
+            tableParts.push(escapeXml /*xml*/ `<tablePart r:id="${tableRelId}" />`);
+            currentTableId++;
+        }
+        return escapeXml /*xml*/ `
+    <tableParts count="${sheetData.filterTables.length}">
+      ${joinXmlNodes(tableParts)}
+    </tableParts>
+`;
     }
     function createStylesSheet(construct) {
         const namespaces = [
@@ -41602,7 +41814,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     function createRelRoot() {
         const attributes = [
             ["Id", "rId1"],
-            ["Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument"],
+            ["Type", XLSX_RELATION_TYPE.document],
             ["Target", "xl/workbook.xml"],
         ];
         const xml = escapeXml /*xml*/ `
@@ -41682,11 +41894,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                                 return dispatchResult;
                             }
                             this.state.addCommand(command);
-                            this.dispatchToHandlers(this.handlers, command);
                         }
-                        else {
-                            this.dispatchToHandlers(this.handlers, command);
-                        }
+                        this.dispatchToHandlers(this.handlers, command);
                         break;
                     case 3 /* Status.Finalizing */:
                         throw new Error("Cannot dispatch commands in the finalize state");
@@ -42074,8 +42283,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-10-27T09:50:44.339Z';
-    exports.__info__.hash = '1f8e5fa';
+    exports.__info__.date = '2022-11-03T06:57:12.461Z';
+    exports.__info__.hash = '7112f4d';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
