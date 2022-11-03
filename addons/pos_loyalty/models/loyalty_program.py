@@ -62,16 +62,3 @@ class LoyaltyProgram(models.Model):
         super()._compute_total_order_count()
         for program in self:
             program.total_order_count += program.pos_order_count
-
-    def action_view_pos_orders(self):
-        self.ensure_one()
-        pos_order_ids = list(unique(r['order_id'] for r in\
-                self.env['pos.order.line'].search_read([('reward_id', 'in', self.reward_ids.ids)], fields=['order_id'])))
-        return {
-            'name': _("PoS Orders"),
-            'view_mode': 'tree,form',
-            'res_model': 'pos.order',
-            'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', pos_order_ids)],
-            'context': dict(self._context, create=False),
-        }
