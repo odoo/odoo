@@ -8,11 +8,13 @@
                 <form string="Compose Email" class="o_mail_composer_form" style="padding-bottom: 0px;">
                     <group col="1">
                         <group col="2">
+                            <field name="author_id" invisible="1"/>
                             <field name="survey_access_mode" invisible="1"/>
                             <field name="survey_users_login_required" invisible="1"/>
                             <field name="survey_users_can_signup" invisible="1"/>
                             <field name="survey_id" invisible="1"/>
                             <field name="existing_mode" widget="radio" invisible="1" />
+                            <field name="lang" invisible="1"/>
                             <field name="render_model" invisible="1"/>
                             <label class="o_survey_label_survey_start_url" for="survey_start_url" string="Survey Link"/>
                             <field name="survey_start_url" nolabel="1" readonly="1" widget="CopyClipboardChar"

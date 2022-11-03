@@ -41,8 +41,8 @@ class ApplicantSendMail(models.TransientModel):
                 })
 
             applicant.message_post(
+                author_id=self.author_id.id,
                 body=self.body,
-                email_from=self.author_id.email,
                 email_layout_xmlid='mail.mail_notification_light',
                 message_type='comment',
                 partner_ids=applicant.partner_id.ids,

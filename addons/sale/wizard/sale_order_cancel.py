@@ -12,17 +12,10 @@ class SaleOrderCancel(models.TransientModel):
     _description = "Sales Order Cancel"
 
     @api.model
-    def _default_email_from(self):
-        if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to post message, please configure the sender's email address."))
-
-    @api.model
     def _default_author_id(self):
         return self.env.user.partner_id
 
     # origin
-    email_from = fields.Char(string="From", default=_default_email_from)
     author_id = fields.Many2one(
         'res.partner',
         string="Author",
@@ -81,9 +74,9 @@ class SaleOrderCancel(models.TransientModel):
     def action_send_mail_and_cancel(self):
         self.ensure_one()
         self.order_id.message_post(
+            author_id=self.author_id.id,
             body=self.body,
             message_type='comment',
-            email_from=self.email_from,
             email_layout_xmlid='mail.mail_notification_light',
             partner_ids=self.recipient_ids.ids,
             subject=self.subject,
