@@ -2,7 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, link } from '@mail/model/model_field_command';
 
 const getThreadNextTemporaryId = (function () {
@@ -39,6 +39,13 @@ registerModel({
                 attachmentsLoaderTimer: clear(),
                 isShowingAttachmentsLoading: true,
             });
+        },
+        /**
+         * Handles click on activity box title.
+         */
+        onClickActivityBoxTitle(ev) {
+            ev.preventDefault();
+            this.update({ isActivityListVisible: !this.isActivityListVisible });
         },
         /**
          * Handles click on the attach button.
@@ -240,12 +247,14 @@ registerModel({
         },
     },
     fields: {
-        activityBoxView: one('ActivityBoxView', { inverse: 'chatter',
+        activityViews: many('ActivityView', { inverse: 'chatterOwner',
             compute() {
-                if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
-                    return {};
+                if (!this.thread) {
+                    return clear();
                 }
-                return clear();
+                return this.thread.activities.map(activity => {
+                    return { activity };
+                });
             },
         }),
         /**
@@ -319,6 +328,14 @@ registerModel({
          * Determines whether `this` should display an activity box.
          */
         hasActivities: attr({ default: true }),
+        hasActivityBox: attr({ default: false,
+            compute() {
+                if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
+                    return true;
+                }
+                return clear();
+            },
+        }),
         hasAttachmentBox: attr({ default: false }),
         hasExternalBorder: attr({ default: true }),
         /**
@@ -370,6 +387,7 @@ registerModel({
          * of this record.
          */
         id: attr({ identifying: true }),
+        isActivityListVisible: attr({ default: true }),
         /**
          * Determiners whether the attachment box is visible initially.
          */
