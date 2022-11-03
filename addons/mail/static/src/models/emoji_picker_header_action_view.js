@@ -10,7 +10,7 @@ registerModel({
     identifyingMode: 'xor',
     fields: {
         // dummy identifying field, so that it works without defining one initially in mail
-        __ownerAsDummy: one('EmojiPickerHeaderActionListView', { identifying: true, inverse: '__dummyActionView' }),
+        __ownerAsDummy: one('EmojiPickerView', { identifying: true, inverse: '__dummyActionView', }),
         content: one('Record', { required: true,
             compute() {
                 return clear();
@@ -21,7 +21,7 @@ registerModel({
                 return clear();
             },
         }),
-        owner: one('EmojiPickerHeaderActionListView', { inverse: 'actionViews', required: true,
+        owner: one('EmojiPickerView', { inverse: 'actionViews', required: true,
             compute() {
                 return clear();
             },

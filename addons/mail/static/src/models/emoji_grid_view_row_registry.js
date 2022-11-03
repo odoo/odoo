@@ -32,7 +32,7 @@ registerModel({
             return value;
         },
         computeSearchRows() {
-            if (this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch === "") {
+            if (this.emojiGridViewOwner.emojiPickerViewOwner.currentSearch === "") {
                 return clear();
             }
             const emojis = this.messaging.emojiRegistry.allEmojis.filter(this.emojiGridViewOwner._filterEmoji);

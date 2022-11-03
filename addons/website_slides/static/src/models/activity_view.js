@@ -9,7 +9,7 @@ registerPatch({
          * Handles click on the "grant access" button.
          */
         async onGrantAccess(ev) {
-            const { chatter } = this.activityBoxView; // save value before deleting activity
+            const chatter = this.chatterOwner; // save value before deleting activity
             await this.messaging.rpc({
                 model: 'slide.channel',
                 method: 'action_grant_access',
@@ -25,7 +25,7 @@ registerPatch({
          * Handles click on the "refuse access" button.
          */
         async onRefuseAccess(ev) {
-            const { chatter } = this.activityBoxView; // save value before deleting activity
+            const chatter = this.chatterOwner; // save value before deleting activity
             await this.messaging.rpc({
                 model: 'slide.channel',
                 method: 'action_refuse_access',

@@ -28,9 +28,9 @@ registerModel({
     },
     fields: {
         /**
-         * Link with a AttachmentBoxView to handle attachments.
+         * Link with a chatter to handle attachments.
          */
-        attachmentBoxViewOwner: one('AttachmentBoxView', { identifying: true, inverse: 'attachmentList' }),
+        chatterOwner: one('Chatter', { identifying: true, inverse: 'attachmentList' }),
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
          */
@@ -56,8 +56,8 @@ registerModel({
                 if (this.messageViewOwner) {
                     return this.messageViewOwner.message.attachments;
                 }
-                if (this.attachmentBoxViewOwner) {
-                    return this.attachmentBoxViewOwner.chatter.thread.allAttachments;
+                if (this.chatterOwner) {
+                    return this.chatterOwner.thread.allAttachments;
                 }
                 if (this.composerViewOwner && this.composerViewOwner.composer) {
                     return this.composerViewOwner.composer.attachments;
