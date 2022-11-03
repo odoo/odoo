@@ -333,6 +333,7 @@ registerModel({
             },
         }),
         is_public: attr(),
+        messagesAsSender: one('Message'),
         model: attr({
             default: 'res.partner',
         }),

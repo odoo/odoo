@@ -47,7 +47,7 @@ class TestImLivechatMessage(TransactionCase):
             'attachment_ids': [],
             'author': {
                 'id': self.users[1].partner_id.id,
-                'name': "test1",
+                'name': self.users[1].partner_id.name,
             },
             'body': message.body,
             'date': message.date,
@@ -72,6 +72,10 @@ class TestImLivechatMessage(TransactionCase):
             'recipients': [],
             'record_name': "test1 Ernest Employee",
             'res_id': channel_livechat_1.id,
+            'sender': {
+                'id': self.users[0].partner_id.id,
+                'name': self.users[0].partner_id.name,
+            },
             'sms_ids': [],
             'starred_partner_ids': [],
             'subject': False,

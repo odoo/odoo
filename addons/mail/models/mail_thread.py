@@ -2761,7 +2761,7 @@ class MailThread(models.AbstractModel):
 
         author_id = msg_vals.get('author_id') or message.author_id.id
         for pid, pdata in res.items():
-            if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
+            if pid and pid in [author_id, self.env.user.partner_id.id] and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pdata['active'] is False:
                 continue

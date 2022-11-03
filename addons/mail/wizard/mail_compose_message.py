@@ -413,6 +413,8 @@ class MailComposer(models.TransientModel):
                 # rendered values using template
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
+                if email_dict.get('author'):
+                    mail_values['author_id'] = int(email_dict.pop('author'))
                 mail_values.update(email_dict)
                 if not self.reply_to_force_new:
                     mail_values.pop('reply_to')
@@ -568,7 +570,7 @@ class MailComposer(models.TransientModel):
             values = self.generate_email_for_composer(
                 template_id, [res_id],
                 ['subject', 'body_html',
-                 'email_from',
+                 'author', 'email_from',
                  'email_cc', 'email_to', 'partner_to', 'reply_to',
                  'attachment_ids', 'mail_server_id'
                 ]
@@ -588,6 +590,7 @@ class MailComposer(models.TransientModel):
                 attachment_ids.append(Attachment.create(data_attach).id)
             if values.get('attachment_ids', []) or attachment_ids:
                 values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
+            values['author_id'] = int(values.pop('author')) if values.get('author') else self.env.user.partner_id.id
         else:
             default_values = self.with_context(
                 default_composition_mode=composition_mode,
@@ -664,7 +667,7 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self.generate_email_for_composer(
                 self.template_id.id, res_ids,
-                ['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
+                ['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id', 'author', 'email_from'])
         else:
             template_values = {}
 
@@ -674,6 +677,7 @@ class MailComposer(models.TransientModel):
                 results[res_id].pop('partner_ids', None)
                 results[res_id].pop('email_to', None)
                 results[res_id].pop('email_cc', None)
+                results[res_id].pop('email_from', None)
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:
