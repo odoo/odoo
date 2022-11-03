@@ -43,7 +43,7 @@
 
     <record id="resource_calendar_std_38h" model="resource.calendar">
         <field name="name">Standard 38 hours/week</field>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="company_id" eval="False"/>
         <field name="hours_per_day">7.6</field>
         <field name="attendance_ids"
             eval="[(5, 0, 0),
