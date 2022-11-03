@@ -2,6 +2,15 @@ import { URL_REGEX, URL_REGEX_WITH_INFOS } from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     click,
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/link.test.js
+||||||| parent of 70fb2e542377... temp
+    deleteForward,
+    deleteBackward,
+=======
+    deleteForward,
+    deleteBackward,
+    deleteBackwardMobile,
+>>>>>>> 70fb2e542377... temp:addons/web_editor/static/lib/odoo-editor/test/spec/link.test.js
     insertText,
     insertParagraphBreak,
     insertLineBreak,
@@ -369,6 +378,172 @@ describe('Link', () => {
             });
         });
     });
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/link.test.js
+||||||| parent of 70fb2e542377... temp
+    describe('isolated link', () => {
+        const clickOnLink = async editor => {
+            const a = editor.editable.querySelector('a');
+            await click(a, { clientX: a.getBoundingClientRect().left + 5 });
+            return a;
+        };
+        it('should restrict editing to link when clicked', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.isContentEditable).to.be.equal(true);
+                },
+                contentAfter: '<p>a<a href="#/"><span>b</span></a></p>',
+            });
+            // The following is a regression test, checking that the link
+            // remains non-editable whenever the editable zone is contained by
+            // the link.
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
+            }, {
+                isRootEditable: false,
+                getContentEditableAreas: function (editor) {
+                    return editor.editable.querySelectorAll('a span');
+                }
+            });
+        });
+        it('should keep isolated link after a keyboard delete', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await deleteBackward(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" data-oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+        });
+        it('should keep isolated link after a delete and typing', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '1');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '2');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '3');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
+            });
+        });
+    });
+=======
+    describe('isolated link', () => {
+        const clickOnLink = async editor => {
+            const a = editor.editable.querySelector('a');
+            await click(a, { clientX: a.getBoundingClientRect().left + 5 });
+            return a;
+        };
+        it('should restrict editing to link when clicked', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.isContentEditable).to.be.equal(true);
+                },
+                contentAfter: '<p>a<a href="#/"><span>b</span></a></p>',
+            });
+            // The following is a regression test, checking that the link
+            // remains non-editable whenever the editable zone is contained by
+            // the link.
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
+            }, {
+                isRootEditable: false,
+                getContentEditableAreas: function (editor) {
+                    return editor.editable.querySelectorAll('a span');
+                }
+            });
+        });
+        it('should keep isolated link after a keyboard delete', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await deleteBackward(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" data-oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+        });
+        it('should keep isolated link after a mobile delete', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await deleteBackwardMobile(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" data-oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+        });
+        it('should keep isolated link after a delete and typing', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '1');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '2');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '3');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
+            });
+        });
+        it('should keep isolated link after a mobile delete and typing', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackwardMobile(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '1');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '2');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '3');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
+            });
+        });
+    });
+>>>>>>> 70fb2e542377... temp:addons/web_editor/static/lib/odoo-editor/test/spec/link.test.js
     describe('existing link', () => {
         it('should parse correctly a span inside a Link', async () => {
             await testEditor(BasicEditor, {

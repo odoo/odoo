@@ -3191,6 +3191,7 @@ export class OdooEditor extends EventTarget {
         } else if (ev.key === 'Backspace') {
             // backspace
             const selection = this.document.getSelection();
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
             if (!ev.ctrlKey && !ev.metaKey) {
                 if (selection.isCollapsed) {
                     // We need to hijack it because firefox doesn't trigger a
@@ -3220,6 +3221,21 @@ export class OdooEditor extends EventTarget {
                         }
                     }
                 }
+||||||| parent of 70fb2e542377... temp
+            if (selection.isCollapsed) {
+                ev.preventDefault();
+                const inputEvent = new InputEvent('input', {
+                    inputType: 'deleteContentBackward',
+                    data: null,
+                    bubbles: true,
+                    cancelable: false,
+                });
+                this._onInput(inputEvent);
+=======
+            if (selection.isCollapsed) {
+                ev.preventDefault();
+                this._applyCommand('oDeleteBackward');
+>>>>>>> 70fb2e542377... temp:addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
             }
         } else if (ev.key === 'Tab') {
             // Tab
