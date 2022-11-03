@@ -726,7 +726,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'holiday_status_id': self.leave_type.id,
             'state': 'draft',
         }
-        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=6), 1, values)
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=5), 1, values)
         leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_confirm_by_user(self):
@@ -737,7 +737,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'holiday_status_id': self.leave_type.id,
             'state': 'confirm',
         }
-        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=6), 1, values)
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=5), 1, values)
         leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_confirm_in_past_by_user(self):
@@ -759,7 +759,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
         }
-        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=6), 1, values)
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=5), 1, values)
         leave.with_user(self.user_hrmanager_id).write({'state': 'validate'})
         with self.assertRaises(UserError), self.cr.savepoint():
             leave.with_user(self.user_employee.id).unlink()
