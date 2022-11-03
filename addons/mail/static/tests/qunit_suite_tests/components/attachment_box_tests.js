@@ -36,7 +36,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a button add"
     );
     assert.ok(
-        messaging.models['Chatter'].all()[0].attachmentBoxView.fileUploader,
+        messaging.models['Chatter'].all()[0].fileUploader,
         "should have a file uploader"
     );
     assert.strictEqual(
@@ -90,7 +90,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         "should have a button add"
     );
     assert.ok(
-        messaging.models['Chatter'].all()[0].attachmentBoxView.fileUploader,
+        messaging.models['Chatter'].all()[0].fileUploader,
         "should have a file uploader"
     );
     assert.strictEqual(
