@@ -2,7 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, link } from '@mail/model/model_field_command';
 
 const getThreadNextTemporaryId = (function () {
@@ -41,6 +41,13 @@ registerModel({
             });
         },
         /**
+         * Handles click on activity box title.
+         */
+        onClickActivityBoxTitle(ev) {
+            ev.preventDefault();
+            this.update({ isActivityListVisible: !this.isActivityListVisible });
+        },
+        /**
          * Handles click on the attach button.
          */
         onClickButtonAddAttachments() {
@@ -50,7 +57,7 @@ registerModel({
          * Handles click on the attachments button.
          */
         onClickButtonToggleAttachments() {
-            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
+            this.update({ hasAttachmentBox: this.hasAttachmentBox ? clear() : true });
         },
         /**
          * Handles click on top bar close button.
@@ -59,6 +66,15 @@ registerModel({
          */
         onClickChatterTopbarClose(ev) {
             this.component.trigger('o-close-chatter');
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickFollow(ev) {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.follow();
         },
         /**
          * Handles click on "log note" button.
@@ -96,6 +112,34 @@ registerModel({
             }
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickUnfollow(ev) {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.unfollow();
+            this.reloadParentView({ fieldNames: ['message_follower_ids'] });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseEnterUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: true });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseleaveUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: false });
+        },
+        /**
          * Handles scroll on this scroll panel.
          *
          * @param {Event} ev
@@ -106,8 +150,8 @@ registerModel({
             }
             this.threadView.messageListView.onScroll();
         },
-        openAttachmentBoxView() {
-            this.update({ attachmentBoxView: {} });
+        openAttachmentBox() {
+            this.update({ hasAttachmentBox: true });
         },
         /**
          * Open a dialog to add partners as followers.
@@ -186,7 +230,7 @@ registerModel({
                     this.thread.delete();
                 }
                 this.update({
-                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? {} : clear(),
+                    hasAttachmentBox: this.isAttachmentBoxVisibleInitially ? true : clear(),
                     thread: insert({
                         // If the thread was considered to have the activity
                         // mixin once, it will have it forever.
@@ -205,7 +249,7 @@ registerModel({
                 });
                 const nextId = getThreadNextTemporaryId();
                 this.update({
-                    attachmentBoxView: clear(),
+                    hasAttachmentBox: clear(),
                     thread: insert({
                         areAttachmentsLoaded: true,
                         id: nextId,
@@ -240,15 +284,41 @@ registerModel({
         },
     },
     fields: {
-        activityBoxView: one('ActivityBoxView', { inverse: 'chatter',
+        activityViews: many('ActivityView', { inverse: 'chatterOwner',
             compute() {
-                if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
-                    return {};
+                if (!this.thread) {
+                    return clear();
                 }
-                return clear();
+                return this.thread.activities.map(activity => {
+                    return { activity };
+                });
             },
         }),
-        attachmentBoxView: one('AttachmentBoxView', { inverse: 'chatter' }),
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one('AttachmentList', { inverse: 'chatterOwner',
+            compute() {
+                return (this.thread && this.thread.allAttachments.length > 0)
+                    ? {}
+                    : clear();
+            },
+        }),
+        /**
+         * Determines the label on the attachment button of the topbar.
+         */
+        attachmentButtonText: attr({ default: "",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                const attachments = this.thread.allAttachments;
+                if (attachments.length === 0) {
+                    return clear();
+                }
+                return attachments.length;
+            },
+        }),
         attachmentsLoaderTimer: one('Timer', { inverse: 'chatterOwnerAsAttachmentsLoader' }),
         /**
          * States the OWL Chatter component of this chatter.
@@ -275,14 +345,6 @@ registerModel({
                 return this.thread ? {} : clear();
             },
         }),
-        followButtonView: one('FollowButtonView', { inverse: 'chatterOwner',
-            compute() {
-                if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
-                    return {};
-                }
-                return clear();
-            },
-        }),
         followerListMenuView: one('FollowerListMenuView', { inverse: 'chatterOwner',
             compute() {
                 if (this.hasFollowers && this.thread) {
@@ -292,10 +354,35 @@ registerModel({
             },
         }),
         /**
+         * Text displayed by the follow button when not already followed.
+         */
+        followingText: attr({
+            compute() {
+                return this.env._t("Following");
+            },
+        }),
+        /**
          * Determines whether `this` should display an activity box.
          */
         hasActivities: attr({ default: true }),
+        hasActivityBox: attr({ default: false,
+            compute() {
+                if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
+                    return true;
+                }
+                return clear();
+            },
+        }),
+        hasAttachmentBox: attr({ default: false }),
         hasExternalBorder: attr({ default: true }),
+        hasFollowButton: attr({ default: false,
+            compute() {
+                if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
+                    return true;
+                }
+                return clear();
+            },
+        }),
         /**
          * Determines whether `this` should display followers menu.
          */
@@ -328,6 +415,11 @@ registerModel({
                 return Boolean(this.thread && this.hasMessageList);
             },
         }),
+        hasTopBar: attr({ default: false,
+            compute() {
+                return this.thread ? true : clear();
+            },
+        }),
         hasWriteAccess: attr({
             compute() {
                 return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
@@ -340,10 +432,16 @@ registerModel({
          * of this record.
          */
         id: attr({ identifying: true }),
+        isActivityListVisible: attr({ default: true }),
         /**
          * Determiners whether the attachment box is visible initially.
          */
         isAttachmentBoxVisibleInitially: attr({ default: false }),
+        isFollowButtonDisabled: attr({
+            compute() {
+                return !this.hasReadAccess;
+            },
+        }),
         isInFormSheetBg: attr({ default: false }),
         isPreparingAttachmentsLoading: attr({ default: false,
             compute() {
@@ -351,6 +449,7 @@ registerModel({
             },
         }),
         isShowingAttachmentsLoading: attr({ default: false }),
+        isUnfollowButtonHighlighted: attr({ default: false }),
         scrollPanelRef: attr({ ref: 'scrollPanel' }),
         /**
          * Determines whether the view should reload after file changed in this chatter,
@@ -392,9 +491,12 @@ registerModel({
                 };
             },
         }),
-        topbar: one('ChatterTopbar', { inverse: 'chatter',
+        /**
+         * Text displayed by the follow button when already followed.
+         */
+        unfollowingText: attr({
             compute() {
-                return this.thread ? {} : clear();
+                return this.env._t("Unfollow");
             },
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', { default: {}, inverse: 'chatterOwner', readonly: true, required: true }),

@@ -24,7 +24,7 @@ registerModel({
         onComponentUpdate() {
             if (
                 this.categorySelectedByUser &&
-                this.emojiPickerViewOwner.emojiSearchBarView.currentSearch === ""
+                this.emojiPickerViewOwner.currentSearch === ""
             ) {
                 this.doJumpToCategorySelectedByUser();
             }
@@ -53,7 +53,7 @@ registerModel({
          * Filters emoji according to the current search terms.
          */
         _filterEmoji(emoji) {
-            return (emoji._isStringInEmojiKeywords(this.emojiPickerViewOwner.emojiSearchBarView.currentSearch));
+            return (emoji._isStringInEmojiKeywords(this.emojiPickerViewOwner.currentSearch));
         },
     },
     fields: {
@@ -96,6 +96,15 @@ registerModel({
                 );
             },
         }),
+        hasNoSearchResult: attr({
+            compute() {
+                if (this.emojiPickerViewOwner.currentSearch !== "" && this.rows.length === 0) {
+                    return true;
+                }
+                return clear();
+            },
+            default: false,
+        }),
         height: attr({
             compute() {
                 return this.rowHeight * 9.5;
@@ -121,15 +130,17 @@ registerModel({
             },
         }),
         listRef: attr({ ref: 'listRef' }),
-        loadingScreenView: one('EmojiGridLoadingScreen', { inverse: 'emojiGridViewOwner',
+        loadingText: attr({
             compute() {
-                if (!this.messaging.emojiRegistry.isLoaded) {
-                    return {};
-                }
-                return clear();
+                return this.env._t("Loading...");
             },
         }),
         nonSearchRowRegistry: one('EmojiGridViewRowRegistry', { default: {}, inverse: 'emojiGridViewOwnerAsNonSearch' }),
+        noSearchResultText: attr({
+            compute() {
+                return this.env._t("No emoji match your search");
+            },
+        }),
         onScrollThrottle: one('Throttle', { inverse: 'emojiGridViewAsOnScroll',
             compute() {
                 return { func: () => this.update({ scrollRecomputeCount: increment() }) };
@@ -159,7 +170,7 @@ registerModel({
         rowHeight: attr({ default: 30 }),
         rows: many('EmojiGridRowView', {
             compute() {
-                if (this.emojiPickerViewOwner.emojiSearchBarView.currentSearch !== "") {
+                if (this.emojiPickerViewOwner.currentSearch !== "") {
                     return this.searchRowRegistry.rows;
                 }
                 return this.nonSearchRowRegistry.rows;
@@ -188,14 +199,6 @@ registerModel({
         }),
         scrollbarThresholdWidth: attr({ default: 15 }),
         scrollRecomputeCount: attr({ default: 0 }),
-        searchNoContentView: one('EmojiGridSearchNoContentView', { inverse: 'emojiGridViewOwner',
-            compute() {
-                if (this.emojiPickerViewOwner.emojiSearchBarView.currentSearch !== "" && this.rows.length === 0) {
-                    return {};
-                }
-                return clear();
-            },
-        }),
         searchRowRegistry: one('EmojiGridViewRowRegistry', { default: {}, inverse: 'emojiGridViewOwnerAsSearch' }),
         viewBlockRef: attr({ ref: 'viewBlockRef' }),
         /**

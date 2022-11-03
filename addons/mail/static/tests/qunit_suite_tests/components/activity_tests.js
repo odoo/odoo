@@ -750,7 +750,7 @@ QUnit.test('activity upload document is available', async function (assert) {
         "should have activity upload button"
     );
     assert.ok(
-        messaging.models['Chatter'].all()[0].activityBoxView.activityViews[0].fileUploader,
+        messaging.models['Chatter'].all()[0].activityViews[0].fileUploader,
         "should have a file uploader"
     );
 });

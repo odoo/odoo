@@ -34,7 +34,7 @@ registerModel({
          * Handles the click on the cancel button
          */
         async onClickCancel() {
-            const { chatter } = this.activityBoxView; // save value before deleting activity
+            const chatter = this.chatterOwner; // save value before deleting activity
             await this.activity.deleteServerRecord();
             if (chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
@@ -51,7 +51,7 @@ registerModel({
          * Handles the click on the edit button
          */
         async onClickEdit() {
-            const { chatter } = this.activityBoxView;
+            const chatter = this.chatterOwner;
             await this.activity.edit();
             if (chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
@@ -70,7 +70,6 @@ registerModel({
     },
     fields: {
         activity: one('Activity', { identifying: true, inverse: 'activityViews' }),
-        activityBoxView: one('ActivityBoxView', { identifying: true, inverse: 'activityViews' }),
         /**
          * Determines whether the details are visible.
          */
@@ -86,6 +85,7 @@ registerModel({
                 return sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
             },
         }),
+        chatterOwner: one('Chatter', { identifying: true, inverse: 'activityViews' }),
         clockWatcher: one('ClockWatcher', { default: { clock: { frequency: 60 * 1000 } }, inverse: 'activityViewOwner' }),
         /**
          * Compute the label for "when" the activity is due.
