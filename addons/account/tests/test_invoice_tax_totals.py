@@ -6,7 +6,7 @@ import json
 
 
 @tagged('post_install', '-at_install')
-class TestTaxTotals(AccountTestInvoicingCommon):
+class TestTaxTotalsCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -86,6 +86,10 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': invoice_lines_vals,
         })
+
+
+@tagged('post_install', '-at_install')
+class TestTaxTotals(TestTaxTotalsCommon):
 
     def test_multiple_tax_lines(self):
         tax_10 = self.env['account.tax'].create({
