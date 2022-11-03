@@ -81,23 +81,24 @@
         <template id="external_loader" name="Livechat : external_script field of livechat channel">
             <!-- css style -->
             <link t-attf-href="{{url}}/im_livechat/external_lib.css" rel="stylesheet"/>
-            <!-- js of all the required lib (internal and external) -->
-            <script t-attf-src="{{url}}/im_livechat/external_lib.js" type="text/javascript" />
             <!-- the loader -->
             <script t-attf-src="{{url}}/im_livechat/loader/{{channel_id}}" type="text/javascript"/>
+            <!-- js of all the required lib (internal and external) -->
+            <script t-attf-src="{{url}}/im_livechat/external_lib.js" type="text/javascript" />
         </template>
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
-                window.addEventListener('load', function () {
-                    odoo.define('im_livechat.loaderData', function() {
-                        return {
-                            isAvailable: <t t-out="'true' if info['available'] else 'false'"/>,
-                            serverUrl: "<t t-out="info['server_url']"/>",
-                            options: <t t-out="json.dumps(info.get('options', {}))"/>,
-                        };
-                    });
+                if (!window.odoo) {
+                    window.odoo = {};
+                }
+                odoo.__session_info__ = Object.assign(odoo.__session_info__ || {}, {
+                    livechatData: {
+                        isAvailable: <t t-out="'true' if info['available'] else 'false'"/>,
+                        serverUrl: "<t t-out="info['server_url']"/>",
+                        options: <t t-out="json.dumps(info.get('options', {}))"/>,
+                    },
                 });
             </t>
         </template>
