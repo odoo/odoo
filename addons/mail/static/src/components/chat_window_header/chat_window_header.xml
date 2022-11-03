@@ -3,25 +3,17 @@
 
     <t t-name="mail.ChatWindowHeaderView" owl="1">
             <div class="o_ChatWindowHeaderView d-flex align-items-center" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'cursor-pointer': !messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="onClick" t-ref="root">
-                <t t-if="chatWindowOwner.hasCloseAsBackButton">
-                    <div class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandBack o_ChatWindowHeaderView_commandClose cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-on-click="chatWindowOwner.onClickClose" title="Close conversation">
-                        <i class="fa fa-arrow-left"/>
-                    </div>
-                </t>
-                <t t-if="threadIconView">
-                    <ThreadIconView
-                        className="'o_ChatWindowHeaderView_icon o_ChatWindowHeaderView_item ms-3 me-1 my-0'"
-                        record="threadIconView"
-                    />
-                </t>
-                <div class="o_ChatWindowHeaderView_item o_ChatWindowHeaderView_name mh-100 mx-1 my-0 text-truncate" t-att-class="{'ms-3':!chatWindowOwner.thread or !chatWindowOwner.thread.channel}" t-att-title="chatWindowOwner.name">
-                    <t t-esc="chatWindowOwner.name"/>
+                <div t-if="chatWindowOwner.hasCloseAsBackButton" class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandBack o_ChatWindowHeaderView_commandClose cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-on-click="chatWindowOwner.onClickClose" title="Close conversation">
+                    <i class="fa fa-arrow-left"/>
                 </div>
-                <t t-if="chatWindowOwner.thread and chatWindowOwner.thread.channel and chatWindowOwner.thread.channel.localMessageUnreadCounter > 0">
-                    <div class="o_ChatWindowHeaderView_counter o_ChatWindowHeaderView_item mx-1 my-0">
-                        (<t t-esc="chatWindowOwner.thread.channel.localMessageUnreadCounter"/>)
-                    </div>
-                </t>
+                <ThreadIconView t-if="threadIconView"
+                    className="'o_ChatWindowHeaderView_icon o_ChatWindowHeaderView_item ms-3 me-1 my-0'"
+                    record="threadIconView"
+                />
+                <div class="o_ChatWindowHeaderView_item o_ChatWindowHeaderView_name mh-100 mx-1 my-0 text-truncate" t-att-class="{'ms-3':!chatWindowOwner.thread or !chatWindowOwner.thread.channel}" t-esc="chatWindowOwner.name" t-att-title="chatWindowOwner.name"/>
+                <div t-if="chatWindowOwner.thread and chatWindowOwner.thread.channel and chatWindowOwner.thread.channel.localMessageUnreadCounter > 0" class="o_ChatWindowHeaderView_counter o_ChatWindowHeaderView_item mx-1 my-0">
+                    (<t t-esc="chatWindowOwner.thread.channel.localMessageUnreadCounter"/>)
+                </div>
                 <div class="flex-grow-1"/>
                 <div class="o_ChatWindowHeaderView_item o_ChatWindowHeaderView_rightArea d-flex align-items-center h-100 ms-1 me-0 my-0" t-att-class="{'opacity-75 opacity-100-hover': !messaging.device.isSmall }">
                     <t t-if="chatWindowOwner.hasCallButtons">
@@ -33,47 +25,31 @@
                         </div>
                     </t>
                     <t t-if="chatWindowOwner.hasInviteFeature">
-                        <t t-if="!chatWindowOwner.channelInvitationForm">
-                            <div class="o_ChatWindowHeaderView_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Add users" t-on-click="chatWindowOwner.onClickShowInviteForm">
-                                <i class="fa fa-lg fa-user-plus"/>
-                            </div>
-                        </t>
-                        <t t-if="chatWindowOwner.channelInvitationForm">
-                            <div class="o_ChatWindowHeaderView_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Stop adding users" t-on-click="chatWindowOwner.onClickHideInviteForm">
-                                <i class="fa fa-lg fa-user-plus"/>
-                            </div>
-                        </t>
-                    </t>
-                    <t t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasMemberListFeature and !chatWindowOwner.isMemberListOpened">
-                        <div class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandShowMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindowOwner.onClickShowMemberList">
-                            <i class="fa fa-users"/>
+                        <div t-if="!chatWindowOwner.channelInvitationForm" class="o_ChatWindowHeaderView_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Add users" t-on-click="chatWindowOwner.onClickShowInviteForm">
+                            <i class="fa fa-lg fa-user-plus"/>
+                        </div>
+                        <div t-if="chatWindowOwner.channelInvitationForm" class="o_ChatWindowHeaderView_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Stop adding users" t-on-click="chatWindowOwner.onClickHideInviteForm">
+                            <i class="fa fa-lg fa-user-plus"/>
                         </div>
                     </t>
-                    <t t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasMemberListFeature and chatWindowOwner.isMemberListOpened">
-                        <div class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandHideMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindowOwner.onClickHideMemberList">
-                            <i class="fa fa-users"/>
-                        </div>
-                    </t>
-                    <t t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasCallFeature and !chatWindowOwner.isCallSettingsMenuOpen">
-                        <div class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandShowCallSettingsMenu cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindowOwner.onClickShowCallSettingsMenu">
-                            <i class="fa fa-gear"/>
-                        </div>
-                    </t>
-                    <t t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasCallFeature and chatWindowOwner.isCallSettingsMenuOpen">
-                        <div class="o_ChatWindowHeaderView_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindowOwner.onClickHideCallSettingsMenu">
-                            <i class="fa fa-gear"/>
-                        </div>
-                    </t>
-                    <t t-if="chatWindowOwner.isExpandable">
-                        <div class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandExpand cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindowOwner.onClickExpand" title="Open in Discuss">
-                            <i class="fa fa-expand"/>
-                        </div>
-                    </t>
-                    <t t-if="!chatWindowOwner.hasCloseAsBackButton">
-                        <div class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandClose cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindowOwner.onClickClose" title="Close chat window">
-                            <i class="fa fa-close"/>
-                        </div>
-                    </t>
+                    <div t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasMemberListFeature and !chatWindowOwner.isMemberListOpened" class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandShowMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindowOwner.onClickShowMemberList">
+                        <i class="fa fa-users"/>
+                    </div>
+                    <div t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasMemberListFeature and chatWindowOwner.isMemberListOpened" class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandHideMemberList cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindowOwner.onClickHideMemberList">
+                        <i class="fa fa-users"/>
+                    </div>
+                    <div t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasCallFeature and !chatWindowOwner.isCallSettingsMenuOpen" class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandShowCallSettingsMenu cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindowOwner.onClickShowCallSettingsMenu">
+                        <i class="fa fa-gear"/>
+                    </div>
+                    <div t-if="chatWindowOwner.thread and chatWindowOwner.thread.hasCallFeature and chatWindowOwner.isCallSettingsMenuOpen" class="o_ChatWindowHeaderView_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindowOwner.onClickHideCallSettingsMenu">
+                        <i class="fa fa-gear"/>
+                    </div>
+                    <div t-if="chatWindowOwner.isExpandable" class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandExpand cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindowOwner.onClickExpand" title="Open in Discuss">
+                        <i class="fa fa-expand"/>
+                    </div>
+                    <div t-if="!chatWindowOwner.hasCloseAsBackButton" class="o_ChatWindowHeaderView_command o_ChatWindowHeaderView_commandClose cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindowOwner.onClickClose" title="Close chat window">
+                        <i class="fa fa-close"/>
+                    </div>
                 </div>
             </div>
     </t>
