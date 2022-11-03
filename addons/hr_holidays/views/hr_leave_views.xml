@@ -262,12 +262,12 @@
                             <field name="date_to" invisible="1" />
                             <!-- half day or custom hours: only show one date -->
                             <label for="request_date_from" attrs="{'invisible': [('request_unit_half', '=', False), ('request_unit_hours', '=', False)]}" string="Date" />
+                            <label for="request_date_from" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" string="Dates" />
                             <div class="o_row" attrs="{'invisible': [('request_unit_half', '=', False), ('request_unit_hours', '=', False)]}">
                                 <field name="request_date_from" class="oe_inline" string="Date" />
                                 <field name="request_date_from_period" attrs="{'invisible': [('request_unit_half', '!=', True)], 'required': [('request_unit_half', '=', True)]}"/>
                             </div>
                             <!-- full days: show date start/end with daterange -->
-                            <label for="request_date_from" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" string="Dates" />
                             <div class="o_row" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
                                 <span class="text-muted">From</span>
                                 <field name="request_date_from" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
