@@ -6,7 +6,7 @@ import io
 import pprint
 import unittest
 
-from odoo.tests.common import TransactionCase, can_import
+from odoo.tests.common import TransactionCase, can_import, RecordCapturer
 from odoo.modules.module import get_module_resource
 from odoo.tools import mute_logger, pycompat
 from odoo.addons.base_import.models.base_import import ImportValidationError
@@ -727,28 +727,26 @@ foo3,US,0,persons\n""",
             ['Joel', 'US', 'Portal', '', 'tag1', 'tag3'],
         ]
 
-        existing_partners = self.env['res.partner'].search_read([], ['id'])
-        import_wizard = self.env['base_import.import'].create({
-            'res_model': 'res.partner',
-            'file': '\n'.join([';'.join(partner_values) for partner_values in file_partner_values]),
-            'file_type': 'text/csv',
-        })
+        with RecordCapturer(self.env['res.partner'], []) as capture:
+            import_wizard = self.env['base_import.import'].create({
+                'res_model': 'res.partner',
+                'file': '\n'.join([';'.join(partner_values) for partner_values in file_partner_values]),
+                'file_type': 'text/csv',
+            })
 
-        results = import_wizard.execute_import(
-            ['name', 'country_id', 'name', 'name', 'category_id', 'category_id'],
-            [],
-            {
-                'quoting': '"',
-                'separator': ';',
-            },
-        )
+            results = import_wizard.execute_import(
+                ['name', 'country_id', 'name', 'name', 'category_id', 'category_id'],
+                [],
+                {
+                    'quoting': '"',
+                    'separator': ';',
+                },
+            )
 
         # if result is empty, no import error
         self.assertItemsEqual(results['messages'], [])
 
-        partners = self.env['res.partner'].search([
-            ('id', 'not in', [existing_partner['id'] for existing_partner in existing_partners])
-        ], order='id asc')
+        partners = capture.records
 
         self.assertEqual(3, len(partners))
         self.assertEqual('Mitchel Admin The Admin User', partners[0].name)
