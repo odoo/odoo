@@ -605,7 +605,7 @@ class HolidaysRequest(models.Model):
     def _compute_can_cancel(self):
         now = fields.Datetime.now()
         for leave in self:
-            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state == 'validate' and leave.date_from and leave.date_from > now
+            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state in ['validate', 'validate1'] and leave.date_from and leave.date_from > now
 
     @api.depends('state')
     def _compute_is_hatched(self):
@@ -1037,7 +1037,7 @@ class HolidaysRequest(models.Model):
 
         if not self.user_has_groups('hr_holidays.group_hr_holidays_user'):
             for hol in self:
-                if hol.state not in ['draft', 'confirm']:
+                if hol.state not in ['draft', 'confirm', 'validate1']:
                     raise UserError(error_message % state_description_values.get(self[:1].state))
                 if hol.date_from < now:
                     raise UserError(_('You cannot delete a time off which is in the past'))
@@ -1219,13 +1219,15 @@ class HolidaysRequest(models.Model):
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
             user_tz = timezone(holiday.tz)
             utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
+            # Do not notify the employee by mail, in case if the time off still needs Officer's approval
+            notify_partner_ids = holiday.employee_id.user_id.partner_id.ids if holiday.validation_type != 'both' else []
             holiday.message_post(
                 body=_(
                     'Your %(leave_type)s planned on %(date)s has been accepted',
                     leave_type=holiday.holiday_status_id.display_name,
                     date=utc_tz.replace(tzinfo=None)
                 ),
-                partner_ids=holiday.employee_id.user_id.partner_id.ids)
+                partner_ids=notify_partner_ids)
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         if not self.env.context.get('leave_fast_create'):
@@ -1363,6 +1365,7 @@ class HolidaysRequest(models.Model):
         if any(holiday.state not in ['draft', 'confirm', 'validate', 'validate1'] for holiday in self):
             raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
 
+        self._notify_manager()
         validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
         validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
         (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
@@ -1383,6 +1386,24 @@ class HolidaysRequest(models.Model):
         self.activity_update()
         return True
 
+    def _notify_manager(self):
+        leaves = self.filtered(lambda hol: (hol.validation_type == 'both' and hol.state in ['validate1', 'validate']) or (hol.validation_type == 'manager' and hol.state == 'validate'))
+        holiday_names = self.name_get()
+        for holiday in leaves:
+            responsible = holiday.employee_id.leave_manager_id.partner_id.ids
+            if responsible:
+                holiday_name = list(filter(lambda h: holiday.id in h, holiday_names))[0][1]
+                self.env['mail.thread'].sudo().message_notify(
+                    partner_ids=responsible,
+                    model_description='Time Off',
+                    subject=_('Refused Time Off'),
+                    body=_(
+                        '%(holiday_name)s has been refused.',
+                        holiday_name=holiday_name,
+                    ),
+                    email_layout_xmlid='mail.mail_notification_light',
+                )
+
     def _action_user_cancel(self, reason):
         self.ensure_one()
         if not self.can_cancel:
@@ -1391,12 +1412,38 @@ class HolidaysRequest(models.Model):
         self._force_cancel(reason, 'mail.mt_note')
 
     def _force_cancel(self, reason, msg_subtype='mail.mt_comment'):
+        leave_names = self.name_get()
         for leave in self:
             leave.message_post(
                 body=_('The time off has been canceled: %s', reason),
                 subtype_xmlid=msg_subtype
             )
 
+            responsibles = self.env['res.partner']
+            # manager
+            if (leave.holiday_status_id.leave_validation_type == 'manager' and leave.state == 'validate') or (leave.holiday_status_id.leave_validation_type == 'both' and leave.state == 'validate1'):
+                responsibles = leave.employee_id.leave_manager_id.partner_id
+            # officer
+            elif leave.holiday_status_id.leave_validation_type == 'hr' and leave.state == 'validate':
+                responsibles = leave.holiday_status_id.responsible_id.partner_id
+            # both
+            elif leave.holiday_status_id.leave_validation_type == 'both' and leave.state == 'validate':
+                responsibles = leave.employee_id.leave_manager_id.partner_id
+                responsibles |= leave.holiday_status_id.responsible_id.partner_id
+
+            if responsibles:
+                leave_name = list(filter(lambda h: leave.id in h, leave_names))[0][1]
+                self.env['mail.thread'].sudo().message_notify(
+                    partner_ids=responsibles.ids,
+                    model_description='Time Off',
+                    subject=_('Canceled Time Off'),
+                    body=_(
+                        "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s.",
+                        leave_name=leave_name,
+                        reason=reason
+                    ),
+                    email_layout_xmlid='mail.mail_notification_light',
+                )
         leave_sudo = self.sudo()
         leave_sudo.with_context(from_cancel_wizard=True).active = False
         leave_sudo.meeting_id.active = False
