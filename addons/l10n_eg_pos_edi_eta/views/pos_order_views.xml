@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_pos_pos_form" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit.l10n_eg_pos_edi_eta</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//button[@name='action_pos_order_invoice']" position="attributes">
+                    <field name="l10n_eg_pos_eta_submission_state" invisible="1" />
+                    <attribute name="attrs">{'invisible': ['|', '|', ('invoice_group', '=', False), ('state','!=','paid'), '&amp;', ('l10n_eg_pos_eta_state', '!=', 'ignore'), ('l10n_eg_pos_eta_submission_state', '!=', 'invalid')]}</attribute>
+                </xpath>
+
+                <xpath expr="//header" position="after">
+                    <field name="l10n_eg_pos_eta_submission_state" invisible="1" />
+                    <field name="l10n_eg_pos_eta_state" invisible="1" />
+                    <field name="l10n_eg_pos_eta_error" invisible="1" />
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': [('l10n_eg_pos_eta_state', '!=', 'pending')]}">
+                         <div>The receipt needs to be submitted to the ETA:</div>
+                         <button name="l10n_eg_pos_eta_process_receipts" type="object" class="oe_link" string="Submit now" />
+                    </div>
+                    <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('l10n_eg_pos_eta_state', '!=', 'pending'), ('l10n_eg_pos_eta_error', '=', False)]}">
+                        <div class="o_row">
+                            <field name="l10n_eg_pos_eta_error" />
+                            <button name="l10n_eg_pos_eta_process_receipts" type="object" class="oe_link oe_inline" string="Retry" />
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('l10n_eg_pos_eta_submission_state', '!=', 'pending'), ('l10n_eg_pos_eta_state', '!=', 'sent')]}">
+                        <div class="o_row">
+                            <i class="fa fa-circle-info mr-2" title="Pending Submission" />
+                            <div>The receipt was submitted to the ETA, but its status remains to be verified</div>
+                            <button name="l10n_eg_pos_eta_check_submissions" type="object" class="oe_link oe_inline" string="Check Submission" />
+                        </div>
+                    </div>
+                    <div class="alert alert-success" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': [('l10n_eg_pos_eta_submission_state', '!=', 'valid')]}">
+                        <div class="o_row">
+                            <i class="fa fa-check mr-2" title="Valid Submission" />
+                            <div>The receipt was successfully submitted to the ETA </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': [('l10n_eg_pos_eta_submission_state', '!=', 'invalid')]}">
+                        <div class="row">
+                            <div class="col-12 o_row">
+                                <i class="fa fa-warning mr-2" title="Invalid Submission" />
+                                <div class="font-weight-bold">The receipt submitted to the ETA is Invalid. Please, check the errors below: </div>
+                            </div>
+                            <field name="l10n_eg_pos_eta_submission_errors" class="col-12" readonly="1" />
+                            <div class="col-12 o_row">
+                                Please, submit this receipt as an invoice instead.
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+
+                <notebook position="inside">
+                    <field name="country_code" invisible="1" />
+                    <page string="ETA E-Invoice" attrs="{'invisible': [('country_code', '!=', 'EG')]}">
+                        <group>
+                            <group>
+                                <field name="l10n_eg_pos_uuid" readonly="1"/>
+                                <field name="l10n_eg_pos_submission_number" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="l10n_eg_pos_json_doc_id" readonly="1" invisible="1"/>
+                                <field name="l10n_eg_pos_qrcode" readonly="1" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="view_pos_order_tree" model="ir.ui.view">
+            <field name="name">pos.order.tree.inherit.l10n_eg_pos_edi_eta</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="l10n_eg_pos_eta_state" widget="badge" optional="hide" />
+                    <field name="l10n_eg_pos_eta_submission_state" widget="badge"
+                           decoration-info="l10n_eg_pos_eta_submission_state == 'pending'"
+                           decoration-success="l10n_eg_pos_eta_submission_state == 'valid'"
+                           decoration-muted="l10n_eg_pos_eta_submission_state == 'invalid'"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>

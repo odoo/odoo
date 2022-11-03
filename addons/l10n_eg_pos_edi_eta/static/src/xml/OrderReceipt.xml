@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
+            <t t-if="eta_data.qr_code">
+                <div class="pos-receipt-qrcode">
+                    <img style="display:block;"
+                         t-attf-src="/report/barcode/?type=QR&amp;value={{eta_data.qr_code}}&amp;width=130&amp;height=130"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('actions')]/div" position="before">
+            <t t-set="eta_sent" t-value="eta_result.state === 'sent'"/>
+            <div role="alert" t-if="eta_result.state !== 'ignore'"
+                 t-attf-class="alert alert-{{eta_sent ? 'success' : 'info'}}">
+                <div class="alert-content">
+                    <span>
+                        <t t-if="eta_sent">
+                            The receipt was successfully submitted to the ETA, and the QR code was applied.
+                        </t>
+                        <t t-else="">
+                            The receipt was not properly submitted to the ETA. Please, click on the button below to try again.
+                        </t>
+                    </span>
+                </div>
+                <t t-set="eta_error" t-value="eta_result.error"/>
+                <div t-if="showError" class="eta-error">
+                    <p class="eta-message" t-esc="eta_error.message"/>
+                    <ul t-if="eta_error.details">
+                        <li t-foreach="eta_error.details" t-as="err_line" t-esc="err_line.message + ': ' + err_line.target + ', ' + err_line.propertyPath" />
+                    </ul>
+                </div>
+                <div t-if="!eta_sent" class="buttons">
+                    <button class="button" t-on-click="submitToETA" t-att-disabled="eta_result.loading">
+                        <t t-if="!eta_result.loading">
+                            <i class="fa fa-refresh"/>
+                            Submit to ETA
+                        </t>
+                        <t t-else="">
+                            Submitting...
+                        </t>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

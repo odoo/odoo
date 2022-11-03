@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="point_of_sale.ClientDetailsEdit" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('client-details-left')]/div[hasclass('client-detail')]" position="after">
+            <div class="client-detail">
+                <span class="label">Building</span>
+                <input class="detail client-address-building-number" name="l10n_eg_building_no"
+                       t-on-change="captureChange" t-att-value="props.partner.l10n_eg_building_no || ''"
+                       placeholder="Building Number" />
+            </div>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,68 @@
+$pos-alert-bg: (
+        'warning': #e74c3c,
+        'success': #2ecc71,
+        'info': #3498ab,
+);
+
+
+.receipt-screen .default-view .actions .alert {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 5px;
+
+  .buttons {
+    margin-bottom: 0;
+
+    .button:disabled {
+      pointer-events: none;
+      opacity: .7;
+    }
+  }
+
+  .eta-error {
+    padding: .5rem;
+    margin: 1rem 0;
+    border-radius: 2px;
+
+    li {
+      margin-bottom: 0.15rem;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: .5rem;
+      font-weight: bold;
+    }
+  }
+
+  @each $cname, $cvalue in $pos-alert-bg {
+    &.alert-#{$cname} {
+      background-color: scale_color($cvalue, $lightness: 70%);
+      border-left: 3px solid $cvalue;
+    }
+
+    .button {
+      background-color: $cvalue;
+      color: white;
+      border: none !important;
+    }
+    .button:hover {
+      background-color: scale_color($cvalue, $lightness: -20%);
+    }
+
+    .eta-error {
+      border: 1px solid $cvalue;
+      background-color: scale_color($cvalue, $lightness: 60%);
+    }
+  }
+}
+
+
+.pos-receipt .pos-receipt-qrcode {
+  display: flex;
+  justify-content: center;
+
+  img {
+    margin-bottom: 1rem;
+  }
+}
