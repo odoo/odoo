@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'EmojiPickerView',
     template: 'mail.EmojiPickerView',
-    templateGetter: 'emojiPickerView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

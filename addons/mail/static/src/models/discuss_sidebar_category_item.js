@@ -9,7 +9,6 @@ import Dialog from 'web.Dialog';
 registerModel({
     name: 'DiscussSidebarCategoryItem',
     template: 'mail.DiscussSidebarCategoryItem',
-    templateGetter: 'categoryItem',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

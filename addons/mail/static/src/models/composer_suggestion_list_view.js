@@ -6,7 +6,6 @@ import { attr, many, one } from '@mail/model/model_field';
 registerModel({
     name: 'ComposerSuggestionListView',
     template: 'mail.ComposerSuggestionListView',
-    templateGetter: 'composerSuggestionListView',
     recordMethods: {
         /**
          * Sets the first suggestion as active. Main and extra records are

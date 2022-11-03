@@ -7,7 +7,6 @@ import { registerModel } from '@mail/model/model_core';
 registerModel({
     name: 'CallDemoView',
     template: 'mail.CallDemoView',
-    templateGetter: 'callDemoView',
     componentSetup() {
         useRefToModel({ fieldName: 'audioRef', refName: 'audio' });
         useRefToModel({ fieldName: 'videoRef', refName: 'video' });

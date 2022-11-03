@@ -7,7 +7,6 @@ import { decrement, increment } from '@mail/model/model_field_command';
 registerModel({
     name: 'DropZoneView',
     template: 'mail.DropZoneView',
-    templateGetter: 'dropZoneView',
     identifyingMode: 'xor',
     recordMethods: {
         /**

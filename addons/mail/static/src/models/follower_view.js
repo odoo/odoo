@@ -6,7 +6,6 @@ import { one } from '@mail/model/model_field';
 registerModel({
     name: 'FollowerView',
     template: 'mail.FollowerView',
-    templateGetter: 'followerView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev

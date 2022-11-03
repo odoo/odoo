@@ -6,7 +6,6 @@ import { many, one } from '@mail/model/model_field';
 registerModel({
     name: 'DiscussMobileMailboxSelectionView',
     template: 'mail.DiscussMobileMailboxSelectionView',
-    templateGetter: 'discussMobileMailboxSelectionView',
     fields: {
         items: many('DiscussMobileMailboxSelectionItemView', { inverse: 'owner',
             compute() {

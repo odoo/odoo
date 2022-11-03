@@ -7,7 +7,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'LinkPreviewDeleteConfirmView',
     template: 'mail.LinkPreviewDeleteConfirmView',
-    templateGetter: 'linkPreviewDeleteConfirmView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

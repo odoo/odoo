@@ -7,7 +7,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'SnailmailErrorView',
     template: 'snailmail.SnailmailErrorView',
-    templateGetter: 'snailmailErrorView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },
