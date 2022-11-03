@@ -350,7 +350,7 @@ class AccountEdiCommon(models.AbstractModel):
                         ('company_id', '=', journal.company_id.id),
                         ('amount', '=', float(tax_categ_percent_el.text)),
                         ('amount_type', '=', 'percent'),
-                        ('type_tax_use', '=', 'purchase'),
+                        ('type_tax_use', '=', journal.type),
                     ], limit=1)
                     if tax:
                         invoice_line_form.tax_ids.add(tax)
