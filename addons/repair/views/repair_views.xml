@@ -162,12 +162,8 @@
                         <group class="oe_subtotal_footer oe_right">
                             <field name="amount_untaxed" sum="Untaxed amount"/>
                             <field name="amount_tax"/>
-                            <div class="oe_subtotal_footer_separator oe_inline">
-                                <label for="amount_total" />
-                                <button name="button_dummy"
-                                    states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
-                            </div>
-                            <field name="amount_total" nolabel="1" sum="Total amount" class="oe_subtotal_footer_separator"/>
+                            <label for="amount_total" />
+                            <field name="amount_total" nolabel="1" sum="Total amount" class="o_footer_tax_separator" />
                         </group>
                         <div class="clearfix"/>
                     </page>
