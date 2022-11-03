@@ -344,8 +344,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         mnf_product_a = self.env['mrp.production'].search([('product_id', '=', product_a.id)])
 
         self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
-        self.assertEqual(mnf_product_a.product_qty, 120, 'Wrong product quantity in manufacturing order.')
-        self.assertEqual(mnf_product_a.product_uom_id, self.uom_unit, 'Wrong unit of measure in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_qty, 10, 'Wrong product quantity in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_uom_id, self.uom_dozen, 'Wrong unit of measure in manufacturing order.')
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
         # ------------------------------------------------------------------------------------------

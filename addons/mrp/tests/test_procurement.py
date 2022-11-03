@@ -62,8 +62,8 @@ class TestProcurement(TestMrpCommon):
             'location_id': self.warehouse.lot_stock_id.id,
         }).action_apply_inventory()
         produce_product_4.action_assign()
-        self.assertEqual(produce_product_4.product_qty, 8, "Wrong quantity of finish product.")
-        self.assertEqual(produce_product_4.product_uom_id, self.uom_dozen, "Wrong quantity of finish product.")
+        self.assertEqual(produce_product_4.product_qty, 96, "Wrong quantity of finish product.")
+        self.assertEqual(produce_product_4.product_uom_id, self.uom_unit, "Wrong quantity of finish product.")
         self.assertEqual(produce_product_4.reservation_state, 'assigned', "Consume material not available")
 
         # produce product4
