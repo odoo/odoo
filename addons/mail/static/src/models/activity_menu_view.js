@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many } from '@mail/model/model_field';
 
@@ -7,6 +8,10 @@ import session from 'web.session';
 
 registerModel({
     name: 'ActivityMenuView',
+    template: 'mail.ActivityMenuView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+    },
     lifecycleHooks: {
         _created() {
             this.fetchData();

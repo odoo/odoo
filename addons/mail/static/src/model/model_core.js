@@ -49,6 +49,20 @@ function addComponentSetup(modelName, componentSetup) {
 }
 
 /**
+ * Adds the provided `components` to the model specified by the `modelName`.
+ *
+ * @param {string} modelName The name of the model to which to add the
+ * componentSetup function.
+ * @param {Object} components The components to be added.
+ */
+ function addComponents(modelName, components) {
+    if (typeof components !== 'object') {
+        throw new Error(`Cannot add components to model ${modelName}: components must be an object of components (current type: "${typeof components}").`);
+    }
+    registry.get(modelName).set('components', components);
+}
+
+/**
  * Adds the provided fields to the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to add the fields.
@@ -301,6 +315,21 @@ function patchComponentSetup({ name, componentSetup }) {
     })
 }
 
+function patchComponents({ name, components }) {
+    const originalComponents = registry.get(name).get('components');
+    if (!originalComponents) {
+        addComponents(name, components);
+        return;
+    }
+    if (typeof components !== 'object') {
+        throw new Error(`Cannot patch components of model ${name}: components must be an object of components (current type: "${typeof components}").`);
+    }
+    registry.get(name).set('components', {
+        ...originalComponents,
+        ...components,
+    });
+}
+
 function patchFields(patch) {
     const newFieldsToAdd = Object.create(null);
     for (const [fieldName, fieldData] of Object.entries(patch.fields)) {
@@ -409,8 +438,10 @@ function patchRecordMethods(patch) {
 /**
  * @param {Object} definition The JSON definition of the model to register.
  * @param {function} [definition.componentSetup]
+ * @param {Object} [definition.components]
  * @param {Object} [definition.fields]
  * @param {string} [definition.identifyingMode='and']
+ * @param {string} [definition.isLegacyComponent=false]
  * @param {Object} [definition.lifecycleHooks]
  * @param {Object} [definition.modelGetters] Deprecated; use fields instead.
  * @param {Object} [definition.modelMethods]
@@ -420,14 +451,14 @@ function patchRecordMethods(patch) {
  * @param {Object} [definition.recordMethods]
  * @param {string} [definition.template]
  */
-export function registerModel({ componentSetup, fields, identifyingMode = 'and', lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
+export function registerModel({ componentSetup, components, fields, identifyingMode = 'and', isLegacyComponent = false, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
     }
-    const sectionNames = ['name', 'template', 'componentSetup', 'identifyingMode', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
+    const sectionNames = ['name', 'template', 'componentSetup', 'components', 'identifyingMode', 'isLegacyComponent', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
     const invalidSectionNames = Object.keys(arguments[0]).filter(x => !sectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
         throw new Error(`Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(", ")}`);
@@ -435,6 +466,7 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
     registry.set(name, new Map([
         ['name', name],
         ['identifyingMode', identifyingMode],
+        ['isLegacyComponent', isLegacyComponent],
         ['lifecycleHooks', new Map()],
         ['modelMethods', new Map()],
         ['modelGetters', new Map()],
@@ -447,6 +479,9 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
         registry.get(name).set('template', template);
         if (componentSetup) {
             addComponentSetup(name, componentSetup);
+        }
+        if (components) {
+            addComponents(name, components);
         }
     }
     if (lifecycleHooks) {
@@ -472,17 +507,18 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
     }
 }
 
-export function registerPatch({ componentSetup, fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
+export function registerPatch({ components, componentSetup, fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
     if (!name) {
         throw new Error("Patch is lacking the name of the model to be patched.");
     }
-    const allowedSectionNames = ['name', 'componentSetup', 'lifecycleHooks', 'modelMethods', 'recordMethods', 'fields', 'onChanges'];
+    const allowedSectionNames = ['name', 'components', 'componentSetup', 'lifecycleHooks', 'modelMethods', 'recordMethods', 'fields', 'onChanges'];
     const invalidSectionNames = Object.keys(arguments['0']).filter(x => !allowedSectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
         throw new Error(`Error while registering patch for model "${name}": patch definition contains unsupported key(s): ${invalidSectionNames.join(", ")}`);
     }
     patches.push({
         name,
+        components,
         componentSetup: componentSetup || undefined,
         lifecycleHooks: lifecycleHooks || {},
         modelMethods: modelMethods || {},
@@ -518,6 +554,9 @@ export const patchesAppliedPromise = makeDeferred();
         }
         if (patch.componentSetup) {
             patchComponentSetup(patch);
+        }
+        if (patch.components) {
+            patchComponents(patch);
         }
         patchLifecycleHooks(patch);
         patchModelMethods(patch);

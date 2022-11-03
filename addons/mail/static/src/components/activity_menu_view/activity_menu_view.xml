@@ -3,15 +3,15 @@
 
     <t t-name="mail.ActivityMenuView" owl="1">
         <div class="o_ActivityMenuView dropdown" t-ref="root">
-            <a class="o_ActivityMenuView_dropdownToggle dropdown-toggle o-no-caret o-dropdown--narrow" t-att-aria-expanded="activityMenuView.isOpen ? 'true' : 'false'" title="Activities" href="#" role="button" t-on-click="activityMenuView.onClickDropdownToggle">
-                <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"/> <span t-if="activityMenuView.counter > 0" class="o_ActivityMenuView_counter badge" t-esc="activityMenuView.counter"/>
+            <a class="o_ActivityMenuView_dropdownToggle dropdown-toggle o-no-caret o-dropdown--narrow" t-att-aria-expanded="isOpen ? 'true' : 'false'" title="Activities" href="#" role="button" t-on-click="onClickDropdownToggle">
+                <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"/> <span t-if="counter > 0" class="o_ActivityMenuView_counter badge" t-esc="counter"/>
             </a>
-            <div t-if="activityMenuView.isOpen" class="o_ActivityMenuView_dropdownMenu o-dropdown-menu dropdown-menu-end show bg-view" role="menu">
+            <div t-if="isOpen" class="o_ActivityMenuView_dropdownMenu o-dropdown-menu dropdown-menu-end show bg-view" role="menu">
                 <div class="o_ActivityMenuView_activityGroups">
-                    <div t-if="activityMenuView.activityGroupViews.length === 0" class="o_ActivityMenuView_noActivity dropdown-item-text text-center d-flex justify-content-center">
+                    <div t-if="activityGroupViews.length === 0" class="o_ActivityMenuView_noActivity dropdown-item-text text-center d-flex justify-content-center">
                         <span>Congratulations, you're done with your activities.</span>
                     </div>
-                    <t t-foreach="activityMenuView.activityGroupViews" t-as="activityGroupView" t-key="activityGroupView.localId" name="activityGroupLoop">
+                    <t t-foreach="activityGroupViews" t-as="activityGroupView" t-key="activityGroupView.localId" name="activityGroupLoop">
                         <div class="o_ActivityMenuView_activityGroup" t-att-data-res_model="activityGroupView.activityGroup.irModel.model" t-att-data-model_name="activityGroupView.activityGroup.irModel.name" t-att-data-domain="activityGroupView.activityGroup.domain" data-filter='my' t-att-data-activity-group-view-local-id="activityGroupView.localId" t-on-click="activityGroupView.onClickFilterButton">
                             <div t-if="activityGroupView.activityGroup.irModel.iconUrl" class="o_ActivityMenuView_activityGroupIconContainer">
                                 <img t-att-src="activityGroupView.activityGroup.irModel.iconUrl" alt="Activity"/>

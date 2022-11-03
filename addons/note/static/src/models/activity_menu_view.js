@@ -1,13 +1,20 @@
 /** @odoo-module **/
 
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerPatch } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
+
+import { DatePicker } from '@web/core/datepicker/datepicker';
 
 const { DateTime } = luxon;
 
 registerPatch({
     name: 'ActivityMenuView',
+    componentSetup() {
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    },
+    components: { DatePicker },
     recordMethods: {
         /**
          * @override
@@ -100,6 +107,6 @@ registerPatch({
         isAddingNote: attr({
             default: false,
         }),
-        noteInputRef: attr(),
+        noteInputRef: attr({ ref: 'noteInput' }),
     },
 });

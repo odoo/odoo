@@ -4,7 +4,7 @@ import { useModels } from '@mail/component_hooks/use_models';
 
 import { useRef } from '@odoo/owl';
 
-const componentRegistry = {};
+export const componentRegistry = {};
 
 /**
  * Allows a component to lean on the messaging features: the component is

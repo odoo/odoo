@@ -3,7 +3,9 @@
 
     <t t-name="mail.ChatterContainer" owl="1">
         <div class="o_ChatterContainer flex-grow-1 d-flex" t-att-class="{ 'o-isInFormSheetBg mx-auto': props.isInFormSheetBg }" t-attf-class="{{ props.className }}" data-command-category="mail" t-ref="root">
-            <Chatter t-if="chatter and chatter.thread" record="chatter"/>
+            <t t-if="isLoaded and chatter and chatter.thread">
+                <Chatter record="chatter"/>
+            </t>
             <div t-else="" class="o_ChatterContainer_noChatter flex-grow-1 align-items-center justify-content-center d-flex"><i class="o_ChatterContainer_noChatterIcon fa fa-circle-o-notch fa-spin me-2"/>Please wait...</div>
         </div>
     </t>

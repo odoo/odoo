@@ -12,6 +12,8 @@ import { followRelations } from '@mail/model/model_utils';
 import { makeDeferred } from '@mail/utils/deferred';
 import { registerMessagingComponent, unregisterMessagingComponent } from '@mail/utils/messaging_component';
 
+import { LegacyComponent } from '@web/legacy/legacy_component';
+
 import { Component } from '@odoo/owl';
 
 /**
@@ -396,11 +398,15 @@ export class ModelManager {
     _applyModelDefinition(model) {
         const definition = registry.get(model.name);
         if (definition.get('template')) {
-            const ModelComponent = { [model.name]: class extends Component {} }[model.name];
+            const ComponentClass = definition.get('isLegacyComponent') ? LegacyComponent : Component;
+            const ModelComponent = { [model.name]: class extends ComponentClass {} }[model.name];
             Object.assign(ModelComponent, {
                 props: { record: Object },
                 template: definition.get('template'),
             });
+            if (definition.get('components')) {
+                Object.assign(ModelComponent, { components: definition.get('components') });
+            }
             registerMessagingComponent(ModelComponent);
             model.__messagingComponent = ModelComponent;
             model.__fieldAndRefNames = [];
