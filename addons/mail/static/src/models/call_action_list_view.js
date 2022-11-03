@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -8,9 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'CallActionListView',
     template: 'mail.CallActionListView',
-    componentSetup() {
-        useRefToModel({ fieldName: 'moreButtonRef', refName: 'moreButton' });
-    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -138,7 +134,7 @@ registerModel({
                 }
             },
         }),
-        moreButtonRef: attr(),
+        moreButtonRef: attr({ ref: 'moreButton' }),
         moreMenuPopoverView: one('PopoverView', { inverse: 'callActionListViewOwnerAsMoreMenu' }),
         screenSharingButtonTitle: attr({ default: '',
             compute() {
