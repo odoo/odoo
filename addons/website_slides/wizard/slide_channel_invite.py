@@ -70,15 +70,15 @@ class SlideChannelInvite(models.TransientModel):
         body = self._render_field('body', slide_channel_partner.ids)[slide_channel_partner.id]
         # post the message
         mail_values = {
-            'email_from': self.env.user.email_formatted,
+            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
             'author_id': self.env.user.partner_id.id,
+            'auto_delete': True,
+            'body_html': body,
+            'email_from': self.env.user.email_formatted,
             'model': None,
+            'recipient_ids': [(4, slide_channel_partner.partner_id.id)],
             'res_id': None,
             'subject': subject,
-            'body_html': body,
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'auto_delete': True,
-            'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 
         # optional support of default_email_layout_xmlid in context

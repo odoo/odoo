@@ -8,11 +8,13 @@
                 <form string="Compose Email" class="o_mail_composer_form">
                     <group col="1">
                         <group col="2">
+                            <field name="author_id" invisible="1"/>
                             <field name="survey_access_mode" invisible="1"/>
                             <field name="survey_users_login_required" invisible="1"/>
                             <field name="survey_users_can_signup" invisible="1"/>
                             <field name="survey_id" readonly="context.get('default_survey_id')"/>
                             <field name="existing_mode" widget="radio" invisible="1" />
+                            <field name="lang" invisible="1"/>
                             <field name="render_model" invisible="1"/>
                             <field name="survey_start_url" label="Public share URL" readonly="1" widget="CopyClipboardChar"
                                  attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"
