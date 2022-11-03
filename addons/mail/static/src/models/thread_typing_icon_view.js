@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ThreadTypingIconView',
     template: 'mail.ThreadTypingIconView',
-    templateGetter: 'threadTypingIconView',
     identifyingMode: 'xor',
     fields: {
         size: attr({ default: 'small',

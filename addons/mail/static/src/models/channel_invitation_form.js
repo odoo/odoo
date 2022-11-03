@@ -13,7 +13,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'ChannelInvitationForm',
     template: 'mail.ChannelInvitationForm',
-    templateGetter: 'channelInvitationForm',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'searchInputRef', refName: 'searchInput' });

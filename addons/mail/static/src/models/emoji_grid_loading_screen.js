@@ -6,7 +6,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'EmojiGridLoadingScreen',
     template: 'mail.EmojiGridLoadingScreen',
-    templateGetter: 'EmojiGridLoadingScreen',
     fields: {
         emojiGridViewOwner: one('EmojiGridView', { identifying: true, inverse: 'loadingScreenView' }),
         text: attr({

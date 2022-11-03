@@ -2,15 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadTextualTypingStatusView" owl="1">
-        <t t-if="threadTextualTypingStatusView">
             <div class="o_ThreadTextualTypingStatusView d-flex" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="threadTextualTypingStatusView.threadTypingIconView">
-                    <ThreadTypingIconView record="threadTextualTypingStatusView.threadTypingIconView"/>
+                <t t-if="threadTypingIconView">
+                    <ThreadTypingIconView record="threadTypingIconView"/>
                     <span class="o_ThreadTextualTypingStatusView_separator ms-1"/>
-                    <span class="text-truncate" t-esc="threadTextualTypingStatusView.thread.typingStatusText"/>
+                    <span class="text-truncate" t-esc="thread.typingStatusText"/>
                 </t>
             </div>
-        </t>
     </t>
 
 </templates>

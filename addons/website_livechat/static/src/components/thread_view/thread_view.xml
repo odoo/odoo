@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadView" t-inherit-mode="extension">
-        <xpath expr="//t[@t-if='threadView.topbar']" position="after">
-            <t t-if="threadView.visitorBanner">
-                <VisitorBannerView className="'border-bottom'" record="threadView.visitorBanner"/>
+        <xpath expr="//t[@t-if='topbar']" position="after">
+            <t t-if="visitorBanner">
+                <VisitorBannerView className="'border-bottom'" record="visitorBanner"/>
             </t>
         </xpath>
     </t>

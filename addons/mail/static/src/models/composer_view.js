@@ -14,7 +14,6 @@ import { url } from '@web/core/utils/urls';
 registerModel({
     name: 'ComposerView',
     template: 'mail.ComposerView',
-    templateGetter: 'composerView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'buttonEmojisRef', refName: 'buttonEmojis' });
