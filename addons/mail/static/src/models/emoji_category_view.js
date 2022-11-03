@@ -36,7 +36,7 @@ registerModel({
     fields: {
         category: one('EmojiCategory', { related: 'viewCategory.category' }),
         emojiCategoryBarViewOwner: one('EmojiCategoryBarView', { identifying: true, inverse: 'emojiCategoryViews' }),
-        emojiPickerView: one('EmojiPickerView', { related: 'emojiCategoryBarViewOwner.emojiPickerView' }),
+        emojiPickerView: one('EmojiPickerView', { related: 'emojiCategoryBarViewOwner.emojiPickerViewOwner' }),
         isActive: attr({
             compute() {
                 return Boolean(this.viewCategory.emojiPickerViewAsActive);

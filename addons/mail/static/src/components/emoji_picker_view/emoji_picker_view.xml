@@ -3,7 +3,11 @@
 
     <t t-name="mail.EmojiPickerView" owl="1">
         <div class="o_EmojiPickerView d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
-            <EmojiPickerHeaderView record="headerView"/>
+            <div class="o_EmojiPickerHeaderView d-flex bg-100 border-bottom">
+                <EmojiCategoryBarView record="emojiCategoryBarView"/>
+                <span class="flex-grow-1"/>
+                <EmojiPickerHeaderActionListView t-if="actionListView" record="actionListView"/>
+            </div>
             <EmojiSearchBarView record="emojiSearchBarView"/>
             <EmojiGridView record="emojiGridView"/>
         </div>

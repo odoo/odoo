@@ -20,6 +20,7 @@ registerModel({
         },
     },
     fields: {
+        actionListView: one('EmojiPickerHeaderActionListView', { default: {}, isCausal: true, inverse: 'owner' }),
         activeCategoryByGridViewScroll: one('EmojiPickerView.Category'),
         activeCategory: one('EmojiPickerView.Category', {
             compute() {
@@ -49,9 +50,9 @@ registerModel({
                 return this.categories[0];
             },
         }),
+        emojiCategoryBarView: one('EmojiCategoryBarView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
         emojiGridView: one('EmojiGridView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
         emojiSearchBarView: one('EmojiSearchBarView', { default: {}, inverse: 'emojiPickerView', readonly: true }),
-        headerView: one('EmojiPickerHeaderView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
         popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'emojiPickerView' }),
         component: attr(),
     },
