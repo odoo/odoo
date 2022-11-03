@@ -282,9 +282,7 @@ registerModel({
                 return this.env._t("Anonymous");
             },
         }),
-        attachments: many('Attachment', {
-            inverse: 'messages',
-        }),
+        attachments: many('Attachment', { inverse: 'messages' }),
         author: one('Partner'),
         avatarUrl: attr({
             compute() {
@@ -311,9 +309,7 @@ registerModel({
          * Do not use this value in a 't-raw' if the message has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        body: attr({
-            default: "",
-        }),
+        body: attr({ default: "" }),
         /**
          * Whether this message can be deleted.
          */
@@ -401,9 +397,7 @@ registerModel({
                 return this.notifications.filter(notifications => notifications.isFailure);
             },
         }),
-        guestAuthor: one('Guest', {
-            inverse: 'authoredMessages',
-        }),
+        guestAuthor: one('Guest', { inverse: 'authoredMessages' }),
         /**
          * States whether the message has some attachments.
          */
@@ -420,10 +414,8 @@ registerModel({
                 return !this.isTemporary && !this.isTransient;
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
-        isCurrentUserOrGuestAuthor: attr({
+        id: attr({ identifying: true }),
+        isCurrentUserOrGuestAuthor: attr({ default: false,
             compute() {
                 return !!(
                     this.author &&
@@ -435,7 +427,6 @@ registerModel({
                     this.messaging.currentGuest === this.guestAuthor
                 );
             },
-            default: false,
         }),
         /**
          * States if the body field is empty, regardless of editor default
@@ -475,7 +466,7 @@ registerModel({
          *   body created by a user with a different language.
          * - Their content might be mostly but not exactly the same.
          */
-        isBodyEqualSubtypeDescription: attr({
+        isBodyEqualSubtypeDescription: attr({ default: false,
             compute() {
                 if (!this.body || !this.subtype_description) {
                     return false;
@@ -483,16 +474,14 @@ registerModel({
                 const inlineBody = htmlToTextContentInline(this.body);
                 return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
             },
-            default: false,
         }),
-        isDiscussionOrNotification: attr({
+        isDiscussionOrNotification: attr({ default: false,
             compute() {
                 if (this.is_discussion || this.is_notification) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Determine whether the message has to be considered empty or not.
@@ -560,43 +549,28 @@ registerModel({
                 return false;
             },
         }),
-        isTemporary: attr({
-            default: false,
-        }),
-        isTransient: attr({
-            default: false,
-        }),
-        is_discussion: attr({
-            default: false,
-        }),
+        isTemporary: attr({ default: false }),
+        isTransient: attr({ default: false }),
+        is_discussion: attr({ default: false }),
         /**
          * Determine whether the message was a needaction. Useful to make it
          * present in history mailbox.
          */
-        isHistory: attr({
-            default: false,
-        }),
+        isHistory: attr({ default: false }),
         /**
          * Determine whether the message is needaction. Useful to make it
          * present in inbox mailbox and messaging menu.
          */
-        isNeedaction: attr({
-            default: false,
-        }),
-        is_note: attr({
-            default: false,
-        }),
-        is_notification: attr({
-            default: false,
-        }),
+        isNeedaction: attr({ default: false }),
+        is_note: attr({ default: false }),
+        is_notification: attr({ default: false }),
         /**
          * Determine whether the current partner is mentioned.
          */
-        isCurrentPartnerMentioned: attr({
+        isCurrentPartnerMentioned: attr({ default: false,
             compute() {
                 return this.recipients.includes(this.messaging.currentPartner);
             },
-            default: false,
         }),
         /**
          * Determine whether the message is highlighted.
@@ -614,9 +588,7 @@ registerModel({
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
-        isStarred: attr({
-            default: false,
-        }),
+        isStarred: attr({ default: false }),
         /**
          * Last tracking value of the message.
          */
@@ -632,16 +604,12 @@ registerModel({
                 return clear();
             },
         }),
-        linkPreviews: many('LinkPreview', {
-            inverse: 'message',
-        }),
+        linkPreviews: many('LinkPreview', { inverse: 'message' }),
         /**
          * Groups of reactions per content allowing to know the number of
          * reactions for each.
          */
-        messageReactionGroups: many('MessageReactionGroup', {
-            inverse: 'message',
-        }),
+        messageReactionGroups: many('MessageReactionGroup', { inverse: 'message' }),
         messageTypeText: attr({
             compute() {
                 if (this.message_type === 'notification') {
@@ -654,30 +622,17 @@ registerModel({
             },
         }),
         message_type: attr(),
-        notificationMessageViews: many('NotificationMessageView', {
-            inverse: 'message',
-            isCausal: true,
-        }),
+        notificationMessageViews: many('NotificationMessageView', { inverse: 'message', isCausal: true }),
         /**
          * States the views that are displaying this message.
          */
-        messageViews: many('MessageView', {
-            inverse: 'message',
-            isCausal: true,
-        }),
-        messageListViewItems: many('MessageListViewItem', {
-            inverse: 'message',
-        }),
-        notifications: many('Notification', {
-            inverse: 'message',
-            isCausal: true,
-        }),
+        messageViews: many('MessageView', { inverse: 'message', isCausal: true }),
+        messageListViewItems: many('MessageListViewItem', { inverse: 'message' }),
+        notifications: many('Notification', { inverse: 'message', isCausal: true }),
         /**
          * Origin thread of this message (if any).
          */
-        originThread: one('Thread', {
-            inverse: 'messagesAsOriginThread',
-        }),
+        originThread: one('Thread', { inverse: 'messagesAsOriginThread' }),
         /**
          * States the message that this message replies to (if any). Only makes
          * sense on channels. Other types of threads might have a parent message
@@ -691,7 +646,7 @@ registerModel({
          * Do not use this value in a 't-raw' if the message has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        prettyBody: attr({
+        prettyBody: attr({ default: "",
             /**
              * This value is meant to be based on field body which is
              * returned by the server (and has been sanitized before stored into db).
@@ -706,7 +661,6 @@ registerModel({
                 // add anchor tags to urls
                 return parseAndTransform(this.body, addLink);
             },
-            default: "",
         }),
         prettyBodyAsMarkup: attr({
             compute() {
@@ -728,7 +682,7 @@ registerModel({
         /**
          * All threads that this message is linked to. This field is read-only.
          */
-        threads: many('Thread', {
+        threads: many('Thread', { inverse: 'messages',
             compute() {
                 const threads = [];
                 if (this.isHistory && this.messaging.history) {
@@ -745,11 +699,8 @@ registerModel({
                 }
                 return threads;
             },
-            inverse: 'messages',
         }),
-        trackingValues: many('TrackingValue', {
-            inverse: 'messageOwner',
-            isCausal: true,
+        trackingValues: many('TrackingValue', { inverse: 'messageOwner', isCausal: true,
             sort: [['smaller-first', 'id']],
         }),
     },

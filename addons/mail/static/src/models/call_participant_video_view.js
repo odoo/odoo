@@ -50,10 +50,7 @@ registerModel({
         },
     },
     fields: {
-        callParticipantCardOwner: one('CallParticipantCard', {
-            identifying: true,
-            inverse: 'callParticipantVideoView',
-        }),
+        callParticipantCardOwner: one('CallParticipantCard', { identifying: true, inverse: 'callParticipantVideoView' }),
         component: attr(),
         rtcSession: one('RtcSession', {
             compute() {

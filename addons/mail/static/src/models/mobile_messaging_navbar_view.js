@@ -56,14 +56,8 @@ registerModel({
                 return clear();
             },
         }),
-        discuss: one('Discuss', {
-            identifying: true,
-            inverse: 'mobileMessagingNavbarView',
-        }),
-        messagingMenu: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'mobileMessagingNavbarView',
-        }),
+        discuss: one('Discuss', { identifying: true, inverse: 'mobileMessagingNavbarView' }),
+        messagingMenu: one('MessagingMenu', { identifying: true, inverse: 'mobileMessagingNavbarView' }),
         /**
          * Ordered list of tabs that this navbar has.
          * Format of tab:

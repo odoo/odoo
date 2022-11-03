@@ -110,34 +110,19 @@ registerModel({
         /**
          * Value that is used to create a channel from the sidebar.
          */
-        addingChannelValue: attr({
-            default: "",
-        }),
-        discuss: one('Discuss', {
-            identifying: true,
-            inverse: 'discussView',
-        }),
-        historyView: one('DiscussSidebarMailboxView', {
-            default: {},
-            inverse: 'discussViewOwnerAsHistory',
-        }),
-        inboxView: one('DiscussSidebarMailboxView', {
-            default: {},
-            inverse: 'discussViewOwnerAsInbox',
-        }),
+        addingChannelValue: attr({ default: "" }),
+        discuss: one('Discuss', { identifying: true, inverse: 'discussView' }),
+        historyView: one('DiscussSidebarMailboxView', { default: {}, inverse: 'discussViewOwnerAsHistory' }),
+        inboxView: one('DiscussSidebarMailboxView', { default: {}, inverse: 'discussViewOwnerAsInbox' }),
         /**
          * Determines whether current user is adding a channel from the sidebar.
          */
-        isAddingChannel: attr({
-            default: false,
-        }),
+        isAddingChannel: attr({ default: false }),
         /**
          * Determines whether current user is adding a chat from the sidebar.
          */
-        isAddingChat: attr({
-            default: false,
-        }),
-        mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
+        isAddingChat: attr({ default: false }),
+        mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', { inverse: 'discussViewOwnerAsMobileAddItemHeader',
             compute() {
                 if (
                     this.messaging.device.isSmall &&
@@ -147,34 +132,27 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'discussViewOwnerAsMobileAddItemHeader',
         }),
-        mobileMailboxSelectionView: one('DiscussMobileMailboxSelectionView', {
+        mobileMailboxSelectionView: one('DiscussMobileMailboxSelectionView', { inverse: 'owner',
             compute() {
                 if (this.messaging.device.isSmall && this.discuss.activeMobileNavbarTabId === 'mailbox') {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'owner',
         }),
-        orderedMailboxes: many('Mailbox', {
-            related: 'messaging.allMailboxes',
+        orderedMailboxes: many('Mailbox', { related: 'messaging.allMailboxes',
             sort: [['smaller-first', 'sequence']],
         }),
-        sidebar: one('DiscussSidebarView', {
+        sidebar: one('DiscussSidebarView', { inverse: 'owner',
             compute() {
                 if (!this.messaging.device.isSmall) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'owner',
         }),
-        starredView: one('DiscussSidebarMailboxView', {
-            default: {},
-            inverse: 'discussViewOwnerAsStarred',
-        }),
+        starredView: one('DiscussSidebarMailboxView', { default: {}, inverse: 'discussViewOwnerAsStarred' }),
     },
     onChanges: [
         {

@@ -61,29 +61,18 @@ registerModel({
     },
     fields: {
         accessToken: attr(),
-        activities: many('Activity', {
-            inverse: 'attachments',
-        }),
-        allThreads: many('Thread', {
-            inverse: 'allAttachments',
-            readonly: true,
-        }),
+        activities: many('Activity', { inverse: 'attachments' }),
+        allThreads: many('Thread', { inverse: 'allAttachments', readonly: true }),
         /**
          * States the attachment lists that are displaying this attachment.
          */
-        attachmentLists: many('AttachmentList', {
-            inverse: 'attachments',
-        }),
-        attachmentViewerViewable: one('AttachmentViewerViewable', {
-            inverse: 'attachmentOwner',
-        }),
+        attachmentLists: many('AttachmentList', { inverse: 'attachments' }),
+        attachmentViewerViewable: one('AttachmentViewerViewable', { inverse: 'attachmentOwner' }),
         checksum: attr(),
         /**
          * States on which composer this attachment is currently being created.
          */
-        composer: one('Composer', {
-            inverse: 'attachments',
-        }),
+        composer: one('Composer', { inverse: 'attachments' }),
         defaultSource: attr({
             compute() {
                 if (this.isImage) {
@@ -148,9 +137,7 @@ registerModel({
             },
         }),
         filename: attr(),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         /**
          * States whether this attachment is deletable.
          */
@@ -213,12 +200,8 @@ registerModel({
         /**
          * True if an unlink RPC is pending, used to prevent multiple unlink attempts.
          */
-        isUnlinkPending: attr({
-            default: false,
-        }),
-        isUploading: attr({
-            default: false,
-        }),
+        isUnlinkPending: attr({ default: false }),
+        isUploading: attr({ default: false }),
         /**
          * States if the attachment is an url.
          */
@@ -262,22 +245,15 @@ registerModel({
                 return this.mimetype && this.mimetype.split('/').shift();
             },
         }),
-        messages: many('Message', {
-            inverse: 'attachments',
-        }),
-        mimetype: attr({
-            default: '',
-        }),
+        messages: many('Message', { inverse: 'attachments' }),
+        mimetype: attr({ default: '' }),
         name: attr(),
-        originThread: one('Thread', {
-            inverse: 'originThreadAttachments',
-        }),
+        originThread: one('Thread', { inverse: 'originThreadAttachments' }),
         size: attr(),
-        threadsAsAttachmentsInWebClientView: many('Thread', {
+        threadsAsAttachmentsInWebClientView: many('Thread', { inverse: 'attachmentsInWebClientView',
             compute() {
                 return (this.isPdf || this.isImage) && !this.isUploading ? this.allThreads : clear();
             },
-            inverse: 'attachmentsInWebClientView',
         }),
         type: attr(),
         /**

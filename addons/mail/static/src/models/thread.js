@@ -1069,7 +1069,7 @@ registerModel({
         },
     },
     fields: {
-        accessRestrictedToGroupText: attr({
+        accessRestrictedToGroupText: attr({ default: '',
             compute() {
                 if (!this.authorizedGroupFullName) {
                     return clear();
@@ -1079,15 +1079,12 @@ registerModel({
                     { 'groupFullName': this.authorizedGroupFullName }
                 );
             },
-            default: '',
         }),
         /**
          * Determines the `mail.activity` that belong to `this`, assuming `this`
          * has activities (@see hasActivities).
          */
-        activities: many('Activity', {
-            inverse: 'thread',
-        }),
+        activities: many('Activity', { inverse: 'thread' }),
         activity_state: attr({
             compute() {
                 if (this.overdueActivities.length > 0) {
@@ -1102,53 +1099,36 @@ registerModel({
                 return clear();
             },
         }),
-        allAttachments: many('Attachment', {
+        allAttachments: many('Attachment', { inverse: 'allThreads',
             compute() {
                 return this.originThreadAttachments;
             },
-            inverse: 'allThreads',
             sort: [
                 ['truthy-first', 'isUploading'],
                 ['greater-first', 'id'],
             ],
         }),
-        areAttachmentsLoaded: attr({
-            default: false,
-        }),
-        attachmentsInWebClientView: many('Attachment', {
-            inverse: 'threadsAsAttachmentsInWebClientView',
-            readonly: true,
+        areAttachmentsLoaded: attr({ default: false }),
+        attachmentsInWebClientView: many('Attachment', { inverse: 'threadsAsAttachmentsInWebClientView', readonly: true,
             sort: [['greater-first', 'id']],
         }),
         authorizedGroupFullName: attr(),
-        cache: one('ThreadCache', {
-            default: {},
-            inverse: 'thread',
-            readonly: true,
-            required: true,
-        }),
-        channel: one('Channel', {
-            inverse: 'thread',
-            isCausal: true,
-            readonly: true,
-        }),
+        cache: one('ThreadCache', { default: {}, inverse: 'thread', readonly: true, required: true }),
+        channel: one('Channel', { inverse: 'thread', isCausal: true, readonly: true }),
         /**
          * States the chat window related to this thread (if any).
          */
-        chatWindow: one('ChatWindow', {
-            inverse: 'thread',
-        }),
+        chatWindow: one('ChatWindow', { inverse: 'thread' }),
         /**
          * Determines the composer state of this thread.
          */
-        composer: one('Composer', {
+        composer: one('Composer', { inverse: 'thread',
             compute() {
                 if (this.mailbox) {
                     return clear();
                 }
                 return {};
             },
-            inverse: 'thread',
         }),
         creator: one('User'),
         /**
@@ -1158,9 +1138,7 @@ registerModel({
          * partner has stopped typing something, due to making no changes
          * on the composer for some time.
          */
-        currentPartnerInactiveTypingTimer: one('Timer', {
-            inverse: 'threadAsCurrentPartnerInactiveTypingTimerOwner',
-        }),
+        currentPartnerInactiveTypingTimer: one('Timer', { inverse: 'threadAsCurrentPartnerInactiveTypingTimerOwner' }),
         /**
          * Last 'is_typing' status of current partner that has been notified
          * to other members. Useful to prevent spamming typing notifications
@@ -1185,9 +1163,7 @@ registerModel({
          * is still typing something, so that they should not assume he/she
          * has stopped typing something.
          */
-        currentPartnerLongTypingTimer: one('Timer', {
-            inverse: 'threadAsCurrentPartnerLongTypingTimerOwner',
-        }),
+        currentPartnerLongTypingTimer: one('Timer', { inverse: 'threadAsCurrentPartnerLongTypingTimerOwner' }),
         /**
          * Determines the default display mode of this channel. Should contain
          * either no value (to display the chat), or 'video_full_screen' to
@@ -1234,15 +1210,9 @@ registerModel({
                 return `/mail/thread/messages`;
             },
         }),
-        followerOfCurrentPartner: one('Follower', {
-            inverse: 'followedThreadAsFollowerOfCurrentPartner',
-        }),
-        followersPartner: many('Partner', {
-            related: 'followers.partner',
-        }),
-        followers: many('Follower', {
-            inverse: 'followedThread',
-        }),
+        followerOfCurrentPartner: one('Follower', { inverse: 'followedThreadAsFollowerOfCurrentPartner' }),
+        followersPartner: many('Partner', { related: 'followers.partner' }),
+        followers: many('Follower', { inverse: 'followedThread' }),
         /**
          * Determines whether the next request to notify current partner
          * typing status should always result to making RPC, regardless of
@@ -1251,9 +1221,7 @@ registerModel({
          * changed, exception being the long typing scenario of current
          * partner.
          */
-        forceNotifyNextCurrentPartnerTypingStatus: attr({
-            default: false,
-        }),
+        forceNotifyNextCurrentPartnerTypingStatus: attr({ default: false }),
         /**
          * States the `Activity` that belongs to `this` and that are
          * planned in the future (due later than today).
@@ -1263,9 +1231,7 @@ registerModel({
                 return this.activities.filter(activity => activity.state === 'planned');
             },
         }),
-        group_based_subscription: attr({
-            default: false,
-        }),
+        group_based_subscription: attr({ default: false }),
         /**
          * States whether the current user has read access for this thread.
          */
@@ -1273,9 +1239,7 @@ registerModel({
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
-        hasActivities: attr({
-            default: false,
-        }),
+        hasActivities: attr({ default: false }),
         /**
          * Determines whether the RTC call feature should be displayed.
          */
@@ -1311,32 +1275,25 @@ registerModel({
          * States whether there is a server request for joining or leaving the RTC session.
          * TODO Should maybe be on messaging (after messaging env rebase) to lock the rpc across all threads.
          */
-        hasPendingRtcRequest: attr({
-            default: false,
-        }),
+        hasPendingRtcRequest: attr({ default: false }),
         /**
          * Determine whether this thread has the seen indicators (V and VV)
          * enabled or not.
          */
-        hasSeenIndicators: attr({
+        hasSeenIndicators: attr({ default: false,
             compute() {
                 if (!this.channel) {
                     return clear();
                 }
                 return ['chat', 'livechat'].includes(this.channel.channel_type);
             },
-            default: false,
         }),
         /**
          * States whether current user has write access for the record. If yes, few other operations
          * (like adding other followers to the thread) are enabled for the user.
          */
-        hasWriteAccess: attr({
-            default: false,
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        hasWriteAccess: attr({ default: false }),
+        id: attr({ identifying: true }),
         invitationLink: attr({
             compute() {
                 if (!this.channel) {
@@ -1382,26 +1339,22 @@ registerModel({
          * Useful to list chat channels, like in messaging menu with the filter
          * 'chat'.
          */
-        isChatChannel: attr({
+        isChatChannel: attr({ default: false,
             compute() {
                 if (!this.channel) {
                     return clear();
                 }
                 return ['chat', 'group'].includes(this.channel.channel_type);
             },
-            default: false,
         }),
-        isCurrentPartnerFollowing: attr({
+        isCurrentPartnerFollowing: attr({ default: false,
             compute() {
                 return this.followers.some(follower =>
                     follower.partner && follower.partner === this.messaging.currentPartner
                 );
             },
-            default: false,
         }),
-        isCurrentPartnerTyping: attr({
-            default: false,
-        }),
+        isCurrentPartnerTyping: attr({ default: false }),
         /**
          * States whether this thread description is editable by the current user.
          */
@@ -1418,9 +1371,7 @@ registerModel({
         /**
          * States whether `this` is currently loading attachments.
          */
-        isLoadingAttachments: attr({
-            default: false,
-        }),
+        isLoadingAttachments: attr({ default: false }),
         /**
          * Determine if there is a pending pin state change, which is a change
          * of pin state requested by the client but not yet confirmed by the
@@ -1448,12 +1399,8 @@ registerModel({
          * the code handling pin state change from the server should typically
          * update it.
          */
-        isServerPinned: attr({
-            default: false,
-        }),
-        isTemporary: attr({
-            default: false,
-        }),
+        isServerPinned: attr({ default: false }),
+        isTemporary: attr({ default: false }),
         /**
          * States the date and time of the last interesting event that happened
          * in this channel for this partner. This includes: creating, joining,
@@ -1548,7 +1495,7 @@ registerModel({
          * even if corresponding message is deleted. It is basically used to know which
          * messages are before or after it.
          */
-        lastSeenByCurrentPartnerMessageId: attr({
+        lastSeenByCurrentPartnerMessageId: attr({ default: 0,
             /**
              * Adjusts the last seen message received from the server to consider
              * the following messages also as read if they are either transient
@@ -1581,11 +1528,8 @@ registerModel({
                 }
                 return lastSeenByCurrentPartnerMessageId;
             },
-            default: 0,
         }),
-        mailbox: one('Mailbox', {
-            inverse: 'thread',
-        }),
+        mailbox: one('Mailbox', { inverse: 'thread' }),
         mainAttachment: one('Attachment'),
         /**
          * Determines the last mentioned channels of the last composer related
@@ -1622,50 +1566,38 @@ registerModel({
                 return message;
             },
         }),
-        message_needaction_counter: attr({
-            default: 0,
-        }),
+        message_needaction_counter: attr({ default: 0 }),
         /**
          * All messages that this thread is linked to.
          * Note that this field is automatically computed by inverse
          * computed field.
          */
-        messages: many('Message', {
-            inverse: 'threads',
-            readonly: true,
-        }),
+        messages: many('Message', { inverse: 'threads', readonly: true }),
         /**
          * All messages that have been originally posted in this thread.
          */
-        messagesAsOriginThread: many('Message', {
-            inverse: 'originThread',
-            isCausal: true,
-        }),
+        messagesAsOriginThread: many('Message', { inverse: 'originThread', isCausal: true }),
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
          */
-        messageSeenIndicators: many('MessageSeenIndicator', {
-            inverse: 'thread',
-        }),
-        messagingAsAllCurrentClientThreads: one('Messaging', {
+        messageSeenIndicators: many('MessageSeenIndicator', { inverse: 'thread' }),
+        messagingAsAllCurrentClientThreads: one('Messaging', { inverse: 'allCurrentClientThreads',
             compute() {
                 if (!this.messaging || !this.channel || !this.channel.memberOfCurrentUser || !this.isServerPinned) {
                     return clear();
                 }
                 return this.messaging;
             },
-            inverse: 'allCurrentClientThreads',
         }),
-        messagingAsRingingThread: one('Messaging', {
+        messagingAsRingingThread: one('Messaging', { inverse: 'ringingThreads',
             compute() {
                 if (this.rtcInvitingSession) {
                     return this.messaging;
                 }
                 return clear();
             },
-            inverse: 'ringingThreads',
         }),
-        messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
+        messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', { inverse: 'pinnedAndUnreadChannels',
             compute() {
                 if (!this.messaging || !this.messaging.messagingMenu) {
                     return clear();
@@ -1675,11 +1607,8 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'pinnedAndUnreadChannels',
         }),
-        model: attr({
-            identifying: true,
-        }),
+        model: attr({ identifying: true }),
         model_name: attr(),
         moduleIcon: attr(),
         name: attr(),
@@ -1720,10 +1649,7 @@ registerModel({
          * Ordered list of typing members.
          */
         orderedTypingMembers: many('ChannelMember'),
-        originThreadAttachments: many('Attachment', {
-            inverse: 'originThread',
-            isCausal: true,
-        }),
+        originThreadAttachments: many('Attachment', { inverse: 'originThread', isCausal: true }),
         /**
          * Registry of timers of partners currently typing in the thread,
          * excluding current partner. This is useful in order to
@@ -1735,9 +1661,7 @@ registerModel({
          * @see registerOtherMemberTypingMember
          * @see unregisterOtherMemberTypingMember
          */
-        otherMembersLongTypingTimers: many('OtherMemberLongTypingInThreadTimer', {
-            inverse: 'thread',
-        }),
+        otherMembersLongTypingTimers: many('OtherMemberLongTypingInThreadTimer', { inverse: 'thread' }),
         /**
          * States the `Activity` that belongs to `this` and that are
          * overdue (due earlier than today).
@@ -1751,44 +1675,32 @@ registerModel({
          * Contains the seen information for all members of the thread.
          * FIXME This field should be readonly once task-2336946 is done.
          */
-        partnerSeenInfos: many('ThreadPartnerSeenInfo', {
-            inverse: 'thread',
-        }),
+        partnerSeenInfos: many('ThreadPartnerSeenInfo', { inverse: 'thread' }),
         /**
          * Determine if there is a pending seen message change, which is a change
          * of seen message requested by the client but not yet confirmed by the
          * server.
          */
         pendingSeenMessageId: attr(),
-        rawLastSeenByCurrentPartnerMessageId: attr({
-            default: 0,
-        }),
+        rawLastSeenByCurrentPartnerMessageId: attr({ default: 0 }),
         /**
          * If set, the current thread is the thread that hosts the current RTC call.
          */
-        rtc: one('Rtc', {
-            inverse: 'channel',
-        }),
-        callInviteRequestPopup: one('CallInviteRequestPopup', {
+        rtc: one('Rtc', { inverse: 'channel' }),
+        callInviteRequestPopup: one('CallInviteRequestPopup', { inverse: 'thread',
             compute() {
                 if (this.rtcInvitingSession) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'thread',
         }),
         /**
          * The session that invited the current user, it is only set when the
          * invitation is still pending.
          */
-        rtcInvitingSession: one('RtcSession', {
-            inverse: 'calledChannels',
-        }),
-        rtcSessions: many('RtcSession', {
-            inverse: 'channel',
-            isCausal: true,
-        }),
+        rtcInvitingSession: one('RtcSession', { inverse: 'calledChannels' }),
+        rtcSessions: many('RtcSession', { inverse: 'channel', isCausal: true }),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
@@ -1798,9 +1710,7 @@ registerModel({
          * the code handling fold state change from the server should typically
          * update it.
          */
-        serverFoldState: attr({
-            default: 'closed',
-        }),
+        serverFoldState: attr({ default: 'closed' }),
         /**
          * Last message considered by the server.
          *
@@ -1809,50 +1719,32 @@ registerModel({
          * @see localMessageUnreadCounter
          */
         serverLastMessage: one('Message'),
-        suggestable: one('ComposerSuggestable', {
-            default: {},
-            inverse: 'thread',
-            readonly: true,
-            required: true,
-        }),
+        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'thread', readonly: true, required: true }),
         /**
          * Determines the `SuggestedRecipientInfo` concerning `this`.
          */
-        suggestedRecipientInfoList: many('SuggestedRecipientInfo', {
-            inverse: 'thread',
-            isCausal: true,
-        }),
+        suggestedRecipientInfoList: many('SuggestedRecipientInfo', { inverse: 'thread', isCausal: true }),
         /**
          * Determines the last content of the last composer related to this
          * thread. Useful to sync the composer when re-creating it.
          */
-        textInputContentBackup: attr({
-            default: "",
-        }),
+        textInputContentBackup: attr({ default: "" }),
         /**
          * Determines the last cursor end of the last composer related to this
          * thread. Useful to sync the composer when re-creating it.
          */
-        textInputCursorEndBackup: attr({
-            default: 0,
-        }),
+        textInputCursorEndBackup: attr({ default: 0 }),
         /**
          * Determines the last cursor start of the last composer related to this
          * thread. Useful to sync the composer when re-creating it.
          */
-        textInputCursorStartBackup: attr({
-            default: 0,
-        }),
+        textInputCursorStartBackup: attr({ default: 0 }),
         /**
          * Determines the last selection direction of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        textInputSelectionDirectionBackup: attr({
-            default: "none",
-        }),
-        threadViews: many('ThreadView', {
-            inverse: 'thread',
-        }),
+        textInputSelectionDirectionBackup: attr({ default: "none" }),
+        threadViews: many('ThreadView', { inverse: 'thread' }),
         /**
          * Clearable and cancellable throttled version of the
          * `_notifyCurrentPartnerTypingStatus` method.
@@ -1863,13 +1755,12 @@ registerModel({
          *
          * @see _notifyCurrentPartnerTypingStatus
          */
-        throttleNotifyCurrentPartnerTypingStatus: one('Throttle', {
+        throttleNotifyCurrentPartnerTypingStatus: one('Throttle', { inverse: 'threadAsThrottleNotifyCurrentPartnerTypingStatus',
             compute() {
                 return {
                     func: () => this._notifyCurrentPartnerTypingStatus(),
                 };
             },
-            inverse: 'threadAsThrottleNotifyCurrentPartnerTypingStatus',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due
@@ -1880,9 +1771,7 @@ registerModel({
                 return this.activities.filter(activity => activity.state === 'today');
             },
         }),
-        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
-            inverse: 'thread',
-        }),
+        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', { inverse: 'thread' }),
         /**
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
@@ -1891,7 +1780,7 @@ registerModel({
         /**
          * Text that represents the status on this thread about typing members.
          */
-        typingStatusText: attr({
+        typingStatusText: attr({ default: '',
             compute() {
                 if (this.orderedOtherTypingMembers.length === 0) {
                     return clear();
@@ -1915,12 +1804,11 @@ registerModel({
                     this.getMemberName(this.orderedOtherTypingMembers[1].persona)
                 );
             },
-            default: '',
         }),
         /**
          * URL to access to the conversation.
          */
-        url: attr({
+        url: attr({ default: '',
             /**
              * Compute an url string that can be used inside a href attribute
              */
@@ -1931,17 +1819,15 @@ registerModel({
                 }
                 return `${baseHref}#model=${this.model}&id=${this.id}`;
             },
-            default: '',
         }),
         uuid: attr(),
         /**
          * The amount of videos broadcast in the current Rtc call
          */
-        videoCount: attr({
+        videoCount: attr({ default: 0,
             compute() {
                 return this.rtcSessions.filter(session => session.videoStream).length;
             },
-            default: 0,
         }),
     },
     onChanges: [

@@ -47,13 +47,9 @@ registerModel({
         },
     },
     fields: {
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         iframeViewerPdfRef: attr(),
-        thread: one('Thread', {
-            required: true,
-        }),
+        thread: one('Thread', { required: true }),
     },
     onChanges: [
         {

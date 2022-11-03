@@ -22,16 +22,8 @@ registerModel({
         },
     },
     fields: {
-        follower: one('Follower', {
-            related: 'followerSubtypeListOwner.follower',
-        }),
-        followerSubtypeListOwner: one('FollowerSubtypeList', {
-            identifying: true,
-            inverse: 'followerSubtypeViews',
-        }),
-        subtype: one('FollowerSubtype', {
-            identifying: true,
-            inverse: 'followerSubtypeViews',
-        }),
+        follower: one('Follower', { related: 'followerSubtypeListOwner.follower' }),
+        followerSubtypeListOwner: one('FollowerSubtypeList', { identifying: true, inverse: 'followerSubtypeViews' }),
+        subtype: one('FollowerSubtype', { identifying: true, inverse: 'followerSubtypeViews' }),
     },
 });

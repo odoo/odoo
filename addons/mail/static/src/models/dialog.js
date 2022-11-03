@@ -52,11 +52,8 @@ registerModel({
         },
     },
     fields: {
-        attachmentCardOwnerAsAttachmentDeleteConfirm: one('AttachmentCard', {
-            identifying: true,
-            inverse: 'attachmentDeleteConfirmDialog',
-        }),
-        attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', {
+        attachmentCardOwnerAsAttachmentDeleteConfirm: one('AttachmentCard', { identifying: true, inverse: 'attachmentDeleteConfirmDialog' }),
+        attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', { inverse: 'dialogOwner',
             compute() {
                 if (this.attachmentCardOwnerAsAttachmentDeleteConfirm) {
                     return {};
@@ -66,24 +63,16 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'dialogOwner',
         }),
-        attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', {
-            identifying: true,
-            inverse: 'attachmentDeleteConfirmDialog',
-        }),
-        attachmentListOwnerAsAttachmentView: one('AttachmentList', {
-            identifying: true,
-            inverse: 'attachmentListViewDialog',
-        }),
-        attachmentViewer: one('AttachmentViewer', {
+        attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', { identifying: true, inverse: 'attachmentDeleteConfirmDialog' }),
+        attachmentListOwnerAsAttachmentView: one('AttachmentList', { identifying: true, inverse: 'attachmentListViewDialog' }),
+        attachmentViewer: one('AttachmentViewer', { inverse: 'dialogOwner',
             compute() {
                 if (this.attachmentListOwnerAsAttachmentView) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'dialogOwner',
         }),
         backgroundOpacity: attr({
             compute() {
@@ -107,7 +96,7 @@ registerModel({
                 return '';
             },
         }),
-        componentName: attr({
+        componentName: attr({ required: true,
             compute() {
                 if (this.attachmentViewer) {
                     return 'AttachmentViewer';
@@ -126,35 +115,25 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        deleteMessageConfirmView: one('DeleteMessageConfirmView', {
+        deleteMessageConfirmView: one('DeleteMessageConfirmView', { inverse: 'dialogOwner',
             compute() {
                 return this.messageActionViewOwnerAsDeleteConfirm ? {} : clear();
             },
-            inverse: 'dialogOwner',
         }),
-        linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm: one('LinkPreviewAsideView', {
-            inverse: 'linkPreviewDeleteConfirmDialog',
-            readonly: true,
-        }),
-        linkPreviewDeleteConfirmView: one('LinkPreviewDeleteConfirmView', {
+        linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm: one('LinkPreviewAsideView', { inverse: 'linkPreviewDeleteConfirmDialog', readonly: true }),
+        linkPreviewDeleteConfirmView: one('LinkPreviewDeleteConfirmView', { inverse: 'dialogOwner',
             compute() {
                 return this.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm ? {} : clear();
             },
-            inverse: 'dialogOwner',
         }),
-        followerOwnerAsSubtypeList: one('Follower', {
-            identifying: true,
-            inverse: 'followerSubtypeListDialog',
-        }),
-        followerSubtypeList: one('FollowerSubtypeList', {
+        followerOwnerAsSubtypeList: one('Follower', { identifying: true, inverse: 'followerSubtypeListDialog' }),
+        followerSubtypeList: one('FollowerSubtypeList', { inverse: 'dialogOwner',
             compute() {
                 return this.followerOwnerAsSubtypeList ? {} : clear();
             },
-            inverse: 'dialogOwner',
         }),
-        isCloseable: attr({
+        isCloseable: attr({ default: true,
             compute() {
                 if (this.attachmentViewer) {
                     /**
@@ -165,27 +144,22 @@ registerModel({
                 }
                 return true;
             },
-            default: true,
         }),
-        manager: one('DialogManager', {
+        manager: one('DialogManager', { inverse: 'dialogs',
             compute() {
                 if (this.messaging.dialogManager) {
                     return this.messaging.dialogManager;
                 }
                 return clear();
             },
-            inverse: 'dialogs',
         }),
-        messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', {
-            identifying: true,
-            inverse: 'deleteConfirmDialog',
-        }),
+        messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', { identifying: true, inverse: 'deleteConfirmDialog' }),
         /**
          * Content of dialog that is directly linked to a record that models
          * a UI component, such as AttachmentViewer. These records must be
          * created from @see `DialogManager:open()`.
          */
-        record: one('Record', {
+        record: one('Record', { isCausal: true, required: true,
             compute() {
                 if (this.attachmentViewer) {
                     return this.attachmentViewer;
@@ -203,8 +177,6 @@ registerModel({
                     return this.followerSubtypeList;
                 }
             },
-            isCausal: true,
-            required: true,
         }),
         style: attr({
             compute() {

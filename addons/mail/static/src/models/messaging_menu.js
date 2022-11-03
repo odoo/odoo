@@ -134,35 +134,30 @@ registerModel({
          * Tab selected in the messaging menu.
          * Either 'all', 'chat' or 'channel'.
          */
-        activeTabId: attr({
-            default: 'all',
-        }),
-        allTab: one('MessagingMenuTabView', {
+        activeTabId: attr({ default: 'all' }),
+        allTab: one('MessagingMenuTabView', { inverse: 'ownerAsAll',
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'ownerAsAll',
         }),
-        channelTab: one('MessagingMenuTabView', {
+        channelTab: one('MessagingMenuTabView', { inverse: 'ownerAsChannel',
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'ownerAsChannel',
         }),
-        chatTab: one('MessagingMenuTabView', {
+        chatTab: one('MessagingMenuTabView', { inverse: 'ownerAsChat',
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'ownerAsChat',
         }),
         component: attr(),
         /**
@@ -188,41 +183,34 @@ registerModel({
         /**
          * Determine whether the mobile new message input is visible or not.
          */
-        isMobileNewMessageToggled: attr({
-            default: false,
-        }),
+        isMobileNewMessageToggled: attr({ default: false }),
         /**
          * Determine whether the messaging menu dropdown is open or not.
          */
-        isOpen: attr({
-            default: false,
-        }),
-        notificationListView: one('NotificationListView', {
+        isOpen: attr({ default: false }),
+        notificationListView: one('NotificationListView', { inverse: 'messagingMenuOwner',
             compute() {
                 return this.isOpen ? {} : clear();
             },
-            inverse: 'messagingMenuOwner',
         }),
         /**
          * The navbar view on the messaging menu when in mobile.
          */
-        mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
+        mobileMessagingNavbarView: one('MobileMessagingNavbarView', { inverse: 'messagingMenu',
             compute() {
                 if (this.messaging.device && this.messaging.device.isSmall) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messagingMenu',
         }),
-        mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', {
+        mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', { inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isSmall && this.isMobileNewMessageToggled) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
         }),
         mobileNewMessageInputPlaceholder: attr({
             compute() {
@@ -232,10 +220,7 @@ registerModel({
         /**
          * States all the pinned channels that have unread messages.
          */
-        pinnedAndUnreadChannels: many('Thread', {
-            inverse: 'messagingMenuAsPinnedAndUnreadChannel',
-            readonly: true,
-        }),
+        pinnedAndUnreadChannels: many('Thread', { inverse: 'messagingMenuAsPinnedAndUnreadChannel', readonly: true }),
         /**
          * global JS generated ID for this record view. Useful to provide a
          * custom class to autocomplete input, so that click in an autocomplete

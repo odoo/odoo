@@ -145,20 +145,19 @@ registerModel({
                 return clear();
             },
         }),
-        addingItemAutocompleteInputView: one('AutocompleteInputView', {
+        addingItemAutocompleteInputView: one('AutocompleteInputView', { inverse: 'discussSidebarCategoryOwnerAsAddingItem',
             compute() {
                 if (this.isOpen && this.isAddingItem) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'discussSidebarCategoryOwnerAsAddingItem',
         }),
         /**
          * Determines how the autocomplete of this category should behave.
          * Must be one of: 'channel', 'chat'.
          */
-        autocompleteMethod: attr({
+        autocompleteMethod: attr({ default: '',
             compute() {
                 if (this.discussAsChannel) {
                     return 'channel';
@@ -168,15 +167,12 @@ registerModel({
                 }
                 return clear();
             },
-            default: '',
         }),
         /**
          * Determines the discuss sidebar category items that are displayed by
          * this discuss sidebar category.
          */
-        categoryItems: many('DiscussSidebarCategoryItem', {
-            inverse: 'category',
-        }),
+        categoryItems: many('DiscussSidebarCategoryItem', { inverse: 'category' }),
         categoryItemsOrderedByLastAction: many('DiscussSidebarCategoryItem', {
             compute() {
                 if (this.discussAsChat) {
@@ -212,7 +208,7 @@ registerModel({
         /**
          * The title text in UI for command `add`
          */
-        commandAddTitleText: attr({
+        commandAddTitleText: attr({ default: '',
             compute() {
                 if (this.discussAsChannel) {
                     return this.env._t("Add or join a channel");
@@ -222,25 +218,14 @@ registerModel({
                 }
                 return clear();
             },
-            default: '',
         }),
         /**
          * States the total amount of unread/action-needed threads in this
          * category.
          */
-        counter: attr({
-            default: 0,
-            readonly: true,
-            sum: 'categoryItems.categoryCounterContribution',
-        }),
-        discussAsChannel: one('Discuss', {
-            identifying: true,
-            inverse: 'categoryChannel',
-        }),
-        discussAsChat: one('Discuss', {
-            identifying: true,
-            inverse: 'categoryChat',
-        }),
+        counter: attr({ default: 0, readonly: true, sum: 'categoryItems.categoryCounterContribution' }),
+        discussAsChannel: one('Discuss', { identifying: true, inverse: 'categoryChannel' }),
+        discussAsChat: one('Discuss', { identifying: true, inverse: 'categoryChat' }),
         /**
          * Determines the filtered and sorted discuss sidebar category items
          * that are displayed by this discuss sidebar category.
@@ -262,7 +247,7 @@ registerModel({
         /**
          * Display name of the category.
          */
-        name: attr({
+        name: attr({ default: '',
             compute() {
                 if (this.discussAsChannel) {
                     return this.env._t("Channels");
@@ -272,12 +257,11 @@ registerModel({
                 }
                 return clear();
             },
-            default: '',
         }),
         /**
          * Boolean that determines whether this category has a 'add' command.
          */
-        hasAddCommand: attr({
+        hasAddCommand: attr({ default: false,
             compute() {
                 if (this.discussAsChannel) {
                     return true;
@@ -287,26 +271,22 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Boolean that determines whether this category has a 'view' command.
          */
-        hasViewCommand: attr({
+        hasViewCommand: attr({ default: false,
             compute() {
                 if (this.discussAsChannel) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Boolean that determines whether discuss is adding a new category item.
          */
-        isAddingItem: attr({
-            default: false,
-        }),
+        isAddingItem: attr({ default: false }),
         /**
          * Boolean that determines whether this category is open.
          */
@@ -326,7 +306,7 @@ registerModel({
         /**
          * Boolean that determines the last open state known by the server.
          */
-        isServerOpen: attr({
+        isServerOpen: attr({ default: false,
             compute() {
                 // there is no server state for non-users (guests)
                 if (!this.messaging.currentUser) {
@@ -343,7 +323,6 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * The placeholder text used when a new item is being added in UI.
@@ -387,7 +366,7 @@ registerModel({
         /**
          * Channel type which is supported by the category.
          */
-        supportedChannelTypes: attr({
+        supportedChannelTypes: attr({ required: true,
             compute() {
                 if (this.discussAsChannel) {
                     return ['channel'];
@@ -397,7 +376,6 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
     },
     onChanges: [

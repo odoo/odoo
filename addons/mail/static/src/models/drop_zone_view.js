@@ -94,27 +94,17 @@ registerModel({
         },
     },
     fields: {
-        chatterOwner: one('Chatter', {
-            identifying: true,
-            inverse: 'dropZoneView',
-        }),
-        composerViewOwner: one('ComposerView', {
-            identifying: true,
-            inverse: 'dropZoneView',
-        }),
+        chatterOwner: one('Chatter', { identifying: true, inverse: 'dropZoneView' }),
+        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'dropZoneView' }),
         /**
          * Counts how many drag enter/leave happened on self and children. This
          * ensures the drop effect stays active when dragging over a child.
          */
-        dragCount: attr({
-            default: 0,
-        }),
+        dragCount: attr({ default: 0 }),
         /**
          * Determines whether the user is dragging files over the dropzone.
          * Useful to provide visual feedback in that case.
          */
-        isDraggingInside: attr({
-            default: false,
-        }),
+        isDraggingInside: attr({ default: false }),
     },
 });

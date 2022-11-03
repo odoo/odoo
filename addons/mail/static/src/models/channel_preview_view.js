@@ -41,10 +41,7 @@ registerModel({
         },
     },
     fields: {
-        channel: one('Channel', {
-            identifying: true,
-            inverse: 'channelPreviewViews',
-        }),
+        channel: one('Channel', { identifying: true, inverse: 'channelPreviewViews' }),
         imageUrl: attr({
             compute() {
                 if (this.channel.correspondent) {
@@ -53,14 +50,13 @@ registerModel({
                 return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
             },
         }),
-        inlineLastMessageBody: attr({
+        inlineLastMessageBody: attr({ default: "",
             compute() {
                 if (!this.thread || !this.thread.lastMessage) {
                     return clear();
                 }
                 return htmlToTextContentInline(this.thread.lastMessage.prettyBody);
             },
-            default: "",
         }),
         isEmpty: attr({
             compute() {
@@ -80,7 +76,7 @@ registerModel({
          * top-level click handler when clicking on this specific button.
          */
         markAsReadRef: attr(),
-        messageAuthorPrefixView: one('MessageAuthorPrefixView', {
+        messageAuthorPrefixView: one('MessageAuthorPrefixView', { inverse: 'channelPreviewViewOwner',
             compute() {
                 if (
                     this.thread &&
@@ -91,13 +87,9 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'channelPreviewViewOwner',
         }),
-        notificationListViewOwner: one('NotificationListView', {
-            identifying: true,
-            inverse: 'channelPreviewViews',
-        }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
+        notificationListViewOwner: one('NotificationListView', { identifying: true, inverse: 'channelPreviewViews' }),
+        personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'channelPreviewViewOwner',
             compute() {
                 if (!this.channel.correspondent) {
                     return clear();
@@ -107,10 +99,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'channelPreviewViewOwner',
         }),
-        thread: one('Thread', {
-            related: 'channel.thread',
-        }),
+        thread: one('Thread', { related: 'channel.thread' }),
     },
 });

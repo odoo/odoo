@@ -72,48 +72,33 @@ registerModel({
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
          */
-        allRecords: many('Record', {
-            inverse: 'messaging',
-            isCausal: true,
-        }),
+        allRecords: many('Record', { inverse: 'messaging', isCausal: true }),
         browser: attr({
             compute() {
                 return browser;
             },
         }),
-        device: one('Device', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        device: one('Device', { default: {}, isCausal: true, readonly: true }),
         /**
          * Promise that will be resolved when messaging is initialized.
          */
-        initializedPromise: attr({
+        initializedPromise: attr({ required: true,
             compute() {
                 return makeDeferred();
             },
-            required: true,
         }),
-        isInitialized: attr({
-            default: false,
-        }),
-        locale: one('Locale', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        isInitialized: attr({ default: false }),
+        locale: one('Locale', { default: {}, isCausal: true, readonly: true }),
         /**
          * Determines the bus that is used to communicate messaging events.
          */
-        messagingBus: attr({
+        messagingBus: attr({ required: true,
             compute() {
                 if (this.messagingBus) {
                     return; // avoid overwrite if already provided (example in tests)
                 }
                 return new EventBus();
             },
-            required: true,
         }),
     },
 });

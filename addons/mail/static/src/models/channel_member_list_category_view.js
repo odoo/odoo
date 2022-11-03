@@ -11,7 +11,7 @@ registerModel({
     template: 'mail.ChannelMemberListCategoryView',
     identifyingMode: 'xor',
     fields: {
-        channel: one('Channel', {
+        channel: one('Channel', { required: true,
             compute() {
                 if (this.channelMemberListViewOwnerAsOffline) {
                     return this.channelMemberListViewOwnerAsOffline.channel;
@@ -20,24 +20,16 @@ registerModel({
                     return this.channelMemberListViewOwnerAsOnline.channel;
                 }
             },
-            required: true,
         }),
-        channelMemberListViewOwnerAsOffline: one('ChannelMemberListView', {
-            identifying: true,
-            inverse: 'offlineCategoryView',
-        }),
-        channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
-            identifying: true,
-            inverse: 'onlineCategoryView',
-        }),
-        channelMemberViews: many('ChannelMemberView', {
+        channelMemberListViewOwnerAsOffline: one('ChannelMemberListView', { identifying: true, inverse: 'offlineCategoryView' }),
+        channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', { identifying: true, inverse: 'onlineCategoryView' }),
+        channelMemberViews: many('ChannelMemberView', { inverse: 'channelMemberListCategoryViewOwner',
             compute() {
                 if (this.members.length === 0) {
                     return clear();
                 }
                 return this.members.map(channelMember => ({ channelMember }));
             },
-            inverse: 'channelMemberListCategoryViewOwner',
         }),
         members: many('ChannelMember', {
             compute() {

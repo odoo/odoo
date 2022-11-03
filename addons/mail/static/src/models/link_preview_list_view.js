@@ -11,27 +11,21 @@ registerModel({
         /**
          * Determines if we are in the ChatWindow view AND if the message is left aligned
          */
-        linkPreviewAsCardViews: many('LinkPreviewCardView', {
+        linkPreviewAsCardViews: many('LinkPreviewCardView', { inverse: 'linkPreviewListViewOwner',
             compute() {
                 return this.messageViewOwner.message.linkPreviews.filter(linkPreview => linkPreview.isCard).map(linkPreview => ({ linkPreview }));
             },
-            inverse: 'linkPreviewListViewOwner',
         }),
-        linkPreviewAsImageViews: many('LinkPreviewImageView', {
+        linkPreviewAsImageViews: many('LinkPreviewImageView', { inverse: 'linkPreviewListViewOwner',
             compute() {
                 return this.messageViewOwner.message.linkPreviews.filter(linkPreview => linkPreview.isImage).map(linkPreview => ({ linkPreview }));
             },
-            inverse: 'linkPreviewListViewOwner',
         }),
-        linkPreviewAsVideoViews: many('LinkPreviewVideoView', {
+        linkPreviewAsVideoViews: many('LinkPreviewVideoView', { inverse: 'linkPreviewListViewOwner',
             compute() {
                 return this.messageViewOwner.message.linkPreviews.filter(linkPreview => linkPreview.isVideo).map(linkPreview => ({ linkPreview }));
             },
-            inverse: 'linkPreviewListViewOwner',
         }),
-        messageViewOwner: one('MessageView', {
-            identifying: true,
-            inverse: 'linkPreviewListView',
-        }),
+        messageViewOwner: one('MessageView', { identifying: true, inverse: 'linkPreviewListView' }),
     },
 });

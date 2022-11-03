@@ -33,16 +33,8 @@ registerModel({
         },
     },
     fields: {
-        callActionListView: one('CallActionListView', {
-            related: 'popoverViewOwner.callActionListViewOwnerAsMoreMenu',
-        }),
-        callView: one('CallView', {
-            related: 'callActionListView.callView',
-            required: true,
-        }),
-        popoverViewOwner: one('PopoverView', {
-            identifying: true,
-            inverse: 'callOptionMenuView',
-        }),
+        callActionListView: one('CallActionListView', { related: 'popoverViewOwner.callActionListViewOwnerAsMoreMenu' }),
+        callView: one('CallView', { related: 'callActionListView.callView', required: true }),
+        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'callOptionMenuView' }),
     },
 });

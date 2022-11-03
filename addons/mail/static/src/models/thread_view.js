@@ -214,27 +214,23 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        callSettingsMenu: one('CallSettingsMenu', {
+        callSettingsMenu: one('CallSettingsMenu', { inverse: 'threadViewOwner',
             compute() {
                 if (this.isCallSettingsMenuOpen) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'threadViewOwner',
         }),
-        channelMemberListView: one('ChannelMemberListView', {
+        channelMemberListView: one('ChannelMemberListView', { inverse: 'threadViewOwner',
             compute() {
                 if (this.thread && this.thread.hasMemberListFeature && this.hasMemberList && this.isMemberListOpened) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'threadViewOwner',
         }),
-        compact: attr({
-            related: 'threadViewer.compact',
-        }),
+        compact: attr({ related: 'threadViewer.compact' }),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -253,10 +249,8 @@ registerModel({
          *                      message id.
          *   }
          */
-        componentHintList: attr({
-            default: [],
-        }),
-        composerView: one('ComposerView', {
+        componentHintList: attr({ default: [] }),
+        composerView: one('ComposerView', { inverse: 'threadView',
             compute() {
                 if (!this.thread || this.thread.mailbox) {
                     return clear();
@@ -266,21 +260,16 @@ registerModel({
                 }
                 return {};
             },
-            inverse: 'threadView',
         }),
         /**
          * Determines which extra class this thread view component should have.
          */
-        extraClass: attr({
-            related: 'threadViewer.extraClass',
-        }),
+        extraClass: attr({ related: 'threadViewer.extraClass' }),
         /**
          * Determines whether this thread viewer has a member list.
          * Only makes sense if thread.hasMemberListFeature is true.
          */
-        hasMemberList: attr({
-            related: 'threadViewer.hasMemberList',
-        }),
+        hasMemberList: attr({ related: 'threadViewer.hasMemberList' }),
         /**
          * Determines whether this thread view should squash close messages.
          * See `_shouldMessageBeSquashed` for which conditions are considered
@@ -294,15 +283,9 @@ registerModel({
         /**
          * Determines whether this thread view has a top bar.
          */
-        hasTopbar: attr({
-            related: 'threadViewer.hasTopbar',
-        }),
-        isCallSettingsMenuOpen: attr({
-            default: false,
-        }),
-        isComposerFocused: attr({
-            related: 'composerView.isFocused',
-        }),
+        hasTopbar: attr({ related: 'threadViewer.hasTopbar' }),
+        isCallSettingsMenuOpen: attr({ default: false }),
+        isComposerFocused: attr({ related: 'composerView.isFocused' }),
         /**
          * States whether `this.threadCache` is currently loading messages.
          *
@@ -312,16 +295,12 @@ registerModel({
          * It is computed through `_onThreadCacheIsLoadingChanged` and it should
          * otherwise be considered read-only.
          */
-        isLoading: attr({
-            default: false,
-        }),
+        isLoading: attr({ default: false }),
         /**
          * Determines whether the member list of this thread is opened.
          * Only makes sense if hasMemberListFeature and hasMemberList are true.
          */
-        isMemberListOpened: attr({
-            default: false,
-        }),
+        isMemberListOpened: attr({ default: false }),
         /**
          * States whether `this` is aware of `this.threadCache` currently
          * loading messages, but `this` is not yet ready to display that loading
@@ -332,47 +311,39 @@ registerModel({
          *
          * @see `this.isLoading`
          */
-        isPreparingLoading: attr({
-            default: false,
-        }),
+        isPreparingLoading: attr({ default: false }),
         /**
          * Determines whether `this` should automatically scroll on receiving
          * a new message. Detection of new message is done through the component
          * hint `message-received`.
          */
-        hasAutoScrollOnMessageReceived: attr({
-            default: true,
-        }),
-        hasComposerThreadName: attr({
+        hasAutoScrollOnMessageReceived: attr({ default: true }),
+        hasComposerThreadName: attr({ default: false,
             compute() {
                 if (this.threadViewer.discuss) {
                     return this.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * If set, determines whether the composer should display status of
          * members typing on related thread. When this prop is not provided,
          * it defaults to composer component default value.
          */
-        hasComposerThreadTyping: attr({
+        hasComposerThreadTyping: attr({ default: false,
             compute() {
                 if (this.threadViewer.threadView_hasComposerThreadTyping !== undefined) {
                     return this.threadViewer.threadView_hasComposerThreadTyping;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Last message in the context of the currently displayed thread cache.
          */
-        lastMessage: one('Message', {
-            related: 'thread.lastMessage',
-        }),
-        lastMessageListViewItem: one('MessageListViewItem', {
+        lastMessage: one('Message', { related: 'thread.lastMessage' }),
+        lastMessageListViewItem: one('MessageListViewItem', { inverse: 'threadViewOwnerAsLastMessageListViewItem',
             compute() {
                 if (!this.messageListView) {
                     return clear();
@@ -380,7 +351,6 @@ registerModel({
                 const { length, [length - 1]: messageListViewItem } = this.messageListView.messageListViewItems;
                 return messageListViewItem;
             },
-            inverse: 'threadViewOwnerAsLastMessageListViewItem',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
@@ -388,25 +358,20 @@ registerModel({
          */
         lastVisibleMessage: one('Message'),
         loaderTimeout: attr(),
-        messageListView: one('MessageListView', {
+        messageListView: one('MessageListView', { inverse: 'threadViewOwner',
             compute() {
                 return (
                     (this.thread && this.thread.isTemporary) ||
                     (this.threadCache && this.threadCache.isLoaded)
                 ) ? {} : clear();
             },
-            inverse: 'threadViewOwner',
         }),
-        messages: many('Message', {
-            related: 'threadCache.messages',
-        }),
+        messages: many('Message', { related: 'threadCache.messages' }),
         /**
          * States the order mode of the messages on this thread view.
          * Either 'asc', or 'desc'.
          */
-        order: attr({
-            related: 'threadViewer.order',
-        }),
+        order: attr({ related: 'threadViewer.order' }),
         /**
          * Determines the message that's currently being replied to.
          */
@@ -414,28 +379,21 @@ registerModel({
         /**
          * Determines the call view of this thread.
          */
-        callView: one('CallView', {
+        callView: one('CallView', { inverse: 'threadView',
             compute() {
                 return (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0)
                     ? {}
                     : clear();
             },
-            inverse: 'threadView',
         }),
         /**
          * Determines the `Thread` currently displayed by `this`.
          */
-        thread: one('Thread', {
-            inverse: 'threadViews',
-            related: 'threadViewer.thread',
-        }),
+        thread: one('Thread', { inverse: 'threadViews', related: 'threadViewer.thread' }),
         /**
          * States the `ThreadCache` currently displayed by `this`.
          */
-        threadCache: one('ThreadCache', {
-            inverse: 'threadViews',
-            related: 'threadViewer.threadCache',
-        }),
+        threadCache: one('ThreadCache', { inverse: 'threadViews', related: 'threadViewer.threadCache' }),
         threadCacheInitialScrollHeight: attr({
             compute() {
                 if (!this.threadCache) {
@@ -463,32 +421,22 @@ registerModel({
         /**
          * List of saved initial scroll heights of thread caches.
          */
-        threadCacheInitialScrollHeights: attr({
-            default: {},
-            related: 'threadViewer.threadCacheInitialScrollHeights',
-        }),
+        threadCacheInitialScrollHeights: attr({ default: {}, related: 'threadViewer.threadCacheInitialScrollHeights' }),
         /**
          * List of saved initial scroll positions of thread caches.
          */
-        threadCacheInitialScrollPositions: attr({
-            default: {},
-            related: 'threadViewer.threadCacheInitialScrollPositions',
-        }),
+        threadCacheInitialScrollPositions: attr({ default: {}, related: 'threadViewer.threadCacheInitialScrollPositions' }),
         /**
          * Determines the `ThreadViewer` currently managing `this`.
          */
-        threadViewer: one('ThreadViewer', {
-            identifying: true,
-            inverse: 'threadView',
-        }),
+        threadViewer: one('ThreadViewer', { identifying: true, inverse: 'threadView' }),
         /**
          * Determines the top bar of this thread view, if any.
          */
-        topbar: one('ThreadViewTopbar', {
+        topbar: one('ThreadViewTopbar', { inverse: 'threadView',
             compute() {
                 return this.hasTopbar ? {} : clear();
             },
-            inverse: 'threadView',
         }),
     },
     onChanges: [

@@ -16,7 +16,7 @@ registerModel({
                 return 1;
             },
         }),
-        messageActionListOwner: one('MessageActionList', {
+        messageActionListOwner: one('MessageActionList', { inverse: 'messageActions', required: true,
             compute() {
                 if (this.messageActionListOwnerAsDelete) {
                     return this.messageActionListOwnerAsDelete;
@@ -35,38 +35,15 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'messageActions',
-            required: true,
         }),
-        messageActionListOwnerAsDelete: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionDelete',
-        }),
-        messageActionListOwnerAsEdit: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionEdit',
-        }),
-        messageActionListOwnerAsMarkAsRead: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionMarkAsRead',
-        }),
-        messageActionListOwnerAsReaction: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionReaction',
-        }),
-        messageActionListOwnerAsReplyTo: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionReplyTo',
-        }),
-        messageActionListOwnerAsToggleCompact: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionToggleCompact',
-        }),
-        messageActionListOwnerAsToggleStar: one('MessageActionList', {
-            identifying: true,
-            inverse: 'actionToggleStar',
-        }),
-        messageActionView: one('MessageActionView', {
+        messageActionListOwnerAsDelete: one('MessageActionList', { identifying: true, inverse: 'actionDelete' }),
+        messageActionListOwnerAsEdit: one('MessageActionList', { identifying: true, inverse: 'actionEdit' }),
+        messageActionListOwnerAsMarkAsRead: one('MessageActionList', { identifying: true, inverse: 'actionMarkAsRead' }),
+        messageActionListOwnerAsReaction: one('MessageActionList', { identifying: true, inverse: 'actionReaction' }),
+        messageActionListOwnerAsReplyTo: one('MessageActionList', { identifying: true, inverse: 'actionReplyTo' }),
+        messageActionListOwnerAsToggleCompact: one('MessageActionList', { identifying: true, inverse: 'actionToggleCompact' }),
+        messageActionListOwnerAsToggleStar: one('MessageActionList', { identifying: true, inverse: 'actionToggleStar' }),
+        messageActionView: one('MessageActionView', { inverse: 'messageAction',
             compute() {
                 /**
                  * Case 0: Always display Reaction and ToggleCompact if they are existing.
@@ -85,7 +62,6 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'messageAction',
         }),
         /**
          * States the listing sequence of the action inside of the aciton list.

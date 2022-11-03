@@ -292,85 +292,46 @@ registerPatch({
         /**
          * This field contains all current client channels.
          */
-        allCurrentClientThreads: many('Thread', {
-            inverse: 'messagingAsAllCurrentClientThreads',
-        }),
-        allMailboxes: many('Mailbox', {
-            inverse: 'messagingAsAnyMailbox',
-        }),
-        allPersonas: many('Persona', {
-            inverse: 'messagingAsAnyPersona',
-        }),
-        callInviteRequestPopups: many('CallInviteRequestPopup', {
+        allCurrentClientThreads: many('Thread', { inverse: 'messagingAsAllCurrentClientThreads' }),
+        allMailboxes: many('Mailbox', { inverse: 'messagingAsAnyMailbox' }),
+        allPersonas: many('Persona', { inverse: 'messagingAsAnyPersona' }),
+        callInviteRequestPopups: many('CallInviteRequestPopup', { isCausal: true,
             compute() {
                 if (this.ringingThreads.length === 0) {
                     return clear();
                 }
                 return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
             },
-            isCausal: true,
         }),
         cannedResponses: many('CannedResponse'),
-        chatWindowManager: one('ChatWindowManager', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        chatWindowManager: one('ChatWindowManager', { default: {}, isCausal: true, readonly: true }),
         /**
          * Determines which message view is currently clicked, if any.
          */
-        clickedMessageView: one('MessageView', {
-            inverse: 'messagingAsClickedMessageView',
-        }),
+        clickedMessageView: one('MessageView', { inverse: 'messagingAsClickedMessageView' }),
         commands: many('ChannelCommand'),
         companyName: attr(),
         currentGuest: one('Guest'),
         currentPartner: one('Partner'),
         currentUser: one('User'),
-        dialogManager: one('DialogManager', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        dialogManager: one('DialogManager', { default: {}, isCausal: true, readonly: true }),
         /**
          * Determines whether animations should be disabled.
          */
-        disableAnimation: attr({
-            default: false,
-        }),
-        discuss: one('Discuss', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
-        emojiRegistry: one('EmojiRegistry', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        disableAnimation: attr({ default: false }),
+        discuss: one('Discuss', { default: {}, isCausal: true, readonly: true }),
+        emojiRegistry: one('EmojiRegistry', { default: {}, isCausal: true, readonly: true }),
         hasLinkPreviewFeature: attr(),
-        history: one('Mailbox', {
-            default: {},
-            inverse: 'messagingAsHistory',
-        }),
-        inbox: one('Mailbox', {
-            default: {},
-            inverse: 'messagingAsInbox',
-        }),
-        initializer: one('MessagingInitializer', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        history: one('Mailbox', { default: {}, inverse: 'messagingAsHistory' }),
+        inbox: one('Mailbox', { default: {}, inverse: 'messagingAsInbox' }),
+        initializer: one('MessagingInitializer', { default: {}, isCausal: true, readonly: true }),
         internalUserGroupId: attr(),
         isCurrentUserGuest: attr({
             compute() {
                 return Boolean(!this.currentPartner && this.currentGuest);
             },
         }),
-        isInQUnitTest: attr({
-            default: false,
-        }),
+        isInQUnitTest: attr({ default: false }),
         isNotificationBlocked: attr({
             compute() {
                 const windowNotification = this.browser.Notification;
@@ -391,64 +352,31 @@ registerPatch({
          * Determines after how much time in ms a "loading" indicator should be
          * shown. Useful to avoid flicker for almost instant loading.
          */
-        loadingBaseDelayDuration: attr({
-            default: 400,
-        }),
-        messagingMenu: one('MessagingMenu', {
-            default: {},
-            isCausal: true,
-        }),
-        notificationHandler: one('MessagingNotificationHandler', {
+        loadingBaseDelayDuration: attr({ default: 400 }),
+        messagingMenu: one('MessagingMenu', { default: {}, isCausal: true }),
+        notificationHandler: one('MessagingNotificationHandler', { isCausal: true,
             compute() {
                 return {};
             },
-            isCausal: true,
         }),
-        outOfFocusUnreadMessageCounter: attr({
-            default: 0,
-        }),
+        outOfFocusUnreadMessageCounter: attr({ default: 0 }),
         partnerRoot: one('Partner'),
-        popoverManager: one('PopoverManager', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
+        popoverManager: one('PopoverManager', { default: {}, isCausal: true, readonly: true }),
         /**
          * Threads for which the current partner has a pending invitation.
          * It is computed from the inverse relation for performance reasons.
          */
-        ringingThreads: many('Thread', {
-            inverse: 'messagingAsRingingThread',
-        }),
-        rtc: one('Rtc', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
-        soundEffects: one('SoundEffects', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
-        starred: one('Mailbox', {
-            default: {},
-            inverse: 'messagingAsStarred',
-        }),
-        updateImStatusRegisterThrottle: one('Throttle', {
+        ringingThreads: many('Thread', { inverse: 'messagingAsRingingThread' }),
+        rtc: one('Rtc', { default: {}, isCausal: true, readonly: true }),
+        soundEffects: one('SoundEffects', { default: {}, isCausal: true, readonly: true }),
+        starred: one('Mailbox', { default: {}, inverse: 'messagingAsStarred' }),
+        updateImStatusRegisterThrottle: one('Throttle', { inverse: 'messagingAsUpdateImStatusRegister',
             compute() {
                 return { func: this.updateImStatusRegistration };
             },
-            inverse: 'messagingAsUpdateImStatusRegister',
         }),
-        userNotificationManager: one('UserNotificationManager', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
-        userSetting: one('UserSetting', {
-            default: {},
-            isCausal: true,
-        }),
+        userNotificationManager: one('UserNotificationManager', { default: {}, isCausal: true, readonly: true }),
+        userSetting: one('UserSetting', { default: {}, isCausal: true }),
     },
     onChanges: [
         {

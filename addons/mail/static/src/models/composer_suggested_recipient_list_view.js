@@ -42,18 +42,12 @@ registerModel({
             },
             inverse: 'composerSuggestedRecipientListViewOwner',
         }),
-        composerViewOwner: one('ComposerView', {
-            identifying: true,
-            inverse: 'composerSuggestedRecipientListView',
-        }),
-        hasShowMoreButton: attr({
-            default: false,
-        }),
-        thread: one('Thread', {
+        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'composerSuggestedRecipientListView' }),
+        hasShowMoreButton: attr({ default: false }),
+        thread: one('Thread', { required: true,
             compute() {
                 return this.composerViewOwner.composer.activeThread;
             },
-            required: true,
         }),
     },
 });

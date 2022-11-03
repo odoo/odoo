@@ -8,20 +8,8 @@ registerModel({
     template: 'mail.EmojiPickerHeaderView',
     templateGetter: 'emojiPickerHeaderView',
     fields: {
-        actionListView: one('EmojiPickerHeaderActionListView', {
-            default: {},
-            isCausal: true,
-            inverse: 'owner',
-        }),
-        emojiCategoryBarView: one('EmojiCategoryBarView', {
-            default: {},
-            inverse: 'emojiPickerHeaderViewOwner',
-            readonly: true,
-            required: true,
-        }),
-        emojiPickerViewOwner: one('EmojiPickerView', {
-            identifying: true,
-            inverse: 'headerView',
-        }),
+        actionListView: one('EmojiPickerHeaderActionListView', { default: {}, isCausal: true, inverse: 'owner' }),
+        emojiCategoryBarView: one('EmojiCategoryBarView', { default: {}, inverse: 'emojiPickerHeaderViewOwner', readonly: true, required: true }),
+        emojiPickerViewOwner: one('EmojiPickerView', { identifying: true, inverse: 'headerView' }),
     },
 });

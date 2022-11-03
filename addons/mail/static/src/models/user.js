@@ -155,12 +155,8 @@ registerModel({
         },
     },
     fields: {
-        activitiesAsAssignee: many('Activity', {
-            inverse: 'assignee',
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        activitiesAsAssignee: many('Activity', { inverse: 'assignee' }),
+        id: attr({ identifying: true }),
         /**
          * Determines whether this user is an internal user. An internal user is
          * a member of the group `base.group_user`. This is the inverse of the
@@ -168,7 +164,7 @@ registerModel({
          */
         isInternalUser: attr(),
         display_name: attr(),
-        displayName: attr({
+        displayName: attr({ default: "",
             compute() {
                 if (this.display_name) {
                     return this.display_name;
@@ -178,21 +174,14 @@ registerModel({
                 }
                 return clear();
             },
-            default: "",
         }),
-        model: attr({
-            default: 'res.user',
-        }),
+        model: attr({ default: 'res.user' }),
         nameOrDisplayName: attr({
             compute() {
                 return this.partner && this.partner.nameOrDisplayName || this.display_name;
             },
         }),
-        partner: one('Partner', {
-            inverse: 'user',
-        }),
-        res_users_settings_id: one('res.users.settings', {
-            inverse: 'user_id',
-        }),
+        partner: one('Partner', { inverse: 'user' }),
+        res_users_settings_id: one('res.users.settings', { inverse: 'user_id' }),
     },
 });

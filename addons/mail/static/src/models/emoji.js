@@ -41,47 +41,34 @@ registerModel({
         },
     },
     fields: {
-        allEmojiInCategoryOfCurrent: many('EmojiInCategory', {
+        allEmojiInCategoryOfCurrent: many('EmojiInCategory', { inverse: 'emoji',
             compute() {
                 return this.emojiCategories.map(category => ({ category }));
             },
-            inverse: 'emoji',
         }),
-        codepoints: attr({
-            identifying: true,
-        }),
-        emojiCategories: many('EmojiCategory', {
+        codepoints: attr({ identifying: true }),
+        emojiCategories: many('EmojiCategory', { inverse: 'allEmojis',
             compute() {
                 if (!this.emojiRegistry) {
                     return clear();
                 }
                 return [this.emojiDataCategory];
             },
-            inverse: 'allEmojis',
         }),
         emojiDataCategory: one('EmojiCategory'),
-        emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
-            inverse: 'emoji',
-        }),
-        emojiRegistry: one('EmojiRegistry', {
+        emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', { inverse: 'emoji' }),
+        emojiRegistry: one('EmojiRegistry', { inverse: 'allEmojis', required: true,
             compute() {
                 if (!this.messaging) {
                     return clear();
                 }
                 return this.messaging.emojiRegistry;
             },
-            inverse: 'allEmojis',
-            required: true,
         }),
-        emojiViews: many('EmojiView', {
-            inverse: 'emoji',
-            readonly: true,
-        }),
+        emojiViews: many('EmojiView', { inverse: 'emoji', readonly: true }),
         emoticons: attr(),
         keywords: attr(),
-        name: attr({
-            readonly: true,
-        }),
+        name: attr({ readonly: true }),
         searchData: attr({
             compute() {
                 return [...this.shortcodes, ...this.emoticons, ...this.name, ...this.keywords];

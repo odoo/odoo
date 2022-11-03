@@ -14,16 +14,10 @@ registerModel({
                 return ['kanban', 'list', 'form', 'activity'];
             },
         }),
-        activityGroup: one('ActivityGroup', {
-            inverse: 'irModel',
-        }),
+        activityGroup: one('ActivityGroup', { inverse: 'irModel' }),
         iconUrl: attr(),
-        id: attr({
-            identifying: true,
-        }),
-        model: attr({
-            required: true,
-        }),
+        id: attr({ identifying: true }),
+        model: attr({ required: true }),
         name: attr(),
     },
 });

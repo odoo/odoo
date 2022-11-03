@@ -16,13 +16,7 @@ registerModel({
         },
     },
     fields: {
-        mailbox: one('Mailbox', {
-            identifying: true,
-            inverse: 'discussMobileSelectionItems',
-        }),
-        owner: one('DiscussMobileMailboxSelectionView', {
-            identifying: true,
-            inverse: 'items',
-        }),
+        mailbox: one('Mailbox', { identifying: true, inverse: 'discussMobileSelectionItems' }),
+        owner: one('DiscussMobileMailboxSelectionView', { identifying: true, inverse: 'items' }),
     },
 });

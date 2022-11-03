@@ -8,19 +8,12 @@ registerModel({
     template: 'mail.ChatWindowHiddenMenuItemView',
     templateGetter: 'chatWindowHiddenMenuItemView',
     fields: {
-        chatWindowHeaderView: one('ChatWindowHeaderView', {
-            identifying: true,
-            inverse: 'hiddenMenuItem',
-        }),
-        isLast: attr({
+        chatWindowHeaderView: one('ChatWindowHeaderView', { identifying: true, inverse: 'hiddenMenuItem' }),
+        isLast: attr({ default: false,
             compute() {
                 return this.owner.lastItem === this;
             },
-            default: false,
         }),
-        owner: one('ChatWindowHiddenMenuView', {
-            identifying: true,
-            inverse: 'items',
-        }),
+        owner: one('ChatWindowHiddenMenuView', { identifying: true, inverse: 'items' }),
     },
 });

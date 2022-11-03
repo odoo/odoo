@@ -68,9 +68,7 @@ registerModel({
         },
     },
     fields: {
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         /**
          *  The keyword to use a specific canned response.
          */
@@ -80,11 +78,6 @@ registerModel({
          * entered.
          */
         substitution: attr(),
-        suggestable: one('ComposerSuggestable', {
-            default: {},
-            inverse: 'cannedResponse',
-            readonly: true,
-            required: true,
-        }),
+        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'cannedResponse', readonly: true, required: true }),
     },
 });

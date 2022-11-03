@@ -63,7 +63,7 @@ registerModel({
          * is highlighted in the UI and it will be selected when the
          * suggestion is confirmed by the user.
          */
-        activeSuggestionView: one('ComposerSuggestionView', {
+        activeSuggestionView: one('ComposerSuggestionView', { inverse: 'composerSuggestionListViewOwnerAsActiveSuggestionView',
             compute() {
                 if (this.suggestionViews.includes(this.rawActiveSuggestionView)) {
                     return this.rawActiveSuggestionView;
@@ -71,31 +71,23 @@ registerModel({
                 const firstSuggestionView = this.suggestionViews[0];
                 return firstSuggestionView;
             },
-            inverse: 'composerSuggestionListViewOwnerAsActiveSuggestionView',
         }),
-        composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
+        composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', { inverse: 'composerSuggestionListViewOwner',
             compute() {
                 return this.composerViewOwner.extraSuggestions.map(suggestable => ({ suggestable }));
             },
-            inverse: 'composerSuggestionListViewOwner',
         }),
-        composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
+        composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', { inverse: 'composerSuggestionListViewOwner',
             compute() {
                 return this.composerViewOwner.mainSuggestions.map(suggestable => ({ suggestable }));
             },
-            inverse: 'composerSuggestionListViewOwner',
         }),
-        composerViewOwner: one('ComposerView', {
-            identifying: true,
-            inverse: 'composerSuggestionListView',
-        }),
+        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'composerSuggestionListView' }),
         /**
          * Determines whether the currently active suggestion should be scrolled
          * into view.
          */
-        hasToScrollToActiveSuggestionView: attr({
-            default: false,
-        }),
+        hasToScrollToActiveSuggestionView: attr({ default: false }),
         rawActiveSuggestionView: one('ComposerSuggestionView'),
         suggestionViews: many('ComposerSuggestionView', {
             compute() {
