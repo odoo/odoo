@@ -17,12 +17,19 @@ odoo.define('pos_restaurant.TicketButton', function (require) {
             }
             async _syncAllFromServer() {
                 const pos = this.env.pos;
+                const pos_config_id = pos.config.id
                 try {
-                    for (const floor of pos.floors) {
-                        for (const table of floor.tables) {
-                            await pos.replace_table_orders_from_server(table);
-                        }
-                    }
+                    const server_orders = await this.rpc({
+                        model: 'pos.order',
+                        method: 'get_all_table_draft_orders',
+                        args: [pos_config_id],
+                        kwargs: {context: pos.session.user_context},
+                    }, {
+                        timeout: 7500,
+                        shadow: false,
+                    });
+                    const orders = this.env.pos.get('orders').models
+                    pos._replace_orders(orders, server_orders);
                 } catch (e) {
                     await this.showPopup('ErrorPopup', {
                         title: this.env._t('Connection Error'),
