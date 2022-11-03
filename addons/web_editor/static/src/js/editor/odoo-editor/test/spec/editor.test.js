@@ -3671,6 +3671,57 @@ X[]
                 });
             });
         });
+        describe('prevent renderingClass to be set from history', () => {
+            it('should prevent renderingClass to be added', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        p.className = 'x';
+                        editor.observerFlush();
+                        editor.historyStep();
+                        window.chai.expect(editor._historySteps.length).to.eql(1);
+                    },
+                }, {
+                    renderingClass: ['x']
+                });
+            });
+            it('should prevent renderingClass to be added when adding 2 classes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        console.log(`p:`, p);
+                        p.className = 'x y';
+                        editor.observerFlush();
+                        editor.historyStep();
+                        editor.historyUndo();
+                        editor.historyRedo();
+                    },
+                    contentAfter: `<p class="y">a</p>`,
+                }, {
+                    renderingClass: ['x']
+                });
+            });
+            it('should prevent renderingClass to be added in historyApply', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        editor.historyApply([{
+                            attributeName:"class",
+                            id: p.oid,
+                            oldValue: null,
+                            type:"attributes",
+                            value: "x y",
+                        }]);
+                    },
+                    contentAfter: `<p class="y">a</p>`,
+                }, {
+                    renderingClass: ['x']
+                });
+            });
+        });
     });
 
     describe('columnize', () => {
