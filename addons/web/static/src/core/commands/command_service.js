@@ -21,6 +21,7 @@ import { Component, xml, EventBus } from "@odoo/owl";
 /**
  * @typedef {import("../hotkeys/hotkey_service").HotkeyOptions & {
  *  category?: string;
+ *  isAvailable: ()=>(boolean);
  * }} CommandOptions
  */
 
