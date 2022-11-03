@@ -319,40 +319,28 @@ registerModel({
          * Determines the attachment list displaying the attachments of this
          * message (if any).
          */
-        attachmentList: one('AttachmentList', {
+        attachmentList: one('AttachmentList', { inverse: 'messageViewOwner',
             compute() {
                 return (this.message && this.message.attachments.length > 0)
                     ? {}
                     : clear();
             },
-            inverse: 'messageViewOwner',
         }),
         authorTitleText: attr({
             compute() {
                 return this.hasAuthorOpenChat ? this.env._t("Open chat") : '';
             },
         }),
-        clockWatcher: one('ClockWatcher', {
-            default: {
-                clock: {
-                    frequency: 60 * 1000,
-                },
-            },
-            inverse: 'messageViewOwner',
-        }),
+        clockWatcher: one('ClockWatcher', { default: { clock: { frequency: 60 * 1000 } }, inverse: 'messageViewOwner' }),
         /**
          * States the component displaying this message view (if any).
          */
         component: attr(),
-        composerForEditing: one('Composer', {
-            inverse: 'messageViewInEditing',
-        }),
+        composerForEditing: one('Composer', { inverse: 'messageViewInEditing' }),
         /**
         * Determines the composer that is used to edit this message (if any).
         */
-        composerViewInEditing: one('ComposerView', {
-            inverse: 'messageViewInEditing',
-        }),
+        composerViewInEditing: one('ComposerView', { inverse: 'messageViewInEditing' }),
         /**
          * Reference to the content of the message.
          */
@@ -382,10 +370,7 @@ registerModel({
          * States the delete message confirm view that is displaying this
          * message view.
          */
-        deleteMessageConfirmViewOwner: one('DeleteMessageConfirmView', {
-            identifying: true,
-            inverse: 'messageView',
-        }),
+        deleteMessageConfirmViewOwner: one('DeleteMessageConfirmView', { identifying: true, inverse: 'messageView' }),
         /**
          * Determines whether this message view should be highlighted at next
          * render. Scrolls into view and briefly highlights it.
@@ -394,26 +379,23 @@ registerModel({
         /**
          * Determines which extra class this message view component should have.
          */
-        extraClass: attr({
+        extraClass: attr({ default: '',
             compute() {
                 if (this.messageListViewItemOwner) {
                     return 'o_MessageListView_item o_MessageListView_message';
                 }
                 return clear();
             },
-            default: '',
         }),
-        failureNotificationIconClassName: attr({
+        failureNotificationIconClassName: attr({ default: 'fa fa-envelope',
             compute() {
                 return clear();
             },
-            default: 'fa fa-envelope',
         }),
-        failureNotificationIconLabel: attr({
+        failureNotificationIconLabel: attr({ default: '',
             compute() {
                 return clear();
             },
-            default: '',
         }),
         /**
          * Determines whether author open chat feature is enabled on message.
@@ -443,9 +425,7 @@ registerModel({
         /**
          * Current timer that will reset isHighlighted to false.
          */
-        highlightTimer: one('Timer', {
-            inverse: 'messageViewOwnerAsHighlight',
-        }),
+        highlightTimer: one('Timer', { inverse: 'messageViewOwnerAsHighlight' }),
         /**
          * Whether the message is "active", ie: hovered or clicked, and should
          * display additional things (date in sidebar, message actions, etc.)
@@ -469,9 +449,7 @@ registerModel({
          * Determine whether the message is hovered. When message is hovered
          * it displays message actions.
          */
-        isHovered: attr({
-            default: false,
-        }),
+        isHovered: attr({ default: false }),
         /**
          * Determines if we are in the Discuss view.
          */
@@ -571,26 +549,24 @@ registerModel({
         /**
          * Tells whether the message is selected in the current thread viewer.
          */
-        isSelected: attr({
+        isSelected: attr({ default: false,
             compute() {
                 return Boolean(
                     this.messageListViewItemOwner &&
                     this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this
                 );
             },
-            default: false,
         }),
         /**
          * Determines whether this message view should be squashed visually.
          */
-        isSquashed: attr({
+        isSquashed: attr({ default: false,
             compute() {
                 if (this.messageListViewItemOwner) {
                     return this.messageListViewItemOwner.isSquashed;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Value of the last rendered prettyBody. Useful to compare to new value
@@ -602,28 +578,24 @@ registerModel({
          * Useful to remember the state for each "read more" even if their DOM
          * is re-rendered.
          */
-        lastReadMoreIndex: attr({
-            default: 0,
-        }),
-        linkPreviewListView: one('LinkPreviewListView', {
+        lastReadMoreIndex: attr({ default: 0 }),
+        linkPreviewListView: one('LinkPreviewListView', { inverse: 'messageViewOwner',
             compute() {
                 return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();
             },
-            inverse: 'messageViewOwner',
         }),
         /**
          * Determines the message action list of this message view (if any).
          */
-        messageActionList: one('MessageActionList', {
+        messageActionList: one('MessageActionList', { inverse: 'messageView',
             compute() {
                 return this.deleteMessageConfirmViewOwner ? clear() : {};
             },
-            inverse: 'messageView',
         }),
         /**
          * Determines the message that is displayed by this message view.
          */
-        message: one('Message', {
+        message: one('Message', { inverse: 'messageViews', required: true,
             compute() {
                 if (this.messageListViewItemOwner) {
                     return this.messageListViewItemOwner.message;
@@ -633,14 +605,12 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'messageViews',
-            required: true,
         }),
         /**
          * States the message in reply to view that displays the message of
          * which this message is a reply to (if any).
          */
-        messageInReplyToView: one('MessageInReplyToView', {
+        messageInReplyToView: one('MessageInReplyToView', { inverse: 'messageView',
             compute() {
                 return (
                     this.message &&
@@ -649,13 +619,9 @@ registerModel({
                     this.message.parentMessage
                 ) ? {} : clear();
             },
-            inverse: 'messageView',
         }),
-        messageListViewItemOwner: one('MessageListViewItem', {
-            identifying: true,
-            inverse: 'messageView',
-        }),
-        messageSeenIndicatorView: one('MessageSeenIndicatorView', {
+        messageListViewItemOwner: one('MessageListViewItem', { identifying: true, inverse: 'messageView' }),
+        messageSeenIndicatorView: one('MessageSeenIndicatorView', { inverse: 'messageViewOwner',
             compute() {
                 if (
                     this.message.isCurrentUserOrGuestAuthor &&
@@ -667,35 +633,27 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'messageViewOwner',
         }),
-        messagingAsClickedMessageView: one('Messaging', {
-            inverse: 'clickedMessageView',
-        }),
-        notificationIconClassName: attr({
+        messagingAsClickedMessageView: one('Messaging', { inverse: 'clickedMessageView' }),
+        notificationIconClassName: attr({ default: 'fa fa-envelope-o',
             compute() {
                 return clear();
             },
-            default: 'fa fa-envelope-o',
         }),
-        notificationIconLabel: attr({
+        notificationIconLabel: attr({ default: '',
             compute() {
                 return clear();
             },
-            default: '',
         }),
         notificationIconRef: attr(),
-        notificationPopoverView: one('PopoverView', {
-            inverse: 'messageViewOwnerAsNotificationContent',
-        }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
+        notificationPopoverView: one('PopoverView', { inverse: 'messageViewOwnerAsNotificationContent' }),
+        personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'messageViewOwner',
             compute() {
                 if (this.message.guestAuthor && this.message.guestAuthor.im_status) {
                     return {};
                 }
                 return this.message.author && this.message.author.isImStatusSet ? {} : clear();
             },
-            inverse: 'messageViewOwner',
         }),
         /**
          * Reference to element containing the prettyBody. Useful to be able to

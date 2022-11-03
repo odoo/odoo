@@ -63,35 +63,27 @@ registerModel({
         /**
          * Determines the attachment of this attachment image..
          */
-        attachment: one('Attachment', {
-            identifying: true,
-        }),
-        attachmentDeleteConfirmDialog: one('Dialog', {
-            inverse: 'attachmentImageOwnerAsAttachmentDeleteConfirm',
-        }),
+        attachment: one('Attachment', { identifying: true }),
+        attachmentDeleteConfirmDialog: one('Dialog', { inverse: 'attachmentImageOwnerAsAttachmentDeleteConfirm' }),
         /**
          * States the attachmentList displaying this attachment image.
          */
-        attachmentList: one('AttachmentList', {
-            identifying: true,
-            inverse: 'attachmentImages',
-        }),
+        attachmentList: one('AttachmentList', { identifying: true, inverse: 'attachmentImages' }),
         /**
          * Determines whether `this` should display a download button.
          */
-        hasDownloadButton: attr({
+        hasDownloadButton: attr({ default: false,
             compute() {
                 if (!this.attachment || !this.attachmentList) {
                     return clear();
                 }
                 return !this.attachmentList.composerViewOwner && !this.attachment.isUploading;
             },
-            default: false,
         }),
         /**
          * Determines the max height of this attachment image in px.
          */
-        height: attr({
+        height: attr({ required: true,
             compute() {
                 if (!this.attachmentList) {
                     return clear();
@@ -106,7 +98,6 @@ registerModel({
                     return 300;
                 }
             },
-            required: true,
         }),
         imageUrl: attr({
             compute() {
@@ -123,7 +114,7 @@ registerModel({
         /**
          * Determines the max width of this attachment image in px.
          */
-        width: attr({
+        width: attr({ required: true,
             /**
              * Returns an arbitrary high value, this is effectively a max-width and
              * the height should be more constrained.
@@ -131,7 +122,6 @@ registerModel({
             compute() {
                 return 1920;
             },
-            required: true,
         }),
     },
 });

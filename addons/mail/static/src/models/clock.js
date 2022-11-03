@@ -45,9 +45,7 @@ registerModel({
          * An integer representing the frequency in milliseconds at which `date`
          * must be recomputed.
          */
-        frequency: attr({
-            identifying: true,
-        }),
+        frequency: attr({ identifying: true }),
         tickInterval: attr({
             compute() {
                 return this.messaging.browser.setInterval(this._onInterval, this.frequency);
@@ -58,10 +56,7 @@ registerModel({
          *
          * The clock self-destructs when there are no more watchers.
          */
-        watchers: many('ClockWatcher', {
-            inverse: 'clock',
-            isCausal: true,
-        }),
+        watchers: many('ClockWatcher', { inverse: 'clock', isCausal: true }),
     },
     onChanges: [
         {

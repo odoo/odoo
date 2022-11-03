@@ -30,15 +30,11 @@ registerModel({
     },
     fields: {
         component: attr(),
-        dialogOwner: one('Dialog', {
-            identifying: true,
-            inverse: 'linkPreviewDeleteConfirmView',
-        }),
-        linkPreview: one('LinkPreview', {
+        dialogOwner: one('Dialog', { identifying: true, inverse: 'linkPreviewDeleteConfirmView' }),
+        linkPreview: one('LinkPreview', { required: true,
             compute() {
                 return this.dialogOwner.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm.linkPreview;
             },
-            required: true,
         }),
     },
 });

@@ -411,12 +411,8 @@ registerModel({
         /**
          * Angle of the image. Changes when the user rotates it.
          */
-        angle: attr({
-            default: 0,
-        }),
-        attachmentList: one('AttachmentList', {
-            related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
-        }),
+        angle: attr({ default: 0 }),
+        attachmentList: one('AttachmentList', { related: 'dialogOwner.attachmentListOwnerAsAttachmentView' }),
         attachmentViewerViewable: one("AttachmentViewerViewable", {
             compute() {
                 if (this.attachmentList) {
@@ -444,17 +440,9 @@ registerModel({
         /**
          * Determines the dialog displaying this attachment viewer.
          */
-        dialogOwner: one('Dialog', {
-            identifying: true,
-            inverse: 'attachmentViewer',
-            isCausal: true,
-        }),
-        dragStartX: attr({
-            default: 0,
-        }),
-        dragStartY: attr({
-            default: 0,
-        }),
+        dialogOwner: one('Dialog', { identifying: true, inverse: 'attachmentViewer', isCausal: true }),
+        dragStartX: attr({ default: 0 }),
+        dragStartY: attr({ default: 0 }),
         /**
          * Reference of the IFRAME node when the attachment is a PDF.
          */
@@ -486,42 +474,24 @@ registerModel({
          * This is useful to determine whether a click outside of the image
          * should close the attachment viewer or not.
          */
-        isDragging: attr({
-            default: false,
-        }),
+        isDragging: attr({ default: false }),
         /**
          * Determine whether the image is loading or not. Useful to diplay
          * a spinner when loading image initially.
          */
-        isImageLoading: attr({
-            default: false,
-        }),
-        minScale: attr({
-            default: 0.5,
-            readonly: true,
-        }),
+        isImageLoading: attr({ default: false }),
+        minScale: attr({ default: 0.5, readonly: true }),
         /**
          * Scale size of the image. Changes when user zooms in/out.
          */
-        scale: attr({
-            default: 1,
-        }),
-        scrollZoomStep: attr({
-            default: 0.1,
-            readonly: true,
-        }),
-        translate: one('AttachmentViewer.Translate', {
-            default: {},
-            inverse: 'owner',
-        }),
+        scale: attr({ default: 1 }),
+        scrollZoomStep: attr({ default: 0.1, readonly: true }),
+        translate: one('AttachmentViewer.Translate', { default: {}, inverse: 'owner' }),
         /**
          * Reference of the zoomer node. Useful to apply translate
          * transformation on image visualisation.
          */
         zoomerRef: attr(),
-        zoomStep: attr({
-            default: 0.5,
-            readonly: true,
-        }),
+        zoomStep: attr({ default: 0.5, readonly: true }),
     },
 });

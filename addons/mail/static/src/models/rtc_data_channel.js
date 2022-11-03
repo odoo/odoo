@@ -11,13 +11,7 @@ registerModel({
         },
     },
     fields: {
-        dataChannel: attr({
-            required: true,
-            readonly: true,
-        }),
-        rtcSession: one('RtcSession', {
-            identifying: true,
-            inverse: 'rtcDataChannel',
-        }),
+        dataChannel: attr({ required: true, readonly: true }),
+        rtcSession: one('RtcSession', { identifying: true, inverse: 'rtcDataChannel' }),
     },
 });

@@ -53,14 +53,10 @@ registerModel({
         /**
          * The default volume to play this sound effect, when unspecified.
          */
-        defaultVolume: attr({
-            default: 1,
-        }),
+        defaultVolume: attr({ default: 1 }),
         /**
          * Path to the audio file.
          */
-        path: attr({
-            identifying: true,
-        }),
+        path: attr({ identifying: true }),
     },
 });

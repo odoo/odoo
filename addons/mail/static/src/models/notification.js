@@ -80,9 +80,7 @@ registerModel({
                 return '';
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         isFailure: attr({
             compute() {
                 return ['exception', 'bounce'].includes(this.notification_status);
@@ -96,9 +94,7 @@ registerModel({
                 return this.messaging.currentPartner === this.message.author;
             },
         }),
-        message: one('Message', {
-            inverse: 'notifications',
-        }),
+        message: one('Message', { inverse: 'notifications' }),
         notificationGroup: one('NotificationGroup', {
             compute() {
                 if (!this.isFailure || !this.isFromCurrentUser) {

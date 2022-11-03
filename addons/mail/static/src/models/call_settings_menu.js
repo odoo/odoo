@@ -114,10 +114,7 @@ registerModel({
                 return clear();
             },
         }),
-        chatWindowOwner: one('ChatWindow', {
-            identifying: true,
-            inverse: 'callSettingsMenu',
-        }),
+        chatWindowOwner: one('ChatWindow', { identifying: true, inverse: 'callSettingsMenu' }),
         thread: one('Thread', {
             compute() {
                 if (this.threadViewOwner) {
@@ -129,15 +126,8 @@ registerModel({
                 return clear();
             },
         }),
-        threadViewOwner: one('ThreadView', {
-            identifying: true,
-            inverse: 'callSettingsMenu',
-        }),
-        userDevices: attr({
-            default: [],
-        }),
-        userSetting: one('UserSetting', {
-            related: 'messaging.userSetting',
-        }),
+        threadViewOwner: one('ThreadView', { identifying: true, inverse: 'callSettingsMenu' }),
+        userDevices: attr({ default: [] }),
+        userSetting: one('UserSetting', { related: 'messaging.userSetting' }),
     },
 });

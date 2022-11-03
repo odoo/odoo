@@ -35,7 +35,7 @@ registerModel({
         },
     },
     fields: {
-        attachment: one('Attachment', {
+        attachment: one('Attachment', { required: true,
             compute() {
                 if (this.dialogOwner && this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm) {
                     return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachment;
@@ -45,7 +45,6 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
         body: attr({
             compute() {
@@ -72,9 +71,6 @@ registerModel({
             },
         }),
         component: attr(),
-        dialogOwner: one('Dialog', {
-            identifying: true,
-            inverse: 'attachmentDeleteConfirmView',
-        }),
+        dialogOwner: one('Dialog', { identifying: true, inverse: 'attachmentDeleteConfirmView' }),
     },
 });

@@ -11,19 +11,8 @@ import { one } from '@mail/model/model_field';
 registerModel({
     name: 'ComposerSuggestionListViewMainComposerSuggestionViewItem',
     fields: {
-        composerSuggestionListViewOwner: one('ComposerSuggestionListView', {
-            identifying: true,
-            inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems',
-        }),
-        composerSuggestionView: one('ComposerSuggestionView', {
-            default: {},
-            inverse: 'composerSuggestionListViewMainComposerSuggestionViewItemOwner',
-            readonly: true,
-            required: true,
-        }),
-        suggestable: one('ComposerSuggestable', {
-            identifying: true,
-            inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems',
-        }),
+        composerSuggestionListViewOwner: one('ComposerSuggestionListView', { identifying: true, inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems' }),
+        composerSuggestionView: one('ComposerSuggestionView', { default: {}, inverse: 'composerSuggestionListViewMainComposerSuggestionViewItemOwner', readonly: true, required: true }),
+        suggestable: one('ComposerSuggestable', { identifying: true, inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems' }),
     },
 });

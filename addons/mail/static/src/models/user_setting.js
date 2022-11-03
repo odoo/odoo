@@ -246,29 +246,21 @@ registerModel({
         /**
          * DeviceId of the audio input selected by the user
          */
-        audioInputDeviceId: attr({
-            default: '',
-        }),
-        backgroundBlurAmount: attr({
-            default: 10,
-        }),
-        edgeBlurAmount: attr({
-            default: 10,
-        }),
+        audioInputDeviceId: attr({ default: '' }),
+        backgroundBlurAmount: attr({ default: 10 }),
+        edgeBlurAmount: attr({ default: 10 }),
         globalSettingsTimeout: attr(),
         /**
          * true if listening to keyboard input to register the push to talk key.
          */
-        isRegisteringKey: attr({
-            default: false,
-        }),
+        isRegisteringKey: attr({ default: false }),
         localPushToTalkKey: attr(),
         localUsePushToTalk: attr(),
         localVoiceActiveDuration: attr(),
         /**
          * String that encodes the push-to-talk key with its modifiers.
          */
-        pushToTalkKey: attr({
+        pushToTalkKey: attr({ default: '',
             compute() {
                 if (this.localPushToTalkKey !== undefined) {
                     return this.localPushToTalkKey;
@@ -281,15 +273,12 @@ registerModel({
                 }
                 return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
             },
-            default: '',
         }),
-        useBlur: attr({
-            default: false,
-        }),
+        useBlur: attr({ default: false }),
         /**
          * If true, push-to-talk will be used over voice activation.
          */
-        usePushToTalk: attr({
+        usePushToTalk: attr({ default: false,
             compute() {
                 if (this.localUsePushToTalk !== undefined) {
                     return this.localUsePushToTalk;
@@ -302,19 +291,16 @@ registerModel({
                 }
                 return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
             },
-            default: false,
         }),
         /**
          * Normalized volume at which the voice activation system must consider the user as "talking".
          */
-        voiceActivationThreshold: attr({
-            default: 0.05,
-        }),
+        voiceActivationThreshold: attr({ default: 0.05 }),
         /**
          * Duration in milliseconds the voice remains active after releasing the
          * push-to-talk key.
          */
-        voiceActiveDuration: attr({
+        voiceActiveDuration: attr({ default: 0,
             compute() {
                 if (this.localVoiceActiveDuration !== undefined) {
                     return this.localVoiceActiveDuration;
@@ -327,11 +313,8 @@ registerModel({
                 }
                 return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
             },
-            default: 0,
         }),
-        volumeSettingsTimeouts: attr({
-            default: {},
-        }),
+        volumeSettingsTimeouts: attr({ default: {} }),
     },
     onChanges: [
         {

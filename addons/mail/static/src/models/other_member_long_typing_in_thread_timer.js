@@ -11,18 +11,8 @@ registerModel({
         },
     },
     fields: {
-        member: one('ChannelMember', {
-            identifying: true,
-            inverse: 'otherMemberLongTypingInThreadTimers',
-        }),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'otherMembersLongTypingTimers',
-        }),
-        timer: one('Timer', {
-            default: {},
-            inverse: 'otherMemberLongTypingInThreadTimerOwner',
-            required: true,
-        }),
+        member: one('ChannelMember', { identifying: true, inverse: 'otherMemberLongTypingInThreadTimers' }),
+        thread: one('Thread', { identifying: true, inverse: 'otherMembersLongTypingTimers' }),
+        timer: one('Timer', { default: {}, inverse: 'otherMemberLongTypingInThreadTimerOwner', required: true }),
     },
 });

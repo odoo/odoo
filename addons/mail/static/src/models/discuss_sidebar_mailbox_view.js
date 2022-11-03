@@ -10,19 +10,10 @@ registerModel({
     templateGetter: 'discussSidebarMailboxView',
     identifyingMode: 'xor',
     fields: {
-        discussViewOwnerAsHistory: one('DiscussView', {
-            identifying: true,
-            inverse: 'historyView',
-        }),
-        discussViewOwnerAsInbox: one('DiscussView', {
-            identifying: true,
-            inverse: 'inboxView',
-        }),
-        discussViewOwnerAsStarred: one('DiscussView', {
-            identifying: true,
-            inverse: 'starredView',
-        }),
-        mailbox: one('Mailbox', {
+        discussViewOwnerAsHistory: one('DiscussView', { identifying: true, inverse: 'historyView' }),
+        discussViewOwnerAsInbox: one('DiscussView', { identifying: true, inverse: 'inboxView' }),
+        discussViewOwnerAsStarred: one('DiscussView', { identifying: true, inverse: 'starredView' }),
+        mailbox: one('Mailbox', { required: true,
             compute() {
                 if (this.discussViewOwnerAsHistory) {
                     return this.messaging.history;
@@ -35,11 +26,7 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        threadIconView: one('ThreadIconView', {
-            default: {},
-            inverse: 'discussSidebarMailboxViewOwner',
-        }),
+        threadIconView: one('ThreadIconView', { default: {}, inverse: 'discussSidebarMailboxViewOwner' }),
     },
 });

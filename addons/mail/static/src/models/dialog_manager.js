@@ -16,9 +16,6 @@ registerModel({
     },
     fields: {
         // FIXME: dependent on implementation that uses insert order in relations!!
-        dialogs: many('Dialog', {
-            inverse: 'manager',
-            isCausal: true,
-        }),
+        dialogs: many('Dialog', { inverse: 'manager', isCausal: true }),
     },
 });

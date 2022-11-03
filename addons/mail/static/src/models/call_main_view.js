@@ -180,15 +180,8 @@ registerModel({
         /**
          * The model for the controller (buttons).
          */
-        callActionListView: one('CallActionListView', {
-            default: {},
-            inverse: 'callMainView',
-            readonly: true,
-        }),
-        callView: one('CallView', {
-            identifying: true,
-            inverse: 'callMainView',
-        }),
+        callActionListView: one('CallActionListView', { default: {}, inverse: 'callMainView', readonly: true }),
+        callView: one('CallView', { identifying: true, inverse: 'callMainView' }),
         component: attr(),
         hasSidebarButton: attr({
             compute() {
@@ -198,40 +191,27 @@ registerModel({
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
-        isControllerFloating: attr({
+        isControllerFloating: attr({ default: false,
             compute() {
                 return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
             },
-            default: false,
         }),
-        mainTiles: many('CallMainViewTile', {
+        mainTiles: many('CallMainViewTile', { inverse: 'callMainViewOwner',
             compute() {
                 if (this.callView.activeRtcSession) {
                     return [{ channelMember: this.callView.activeRtcSession.channelMember }];
                 }
                 return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
             },
-            inverse: 'callMainViewOwner',
         }),
         /**
          * Determines if we show the overlay with the control buttons.
          */
-        showOverlay: attr({
-            default: true,
-        }),
-        showOverlayTimer: one('Timer', {
-            inverse: 'callMainViewAsShowOverlay',
-        }),
-        thread: one('Thread', {
-            related: 'callView.thread',
-            required: true,
-        }),
+        showOverlay: attr({ default: true }),
+        showOverlayTimer: one('Timer', { inverse: 'callMainViewAsShowOverlay' }),
+        thread: one('Thread', { related: 'callView.thread', required: true }),
         tileContainerRef: attr(),
-        tileHeight: attr({
-            default: 0,
-        }),
-        tileWidth: attr({
-            default: 0,
-        }),
+        tileHeight: attr({ default: 0 }),
+        tileWidth: attr({ default: 0 }),
     },
 });

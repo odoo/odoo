@@ -165,26 +165,11 @@ registerModel({
         },
     },
     fields: {
-        activityListViewItemOwner: one('ActivityListViewItem', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
-        activityView: one('ActivityView', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
-        attachmentBoxView: one('AttachmentBoxView', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
-        chatterOwner: one('Chatter', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
-        composerView: one('ComposerView', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
+        activityListViewItemOwner: one('ActivityListViewItem', { identifying: true, inverse: 'fileUploader' }),
+        activityView: one('ActivityView', { identifying: true, inverse: 'fileUploader' }),
+        attachmentBoxView: one('AttachmentBoxView', { identifying: true, inverse: 'fileUploader' }),
+        chatterOwner: one('Chatter', { identifying: true, inverse: 'fileUploader' }),
+        composerView: one('ComposerView', { identifying: true, inverse: 'fileUploader' }),
         fileInput: attr({
             /**
              * Create an HTML element that will serve as file input.
@@ -199,7 +184,7 @@ registerModel({
                 return fileInput;
             },
         }),
-        thread: one('Thread', {
+        thread: one('Thread', { required: true,
             compute() {
                 if (this.activityView) {
                     return this.activityView.activity.thread;
@@ -218,7 +203,6 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         })
     },
 });

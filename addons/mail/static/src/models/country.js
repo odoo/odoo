@@ -16,9 +16,7 @@ registerModel({
                 return `/base/static/img/country_flags/${this.code}.png`;
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         name: attr(),
     },
 });

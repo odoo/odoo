@@ -10,19 +10,10 @@ registerModel({
     templateGetter: 'threadIconView',
     identifyingMode: 'xor',
     fields: {
-        chatWindowHeaderViewOwner: one('ChatWindowHeaderView', {
-            identifying: true,
-            inverse: 'threadIconView',
-        }),
-        discussSidebarCategoryItemOwner: one('DiscussSidebarCategoryItem', {
-            identifying: true,
-            inverse: 'threadIconView',
-        }),
-        discussSidebarMailboxViewOwner: one('DiscussSidebarMailboxView', {
-            identifying: true,
-            inverse: 'threadIconView',
-        }),
-        thread: one('Thread', {
+        chatWindowHeaderViewOwner: one('ChatWindowHeaderView', { identifying: true, inverse: 'threadIconView' }),
+        discussSidebarCategoryItemOwner: one('DiscussSidebarCategoryItem', { identifying: true, inverse: 'threadIconView' }),
+        discussSidebarMailboxViewOwner: one('DiscussSidebarMailboxView', { identifying: true, inverse: 'threadIconView' }),
+        thread: one('Thread', { required: true,
             compute() {
                 if (this.chatWindowHeaderViewOwner) {
                     return this.chatWindowHeaderViewOwner.chatWindowOwner.thread;
@@ -34,12 +25,11 @@ registerModel({
                     return this.discussSidebarMailboxViewOwner.mailbox.thread;
                 }
                 if (this.threadViewTopbarOwner) {
-                    return this.threadViewTopbarOwner.thread
+                    return this.threadViewTopbarOwner.thread;
                 }
             },
-            required: true,
         }),
-        threadTypingIconView: one('ThreadTypingIconView', {
+        threadTypingIconView: one('ThreadTypingIconView', { inverse: 'threadIconViewOwner',
             compute() {
                 if (
                     this.thread.channel &&
@@ -51,11 +41,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'threadIconViewOwner'
         }),
-        threadViewTopbarOwner: one('ThreadViewTopbar', {
-            identifying: true,
-            inverse: 'threadIconView',
-        }),
+        threadViewTopbarOwner: one('ThreadViewTopbar', { identifying: true, inverse: 'threadIconView' }),
     },
 });

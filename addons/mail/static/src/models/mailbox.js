@@ -25,12 +25,8 @@ registerModel({
         },
     },
     fields: {
-        counter: attr({
-            default: 0,
-        }),
-        discussMobileSelectionItems: many('DiscussMobileMailboxSelectionItemView', {
-            inverse: 'mailbox',
-        }),
+        counter: attr({ default: 0 }),
+        discussMobileSelectionItems: many('DiscussMobileMailboxSelectionItemView', { inverse: 'mailbox' }),
         fetchMessagesUrl: attr({
             compute() {
                 switch (this) {
@@ -48,27 +44,17 @@ registerModel({
         /**
          * Useful to fill its inverse `Messaging/allMailboxes`.
          */
-        messagingAsAnyMailbox: one('Messaging', {
+        messagingAsAnyMailbox: one('Messaging', { inverse: 'allMailboxes',
             compute() {
                 if (!this.messaging) {
                     return clear();
                 }
                 return this.messaging;
             },
-            inverse: 'allMailboxes',
         }),
-        messagingAsHistory: one('Messaging', {
-            identifying: true,
-            inverse: 'history',
-        }),
-        messagingAsInbox: one('Messaging', {
-            identifying: true,
-            inverse: 'inbox',
-        }),
-        messagingAsStarred: one('Messaging', {
-            identifying: true,
-            inverse: 'starred',
-        }),
+        messagingAsHistory: one('Messaging', { identifying: true, inverse: 'history' }),
+        messagingAsInbox: one('Messaging', { identifying: true, inverse: 'inbox' }),
+        messagingAsStarred: one('Messaging', { identifying: true, inverse: 'starred' }),
         name: attr({
             compute() {
                 switch (this) {
@@ -86,9 +72,7 @@ registerModel({
         /**
          * Useful to display rainbow man on inbox.
          */
-        previousValueOfInboxCounter: attr({
-            default: 0,
-        }),
+        previousValueOfInboxCounter: attr({ default: 0 }),
         sequence: attr({
             compute() {
                 switch (this) {
@@ -103,7 +87,7 @@ registerModel({
                 }
             },
         }),
-        thread: one('Thread', {
+        thread: one('Thread', { inverse: 'mailbox',
             compute() {
                 const threadId = (() => {
                     switch (this) {
@@ -123,7 +107,6 @@ registerModel({
                     model: 'mail.box',
                 };
             },
-            inverse: 'mailbox',
         }),
     },
     onChanges: [

@@ -186,9 +186,7 @@ registerModel({
         /**
          * Active mobile navbar tab, either 'mailbox', 'chat', or 'channel'.
          */
-        activeMobileNavbarTabId: attr({
-            default: 'mailbox',
-        }),
+        activeMobileNavbarTabId: attr({ default: 'mailbox' }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
@@ -222,20 +220,12 @@ registerModel({
         /**
          * Discuss sidebar category for `channel` type channel threads.
          */
-        categoryChannel: one('DiscussSidebarCategory', {
-            default: {},
-            inverse: 'discussAsChannel',
-        }),
+        categoryChannel: one('DiscussSidebarCategory', { default: {}, inverse: 'discussAsChannel' }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
          */
-        categoryChat: one('DiscussSidebarCategory', {
-            default: {},
-            inverse: 'discussAsChat',
-        }),
-        discussView: one('DiscussView', {
-            inverse: 'discuss',
-        }),
+        categoryChat: one('DiscussSidebarCategory', { default: {}, inverse: 'discussAsChat' }),
+        discussView: one('DiscussView', { inverse: 'discuss' }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
@@ -264,35 +254,28 @@ registerModel({
          *    {string} <threadModel>_<threadId>
          *    {int} <channelId> with default model of 'mail.channel'
          */
-        initActiveId: attr({
-            default: 'mail.box_inbox',
-        }),
+        initActiveId: attr({ default: 'mail.box_inbox' }),
         /**
          * Determines if the logic for opening a thread via the `initActiveId`
          * has been processed. This is necessary to ensure that this only
          * happens once.
          */
-        isInitThreadHandled: attr({
-            default: false,
-        }),
+        isInitThreadHandled: attr({ default: false }),
         /**
          * The menu_id of discuss app, received on mail/init_messaging and
          * used to open discuss from elsewhere.
          */
-        menu_id: attr({
-            default: null,
-        }),
-        notificationListView: one('NotificationListView', {
+        menu_id: attr({ default: null }),
+        notificationListView: one('NotificationListView', { inverse: 'discussOwner',
             compute() {
                 return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
             },
-            inverse: 'discussOwner',
         }),
         /**
          * The navbar view on the discuss app when in mobile and when not
          * replying to a message from inbox.
          */
-        mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
+        mobileMessagingNavbarView: one('MobileMessagingNavbarView', { inverse: 'discuss',
             compute() {
                 if (
                     this.messaging.device &&
@@ -303,26 +286,21 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'discuss',
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
          * to filter channels and chats based on this input content.
          */
-        sidebarQuickSearchValue: attr({
-            default: "",
-        }),
+        sidebarQuickSearchValue: attr({ default: "" }),
         thread: one('Thread'),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
-        }),
+        threadView: one('ThreadView', { related: 'threadViewer.threadView' }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', { inverse: 'discuss', required: true,
             compute() {
                 return {
                     hasMemberList: true,
@@ -331,8 +309,6 @@ registerModel({
                     thread: this.activeThread ? this.activeThread : clear(),
                 };
             },
-            inverse: 'discuss',
-            required: true,
         }),
     },
 });

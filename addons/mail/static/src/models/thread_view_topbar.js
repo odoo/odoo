@@ -609,9 +609,7 @@ registerModel({
         /**
          * Determines whether the guest is currently being renamed.
          */
-        isEditingGuestName: attr({
-            default: false,
-        }),
+        isEditingGuestName: attr({ default: false }),
         /**
          * States the OWL ref of the invite button.
          * Useful to provide anchor for the invite popover positioning.
@@ -621,9 +619,7 @@ registerModel({
          * If set, this is the record of invite button popover that is currently
          * open in the topbar.
          */
-        invitePopoverView: one('PopoverView', {
-            inverse: 'threadViewTopbarOwnerAsInvite',
-        }),
+        invitePopoverView: one('PopoverView', { inverse: 'threadViewTopbarOwnerAsInvite' }),
         /**
          * States whether this thread description is highlighted.
          */
@@ -638,69 +634,51 @@ registerModel({
         /**
          * Determines whether this thread is currently being renamed.
          */
-        isEditingThreadName: attr({
-            default: false,
-        }),
+        isEditingThreadName: attr({ default: false }),
         /**
          * Determines whether this thread description is currently being changed.
          */
-        isEditingThreadDescription: attr({
-            default: false,
-        }),
+        isEditingThreadDescription: attr({ default: false }),
         /**
          * States whether the cursor is currently over this thread name in
          * the top bar.
          */
-        isMouseOverThreadName: attr({
-            default: false,
-        }),
+        isMouseOverThreadName: attr({ default: false }),
         /**
          * States whether the cursor is currently over this thread description in
          * the top bar.
          */
-        isMouseOverThreadDescription: attr({
-            default: false,
-        }),
+        isMouseOverThreadDescription: attr({ default: false }),
         /**
          * States whether the cursor is currently over the user name in this top
          * bar.
          */
-        isMouseOverUserName: attr({
-            default: false,
-        }),
+        isMouseOverUserName: attr({ default: false }),
         /**
          * Determines the pending name of the guest, which is the new name of
          * the guest as the current guest is currently typing it, with the goal
          * of renaming the guest.
          * This value can either be applied or discarded.
          */
-        pendingGuestName: attr({
-            default: "",
-        }),
+        pendingGuestName: attr({ default: "" }),
         /**
          * Determines the pending name of this thread, which is the new name of
          * the thread as the current user is currently typing it, with the goal
          * of renaming the thread.
          * This value can either be applied or discarded.
          */
-        pendingThreadName: attr({
-            default: "",
-        }),
+        pendingThreadName: attr({ default: "" }),
         /**
          * Determines the pending description of this thread, which is the new description of
          * the thread as the current user is currently typing it, with the goal
          * of changing the description the thread.
          * This value can either be applied or discarded.
          */
-        pendingThreadDescription: attr({
-            default: "",
-        }),
+        pendingThreadDescription: attr({ default: "" }),
         /**
          * States the thread that is displayed by this top bar.
          */
-        thread: one('Thread', {
-            related: 'threadView.thread',
-        }),
+        thread: one('Thread', { related: 'threadView.thread' }),
         /**
          * States the OWL ref of the "thread name" input of this top bar.
          * Useful to focus it, or to know when a click is done outside of it.
@@ -711,21 +689,17 @@ registerModel({
          * Useful to focus it, or to know when a click is done outside of it.
          */
         threadDescriptionInputRef: attr(),
-        threadIconView: one('ThreadIconView', {
+        threadIconView: one('ThreadIconView', { inverse: 'threadViewTopbarOwner',
             compute() {
                 if (this.thread) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'threadViewTopbarOwner',
         }),
         /**
          * States the thread view managing this top bar.
          */
-        threadView: one('ThreadView', {
-            identifying: true,
-            inverse: 'topbar',
-        }),
+        threadView: one('ThreadView', { identifying: true, inverse: 'topbar' }),
     },
 });

@@ -29,13 +29,8 @@ registerModel({
         },
     },
     fields: {
-        isHovered: attr({
-            default: false,
-        }),
-        linkPreview: one('LinkPreview', {
-            identifying: true,
-            inverse: 'linkPreviewCardView',
-        }),
+        isHovered: attr({ default: false }),
+        linkPreview: one('LinkPreview', { identifying: true, inverse: 'linkPreviewCardView' }),
         linkPreviewAsideView: one('LinkPreviewAsideView', {
             compute() {
                 if (!this.linkPreview.isDeletable) {
@@ -51,9 +46,6 @@ registerModel({
             },
             inverse: 'linkPreviewCardView',
         }),
-        linkPreviewListViewOwner: one('LinkPreviewListView', {
-            identifying: true,
-            inverse: 'linkPreviewAsCardViews',
-        }),
+        linkPreviewListViewOwner: one('LinkPreviewListView', { identifying: true, inverse: 'linkPreviewAsCardViews' }),
     },
 });

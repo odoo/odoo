@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'CallSystrayMenu',
     fields: {
-        buttonTitle: attr({
+        buttonTitle: attr({ default: '',
             compute() {
                 if (!this.messaging.rtc.channel) {
                     return clear();
@@ -19,11 +19,7 @@ registerModel({
                     this.messaging.rtc.channel.displayName,
                 );
             },
-            default: '',
         }),
-        rtc: one('Rtc', {
-            identifying: true,
-            inverse: 'callSystrayMenu',
-        }),
+        rtc: one('Rtc', { identifying: true, inverse: 'callSystrayMenu' }),
     },
 });

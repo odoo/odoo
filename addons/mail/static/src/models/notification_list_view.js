@@ -28,7 +28,7 @@ registerModel({
         },
     },
     fields: {
-        channelPreviewViews: many('ChannelPreviewView', {
+        channelPreviewViews: many('ChannelPreviewView', { inverse: 'notificationListViewOwner',
             compute() {
                 return this.filteredChannels
                     .sort((c1, c2) => {
@@ -51,12 +51,8 @@ registerModel({
                     })
                     .map(channel => ({ channel }));
             },
-            inverse: 'notificationListViewOwner',
         }),
-        discussOwner: one('Discuss', {
-            identifying: true,
-            inverse: 'notificationListView',
-        }),
+        discussOwner: one('Discuss', { identifying: true, inverse: 'notificationListView' }),
         filter: attr({
             compute() {
                 if (this.discussOwner) {
@@ -97,11 +93,8 @@ registerModel({
                 return clear();
             },
         }),
-        messagingMenuOwner: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'notificationListView',
-        }),
-        notificationGroupViews: many('NotificationGroupView', {
+        messagingMenuOwner: one('MessagingMenu', { identifying: true, inverse: 'notificationListView' }),
+        notificationGroupViews: many('NotificationGroupView', { inverse: 'notificationListViewOwner',
             compute() {
                 if (this.filter !== 'all') {
                     return clear();
@@ -111,15 +104,13 @@ registerModel({
                     .sort((group1, group2) => group1.sequence - group2.sequence)
                     .map(notificationGroup => ({ notificationGroup }));
             },
-            inverse: 'notificationListViewOwner',
         }),
-        notificationRequestView: one('NotificationRequestView', {
+        notificationRequestView: one('NotificationRequestView', { inverse: 'notificationListViewOwner',
             compute() {
                 return (this.filter === 'all' && this.messaging.isNotificationPermissionDefault) ? {} : clear();
             },
-            inverse: 'notificationListViewOwner',
         }),
-        notificationViews: many('Record', {
+        notificationViews: many('Record', { isCausal: true,
             compute() {
                 const notifications = [];
                 if (this.notificationRequestView) {
@@ -130,9 +121,8 @@ registerModel({
                 notifications.push(...this.channelPreviewViews);
                 return notifications;
             },
-            isCausal: true,
         }),
-        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
+        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', { inverse: 'notificationListViewOwner',
             compute() {
                 if (this.filter !== 'all') {
                     return clear();
@@ -159,7 +149,6 @@ registerModel({
                     })
                     .map(thread => ({ thread }));
             },
-            inverse: 'notificationListViewOwner',
         }),
     },
 });

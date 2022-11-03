@@ -53,38 +53,21 @@ registerModel({
         /**
          * States the channel linked to this discuss public view.
          */
-        channel: one('Thread', {
-            readonly: true,
-            required: true,
-        }),
-        isChannelTokenSecret: attr({
-            default: true,
-        }),
-        shouldAddGuestAsMemberOnJoin: attr({
-            default: false,
-            readonly: true,
-        }),
-        shouldDisplayWelcomeViewInitially: attr({
-            default: false,
-            readonly: true,
-        }),
+        channel: one('Thread', { readonly: true, required: true }),
+        isChannelTokenSecret: attr({ default: true }),
+        shouldAddGuestAsMemberOnJoin: attr({ default: false, readonly: true }),
+        shouldDisplayWelcomeViewInitially: attr({ default: false, readonly: true }),
         /**
          * States the thread view linked to this discuss public view.
          */
-        threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
-        }),
+        threadView: one('ThreadView', { related: 'threadViewer.threadView' }),
         /**
          * States the thread viewer linked to this discuss public view.
          */
-        threadViewer: one('ThreadViewer', {
-            inverse: 'discussPublicView',
-        }),
+        threadViewer: one('ThreadViewer', { inverse: 'discussPublicView' }),
         /**
          * States the welcome view linked to this discuss public view.
          */
-        welcomeView: one('WelcomeView', {
-            inverse: 'discussPublicView',
-        }),
+        welcomeView: one('WelcomeView', { inverse: 'discussPublicView' }),
     },
 });

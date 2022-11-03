@@ -41,19 +41,12 @@ registerModel({
         /**
          * Determines the attachment of this card.
          */
-        attachment: one('Attachment', {
-            identifying: true,
-        }),
-        attachmentDeleteConfirmDialog: one('Dialog', {
-            inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm',
-        }),
+        attachment: one('Attachment', { identifying: true }),
+        attachmentDeleteConfirmDialog: one('Dialog', { inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm' }),
         /**
          * States the attachmentList displaying this card.
          */
-        attachmentList: one('AttachmentList', {
-            identifying: true,
-            inverse: 'attachmentCards',
-        }),
+        attachmentList: one('AttachmentList', { identifying: true, inverse: 'attachmentCards' }),
         hasMultipleActions: attr({
             compute() {
                 return this.attachment.isDeletable && !this.attachmentList.composerViewOwner;

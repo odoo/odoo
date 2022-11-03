@@ -100,38 +100,28 @@ registerModel({
         /**
          * The rtc session that is the main card of the view.
          */
-        activeRtcSession: one('RtcSession', {
-            related: 'channel.activeRtcSession',
-        }),
+        activeRtcSession: one('RtcSession', { related: 'channel.activeRtcSession' }),
         /**
          * The aspect ratio of the tiles.
          */
-        aspectRatio: attr({
+        aspectRatio: attr({ default: 16 / 9,
             compute() {
                 const rtcAspectRatio = this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
                 const aspectRatio = rtcAspectRatio || 16 / 9;
                 // if we are in minimized mode (round avatar frames), we treat the cards like squares.
                 return this.isMinimized ? 1 : aspectRatio;
             },
-            default: 16 / 9,
         }),
-        callMainView: one('CallMainView', {
-            default: {},
-            inverse: 'callView',
-            readonly: true,
-        }),
-        callSidebarView: one('CallSidebarView', {
+        callMainView: one('CallMainView', { default: {}, inverse: 'callView', readonly: true }),
+        callSidebarView: one('CallSidebarView', { inverse: 'callView',
             compute() {
                 if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'callView',
         }),
-        channel: one('Channel', {
-            related: 'thread.channel',
-        }),
+        channel: one('Channel', { related: 'thread.channel' }),
         filteredChannelMembers: many('ChannelMember', {
             compute() {
                 if (!this.channel) {
@@ -150,14 +140,12 @@ registerModel({
         /**
          * Determines if the viewer should be displayed fullScreen.
          */
-        isFullScreen: attr({
-            default: false,
-        }),
+        isFullScreen: attr({ default: false }),
         /**
          * Determines if the tiles are in a minimized format:
          * small circles instead of cards, smaller display area.
          */
-        isMinimized: attr({
+        isMinimized: attr({ default: false,
             compute() {
                 if (!this.threadView || !this.thread) {
                     return true;
@@ -170,11 +158,8 @@ registerModel({
                 }
                 return !this.thread.rtc || this.thread.videoCount === 0;
             },
-            default: false,
         }),
-        isSidebarOpen: attr({
-            default: true,
-        }),
+        isSidebarOpen: attr({ default: true }),
         /**
          * Text content that is displayed on title of the layout settings dialog.
          */
@@ -187,10 +172,7 @@ registerModel({
          * All the participant cards of the call viewer (main card and tile cards).
          * this is a technical inverse to distinguish from the other relation 'tileParticipantCards'.
          */
-        participantCards: many('CallParticipantCard', {
-            inverse: 'callView',
-            isCausal: true,
-        }),
+        participantCards: many('CallParticipantCard', { inverse: 'callView', isCausal: true }),
         /**
          * Text content that is displayed on title of the settings dialog.
          */
@@ -199,17 +181,11 @@ registerModel({
                 return this.env._t("Settings");
             },
         }),
-        thread: one('Thread', {
-            related: 'threadView.thread',
-            required: true,
-        }),
+        thread: one('Thread', { related: 'threadView.thread', required: true }),
         /**
          * ThreadView on which the call view is attached.
          */
-        threadView: one('ThreadView', {
-            identifying: true,
-            inverse: 'callView',
-        }),
+        threadView: one('ThreadView', { identifying: true, inverse: 'callView' }),
     },
     onChanges: [
         {

@@ -7,9 +7,6 @@ registerModel({
     name: 'PopoverManager',
     fields: {
         // FIXME: dependent on implementation that uses insert order in relations!!
-        popoverViews: many('PopoverView', {
-            inverse: 'manager',
-            isCausal: true,
-        }),
+        popoverViews: many('PopoverView', { inverse: 'manager', isCausal: true }),
     },
 });

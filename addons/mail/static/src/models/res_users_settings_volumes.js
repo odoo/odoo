@@ -25,23 +25,11 @@ registerModel({
         },
     },
     fields: {
-        guest_id: one('Guest', {
-            inverse: 'volumeSetting',
-        }),
-        id: attr({
-            identifying: true,
-        }),
-        partner_id: one('Partner', {
-            inverse: 'volumeSetting',
-        }),
-        user_setting_id: one('res.users.settings', {
-            inverse: 'volume_settings_ids',
-            readonly: true,
-            required: true,
-        }),
-        volume: attr({
-            default: 0.5,
-        }),
+        guest_id: one('Guest', { inverse: 'volumeSetting' }),
+        id: attr({ identifying: true }),
+        partner_id: one('Partner', { inverse: 'volumeSetting' }),
+        user_setting_id: one('res.users.settings', { inverse: 'volume_settings_ids', readonly: true, required: true }),
+        volume: attr({ default: 0.5 }),
     },
     onChanges: [
         {

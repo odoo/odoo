@@ -34,26 +34,20 @@ registerModel({
     },
     fields: {
         component: attr(),
-        dialogOwner: one('Dialog', {
-            identifying: true,
-            inverse: 'deleteMessageConfirmView',
-        }),
-        message: one('Message', {
+        dialogOwner: one('Dialog', { identifying: true, inverse: 'deleteMessageConfirmView' }),
+        message: one('Message', { required: true,
             compute() {
                 return this.dialogOwner.messageActionViewOwnerAsDeleteConfirm.messageAction.messageActionListOwner.message;
             },
-            required: true,
         }),
         /**
          * Determines the message view that this delete message confirm view
          * will use to display this message.
          */
-        messageView: one('MessageView', {
+        messageView: one('MessageView', { inverse: 'deleteMessageConfirmViewOwner', required: true,
             compute() {
                 return this.message ? { message: this.message } : clear();
             },
-            inverse: 'deleteMessageConfirmViewOwner',
-            required: true,
         }),
     },
 });

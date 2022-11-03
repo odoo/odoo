@@ -143,10 +143,8 @@ registerModel({
         },
     },
     fields: {
-        followedThread: one('Thread', {
-            inverse: 'followers',
-        }),
-        followedThreadAsFollowerOfCurrentPartner: one('Thread', {
+        followedThread: one('Thread', { inverse: 'followers' }),
+        followedThreadAsFollowerOfCurrentPartner: one('Thread', { inverse: 'followerOfCurrentPartner',
             compute() {
                 if (!this.followedThread) {
                     return clear();
@@ -159,20 +157,11 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'followerOfCurrentPartner',
         }),
-        followerSubtypeListDialog: one('Dialog', {
-            inverse: 'followerOwnerAsSubtypeList',
-        }),
-        followerViews: many('FollowerView', {
-            inverse: 'follower',
-        }),
-        id: attr({
-            identifying: true,
-        }),
-        isActive: attr({
-            default: true,
-        }),
+        followerSubtypeListDialog: one('Dialog', { inverse: 'followerOwnerAsSubtypeList' }),
+        followerViews: many('FollowerView', { inverse: 'follower' }),
+        id: attr({ identifying: true }),
+        isActive: attr({ default: true }),
         /**
          * States whether the follower's subtypes are editable by current user.
          */
@@ -182,9 +171,7 @@ registerModel({
                 return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
             },
         }),
-        partner: one('Partner', {
-            required: true,
-        }),
+        partner: one('Partner', { required: true }),
         selectedSubtypes: many('FollowerSubtype'),
         subtypes: many('FollowerSubtype'),
     },

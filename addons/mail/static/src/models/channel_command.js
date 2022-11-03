@@ -112,27 +112,16 @@ registerModel({
         /**
          *  The command that will be executed.
          */
-        help: attr({
-            required: true,
-        }),
+        help: attr({ required: true }),
         /**
          * Name of the method of `mail.channel` to call on the server when
          * executing this command.
          */
-        methodName: attr({
-            required: true,
-        }),
+        methodName: attr({ required: true }),
         /**
          *  The keyword to use a specific command.
          */
-        name: attr({
-            identifying: true,
-        }),
-        suggestable: one('ComposerSuggestable', {
-            default: {},
-            inverse: 'channelCommand',
-            readonly: true,
-            required: true,
-        }),
+        name: attr({ identifying: true }),
+        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'channelCommand', readonly: true, required: true }),
     },
 });
