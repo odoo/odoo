@@ -4,9 +4,8 @@
     <!-- Call this template instead of "web.assets_tests" to have the proper conditional check -->
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
         <t t-if="'tests' in debug or test_mode_enabled">
-            <t t-call-assets="web.assets_tests" defer_load="True" />
-            <!-- The assets_tests bundle contains a lot of module whose dependencies are in other bundles that may or may not be loaded. This global is used to silence module loading errors when this bundle is present -->
-            <script>window.__odooIgnoreModuleErrors = true</script>
+            <!-- To allow all tests assets and tours to be in the same bundle, the assets_tests bundle ignores missing dependencies -->
+            <t t-call-assets="web.__assets_tests_call__" defer_load="True" />
         </t>
     </template>
 

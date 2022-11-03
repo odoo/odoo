@@ -6,7 +6,7 @@
             Template registering all the assets required to execute the Livechat from a page containing Odoo
         -->
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
-            <xpath expr="//div[@id='wrapwrap']" position="after">
+            <xpath expr="//head">
                 <t t-if="not no_livechat and website and website.channel_id">
                     <script>
                         <t t-call="im_livechat.loader">

@@ -15,19 +15,6 @@
                 <meta name="viewport" content="initial-scale=1"/>
                 <title><t t-esc="title or 'Odoo Report'"/></title>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
-                <!--The following is kind of a hack-->
-                <!--in an iframe, we don't want the session to perform qweb_templates rpc-->
-                <script type="text/javascript">
-                    window.odoo = {};
-                    window.odoo.__session_info__ = {is_report: true};
-                    // Using web.assets_common without assets_frontend or assets_backend creates a lot
-                    // of module dependency errors. Either assets_common should be reworked to work
-                    // as a standalone bundle, or this template should not use it and add what it needs
-                    // from it into its own bundle. Silence these errors in the meantime
-                    window.__odooIgnoreModuleErrors = true;
-                </script>
-                <t t-call-assets="web.assets_common" t-css="false"/>
-                <t t-call-assets="web.report_assets_common" t-css="false"/>
             </head>
             <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
@@ -51,15 +38,7 @@
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
                 <title><t t-esc="title or 'Odoo Report'"/></title>
-                <script type="text/javascript">
-                    // Using web.assets_common without assets_frontend or assets_backend creates a lot
-                    // of module dependency errors. Either assets_common should be reworked to work
-                    // as a standalone bundle, or this template should not use it and add what it needs
-                    // from it into its own bundle. Silence these errors in the meantime
-                    window.__odooIgnoreModuleErrors = true;
-                </script>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_common" t-css="false"/>
                 <style>
                     <t t-out="preview_css"/>
 

@@ -1,5 +1,9 @@
 /** @odoo-module **/
 
+/**
+ * Lists of colors that contrast well with each other to be used in various
+ * visualizations (eg. graphs/charts), both in bright and dark themes.
+ */
 const COLORS_BRIGHT = [
     "#1f77b4",
     "#ff7f0e",

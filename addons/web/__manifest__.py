@@ -495,6 +495,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/description.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
             'web/static/lib/odoo_ui_icons/*',
             'web/static/fonts/fonts.scss',
 
@@ -504,11 +505,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/actions/reports/layout_assets/layout_boxed.scss',
             'web/static/src/webclient/actions/reports/layout_assets/layout_clean.scss',
             'web/static/asset_styles_company_report.scss',
-
-            'web/static/src/legacy/js/services/session.js',
-            'web/static/src/legacy/js/public/public_root.js',
-            'web/static/src/legacy/js/public/public_root_instance.js',
-            'web/static/src/legacy/js/public/public_widget.js',
         ],
         'web.report_assets_pdf': [
             'web/static/src/webclient/actions/reports/reset.min.css',
@@ -586,6 +582,11 @@ This module provides the core of the Odoo Web Client.
             # No tours are defined in web, but the bundle "assets_tests" is
             # first called in web.
             'web/static/tests/legacy/helpers/test_utils_file.js'
+        ],
+        'web.__assets_tests_call__': [
+            'web/static/tests/ignore_missing_deps_start.js',
+            ('include', 'web.assets_tests'),
+            'web/static/tests/ignore_missing_deps_stop.js',
         ],
         # remove this bundle alongside the owl2 compatibility layer
         'web.tests_assets_common': [
