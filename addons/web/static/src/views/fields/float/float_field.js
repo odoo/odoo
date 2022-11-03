@@ -37,7 +37,7 @@ FloatField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
     step: { type: Number, optional: true },
-    digits: { type: Array, optional: true },
+    digits: { type: [Array, Number], optional: true },
     placeholder: { type: String, optional: true },
 };
 FloatField.defaultProps = {
