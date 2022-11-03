@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from urllib.parse import urlparse
 
 import odoo
 from odoo.tools import mute_logger
@@ -74,3 +75,20 @@ class TestHttpSession(TestHttpBase):
             res.raise_for_status()
             self.assertEqual(res.text, str(GEOIP_ODOO_FARM_2))
             mock_resolve.assert_called_once()
+
+
+    def test_session3_logout_15_0_geoip(self):
+        session = self.authenticate(None, None)
+        session['db'] = 'idontexist'
+        session['geoip'] = {}  # Until saas-15.2 geoip was directly stored in the session
+        odoo.http.root.session_store.save(session)
+
+        with self.assertLogs(level='WARNING') as (_, warnings):
+            res = self.multidb_url_open('/test_http/ensure_db', dblist=['db1', 'db2'])
+
+        self.assertEqual(warnings, [
+            "WARNING:odoo.http:Logged into database 'idontexist', but dbfilter rejects it; logging session out.",
+        ])
+        self.assertFalse(session['db'])
+        self.assertEqual(res.status_code, 303)
+        self.assertEqual(urlparse(res.headers['Location']).path, '/web/database/selector')
