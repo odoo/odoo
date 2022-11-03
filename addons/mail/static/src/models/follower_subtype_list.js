@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'FollowerSubtypeList',
     template: 'mail.FollowerSubtypeList',
-    templateGetter: 'followerSubtypeList',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

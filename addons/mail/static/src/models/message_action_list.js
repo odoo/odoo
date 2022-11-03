@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessageActionList',
     template: "mail.MessageActionList",
-    templateGetter: 'messageActionList',
     fields: {
         actionViewsCount: attr({ default: 0, readonly: true, sum: 'messageActionViews.actionViewCounterContribution' }),
         actionsWithoutCompactCount: attr({ default: 0, readonly: true, sum: 'messageActions.isNonCompactActionContribution' }),

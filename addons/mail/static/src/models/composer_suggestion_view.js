@@ -16,7 +16,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'ComposerSuggestionView',
     template: 'mail.ComposerSuggestionView',
-    templateGetter: 'composerSuggestionView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
