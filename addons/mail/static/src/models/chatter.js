@@ -68,6 +68,15 @@ registerModel({
             this.component.trigger('o-close-chatter');
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickFollow(ev) {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.follow();
+        },
+        /**
          * Handles click on "log note" button.
          *
          * @param {MouseEvent} ev
@@ -101,6 +110,34 @@ registerModel({
             } else {
                 this.showSendMessage();
             }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickUnfollow(ev) {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.unfollow();
+            this.reloadParentView({ fieldNames: ['message_follower_ids'] });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseEnterUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: true });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseleaveUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: false });
         },
         /**
          * Handles scroll on this scroll panel.
@@ -308,20 +345,20 @@ registerModel({
                 return this.thread ? {} : clear();
             },
         }),
-        followButtonView: one('FollowButtonView', { inverse: 'chatterOwner',
-            compute() {
-                if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
-                    return {};
-                }
-                return clear();
-            },
-        }),
         followerListMenuView: one('FollowerListMenuView', { inverse: 'chatterOwner',
             compute() {
                 if (this.hasFollowers && this.thread) {
                     return {};
                 }
                 return clear();
+            },
+        }),
+        /**
+         * Text displayed by the follow button when not already followed.
+         */
+        followingText: attr({
+            compute() {
+                return this.env._t("Following");
             },
         }),
         /**
@@ -338,6 +375,14 @@ registerModel({
         }),
         hasAttachmentBox: attr({ default: false }),
         hasExternalBorder: attr({ default: true }),
+        hasFollowButton: attr({ default: false,
+            compute() {
+                if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
+                    return true;
+                }
+                return clear();
+            },
+        }),
         /**
          * Determines whether `this` should display followers menu.
          */
@@ -392,6 +437,11 @@ registerModel({
          * Determiners whether the attachment box is visible initially.
          */
         isAttachmentBoxVisibleInitially: attr({ default: false }),
+        isFollowButtonDisabled: attr({
+            compute() {
+                return !this.hasReadAccess;
+            },
+        }),
         isInFormSheetBg: attr({ default: false }),
         isPreparingAttachmentsLoading: attr({ default: false,
             compute() {
@@ -399,6 +449,7 @@ registerModel({
             },
         }),
         isShowingAttachmentsLoading: attr({ default: false }),
+        isUnfollowButtonHighlighted: attr({ default: false }),
         scrollPanelRef: attr({ ref: 'scrollPanel' }),
         /**
          * Determines whether the view should reload after file changed in this chatter,
@@ -438,6 +489,14 @@ registerModel({
                     order: 'desc',
                     thread: this.thread ? this.thread : clear(),
                 };
+            },
+        }),
+        /**
+         * Text displayed by the follow button when already followed.
+         */
+        unfollowingText: attr({
+            compute() {
+                return this.env._t("Unfollow");
             },
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', { default: {}, inverse: 'chatterOwner', readonly: true, required: true }),

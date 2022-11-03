@@ -66,10 +66,25 @@
                                         className="'o_ChatterTopbar_followerListMenu'"
                                         record="followerListMenuView"
                                     />
-                                    <FollowButtonView t-if="followButtonView"
-                                        className="'o_ChatterTopbar_followButton'"
-                                        record="followButtonView"
-                                    />
+                                    <div t-if="hasFollowButton" class="o_ChatterTopbar_followButton o_FollowButtonView d-flex">
+                                        <button t-if="thread and thread.isCurrentPartnerFollowing" class="o_FollowButtonView_unfollow btn px-0" t-att-class="{ 'o_ChatterTopbar_button': chatter, 'o-following text-success': !isUnfollowButtonHighlighted, 'o-unfollow text-warning': isUnfollowButtonHighlighted }" t-att-disabled="isFollowButtonDisabled" t-on-click="onClickUnfollow" t-on-mouseenter="onMouseEnterUnfollow" t-on-mouseleave="onMouseleaveUnfollow">
+                                            <div class="position-relative">
+                                                <!-- Hidden element used to set the button maximum size -->
+                                                <span class="invisible">
+                                                    <i class="fa fa-fw fa fa-eye-slash"/> <t t-out="followingText.length > unfollowingText.length ? followingText : unfollowingText"></t>
+                                                </span>
+                                                <span t-if="isUnfollowButtonHighlighted" class="o_FollowButtonView_text position-absolute end-0 top-0 bottom-0 text-warning">
+                                                    <i class="fa fa-fw fa-times"/> <span t-out="unfollowingText"/>
+                                                </span>
+                                                <span t-else="" class="o_FollowButtonView_text d-block position-absolute end-0 top-0 bottom-0">
+                                                    <i class="fa fa-fw fa-check"/> <span t-out="followingText"/>
+                                                </span>
+                                            </div>
+                                        </button>
+                                        <button t-else="" class="o_FollowButtonView_follow btn btn-link text-600 pe-0" t-att-disabled="isFollowButtonDisabled" t-on-click="onClickFollow" t-att-class="{ 'o_ChatterTopbar_button': chatter }">
+                                            Follow
+                                        </button>
+                                    </div>
                                 </t>
                             </div>
                         </div>
