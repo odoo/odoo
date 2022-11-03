@@ -25,6 +25,8 @@ class TestStockValuation(TransactionCase):
             'name': 'Large Desk',
             'standard_price': 1299.0,
             'list_price': 1799.0,
+            # Ignore tax calculations for these tests.
+            'supplier_taxes_id': False,
             'type': 'product',
         })
         Account = self.env['account.account']

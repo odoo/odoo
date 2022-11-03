@@ -216,7 +216,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # ==== partner_id ====
 
-        partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
+        partner_type = invoice_form.journal_id.type == journal.type and 'SellerTradeParty' or 'BuyerTradeParty'
         invoice_form.partner_id = self.env['account.edi.format']._retrieve_partner(
             name=_find_value(f"//ram:{partner_type}/ram:Name"),
             mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
@@ -349,7 +349,7 @@ class AccountEdiXmlCII(models.AbstractModel):
                 ('company_id', '=', journal.company_id.id),
                 ('amount', '=', float(tax_node.text)),
                 ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', 'purchase'),
+                ('type_tax_use', '=', journal.type),
             ], limit=1)
             if tax:
                 taxes.append(tax)
