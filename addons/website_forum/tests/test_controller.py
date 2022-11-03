@@ -47,6 +47,6 @@ class TestController(HttpCase):
                                                         'mimetype': 'text/plain', 'res_model': 'forum.post',
                                                         'raw': self.pixel, 'website_id': 1}])
         domain = [('name', '=', 'test_pixel')]
-        result = attachment.search_read(domain)
-        self.assertTrue(len(result), "No attachment fetched")
-        self.assertEqual(result[0]['id'], attachment.id)
+        result = attachment.search(domain, limit=1)
+        self.assertTrue(result, "No attachment fetched")
+        self.assertEqual(result.id, attachment.id)
