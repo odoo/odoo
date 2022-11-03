@@ -4,7 +4,7 @@
         <record id="sms_template_data_calendar_reminder" model="sms.template">
             <field name="name">Calendar Event: Reminder</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>
-            <field name="body">Event reminder: {{ object.name }}, {{ object.display_time }}</field>
+            <field name="body">Event reminder: {{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}</field>
         </record>
     </data>
 </odoo>
