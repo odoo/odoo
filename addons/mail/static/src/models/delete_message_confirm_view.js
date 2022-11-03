@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'DeleteMessageConfirmView',
     template: 'mail.DeleteMessageConfirmView',
-    templateGetter: 'deleteMessageConfirmView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

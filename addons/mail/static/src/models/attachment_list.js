@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'AttachmentList',
     template: 'mail.AttachmentList',
-    templateGetter: 'attachmentList',
     identifyingMode: 'xor',
     recordMethods: {
         /**

@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'MobileMessagingNavbarView',
     template: 'mail.MobileMessagingNavbarView',
-    templateGetter: 'mobileMessagingNavbarView',
     identifyingMode: 'xor',
     recordMethods: {
         /**

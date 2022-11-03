@@ -9,7 +9,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ThreadViewTopbar',
     template: 'mail.ThreadViewTopbar',
-    templateGetter: 'threadViewTopbar',
     componentSetup() {
         useRefToModel({ fieldName: 'guestNameInputRef', refName: 'guestNameInput' });
         useRefToModel({ fieldName: 'inviteButtonRef', refName: 'inviteButton' });

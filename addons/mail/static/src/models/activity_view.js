@@ -11,7 +11,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'ActivityView',
     template: 'mail.ActivityView',
-    templateGetter: 'activityView',
     componentSetup() {
         useRefToModel({ fieldName: 'markDoneButtonRef', refName: 'markDoneButton', });
     },

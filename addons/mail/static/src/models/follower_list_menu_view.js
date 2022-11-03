@@ -7,7 +7,6 @@ import { attr, many, one } from '@mail/model/model_field';
 registerModel({
     name: 'FollowerListMenuView',
     template: 'mail.FollowerListMenuView',
-    templateGetter: 'followerListMenuView',
     componentSetup() {
         useRefToModel({ fieldName: 'dropdownRef', refName: 'dropdown' });
     },

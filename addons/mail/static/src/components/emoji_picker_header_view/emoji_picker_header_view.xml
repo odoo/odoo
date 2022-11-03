@@ -3,9 +3,9 @@
 
     <t t-name="mail.EmojiPickerHeaderView" owl="1">
         <div class="o_EmojiPickerHeaderView d-flex bg-100 border-bottom" t-attf-class="{{ className }}" t-ref="root">
-            <EmojiCategoryBarView record="emojiPickerHeaderView.emojiCategoryBarView"/>
+            <EmojiCategoryBarView record="emojiCategoryBarView"/>
             <span class="flex-grow-1"/>
-            <EmojiPickerHeaderActionListView t-if="emojiPickerHeaderView.actionListView" record="emojiPickerHeaderView.actionListView"/>
+            <EmojiPickerHeaderActionListView t-if="actionListView" record="actionListView"/>
         </div>
     </t>
 

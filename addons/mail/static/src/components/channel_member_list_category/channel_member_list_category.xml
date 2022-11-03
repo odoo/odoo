@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelMemberListCategoryView" owl="1">
-        <h6 class="m-2" t-esc="record.title"/>
-        <t t-foreach="record.channelMemberViews" t-as="channelMemberView" t-key="channelMemberView.localId">
+        <h6 class="m-2" t-esc="title"/>
+        <t t-foreach="channelMemberViews" t-as="channelMemberView" t-key="channelMemberView.localId">
             <ChannelMemberView record="channelMemberView"/>
         </t>
     </t>

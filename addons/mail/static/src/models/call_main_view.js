@@ -14,13 +14,12 @@ import { onMounted, onWillUnmount } from '@odoo/owl';
 registerModel({
     name: 'CallMainView',
     template: 'mail.CallMainView',
-    templateGetter: 'callMainView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
         useRefToModel({ fieldName: 'tileContainerRef', refName: 'tileContainer', });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         onMounted(() => {
-            this.resizeObserver = new ResizeObserver(() => this.callMainView.onResize());
+            this.resizeObserver = new ResizeObserver(() => this.onResize());
             this.resizeObserver.observe(this.root.el);
         });
         onWillUnmount(() => this.resizeObserver.disconnect());

@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'ChatterTopbar',
     template: 'mail.ChatterTopbar',
-    templateGetter: 'chatterTopbar',
     fields: {
         /**
          * Determines the label on the attachment button of the topbar.
