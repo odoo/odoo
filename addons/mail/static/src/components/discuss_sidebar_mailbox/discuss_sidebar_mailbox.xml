@@ -10,15 +10,9 @@
             t-ref="root"
         >
             <ThreadIconView className="'o_DiscussSidebarMailboxView_item ms-4 me-2'" record="threadIconView"/>
-            <div class="o_DiscussSidebarMailboxView_item o_DiscussSidebarMailboxView_name me-2 text-truncate">
-                <t t-esc="mailbox.name"/>
-            </div>
+            <div class="o_DiscussSidebarMailboxView_item o_DiscussSidebarMailboxView_name me-2 text-truncate" t-esc="mailbox.name"/>
             <div t-attf-class="o_DiscussSidebarMailboxView_item flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
-            <t t-if="mailbox.counter > 0">
-                <div t-attf-class="o_DiscussSidebarMailboxView_counter o_DiscussSidebarMailboxView_item badge rounded-pill {{ mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3">
-                    <t t-esc="mailbox.counter"/>
-                </div>
-            </t>
+            <div t-if="mailbox.counter > 0" t-attf-class="o_DiscussSidebarMailboxView_counter o_DiscussSidebarMailboxView_item badge rounded-pill {{ mailbox === messaging.starred ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3" t-esc="mailbox.counter"/>
         </button>
     </t>
 </templates>
