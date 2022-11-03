@@ -47,7 +47,7 @@ class PosOrder(models.Model):
                 sale_line = self.env['sale.order.line'].create({
                     'order_id': line.sale_order_origin_id.id,
                     'product_id': line.product_id.id,
-                    'price_unit': line.price_unit,
+                    'price_unit': line.price_subtotal_incl,
                     'product_uom_qty': 0,
                     'tax_id': [(6, 0, line.tax_ids.ids)],
                     'is_downpayment': True,
