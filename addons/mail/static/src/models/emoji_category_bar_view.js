@@ -10,13 +10,12 @@ registerModel({
     fields: {
         emojiCategoryViews: many('EmojiCategoryView', { inverse: 'emojiCategoryBarViewOwner',
             compute() {
-                if (!this.emojiPickerView) {
+                if (!this.emojiPickerViewOwner) {
                     return clear();
                 }
-                return this.emojiPickerView.categories.map(category => ({ viewCategory: category }));
+                return this.emojiPickerViewOwner.categories.map(category => ({ viewCategory: category }));
             },
         }),
-        emojiPickerHeaderViewOwner: one('EmojiPickerHeaderView', { identifying: true, inverse: 'emojiCategoryBarView' }),
-        emojiPickerView: one('EmojiPickerView', { related: 'emojiPickerHeaderViewOwner.emojiPickerViewOwner' }),
+        emojiPickerViewOwner: one('EmojiPickerView', { identifying: true, inverse: 'emojiCategoryBarView' }),
     },
 });

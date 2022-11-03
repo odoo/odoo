@@ -11,7 +11,6 @@ registerModel({
         actionViews: many('EmojiPickerHeaderActionView', { inverse: 'owner',
             sort: [['smaller-first', 'sequence']],
         }),
-        emojiPickerView: one('EmojiPickerView', { related: 'owner.emojiPickerViewOwner' }),
-        owner: one('EmojiPickerHeaderView', { identifying: true, inverse: 'actionListView' }),
+        owner: one('EmojiPickerView', { identifying: true, inverse: 'actionListView' }),
     },
 });
