@@ -289,7 +289,7 @@ class MailRenderMixin(models.AbstractModel):
         :return dict: {res_id: string of rendered template based on record}
         """
         results = dict.fromkeys(res_ids, u"")
-        if not template_src:
+        if not template_src or not res_ids:
             return results
 
         # prepare template variables
@@ -341,11 +341,9 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # prevent wrong values (rendering on a void record set, ...)
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
-
         results = {}
+        if not res_ids:
+            return results
 
         # prepare template variables
         variables = self._render_eval_context()
@@ -384,12 +382,8 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # prevent wrong values (rendering on a void record set, ...)
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
-
         results = dict.fromkeys(res_ids, u"")
-        if not template_txt:
+        if not template_txt or not res_ids:
             return results
 
         template_instructions = parse_inline_template(str(template_txt))
@@ -554,6 +548,12 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if field not in self:
+            raise ValueError(
+                _('Rendering of %(field_name)s is not possible as not defined on template.',
+                  field_name=field
+                 )
+            )
         if options is None:
             options = {}
 
