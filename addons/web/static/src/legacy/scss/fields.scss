@@ -37,6 +37,12 @@
     padding: $o-input-padding-y $o-input-padding-x;
     background-color: var(--o-input-background-color, #{$input-bg});
 
+    &::placeholder {
+        color: var(--o-input-placeholder-color, #{$input-placeholder-color});
+        // Reset the default opacity set on placeholders by Firefox's browser stylesheet
+        opacity: 1;
+    }
+
     // -- Nested o_input(s)
     .o_input {
         border: 0;
