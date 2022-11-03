@@ -1377,10 +1377,18 @@
         t-att-title="cell.urlRepresentation">
         <t t-esc="cell.urlRepresentation"/>
       </a>
-      <span class="o-link-icon o-unlink" t-on-click="unlink" title="Remove link">
+      <span
+        t-if="!env.model.getters.isReadonly()"
+        class="o-link-icon o-unlink"
+        t-on-click="unlink"
+        title="Remove link">
         <t t-call="o-spreadsheet-Icon.UNLINK"/>
       </span>
-      <span class="o-link-icon o-edit-link" t-on-click="edit" title="Edit link">
+      <span
+        t-if="!env.model.getters.isReadonly()"
+        class="o-link-icon o-edit-link"
+        t-on-click="edit"
+        title="Edit link">
         <t t-call="o-spreadsheet-Icon.EDIT"/>
       </span>
     </div>
