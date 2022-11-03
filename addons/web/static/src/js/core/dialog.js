@@ -269,7 +269,7 @@ var Dialog = Widget.extend({
             this.$modal.remove();
         }
 
-        var modals = $('body > .modal').filter(':visible');
+        const modals = $('body .modal').filter(':visible');
         if (modals.length) {
             if (!isFocusSet) {
                 modals.last().focus();
