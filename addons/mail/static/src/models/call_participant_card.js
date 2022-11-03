@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -9,9 +8,6 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'CallParticipantCard',
     template: 'mail.CallParticipantCard',
-    componentSetup() {
-        useRefToModel({ fieldName: 'volumeMenuAnchorRef', refName: 'volumeMenuAnchor' });
-    },
     identifyingMode: 'xor',
     recordMethods: {
         /**
@@ -113,6 +109,6 @@ registerModel({
                 return clear();
             },
         }),
-        volumeMenuAnchorRef: attr(),
+        volumeMenuAnchorRef: attr({ ref: 'volumeMenuAnchor' }),
     },
 });

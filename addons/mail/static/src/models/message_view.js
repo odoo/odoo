@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
@@ -13,9 +12,6 @@ registerModel({
     template: 'mail.MessageView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useRefToModel({ fieldName: 'contentRef', refName: 'content' });
-        useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
-        useRefToModel({ fieldName: 'prettyBodyRef', refName: 'prettyBody' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     identifyingMode: 'xor',
@@ -343,7 +339,7 @@ registerModel({
         /**
          * Reference to the content of the message.
          */
-        contentRef: attr(),
+        contentRef: attr({ ref: 'content' }),
         /**
          * States the time elapsed since date up to now.
          */
@@ -644,7 +640,7 @@ registerModel({
                 return clear();
             },
         }),
-        notificationIconRef: attr(),
+        notificationIconRef: attr({ ref: 'notificationIcon' }),
         notificationPopoverView: one('PopoverView', { inverse: 'messageViewOwnerAsNotificationContent' }),
         personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'messageViewOwner',
             compute() {
@@ -658,7 +654,7 @@ registerModel({
          * Reference to element containing the prettyBody. Useful to be able to
          * replace prettyBody with new value in JS (which is faster than t-raw).
          */
-        prettyBodyRef: attr(),
+        prettyBodyRef: attr({ ref: 'prettyBody' }),
         readLessText: attr({
             compute() {
                 return this.env._t("Read Less");
