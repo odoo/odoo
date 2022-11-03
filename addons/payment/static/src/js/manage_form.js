@@ -108,41 +108,7 @@ odoo.define('payment.manage_form', require => {
                 method: 'get_linked_records_info',
                 args: [tokenId],
             }).then(result => {
-                const $dialogContentMessage = $(
-                    '<span>', {text: _t("Are you sure you want to delete this payment method?")}
-                );
-                if (result.length > 0) { // There are documents linked to the token, list them
-                    $dialogContentMessage.append($('<br>'));
-                    $dialogContentMessage.append($(
-                        '<span>', {text: _t("It is currently linked to the following documents:")}
-                    ));
-                    const $documentInfoList = $('<ul>');
-                    result.forEach(documentInfo => {
-                        $documentInfoList.append($('<li>').append($(
-                            '<a>', {
-                                href: documentInfo.url,
-                                target: '_blank',
-                                title: documentInfo.description,
-                                text: documentInfo.name
-                            }
-                        )));
-                    });
-                    $dialogContentMessage.append($documentInfoList);
-                }
-                new Dialog(this, {
-                    title: _t("Warning!"),
-                    size: 'medium',
-                    $content: $('<div>').append($dialogContentMessage),
-                    buttons: [
-                        {
-                            text: _t("Confirm Deletion"), classes: 'btn-primary', close: true,
-                            click: execute
-                        },
-                        {
-                            text: _t("Cancel"), close: true
-                        },
-                    ],
-                }).open();
+                this._buildConfirmationDialog(result, execute).open();
             }).guardedCatch(error => {
                 this._displayError(
                     _t("Server Error"),
@@ -150,6 +116,52 @@ odoo.define('payment.manage_form', require => {
                     error.message.data.message
                 );
             });
+        },
+
+        /**
+         * Build the confirmation dialog based on the linked records information.
+         *
+         * @private
+         * @param {Array} linkedRecordsInfo - The list of information about linked records
+         * @return {object}
+         */
+        _buildConfirmationDialog: function (linkedRecordsInfo, onClick) {
+            const $dialogContentMessage = $(
+                '<span>', {text: _t("Are you sure you want to delete this payment method?")}
+            );
+            if (linkedRecordsInfo.length > 0) { // There are documents linked to the token, list them
+                $dialogContentMessage.append($('<br>'));
+                $dialogContentMessage.append($(
+                    '<span>', {text: _t("It is currently linked to the following documents:")}
+                ));
+                const $documentInfoList = $('<ul>');
+                linkedRecordsInfo.forEach(documentInfo => {
+                    $documentInfoList.append($('<li>').append($(
+                        '<a>', {
+                            href: documentInfo.url,
+                            target: '_blank',
+                            title: documentInfo.description,
+                            text: documentInfo.name
+                        }
+                    )));
+                });
+                $dialogContentMessage.append($documentInfoList);
+            }
+            let diag = new Dialog(this, {
+                title: _t("Warning!"),
+                size: 'medium',
+                $content: $('<div>').append($dialogContentMessage),
+                buttons: [
+                    {
+                        text: _t("Confirm Deletion"), classes: 'btn-primary', close: true,
+                        click: onClick,
+                    },
+                    {
+                        text: _t("Cancel"), close: true
+                    },
+                ],
+            });
+            return diag;
         },
 
         //--------------------------------------------------------------------------
