@@ -85,10 +85,25 @@
                 />
             </div>
             <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="onScrollScrollPanel" t-ref="scrollPanel">
-                <AttachmentBoxView t-if="attachmentBoxView"
-                    className="'o_Chatter_attachmentBox'"
-                    record="attachmentBoxView"
-                />
+                <div t-if="hasAttachmentBox" class="o_Chatter_attachmentBox o_AttachmentBoxView position-relative">
+                    <div class="o_AttachmentBoxView_title d-flex align-items-center">
+                        <hr class="o_AttachmentBoxView_dashedLine flex-grow-1"/>
+                        <span class="o_AttachmentBoxView_titleText p-3 fw-bold">
+                            Files
+                        </span>
+                        <hr class="o_AttachmentBoxView_dashedLine flex-grow-1"/>
+                    </div>
+                    <div class="o_AttachmentBoxView_content d-flex flex-column">
+                        <AttachmentList t-if="attachmentList"
+                            className="'o_attachmentBox_attachmentList'"
+                            record="attachmentList"
+                        />
+                        <button class="o_AttachmentBoxView_buttonAdd btn btn-link" type="button" t-on-click="onClickButtonAddAttachments" t-att-disabled="!hasWriteAccess">
+                            <i class="fa fa-plus-square"/>
+                            Attach files
+                        </button>
+                    </div>
+                </div>
                 <ActivityBoxView t-if="activityBoxView"
                     className="'o_Chatter_activityBox'"
                     record="activityBoxView"
