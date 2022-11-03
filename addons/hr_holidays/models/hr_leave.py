@@ -456,7 +456,7 @@ class HolidaysRequest(models.Model):
             holiday.manager_id = holiday.employee_id.parent_id.id
             if holiday.holiday_status_id.requires_allocation == 'no':
                 continue
-            if holiday.employee_ids:
+            if len(holiday.employee_ids) > 1:
                 holiday.holiday_status_id = False
             elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
@@ -693,7 +693,8 @@ class HolidaysRequest(models.Model):
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
-            mapped_days = self.holiday_status_id.get_employees_days((holiday.employee_id | holiday.employee_ids).ids, holiday.date_from.date())
+            mapped_days_date = holiday.date_from.date() or None
+            mapped_days = self.holiday_status_id.get_employees_days((holiday.employee_id | holiday.employee_ids).ids, mapped_days_date)
             if holiday.holiday_type != 'employee'\
                     or not holiday.employee_id and not holiday.employee_ids\
                     or holiday.holiday_status_id.requires_allocation == 'no':
@@ -791,11 +792,17 @@ class HolidaysRequest(models.Model):
             user_tz = timezone(leave.tz)
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
+            time_off_type_display = leave.holiday_status_id.name
             if self.env.context.get('short_name'):
+                short_leave_name = leave.name or time_off_type_display or _('Time Off')
                 if leave.leave_type_request_unit == 'hour':
-                    res.append((leave.id, _("%s : %.2f hours") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
+                    res.append((
+                        leave.id,
+                        _("%s : %.2f hours") % (short_leave_name, leave.number_of_hours_display)))
                 else:
-                    res.append((leave.id, _("%s : %.2f days") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
+                    res.append((
+                        leave.id,
+                        _("%s : %.2f days") % (short_leave_name, leave.number_of_days)))
             else:
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
@@ -807,13 +814,22 @@ class HolidaysRequest(models.Model):
                     target = leave.employee_id.name
                 else:
                     target = ', '.join(leave.employee_ids.mapped('name'))
+
                 if leave.leave_type_request_unit == 'hour':
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
-                            _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
+                            _("%(leave_type)s: %(duration).2f hours on %(date)s",
+                                leave_type=time_off_type_display,
+                                duration=leave.number_of_hours_display,
+                                date=fields.Date.to_string(date_from_utc) or "",
+                            )
+                        ))
+                    elif not time_off_type_display:
+                        res.append((
+                            leave.id,
+                            _("%(person)s: %(duration).2f hours on %(date)s",
                                 person=target,
-                                leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
                                 date=fields.Date.to_string(date_from_utc) or "",
                             )
@@ -823,7 +839,7 @@ class HolidaysRequest(models.Model):
                             leave.id,
                             _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
                                 person=target,
-                                leave_type=leave.holiday_status_id.name,
+                                leave_type=time_off_type_display,
                                 duration=leave.number_of_hours_display,
                                 date=fields.Date.to_string(date_from_utc) or "",
                             )
@@ -836,7 +852,16 @@ class HolidaysRequest(models.Model):
                         res.append((
                             leave.id,
                             _("%(leave_type)s: %(duration).2f days (%(start)s)",
-                                leave_type=leave.holiday_status_id.name,
+                                leave_type=time_off_type_display,
+                                duration=leave.number_of_days,
+                                start=display_date,
+                            )
+                        ))
+                    elif not time_off_type_display:
+                        res.append((
+                            leave.id,
+                            _("%(person)s: %(duration).2f days (%(start)s)",
+                                person=target,
                                 duration=leave.number_of_days,
                                 start=display_date,
                             )
@@ -846,7 +871,7 @@ class HolidaysRequest(models.Model):
                             leave.id,
                             _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
                                 person=target,
-                                leave_type=leave.holiday_status_id.name,
+                                leave_type=time_off_type_display,
                                 duration=leave.number_of_days,
                                 start=display_date,
                             )
