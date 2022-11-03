@@ -249,6 +249,21 @@ registerModel({
             },
         }),
         attachmentBoxView: one('AttachmentBoxView', { inverse: 'chatter' }),
+        /**
+         * Determines the label on the attachment button of the topbar.
+         */
+        attachmentButtonText: attr({ default: "",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                const attachments = this.thread.allAttachments;
+                if (attachments.length === 0) {
+                    return clear();
+                }
+                return attachments.length;
+            },
+        }),
         attachmentsLoaderTimer: one('Timer', { inverse: 'chatterOwnerAsAttachmentsLoader' }),
         /**
          * States the OWL Chatter component of this chatter.
@@ -328,6 +343,11 @@ registerModel({
                 return Boolean(this.thread && this.hasMessageList);
             },
         }),
+        hasTopBar: attr({ default: false,
+            compute() {
+                return this.thread ? true : clear();
+            },
+        }),
         hasWriteAccess: attr({
             compute() {
                 return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
@@ -390,11 +410,6 @@ registerModel({
                     order: 'desc',
                     thread: this.thread ? this.thread : clear(),
                 };
-            },
-        }),
-        topbar: one('ChatterTopbar', { inverse: 'chatter',
-            compute() {
-                return this.thread ? {} : clear();
             },
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', { default: {}, inverse: 'chatterOwner', readonly: true, required: true }),
