@@ -237,6 +237,7 @@ class Import(models.TransientModel):
         """
         self.ensure_one()
 
+        # guess mimetype from file content
         mimetype = guess_mimetype(self.file or b'')
         (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
         if handler:
@@ -244,12 +245,15 @@ class Import(models.TransientModel):
             if handled:
                 return handled
 
+        # try reading with user-provided? mimetype
         (file_extension, handler, req) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
         if handler:
             handled = self._import_handler('given filetype', file_extension, options, self.file_type)
             if handled:
                 return handled
 
+        # derive from filename when software set incorrect mime types, or non-installed software
+        # led to browser not sending mime types
         if self.file_name:
             fext = os.path.splitext(self.file_name)[-1]
             if fext in EXTENSIONS:
