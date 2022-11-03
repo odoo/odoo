@@ -79,8 +79,9 @@ class ReplenishmentReport(models.AbstractModel):
             res['product_variants'] = docs['product_variants'].read(fields=['id', 'display_name'])
 
         res['lines'] = []
-        for line in docs['lines']:
+        for index, line in enumerate(docs['lines']):
             res['lines'].append({
+                'index': index,
                 'document_in' : {
                     '_name' : line['document_in']._name,
                     'id' : line['document_in']['id'],
