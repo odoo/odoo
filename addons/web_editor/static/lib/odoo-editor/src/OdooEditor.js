@@ -1412,15 +1412,21 @@ export class OdooEditor extends EventTarget {
             const parentFragmentTr = closestElement(td, 'tr');
             // Skip the first and the last partially selected TD.
             if (i && !(splitEndTd && i === tds.length - 1)) {
-                if (parentFragmentTr !== currentFragmentTr) {
-                    currentTr = currentTr
-                        ? currentTr.nextElementSibling
-                        : closestElement(range.endContainer, 'tr').nextElementSibling;
+                if (parentFragmentTr !== currentFragmentTr && currentTr && [...parentFragmentTr.querySelectorAll('td')].every(td => tds.includes(td))) {
+                    currentTr.after(parentFragmentTr);
+                    currentTr = parentFragmentTr;
+                    parentFragmentTr.textContent = '';
+                } else {
+                    if (parentFragmentTr !== currentFragmentTr) {
+                        currentTr = currentTr
+                            ? currentTr.nextElementSibling
+                            : closestElement(range.endContainer, 'tr').nextElementSibling;
+                    }
+                    currentTr ? currentTr.prepend(td) : currentTd.after(td);
+                    td.textContent = '';
                 }
-                currentTr ? currentTr.prepend(td) : currentTd.after(td);
             }
             currentFragmentTr = parentFragmentTr;
-            td.textContent = '';
         });
         this.observerFlush();
         this._toRollback = false; // Errors caught with observerFlush were already handled.
