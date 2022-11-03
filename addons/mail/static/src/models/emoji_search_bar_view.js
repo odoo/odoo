@@ -8,7 +8,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'EmojiSearchBarView',
     template: 'mail.EmojiSearchBarView',
-    templateGetter: 'emojiSearchBarView',
     componentSetup() {
         useRefToModel({ fieldName: 'inputRef', refName: 'input' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'EmojiSearchBarView' });

@@ -3,9 +3,9 @@
 
     <t t-name="mail.EmojiGridRowView" owl="1">
         <div class="o_EmojiGridRowView">
-            <EmojiGridSectionView t-if="emojiGridRowView.sectionView" record="emojiGridRowView.sectionView"/>
+            <EmojiGridSectionView t-if="sectionView" record="sectionView"/>
             <t t-else="">
-                <t t-foreach="emojiGridRowView.items" t-as="item" t-key="item">
+                <t t-foreach="items" t-as="item" t-key="item">
                     <EmojiGridItemView className="'o_EmojiGridRowView_item'" record="item"/>
                 </t>
             </t>

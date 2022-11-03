@@ -9,7 +9,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'AttachmentDeleteConfirmView',
     template: 'mail.AttachmentDeleteConfirmView',
-    templateGetter: 'attachmentDeleteConfirmView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
     },

@@ -8,7 +8,6 @@ import { sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'CallParticipantCardPopoverContentView',
     template: 'mail.CallParticipantCardPopoverContentView',
-    templateGetter: 'callParticipantCardPopoverContentView',
     recordMethods: {
         /**
          * @param {Event} ev

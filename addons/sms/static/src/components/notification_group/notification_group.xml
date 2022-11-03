@@ -3,7 +3,7 @@
 
     <t t-inherit="mail.NotificationGroupView" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o_NotificationGroupView_inlineText')]" position="inside">
-            <t t-if="notificationGroupView.notificationGroup.notification_type === 'sms'">
+            <t t-if="notificationGroup.notification_type === 'sms'">
                 An error occurred when sending an SMS.
             </t>
         </xpath>

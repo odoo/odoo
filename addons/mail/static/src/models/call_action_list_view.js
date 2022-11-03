@@ -8,7 +8,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'CallActionListView',
     template: 'mail.CallActionListView',
-    templateGetter: 'callActionListView',
     componentSetup() {
         useRefToModel({ fieldName: 'moreButtonRef', refName: 'moreButton' });
     },

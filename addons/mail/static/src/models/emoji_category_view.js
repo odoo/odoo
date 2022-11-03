@@ -6,7 +6,6 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'EmojiCategoryView',
     template: 'mail.EmojiCategoryView',
-    templateGetter: 'emojiCategoryView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev
