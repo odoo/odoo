@@ -7,6 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'Dialog',
     identifyingMode: 'xor',
+    template: 'mail.Dialog',
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickGlobal, true);

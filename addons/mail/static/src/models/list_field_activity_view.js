@@ -6,6 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ListFieldActivityView',
+    template: 'mail.ListFieldActivityView',
     fields: {
         activityButtonView: one('ActivityButtonView', { default: {}, inverse: 'listFieldActivityViewOwner', required: true }),
         id: attr({ identifying: true }),

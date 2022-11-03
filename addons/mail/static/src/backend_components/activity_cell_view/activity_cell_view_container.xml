@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityCellViewContainer" owl="1">
-        <ActivityCellView t-if="activityCellView" record="activityCellView"/>
+        <t t-if="isLoaded">
+            <ActivityCellView t-if="activityCellView" record="activityCellView"/>
+        </t>
     </t>
 
 </templates>
