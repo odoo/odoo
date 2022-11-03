@@ -786,7 +786,8 @@ const Wysiwyg = Widget.extend({
      * @returns {String}
      */
     getValue: function (options) {
-        var $editable = options && options.$layout || this.$editable.clone();
+        const $editable = options && options.$layout || this.$editable.clone();
+        const isEmpty = $editable.html() === '<p><br></p>';
         $editable.find('[contenteditable]').removeAttr('contenteditable');
         $editable.find('[class=""]').removeAttr('class');
         $editable.find('[style=""]').removeAttr('style');
@@ -797,7 +798,7 @@ const Wysiwyg = Widget.extend({
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
         this.odooEditor.cleanForSave($editable[0]);
-        return $editable.html();
+        return isEmpty ? false : $editable.html();
     },
     /**
      * Save the content in the target

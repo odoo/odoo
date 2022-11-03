@@ -62,6 +62,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $editable = this.wysiwyg.getEditable();
         await this.wysiwyg.cleanForSave();
         return this.wysiwyg.saveModifiedImages(this.$content).then(async function () {
+            const isEmptyEditable = $editable.html() === '<p><br></p>';
             self._isDirty = self.wysiwyg.isDirty();
             await self._doAction();
 
@@ -72,7 +73,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
-                changes: _.object([fieldName], [self._unWrap($editable.html())])
+                changes: _.object([fieldName], [self._unWrap(isEmptyEditable ? false : $editable.html())])
             });
 
             $editable.html(self.value);
