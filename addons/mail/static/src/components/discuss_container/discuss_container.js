@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
-// ensure component is registered before-hand
-import '@mail/components/discuss/discuss';
-import { getMessagingComponent } from "@mail/utils/messaging_component";
+import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
 
 import { Component, onWillDestroy } from '@odoo/owl';
 
@@ -13,7 +10,7 @@ export class DiscussContainer extends Component {
      * @override
      */
     setup() {
-        useModels();
+        useMessagingContainer();
         super.setup();
         onWillDestroy(() => this._willDestroy());
         this.env.services.messaging.modelManager.messagingCreatedPromise.then(async () => {
@@ -71,6 +68,5 @@ Object.assign(DiscussContainer, {
         className: String,
         globalState: { type: Object, optional: 1 },
     },
-    components: { DiscussView: getMessagingComponent('DiscussView') },
     template: 'mail.DiscussContainer',
 });

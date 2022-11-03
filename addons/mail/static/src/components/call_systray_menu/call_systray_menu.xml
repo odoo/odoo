@@ -5,7 +5,7 @@
         <div class="o_CallSystrayMenu dropdown" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="messaging">
                 <CallInviteRequestPopupList/>
-                <button t-if="messaging.rtc.channel" class="o_CallSystrayMenu_button px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="callSystrayMenu.buttonTitle" role="button" t-on-click="messaging.rtc.onClickActivityNoticeButton">
+                <button t-if="messaging.rtc.channel" class="o_CallSystrayMenu_button px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="messaging.rtc.onClickActivityNoticeButton">
                     <div class="o_CallSystrayMenu_buttonContent d-flex align-items-center">
                         <span class="position-relative me-2">
                             <i class="o_CallSystrayMenu_outputIndicator fa me-2" t-att-class="{

@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.KanbanFieldActivityViewContainer" owl="1">
-        <KanbanFieldActivityView t-if="kanbanFieldActivityView" record="kanbanFieldActivityView"/>
+        <t t-if="isLoaded">
+            <KanbanFieldActivityView t-if="kanbanFieldActivityView" record="kanbanFieldActivityView"/>
+        </t>
     </t>
 
 </templates>

@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
-// ensure components are registered beforehand.
-import '@mail/components/web_client_view_attachment_view/web_client_view_attachment_view';
-import { getMessagingComponent } from '@mail/utils/messaging_component';
+import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
 
 import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 
@@ -30,7 +27,7 @@ export class WebClientViewAttachmentViewContainer extends Component {
      * @override
      */
     setup() {
-        useModels();
+        useMessagingContainer();
         super.setup();
         this.webClientViewAttachmentView = undefined;
         this.webClientViewAttachmentViewId = getNextId();
@@ -78,7 +75,6 @@ export class WebClientViewAttachmentViewContainer extends Component {
 }
 
 Object.assign(WebClientViewAttachmentViewContainer, {
-    components: { WebClientViewAttachmentView: getMessagingComponent('WebClientViewAttachmentView') },
     props: {
         threadId: {
             type: Number,
