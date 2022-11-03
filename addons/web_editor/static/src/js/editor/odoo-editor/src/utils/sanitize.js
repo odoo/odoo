@@ -220,7 +220,10 @@ class Sanitize {
             ) {
                 node.setAttribute('contenteditable', 'false');
             }
-            // update link URL if label is a new valid link
+            if (node.firstChild) {
+                this._parse(node.firstChild);
+            }
+            // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
                 const linkLabel = node.textContent;
                 const match = linkLabel.match(URL_REGEX);
@@ -228,9 +231,6 @@ class Sanitize {
                     const urlInfo = getUrlsInfosInString(linkLabel)[0];
                     node.setAttribute('href', urlInfo.url);
                 }
-            }
-            if (node.firstChild) {
-                this._parse(node.firstChild);
             }
             node = node.nextSibling;
         }
