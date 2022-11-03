@@ -2529,13 +2529,7 @@ export class OdooEditor extends EventTarget {
             const selection = this.document.getSelection();
             if (selection.isCollapsed) {
                 ev.preventDefault();
-                const inputEvent = new InputEvent('input', {
-                    inputType: 'deleteContentBackward',
-                    data: null,
-                    bubbles: true,
-                    cancelable: false,
-                });
-                this._onInput(inputEvent);
+                this._applyCommand('oDeleteBackward');
             }
         } else if (ev.key === 'Tab') {
             // Tab
