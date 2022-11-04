@@ -3,10 +3,6 @@
 import { Record, RelationalModel } from "@web/views/basic_relational_model";
 
 export class StockPickingAutoSaveRecord extends Record {
-    setup(params, state) {
-        super.setup(params, state);
-    }
-
     async saveAndOpenDetails() {
         await new Promise((resolve) => {
             this.model.env.bus.trigger("STOCK_MOVE:UPDATED", { resolve });

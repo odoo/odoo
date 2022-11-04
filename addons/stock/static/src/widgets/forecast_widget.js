@@ -36,8 +36,6 @@ export class ForecastWidgetField extends FloatField {
      * Opens the Forecast Report for the `stock.move` product.
      */
     async _openReport(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
         if (!this.resId) {
             return;
         }

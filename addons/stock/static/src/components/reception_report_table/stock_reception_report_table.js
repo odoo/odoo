@@ -29,7 +29,7 @@ export class ReceptionReportTable extends Component {
             "action_assign",
             [false, moveIds, quantities, inIds],
         );
-        this.env.bus.trigger("update-assign-state", { isAssigned: true, tableIndex: this.props.index });
+        this.env.bus.trigger("update-assign-state", { isAssigned: true, tableIndex: this.props.index }); // You should pass a callback
     }
 
     async onClickLink(resModel, resId, viewType) {

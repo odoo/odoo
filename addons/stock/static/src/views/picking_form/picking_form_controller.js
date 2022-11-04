@@ -8,7 +8,7 @@ export class StockPickingFormController extends FormController {
     setup() {
         super.setup();
         this.action = useService("action");
-        useBus(this.env.bus, "STOCK_MOVE:UPDATED", (ev) => this._qtyUpdated(ev));
+        useBus(this.env.bus, "STOCK_MOVE:UPDATED", (ev) => this._qtyUpdated(ev)); // use a subenv or a callback or move _qtyUpdated and _actionOpenShowDetails in your custom model or write a callback and pass it to the customViewButton
         useBus(this.env.bus, "STOCK_MOVE:SAVED", (ev) => this._actionOpenShowDetails(ev));
     }
 
