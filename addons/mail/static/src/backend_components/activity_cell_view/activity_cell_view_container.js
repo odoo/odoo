@@ -2,7 +2,7 @@
 
 // ensure components are registered beforehand.
 import '@mail/backend_components/activity_cell_view/activity_cell_view';
-import { insert } from '@mail/model/model_field_command';
+import { insert } from '@mail/model';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';

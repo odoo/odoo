@@ -2,9 +2,7 @@
 
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, increment } from '@mail/model/model_field_command';
+import { attr, clear, increment, many, one, registerModel } from '@mail/model';
 
 registerModel({
     name: 'EmojiGridView',

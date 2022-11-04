@@ -3,9 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, link, unlink } from '@mail/model/model_field_command';
+import { attr, clear, link, many, one, registerModel, unlink } from '@mail/model';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';

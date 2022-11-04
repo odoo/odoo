@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, registerModel } from '@mail/model';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
 import { sprintf } from '@web/core/utils/strings';

@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, registerModel } from '@mail/model';
 
 registerModel({
     name: 'SnailmailErrorView',

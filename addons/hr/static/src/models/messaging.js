@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-
+import { registerPatch } from '@mail/model';
 // dummy import to ensure mail Messaging patches are loaded beforehand
 import '@mail/models/messaging';
 

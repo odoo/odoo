@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insert, link } from '@mail/model/model_field_command';
+import { attr, clear, insert, link, one, registerModel } from '@mail/model';
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;

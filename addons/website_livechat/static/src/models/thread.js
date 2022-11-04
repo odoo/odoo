@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { clear, insert, one, registerPatch } from '@mail/model';
 
 registerPatch({
     name: 'Thread',
