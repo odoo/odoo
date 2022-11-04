@@ -4,7 +4,7 @@
     <tr t-name="mrp.BomOverviewSpecialLine" owl="1">
         <td name="td_mrp_bom">
             <span t-attf-style="margin-left: {{ data.level * 20 }}px"/>
-            <button t-if="hasFoldButton" t-on-click="onToggleFolded" t-attf-class="o_mrp_bom_{{ props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}">
+            <button t-if="hasFoldButton" t-on-click="props.toggleFolded" t-attf-class="o_mrp_bom_{{ props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}">
                 <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
                 <t t-if="props.type == 'operations'">Operations</t>
                 <t t-elif="props.type == 'byproducts'">By-Products</t>
