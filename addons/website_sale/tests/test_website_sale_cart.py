@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
 from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
@@ -59,3 +59,22 @@ class WebsiteSaleCart(TransactionCase):
         with self.assertRaises(UserError):
             with MockRequest(product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
                 self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+
+    def test_update_cart_before_payment(self):
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+            'lst_price': 1000.0,
+            'standard_price': 800.0,
+        })
+        website = self.website.with_user(self.public_user)
+        with MockRequest(product.with_user(self.public_user).env, website=website):
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            sale_order = website.sale_get_order()
+            sale_order.access_token = 'test_token'
+            old_amount = sale_order.amount_total
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            # Try processing payment with the old amount
+            with self.assertRaises(UserError):
+                PaymentPortal().shop_payment_transaction(sale_order.id, sale_order.access_token, amount=old_amount)
