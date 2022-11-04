@@ -426,7 +426,7 @@
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
 
-                <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
+                <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm bg-white" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
                             <th class="text-left">Products</th>
@@ -547,7 +547,7 @@
     </template>
 
     <template id="sale_order_portal_content_totals_table">
-        <table class="table table-sm">
+        <table class="table table-sm bg-white">
             <tr class="border-black">
                 <td><strong>Subtotal</strong></td>
                 <td class="text-right">
