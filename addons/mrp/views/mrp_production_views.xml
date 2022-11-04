@@ -303,7 +303,7 @@
                                 context="{'default_date': date_planned_start, 'default_date_deadline': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id,
                                 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
-                                <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
+                                <tree default_order="manual_consumption desc, sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}" domain="[('id', '!=', parent.product_id)]"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="show"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
@@ -321,7 +321,6 @@
                                     <field name="picking_type_id" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
                                     <field name="operation_id" invisible="1"/>
-                                    <field name="is_done" invisible="1"/>
                                     <field name="bom_line_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
@@ -343,8 +342,8 @@
                                     <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" widget="forecast_widget"/>
                                     <field name="quantity_done" string="Consumed" class="o_manual_consumption"
                                         decoration-bf="not manual_consumption"
-                                        decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
-                                        decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
+                                        decoration-success="not (state in ('done', 'cancel')) and (quantity_done - should_consume_qty == 0)"
+                                        decoration-warning="not (state in ('done', 'cancel')) and (quantity_done - should_consume_qty &gt; 0.0001)"
                                         attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '!=','none')]}"
                                         force_save="1"/>
                                     <field name="manual_consumption" invisible="1" force_save="1"/>
@@ -372,7 +371,7 @@
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
-                                <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
+                                <tree default_order="sequence" editable="bottom">
                                     <field name="product_id" context="{'default_detailed_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" invisible="1"/>
@@ -386,7 +385,6 @@
                                     <field name="picking_type_id" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
                                     <field name="operation_id" invisible="1"/>
-                                    <field name="is_done" invisible="1"/>
                                     <field name="bom_line_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="location_id" invisible="1"/>

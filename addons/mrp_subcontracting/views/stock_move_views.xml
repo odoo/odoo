@@ -151,7 +151,7 @@
         <field name="model">stock.move</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
+            <tree delete="0" create="0" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not (state in ('done', 'cancel')) and quantity_done - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
                 <field name="company_id" invisible="1"/>
                 <field name="sequence" invisible="1"/>
                 <field name="product_uom_category_id" invisible="1"/>
@@ -161,7 +161,6 @@
                 <field name="picking_type_id" invisible="1"/>
                 <field name="has_tracking" invisible="1"/>
                 <field name="operation_id" invisible="1"/>
-                <field name="is_done" invisible="1"/>
                 <field name="bom_line_id" invisible="1"/>
                 <field name="location_id" invisible="1"/>
                 <field name="warehouse_id" invisible="1"/>
@@ -171,7 +170,7 @@
                 <field name="raw_material_production_id" invisible="1"/>
                 <field name="product_id" required="1"/>
                 <field name="order_finished_lot_id"/>
-                <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)]}" string="Reserved"/>
+                <field name="reserved_availability" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" string="Reserved"/>
                 <field name="quantity_done" string="Consumed" readonly="1"/>
                 <field name="product_uom" groups="uom.group_uom"/>
             </tree>

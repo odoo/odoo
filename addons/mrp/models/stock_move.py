@@ -129,8 +129,6 @@ class StockMove(models.Model):
         'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
     unit_factor = fields.Float('Unit Factor', compute='_compute_unit_factor', store=True)
-    is_done = fields.Boolean(
-        'Done', compute='_compute_is_done', store=True)
     order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id", store=True)
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
     cost_share = fields.Float(
@@ -187,11 +185,6 @@ class StockMove(models.Model):
                 move.is_locked = move.raw_material_production_id.is_locked
             if move.production_id:
                 move.is_locked = move.production_id.is_locked
-
-    @api.depends('state')
-    def _compute_is_done(self):
-        for move in self:
-            move.is_done = (move.state in ('done', 'cancel'))
 
     @api.depends('product_uom_qty',
         'raw_material_production_id', 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_produced',
