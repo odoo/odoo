@@ -91,7 +91,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                                             <field name="bar"/>
                                         </div>
                                         <div class="o_setting_right_pane">
-                                            <label for="bar"/>
+                                            <label for="bar" class="my_custom_class"/>
                                             <div class="text-muted">this is bar</div>
                                         </div>
                                     </div>
