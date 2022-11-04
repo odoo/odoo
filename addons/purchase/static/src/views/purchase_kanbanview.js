@@ -1,15 +1,14 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { kanbanView } from '@web/views/kanban/kanban_view';
-import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
-import { PurchaseDashBoard } from '@purchase/views/purchase_dashboard';
+import { kanbanView } from "@web/views/kanban/kanban_view";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { PurchaseDashBoard } from "@purchase/views/purchase_dashboard";
 
+export class PurchaseDashBoardKanbanRenderer extends KanbanRenderer {}
 
-export class PurchaseDashBoardKanbanRenderer extends KanbanRenderer {};
-
-PurchaseDashBoardKanbanRenderer.template = 'purchase.PurchaseKanbanView';
-PurchaseDashBoardKanbanRenderer.components= Object.assign({}, KanbanRenderer.components, {PurchaseDashBoard})
+PurchaseDashBoardKanbanRenderer.template = "purchase.PurchaseKanbanView";
+PurchaseDashBoardKanbanRenderer.components = { ...KanbanRenderer.components, PurchaseDashBoard };
 
 export const PurchaseDashBoardKanbanView = {
     ...kanbanView,

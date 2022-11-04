@@ -45,7 +45,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
-                this.props.record.update({
+                this.props.record.update({ // why not use this.props.update?
                     // TODO right name get (same problem as configurator)
                     product_id: [result.product_id, 'whatever'],
                 });
@@ -96,7 +96,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
     _openMatrixConfigurator(jsonInfo, productTemplateId, editedCellAttributes) {
         const infos = JSON.parse(jsonInfo);
         const saleOrderRecord = this.props.record.model.root;
-        const MatrixDialog = new Dialog(this, {
+        const MatrixDialog = new Dialog(this, { // should use the new dialog and remove jquery
             title: this.env._t('Choose Product Variants'),
             size: 'extra-large', // adapt size depending on matrix size?
             $content: $(qweb.render(
