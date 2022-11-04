@@ -410,14 +410,14 @@ class TestOne2Many2ManySubfield(SearchCase, TestSubfield):
         # The implementation from the parent class will prefill the parent
         # dictionary with an entry for child_ids.child_ids which we need to
         # convert to an appropriate entry for child_ids.
-        commands = values[cls.parent_field]
         path = cls.parent_field.split('.')
         unique_id = ''.join(str(count) for count in counts)
-        partner = cls.parent_model[path[0]].create({
-            'name': 'partner' + unique_id,
-            path[1]: commands,
-        })
+        commands = [(0, 0, {
+            'name': command[2]['name'] + '_parent',
+            path[1]: [command],
+        }) for command in values.pop(cls.parent_field)]
         return super().get_parent_values({
             'login': 'user' + unique_id,
-            path[0]: [(4, partner.id)],
+            path[0]: commands,
+            **values,
         }, params, counts)

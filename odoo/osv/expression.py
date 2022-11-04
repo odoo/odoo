@@ -682,7 +682,8 @@ class expression(object):
                     domain = [(domain[0][0], TERM_OPERATORS_NEGATION[domain[0][1]], domain[0][2])]
                 elif use_inverted_domain:
                     domain = invert_domain(domain)
-                use_inverted_search = operator in ('not any', 'all')
+
+            use_inverted_search = operator in ('not any', 'all')
 
             # ----------------------------------------
             # FIELD NOT FOUND
@@ -746,7 +747,8 @@ class expression(object):
                     # compatibility until completion of domain translations.
                     emit_deprecation_notice(field, leaf)
                 right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)], order='id')
-                push((path[0], 'any', [('id', 'in', right_ids)]), model, alias)
+                new_operator = ['any', 'all'][use_inverted_search]
+                push((path[0], new_operator, [('id', 'in', right_ids)]), model, alias)
 
             elif not field.store:
                 # Non-stored field should provide an implementation of search.
