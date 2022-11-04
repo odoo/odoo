@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_bo_iva_13_sale" model="account.tax.template">
+        <field name="sequence">100</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13%</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">sale</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <!-- For IVA, the 'base' amount is considered to be the tax-included amount. Therefore we put the base tag on the tax line as well.-->
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_13_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_13_balance'), ref('l10n_bo_tax_report_iva_19_tax_amount_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance'), ref('l10n_bo_tax_report_iva_30_tax_amount_balance')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_13_discount_sale" model="account.tax.template">
+        <field name="sequence">105</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% - for Discounts</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">sale</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_28_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_28_balance'), ref('l10n_bo_tax_report_iva_30_tax_amount_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance'), ref('l10n_bo_tax_report_iva_19_tax_amount_balance')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_0_sale" model="account.tax.template">
+        <field name="sequence">110</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 0% - Zero Rate</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_15_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_0_exempt_sale" model="account.tax.template">
+        <field name="sequence">120</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">0% IVA Exempt</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_0_exempt"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_14_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_0_untaxed_sale" model="account.tax.template">
+        <field name="sequence">130</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">0% Not Subject to IVA</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_0_untaxed"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_505_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_27_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_it_3_sale_tax" model="account.tax.template">
+        <field name="sequence">140</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IT 3% (tax line)</field>
+        <field name="amount">3</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="is_base_affected" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_it_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_it_24_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2136'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_it_24_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2136'),
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_it_3_sale_expense" model="account.tax.template">
+        <field name="sequence">150</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IT 3% (expense line)</field>
+        <field name="amount">-3</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="is_base_affected" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_it_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52091'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52091'),
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_it_3_sale" model="account.tax.template">
+        <field name="sequence">160</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IT 3%</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_it_3"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('l10n_bo_it_3_sale_tax'), ref('l10n_bo_it_3_sale_expense')])]"/>
+    </record>
+    <record id="l10n_bo_it_0_sale" model="account.tax.template">
+        <field name="sequence">170</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">0% Not Subject to IT</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_it_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_it_32_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_it_32_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_13_purchase" model="account.tax.template">
+        <field name="sequence">300</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13%</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_11_balance'), ref('l10n_bo_tax_report_iva_26_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [
+                    ref('l10n_bo_tax_report_iva_11_balance'),
+                    ref('l10n_bo_tax_report_iva_26_balance'),
+                    ref('l10n_bo_tax_report_iva_30_tax_amount_balance')
+                ],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance'), ref('l10n_bo_tax_report_iva_19_tax_amount_balance')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_13_discount_purchase" model="account.tax.template">
+        <field name="sequence">305</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% - for Discounts</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_28_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_28_balance'), ref('l10n_bo_tax_report_iva_19_tax_amount_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance'), ref('l10n_bo_tax_report_iva_30_tax_amount_balance')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_13_purchase_personal" model="account.tax.template">
+        <field name="sequence">310</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% - for Private Consumption</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [
+                    ref('l10n_bo_tax_report_iva_11_balance'),
+                    ref('l10n_bo_tax_report_iva_26_balance'),
+                    ref('l10n_bo_tax_report_iva_16_balance')
+                ],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [
+                    ref('l10n_bo_tax_report_iva_11_balance'),
+                    ref('l10n_bo_tax_report_iva_26_balance'),
+                    ref('l10n_bo_tax_report_iva_16_balance'),
+                    ref('l10n_bo_tax_report_iva_30_tax_amount_balance'),
+                    ref('l10n_bo_tax_report_iva_19_tax_amount_balance')
+                ],
+            }),
+        ]"/>
+        <!-- For purchases destined for personal consumption, the VAT from the purchase is not deductible,
+            so there is no need to revert any deduction if the product is returned.-->
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_13_purchase_donations" model="account.tax.template">
+        <field name="sequence">320</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% - for Donations</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_11_balance'), ref('l10n_bo_tax_report_iva_26_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [
+                    ref('l10n_bo_tax_report_iva_11_balance'),
+                    ref('l10n_bo_tax_report_iva_26_balance'),
+                    ref('l10n_bo_tax_report_iva_30_tax_amount_balance'),
+                    ref('l10n_bo_tax_report_iva_19_tax_amount_balance'),
+                    ref('l10n_bo_tax_report_iva_55_balance')
+                ],
+            }),
+        ]"/>
+        <!-- For purchases destined for donations, the VAT from the purchase is not deductible,
+            so there is no need to revert any deduction if the product is returned.-->
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+        ]"/>
+    </record>
+        <record id="l10n_bo_iva_0_purchase" model="account.tax.template">
+        <field name="sequence">330</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 0% - Zero Rate</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_11_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_mixed_purchase" model="account.tax.template">
+        <field name="sequence">340</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA - Mixed Taxed and Untaxed</field>
+        <field name="amount">13</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="price_include" eval="True"/>
+        <field name="tax_group_id" ref="tax_group_iva_mixed"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_11_balance'), ref('l10n_bo_tax_report_iva_31_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [
+                    ref('l10n_bo_tax_report_iva_11_balance'),
+                    ref('l10n_bo_tax_report_iva_31_balance'),
+                    ref('l10n_bo_tax_report_iva_30_tax_amount_balance')
+                ],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2135'),
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance'), ref('l10n_bo_tax_report_iva_19_tax_amount_balance')],
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_0_exempt_purchase" model="account.tax.template">
+        <field name="sequence">350</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">0% IVA Exempt</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_0_exempt"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_11_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_iva_0_untaxed_purchase" model="account.tax.template">
+        <field name="sequence">360</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">0% Not Subject to IVA</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_0_untaxed"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_11_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_iva_17_balance')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_services_it_tax" model="account.tax.template">
+        <field name="sequence">370</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">3% Whh. IT services gross-up (tax)</field>
+        <field name="amount">3.5503</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_services"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_whh_it_13_balance')],
+                'account_id': ref('l10n_bo_2137')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_whh_it_13_balance')],
+                'account_id': ref('l10n_bo_2137')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_services_it_expense" model="account.tax.template">
+        <field name="sequence">380</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">3% Whh. IT services gross-up (expense)</field>
+        <field name="amount">-3.5503</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_services"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52092')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52092')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_services_iue_tax" model="account.tax.template">
+        <field name="sequence">390</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">12.5% Whh. IUE services gross-up (tax)</field>
+        <field name="amount">14.7929</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_services"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_whh_iue_13_base')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2138')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_whh_iue_13_base')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2138')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_services_iue_expense" model="account.tax.template">
+        <field name="sequence">400</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">12.5% Whh. IUE services gross-up (expense)</field>
+        <field name="amount">-14.7929</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_services"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52093')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52093')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_services_purchase" model="account.tax.template">
+        <field name="sequence">410</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">15.5% Whh. IT+IUE services gross-up</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_whh_services"/>
+        <field name="children_tax_ids"
+            eval="[(6, 0, [
+                ref('l10n_bo_whh_services_it_tax'),
+                ref('l10n_bo_whh_services_it_expense'),
+                ref('l10n_bo_whh_services_iue_tax'),
+                ref('l10n_bo_whh_services_iue_expense')
+            ])]"/>
+    </record>
+    <record id="l10n_bo_whh_goods_it_tax" model="account.tax.template">
+        <field name="sequence">420</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">3% Whh. IT goods gross-up (tax)</field>
+        <field name="amount">3.2609</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_goods"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_whh_it_13_balance')],
+                'account_id': ref('l10n_bo_2137')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_whh_it_13_balance')],
+                'account_id': ref('l10n_bo_2137')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_goods_it_expense" model="account.tax.template">
+        <field name="sequence">430</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">3% Whh. IT goods gross-up (expense)</field>
+        <field name="amount">-3.2609</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_goods"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52092')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52092')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_goods_iue_tax" model="account.tax.template">
+        <field name="sequence">440</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">5% Whh. IUE goods gross-up (tax)</field>
+        <field name="amount">5.4348</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_goods"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_bo_tax_report_whh_iue_26_base')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2138')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_bo_tax_report_whh_iue_26_base')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_2138')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_goods_iue_expense" model="account.tax.template">
+        <field name="sequence">450</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">5% Whh. IUE goods gross-up (expense)</field>
+        <field name="amount">-5.4348</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_whh_goods"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52093')
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_bo_52093')
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_bo_whh_goods_purchase" model="account.tax.template">
+        <field name="sequence">460</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">8% Whh. IT+IUE goods gross-up</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_whh_goods"/>
+        <field name="children_tax_ids"
+            eval="[(6, 0, [
+                ref('l10n_bo_whh_goods_it_tax'),
+                ref('l10n_bo_whh_goods_it_expense'),
+                ref('l10n_bo_whh_goods_iue_tax'),
+                ref('l10n_bo_whh_goods_iue_expense')
+            ])]"/>
+    </record>
+</odoo>

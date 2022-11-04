@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fiscal positions -->
+    <record id="l10n_bo_domestic" model="account.fiscal.position.template">
+        <field name="sequence">10</field>
+        <field name="name">Domestic</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.bo"/>
+    </record>
+
+    <record id="l10n_bo_domestic_consumer" model="account.fiscal.position.template">
+        <field name="sequence">20</field>
+        <field name="name">Domestic (Consumer)</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.bo"/>
+    </record>
+
+    <record id="l10n_bo_international" model="account.fiscal.position.template">
+        <field name="sequence">30</field>
+        <field name="name">International</field>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="tax_ids">
+            <record id="l10n_bo_international_sale_iva" model="account.fiscal.position.tax.template">
+                <field name="tax_src_id" ref="l10n_bo_iva_13_sale"/>
+                <field name="tax_dest_id" ref="l10n_bo_iva_0_exempt_sale"/>
+            </record>
+            <record id="l10n_bo_international_sale_it" model="account.fiscal.position.tax.template">
+                <field name="tax_src_id" ref="l10n_bo_it_3_sale"/>
+                <field name="tax_dest_id" ref="l10n_bo_it_0_sale"/>
+            </record>
+            <record id="l10n_bo_international_purchase_iva" model="account.fiscal.position.tax.template">
+                <field name="tax_src_id" ref="l10n_bo_iva_13_purchase"/>
+                <field name="tax_dest_id" ref="l10n_bo_iva_0_exempt_purchase"/>
+            </record>
+        </field>
+    </record>
+</odoo>
