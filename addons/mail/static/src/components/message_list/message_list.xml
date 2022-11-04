@@ -2,22 +2,22 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageListView" owl="1">
-        <div class="o_MessageListView bg-view d-flex flex-column overflow-auto" t-att-class="{ 'o-empty align-items-center justify-content-center': messageListView.threadViewOwner.messages.length === 0, 'pb-4': messageListView.threadViewOwner.messages.length !== 0 }" t-attf-class="{{ className }}" t-on-scroll="messageListView.onScroll" t-ref="root">
+        <div class="o_MessageListView bg-view d-flex flex-column overflow-auto" t-att-class="{ 'o-empty align-items-center justify-content-center': threadViewOwner.messages.length === 0, 'pb-4': threadViewOwner.messages.length !== 0 }" t-attf-class="{{ className }}" t-on-scroll="onScroll" t-ref="root">
             <!-- No result messages -->
-            <div t-if="messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length === 0" class="o_MessageListView_empty o_MessageListView_item d-flex flex-grow-1 flex-column align-items-center justify-content-center align-self-center w-100 h-100 p-4 text-center text-muted fst-italic">
-                <t t-if="messageListView.threadViewOwner.thread === messaging.inbox.thread">
+            <div t-if="threadViewOwner.threadCache.orderedNonEmptyMessages.length === 0" class="o_MessageListView_empty o_MessageListView_item d-flex flex-grow-1 flex-column align-items-center justify-content-center align-self-center w-100 h-100 p-4 text-center text-muted fst-italic">
+                <t t-if="threadViewOwner.thread === messaging.inbox.thread">
                     <h4 class="o_MessageListView_emptyTitle mb-3 fw-bolder">
                         Congratulations, your inbox is empty
                     </h4>
                     New messages appear here.
                 </t>
-                <t t-elif="messageListView.threadViewOwner.thread === messaging.starred.thread">
+                <t t-elif="threadViewOwner.thread === messaging.starred.thread">
                     <h4 class="o_MessageListView_emptyTitle mb-3 fw-bolder">
                         No starred messages
                     </h4>
                     You can mark any message as 'starred', and it shows up in this mailbox.
                 </t>
-                <t t-elif="messageListView.threadViewOwner.thread === messaging.history.thread">
+                <t t-elif="threadViewOwner.thread === messaging.history.thread">
                     <img src="/web/static/img/neutral_face.svg" alt="History"/>
                     <h4 class="o_MessageListView_emptyTitle mb-3 fw-bolder">
                         No history messages
@@ -29,20 +29,20 @@
                 </t>
             </div>
             <!-- LOADING (if order asc)-->
-            <div t-if="messageListView.threadViewOwner.threadCache.hasLoadingFailed" class="o_MessageListView_alertLoadingFailed d-flex align-items-center alert alert-info">
+            <div t-if="threadViewOwner.threadCache.hasLoadingFailed" class="o_MessageListView_alertLoadingFailed d-flex align-items-center alert alert-info">
                 <div>
                     An error occurred while fetching messages.
                 </div>
-                <button class="o_MessageListView_alertLoadingFailedRetryButton btn btn-link" t-on-click="messageListView.onClickRetryLoadMoreMessages">
+                <button class="o_MessageListView_alertLoadingFailedRetryButton btn btn-link" t-on-click="onClickRetryLoadMoreMessages">
                     Click here to retry
                 </button>
             </div>
-            <t t-if="!messageListView.threadViewOwner.threadCache.hasLoadingFailed and messageListView.threadViewOwner.order === 'asc'" t-call="mail.MessageListView.loadMore"/>
-            <div t-if="messageListView.threadViewOwner.order === 'asc' and messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length !== 0 and !(messageListView.threadViewOwner.thread and messageListView.threadViewOwner.thread.mailbox)" class="flex-grow-1"/>
+            <t t-if="!threadViewOwner.threadCache.hasLoadingFailed and threadViewOwner.order === 'asc'" t-call="mail.MessageListView.loadMore"/>
+            <div t-if="threadViewOwner.order === 'asc' and threadViewOwner.threadCache.orderedNonEmptyMessages.length !== 0 and !(threadViewOwner.thread and threadViewOwner.thread.mailbox)" class="flex-grow-1"/>
             <!-- MESSAGES -->
             <t t-set="current_day" t-value="0"/>
-            <t t-foreach="messageListView.messageListViewItems" t-as="messageListViewItem" t-key="messageListViewItem.localId">
-                <Transition visible="messageListViewItem.message === messageListView.threadViewOwner.thread.messageAfterNewMessageSeparator" name="'o-fade'" t-slot-scope="transition">
+            <t t-foreach="messageListViewItems" t-as="messageListViewItem" t-key="messageListViewItem.localId">
+                <Transition visible="messageListViewItem.message === threadViewOwner.thread.messageAfterNewMessageSeparator" name="'o-fade'" t-slot-scope="transition">
                     <div class="o_MessageListView_separator o_MessageListView_separatorNewMessages o_MessageListView_item d-flex flex-shrink-0 align-items-center me-4 p-0 fw-bolder" t-att-class="{ 'o-disable-animation': messaging.disableAnimation, 'opacity-0': transition.className.includes('o-fade-leave') }" t-attf-class="{{transition.className}}">
                         <hr class="o_MessageListView_separatorLine o_MessageListView_separatorLineNewMessages flex-grow-1 w-auto"/><span class="o_MessageListView_separatorLabel o_MessageListView_separatorLabelNewMessages px-3">New messages</span>
                     </div>
@@ -58,16 +58,16 @@
                 </t>
             </t>
             <!-- LOADING (if order desc)-->
-            <t t-if="!messageListView.threadViewOwner.threadCache.hasLoadingFailed and messageListView.threadViewOwner.order === 'desc'" t-call="mail.MessageListView.loadMore"/>
+            <t t-if="!threadViewOwner.threadCache.hasLoadingFailed and threadViewOwner.order === 'desc'" t-call="mail.MessageListView.loadMore"/>
         </div>
     </t>
 
     <t t-name="mail.MessageListView.loadMore" owl="1">
-        <div t-if="messageListView.threadViewOwner.threadCache.isLoadingMore" class="o_MessageListView_item o_MessageListView_isLoadingMore align-self-center">
+        <div t-if="threadViewOwner.threadCache.isLoadingMore" class="o_MessageListView_item o_MessageListView_isLoadingMore align-self-center">
             <i class="o_MessageListView_isLoadingMoreIcon fa fa-spin fa-circle-o-notch me-1"/>
             Loading...
         </div>
-        <a t-elif="!messageListView.threadViewOwner.threadCache.isAllHistoryLoaded and !messageListView.threadViewOwner.thread.isTemporary" class="o_MessageListView_item o_MessageListView_loadMore align-self-center" href="#" t-on-click="messageListView.onClickLoadMore" t-ref="loadMore">
+        <a t-elif="!threadViewOwner.threadCache.isAllHistoryLoaded and !threadViewOwner.thread.isTemporary" class="o_MessageListView_item o_MessageListView_loadMore align-self-center" href="#" t-on-click="onClickLoadMore" t-ref="loadMore">
             Load more
         </a>
     </t>

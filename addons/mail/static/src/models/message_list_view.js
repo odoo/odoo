@@ -1,11 +1,24 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { Transition } from "@web/core/transition";
+
+import { onWillPatch } from '@odoo/owl';
+
 registerModel({
     name: 'MessageListView',
+    template: 'mail.MessageListView',
+    components: { Transition },
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
+        onWillPatch(this.onWillPatch);
+    },
     recordMethods: {
         /**
          * Update the scroll position of the message list.
@@ -61,15 +74,15 @@ registerModel({
                 }
                 this.threadViewOwner.markComponentHintProcessed(hint);
             }
-            this.component._willPatchSnapshot = undefined;
+            this.update({ willPatchSnapshot: clear() });
         },
         adjustScrollForExtraMessagesAtTheEnd() {
             if (!this.getScrollableElement() || !this.hasScrollAdjust) {
                 return;
             }
             if (!this.threadViewOwner.hasAutoScrollOnMessageReceived) {
-                if (this.threadViewOwner.order === 'desc' && this.component._willPatchSnapshot) {
-                    const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
+                if (this.threadViewOwner.order === 'desc' && this.willPatchSnapshot) {
+                    const { scrollHeight, scrollTop } = this.willPatchSnapshot;
                     this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
                 }
                 return;
@@ -80,12 +93,12 @@ registerModel({
             if (
                 !this.getScrollableElement() ||
                 !this.hasScrollAdjust ||
-                !this.component._willPatchSnapshot ||
+                !this.willPatchSnapshot ||
                 this.threadViewOwner.order === 'desc'
             ) {
                 return;
             }
-            const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
+            const { scrollHeight, scrollTop } = this.willPatchSnapshot;
             this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
         },
         adjustScrollFromModel() {
@@ -164,6 +177,17 @@ registerModel({
                 return;
             }
             this.scrollThrottle.do();
+        },
+        onWillPatch() {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({
+                willPatchSnapshot: {
+                    scrollHeight: this.getScrollableElement().scrollHeight,
+                    scrollTop: this.getScrollableElement().scrollTop,
+                },
+            });
         },
         scrollToEnd() {
             this.setScrollTop(this.threadViewOwner.order === 'asc' ? this.getScrollableElement().scrollHeight - this.getScrollableElement().clientHeight : 0);
@@ -270,7 +294,7 @@ registerModel({
          * Reference of the "load more" item. Useful to trigger load more
          * on scroll when it becomes visible.
          */
-        loadMoreRef: attr(),
+        loadMoreRef: attr({ ref: 'loadMore' }),
         /**
          * States the message views used to display this thread view owner's messages.
          */
@@ -304,5 +328,9 @@ registerModel({
         scrollTop: attr(),
         thread: one('Thread', { related: 'threadViewOwner.thread' }),
         threadViewOwner: one('ThreadView', { identifying: true, inverse: 'messageListView' }),
+        /**
+         * Snapshot computed during willPatch, which is used by patched.
+         */
+        willPatchSnapshot: attr(),
     },
 });
