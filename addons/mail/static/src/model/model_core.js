@@ -35,6 +35,20 @@ function addContextToErrors(func, contextMessage) {
 }
 
 /**
+ * Adds the provided `componentSetup` to the model specified by the `modelName`.
+ *
+ * @param {string} modelName The name of the model to which to add the
+ * componentSetup function.
+ * @param {Function} componentSetup The componentSetup function to be added.
+ */
+function addComponentSetup(modelName, componentSetup) {
+    if (typeof componentSetup !== 'function') {
+        throw new Error(`Cannot add componentSetup to model ${modelName}: componentSetup must be a function (current type: "${typeof componentSetup}").`);
+    }
+    registry.get(modelName).set('componentSetup', componentSetup);
+}
+
+/**
  * Adds the provided fields to the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to add the fields.
@@ -272,6 +286,21 @@ function assertNameIsAvailableOnRecords(name, modelDefinition) {
     }
 }
 
+function patchComponentSetup({ name, componentSetup }) {
+    const originalComponentSetup = registry.get(name).get('componentSetup');
+    if (!originalComponentSetup) {
+        addComponentSetup(name, componentSetup);
+        return;
+    }
+    if (typeof componentSetup !== 'function') {
+        throw new Error(`Cannot patch componentSetup of model ${name}: componentSetup must be a function (current type: "${typeof componentSetup}").`);
+    }
+    registry.get(name).set('componentSetup', function () {
+        this._super = originalComponentSetup;
+        return componentSetup.call(this);
+    })
+}
+
 function patchFields(patch) {
     const newFieldsToAdd = Object.create(null);
     for (const [fieldName, fieldData] of Object.entries(patch.fields)) {
@@ -417,7 +446,7 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
     if (template) {
         registry.get(name).set('template', template);
         if (componentSetup) {
-            registry.get(name).set('componentSetup', componentSetup);
+            addComponentSetup(name, componentSetup);
         }
     }
     if (lifecycleHooks) {
@@ -443,17 +472,18 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
     }
 }
 
-export function registerPatch({ fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
+export function registerPatch({ componentSetup, fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
     if (!name) {
         throw new Error("Patch is lacking the name of the model to be patched.");
     }
-    const allowedSectionNames = ['name', 'lifecycleHooks', 'modelMethods', 'recordMethods', 'fields', 'onChanges'];
+    const allowedSectionNames = ['name', 'componentSetup', 'lifecycleHooks', 'modelMethods', 'recordMethods', 'fields', 'onChanges'];
     const invalidSectionNames = Object.keys(arguments['0']).filter(x => !allowedSectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
         throw new Error(`Error while registering patch for model "${name}": patch definition contains unsupported key(s): ${invalidSectionNames.join(", ")}`);
     }
     patches.push({
         name,
+        componentSetup: componentSetup || undefined,
         lifecycleHooks: lifecycleHooks || {},
         modelMethods: modelMethods || {},
         recordMethods: recordMethods || {},
@@ -485,6 +515,9 @@ export const patchesAppliedPromise = makeDeferred();
         const definition = registry.get(patch.name);
         if (!definition) {
             throw new Error(`Cannot patch model "${patch.name}": there is no model registered under this name.`);
+        }
+        if (patch.componentSetup) {
+            patchComponentSetup(patch);
         }
         patchLifecycleHooks(patch);
         patchModelMethods(patch);
