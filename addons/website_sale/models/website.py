@@ -8,11 +8,6 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import url_for
-from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
-
-SEARCH_TYPE_MODELS['products'] |= 'product.public.category', 'product.template'
-SEARCH_TYPE_MODELS['product_categories_only'] |= 'product.public.category',
-SEARCH_TYPE_MODELS['products_only'] |= 'product.template',
 
 _logger = logging.getLogger(__name__)
 
@@ -493,6 +488,14 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
+
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if search_type in ['products', 'product_categories_only', 'all']:
+            result.append(self.env['product.public.category']._search_get_detail(self, order, options))
+        if search_type in ['products', 'products_only', 'all']:
+            result.append(self.env['product.template']._search_get_detail(self, order, options))
+        return result
 
     def _get_product_page_proportions(self):
         """
