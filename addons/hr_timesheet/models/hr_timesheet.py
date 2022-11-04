@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from functools import reduce
 from lxml import etree
 import re
 
@@ -14,14 +15,26 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def _get_favorite_project_id(self, employee_id=False):
-        employee_id = employee_id or self.env.user.employee_id.id
-        last_timesheet_ids = self.search([
-            ('employee_id', '=', employee_id),
-            ('project_id', '!=', False),
-        ], limit=5)
-        if len(last_timesheet_ids.project_id) == 1:
-            return last_timesheet_ids.project_id.id
-        return False
+        employee_ids = [employee_id] if employee_id else self.env.user.employee_ids.ids
+        last_timesheets_per_project_id = {
+            group['project_id'][0]: len(group['ids'])
+            for group in self.sudo().read_group(
+                domain=[
+                    ('employee_id', 'in', employee_ids),
+                    ('project_id', '!=', False),
+                ],
+                fields=['project_id', 'ids:array_agg(id)'],
+                groupby=['project_id'],
+                limit=10
+            )
+        }
+        if not last_timesheets_per_project_id:
+            return self.env.company.internal_project_id.id
+        return reduce(
+            lambda acc, fn: max(acc, fn, key=lambda item: item[1]),
+            last_timesheets_per_project_id.items()
+        )[0]
+
 
     @api.model
     def default_get(self, field_list):
