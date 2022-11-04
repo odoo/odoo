@@ -75,6 +75,7 @@ export class ForecastKanbanDynamicGroupList extends ForecastKanbanModel.DynamicG
         const result = await super.load(...arguments);
         const lastGroup = this.groups.filter((grp) => grp.value).slice(-1)[0];
         if (lastGroup) {
+            // Moment is depreciating. We use Luxon now
             this.fillTemporalPeriod.setEnd(moment.utc(lastGroup.range[this.groupBy[0]].to));
         }
         return result;

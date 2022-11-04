@@ -39,7 +39,7 @@ export class ForecastKanbanRenderer extends CrmKanbanRenderer {
                 granularity: granularity || "month",
             })
             .expand();
-        await this.props.list.model.root.load();
+        await this.props.list.model.root.load(); // list should be the root No ?
         this.props.list.model.notify();
     }
 

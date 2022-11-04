@@ -6,7 +6,7 @@ import { checkRainbowmanMessage } from "@crm/views/check_rainbowman_message";
 export class CrmKanbanModel extends KanbanModel {
     setup(params, { orm, effect }) {
         super.setup(...arguments);
-        this.ormService = orm;
+        this.ormService = orm; // why not using the ormBatcher ?
         this.effect = effect;
     }
 }

@@ -13,7 +13,8 @@ export function useGenerateLeadsButton() {
         component.isSalesManager = await user.hasGroup("sales_team.group_sale_manager");
     });
 
-    component.onClickGenerateLead = () => {
+    // Not a good idea to add a prop directly to the component.
+    return () => {
         const leadType = component.props.context.default_type;
         action.doAction({
             name: "Generate Leads",

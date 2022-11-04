@@ -14,6 +14,7 @@ export async function checkRainbowmanMessage(orm, effect, recordId) {
     }
 }
 
+// Not use ?
 export function useCheckRainbowman() {
     const component = useComponent();
     const orm = useService("orm");

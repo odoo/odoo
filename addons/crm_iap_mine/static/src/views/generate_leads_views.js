@@ -10,7 +10,7 @@ import { listView } from "@web/views/list/list_view";
 export class LeadMiningRequestListController extends ListController {
     setup() {
         super.setup();
-        useGenerateLeadsButton();
+        this.onClickGenerateLead = useGenerateLeadsButton();
     }
 }
 
@@ -19,11 +19,11 @@ registry.category("views").add("crm_iap_lead_mining_request_tree", {
     Controller: LeadMiningRequestListController,
     buttonTemplate: "LeadMiningRequestListView.buttons",
 });
-
+// why patch it and not replace it in the registry ?
 patch(crmKanbanView.Controller.prototype, "crm_iap_lead_mining_request_kanban", {
     setup() {
         this._super(...arguments);
-        useGenerateLeadsButton();
+        this.onClickGenerateLead = useGenerateLeadsButton();
     },
 });
 crmKanbanView.buttonTemplate = "LeadMiningRequestKanbanView.buttons";
