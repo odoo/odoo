@@ -568,7 +568,6 @@ class Project(models.Model):
                 for res in projects_read_group
                 if res['analytic_account_id'] and res['analytic_account_id_count'] == 1
             ])
-            analytic_account_to_update.write({'name': self.name})
         return res
 
     def action_unlink(self):
