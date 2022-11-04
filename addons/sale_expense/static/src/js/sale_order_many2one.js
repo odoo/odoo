@@ -5,10 +5,6 @@ import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { registry } from "@web/core/registry";
 
 export class OrderField extends Many2OneField {
-    setup() {
-        super.setup();
-    }
-
     /**
      * @override
      */

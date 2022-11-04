@@ -63,7 +63,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
      _openMatrixConfigurator: function (jsonInfo, productTemplateId, editedCellAttributes) {
         const infos = JSON.parse(jsonInfo);
         const saleOrderRecord = this.props.record.model.root;
-        const MatrixDialog = new Dialog(this, {
+        const MatrixDialog = new Dialog(this, { // use the new dialog
             title: this.env._t('Choose Product Variants'),
             size: 'extra-large', // adapt size depending on matrix size?
             $content: $(qweb.render(

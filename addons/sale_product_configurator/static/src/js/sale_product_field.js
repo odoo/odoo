@@ -66,7 +66,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         const saleOrderRecord = this.props.record.model.root;
         const pricelistId = saleOrderRecord.data.pricelist_id ? saleOrderRecord.data.pricelist_id[0] : false;
         const productTemplateId = this.props.record.data.product_template_id[0];
-        const $modal = $(
+        const $modal = $( // remove jquery
             await this.rpc(
                 "/sale_product_configurator/configure",
                 {
@@ -188,7 +188,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         var customAttributeValues = mainProduct.product_custom_attribute_values;
         var customValuesCommands = [{ operation: "DELETE_ALL" }];
         if (customAttributeValues && customAttributeValues.length !== 0) {
-            _.each(customAttributeValues, function (customValue) {
+            _.each(customAttributeValues, function (customValue) { // remove underscore
                 customValuesCommands.push({
                     operation: "CREATE",
                     context: [
