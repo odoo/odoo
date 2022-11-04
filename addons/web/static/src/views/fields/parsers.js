@@ -33,8 +33,8 @@ function evaluateMathematicalExpression(expr, context = {}) {
  *
  * @param {string} value
  * @param {Object} options - additional options
- * @param {string|RegExp} [options.thousandsSep] - the thousands separator used in the value
- * @param {string|RegExp} [options.decimalPoint] - the decimal point used in the value
+ * @param {string|RegExp} options.thousandsSep - the thousands separator used in the value
+ * @param {string|RegExp} options.decimalPoint - the decimal point used in the value
  * @returns {number}
  */
 function parseNumber(value, options = {}) {
@@ -66,7 +66,7 @@ export class InvalidNumberError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value) {
-    const thousandsSepRegex = localization.thousandsSep;
+    const thousandsSepRegex = localization.thousandsSep || "";
     const decimalPointRegex = localization.decimalPoint;
     let parsed = parseNumber(value, {
         thousandsSep: thousandsSepRegex,
@@ -116,7 +116,7 @@ export function parseFloatTime(value) {
  * @returns {number} an integer
  */
 export function parseInteger(value) {
-    const thousandsSepRegex = localization.thousandsSep;
+    const thousandsSepRegex = localization.thousandsSep || "";
     const decimalPointRegex = localization.decimalPoint;
     let parsed = parseNumber(value, {
         thousandsSep: thousandsSepRegex,

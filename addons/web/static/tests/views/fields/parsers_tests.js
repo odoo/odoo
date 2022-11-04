@@ -39,6 +39,9 @@ QUnit.module("Fields", (hooks) => {
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
         assert.strictEqual(parseFloat("1.234,567"), 1234.567);
+
+        patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: false });
+        assert.strictEqual(parseFloat("1234,567"), 1234.567);
     });
 
     QUnit.test("parseFloatTime", function (assert) {
@@ -73,6 +76,9 @@ QUnit.module("Fields", (hooks) => {
         expectInvalidNumberError(assert, parseInteger, "1.234,567");
         // fallback to en localization
         assert.strictEqual(parseInteger("1,000,000"), 1000000);
+
+        patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: false });
+        assert.strictEqual(parseInteger("1000000"), 1000000);
     });
 
     QUnit.test("parsePercentage", function (assert) {
