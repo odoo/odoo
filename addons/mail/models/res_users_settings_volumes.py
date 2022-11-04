@@ -22,6 +22,9 @@ class ResUsersSettingsVolumes(models.Model):
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A volume setting must have a partner or a guest."),
     ]
 
+    def name_get(self):
+        return [(rec.id, f'{rec.user_setting_id.user_id.name} - {rec.partner_id.name or rec.guest_id.name}') for rec in self]
+
     def _discuss_users_settings_volume_format(self):
         return [{
             'id': volume_setting.id,
