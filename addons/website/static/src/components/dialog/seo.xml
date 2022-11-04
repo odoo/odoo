@@ -143,7 +143,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
                         </div>
-                        <input type="text" t-model="seoContext.seoName" class="form-control" t-att-placeholder="props.seoNameDefault" />
+                        <input type="text" class="form-control" t-att-placeholder="props.seoNameDefault"
+                               t-on-input="_updateInputValue" t-att-value="seoContext.seoName"/>
                         <div class="input-group-append" title="Unalterable unique identifier">
                             <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
                         </div>
