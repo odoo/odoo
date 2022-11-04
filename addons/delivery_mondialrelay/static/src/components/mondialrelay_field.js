@@ -36,6 +36,7 @@ export class MondialRelayField extends Component {
                 if (!el) {
                     return;
                 }
+                // jquery is deprecated. Is it not possible to add this directly in the template?
                 this.insertWidget($(el));
             },
             () => [this.state.libLoaded && this.root.el],
