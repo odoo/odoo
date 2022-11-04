@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
@@ -44,6 +44,7 @@ TYPE_REVERSE_MAP = {
     'in_receipt': 'entry',
 }
 
+PartialKey = namedtuple('PartialKey', ['move_id', 'is_exchange', 'is_write_off'])
 
 class AccountMove(models.Model):
     _name = "account.move"
@@ -1111,7 +1112,8 @@ class AccountMove(models.Model):
         invoice_count = invoice_count or len([line for line in other_lines if line.reconciled])
         if other_statement_lines:
             for other_line in other_statement_lines:
-                reconciled_dict_copy = reconciled_dict['payments'][other_line.move_id.id].copy()
+                payment_key = PartialKey(move_id=other_line.move_id.id, is_exchange=False, is_write_off=False)
+                reconciled_dict_copy = reconciled_dict[payment_key].copy()
                 amount = other_line.company_currency_id.round(other_line.balance/invoice_count)
                 if move_foreign_currency:
                     amount = other_line.company_currency_id._convert(amount, move_foreign_currency, other_line.company_id, move_date)
@@ -1120,7 +1122,8 @@ class AccountMove(models.Model):
                     'is_write_off': True,
                     'currency_id': move_foreign_currency or other_line.company_currency_id.id,
                 })
-                reconciled_dict['write_offs'][other_line.move_id.id] = reconciled_dict_copy
+                write_off_key = PartialKey(move_id=other_line.move_id.id, is_exchange=False, is_write_off=True)
+                reconciled_dict[write_off_key] = reconciled_dict_copy
 
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):
@@ -1132,18 +1135,20 @@ class AccountMove(models.Model):
                 continue
 
             reconciled_vals = []
-            reconciled_dict = defaultdict(lambda: defaultdict(lambda: {
+            exchange_moves = set()
+            reconciled_dict = defaultdict(lambda: {
                 'amount_foreign_total': 0.0,
                 'amount': 0.0,
-            }))
+            })
             reconciled_partials = move._get_all_reconciled_invoice_partials()
 
             for reconciled_partial in reconciled_partials:
                 counterpart_line = reconciled_partial['aml']
                 amount = reconciled_partial['amount']
-                partial_type = 'payments' if not reconciled_partial['is_exchange'] else 'exchange'
                 is_statement, invoice_count = False, False
-                if (counterpart_line.statement_line_id or counterpart_line.payment_id.reconciled_statement_line_ids) and partial_type == 'payments':
+                if reconciled_partial['is_exchange']:
+                    exchange_moves.add(counterpart_line.move_id.id)
+                if (counterpart_line.statement_line_id or counterpart_line.payment_id.reconciled_statement_line_ids) and not reconciled_partial['is_exchange']:
                     if counterpart_line.payment_id.reconciled_invoice_ids:
                         invoice_count = len(counterpart_line.payment_id.reconciled_invoice_ids)
                     counterpart_line = counterpart_line.statement_line_id or counterpart_line.payment_id.reconciled_statement_line_ids
@@ -1160,7 +1165,9 @@ class AccountMove(models.Model):
                 else:
                     foreign_currency = False
 
-                reconciled_dict[partial_type][counterpart_line.move_id.id].update({
+                partial_key = PartialKey(move_id=counterpart_line.move_id.id, is_exchange=reconciled_partial['is_exchange'], is_write_off=False)
+
+                reconciled_dict[partial_key].update({
                     'name': counterpart_line.name,
                     'journal_name': counterpart_line.journal_id.name,
                     'currency_id': move.company_id.currency_id.id if reconciled_partial['is_exchange'] else reconciled_partial['currency'].id,
@@ -1175,24 +1182,19 @@ class AccountMove(models.Model):
                     'is_exchange': reconciled_partial['is_exchange'],
                     'is_write_off': False,
                 })
-                reconciled_dict[partial_type][counterpart_line.move_id.id]['amount'] += amount
-                reconciled_dict[partial_type][counterpart_line.move_id.id]['amount_foreign_total'] += abs(counterpart_line.amount_currency)
-                reconciled_dict[partial_type][counterpart_line.move_id.id]['amount_foreign_currency'] = foreign_currency and formatLang(self.env, reconciled_dict[partial_type][counterpart_line.move_id.id]['amount_foreign_total'], currency_obj=foreign_currency)
+                reconciled_dict[partial_key]['amount'] += amount
+                reconciled_dict[partial_key]['amount_foreign_total'] += abs(counterpart_line.amount_currency)
+                reconciled_dict[partial_key]['amount_foreign_currency'] = foreign_currency and formatLang(self.env, reconciled_dict[partial_key]['amount_foreign_total'], currency_obj=foreign_currency)
 
                 if is_statement:
                     foreign_currency = reconciled_partial['currency'] if reconciled_partial['currency'] != counterpart_line.company_id.currency_id else False
-                    self._get_writeoff_lines(other_lines, reconciled_dict, invoice_count, foreign_currency, foreign_currency and counterpart_line.date, reconciled_dict['exchange'].keys())
+                    self._get_writeoff_lines(other_lines, reconciled_dict, invoice_count, foreign_currency, foreign_currency and counterpart_line.date, exchange_moves)
 
-            if reconciled_dict['write_offs']:
-                for payment in reconciled_dict['payments']:
-                    for write_off in [w for w in reconciled_dict['write_offs'] if w == payment]:
-                        reconciled_dict['payments'][payment]['amount'] -= reconciled_dict['write_offs'][write_off]['amount']
-            for payment in reconciled_dict['payments']:
-                reconciled_vals.append(reconciled_dict['payments'][payment])
-            for write_off in reconciled_dict['write_offs']:
-                reconciled_vals.append(reconciled_dict['write_offs'][write_off])
-            for exchange in reconciled_dict['exchange']:
-                reconciled_vals.append(reconciled_dict['exchange'][exchange])
+            for partial in reconciled_dict:
+                write_off_key = PartialKey(partial.move_id, is_exchange=False, is_write_off=True)
+                if reconciled_dict.get(write_off_key) and partial != write_off_key:
+                    reconciled_dict[partial]['amount'] -= reconciled_dict[write_off_key]['amount']
+                reconciled_vals.append(reconciled_dict[partial])
             payments_widget_vals['content'] = reconciled_vals
 
             if payments_widget_vals['content']:
