@@ -31,7 +31,7 @@ export class ExpenseFormController extends FormController {
                         resolve(true);
                     },
                 }, {
-                    onClose: resolve.bind(null, false),
+                    onClose: resolve.bind(null, false), // Why bind to null ?
                 });
             });
         }

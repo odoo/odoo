@@ -2,7 +2,53 @@
 
 import { useBus, useService } from '@web/core/utils/hooks';
 
-const { useRef, useEffect, useState } = owl;
+const { useComponent, useRef, useEffect, useState } = owl;
+
+export function useExpenseDocumentDropZone() {
+    const component = useComponent();
+
+    const dragState = useState({
+        showDragZone: false,
+    });
+
+    function highlight(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        dragState.showDragZone = true;
+    }
+
+    function unhighlight(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        dragState.showDragZone = false;
+    }
+
+    async function onDrop(ev) {
+        ev.preventDefault();
+        await component.env.bus.trigger("change_file_input", {
+            files: ev.dataTransfer.files,
+        });
+    }
+
+    useEffect(
+        (el) => {
+            if (!el) {
+                return;
+            }
+            el.addEventListener("dragover", highlight);
+            el.addEventListener("dragleave", unhighlight);
+            el.addEventListener("drop", onDrop);
+            return () => {
+                el.removeEventListener("dragover", highlight);
+                el.removeEventListener("dragleave", unhighlight);
+                el.removeEventListener("drop", onDrop);
+            };
+        },
+        () => [document.querySelector('.o_content')] // Maybe use a t-ref
+    );
+
+    return dragState;
+}
 
 export const ExpenseDocumentDropZone = {
     setup() {
@@ -47,6 +93,7 @@ export const ExpenseDocumentDropZone = {
 
     async onDrop(ev) {
         ev.preventDefault();
+        // We should probably pass a callBack to the renderer or add a sub env in the controller with your bus
         await this.env.bus.trigger("change_file_input", {
             files: ev.dataTransfer.files,
         });        

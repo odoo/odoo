@@ -7,7 +7,7 @@ const { onMounted, onPatched, useRef } = owl;
 export const ExpenseMobileQRCode = {
     setup() {
         this._super();
-        this.root = useRef('root');
+        this.root = useRef('root'); // why ?
         this.actionService = useService('action');
 
         onMounted(this.bindAppsIcons);

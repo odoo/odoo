@@ -11,6 +11,7 @@ export class TimeOffDashboard extends Component {
         this.state = useState({
             holidays: [],
         });
+        // Maybe use a subEvent or a callBack
         useBus(this.env.timeOffBus, 'update_dashboard', async () => {
             await this.loadDashboardData()
         });

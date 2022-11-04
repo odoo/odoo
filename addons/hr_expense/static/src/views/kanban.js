@@ -5,18 +5,24 @@ import { patch } from '@web/core/utils/patch';
 
 import { ExpenseDashboard } from '../components/expense_dashboard';
 import { ExpenseMobileQRCode } from '../mixins/qrcode';
-import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/document_upload';
+import { ExpenseDocumentUpload, ExpenseDocumentDropZone, useExpenseDocumentDropZone } from '../mixins/document_upload';
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanController } from '@web/views/kanban/kanban_controller';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 
+// We should probably use hooks instead of patches
 export class ExpenseKanbanController extends KanbanController {}
 patch(ExpenseKanbanController.prototype, 'expense_kanban_controller_upload', ExpenseDocumentUpload);
 
-export class ExpenseKanbanRenderer extends KanbanRenderer {}
+export class ExpenseKanbanRenderer extends KanbanRenderer {
+    setup() {
+        super.setup();
+        this.dragState = useExpenseDocumentDropZone();
+    }
+}
 patch(ExpenseKanbanRenderer.prototype, 'expense_kanban_renderer_qrcode', ExpenseMobileQRCode);
-patch(ExpenseKanbanRenderer.prototype, 'expense_kanban_renderer_qrcode_dzone', ExpenseDocumentDropZone);
+// patch(ExpenseKanbanRenderer.prototype, 'expense_kanban_renderer_qrcode_dzone', ExpenseDocumentDropZone);
 ExpenseKanbanRenderer.template = 'hr_expense.KanbanRenderer';
 
 export class ExpenseDashboardKanbanRenderer extends ExpenseKanbanRenderer {}
