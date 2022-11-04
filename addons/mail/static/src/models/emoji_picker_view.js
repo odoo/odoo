@@ -20,7 +20,11 @@ registerModel({
         },
     },
     fields: {
-        actionListView: one('EmojiPickerHeaderActionListView', { default: {}, isCausal: true, inverse: 'owner' }),
+        __dummyActionView: one('EmojiPickerHeaderActionView', { inverse: '__ownerAsDummy' }),
+        actionViews: many('EmojiPickerHeaderActionView', {
+            inverse: 'owner',
+            sort: [['smaller-first', 'sequence']],
+        }),
         activeCategoryByGridViewScroll: one('EmojiPickerView.Category'),
         activeCategory: one('EmojiPickerView.Category', {
             compute() {

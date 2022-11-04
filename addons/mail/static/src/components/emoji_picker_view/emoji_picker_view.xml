@@ -10,7 +10,9 @@
                     </t>
                 </div>
                 <span class="flex-grow-1"/>
-                <EmojiPickerHeaderActionListView t-if="actionListView" record="actionListView"/>
+            <div class="o_EmojiPickerHeaderActionListView d-flex">
+                <EmojiPickerHeaderActionView t-foreach="actionViews" t-as="actionView" t-key="actionView" record="actionView"/>
+            </div>
             </div>
             <EmojiSearchBarView record="emojiSearchBarView"/>
             <EmojiGridView record="emojiGridView"/>
