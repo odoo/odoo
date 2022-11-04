@@ -5,7 +5,7 @@ import datetime
 import logging
 import re
 import uuid
-from collections import Counter, OrderedDict
+from collections import Counter, OrderedDict, defaultdict
 from itertools import product
 from werkzeug import urls
 
@@ -90,14 +90,26 @@ class Survey(models.Model):
     def _compute_survey_statistic(self):
         UserInput = self.env['survey.user_input']
 
-        sent_survey = UserInput.search([('survey_id', 'in', self.ids), ('type', '=', 'link')])
-        start_survey = UserInput.search(['&', ('survey_id', 'in', self.ids), '|', ('state', '=', 'skip'), ('state', '=', 'done')])
-        complete_survey = UserInput.search([('survey_id', 'in', self.ids), ('state', '=', 'done')])
+        tot_sent_groups = UserInput.read_group(domain=[('type', '=', 'link')], fields=['id:count'], groupby=["survey_id"], lazy=False)
+        tot_start_groups = UserInput.read_group(domain=[('state', 'in', ['skip', 'done'])], fields=['id:count'], groupby=["survey_id"], lazy=False)
+        tot_comp_groups = UserInput.read_group(domain=[('state', '=', 'done')], fields=['id:count'], groupby=["survey_id"], lazy=False)
+
+        # if some stats for a certain survey don't exist, assume that those stats are equal to 0
+        stats = defaultdict(lambda: defaultdict(int))
+
+        for sent_dict in tot_sent_groups:
+            stats[sent_dict["survey_id"][0]]["sent"] = sent_dict["__count"]
+
+        for start_dict in tot_start_groups:
+            stats[start_dict["survey_id"][0]]["start"] = start_dict["__count"]
+
+        for comp_dict in tot_comp_groups:
+            stats[comp_dict["survey_id"][0]]["comp"] = comp_dict["__count"]
 
         for survey in self:
-            survey.tot_sent_survey = len(sent_survey.filtered(lambda user_input: user_input.survey_id == survey))
-            survey.tot_start_survey = len(start_survey.filtered(lambda user_input: user_input.survey_id == survey))
-            survey.tot_comp_survey = len(complete_survey.filtered(lambda user_input: user_input.survey_id == survey))
+            survey.tot_sent_survey = stats[survey.id]["sent"]
+            survey.tot_start_survey = stats[survey.id]["start"]
+            survey.tot_comp_survey = stats[survey.id]["comp"]
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
