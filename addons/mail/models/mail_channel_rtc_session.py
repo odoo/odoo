@@ -10,6 +10,7 @@ from odoo import api, fields, models
 class MailRtcSession(models.Model):
     _name = 'mail.channel.rtc.session'
     _description = 'Mail RTC session'
+    _rec_name = 'channel_member_id'
 
     channel_member_id = fields.Many2one('mail.channel.member', required=True, ondelete='cascade')
     channel_id = fields.Many2one('mail.channel', related='channel_member_id.channel_id', store=True, readonly=True)
