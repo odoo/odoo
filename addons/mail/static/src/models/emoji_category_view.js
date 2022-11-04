@@ -11,7 +11,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.emojiPickerViewOwner.emojiSearchBarView.reset();
+            this.emojiPickerViewOwner.reset();
             this.emojiPickerViewOwner.emojiGridView.update({ categorySelectedByUser: this.viewCategory });
         },
         /**

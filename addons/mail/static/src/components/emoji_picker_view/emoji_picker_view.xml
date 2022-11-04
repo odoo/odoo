@@ -14,7 +14,12 @@
                 <EmojiPickerHeaderActionView t-foreach="actionViews" t-as="actionView" t-key="actionView" record="actionView"/>
             </div>
             </div>
-            <EmojiSearchBarView record="emojiSearchBarView"/>
+            <div class="o_EmojiSearchBarView overflow-auto d-flex flex-shrink-0 p-2 flex-column border-bottom">
+                <div class="o_EmojiSearchBarView_inputContainer d-flex flex-grow-1 align-items-center">
+                    <input class="o_EmojiSearchBarView_searchInput o_input form-control overflow-auto flex-fill" t-att-placeholder="placeholder" t-on-focusin="onFocusinInput" t-on-focusout="onFocusoutInput" t-on-input="onInput" t-ref="input"/>
+                    <i class="o_EmojiSearchBarView_icon oi oi-search ps-2" title="Search..." role="img" aria-label="Search..."/>
+                </div>
+            </div>
             <EmojiGridView record="emojiGridView"/>
         </div>
     </t>
