@@ -41,6 +41,14 @@ class AccountInvoiceSend(models.TransientModel):
         })
         return res
 
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        a = len(res)
+        if (a==1):
+            res.composer_id.template_id = res.template_id.id
+        return res
+
     @api.onchange('invoice_ids')
     def _compute_composition_mode(self):
         for wizard in self:
