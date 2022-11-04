@@ -5,9 +5,12 @@ import hashlib
 import inspect
 import json
 import logging
+import operator
 import re
 import requests
 
+from collections import defaultdict
+from functools import reduce
 from lxml import etree, html
 from psycopg2 import sql
 from werkzeug import urls
@@ -26,7 +29,7 @@ from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
 from odoo.tools.translate import _
-from odoo.tools import escape_psql, pycompat
+from odoo.tools import escape_psql, OrderedSet, pycompat
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +45,10 @@ DEFAULT_CDN_FILTERS = [
 ]
 
 DEFAULT_ENDPOINT = 'https://website.api.odoo.com'
+
+# TODO: Remove in master.
+SEARCH_TYPE_MODELS = defaultdict(OrderedSet)
+#: DO NOT USE: this breaks multitenancy, extend '_search_get_details' instead
 
 
 class Website(models.Model):
@@ -1474,7 +1481,21 @@ class Website(models.Model):
 
         :return: list of search details obtained from the `website.searchable.mixin`'s `_search_get_detail()`
         """
-        result = []
+        if SEARCH_TYPE_MODELS:
+            # TODO: Remove in master.
+            if search_type == 'all':
+                model_names = reduce(operator.ior, SEARCH_TYPE_MODELS.values())
+            else:
+                model_names = SEARCH_TYPE_MODELS[search_type]
+
+            result = list(
+                self.env[model_name]._search_get_detail(self, order, options)
+                for model_name in model_names
+                if model_name in self.env
+            )
+        else:
+            result = []
+
         if search_type in ['pages', 'all']:
             result.append(self.env['website.page']._search_get_detail(self, order, options))
         return result
