@@ -11,8 +11,8 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.emojiPickerView.emojiSearchBarView.reset();
-            this.emojiPickerView.emojiGridView.update({ categorySelectedByUser: this.viewCategory });
+            this.emojiPickerViewOwner.emojiSearchBarView.reset();
+            this.emojiPickerViewOwner.emojiGridView.update({ categorySelectedByUser: this.viewCategory });
         },
         /**
          * @param {MouseEvent} ev
@@ -35,8 +35,7 @@ registerModel({
     },
     fields: {
         category: one('EmojiCategory', { related: 'viewCategory.category' }),
-        emojiCategoryBarViewOwner: one('EmojiCategoryBarView', { identifying: true, inverse: 'emojiCategoryViews' }),
-        emojiPickerView: one('EmojiPickerView', { related: 'emojiCategoryBarViewOwner.emojiPickerViewOwner' }),
+        emojiPickerViewOwner: one('EmojiPickerView', { identifying: true, inverse: 'emojiCategoryViews' }),
         isActive: attr({
             compute() {
                 return Boolean(this.viewCategory.emojiPickerViewAsActive);

@@ -4,7 +4,11 @@
     <t t-name="mail.EmojiPickerView" owl="1">
         <div class="o_EmojiPickerView d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
             <div class="o_EmojiPickerHeaderView d-flex bg-100 border-bottom">
-                <EmojiCategoryBarView record="emojiCategoryBarView"/>
+                <div class="o_EmojiCategoryBarView d-flex flex-shrink-0 overflow-auto border-end">
+                    <t t-foreach="emojiCategoryViews" t-as="emojiCategoryView" t-key="emojiCategoryView.localId">
+                        <EmojiCategoryView record="emojiCategoryView"/>
+                    </t>
+                </div>
                 <span class="flex-grow-1"/>
                 <EmojiPickerHeaderActionListView t-if="actionListView" record="actionListView"/>
             </div>
