@@ -1160,6 +1160,7 @@
                                                widget="many2many_tags"
                                                string="Tax Grids"
                                                optional="show"
+                                               options="{'no_create': True}"
                                                domain="[
                                                     ('applicability', '=', 'taxes'),
                                                     '|', ('country_id', '=', parent.tax_country_id),
