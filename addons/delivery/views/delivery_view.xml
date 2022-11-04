@@ -97,12 +97,13 @@
                             <group name="delivery_details">
                                 <field name="product_id" context="{'default_detailed_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
                                 <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
-                                <label for="margin" string="Margin on Rate"/>
-                                <div>
-                                    <field name="margin" class="oe_inline"/>%
+                                <label for="margin" string="Margin on Rate" attrs="{'invisible': [ ('delivery_type', '=', 'fixed')]}"/>
+                                <div attrs="{'invisible': [ ('delivery_type', '=', 'fixed')]}">
+                                    <field name="margin" class="oe_inline" />%
                                 </div>
-                                <field name="free_over"/>
-                                <field name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
+                                <field name="fixed_margin" attrs="{'invisible': [ ('delivery_type', '=', 'fixed')]}"/>
+                                <field name="free_over" attrs="{'invisible': [ ('delivery_type', '=', ('base_on_rule'))]}"/>
+                                <field name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':['|',('free_over','=', False),('delivery_type', '=', ('base_on_rule'))]}"/>
                                 <field name="supports_shipping_insurance" invisible="1"/>
                                 <label for="shipping_insurance" String="Shipping Insurance" attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}"/>
                                 <div attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}">
