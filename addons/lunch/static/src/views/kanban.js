@@ -19,6 +19,7 @@ export class LunchKanbanRecord extends KanbanRecord {
     }
 }
 
+// you should use a hook
 export class LunchKanbanRenderer extends KanbanRenderer {}
 patch(LunchKanbanRenderer.prototype, 'lunch_kanban_renderer_mixin', LunchRendererMixin);
 

@@ -98,7 +98,7 @@ export class LunchDashboard extends Component {
             infos: {},
         });
 
-        useBus(this.env.bus, 'lunch_update_dashboard', () => this._fetchLunchInfos());
+        useBus(this.env.bus, 'lunch_update_dashboard', () => this._fetchLunchInfos()); // use a sub env or a callback
         onWillStart(async () => {
             await this._fetchLunchInfos()
             this.env.searchModel.updateLocationId(this.state.infos.user_location[0]);

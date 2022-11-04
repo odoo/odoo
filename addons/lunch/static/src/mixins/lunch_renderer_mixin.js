@@ -2,6 +2,7 @@
 
 import { useBus, useService } from "@web/core/utils/hooks";
 
+// should be a hook
 export const LunchRendererMixin = {
     setup() {
         this._super(...arguments);
