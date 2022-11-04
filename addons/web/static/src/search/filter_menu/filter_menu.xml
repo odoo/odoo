@@ -26,6 +26,7 @@
                                 t-att-class="{ selected: option.isActive }"
                                 payload="{ itemId: item.id, optionId: option.id }"
                                 parentClosingMode="'none'"
+                                checked="option.isActive ? 'true' : 'false'"
                                 t-esc="option.description"
                             />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
@@ -37,6 +38,7 @@
                         t-att-class="{ selected: item.isActive }"
                         payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
+                        checked="item.isActive ? 'true' : 'false'"
                         t-esc="item.description"
                     />
                 </t>

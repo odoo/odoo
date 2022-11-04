@@ -17,6 +17,7 @@
                         t-att-class="{ selected: item.isActive }"
                         payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
+                        checked="item.isActive ? 'true' : 'false'"
                     >
                         <span class="d-flex p-0 align-items-center justify-content-between">
                             <t t-esc="item.description"/>

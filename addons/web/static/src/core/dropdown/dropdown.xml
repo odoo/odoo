@@ -10,8 +10,11 @@
     >
       <button
         t-if="props.toggler !== 'parent'"
+        t-attf-id="menubutton_{{__owl__.id}}"
         class="dropdown-toggle"
         t-attf-class="{{props.togglerClass || ''}} {{hasParentDropdown ? 'dropdown-item' : ''}}"
+        t-att-aria-expanded="state.open ? 'true' : 'false'"
+        aria-haspopup="true "
         t-on-click="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
         t-att-title="props.title"
@@ -20,7 +23,7 @@
       >
         <t t-slot="toggler" />
       </button>
-      <div t-if="state.open" class="o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
+      <div t-if="state.open" class="o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass" role="menu" t-ref="menuRef">
         <t t-slot="default" />
       </div>
     </div>

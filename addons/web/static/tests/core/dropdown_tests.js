@@ -44,9 +44,10 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = owl.tags.xml`<Dropdown/>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
+        const buttonId = $(parent.el).find("button[id]:first").attr("id");
         assert.strictEqual(
             parent.el.outerHTML,
-            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle  "></button></div>'
+            `<div class="o-dropdown dropdown o-dropdown--no-caret"><button id="${buttonId}" class="dropdown-toggle  " aria-expanded="false" aria-haspopup="true "></button></div>`
         );
         assert.containsOnce(parent.el, "button.dropdown-toggle");
         assert.containsNone(parent.el, ".dropdown-menu");
@@ -57,7 +58,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = owl.tags.xml`<DropdownItem>coucou</DropdownItem>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        assert.strictEqual(parent.el.outerHTML, '<span class="dropdown-item">coucou</span>');
+        const menuitemId = $(parent.el).attr("id");
+        assert.strictEqual(parent.el.outerHTML, `<span id="${menuitemId}" role="menuitem" class="dropdown-item">coucou</span>`);
     });
 
     QUnit.test("DropdownItem (with href prop) can be rendered as <a/>", async (assert) => {
@@ -65,7 +67,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = owl.tags.xml`<DropdownItem href="'#'">coucou</DropdownItem>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        assert.strictEqual(parent.el.outerHTML, '<a href="#" class="dropdown-item">coucou</a>');
+        const menuitemId = $(parent.el).attr("id");
+        assert.strictEqual(parent.el.outerHTML, `<a href="#" id="${menuitemId}" role="menuitem" class="dropdown-item">coucou</a>`);
     });
 
     QUnit.test("DropdownItem: prevents click default with href", async (assert) => {

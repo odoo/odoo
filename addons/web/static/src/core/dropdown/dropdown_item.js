@@ -67,6 +67,10 @@ DropdownItem.props = {
         type: String,
         optional: true,
     },
+    checked: {
+        type: String,
+        optional: true,
+    },
 };
 DropdownItem.defaultProps = {
     parentClosingMode: ParentClosingMode.AllParents,

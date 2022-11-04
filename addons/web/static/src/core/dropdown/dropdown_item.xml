@@ -5,10 +5,13 @@
     <t
       t-tag="props.href ? 'a' : 'span'"
       t-att-href="props.href"
+      t-attf-id="menuitem_{{__owl__.id}}"
       class="dropdown-item"
+      t-att-role="props.checked === undefined ? 'menuitem': 'menuitemcheckbox'"
       t-on-click="onClick"
       t-att-title="props.title"
       t-att-data-hotkey="props.hotkey"
+      t-att-aria-checked="props.checked"
     >
       <t t-slot="default" />
     </t>

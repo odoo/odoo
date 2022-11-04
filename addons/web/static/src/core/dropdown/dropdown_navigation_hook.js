@@ -115,6 +115,10 @@ export function useDropdownNavigation() {
                 }
                 // Make myself active
                 navTarget.classList.add(ACTIVE_MENU_ELEMENT_CLASS);
+                // Make the actually-focused element be aware of the visually-focused one
+                if (navTarget.id && document.activeElement !== navTarget) {
+                    document.activeElement.setAttribute("aria-activedescendant", navTarget.id);
+                }
             };
 
             /** @type {MenuElement} */
