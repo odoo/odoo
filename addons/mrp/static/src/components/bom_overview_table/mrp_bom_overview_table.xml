@@ -40,16 +40,15 @@
                     </thead>
                     <tbody>
                         <BomOverviewLine
-                            bus="props.bus"
                             showOptions="props.showOptions"
                             currentWarehouseId="props.currentWarehouseId"
                             data="data"/>
 
                         <BomOverviewComponentsBlock
-                            bus="props.bus"
                             showOptions="props.showOptions"
                             currentWarehouseId="props.currentWarehouseId"
-                            data="data"/>
+                            data="data"
+                            changeFolded.bind="props.changeFolded"/>
                     </tbody>
                     <tfoot t-if="showCosts">
                         <tr>

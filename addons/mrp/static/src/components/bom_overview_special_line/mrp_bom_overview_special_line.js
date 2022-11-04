@@ -11,14 +11,6 @@ export class BomOverviewSpecialLine extends Component {
         this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
     }
 
-    //---- Handlers ----
-
-    onToggleFolded() {
-        if (this.props.parentId) {
-            this.props.bus.trigger(`toggle-fold-${this.props.parentId}`);
-        }
-    }
-
     //---- Getters ----
 
     get data() {
@@ -52,9 +44,7 @@ export class BomOverviewSpecialLine extends Component {
 
 BomOverviewSpecialLine.template = "mrp.BomOverviewSpecialLine";
 BomOverviewSpecialLine.props = {
-    bus: Object,
     type: String,
-    parentId: { type: String, optional: true },
     isFolded: { type: Boolean, optional: true },
     showOptions: {
         type: Object,
