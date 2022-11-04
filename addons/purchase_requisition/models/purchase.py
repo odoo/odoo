@@ -288,7 +288,7 @@ class PurchaseOrderLine(models.Model):
             'tag': 'display_notification',
             'params': {
                 'title': _("Nothing to clear"),
-                'message': _("There are no quantites to clear."),
+                'message': _("There are no quantities to clear."),
                 'sticky': False,
             }
         }
