@@ -151,47 +151,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         # Payment values
         if order_sudo.has_to_be_paid():
-            logged_in = not request.env.user._is_public()
-
-            acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-                order_sudo.company_id.id,
-                order_sudo.partner_id.id,
-                currency_id=order_sudo.currency_id.id,
-                sale_order_id=order_sudo.id,
-            )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
-            tokens = request.env['payment.token'].search([
-                ('acquirer_id', 'in', acquirers_sudo.ids),
-                ('partner_id', '=', order_sudo.partner_id.id)
-            ]) if logged_in else request.env['payment.token']
-
-            # Make sure that the partner's company matches the order's company.
-            if not payment_portal.PaymentPortal._can_partner_pay_in_company(
-                order_sudo.partner_id, order_sudo.company_id
-            ):
-                acquirers_sudo = request.env['payment.acquirer'].sudo()
-                tokens = request.env['payment.token']
-
-            fees_by_acquirer = {
-                acquirer: acquirer._compute_fees(
-                    order_sudo.amount_total,
-                    order_sudo.currency_id,
-                    order_sudo.partner_id.country_id,
-                ) for acquirer in acquirers_sudo.filtered('fees_active')
-            }
-            values.update({
-                'acquirers': acquirers_sudo,
-                'tokens': tokens,
-                'fees_by_acquirer': fees_by_acquirer,
-                'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
-                    acquirers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
-                ),
-                'amount': order_sudo.amount_total,
-                'currency': order_sudo.pricelist_id.currency_id,
-                'partner_id': order_sudo.partner_id.id,
-                'access_token': order_sudo.access_token,
-                'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
-                'landing_route': order_sudo.get_portal_url(),
-            })
+            values.update(self._get_payment_values(order_sudo))
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history_session_key = 'my_quotations_history'
@@ -202,6 +162,52 @@ class CustomerPortal(portal.CustomerPortal):
             order_sudo, access_token, values, history_session_key, False)
 
         return request.render('sale.sale_order_portal_template', values)
+
+    def _get_payment_values(self, order_sudo):
+        """ Return the payment-specific QWeb context values.
+
+        :param recordset order_sudo: The sales order being paid, as a `sale.order` record.
+        :return: The payment-specific values.
+        :rtype: dict
+        """
+        logged_in = not request.env.user._is_public()
+        acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
+            order_sudo.company_id.id,
+            order_sudo.partner_id.id,
+            currency_id=order_sudo.currency_id.id,
+            sale_order_id=order_sudo.id,
+        )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
+        tokens = request.env['payment.token'].search([
+            ('acquirer_id', 'in', acquirers_sudo.ids),
+            ('partner_id', '=', order_sudo.partner_id.id)
+        ]) if logged_in else request.env['payment.token']
+        # Make sure that the partner's company matches the order's company.
+        if not payment_portal.PaymentPortal._can_partner_pay_in_company(
+            order_sudo.partner_id, order_sudo.company_id
+        ):
+            acquirers_sudo = request.env['payment.acquirer'].sudo()
+            tokens = request.env['payment.token']
+        fees_by_acquirer = {
+            acquirer: acquirer._compute_fees(
+                order_sudo.amount_total,
+                order_sudo.currency_id,
+                order_sudo.partner_id.country_id,
+            ) for acquirer in acquirers_sudo.filtered('fees_active')
+        }
+        return {
+            'acquirers': acquirers_sudo,
+            'tokens': tokens,
+            'fees_by_acquirer': fees_by_acquirer,
+            'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
+                acquirers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
+            ),
+            'amount': order_sudo.amount_total,
+            'currency': order_sudo.pricelist_id.currency_id,
+            'partner_id': order_sudo.partner_id.id,
+            'access_token': order_sudo.access_token,
+            'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
+            'landing_route': order_sudo.get_portal_url(),
+        }
 
     @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
