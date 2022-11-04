@@ -304,9 +304,11 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const GPSPicker = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
-        'blur input': '_onInputBlur',
-    },
+    // Explicitly not consider all InputUserValueWidget events. E.g. we actually
+    // don't want input focusout messing with the google map API. Because of
+    // this, clicking on google map autocomplete suggestion on Firefox was not
+    // working properly.
+    events: {},
 
     /**
      * @constructor
@@ -483,9 +485,12 @@ const GPSPicker = InputUserValueWidget.extend({
         if (gmapPlace && gmapPlace.geometry) {
             this._gmapPlace = gmapPlace;
             const location = this._gmapPlace.geometry.location;
+            const oldValue = this._value;
             this._value = `(${location.lat()},${location.lng()})`;
             this._gmapCacheGPSToPlace[this._value] = gmapPlace;
-            this._onUserValueChange(ev);
+            if (oldValue !== this._value) {
+                this._onUserValueChange(ev);
+            }
         }
     },
 });
