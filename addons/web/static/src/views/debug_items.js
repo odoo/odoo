@@ -236,9 +236,7 @@ class SetDefaultDialog extends Component {
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    this.fieldsInfo[fieldName].options.isPassword ||
-                    fieldInfo.depends === undefined ||
-                    fieldInfo.depends.length !== 0
+                    this.fieldsInfo[fieldName].options.isPassword
                 ) {
                     return false;
                 }
