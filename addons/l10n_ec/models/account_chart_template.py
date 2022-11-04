@@ -10,8 +10,6 @@ class AccountChartTemplate(models.Model):
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         res = super(AccountChartTemplate, self)._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
         for journal in res:
-            # TODO figure out why the "account.chart.template" from l10n_ec_edi is being called
-            # TODO move this code to l10n_ec_edi's "account.chart.template" ?
             if journal.get('code') == 'INV' and company.country_code == 'EC':
                 journal.update({
                     'name': '001-001 ' + journal.get('name'),
