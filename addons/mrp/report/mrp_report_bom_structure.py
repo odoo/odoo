@@ -213,10 +213,10 @@ class ReportBomStructure(models.AbstractModel):
                 continue
             line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
             if line.child_bom_id:
-                component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
-                                               index=new_index, product_info=product_info, ignore_stock=ignore_stock)
+                component = self.with_context(parent_product_id=product.id)._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
+                                                                                          index=new_index, product_info=product_info, ignore_stock=ignore_stock)
             else:
-                component = self._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                component = self.with_context(parent_product_id=product.id)._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
             components.append(component)
             bom_report_line['bom_cost'] += component['bom_cost']
         bom_report_line['components'] = components
