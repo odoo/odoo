@@ -115,7 +115,7 @@ registerModel({
             },
         }),
         emojiGridView: one('EmojiGridView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
-        inputRef: attr(),
+        inputRef: attr({ ref: 'input' }),
         isDoFocus: attr({ default: false }),
         isFocused: attr({ default: false }),
         placeholder: attr({ required: true,
