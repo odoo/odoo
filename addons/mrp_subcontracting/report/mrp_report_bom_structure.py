@@ -67,8 +67,8 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _get_quantities_info(self, product, bom_uom, parent_bom, product_info):
         if parent_bom and parent_bom.type == 'subcontract' and product.detailed_type == 'product':
-            parent_product = parent_bom.product_id or parent_bom.product_tmpl_id.product_variant_id
-            route_info = product_info[parent_product.id].get(parent_bom.id, {})
+            parent_product_id = self.env.context.get('parent_product_id', False)
+            route_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
             if route_info and route_info['route_type'] == 'subcontract':
                 subcontracting_loc = route_info['supplier'].partner_id.property_stock_subcontractor
                 subloc_product = product.with_context(location=subcontracting_loc.id, warehouse=False).read(['free_qty', 'qty_available'])[0]
