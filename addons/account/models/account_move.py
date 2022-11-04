@@ -349,6 +349,7 @@ class AccountMove(models.Model):
     invoice_outstanding_credits_debits_widget = fields.Binary(
         groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_to_reconcile_info',
+        exportable=False,
     )
     invoice_has_outstanding = fields.Boolean(
         groups="account.group_account_invoice,account.group_account_readonly",
@@ -357,6 +358,7 @@ class AccountMove(models.Model):
     invoice_payments_widget = fields.Binary(
         groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_reconciled_info',
+        exportable=False,
     )
 
     # === Currency fields === #

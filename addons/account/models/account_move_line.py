@@ -110,6 +110,7 @@ class AccountMoveLine(models.Model):
         string='Cumulated Balance',
         compute='_compute_cumulated_balance',
         currency_field='company_currency_id',
+        exportable=False,
         help="Cumulated balance depending on the domain and the order chosen in the view.")
     currency_rate = fields.Float(
         compute='_compute_currency_rate',
@@ -1281,13 +1282,6 @@ class AccountMoveLine(models.Model):
             order_cumulated_balance=order,
         )
         return super(AccountMoveLine, contextualized).search_read(domain, fields, offset, limit, order)
-
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        res = super().fields_get(allfields, attributes)
-        if res.get('cumulated_balance'):
-            res['cumulated_balance']['exportable'] = False
-        return res
 
     def init(self):
         """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
