@@ -86,9 +86,9 @@
                     </group>
 
                     <group name="contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
-                        <div>
-                            <field name="contact_number" attrs="{'readonly': [('state', '=', 'done')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="col-md-1"/>
-                             <span class="col-md-6">Extra contacts per Company</span>
+                        <div colspan="2">
+                            <field name="contact_number" attrs="{'readonly': [('state', '=', 'done')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="oe_inline col-md-1"/>
+                            <span class="oe_inline col-md-6">Extra contacts per Company</span>
                         </div>
                     </group>
                     <group attrs="{'invisible': [('search_type', '!=', 'people')]}">
