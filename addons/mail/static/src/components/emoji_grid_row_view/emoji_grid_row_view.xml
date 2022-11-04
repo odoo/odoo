@@ -7,7 +7,7 @@
                 <span t-out="category.name"/>
             </div>
             <t t-else="">
-                <EmojiGridItemView t-foreach="items" t-as="item" t-key="item" className="'o_EmojiGridRowView_item'" record="item"/>
+                <EmojiView t-foreach="items" t-as="item" t-key="item" className="'o_EmojiGridRowView_item'" record="item"/>
             </t>
         </div>
     </t>

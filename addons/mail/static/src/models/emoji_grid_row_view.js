@@ -19,7 +19,7 @@ registerModel({
             },
         }),
         index: attr({ identifying: true }),
-        items: many('EmojiGridItemView', { inverse: 'emojiGridRowViewOwner' }),
+        items: many('EmojiView', { inverse: 'emojiGridRowViewOwner' }),
         emojiGridViewRowRegistryOwner: one('EmojiGridViewRowRegistry', { identifying: true, inverse: 'rows' }),
         viewCategory: one('EmojiPickerView.Category', { inverse: 'emojiGridRowView' }),
     },
