@@ -248,7 +248,7 @@ class ReportBomStructure(models.AbstractModel):
         price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
 
-        bom_key = 'no_bom'
+        bom_key = parent_bom.id
         if not product_info[key].get(bom_key):
             product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
         route_info = product_info[key].get(bom_key, {})
