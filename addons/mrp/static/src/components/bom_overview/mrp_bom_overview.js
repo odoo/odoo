@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { BomOverviewControlPanel } from "../bom_overview_control_panel/mrp_bom_overview_control_panel";
 import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
 
-const { Component, EventBus, onMounted, onWillStart, onWillUnmount, useState } = owl;
+const { Component, EventBus, onWillStart, useState } = owl;
 
 export class BomOverviewComponent extends Component {
     setup() {
@@ -40,23 +40,13 @@ export class BomOverviewComponent extends Component {
             await this.initBomData();
         });
 
-        onMounted(() => {
-            this.bus.addEventListener("change-fold", (ev) => this._onChangeFolded(ev.detail));
-            this.bus.addEventListener("change-display", (ev) => this._onChangeDisplay(ev.detail));
-            this.bus.addEventListener("change-quantity", (ev) => this._onChangeBomQuantity(ev.detail));
-            this.bus.addEventListener("change-variant", (ev) => this._onChangeVariant(ev.detail));
-            this.bus.addEventListener("change-warehouse", (ev) => this._onChangeWarehouse(ev.detail));
-            this.bus.addEventListener("print", (ev) => this._onClickPrint(ev.detail));
-        });
-
-        onWillUnmount(() => {
-            this.bus.removeEventListener("change-fold", (ev) => this._onChangeFolded(ev.detail));
-            this.bus.removeEventListener("change-display", (ev) => this._onChangeDisplay(ev.detail));
-            this.bus.removeEventListener("change-quantity", (ev) => this._onChangeBomQuantity(ev.detail));
-            this.bus.removeEventListener("change-variant", (ev) => this._onChangeVariant(ev.detail));
-            this.bus.removeEventListener("change-warehouse", (ev) => this._onChangeWarehouse(ev.detail));
-            this.bus.removeEventListener("print", (ev) => this._onClickPrint(ev.detail));
-        });
+        // It might be a better idea to pass callbacks to child components
+        useBus(this.bus, "change-fold", (ev) => this._onChangeFolded(ev.detail));
+        useBus(this.bus, "change-display", (ev) => this._onChangeDisplay(ev.detail));
+        useBus(this.bus, "change-quantity", (ev) => this._onChangeBomQuantity(ev.detail));
+        useBus(this.bus, "change-variant", (ev) => this._onChangeVariant(ev.detail));
+        useBus(this.bus, "change-warehouse", (ev) => this._onChangeWarehouse(ev.detail));
+        useBus(this.bus, "print", (ev) => this._onClickPrint(ev.detail));
     }
 
     //---- Data ----
