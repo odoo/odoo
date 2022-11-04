@@ -11,7 +11,9 @@
     'assets': {
         'web.assets_backend': [
             'auth_password_policy/static/src/password_meter.js',
+            'auth_password_policy/static/src/password_meter.xml',
             'auth_password_policy/static/src/password_field.js',
+            'auth_password_policy/static/src/password_field.xml',
         ],
         'web.assets_frontend': [
             'auth_password_policy/static/src/css/password_field.css',

@@ -3,7 +3,7 @@
 import { sprintf } from "@web/core/utils/strings";
 import { computeScore } from "./password_policy";
 
-const { Component, xml } = owl;
+const { Component } = owl;
 
 export class Meter extends Component {
     get title() {
@@ -19,11 +19,7 @@ export class Meter extends Component {
         return computeScore(this.props.password, this.props.required, this.props.recommended);
     }
 }
-Meter.template = xml`
-<meter class="o_password_meter"
-       min="0" low="0.5" high="0.99" max="1" optimum="1"
-       t-att-title="title" t-att-value="value"/>
-`;
+Meter.template = "auth_password_policy.Meter";
 Meter.props = {
     password: { type: String },
     required: Object,
