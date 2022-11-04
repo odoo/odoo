@@ -4,7 +4,7 @@ import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
 
 export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
     get context() {
-        const context = super.context;
+        const context = { ...super.context };
         if (context.createPersonalStageGroup) {
             context.default_user_id = context.uid;
             delete context.createPersonalStageGroup;

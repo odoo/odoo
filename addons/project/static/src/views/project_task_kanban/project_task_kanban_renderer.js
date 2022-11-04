@@ -13,7 +13,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         this.action = useService('action');
 
         this.isProjectManager = false;
-        onWillStart(this.onWillStart);
+        onWillStart(() => this.onWillStart());
     }
 
     get canMoveRecords() {

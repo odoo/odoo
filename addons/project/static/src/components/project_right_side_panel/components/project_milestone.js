@@ -52,7 +52,7 @@ export class ProjectMilestone extends Component {
 
     async onOpenMilestone() {
         if (!this.write_mutex) {
-            this.write_mutex = true;
+            this.write_mutex = true; // maybe use the Mutex utils ?
             this.props.open({
                 resModel: this.resModel,
                 resId: this.milestone.id,
@@ -73,7 +73,7 @@ export class ProjectMilestone extends Component {
                 this.resModel,
                 'toggle_is_reached',
                 [[this.milestone.id], !this.milestone.is_reached],
-            );
+            ); // you overwrite the reactive object. milestone is no longer reactive.
             this.state.colorClass = this._getColorClass();
             this.state.checkboxIcon = this._getCheckBoxIcon();
             this.write_mutex = false;

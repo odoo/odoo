@@ -9,7 +9,7 @@ export class BurndownChartSearchModel extends SearchModel {
     /**
      * @override
      */
-    setup(services) {
+    setup() {
         this.notificationService = useService("notification");
         super.setup(...arguments);
     }
@@ -17,7 +17,7 @@ export class BurndownChartSearchModel extends SearchModel {
     /**
      * @override
      */
-    async load(config) {
+    async load() {
         await super.load(...arguments);
         // Store date and stage_id searchItemId in the SearchModel for reuse in other functions.
         for (const searchItem of Object.values(this.searchItems)) {
