@@ -99,7 +99,8 @@ class PaymentTransaction(models.Model):
         # send order confirmation mail
         confirmed_sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
-        self._invoice_sale_orders()
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
+            self._invoice_sale_orders()
         res = super()._reconcile_after_done()
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice') and any(so.state in ('sale', 'done') for so in self.sale_order_ids):
             self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done')))._send_invoice()
@@ -143,19 +144,18 @@ class PaymentTransaction(models.Model):
         ])._send_invoice()
 
     def _invoice_sale_orders(self):
-        if str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
-            for trans in self.filtered(lambda t: t.sale_order_ids):
-                trans = trans.with_company(trans.acquirer_id.company_id)\
-                    .with_context(company_id=trans.acquirer_id.company_id.id)
-                confirmed_orders = trans.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))
-                if confirmed_orders:
-                    confirmed_orders._force_lines_to_invoice_policy_order()
-                    invoices = confirmed_orders._create_invoices()
-                    # Setup access token in advance to avoid serialization failure between
-                    # edi postprocessing of invoice and displaying the sale order on the portal
-                    for invoice in invoices:
-                        invoice._portal_ensure_token()
-                    trans.invoice_ids = [(6, 0, invoices.ids)]
+        for trans in self.filtered(lambda t: t.sale_order_ids):
+            trans = trans.with_company(trans.acquirer_id.company_id)\
+                .with_context(company_id=trans.acquirer_id.company_id.id)
+            confirmed_orders = trans.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))
+            if confirmed_orders:
+                confirmed_orders._force_lines_to_invoice_policy_order()
+                invoices = confirmed_orders._create_invoices()
+                # Setup access token in advance to avoid serialization failure between
+                # edi postprocessing of invoice and displaying the sale order on the portal
+                for invoice in invoices:
+                    invoice._portal_ensure_token()
+                trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, provider, separator, **values):
