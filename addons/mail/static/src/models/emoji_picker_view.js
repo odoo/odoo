@@ -50,7 +50,11 @@ registerModel({
                 return this.categories[0];
             },
         }),
-        emojiCategoryBarView: one('EmojiCategoryBarView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
+        emojiCategoryViews: many('EmojiCategoryView', { inverse: 'emojiPickerViewOwner',
+            compute() {
+                return this.categories.map(category => ({ viewCategory: category }));
+            },
+        }),
         emojiGridView: one('EmojiGridView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
         emojiSearchBarView: one('EmojiSearchBarView', { default: {}, inverse: 'emojiPickerView', readonly: true }),
         popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'emojiPickerView' }),
