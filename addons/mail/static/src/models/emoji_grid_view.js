@@ -121,12 +121,9 @@ registerModel({
             },
         }),
         listRef: attr({ ref: 'listRef' }),
-        loadingScreenView: one('EmojiGridLoadingScreen', { inverse: 'emojiGridViewOwner',
+        loadingText: attr({
             compute() {
-                if (!this.messaging.emojiRegistry.isLoaded) {
-                    return {};
-                }
-                return clear();
+                return this.env._t("Loading...");
             },
         }),
         nonSearchRowRegistry: one('EmojiGridViewRowRegistry', { default: {}, inverse: 'emojiGridViewOwnerAsNonSearch' }),
