@@ -17,10 +17,17 @@ export class AutoResizeImage extends Attachment {
             loaded: false,
         });
 
-        useEffect(() => {
-            this.image.el.addEventListener('load', () => this.onImageLoaded());
-            return this.image.el.removeEventListener('load', () => this.onImageLoaded());
-        }, () => []);
+        useEffect(
+            (el) => {
+                if (el) {
+                    el.addEventListener("load", () => this.onImageLoaded());
+                    return () => {
+                        el.removeEventListener("load", () => this.onImageLoaded());
+                    };
+                }
+            },
+            () => [this.image.el]
+        );
     }
 
     async onImageLoaded() {

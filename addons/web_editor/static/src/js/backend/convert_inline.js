@@ -105,7 +105,7 @@ function attachmentThumbnailToLinkImg($editable) {
  *
  * @param {JQuery} $editable
  */
-function bootstrapToTable($editable) {
+function bootstrapToTable($editable) { // jquery should no longer be present in the backend
     const editable = $editable.get(0);
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {

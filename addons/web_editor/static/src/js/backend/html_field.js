@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import legacyEnv from 'web.commonEnv';
-import { ComponentAdapter } from 'web.OwlCompatibility';
+import legacyEnv from 'web.commonEnv';//Why do you still have dependencies on legacy code?
+import { ComponentAdapter } from 'web.OwlCompatibility';//Why do you still have dependencies on legacy code?
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -9,8 +9,10 @@ import { getWysiwygClass } from 'web_editor.loader';
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { useDynamicPlaceholder } from "@web/views/fields/dynamicplaceholder_hook";
-import { QWeb } from 'web.core';
-import ajax from 'web.ajax';
+import { QWeb } from 'web.core';//Why do you still have dependencies on legacy code?
+
+import ajax from 'web.ajax'; //Why do you still have dependencies on legacy code?
+
 import {
     useBus,
     useService,
@@ -20,7 +22,8 @@ import {
     getAdjacentNextSiblings,
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { toInline } from 'web_editor.convertInline';
+import { toInline } from 'web_editor.convertInline'; //Why do you still have dependencies on legacy code?
+
 import { loadJS } from '@web/core/assets';
 import {
     markup,
@@ -38,7 +41,7 @@ import {
 export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     setup() {
         super.setup();
-        useSubEnv(legacyEnv);
+        useSubEnv(legacyEnv); //Why do you still have dependencies on legacy code?
 
         let started = false;
         onMounted(() => {
@@ -59,7 +62,8 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
 
         if (
             (newValue !== newProps.editingValue && lastValue !== newValue) ||
-            !_.isEqual(lastRecordInfo, newRecordInfo) ||
+            !_.isEqual(lastRecordInfo, newRecordInfo) || // remove _
+
             !_.isEqual(lastCollaborationChannel, newCollaborationChannel))
         {
             this.widget.resetEditor(newValue, {

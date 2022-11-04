@@ -145,6 +145,7 @@ export class MediaDialog extends Component {
     async save() {
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         if (selectedMedia.length) {
+            //I'm not sure I understand what you are trying to do. Why not do it in the template with a state?
             const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm });
             elements.forEach(element => {
                 if (this.props.media) {
