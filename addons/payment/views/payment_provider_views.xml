@@ -79,7 +79,10 @@
                             <group name="provider_config">
                                 <group string="Payment Form" name="payment_form">
                                     <field name="display_as" placeholder="If not defined, the provider name will be used."/>
-                                    <field name="payment_method_ids" attrs="{'invisible': [('show_payment_method_ids', '=', False)]}" widget="many2many_tags"/>
+                                    <field name="payment_method_ids"
+                                           options="{'no_create': True, 'no_edit': True}"
+                                           widget="many2many_tags"
+                                           attrs="{'invisible': [('show_payment_method_ids', '=', False)]}" />
                                     <field name="allow_tokenization" attrs="{'invisible': ['|', ('support_tokenization', '=', False), ('show_allow_tokenization', '=', False)]}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
                                     <field name="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
