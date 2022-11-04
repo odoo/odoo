@@ -254,7 +254,7 @@ class PurchaseOrderLine(models.Model):
             for line in pol.order_id.requisition_id.line_ids:
                 if line.product_id == pol.product_id:
                     pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom)
-                    partner = pol.order_id.partner_id or pol.order_id.requisition.vendor_id
+                    partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
                     product_ctx = {'seller_id': partner.id, 'lang': get_lang(pol.env, partner.lang).code}
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
                     if line.product_description_variants:
