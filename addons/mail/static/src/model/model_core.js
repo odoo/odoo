@@ -41,9 +41,6 @@ function addContextToErrors(func, contextMessage) {
  * @param {Object} fields Fields to be added. key = field name, value = field attributes
  */
 function addFields(modelName, fields) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add fields to model "${modelName}": model must be registered before fields can be added.`);
-    }
     const definition = registry.get(modelName);
     for (const [fieldName, field] of Object.entries(fields)) {
         addContextToErrors(() => {
@@ -53,6 +50,8 @@ function addFields(modelName, fields) {
     }
 }
 
+const validHookNames = ['_created', '_willDelete'];
+
 /**
  * Adds the provided hooks to the model specified by the `modelName`.
  *
@@ -60,15 +59,13 @@ function addFields(modelName, fields) {
  * @param {Object} hooks Hooks to be added. key = name, value = handler
  */
 function addLifecycleHooks(modelName, hooks) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add lifecycle hooks to model "${modelName}": model must be registered before lifecycle hooks can be added.`);
-    }
     const definition = registry.get(modelName);
     for (const [name, handler] of Object.entries(hooks)) {
         addContextToErrors(() => {
             assertIsFunction(handler);
-            assertIsValidHookName(name);
-            assertSectionDoesNotHaveKey('lifecycleHooks', name, definition);
+            if (!validHookNames.includes(name)) {
+                throw new Error(`unsupported hook name. Possible values: ${validHookNames.join(", ")}.`);
+            }
         }, `Cannot add lifecycle hook "${name}" to model "${modelName}": `);
         definition.get('lifecycleHooks').set(name, handler);
     }
@@ -85,9 +82,6 @@ function addLifecycleHooks(modelName, hooks) {
  * @param {Object} modelGetters Model getters to be added. key = name, value = getter
  */
 function addModelGetters(modelName, modelGetters) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add record getters to model "${modelName}": model must be registered before record getters can be added.`);
-    }
     const definition = registry.get(modelName);
     for (const [getterName, getter] of Object.entries(modelGetters)) {
         addContextToErrors(() => {
@@ -105,9 +99,6 @@ function addModelGetters(modelName, modelGetters) {
  * @param {Object} modelMethods Model methods to be added. key = name, value = method
  */
 function addModelMethods(modelName, modelMethods) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add model methods to model "${modelName}": model must be registered before model methods can be added.`);
-    }
     const definition = registry.get(modelName);
     for (const [name, method] of Object.entries(modelMethods)) {
         addContextToErrors(() => {
@@ -126,9 +117,6 @@ function addModelMethods(modelName, modelMethods) {
  */
 function addOnChanges(modelName, onChanges) {
     addContextToErrors(() => {
-        if (!registry.has(modelName)) {
-            throw new Error(`model must be registered before onChanges can be added.`);
-        }
         for (const onChange of onChanges) {
             if (!Object.prototype.hasOwnProperty.call(onChange, 'dependencies')) {
                 throw new Error("at least one onChange definition lacks dependencies (the list of fields to be watched for changes).");
@@ -170,9 +158,6 @@ function addOnChanges(modelName, onChanges) {
  * @param {Object} recordMethods Record methods to be added. key = name, value = method
  */
 function addRecordMethods(modelName, recordMethods) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add record methods to model "${modelName}": model must be registered before record methods can be added.`);
-    }
     const definition = registry.get(modelName);
     for (const [name, method] of Object.entries(recordMethods)) {
         addContextToErrors(() => {
@@ -194,9 +179,6 @@ function addRecordMethods(modelName, recordMethods) {
  * @param {Object} recordGetters Record getters to be added. key = name, value = getter
  */
 function addRecordGetters(modelName, recordGetters) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add record getters to model "${modelName}": model must be registered before record getters can be added.`);
-    }
     const definition = registry.get(modelName);
     for (const [getterName, getter] of Object.entries(recordGetters)) {
         addContextToErrors(() => {
@@ -216,33 +198,6 @@ function addRecordGetters(modelName, recordGetters) {
 function assertIsFunction(toAssert) {
     if (typeof toAssert !== 'function') {
         throw new Error(`"${toAssert}" must be a function`);
-    }
-}
-
-/**
- * Asserts that `name` is a valid hook name.
- *
- * @param {string} name The hook name to check.
- * @throws {Error} if name is not an existing hook name.
- */
-function assertIsValidHookName(name) {
-    const validHookNames = ['_created', '_willDelete'];
-    if (!validHookNames.includes(name)) {
-        throw new Error(`unsupported hook name. Possible values: ${validHookNames.join(", ")}.`);
-    }
-}
-
-/**
- * Asserts that the provided `key` is not already defined within the section
- * `sectionName` on the model `modelDefinition`.
- *
- * @param {string} sectionName The section of the `modelDefinition` to check into.
- * @param {string} key The key to check for.
- * @param {Object} modelDefinition The definition of the model to check.
- */
-function assertSectionDoesNotHaveKey(sectionName, key, modelDefinition) {
-    if (modelDefinition.get(sectionName).has(key)) {
-        throw new Error(`"${key}" is already defined on "${sectionName}".`);
     }
 }
 
