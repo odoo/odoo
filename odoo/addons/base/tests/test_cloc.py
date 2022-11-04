@@ -192,7 +192,7 @@ for rec in records:
 
     def test_several_xml_id(self):
         sa = self.create_server_action("Test double xml_id")
-        self.create_xml_id("__export__", "first", sa)
+        self.create_xml_id("__another__", "first", sa)
         self.create_xml_id("base", "second", sa)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
@@ -230,6 +230,53 @@ for rec in records:
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Should count field with no xml_id at all')
+
+    def test_cloc_old_server_action(self):
+        # Old server actions created by ir_ cron doesn't have external_id created during the cron creation
+        xml_id = 'base.standard_cron'
+
+        cron = self.env['ir.cron']._load_records([dict(xml_id=xml_id, values={
+            'user_id': self.env.ref('base.user_root').id,
+            'active': False,
+            'interval_type': 'days',
+            'interval_number': 1,
+            'numbercall': -1,
+            'doall': False,
+            'name': "Test - loc",
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'state': 'code',
+            'code': "raise UserError('OneLine of Loc')",
+        })])
+
+        cron_xml_ids = cron._get_external_ids()[cron.id]
+        self.assertEqual(len(cron_xml_ids), 1, "Should have only 1 xmlid")
+        self.assertEqual(cron_xml_ids[0], xml_id, "Should have %s as xmlid" % xml_id)
+
+        action_server_xml_id = xml_id + "_ir_actions_server"
+        action_server_xml_ids = cron.ir_actions_server_id._get_external_ids()[cron.ir_actions_server_id.id]
+        self.assertEqual(len(action_server_xml_ids), 1, "Should have only 1 xmlid")
+        self.assertEqual(action_server_xml_ids[0], action_server_xml_id, "Should have %s as xmlid" % action_server_xml_id)
+
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+
+        self.assertEqual(cl.code, {}, 'Should not have any loc')
+
+        imd_action_server = self.env['ir.model.data'].search([('model', '=', 'ir.actions.server'), ('res_id', '=', cron.ir_actions_server_id.id)])
+        imd_action_server.module = 'to_loc'
+        imd_action_server.flush()
+        cl.count_customization(self.env)
+
+        self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Should count code for module to_loc')
+
+        cl.code = {}
+
+        # Simulate old record created without xmlid on ir_action server but only in the ir_cron.
+        # The cloc should ignore the action server, as it is standard code because the related cron
+        # is in base module (base.standard_cron)
+        imd_action_server.unlink()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code, {}, 'Should not have any loc')
 
 
 class TestClocParser(TransactionCase):

@@ -172,6 +172,8 @@ class Cloc(object):
                 self.count_path(module_path)
 
     def count_customization(self, env):
+        # Old server actions created by ir_cron have no xml_id. (Or could have __export__ if exported meanwhile)
+        # Recent have the ir_cron xml_id suffixed by `_ir_actions_server`
         imported_module_sa = ""
         if env['ir.module.module']._fields.get('imported'):
             imported_module_sa = "OR (m.imported = TRUE AND m.state = 'installed')"
@@ -179,9 +181,13 @@ class Cloc(object):
                 SELECT s.id, min(m.name), array_agg(d.module)
                   FROM ir_act_server AS s
              LEFT JOIN ir_model_data AS d
-                    ON (d.res_id = s.id AND d.model = 'ir.actions.server')
+                    ON (d.res_id = s.id AND d.model = 'ir.actions.server' and d.module != '__export__')
+             LEFT JOIN ir_cron AS c
+                    ON c.ir_actions_server_id = s.id
+             LEFT JOIN ir_model_data AS d2
+                    ON (d2.res_id = c.id AND d2.model = 'ir.cron' and d2.module != '__export__')
              LEFT JOIN ir_module_module AS m
-                    ON m.name = d.module
+                    ON m.name = coalesce(d.module, d2.module)
                  WHERE s.state = 'code' AND (m.name IS null {})
               GROUP BY s.id
         """.format(imported_module_sa)
