@@ -25,6 +25,7 @@ class EventConfiguratorRecord extends Record {
      * @override
      */
     async save(options = {}) {
+        // What happens if the save does not take place (invalid record). We still want to do the doAction ?
         await super.save(options);
         this.model.action.doAction({type: 'ir.actions.act_window_close', infos: {
             eventConfiguration: {
