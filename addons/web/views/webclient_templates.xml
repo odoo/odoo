@@ -292,6 +292,8 @@
         <t t-call="web.layout">
             <t t-set="head_web">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <!-- Mixed Content over https -->
+                <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
                 <!-- Chrome, Firefox OS and Opera -->
                 <meta name="theme-color" content="#875A7B"/>
                 <link rel="icon" sizes="192x192" href="/web/static/img/mobile-icons/android-192x192.png"/>
