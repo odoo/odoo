@@ -2,9 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, registerModel } from '@mail/model';
 
 registerModel({
     name: 'CallView',

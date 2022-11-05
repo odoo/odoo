@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, many, one, registerModel } from '@mail/model';
 import { markEventHandled } from '@mail/utils/utils';
 import { sprintf } from '@web/core/utils/strings';
 

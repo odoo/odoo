@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { decrement, increment, insert } from '@mail/model/model_field_command';
+import { decrement, increment, insert, registerModel } from '@mail/model';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';

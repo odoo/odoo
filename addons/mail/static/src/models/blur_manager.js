@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { clear } from '@mail/model/model_field_command';
-import { attr, one } from '@mail/model/model_field';
+import { attr, clear, one, registerModel } from '@mail/model';
 
 function drawAndBlurImageOnCanvas(image, blurAmount, canvas) {
     canvas.width = image.width;

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { many, registerPatch } from '@mail/model';
 
 registerPatch({
     name: 'Messaging',

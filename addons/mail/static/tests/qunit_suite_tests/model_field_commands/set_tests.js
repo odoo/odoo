@@ -1,10 +1,6 @@
 /** @odoo-module **/
 
-import {
-    decrement,
-    increment,
-    set
-} from '@mail/model/model_field_command';
+import { decrement, increment, set } from '@mail/model';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {

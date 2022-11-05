@@ -2,9 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, unlink } from '@mail/model/model_field_command';
+import { attr, clear, insert, many, one, registerModel, unlink } from '@mail/model';
 import { monitorAudio } from '@mail/utils/media_monitoring';
 import { sprintf } from '@web/core/utils/strings';
 

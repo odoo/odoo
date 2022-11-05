@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { increment } from '@mail/model/model_field_command';
+import { increment, one, registerModel } from '@mail/model';
 
 import session from 'web.session';
 import utils from 'web.utils';

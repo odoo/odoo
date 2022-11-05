@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { link } from '@mail/model/model_field_command';
+import { link } from '@mail/model';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {

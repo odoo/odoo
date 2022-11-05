@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { many, one, registerModel } from '@mail/model';
 
 registerModel({
     name: 'EmojiOrEmojiInCategory',

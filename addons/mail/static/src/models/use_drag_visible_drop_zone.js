@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { decrement, increment } from '@mail/model/model_field_command';
+import { attr, decrement, increment, one, registerModel } from '@mail/model';
 
 registerModel({
     name: 'UseDragVisibleDropZone',

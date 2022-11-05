@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-import { clear } from '@mail/model/model_field_command';
+import { clear, registerPatch } from '@mail/model';
 
 registerPatch({
     name: 'DiscussSidebarCategoryItem',

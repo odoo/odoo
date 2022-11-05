@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, increment } from '@mail/model/model_field_command';
+import { attr, one, clear, increment, registerModel } from '@mail/model';
 
 import { qweb } from 'web.core';
 import { Markup } from 'web.utils';

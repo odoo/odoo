@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, registerPatch } from '@mail/model';
 
 import { str_to_date } from 'web.time';
 

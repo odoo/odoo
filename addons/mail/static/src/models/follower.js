@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, link, unlink } from '@mail/model/model_field_command';
+import { attr, clear, insert, link, many, one, registerModel, unlink } from '@mail/model';
 
 registerModel({
     name: 'Follower',

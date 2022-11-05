@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
-import { insert } from '@mail/model/model_field_command';
+import { insert } from '@mail/model';
 
 import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
 

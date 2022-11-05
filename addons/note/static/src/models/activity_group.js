@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, registerPatch } from '@mail/model';
 
 registerPatch({
     name: 'ActivityGroup',

@@ -115,6 +115,7 @@ For more specific needs, you may also assign custom-defined actions
     'application': True,
     'assets': {
         'mail.assets_core_messaging': [
+            'mail/static/src/model.js',
             'mail/static/src/model/*.js',
             'mail/static/src/core_models/*.js',
         ],

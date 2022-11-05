@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { insert } from '@mail/model/model_field_command';
+import { insert, registerModel } from '@mail/model';
 
 registerModel({
     name: 'MessagingInitializer',
