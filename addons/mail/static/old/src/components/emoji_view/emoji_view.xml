@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiView" owl="1">
+        <span class="o_EmojiView p-1 fs-3 cursor-pointer" t-att-class="emojiView.emojiGridViewAsHovered ? 'bg-200' : ''" t-on-click="emojiView.onClick" t-on-mouseenter="emojiView.onMouseenter" t-on-mouseleave="emojiView.onMouseleave" t-att-title="emojiView.emoji.name" t-att-data-source="emojiView.emoji.sources[0]" t-att-data-codepoints="emojiView.emoji.codepoints" t-attf-class="{{ className }}" t-ref="root">
+            <t t-esc="emojiView.emoji.codepoints"/>
+        </span>
+    </t>
+
+</templates>

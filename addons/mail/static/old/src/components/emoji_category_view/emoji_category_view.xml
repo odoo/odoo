@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiCategoryView" owl="1">
+        <span class="o_EmojiCategoryView flex-grow-1 px-2 py-1 fs-5 cursor-pointer" t-att-class="(emojiCategoryView.isHovered or emojiCategoryView.isActive) ? 'active bg-view' : 'border-bottom'" t-att-title="emojiCategoryView.category.name" t-on-click="emojiCategoryView.onClick" t-on-mouseenter="emojiCategoryView.onMouseenter" t-on-mouseleave="emojiCategoryView.onMouseleave" t-attf-class="{{ className }}" t-ref="root">
+            <t t-esc="emojiCategoryView.category.title"/>
+        </span>
+    </t>
+
+</templates>

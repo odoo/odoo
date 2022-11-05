@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ComposerTextInputView" owl="1">
+        <t t-if="composerTextInputView">
+            <div class="o_ComposerTextInputView position-relative bg-view" t-attf-class="{{ className }} {{ composerTextInputView.owner.isCompact ? 'border border-end-0' : 'border-0' }}" t-att-class="{ 'border-start-0': composerTextInputView.owner.isInChatWindow }" t-on-paste="composerTextInputView.owner.onPasteTextInput" t-ref="root">
+                <t t-if="composerTextInputView.owner.composerSuggestionListView">
+                    <ComposerSuggestionListView record="composerTextInputView.owner.composerSuggestionListView"/>
+                </t>
+                <textarea class="o_ComposerTextInputView_textarea o_ComposerTextInputView_textareaStyle form-control px-3 border-0 shadow-none overflow-auto" t-att-class="{ 'o-composer-is-compact rounded-0 rounded-start-3': composerTextInputView.owner.isCompact, 'rounded-3': !composerTextInputView.owner.isCompact }" t-esc="composerTextInputView.owner.composer.textInputContent" t-att-placeholder="composerTextInputView.owner.composer.placeholder" t-on-click="composerTextInputView.owner.onClickTextarea" t-on-focusin="composerTextInputView.owner.onFocusinTextarea" t-on-focusout="composerTextInputView.owner.onFocusoutTextarea" t-on-keydown="composerTextInputView.owner.onKeydownTextarea" t-on-keyup="composerTextInputView.owner.onKeyupTextarea" t-on-input="composerTextInputView.owner.onInputTextarea" t-ref="textarea"/>
+                <!--
+                     This is an invisible textarea used to compute the composer
+                     height based on the text content. We need it to downsize
+                     the textarea properly without flicker.
+                -->
+                <textarea class="o_ComposerTextInputView_mirroredTextarea o_ComposerTextInputView_textareaStyle position-absolute px-3 border-0 overflow-hidden opacity-0" t-att-class="{ 'o-composer-is-compact rounded-0 rounded-start-3': composerTextInputView.owner.isCompact, 'rounded-3': !composerTextInputView.owner.isCompact }" t-esc="composerTextInputView.owner.composer.textInputContent" t-ref="mirroredTextarea" disabled="1"/>
+            </div>
+        </t>
+    </t>
+
+</templates>
