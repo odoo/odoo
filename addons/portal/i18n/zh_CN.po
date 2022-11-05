@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # keecome <7017511@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -24,7 +25,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\" 来验证您的动作。"
 
 #. module: portal
 #. openerp-web
@@ -36,7 +37,7 @@ msgstr "逾期%1d天"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "1. Enter your password to confirm you own this account"
-msgstr ""
+msgstr "1、输入您的密码以确认您拥有此账户"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -44,11 +45,13 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2、确认您要删除您的账户\n"
+"                                    复制下你的登录名("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>返回编辑模式"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -65,17 +68,17 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"下一\" titl
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/>我的账户"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> Logout"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/>登出"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Apps"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/>应用"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -105,17 +108,17 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">筛选方式：</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">组别：</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">排序方法：</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -201,6 +204,81 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">您的账户</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.user_id.name or ''\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        亲爱的<t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br/> <br/>\n"
+"                        欢迎来到 <t t-out=\"object.user_id.company_id.name\">您的公司</t>门户网站！<br/><br/>\n"
+"                        已为您创建账户，请用以下用户名登录： <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        点击下面的按钮获取密码并激活您的帐户。\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>激活账户</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">欢迎来到我们公司门户网站。</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">您的公司</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"       技术提供 <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #. openerp-web
@@ -231,7 +309,7 @@ msgstr "帐户安全"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
-msgstr ""
+msgstr "账户已删除！"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -263,7 +341,7 @@ msgstr "已添加"
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
+msgstr "已经注册"
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
@@ -274,7 +352,7 @@ msgstr "必须为每个附件提供一个访问令牌。"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "您确认您想这么做吗？"
 
 #. module: portal
 #. openerp-web
@@ -464,7 +542,7 @@ msgstr "删除"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr ""
+msgstr "删除账户"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -491,6 +569,11 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"禁用您的帐户，防止任何进一步登录。<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            此动作无法撤消。\n"
+"                                        </b>"
 
 #. module: portal
 #. openerp-web
@@ -534,12 +617,12 @@ msgstr "Email"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "电子邮件地址已被其他用户占用"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "邮件主题"
+msgstr "邮件会话"
 
 #. module: portal
 #. openerp-web
@@ -640,7 +723,7 @@ msgstr "无效"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "无效的电子邮件地址"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -662,7 +745,7 @@ msgstr "邀请消息"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "向联系人发送邀请电子邮件以创建用户帐户"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -745,7 +828,7 @@ msgstr "模型%(model_name)s不支持token签名，因为它没有%(field_name)s
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "不支持多公司报告。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -784,7 +867,7 @@ msgstr "下一页"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "No Documents to display"
-msgstr ""
+msgstr "没有显示的文档"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -903,7 +986,7 @@ msgstr "已在 %s 上发布"
 msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
-msgstr ""
+msgstr "把我的电子邮件和电话列入阻止名单，以确保我不再被联系到。"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1076,7 +1159,7 @@ msgstr "联系人\"%s\"没有一个有效的电子邮件。"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "联系人“%s”跟现有用户的电子邮件相同"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1115,7 +1198,7 @@ msgstr "伙伴\"%s\"已经拥有门户访问权。"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "合作伙伴“%s”没有门户访问权或者是内部的。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1189,7 +1272,7 @@ msgstr "有效"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "有效电子邮件地址"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1242,7 +1325,7 @@ msgstr "网站消息"
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "网上沟通记录"
+msgstr "网上沟通历史"
 
 #. module: portal
 #. openerp-web
@@ -1273,7 +1356,7 @@ msgstr "写下您的密钥(口令)"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr ""
+msgstr "错误的密码"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
@@ -1303,7 +1386,7 @@ msgstr "您应该"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "您必须输入“"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0

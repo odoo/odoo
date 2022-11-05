@@ -8,8 +8,9 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # 226408 台北 <226408@so8d.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
+# 徐 文郁, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,6 +92,8 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"产品”%s“的完成数量小数点精度与单位”%s“设定精度不同。 请修改完成数量小数点精度或重新设置单位小数点精度。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -149,7 +152,7 @@ msgstr "%s (副本)"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
-msgstr ""
+msgstr "%s[恢复]"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -722,7 +725,7 @@ msgstr "完成的调拨行将永远不能有预留数量"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
+msgstr "此位置上已存在本产品的补货规则。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -759,7 +762,7 @@ msgstr "需要动作"
 msgid ""
 "Activate this function to get all quantities to replenish at this particular"
 " location"
-msgstr ""
+msgstr "激活此功能，可以获取在该位置补充的所有数量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
@@ -861,7 +864,7 @@ msgstr "额外的信息"
 #: model:ir.model.fields,field_description:stock.field_stock_location__comment
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Additional Information"
-msgstr "其它信息"
+msgstr "额外信息"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__partner_id
@@ -1138,7 +1141,7 @@ msgstr "自动移动"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__transparent
 msgid "Automatic No Step Added"
-msgstr "自动，不增加步骤"
+msgstr "自动并不增加步骤"
 
 #. module: stock
 #. openerp-web
@@ -1479,7 +1482,7 @@ msgstr "选择标签布局"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "请选择要打印的标签类型"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1496,7 +1499,7 @@ msgstr "选择目的位置"
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "请选择纸张布局格式用于打印批次标签"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
@@ -1506,7 +1509,7 @@ msgstr "选择表格布局来打印标签"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr ""
+msgstr "清选择【打印产品标签】/【批次标签】"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1617,7 +1620,7 @@ msgstr "计算运输成本并用bpost装运"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
-msgstr ""
+msgstr "判断何时产品移动会被预留"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -1669,7 +1672,7 @@ msgstr "冲突"
 msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
-msgstr ""
+msgstr "判断产品补货后未来几天的数量预测，数值为0表示即时生效。该值取决于路线类型（购买或制造）。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -1817,6 +1820,8 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
+"如果您需要将剩余货物发货，则需要创建欠单。如无需继续发货，则不需要创建欠单。\n"
+"处理剩余货物"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -1843,7 +1848,7 @@ msgstr "创建新的上架规则，以便在收到货后自动将特定产品发
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "Create some storable products to see their stock info in this view."
-msgstr ""
+msgstr "在此视图可查看产品类型为【可库存】的产品的库存信息。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__create_uid
@@ -2121,7 +2126,7 @@ msgstr "天"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
 msgid "Days To Order"
-msgstr ""
+msgstr "订购天数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
@@ -2194,7 +2199,7 @@ msgstr "通过此仓库的默认路线"
 msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr ""
+msgstr "设置一个最小库存规则，odoo会依据规则自动创建报价单或确认生产单，以满足最小库存量。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2520,7 +2525,7 @@ msgstr "显示分配序列号"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_clear_serial
 msgid "Display Clear Serial"
-msgstr ""
+msgstr "显示已确认的序列号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__display_complete
@@ -2803,7 +2808,7 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__priority
 msgid "Favorite"
-msgstr "收藏夹"
+msgstr "收藏"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__2
@@ -3206,7 +3211,7 @@ msgstr "历史"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
-msgstr "该作业类型的转让中的产品应如何预留。"
+msgstr "该作业类型的调拨中的产品应如何预留。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__id
@@ -3317,7 +3322,7 @@ msgstr "如果设置，将对动作进行组合。"
 msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and"
 " only one label will be printed for this lot."
-msgstr ""
+msgstr "如果批次的计量单位不是系统设定单位，则该批次将被视为一个单位，并且该批次只打印一个标签。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -3348,7 +3353,7 @@ msgstr "如果拣货被解锁，您可以编辑初始需求（适用于拣货草
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
 msgid "If the same SN is in another Quant"
-msgstr ""
+msgstr "如果相同的序列号已被记录于系统库存中"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3364,7 +3369,7 @@ msgstr "如果勾选此复选框，Odoo将自动用相应的产品、位置和�
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
-msgstr ""
+msgstr "如果勾选此复选框，Odoo将在验证时自动显示接收报表（如果有要分配的库存移动）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3460,7 +3465,7 @@ msgstr "导入"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import Template for Inventory Adjustments"
-msgstr ""
+msgstr "库存调整导入模版"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -3490,7 +3495,7 @@ msgstr "入库"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__in_date
 msgid "Incoming Date"
-msgstr "进货日期"
+msgstr "进入日期"
 
 #. module: stock
 #. openerp-web
@@ -3563,7 +3568,7 @@ msgstr "内部参考"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "内部转账"
+msgstr "内部调拨"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -3585,7 +3590,7 @@ msgstr "内部类型"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
 msgid "Internal locations among descendants"
-msgstr ""
+msgstr "下级的内部位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__ref
@@ -3674,13 +3679,13 @@ msgstr "盘点日期"
 #: model:ir.model.fields,field_description:stock.field_stock_location__cyclic_inventory_frequency
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 msgid "Inventory Frequency (Days)"
-msgstr "盘点频率（天数）"
+msgstr "盘点频率（天）"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "库存位置"
+msgstr "盘点位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -3828,7 +3833,7 @@ msgstr "Json提前天数弹窗"
 #: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
-msgstr ""
+msgstr "JSON格式弹窗"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
@@ -3876,7 +3881,7 @@ msgstr "批次/序列号："
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
 msgid "Labels to print"
-msgstr ""
+msgstr "待打印标签"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3896,7 +3901,7 @@ msgstr "最近30天"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
 msgid "Last Count Date"
-msgstr ""
+msgstr "最近计数日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
@@ -4062,7 +4067,7 @@ msgstr "最后更新时间"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
 msgid "Last time the Quantity was Updated"
-msgstr ""
+msgstr "最近更新数量的时间"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -4254,7 +4259,7 @@ msgstr "批号/序号 标签"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr "批号/序号"
+msgstr "批号/序列号"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -4558,7 +4563,7 @@ msgstr "移动整个包裹"
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
-msgstr "凭证行"
+msgstr "移动行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_nosuggest_ids
@@ -4581,7 +4586,7 @@ msgstr "移动明细行数"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
 msgid "Move that created the return move"
-msgstr "创建退回调拨的调拨"
+msgstr "创建退回移动的移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__product_return_moves
@@ -4761,7 +4766,7 @@ msgstr "影响到的下一步调拨:"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr ""
+msgstr "未选择%s  或已选择交货单"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4790,7 +4795,7 @@ msgstr "不追溯"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "No allocation need found."
-msgstr ""
+msgstr "无需预留库存"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -4806,7 +4811,7 @@ msgstr "此批号没有作业"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer !"
-msgstr ""
+msgstr "没有作业单。让我们创建一个作业单！"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -4853,7 +4858,7 @@ msgstr "没有库存移动"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "No stock to show"
-msgstr ""
+msgstr "没有库存可供显示"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -4957,7 +4962,7 @@ msgstr "在过去的12个月里，股票的出手次数"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
 msgid "Numbers of days  in advance that replenishments demands are created."
-msgstr ""
+msgstr "创建补货需求所需的前置天数。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__10
@@ -4997,12 +5002,12 @@ msgstr "在手："
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr ""
+msgstr "每批次/序列号一个"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
-msgstr ""
+msgstr "每单元一个"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5171,7 +5176,7 @@ msgstr "原始移动"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr "原始订货规则"
+msgstr "原始重订货规则"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5399,7 +5404,7 @@ msgstr "包裹使用"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
 msgid "Package name is valid SSCC"
-msgstr ""
+msgstr "包裹名称不符合SSCC"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -5640,12 +5645,12 @@ msgstr "打印"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr ""
+msgstr "使用GS1编码格式打印批号和序列号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr ""
+msgstr "使用GS1编码格式打印批号和序列号"
 
 #. module: stock
 #. openerp-web
@@ -5851,7 +5856,7 @@ msgstr "确认的产品数量"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
-msgstr "产品数量更新"
+msgstr "更新的产品数量"
 
 #. module: stock
 #. openerp-web
@@ -6129,7 +6134,7 @@ msgstr "量化的编辑受限，您无法执行此作业。"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities Already Set"
-msgstr "已经确定的数量"
+msgstr "数量已设定"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6187,13 +6192,13 @@ msgstr "在手数量"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity Reserved"
-msgstr "已预留数量"
+msgstr "数量已预留"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "Quantity available too low"
-msgstr ""
+msgstr "可用数量过低"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:0
@@ -6740,7 +6745,7 @@ msgstr "反向调拨"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
 msgid "Revert Inventory Adjustment"
-msgstr ""
+msgstr "还原库存调整"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -6859,7 +6864,7 @@ msgstr "短信发送错误"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
-msgstr ""
+msgstr "SSCC:"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -7020,7 +7025,7 @@ msgstr "Sendcloud 连接器"
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
-msgstr ""
+msgstr "如果启用设置，将在订单交付后给客户送货。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -7224,7 +7229,7 @@ msgstr "运输连接器允许计算准确的运输成本，打印运输标签和
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
-msgstr ""
+msgstr "发货：通过电子邮件发送"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -7298,7 +7303,7 @@ msgstr "在验证时显示接待报告"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "显示设置数量按钮"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -7319,7 +7324,7 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
 msgid "Show the routes that apply on selected warehouses."
-msgstr "显示所选仓库的可用路线"
+msgstr "显示应用在所选仓库路线"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__show_info
@@ -7422,7 +7427,7 @@ msgstr "源位置"
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_usage
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_usage
 msgid "Source Location Type"
-msgstr ""
+msgstr "源位置类型"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -7647,7 +7652,7 @@ msgstr "库存供应商补货信息"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
 msgid "Stock warehouse replenishment option"
-msgstr ""
+msgstr "仓库库存补货选项"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__detailed_type__product
@@ -7818,7 +7823,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "The backorder %s has been created."
-msgstr ""
+msgstr "欠单 %s已被创建. "
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -7853,7 +7858,7 @@ msgstr "该公司是从您的用户偏好自动设置。"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr ""
+msgstr "由于 %s的延期，截止日期已自动更新。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -7878,13 +7883,13 @@ msgstr "预测库存"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
-msgstr ""
+msgstr "已生成仓库间的库存移动"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "The inventory adjustments have been reverted."
-msgstr ""
+msgstr "库存调整已被还原"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
@@ -7963,7 +7968,7 @@ msgstr "请求的作业无法处理，因为一个程序错误，设置`product_
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `reserved_qty` field instead of the `reserved_uom_qty`."
-msgstr ""
+msgstr "无法处理请求的操作，原因：设置“reserved_qty”字段而不是“reserved_uom_qty”时出错误。"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8031,7 +8036,7 @@ msgstr "在已创建的调拨/补货传播的仓库，它可以与此规则所�
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "There are no inventory adjustments to revert."
-msgstr ""
+msgstr "没有库存调整可以还原"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -8041,7 +8046,7 @@ msgstr "还没有产品移动"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "This SN is already in another location."
-msgstr ""
+msgstr "该序列号已存在于其他库存位置"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8117,7 +8122,7 @@ msgstr "批次%(lot_name)s与产品%(product_name)s不兼容 "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "This lot/serial number is already in another location"
-msgstr ""
+msgstr "该批次/序列号已存在于其他库存位置"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -8194,7 +8199,7 @@ msgstr "此记录早已存在。"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
-msgstr ""
+msgstr "报告不能同时存在已完成和未完成%s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -8231,6 +8236,8 @@ msgid ""
 "Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
+"您添加的那些产品将被跟踪，但批次/序列号未定义。一旦应用，这些就无法更改。<br/>\n"
+"                    确认操作吗?"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -8305,7 +8312,7 @@ msgstr "今天的活动"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Forecasted"
-msgstr ""
+msgstr "总预测数"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -8710,7 +8717,7 @@ msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers. Printing datamatrix requires extra software. If software "
 "can't be found then 1D barcodes will be printed."
-msgstr ""
+msgstr "打印批次和序列号的条形码时，请使用GS1编码规则进行数据集命名。打印数据集需要额外的软件。如果找不到软件，则将打印一维条形码。"
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -8966,7 +8973,7 @@ msgstr "警告"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
-msgstr ""
+msgstr "警告序列号重复"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__warning_message
@@ -9022,7 +9029,7 @@ msgstr "重量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr ""
+msgstr "某包装类型的重量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9037,7 +9044,7 @@ msgstr "称重的产品"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids
 msgid "Wh Replenishment Option"
-msgstr ""
+msgstr "WH 补货规则 "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__warehouse_selectable
@@ -9116,7 +9123,7 @@ msgstr "当虚拟库存小于最小数量，系统生成补货以便令数量的
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
 msgid "When ticked, carrier of shipment will be propagated."
-msgstr ""
+msgstr "当被打勾时，运输承运商将被传播。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_cancel
@@ -9275,7 +9282,7 @@ msgstr "只能处理1.0%s具有唯一序列号的产品。"
 msgid ""
 "You can't deactivate the multi-location if you have more than once warehouse"
 " by company"
-msgstr ""
+msgstr "如果公司有多个仓库，则不能停用多位置"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -9363,7 +9370,7 @@ msgstr "您无法执行此调拨，因为此计量单位与产品的计量单位
 msgid ""
 "You cannot set a location as a scrap location when it assigned as a "
 "destination location for a manufacturing type operation."
-msgstr ""
+msgstr "当某个位置被指定为生产类型操作的目标位置时，不能将其设置为报废位置。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9371,7 +9378,7 @@ msgstr ""
 msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
-msgstr ""
+msgstr "不能将报废位置设置为生产类型操作的目标位置。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9525,7 +9532,7 @@ msgstr "您仍然有一些产品在%s的位置"
 msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
-msgstr ""
+msgstr "您试图创建的记录已存在，因此直接修改了现有记录。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -9544,6 +9551,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"你的午餐已经送到了。\n"
+"祝您用餐愉快！"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9583,7 +9592,7 @@ msgstr "bpost 连接器"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -9628,7 +9637,7 @@ msgstr "例如：物理位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "e.g. Receptions"
-msgstr ""
+msgstr "例如:接待"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -9703,7 +9712,7 @@ msgstr "应补足"
 msgid ""
 "the warehouse to consider for the route selection on the next procurement "
 "(if any)."
-msgstr ""
+msgstr "仓库在下一次采购（如有）时考虑路线选择。"
 
 #. module: stock
 #. openerp-web
@@ -9716,7 +9725,7 @@ msgstr "以达到最大的"
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."
-msgstr ""
+msgstr "{0}只能提供{1} {2}, 而要订购的数量是 {3} {2}."
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation

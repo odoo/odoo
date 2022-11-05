@@ -58,13 +58,15 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Anterior\" "
+"title=\"Anterior\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Siguiente\" "
+"title=\"Siguiente\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -103,8 +105,8 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
-"<small class=\"form-text text-muted\">Cambiar el nombre de la empresa o el "
-"RFC no se permite una vez que se emitieron documentos para su cuenta.<br/> "
+"<small class=\"form-text text-muted\">Una vez que se emitieron documentos "
+"para su cuenta no se permite cambiar el nombre de la empresa o el RFC.<br/> "
 "Contáctenos directamente para esta operación.</small>"
 
 #. module: portal
@@ -628,7 +630,7 @@ msgstr "Correo electrónico"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "Esta dirección de correo ya la está usando otro usuario"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -734,13 +736,13 @@ msgstr "No válido"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "Dirección de correo no válida"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Correo no válido. Por favor proporcione un correo electrónico válido."
+msgstr "Correo no válido. Proporcione un correo electrónico válido."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -756,7 +758,7 @@ msgstr "Mensaje de invitación"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "Correo de invitación a contactos para crear una cuenta de usuario"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -880,7 +882,7 @@ msgstr "Siguiente"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "No Documents to display"
-msgstr ""
+msgstr "No hay documentos que mostrar"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -1000,6 +1002,8 @@ msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
 msgstr ""
+"Poner mi correo y teléfono en la lista de bloqueo para que no me vuelvan a "
+"contactar"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1151,7 +1155,7 @@ msgstr ""
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
-"El archivo adjunto %s no se puede quitar porque no está en un estado "
+"El archivo adjunto %s no se puede eliminar porque no está en un estado "
 "pendiente."
 
 #. module: portal
@@ -1182,7 +1186,7 @@ msgstr "El contacto \"%s\" no tiene una dirección de correo válida."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "El contacto \"%s\" tiene el mismo correo que un usuario existente"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1225,7 +1229,7 @@ msgstr "El partner \"%s\" ya tiene acceso al portal."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "El contacto \"%s\" no tiene acceso al portal o es interno."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1307,7 +1311,7 @@ msgstr "Válido"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "Dirección de correo válida"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1391,7 +1395,7 @@ msgstr "Escriba su clave"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr ""
+msgstr "Contraseña incorrecta."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
@@ -1421,7 +1425,7 @@ msgstr "Usted debe ser"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "Debería ingresar \""
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0

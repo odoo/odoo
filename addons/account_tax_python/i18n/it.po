@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,12 +65,12 @@ msgid ""
 msgstr ""
 "Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
 "\n"
-":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
-":param price_unit: effettivo\n"
-":param quantity: effettivo\n"
-":param company: registrazione di res.company\n"
-":param product: registrazione di product.product o None\n"
-":param partner: registrazione di res.partner o None"
+":param base_amount: a virgola mobile, importo effettivo a cui viene applicata l'imposta\n"
+":param price_unit: a virgola mobile\n"
+":param quantity: a virgola mobile\n"
+":param company: singolo elemento di un insieme di record res.company\n"
+":param product: singolo elemento di un insieme di record product.product oppure nessuno\n"
+":param partner: singolo elemento di un insieme di record res.partner oppure nessuno"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -84,11 +85,10 @@ msgid ""
 msgstr ""
 "Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
 "\n"
-":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
-":param price_unit: effettivo\n"
-":param quantity: effettivo\n"
-":param product: registrazione di product.product o None\n"
-":param partner: registrazione di res.partner o None"
+":param base_amount: a virgola mobile, importo effettivo a cui viene applicata l'imposta\n"
+":param quantity: a virgola mobile\n"
+":param product: singolo elemento di un insieme di record product.product oppure nessuno\n"
+":param partner: singolo elemento di un insieme di record res.partner oppure nessuno"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -101,13 +101,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Determina se l'imposta sarà applicata impostando la variabile \"risultato\" su Vero o Falso.\n"
+"Determina se l'imposta viene applicata impostando la variabile \"risultato\" a vero o falso.\n"
 "\n"
-":param price_unit: effettivo\n"
-":param quantity: effettivo\n"
-":param company: registrazione di res.company\n"
-":param product: registrazione di product.product o None\n"
-":param partner: registrazione di res.partner o None"
+":param price_unit: a virgola mobile\n"
+":param quantity: a virgola mobile\n"
+":param company: singolo elemento di un insieme di record res.company\n"
+":param product: singolo elemento di un insieme di record product.product oppure nessuno\n"
+":param partner: singolo elemento di un insieme di record res.partner oppure nessuno"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -119,12 +119,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Determina se l'imposta sarà applicata impostando la variabile \"risultato\" su Vero o Falso.\n"
+"Determina se l'imposta viene applicata impostando la variabile \"risultato\" a vero o falso.\n"
 "\n"
-":param price_unit: effettivo\n"
-":param quantity: effettivo\n"
-":param product: registrazione di product.product o None\n"
-":param partner: registrazione di res.partner o None"
+":param price_unit: a virgola mobile\n"
+":param quantity: a virgola mobile\n"
+":param product: singolo elemento di un insieme di record product.product oppure nessuno\n"
+":param partner: singolo elemento di un insieme di record res.partner oppure nessuno"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,7 +150,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "<b>Save</b> your question."
-msgstr "<b>Save</b>je vraag."
+msgstr "Sla je <b>vraag op</b>."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
@@ -245,7 +245,7 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"marge: 0px; padding: 0px;\">\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        Hallo<br/><br/>\n"
 "                        <t t-out=\"user.name of ''\">Mitchell Admin</t> heeft het <strong t-out=\"object.name of ''\">document</strong> met je gedeeld!\n"
@@ -253,7 +253,7 @@ msgstr ""
 "                            <a t-att-href=\"object.website_url\">\n"
 "                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256 \" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
-"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                                Bekijk <strong t-out=\"object.name of ''\">Document</strong></a>\n"
@@ -548,7 +548,7 @@ msgstr "<i class=\"fa fa-home\"/> Over"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "<i class=\"fa fa-home\"/> Course"
-msgstr "<i class=\"fa fa-home\"/>Cursus"
+msgstr "<i class=\"fa fa-home\"/> Cursus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -1987,7 +1987,7 @@ msgstr "Configuratie"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
-msgid "Congratulation! You completed {{ object.channel_id.name }}"
+msgid "Congratulations! You completed {{ object.channel_id.name }}"
 msgstr "Gefeliciteerd! Je hebt {{ object.channel_id.name }} voltooid"
 
 #. module: website_slides
@@ -2101,7 +2101,7 @@ msgstr "Inhoudlabels"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Content Title"
-msgstr "Inhoud titel"
+msgstr "Inhoudtitel"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5003,14 +5003,14 @@ msgstr "Sectie"
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Section Subtitle"
-msgstr "Sectie subtitel"
+msgstr "Sectiesubtitel"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "Section name"
-msgstr "Naam sectie"
+msgstr "Sectienaam"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
@@ -5213,7 +5213,7 @@ msgstr "Delen op Whatsapp"
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Sharing is caring!"
-msgstr "Delen is zorgzaam!"
+msgstr "Delen is lief!"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__sheet
@@ -5335,7 +5335,7 @@ msgstr "Sorteer op"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__source_type
 msgid "Source Type"
-msgstr "Bron type"
+msgstr "Bronsoort"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -5444,14 +5444,14 @@ msgstr "Label"
 #: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
 #, python-format
 msgid "Tag Group"
-msgstr "Tag een groep"
+msgstr "Label een groep"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #, python-format
 msgid "Tag Group (required for new tags)"
-msgstr "Tag een groep (vereist voor nieuwe labels)."
+msgstr "Label een groep (vereist voor nieuwe labels)."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
