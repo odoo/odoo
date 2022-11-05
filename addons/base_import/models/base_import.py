@@ -234,7 +234,10 @@ class Import(models.TransientModel):
         (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
         if handler:
             try:
-                return getattr(self, '_read_' + file_extension)(options)
+                if file_extension == 'csv':
+                    return getattr(self, '_read_' + file_extension)(options)
+                else:
+                    return getattr(self, '_read_' + file_extension)()
             except Exception:
                 _logger.warn("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
@@ -261,7 +264,7 @@ class Import(models.TransientModel):
             raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
         raise ValueError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(self.file_type))
 
-    def _read_xls(self, options):
+    def _read_xls(self):
         """ Read file content, using xlrd lib """
         book = xlrd.open_workbook(file_contents=self.file or b'')
         return self._read_xls_book(book)
@@ -306,7 +309,7 @@ class Import(models.TransientModel):
     # use the same method for xlsx and xls files
     _read_xlsx = _read_xls
 
-    def _read_ods(self, options):
+    def _read_ods(self):
         """ Read file content using ODSReader custom lib """
         doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
 
