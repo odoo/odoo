@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, increment, many, one, registerModel } from '@mail/model';
+import { attr, clear, increment, many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'EmojiGridView',
     template: 'mail.EmojiGridView',
     componentSetup() {

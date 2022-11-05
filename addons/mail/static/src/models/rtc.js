@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { attr, clear, insert, many, one, registerModel, unlink } from '@mail/model';
+import { attr, clear, insert, many, one, Model, unlink } from '@mail/model';
 import { monitorAudio } from '@mail/utils/media_monitoring';
 import { sprintf } from '@web/core/utils/strings';
 
@@ -14,7 +14,7 @@ const getRTCPeerNotificationNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
+Model({
     name: 'Rtc',
     lifecycleHooks: {
         _created() {

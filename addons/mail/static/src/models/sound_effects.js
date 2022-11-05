@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { one, registerModel } from '@mail/model';
+import { one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'SoundEffects',
     fields: {
         channelJoin: one('SoundEffect', { default: { defaultVolume: 0.3, path: '/mail/static/src/audio/channel_01_in' }, isCausal: true }),

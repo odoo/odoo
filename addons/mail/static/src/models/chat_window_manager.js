@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, registerModel } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 
 export const BASE_VISUAL = {
     /**
@@ -40,7 +40,7 @@ export const BASE_VISUAL = {
     visible: [],
 };
 
-registerModel({
+Model({
     name: 'ChatWindowManager',
     template: 'mail.ChatWindowManager',
     recordMethods: {

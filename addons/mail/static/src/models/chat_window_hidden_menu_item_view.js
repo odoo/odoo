@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'ChatWindowHiddenMenuItemView',
     template: 'mail.ChatWindowHiddenMenuItemView',
     fields: {

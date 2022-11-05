@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, decrement, increment, one, registerModel } from '@mail/model';
+import { attr, decrement, increment, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'DropZoneView',
     template: 'mail.DropZoneView',
     identifyingMode: 'xor',

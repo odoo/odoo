@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { one, registerModel } from '@mail/model';
+import { one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'CallOptionMenu',
     template: 'mail.CallOptionMenu',
     componentSetup() {

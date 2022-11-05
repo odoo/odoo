@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, registerModel } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 
 import { qweb } from 'web.core';
 import { Markup } from 'web.utils';
 import {getCookie, setCookie, deleteCookie} from 'web.utils.cookies';
 
-registerModel({
+Model({
     name: 'PublicLivechatGlobal',
     lifecycleHooks: {
         _created() {

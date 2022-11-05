@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { attr, clear, registerModel } from '@mail/model';
+import { attr, clear, Model } from '@mail/model';
 
 /**
  * Models various user settings. It is used as a complement to
@@ -10,7 +10,7 @@ import { attr, clear, registerModel } from '@mail/model';
  * client-side. This is particularly useful for allowing guests to have their
  * own settings.
  */
-registerModel({
+Model({
     name: 'UserSetting',
     lifecycleHooks: {
         _created() {
