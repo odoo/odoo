@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, insert, link, many, one, registerModel } from '@mail/model';
+import { attr, clear, insert, link, many, one, Model } from '@mail/model';
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;
@@ -19,7 +19,7 @@ const getMessageNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
+Model({
     name: 'Chatter',
     template: 'mail.Chatter',
     isLegacyComponent: true,

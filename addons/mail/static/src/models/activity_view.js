@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, registerModel } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
 import { sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'ActivityView',
     template: 'mail.ActivityView',
     recordMethods: {

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, many, one, registerModel } from '@mail/model';
+import { attr, many, one, Model } from '@mail/model';
 
 import { sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'SuggestedRecipientInfo',
     fields: {
         composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', { inverse: 'suggestedRecipientInfo' }),

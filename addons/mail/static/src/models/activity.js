@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, many, one, registerModel } from '@mail/model';
+import { attr, clear, insert, many, one, Model } from '@mail/model';
 
 import { markup } from '@odoo/owl';
 
-registerModel({
+Model({
     name: 'Activity',
     modelMethods: {
         /**

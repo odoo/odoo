@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model';
+import { Patch } from '@mail/model';
 import { BASE_VISUAL } from '@mail/models/chat_window_manager';
 
-registerPatch({
+Patch({
     name: 'ChatWindowManager',
     fields: {
         visual: {

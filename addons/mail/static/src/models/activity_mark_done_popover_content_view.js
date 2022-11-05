@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 import { onMounted } from '@odoo/owl';
 
-registerModel({
+Model({
     name: 'ActivityMarkDonePopoverContentView',
     template: 'mail.ActivityMarkDonePopoverContentView',
     componentSetup() {

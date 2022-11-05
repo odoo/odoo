@@ -421,7 +421,7 @@ function patchRecordMethods(patch) {
  * @param {Object} [definition.recordMethods]
  * @param {string} [definition.template]
  */
-export function registerModel({ componentSetup, fields, identifyingMode = 'and', isLegacyComponent = false, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
+export function Model({ componentSetup, fields, identifyingMode = 'and', isLegacyComponent = false, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
@@ -474,7 +474,7 @@ export function registerModel({ componentSetup, fields, identifyingMode = 'and',
     }
 }
 
-export function registerPatch({ componentSetup, fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
+export function Patch({ componentSetup, fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
     if (!name) {
         throw new Error("Patch is lacking the name of the model to be patched.");
     }

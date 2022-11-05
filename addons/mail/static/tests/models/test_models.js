@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, many, one, registerModel } from '@mail/model';
+import { attr, many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'TestAddress',
     fields: {
         id: attr({
@@ -15,7 +15,7 @@ registerModel({
     },
 });
 
-registerModel({
+Model({
     name: 'TestContact',
     fields: {
         id: attr({
@@ -39,7 +39,7 @@ registerModel({
     },
 });
 
-registerModel({
+Model({
     name: 'TestHobby',
     fields: {
         description: attr({
@@ -48,7 +48,7 @@ registerModel({
     },
 });
 
-registerModel({
+Model({
     name: 'TestTask',
     fields: {
         id: attr({

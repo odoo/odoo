@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { insert, registerModel } from '@mail/model';
+import { insert, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'MessagingInitializer',
     recordMethods: {
         /**

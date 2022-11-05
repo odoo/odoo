@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, one, registerPatch } from '@mail/model';
+import { attr, one, Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'Channel',
     fields: {
         anonymous_country: one('Country'),

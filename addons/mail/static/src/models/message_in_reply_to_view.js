@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 import { markEventHandled } from '@mail/utils/utils';
 
-registerModel({
+Model({
     name: 'MessageInReplyToView',
     template: "mail.MessageInReplyToView",
     recordMethods: {

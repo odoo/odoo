@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { clear, registerPatch } from '@mail/model';
+import { clear, Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'ComposerView',
     fields: {
         dropZoneView: {

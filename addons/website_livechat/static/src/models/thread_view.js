@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { clear, one, registerPatch } from '@mail/model';
+import { clear, one, Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'ThreadView',
     fields: {
         visitorBanner: one('VisitorBannerView', {

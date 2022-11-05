@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 
 /**
  * Tracked translate transformations on image visualisation. This is
@@ -9,7 +9,7 @@ import { attr, one, registerModel } from '@mail/model';
  * reasons (overhead of making vdom is too significant for each mouse
  * position changes while dragging)
  */
-registerModel({
+ Model({
     name: 'AttachmentViewer.Translate',
     fields: {
         dx: attr({ default: 0 }),

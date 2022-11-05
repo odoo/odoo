@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, registerPatch } from '@mail/model';
+import { attr, clear, Patch } from '@mail/model';
 
 import { str_to_date } from 'web.time';
 
-registerPatch({
+Patch({
     name: 'Partner',
     fields: {
         isOnline: {

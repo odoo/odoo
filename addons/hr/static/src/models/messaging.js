@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model';
+import { Patch } from '@mail/model';
 
 // dummy import to ensure mail Messaging patches are loaded beforehand
 import '@mail/models/messaging';
 
-registerPatch({
+Patch({
     name: 'Messaging',
     recordMethods: {
         /**

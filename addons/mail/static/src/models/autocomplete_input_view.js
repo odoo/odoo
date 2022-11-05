@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 import { onMounted, onWillUnmount } from '@odoo/owl';
 
-registerModel({
+Model({
     name: 'AutocompleteInputView',
     template: 'mail.AutocompleteInputView',
     componentSetup() {

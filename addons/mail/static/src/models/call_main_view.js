@@ -2,13 +2,13 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, many, one, registerModel } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { onMounted, onWillUnmount } from '@odoo/owl';
 
-registerModel({
+Model({
     name: 'CallMainView',
     template: 'mail.CallMainView',
     componentSetup() {

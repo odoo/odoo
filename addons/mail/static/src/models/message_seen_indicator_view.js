@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { clear, one, registerModel } from '@mail/model';
+import { clear, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'MessageSeenIndicatorView',
     template: 'mail.MessageSeenIndicatorView',
     fields: {

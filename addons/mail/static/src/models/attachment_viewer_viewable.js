@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { attr, one, registerModel } from "@mail/model";
+import { attr, one, Model } from "@mail/model";
 
 /**
  * Intermediary model to facilitate adding support for additional
  * models to the AttachmentViewer.
  */
 
-registerModel({
+ Model({
     name: "AttachmentViewerViewable",
     identifyingMode: 'xor',
     recordMethods: {

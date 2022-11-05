@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, many, registerModel } from '@mail/model';
+import { attr, many, Model } from '@mail/model';
 
 /**
  * Models a record that provides the current date, updated at a given frequency.
  */
-registerModel({
+Model({
     name: 'Clock',
     lifecycleHooks: {
         _created() {

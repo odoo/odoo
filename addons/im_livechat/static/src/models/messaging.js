@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { many, registerPatch } from '@mail/model';
+import { many, Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'Messaging',
     fields: {
         /**

@@ -2,9 +2,9 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { attr, clear, many, one, registerModel } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'CallView',
     template: 'mail.CallView',
     lifecycleHooks: {

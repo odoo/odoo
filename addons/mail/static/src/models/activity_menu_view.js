@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, many, registerModel } from '@mail/model';
+import { attr, many, Model } from '@mail/model';
 
 import session from 'web.session';
 
-registerModel({
+Model({
     name: 'ActivityMenuView',
     lifecycleHooks: {
         _created() {

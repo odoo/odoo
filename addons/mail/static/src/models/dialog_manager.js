@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { many, registerModel } from '@mail/model';
+import { many, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'DialogManager',
     template: 'mail.DialogManager',
     componentSetup() {

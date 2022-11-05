@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, many, one, registerModel } from '@mail/model';
+import { attr, many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'ActivityGroup',
     modelMethods: {
         convertData(data) {

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, one, clear, increment, registerModel } from '@mail/model';
+import { attr, one, clear, increment, Model } from '@mail/model';
 
 import { qweb } from 'web.core';
 import { Markup } from 'web.utils';
 
-registerModel({
+Model({
     name: 'Chatbot',
     recordMethods: {
         /**

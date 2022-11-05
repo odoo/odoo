@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 import { escape, sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'Discuss',
     recordMethods: {
         /**

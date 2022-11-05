@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, many, one, registerModel } from '@mail/model';
+import { attr, clear, insert, many, one, Model } from '@mail/model';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
@@ -9,7 +9,7 @@ import { getLangDatetimeFormat, str_to_datetime } from 'web.time';
 
 import { markup } from '@odoo/owl';
 
-registerModel({
+Model({
     name: 'Message',
     modelMethods: {
         /**

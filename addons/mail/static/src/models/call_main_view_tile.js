@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { one, registerModel } from '@mail/model';
+import { one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'CallMainViewTile',
     fields: {
         callMainViewOwner: one('CallMainView', { identifying: true, inverse: 'mainTiles' }),

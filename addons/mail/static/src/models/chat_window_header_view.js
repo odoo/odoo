@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { clear, one, registerModel } from '@mail/model';
+import { clear, one, Model } from '@mail/model';
 import { isEventHandled } from '@mail/utils/utils';
 
-registerModel({
+Model({
     name: 'ChatWindowHeaderView',
     template: 'mail.ChatWindowHeaderView',
     recordMethods: {

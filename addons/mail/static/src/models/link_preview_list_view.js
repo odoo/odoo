@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { many, one, registerModel } from '@mail/model';
+import { many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'LinkPreviewListView',
     template: 'mail.LinkPreviewListView',
     fields: {

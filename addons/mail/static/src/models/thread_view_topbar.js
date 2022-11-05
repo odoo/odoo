@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'ThreadViewTopbar',
     template: 'mail.ThreadViewTopbar',
     componentSetup() {

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 import core from 'web.core';
 
@@ -12,7 +12,7 @@ const getAttachmentNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
+Model({
     name: 'FileUploader',
     identifyingMode: 'xor',
     recordMethods: {

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, link, many, one, registerModel } from '@mail/model';
+import { attr, clear, link, many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'ThreadCache',
     recordMethods: {
         async loadMoreMessages() {

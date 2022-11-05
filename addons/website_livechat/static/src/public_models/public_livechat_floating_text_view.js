@@ -2,9 +2,9 @@
 
 import { PublicLivechatFloatingTextView } from '@website_livechat/legacy/widgets/public_livechat_floating_text_view/public_livechat_floating_text_view';
 
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'PublicLivechatFloatingTextView',
     lifecycleHooks: {
         _created() {

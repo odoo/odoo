@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, link, many, one, registerModel, unlink } from '@mail/model';
+import { attr, clear, insert, link, many, one, Model, unlink } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Follower',
     modelMethods: {
         /**

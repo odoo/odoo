@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, one, registerModel } from '@mail/model';
+import { attr, clear, insert, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Notification',
     modelMethods: {
         /**

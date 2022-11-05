@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 /**
  * This model defines a "Throttle", which is an abstraction to throttle calls on a
@@ -9,7 +9,7 @@ import { attr, clear, one, registerModel } from '@mail/model';
  * calls most of the time, and a few priviledged exception to immediately make the call
  * are re-trigger a cooldown like a fresh throttle call.
  */
-registerModel({
+Model({
     name: 'Throttle',
     identifyingMode: 'xor',
     recordMethods: {

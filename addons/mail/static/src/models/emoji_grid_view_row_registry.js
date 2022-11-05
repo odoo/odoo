@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { clear, many, one, registerModel } from '@mail/model';
+import { clear, many, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'EmojiGridViewRowRegistry',
     identifyingMode: 'xor',
     recordMethods: {

@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { attr, many, one, registerModel } from '@mail/model';
+import { attr, many, one, Model } from '@mail/model';
 import { makeDeferred } from '@mail/utils/deferred';
 
 import { browser } from '@web/core/browser/browser';
 
 import { EventBus } from '@odoo/owl';
 
-registerModel({
+Model({
     name: 'Messaging',
     lifecycleHooks: {
         _created() {

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, registerModel } from '@mail/model';
+import { attr, clear, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Timer',
     identifyingMode: 'xor',
     lifecycleHooks: {
