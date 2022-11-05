@@ -16,10 +16,10 @@ class CalendarProviderConfig(models.TransientModel):
     # Allow to sync with eventually existing ICP keys without creating them if respective module is not installed
     # Using same field names and strings as their respective res.config.settings
     cal_client_id = fields.Char(
-        "Google Client_id",
+        "Google Client Id",
         default=lambda self: self.env['ir.config_parameter'].get_param('google_calendar_client_id'))
     cal_client_secret = fields.Char(
-        "Google Client_key",
+        "Google Client Secret",
         default=lambda self: self.env['ir.config_parameter'].get_param('google_calendar_client_secret'))
     microsoft_outlook_client_identifier = fields.Char(
         "Outlook Client Id",
