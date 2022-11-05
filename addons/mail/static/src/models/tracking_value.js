@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 import { sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'TrackingValue',
     fields: {
         /**

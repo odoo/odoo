@@ -2,9 +2,9 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'ComposerTextInputView',
     template: 'mail.ComposerTextInputView',
     componentSetup() {

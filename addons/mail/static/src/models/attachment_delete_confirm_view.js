@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 import { sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'AttachmentDeleteConfirmView',
     template: 'mail.AttachmentDeleteConfirmView',
     componentSetup() {

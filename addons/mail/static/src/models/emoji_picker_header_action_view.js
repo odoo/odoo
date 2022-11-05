@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, one, clear, registerModel } from '@mail/model';
+import { attr, one, clear, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'EmojiPickerHeaderActionView',
     template: 'mail.EmojiPickerHeaderActionView',
     identifyingMode: 'xor',

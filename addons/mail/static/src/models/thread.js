@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, insertAndUnlink, link, many, one, registerModel, unlink } from '@mail/model';
+import { attr, clear, insert, insertAndUnlink, link, many, one, Model, unlink } from '@mail/model';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
@@ -17,7 +17,7 @@ const getSuggestedRecipientInfoNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
+Model({
     name: 'Thread',
     lifecycleHooks: {
         _willDelete() {

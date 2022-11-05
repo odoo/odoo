@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { many, registerModel } from '@mail/model';
+import { many, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'PopoverManager',
     template: 'mail.PopoverManager',
     fields: {

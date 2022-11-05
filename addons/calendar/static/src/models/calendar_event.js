@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, clear, registerModel } from '@mail/model';
+import { attr, clear, Model } from '@mail/model';
 
 import fieldUtils from 'web.field_utils';
 import { getLangTimeFormat } from 'web.time';
 
-registerModel({
+Model({
     name: 'calendar.event',
     fields: {
         allday: attr(),

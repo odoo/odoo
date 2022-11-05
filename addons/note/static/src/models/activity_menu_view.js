@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, registerPatch } from '@mail/model';
+import { attr, clear, Patch } from '@mail/model';
 
 const { DateTime } = luxon;
 
-registerPatch({
+Patch({
     name: 'ActivityMenuView',
     recordMethods: {
         /**

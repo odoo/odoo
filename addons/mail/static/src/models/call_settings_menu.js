@@ -2,9 +2,9 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'CallSettingsMenu',
     template: 'mail.CallSettingsMenu',
     identifyingMode: 'xor',

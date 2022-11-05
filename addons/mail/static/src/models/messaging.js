@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, registerPatch } from '@mail/model';
+import { attr, clear, many, one, Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'Messaging',
     lifecycleHooks: {
         _created() {

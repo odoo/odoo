@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, registerModel } from '@mail/model';
+import { attr, clear, many, one, Model } from '@mail/model';
 
 import session from 'web.session';
 
-registerModel({
+Model({
     name: 'ActivityListView',
     template: 'mail.ActivityListView',
     lifecycleHooks: {

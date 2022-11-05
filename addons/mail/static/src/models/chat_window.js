@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
-registerModel({
+Model({
     name: 'ChatWindow',
     identifyingMode: 'xor',
     template: 'mail.ChatWindow',

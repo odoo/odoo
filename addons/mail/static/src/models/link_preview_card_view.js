@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'LinkPreviewCardView',
     template: 'mail.LinkPreviewCardView',
     recordMethods: {
