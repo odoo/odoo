@@ -402,7 +402,6 @@ class QWeb(object):
             return
         code_line = astor.to_source(astmod)
 
-        # code = $code_lines.split(u"\n")
         astmod.body.insert(0, ast.Assign(
             targets=[ast.Name(id='code', ctx=ast.Store())],
             value=ast.Call(
@@ -415,8 +414,6 @@ class QWeb(object):
                 starargs=None, kwargs=None
             )
         ))
-        code_line = [[l, False] for l in code_line.split('\n')]
-
         # profiling = {}
         astmod.body.insert(0, ast.Assign(
             targets=[ast.Name(id='profiling', ctx=ast.Store())],
@@ -425,7 +422,7 @@ class QWeb(object):
         astmod.body.insert(0, ast.parse("from time import time").body[0])
 
         line_id = [0]
-        def prof(code, time):
+        def prof(time):
             line_id[0] += 1
 
             # profiling.setdefault($line_id, time() - $time)
@@ -467,7 +464,7 @@ class QWeb(object):
                     )
                 )
                 profile_body.append(code)
-                profline = prof(code, time)
+                profline = prof(time)
                 # log body of if, else and loop
                 if hasattr(code, 'body'):
                     code.body = [profline] + profile(code.body)
