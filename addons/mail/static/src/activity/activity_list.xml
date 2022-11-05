@@ -14,7 +14,7 @@
         </div>
         <t t-if="state.isOpen">
             <t t-foreach="props.activities" t-as="activity" t-key="activity.id">
-                <Activity data="activity"/>
+                <Activity data="activity" reload="props.reload"/>
             </t>
         </t>
     </div>

@@ -1,14 +1,16 @@
 /** @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
 export class Activity extends Component {
     static template = "mail.activity";
-    static props = ["data"];
+    static props = ["data", "reload?"];
 
     setup() {
+        this.orm = useService("orm");
         this.state = useState({
             showDetails: false,
         });
@@ -19,5 +21,12 @@ export class Activity extends Component {
 
     toggleDetails() {
         this.state.showDetails = !this.state.showDetails;
+    }
+
+    async unlink() {
+        await this.orm.unlink("mail.activity", [this.props.data.id]);
+        if (this.props.reload) {
+            this.props.reload();
+        }
     }
 }

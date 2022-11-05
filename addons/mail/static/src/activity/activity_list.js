@@ -5,7 +5,7 @@ import { Activity } from "./activity";
 
 export class ActivityList extends Component {
     static template = "mail.activity_list";
-    static props = ["activities"];
+    static props = ["activities", "reload"];
     static components = { Activity };
 
     setup() {

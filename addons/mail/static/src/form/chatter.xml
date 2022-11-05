@@ -20,7 +20,7 @@
         </t>
         <div class="overflow-auto">
             <t t-if="state.metadata and state.metadata.activities.length">
-                <ActivityList activities="state.metadata.activities" />
+                <ActivityList activities="state.metadata.activities" reload.bind="load" />
             </t>
             <Thread id="thread.id" t-key="thread.id"/>
         </div>
