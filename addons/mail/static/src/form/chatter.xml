@@ -3,7 +3,7 @@
 
 <t t-name="mail.chatter" owl="1">
     <div class="o-mail-chatter h-100 d-flex flex-column">
-        <div class="o-mail-chatter-topbar d-flex border-bottom flex-shrink-0 flex-grow-0">
+        <div class="o-mail-chatter-topbar d-flex border-bottom flex-shrink-0 flex-grow-0 pe-2">
             <button class="btn btn-odoo p-2 my-2 mx-3" t-on-click="toggleComposer">
                 Send message
             </button>
@@ -14,13 +14,28 @@
                 <i class="fa fa-clock-o me-1"/>
                 Activities
             </button>
+            <span class="flex-grow-1"/>
+            <button class="btn px-2">
+                <i class="fa fa-paperclip fa-lg"/>
+            </button>
+            <button class="btn px-2">
+                <i class="fa fa-user-o"/>
+                <span class="ps-1">
+                    <t t-esc="state.followers.length"/>
+                </span>
+            </button>
+            <button t-if="state.isFollower" class="btn text-success">
+                <i class="fa fa-fw fa-check"/>
+                Following
+            </button>
+            <button t-else="" class="btn btn-link">Follow</button>
         </div>
         <t t-if="state.hasComposer">
             <Composer threadId="thread.id" autofocus="true" onPostCallback.bind="toggleComposer"/> 
         </t>
         <div class="overflow-auto">
-            <t t-if="state.metadata and state.metadata.activities.length">
-                <ActivityList activities="state.metadata.activities" reload.bind="load" />
+            <t t-if="state.activities.length">
+                <ActivityList activities="state.activities" reload.bind="load" />
             </t>
             <Thread id="thread.id" t-key="thread.id"/>
         </div>
