@@ -14,6 +14,7 @@ export class Chatter extends Component {
 
     setup() {
         this.messaging = useMessaging();
+        this.activity = useService("mail.activity");
         this.rpc = useService("rpc");
         this.action = useService("action");
         this.state = useState({
@@ -49,28 +50,8 @@ export class Chatter extends Component {
         this.state.hasComposer = !this.state.hasComposer;
     }
 
-    scheduleActivity() {
-        const context = {
-            default_res_id: this.props.resId,
-            default_res_model: this.props.resModel,
-        };
-        this.action.doAction(
-            {
-                type: "ir.actions.act_window",
-                name: this.env._t("Schedule Activity"),
-                res_model: "mail.activity",
-                view_mode: "form",
-                views: [[false, "form"]],
-                target: "new",
-                context,
-                res_id: false,
-            },
-            {
-                onClose: () => {
-                    // to force a reload for this thread
-                    this.load();
-                },
-            }
-        );
+    async scheduleActivity() {
+        await this.activity.scheduleActivity(this.props.resModel, this.props.resId);
+        this.load();
     }
 }

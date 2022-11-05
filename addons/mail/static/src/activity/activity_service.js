@@ -4,8 +4,8 @@ import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const activityService = {
-    dependencies: ["orm"],
-    start(env, { orm }) {
+    dependencies: ["orm", "action"],
+    start(env, { orm, action }) {
         const state = reactive({
             counter: 0,
             activities: [],
@@ -21,7 +21,32 @@ export const activityService = {
             state.activities = activities;
         });
 
-        return state;
+        async function scheduleActivity(resModel, resId, activityId = false) {
+            const context = {
+                default_res_model: resModel,
+                default_res_id: resId,
+            };
+            return new Promise((resolve) => {
+                action.doAction(
+                    {
+                        type: "ir.actions.act_window",
+                        name: env._t("Schedule Activity"),
+                        res_model: "mail.activity",
+                        view_mode: "form",
+                        views: [[false, "form"]],
+                        target: "new",
+                        context,
+                        res_id: activityId,
+                    },
+                    { onClose: resolve }
+                );
+            });
+        }
+
+        return {
+            state,
+            scheduleActivity,
+        };
     },
 };
 

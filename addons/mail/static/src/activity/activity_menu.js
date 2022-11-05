@@ -11,7 +11,7 @@ export class ActivityMenu extends Component {
     static props = [];
 
     setup() {
-        this.activity = useState(useService("mail.activity"));
+        this.activity = useState(useService("mail.activity").state);
         this.action = useService("action");
         this.userId = useService("user").userId;
     }
