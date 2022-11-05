@@ -4,8 +4,8 @@ import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const activityService = {
-    dependencies: ["orm", "action"],
-    start(env, { orm, action }) {
+    dependencies: ["orm", "action", "bus_service"],
+    start(env, { orm, action, bus_service: bus }) {
         const state = reactive({
             counter: 0,
             activities: [],
@@ -42,6 +42,19 @@ export const activityService = {
                 );
             });
         }
+
+        bus.addEventListener("notification", (notifEvent) => {
+            for (let notif of notifEvent.detail) {
+                if (notif.type === "mail.activity/updated") {
+                    if (notif.payload.activity_created) {
+                        state.counter++;
+                    }
+                    if (notif.payload.activity_deleted) {
+                        state.counter--;
+                    }
+                }
+            }
+        });
 
         return {
             state,
