@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.message" owl="1">
+    <div class="o-mail-message py-1 mt-1 px-3 d-flex" t-att-class="{'o-mail-is-author': message.isAuthor}">
+        <div class="o-mail-message-sidebar d-flex flex-shrink-0 justify-content-center">
+            <div t-if="!props.squashed" class="o-mail-avatar-container position-relative">
+                <img class="w-100 h-100 rounded-circle o_object_fit_cover cursor-pointer o_redirect"
+                    t-attf-src="/mail/channel/1/partner/{{message.authorId}}/avatar_128"/>
+            </div>
+        </div>
+        <div>
+            <div t-if="!props.squashed" class="o-mail-msg-header d-flex flex-wrap align-items-baseline">
+                <span class="o-mail-own-name">
+                    <strong class="o_redirect me-1 text-truncate cursor-pointer">
+                    <t t-esc="author.name"/>
+                    </strong> - 
+                </span>
+                <small class="text-muted opacity-50 ms-2" t-att-title="message.dateTimeStr">
+                    <RelativeTime datetime="message.dateTime" />
+                </small>
+                <t t-if="!env.inChatter and message.recordName and message.resModel !== 'mail.channel'">
+                    <small t-on-click.prevent="openRecord" class="ms-1 text-500">
+                        on <a t-att-href="message.url"><t t-esc="message.recordName"/></a>
+                    </small>
+                </t>
+            </div>
+            <div class="o-mail-message-content d-flex">
+                <t t-if="message.type === 'notification'">
+                    <t t-if="message.subtype_description">
+                        <p class="mb-0"><t t-esc="message.subtype_description"/></p>
+                    </t>
+                    <t t-if="message.trackingValues.length">
+                        <t t-call="mail.tracking_values"/>
+                    </t>
+                </t>
+                <t t-if="message.type !== 'notification'">
+                    <div class="o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3">
+                        <t t-out="message.body"/>
+                    </div>
+                </t>
+                <div class="o-mail-message-actions invisible">
+                    <div class="rounded-1 shadow-sm">
+                        <i class="cursor-pointer px-1 py-2 fa fa-lg"
+                            t-att-class="message.isStarred ? 'fa-star' : 'fa-star-o'" 
+                            t-on-click="toggleStar"
+                            role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.tracking_values" owl="1">
+    <ul class="mb-0 ps-4">
+        <t t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
+            <li>
+                <span class="fw-bold" t-esc="trackingValue.oldValue.value"/>
+                <i class="fa fa-long-arrow-right mx-1 text-600" />
+                <span class="text-info fw-bold" t-esc="trackingValue.newValue.value"/> (<t t-esc="trackingValue.changedField"/>)
+            </li>
+        </t>
+    </ul>
+</t>
+</templates>
+

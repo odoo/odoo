@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.call_ui" owl="1">
+    <div class="o-mail-call-ui" t-att-class="{'o-compact': props.compact}">
+        <div class="p-4 d-flex flex-column align-items-center">
+            <div style="height: 70px">
+            calling...
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button class="o-mail-call-command rounded-circle btn m-2 opacity-75-hover" aria-label="Unmute" title="Unmute">
+                <div class="fa-stack"><i class="fa fa-microphone-slash text-danger fa-lg"/></div>
+            </button>
+            <button class="o-mail-call-command rounded-circle btn m-2 opacity-75-hover" aria-label="Deafen" title="Deafen">
+                <div class="fa-stack"><i class="fa fa-headphones fa-lg"/></div>
+            </button>
+            <button class="o-mail-call-command rounded-circle btn m-2 opacity-75-hover" aria-label="Turn camera on" title="Turn camera on">
+                <div class="fa-stack"><i class="fa fa-video-camera fa-lg"/></div>
+            </button>
+            <button class="o-mail-call-command rounded-circle btn m-2 opacity-75-hover" aria-label="Share Screen" title="Share Screen">
+                <div class="fa-stack"><i class="fa fa-desktop fa-lg"/></div>
+            </button>
+            <button class="o-mail-call-command rounded-circle btn m-2 opacity-75-hover" aria-label="Activate Full Screen" title="Activate Full Screen">
+                <div class="fa-stack"><i class="fa fa-arrows-alt fa-lg"/></div>
+            </button>
+            <button class="o-mail-call-command rounded-circle btn btn-danger m-2" aria-label="Disconnect" title="Disconnect" t-on-click="disconnect">
+                <div class="fa-stack"><i class="fa fa-phone fa-lg"/></div>
+            </button>
+        </div>
+    </div>
+</t>
+
+
+</templates>

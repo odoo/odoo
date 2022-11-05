@@ -1,0 +1,43 @@
+$o-mail-message-sidebar-width: 48px !default;
+
+.o-mail-composer {
+    // Could be replaced by .d-grid after the migration to BS5.
+    display: grid;
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    &.o-has-current-partner-avatar {
+        grid-template-columns: $o-mail-message-sidebar-width 1fr;
+    }
+}
+
+.o-mail-composer-main {
+    grid-area: core-main;
+    min-width: 0;
+}
+
+.o-mail-composer-sidebar {
+    grid-area: sidebar-main;
+    justify-self: center;
+}
+
+.o-mail-composer-textarea {
+    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+    padding-bottom: 10px;
+    resize: none;
+
+    &::placeholder {
+        @include text-truncate();
+    }
+}
+
+.o-fast-popover {
+    animation: 0.02s slide-right !important;
+    animation: 0.02s slide-left !important;
+    animation: 0.02s slide-top !important;
+    animation: 0.02s slide-bottom !important;
+}

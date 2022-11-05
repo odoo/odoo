@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.activity_list" owl="1">
+    <div class="o-mail-activity-list">
+        <div class="d-flex pt-4 cursor-pointer fw-bolder" t-on-click="toggleList">
+            <hr class="flex-grow-1 border-top"/>
+            <div class="px-3">
+                <i class="fa fa-fw" t-att-class="state.isOpen ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Planned Activities
+                <span t-if="!state.isOpen" class="badge text-bg-success"><t t-esc="props.activities.length"/></span>
+            </div>
+            <hr class="flex-grow-1 border-top"/>
+        </div>
+        <t t-if="state.isOpen">
+            <t t-foreach="props.activities" t-as="activity" t-key="activity.id">
+                <Activity data="activity"/>
+            </t>
+        </t>
+    </div>
+</t>
+
+</templates>

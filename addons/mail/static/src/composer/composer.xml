@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.composer" owl="1">
+    <t t-set="thread" t-value="messaging.threads[props.threadId]" />
+    <t t-set="compact" t-value="props.mode === 'compact'"/>
+    <div class="o-mail-composer d-grid pe-3 ps-1 py-1 flex-shrink-0"
+            t-att-class="{'o-has-current-partner-avatar mb-3':!compact}">
+        <div class="o-mail-composer-sidebar" t-if="!compact">
+            <img class="mt-1 rounded-circle" style="width:36px;height:36px;"
+                t-att-src="messaging.user.avatarUrl" alt="Avatar of user"/>
+        </div>
+        <div class="o-mail-composer-main d-flex flex-nowrap align-items-start flex-grow-1">
+            <div class="position-relative flex-grow-1 align-self-stretch rounded-start-3 border border-end-0">
+                <textarea class="o-mail-composer-textarea form-control px-3 border-0 shadow-none overflow-auto rounded-0 rounded-start-3"
+                    t-ref="textarea"
+                    style="height:40px;"
+                    t-on-keydown="onKeydown"
+                    t-model="state.value"
+                    t-attf-placeholder="Message ##{thread.name}" />
+            </div>
+            <div class="d-flex flex-shrink-0 align-self-stretch">
+                <div class="d-flex py-1 border-top border-bottom">
+                    <div class="d-flex align-items-center px-2" >
+                        <button class="btn btn-light border-0 rounded-pill" t-ref="emoji-picker">
+                            <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+                        </button>
+                        <button class="btn btn-light fa fa-paperclip border-0 rounded-pill" title="Add attachment" aria-label="Add attachment" type="button"/>
+                    </div>
+                </div>
+                <t t-if="!compact">
+                    <t t-call="mail.Composer.actionButtons"/>
+                </t>
+            </div>
+
+        </div>
+
+    </div>
+</t>
+
+    <t t-name="mail.Composer.actionButtons" owl="1">
+        <div class="d-flex">
+            <button class="btn btn-primary o-last border-start-0 rounded-0 rounded-end-3"
+                t-on-click="sendMessage"           
+                type="button"
+                t-att-disabled="!state.value"
+            >
+                Send
+            </button>
+        </div>
+    </t>
+
+
+
+</templates>
+

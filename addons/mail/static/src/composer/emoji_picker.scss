@@ -1,0 +1,26 @@
+.o-mail-emoji-picker {
+    width: 285px;
+    height: 350px;
+
+    display: grid;
+    grid-template-rows: 34px 35px 1fr;
+
+    .o-emoji {
+        width: 30px;
+        font-size: 1.5rem;
+        &:hover {
+            background-color: #e9ecef;
+        }
+    }
+
+    .o-mail-emoji-picker-top {
+        border-bottom: 1px solid gray;
+        .o-emoji:hover {
+            background-color: white;
+        }
+    }
+
+    .o-mail-emoji-picker-search {
+        border-bottom: 1px solid gray;
+    }
+}
