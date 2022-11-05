@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { clear, insert, one, registerPatch } from '@mail/model';
+import { clear, insert, one, Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'Thread',
     modelMethods: {
         /**

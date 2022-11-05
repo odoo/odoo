@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 
 /**
  * Mirrors the fields of the python model res.users.settings.volumes.
  */
-registerModel({
+Model({
     name: 'res.users.settings.volumes',
     recordMethods: {
         /**

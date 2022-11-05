@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model';
+import { Patch } from '@mail/model';
 
-registerPatch({
+Patch({
     name: 'NotificationListView',
     fields: {
         filteredChannels: {

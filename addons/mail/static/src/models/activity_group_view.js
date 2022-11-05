@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { one, registerModel } from '@mail/model';
+import { one, Model } from '@mail/model';
 
 import session from 'web.session';
 
-registerModel({
+Model({
     name: 'ActivityGroupView',
     recordMethods: {
         /**

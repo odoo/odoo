@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { increment, one, registerModel } from '@mail/model';
+import { increment, one, Model } from '@mail/model';
 
 import session from 'web.session';
 import utils from 'web.utils';
 import {getCookie} from 'web.utils.cookies';
 
-registerModel({
+Model({
     name: 'PublicLivechatGlobalNotificationHandler',
     lifecycleHooks: {
         _created() {

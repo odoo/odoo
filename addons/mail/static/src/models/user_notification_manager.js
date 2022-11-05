@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, registerModel } from '@mail/model';
+import { attr, clear, Model } from '@mail/model';
 
 import { url } from '@web/core/utils/urls';
 
-registerModel({
+Model({
     name: 'UserNotificationManager',
     recordMethods: {
         /**

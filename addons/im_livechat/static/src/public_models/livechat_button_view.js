@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 import {unaccent} from 'web.utils';
 import {getCookie, setCookie, deleteCookie} from 'web.utils.cookies';
 
-registerModel({
+Model({
     name: 'LivechatButtonView',
     lifecycleHooks: {
         _created() {

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, one, registerModel } from '@mail/model';
+import { attr, one, Model } from '@mail/model';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
-registerModel({
+Model({
     name: 'WebClientViewAttachmentView',
     template: 'mail.WebClientViewAttachmentView',
     componentSetup() {

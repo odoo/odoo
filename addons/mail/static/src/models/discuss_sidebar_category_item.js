@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 import Dialog from 'web.Dialog';
 
-registerModel({
+Model({
     name: 'DiscussSidebarCategoryItem',
     template: 'mail.DiscussSidebarCategoryItem',
     recordMethods: {

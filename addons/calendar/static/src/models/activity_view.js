@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model';
+import { Patch } from '@mail/model';
 
 import Dialog from 'web.Dialog';
 
-registerPatch({
+Patch({
     name: 'ActivityView',
     recordMethods: {
         /**

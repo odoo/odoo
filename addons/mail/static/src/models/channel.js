@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, one, many, registerModel } from '@mail/model';
+import { attr, clear, one, many, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Channel',
     modelMethods: {
         /**

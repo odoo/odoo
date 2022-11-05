@@ -2,7 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 import { sprintf } from '@web/core/utils/strings';
 
 /**
@@ -11,7 +11,7 @@ import { sprintf } from '@web/core/utils/strings';
  * For instance, to mention a partner, can type "@" and some keyword,
  * and display suggested partners to mention.
  */
-registerModel({
+Model({
     name: 'ComposerSuggestionView',
     template: 'mail.ComposerSuggestionView',
     componentSetup() {

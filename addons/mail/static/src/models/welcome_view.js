@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, one, registerModel } from '@mail/model';
+import { attr, clear, one, Model } from '@mail/model';
 
 const getNextGuestNameInputId = (function () {
     let id = 0;
     return () => ++id;
 })();
 
-registerModel({
+Model({
     name: 'WelcomeView',
     template: 'mail.WelcomeView',
     componentSetup() {

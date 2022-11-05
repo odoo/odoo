@@ -2,12 +2,12 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, link, many, one, registerModel, unlink } from '@mail/model';
+import { attr, clear, link, many, one, Model, unlink } from '@mail/model';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'ChannelInvitationForm',
     template: 'mail.ChannelInvitationForm',
     componentSetup() {

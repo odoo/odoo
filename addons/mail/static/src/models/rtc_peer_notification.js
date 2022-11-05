@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, registerModel } from '@mail/model';
+import { attr, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'RtcPeerNotification',
     fields: {
         channelId: attr({ readonly: true, required: true }),

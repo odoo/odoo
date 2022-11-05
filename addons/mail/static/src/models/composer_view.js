@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, link, many, one, registerModel } from '@mail/model';
+import { attr, clear, link, many, one, Model } from '@mail/model';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
 import { url } from '@web/core/utils/urls';
 
-registerModel({
+Model({
     name: 'ComposerView',
     template: 'mail.ComposerView',
     componentSetup() {
