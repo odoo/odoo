@@ -71,7 +71,7 @@
     'application': True,
     'assets': {
         'mail.assets_messaging': [
-            'crm/static/src/models/*.js',
+            'crm/static/src/models/*',
         ],
         'web.assets_backend': [
             'crm/static/src/views/**/*.js',

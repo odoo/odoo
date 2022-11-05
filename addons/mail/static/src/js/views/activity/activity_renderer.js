@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import ActivityRecord from '@mail/js/views/activity/activity_record';
-import { ActivityCellViewContainer } from '@mail/backend_components/activity_cell_view/activity_cell_view_container';
+import { ActivityCellViewContainer } from '@mail/backend_components/activity_cell_view_container/activity_cell_view_container';
 
 import AbstractRendererOwl from 'web.AbstractRendererOwl';
 import core from 'web.core';

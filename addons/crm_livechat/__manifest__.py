@@ -20,7 +20,7 @@
     'license': 'LGPL-3',
     'assets': {
         'mail.assets_messaging': [
-            'crm_livechat/static/src/models/*.js',
+            'crm_livechat/static/src/models/*',
         ],
     },
 }

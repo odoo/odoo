@@ -68,7 +68,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/*/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
-            'im_livechat/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
             'im_livechat/static/tests/helpers/**/*.js',
@@ -80,7 +79,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/tours/**/*',
         ],
         'mail.assets_messaging': [
-            'im_livechat/static/src/models/*.js',
+            'im_livechat/static/src/models/*',
         ],
         'im_livechat.assets_public_livechat': [
             ('include', 'mail.assets_core_messaging'),

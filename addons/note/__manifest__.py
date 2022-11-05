@@ -26,7 +26,7 @@
     'application': True,
     'assets': {
         'mail.assets_messaging': [
-            'note/static/src/models/*.js',
+            'note/static/src/models/*',
         ],
         'web.assets_backend': [
             'note/static/src/components/**/*',

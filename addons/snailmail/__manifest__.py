@@ -23,10 +23,7 @@ Allows users to send documents by post
     'auto_install': True,
     'assets': {
         'mail.assets_messaging': [
-            'snailmail/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
-            'snailmail/static/src/components/*/*',
+            'snailmail/static/src/models/*',
         ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
@@ -34,10 +31,6 @@ Allows users to send documents by post
             'web/static/lib/bootstrap/scss/_variables.scss',
             'snailmail/static/src/scss/snailmail_external_layout_asset.scss',
             'snailmail/static/src/js/snailmail_external_layout.js',
-        ],
-        'web.assets_backend': [
-            'snailmail/static/src/components/*/*.scss',
-            'snailmail/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
             'snailmail/static/tests/helpers/**/*.js',

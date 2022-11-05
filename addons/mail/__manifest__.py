@@ -121,7 +121,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'mail.assets_messaging': [
             ('include', 'mail.assets_core_messaging'),
-            'mail/static/src/models/*.js',
+            'mail/static/src/models/*',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
         'mail.assets_model_data': [
@@ -224,7 +224,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.tests_assets': [
             'mail/static/tests/helpers/**/*.js',
-            'mail/static/tests/models/*.js',
+            'mail/static/tests/models/*',
         ],
         'web.qunit_suite_tests': [
             'mail/static/tests/qunit_suite_tests/**/*.js',

@@ -50,7 +50,7 @@
     'post_init_hook': '_install_hr_localization',
     'assets': {
         'mail.assets_messaging': [
-            'hr/static/src/models/*.js',
+            'hr/static/src/models/*',
         ],
         'web.assets_backend': [
             'hr/static/src/views/**/*.js',
