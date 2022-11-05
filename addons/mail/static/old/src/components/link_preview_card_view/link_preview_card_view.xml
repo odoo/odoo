@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.LinkPreviewCardView" owl="1">
+        <div class="o_LinkPreviewCardView card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'me-2': !linkPreviewCardView.linkPreviewListViewOwner.messageViewOwner.isInChatWindow }" t-attf-class="{{ className }}" t-on-mouseenter="linkPreviewCardView.onMouseEnter" t-on-mouseleave="linkPreviewCardView.onMouseLeave" t-ref="root">
+            <div class="row g-0 flex-row-reverse h-100">
+                <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !linkPreviewCardView.linkPreview.og_description }">
+                    <div class="o_LinkPreviewCardView_content p-3">
+                        <h6 class="o_LinkPreviewCardView_title card-title mb-0 me-2" t-attf-class="{{ linkPreviewCardView.linkPreview.og_description ? 'text-truncate' : 'o_LinkPreviewCardView_hasMultineLines overflow-hidden' }}">
+                            <a t-att-href="linkPreviewCardView.linkPreview.source_url" target="_blank" t-out="linkPreviewCardView.linkPreview.og_title"/>
+                        </h6>
+                        <p t-if="linkPreviewCardView.linkPreview.og_description" class="o_LinkPreviewCardView_description o_LinkPreviewCardView_hasMultineLines card-text mb-0 mt-2 text-muted small overflow-hidden" t-out="linkPreviewCardView.linkPreview.og_description"/>
+                    </div>
+                </div>
+                <div class="o_LinkPreviewCardView_imageLinkWrap col-4 d-block">
+                    <a t-att-href="linkPreviewCardView.linkPreview.source_url" class="o_LinkPreviewCardView_imageLink" target="_blank">
+                        <img t-if="linkPreviewCardView.linkPreview.og_image" class="o_LinkPreviewCardView_image w-100 h-100 o_object_fit_cover" t-att-src="linkPreviewCardView.linkPreview.og_image" t-att-alt="linkPreviewCardView.linkPreview.og_title"/>
+                        <span t-else="" class="o_LinkPreviewCardView_imageEmpty d-flex align-items-center justify-content-center w-100 h-100 bg-100 text-300">
+                            <i class="fa fa-camera fa-2x"/>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div t-if="linkPreviewCardView.linkPreviewAsideView" class="o_LinkPreviewCardView_aside position-absolute top-0 end-0 small">
+                <LinkPreviewAsideView className="'fa fa-stack p-0 opacity-75 opacity-100-hover'" record="linkPreviewCardView.linkPreviewAsideView"/>
+            </div>
+        </div>
+    </t>
+</templates>

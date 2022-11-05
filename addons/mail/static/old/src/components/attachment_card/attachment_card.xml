@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentCard" owl="1">
+        <t t-if="attachmentCard">
+            <div t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_AttachmentCard o-has-card-details d-flex rounded bg-300"
+                    t-att-class="{
+                        'o-isUploading': attachmentCard.attachment.isUploading,
+                        'o-viewable': attachmentCard.attachment.isViewable,
+                    }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" role="menu" t-att-aria-label="attachmentCard.attachment.displayName" t-att-data-id="attachmentCard.attachment.localId"
+                >
+                    <!-- Image style-->
+                    <!-- o_image from mimetype.scss -->
+                    <div class="o_AttachmentCard_image o_image flex-shrink-0 m-1" t-on-click="attachmentCard.onClickImage" t-att-class="{'o-attachment-viewable opacity-75-hover': attachmentCard.attachment.isViewable,}" role="menuitem" aria-label="Preview" t-att-tabindex="attachmentCard.attachment.isViewable ? 0 : -1" t-att-aria-disabled="!attachmentCard.attachment.isViewable" t-att-data-mimetype="attachmentCard.attachment.mimetype">
+                    </div>
+                    <!-- Attachment details -->
+                    <div class="o_AttachmentCard_details d-flex justify-content-center flex-column px-1">
+                        <t t-if="attachmentCard.attachment.displayName">
+                            <div class="o_AttachmentCard_filename text-truncate">
+                                <t t-esc="attachmentCard.attachment.displayName"/>
+                            </div>
+                        </t>
+                        <t t-if="attachmentCard.attachment.extension">
+                            <small class="o_AttachmentCard_extension text-uppercase">
+                                <t t-esc="attachmentCard.attachment.extension"/>
+                            </small>
+                        </t>
+                    </div>
+                    <!-- Attachment aside -->
+                    <div class="o_AttachmentCard_aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachmentCard.hasMultipleActions }">
+                        <!-- Uploading icon -->
+                        <t t-if="attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
+                            <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploading d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
+                                <i class="fa fa-spin fa-spinner"/>
+                            </div>
+                        </t>
+                        <!-- Uploaded icon -->
+                        <t t-if="!attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
+                            <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploaded d-flex justify-content-center align-items-center w-100 h-100 text-primary" title="Uploaded">
+                                <i class="fa fa-check"/>
+                            </div>
+                        </t>
+                        <!-- Remove button -->
+                        <t t-if="attachmentCard.attachment.isDeletable">
+                            <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0" t-attf-class="{{ attachmentCard.attachmentList.composerViewOwner ? 'o-pretty position-absolute btn-primary transition-base' : 'bg-300' }}" t-on-click="attachmentCard.onClickUnlink" title="Remove">
+                                <i class="fa fa-trash" role="img" aria-label="Remove"/>
+                            </button>
+                        </t>
+                        <!-- Download button -->
+                        <t t-if="!attachmentCard.attachmentList.composerViewOwner and !attachmentCard.attachment.isUploading">
+                            <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemDownload btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0 bg-300" t-on-click="attachmentCard.attachment.onClickDownload" title="Download">
+                                <i class="fa fa-download" role="img" aria-label="Download"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

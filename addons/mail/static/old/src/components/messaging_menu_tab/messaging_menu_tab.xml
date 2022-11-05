@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessagingMenuTabView" owl="1">
+        <button class="o_MessagingMenuTabView o-desktop btn btn-link" t-att-class="{ 'o-active fw-bolder': messagingMenuTabView.isActive, 'text-dark': !messagingMenuTabView.isActive }" t-on-click="messagingMenuTabView.onClick" type="button" role="tab" t-att-data-tab-id="messagingMenuTabView.id" t-attf-class="{{ className }}" t-ref="root">
+            <t t-out="messagingMenuTabView.name"/>
+        </button>
+    </t>
+
+</templates>

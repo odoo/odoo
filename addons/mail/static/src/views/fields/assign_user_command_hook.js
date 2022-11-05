@@ -4,7 +4,7 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 
-import { useComponent, useEnv } from '@odoo/owl';
+import { useComponent, useEnv } from "@odoo/owl";
 
 /**
  * Use this hook to add "Assign to.." and "Assign/Unassign me" to the command palette.
