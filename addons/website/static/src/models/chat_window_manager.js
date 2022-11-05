@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
+import { registerPatch } from '@mail/model';
 import { BASE_VISUAL } from '@mail/models/chat_window_manager';
 
 registerPatch({

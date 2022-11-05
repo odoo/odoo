@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, registerPatch } from '@mail/model';
 
 registerPatch({
     name: 'ClockWatcher',

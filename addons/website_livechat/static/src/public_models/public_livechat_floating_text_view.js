@@ -2,8 +2,7 @@
 
 import { PublicLivechatFloatingTextView } from '@website_livechat/legacy/widgets/public_livechat_floating_text_view/public_livechat_floating_text_view';
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, registerModel } from '@mail/model';
 
 registerModel({
     name: 'PublicLivechatFloatingTextView',

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert } from '@mail/model/model_field_command';
+import { insert } from '@mail/model';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 import { str_to_datetime } from 'web.time';

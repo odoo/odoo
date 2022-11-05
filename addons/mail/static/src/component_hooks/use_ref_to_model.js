@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { clear } from '@mail/model/model_field_command';
+import { clear } from '@mail/model';
 
 import { onWillUpdateProps, useComponent, useRef } from '@odoo/owl';
 
