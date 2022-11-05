@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, registerModel } from '@mail/model';
 
 import fieldUtils from 'web.field_utils';
 import { getLangTimeFormat } from 'web.time';

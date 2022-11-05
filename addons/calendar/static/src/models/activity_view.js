@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registerPatch } from '@mail/model/model_core';
+import { registerPatch } from '@mail/model';
 
 import Dialog from 'web.Dialog';
 

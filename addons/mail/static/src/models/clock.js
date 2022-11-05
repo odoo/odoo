@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many } from '@mail/model/model_field';
+import { attr, many, registerModel } from '@mail/model';
 
 /**
  * Models a record that provides the current date, updated at a given frequency.

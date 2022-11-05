@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, many, one, registerModel } from '@mail/model';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
