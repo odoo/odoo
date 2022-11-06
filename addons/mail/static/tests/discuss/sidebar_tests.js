@@ -3,7 +3,7 @@
 import { Sidebar } from "@mail/discuss/sidebar";
 import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
-import { makeMessagingEnv, MessagingServer } from "../helpers";
+import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
 
 let target;
 
@@ -35,7 +35,7 @@ QUnit.module("mail", (hooks) => {
         server.addChannel(43, "abc");
         server.addChannel(46, "def");
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        env.services['mail.messaging'].discuss.threadId = 43; // #abc is active
+        env.services["mail.messaging"].discuss.threadId = 43; // #abc is active
 
         await mount(Sidebar, target, { env });
         assert.containsN(target, ".o-mail-category-item", 2);

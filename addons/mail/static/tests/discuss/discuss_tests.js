@@ -1,15 +1,8 @@
 /** @odoo-module **/
 
 import { Discuss } from "@mail/discuss/discuss";
-import {
-    click,
-    editInput,
-    getFixture,
-    mount,
-    patchWithCleanup,
-    nextTick,
-} from "@web/../tests/helpers/utils";
-import { makeMessagingEnv, MessagingServer } from "../helpers";
+import { click, editInput, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
 import { browser } from "@web/core/browser/browser";
 
 let target;
@@ -73,7 +66,7 @@ QUnit.module("mail", (hooks) => {
             assert.step(route);
             return server.rpc(route, params);
         });
-        env.services['mail.messaging'].setDiscussThread(1);
+        env.services["mail.messaging"].setDiscussThread(1);
 
         await mount(Discuss, target, { env });
         assert.containsNone(target, ".o-mail-message");

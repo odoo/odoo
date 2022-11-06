@@ -2,7 +2,7 @@
 
 import { ChatWindow } from "@mail/chat/chat_window";
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
-import { makeMessagingEnv, MessagingServer } from "../helpers";
+import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
 
 let target;
 
