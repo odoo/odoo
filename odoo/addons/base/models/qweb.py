@@ -12,7 +12,7 @@ from itertools import tee, count
 from textwrap import dedent
 
 import itertools
-from lxml import etree, html
+from lxml import etree
 from psycopg2.extensions import TransactionRollbackError
 import werkzeug
 from werkzeug.utils import escape as _escape
@@ -378,8 +378,8 @@ class QWeb(object):
 
         for node in element:
             if node.get('t-name') == str(template):
-                return (node, document)
-        return (element, document)
+                return node, document
+        return element, document
 
     def load(self, template, options):
         """ Load a given template. """
@@ -452,7 +452,6 @@ class QWeb(object):
             for code in body:
                 time = self._make_name('time')
 
-                # $time = time()
                 profile_body.append(
                     ast.Assign(
                         targets=[ast.Name(id=time, ctx=ast.Store())],
@@ -1010,9 +1009,7 @@ class QWeb(object):
         return self._compile_tag(el, content, options, False)
 
     def _compile_directive_set(self, el, options):
-        body = []
         varname = el.attrib.pop('t-set')
-        varset = self._values_var(ast.Str(varname), ctx=ast.Store())
 
         if 't-value' in el.attrib:
             value = self._compile_expr(el.attrib.pop('t-value') or 'None')
@@ -1655,7 +1652,7 @@ class QWeb(object):
             * string or None: content
             * boolean: force_display display the tag if the content and default_content are None
         """
-        return (OrderedDict(), value, False)
+        return OrderedDict(), value, False
 
     # compile expression
 
