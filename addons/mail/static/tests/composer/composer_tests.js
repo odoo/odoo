@@ -20,6 +20,6 @@ QUnit.module("mail", (hooks) => {
         await mount(Composer, target, { env, props: { threadId: 1, placeholder: "owl" } });
 
         assert.containsOnce(target, "textarea");
-        assert.strictEqual(target.querySelector("textarea").getAttribute("placeholder"), "owl")
+        assert.strictEqual(target.querySelector("textarea").getAttribute("placeholder"), "owl");
     });
 });

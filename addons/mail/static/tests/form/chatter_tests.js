@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Chatter } from "@mail/form/chatter";
-import { click, nextTick, getFixture, mount } from "@web/../tests/helpers/utils";
+import { click, editInput, nextTick, getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
 import { Component, useState, xml } from "@odoo/owl";
 
@@ -26,7 +26,10 @@ QUnit.module("mail", (hooks) => {
             assert.step(route);
             return server.rpc(route, params);
         });
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
         assert.containsOnce(target, ".o-mail-thread");
@@ -39,7 +42,10 @@ QUnit.module("mail", (hooks) => {
             assert.step(route);
             return server.rpc(route, params);
         });
-        await mount(Chatter, target, { env, props: { resId: false, resModel: "somemodel" , displayName: ""} });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: false, resModel: "somemodel", displayName: "" },
+        });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
         assert.containsOnce(target, ".o-mail-thread");
@@ -67,52 +73,113 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("composer has proper placeholder when sending message", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
         assert.containsNone(target, ".o-mail-composer");
 
         await click($(target).find("button:contains(Send message)")[0]);
         assert.containsOnce(target, ".o-mail-composer");
-        assert.strictEqual(target.querySelector("textarea").getAttribute("placeholder"), "Send a message to followers...")
+        assert.strictEqual(
+            target.querySelector("textarea").getAttribute("placeholder"),
+            "Send a message to followers..."
+        );
     });
 
     QUnit.test("composer has proper placeholder when logging note", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
         assert.containsNone(target, ".o-mail-composer");
 
         await click($(target).find("button:contains(Log note)")[0]);
         assert.containsOnce(target, ".o-mail-composer");
-        assert.strictEqual(target.querySelector("textarea").getAttribute("placeholder"), "Log an internal note...")
+        assert.strictEqual(
+            target.querySelector("textarea").getAttribute("placeholder"),
+            "Log an internal note..."
+        );
     });
 
     QUnit.test("send/log buttons are properly styled", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
         assert.containsNone(target, ".o-mail-composer");
 
         const sendMsgBtn = $(target).find("button:contains(Send message)")[0];
         const sendNoteBtn = $(target).find("button:contains(Log note)")[0];
-        assert.ok(sendMsgBtn.classList.contains('btn-odoo'));
-        assert.notOk(sendNoteBtn.classList.contains('btn-odoo'));
+        assert.ok(sendMsgBtn.classList.contains("btn-odoo"));
+        assert.notOk(sendNoteBtn.classList.contains("btn-odoo"));
 
         await click(sendNoteBtn);
-        assert.notOk(sendMsgBtn.classList.contains('btn-odoo'));
-        assert.ok(sendNoteBtn.classList.contains('btn-odoo'));
+        assert.notOk(sendMsgBtn.classList.contains("btn-odoo"));
+        assert.ok(sendNoteBtn.classList.contains("btn-odoo"));
 
         await click(sendMsgBtn);
-        assert.ok(sendMsgBtn.classList.contains('btn-odoo'));
-        assert.notOk(sendNoteBtn.classList.contains('btn-odoo'));
+        assert.ok(sendMsgBtn.classList.contains("btn-odoo"));
+        assert.notOk(sendNoteBtn.classList.contains("btn-odoo"));
     });
 
     QUnit.test("displayname is used when sending a message", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" } });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" },
+        });
         await click($(target).find("button:contains(Send message)")[0]);
         const msg = $(target).find("span:contains(Gnargl)")[0];
         assert.ok(msg);
     });
 
+    QUnit.test("can post a message on a record thread", async (assert) => {
+        assert.expect(10);
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => {
+            assert.step(route);
+            if (route === "/mail/message/post") {
+                const expected = {
+                    post_data: {
+                        body: "hey",
+                        attachment_ids: [],
+                        message_type: "comment",
+                        partner_ids: [43],
+                        subtype_xmlid: "mail.mt_comment",
+                    },
+                    thread_id: 43,
+                    thread_model: "somemodel",
+                };
+                assert.deepEqual(params, expected);
+            }
+            return server.rpc(route, params);
+        });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
+
+        assert.containsNone(target, ".o-mail-composer");
+        await click($(target).find("button:contains(Send message)")[0]);
+        assert.containsOnce(target, ".o-mail-composer");
+
+        await editInput(target, "textarea", "hey");
+
+        assert.containsNone(target, ".o-mail-message");
+        await click($(target).find(".o-mail-composer button:contains(Send)")[0]);
+        assert.containsOnce(target, ".o-mail-message");
+
+        assert.verifySteps([
+            "/mail/init_messaging",
+            "/mail/thread/data",
+            "/mail/thread/messages",
+            "/mail/message/post",
+        ]);
+    });
 });
