@@ -8,7 +8,7 @@
 # Slawomir Adamus <melthalion@gmail.com>, 2020
 # Michał <michal.gorecki@esnc.pl>, 2020
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2020
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2020
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2020
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2020
 # Martin Trigaux, 2020
@@ -32,6 +32,7 @@
 # Dawid Prus, 2021
 # Tomasz Leppich <t.leppich@gmail.com>, 2022
 # Maksym <ms@myodoo.pl>, 2022
+# Anita Kosobucka, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2022\n"
+"Last-Translator: Anita Kosobucka, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -851,7 +852,7 @@ msgstr "Kategorie podrzędne"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Wybierz metodę płatności"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1751,6 +1752,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"No payment method is available for your current order. Please contact us for"
+" more information."
 msgstr ""
 
 #. module: website_sale
@@ -2728,6 +2737,12 @@ msgstr "Sprzedane"
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Niektóre wymagane pola są puste."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Sorry, we are unable to find a Payment Method"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
