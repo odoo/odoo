@@ -127,6 +127,35 @@ QUnit.module("mail", (hooks) => {
         assert.notOk(sendNoteBtn.classList.contains("btn-odoo"));
     });
 
+    QUnit.test("composer is focused", async (assert) => {
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
+        assert.containsNone(target, ".o-mail-composer");
+
+        const sendMsgBtn = $(target).find("button:contains(Send message)")[0];
+        const sendNoteBtn = $(target).find("button:contains(Log note)")[0];
+        
+        await click(sendMsgBtn);
+        const composer = target.querySelector(".o-mail-composer textarea");
+        assert.strictEqual(document.activeElement, composer);
+
+        // unfocus composer
+        composer.blur();
+        assert.notEqual(document.activeElement, composer);
+        await click(sendNoteBtn);
+        assert.strictEqual(document.activeElement, composer);
+
+        // unfocus composer
+        composer.blur();
+        assert.notEqual(document.activeElement, composer);
+        await click(sendMsgBtn);
+        assert.strictEqual(document.activeElement, composer);
+    });
+
     QUnit.test("displayname is used when sending a message", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
@@ -182,4 +211,5 @@ QUnit.module("mail", (hooks) => {
             "/mail/message/post",
         ]);
     });
+
 });

@@ -19,7 +19,7 @@ export class Composer extends Component {
                     this.ref.el.focus();
                 }
             },
-            () => [this.props.autofocus + this.state.autofocus]
+            () => [this.props.autofocus + this.state.autofocus, this.props.placeholder]
         );
     }
 
