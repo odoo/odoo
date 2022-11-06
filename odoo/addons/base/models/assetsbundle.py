@@ -17,7 +17,7 @@ from contextlib import closing
 from datetime import datetime
 from subprocess import Popen, PIPE
 from collections import OrderedDict
-from odoo import fields, tools, SUPERUSER_ID
+from odoo import SUPERUSER_ID
 from odoo.tools.pycompat import to_text
 from odoo.tools.misc import file_open
 from odoo.http import request
@@ -514,8 +514,8 @@ class AssetsBundle(object):
     def compile_css(self, compiler, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
-        def handle_compile_error(e, source):
-            error = self.get_preprocessor_error(e, source=source)
+        def handle_compile_error(e):
+            error = self.get_preprocessor_error(e)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''
@@ -531,11 +531,10 @@ class AssetsBundle(object):
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
-        compiled = ''
         try:
             compiled = compiler(source)
         except CompileError as e:
-            return handle_compile_error(e, source=source)
+            return handle_compile_error(e)
 
         compiled = compiled.strip()
 
@@ -561,14 +560,12 @@ class AssetsBundle(object):
                 rtlcss = 'rtlcss'
         cmd = [rtlcss, '-']
 
-
         try:
             rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
-
             # Check the presence of rtlcss, if rtlcss not available then we should return normal less file
             try:
-                process = Popen(
+                Popen(
                     ['rtlcss', '--version'], stdout=PIPE, stderr=PIPE
                 )
             except (OSError, IOError):
@@ -585,14 +582,14 @@ class AssetsBundle(object):
             cmd_output = ''.join(misc.ustr(result))
             if not cmd_output:
                 cmd_output = "Process exited with return code %d\n" % rtlcss.returncode
-            error = self.get_rtlcss_error(cmd_output, source=source)
+            error = self.get_rtlcss_error(cmd_output)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''
         rtlcss_result = result[0].strip().decode('utf8')
         return rtlcss_result
 
-    def get_preprocessor_error(self, stderr, source=None):
+    def get_preprocessor_error(self, stderr):
         """Improve and remove sensitive information from sass/less compilator error messages"""
         error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         if 'Cannot load compass' in error:
@@ -604,7 +601,7 @@ class AssetsBundle(object):
                 error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
         return error
 
-    def get_rtlcss_error(self, stderr, source=None):
+    def get_rtlcss_error(self, stderr):
         """Improve and remove sensitive information from sass/less compilator error messages"""
         error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         error += "This error occured while compiling the bundle '%s' containing:" % self.name
@@ -687,7 +684,7 @@ class WebAsset(object):
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:
             raise AssetNotFound('File %s does not exist.' % self.name)
-        except:
+        except Exception:
             raise AssetError('Could not get content for %s.' % self.name)
 
     def minify(self):
@@ -792,13 +789,13 @@ class StylesheetAsset(WebAsset):
                 ["href", self.html_url],
                 ["media", escape(to_text(self.media)) if self.media else None]
             ])
-            return ("link", attr, None)
+            return "link", attr, None
         else:
             attr = OrderedDict([
                 ["type", "text/css"],
                 ["media", escape(to_text(self.media)) if self.media else None]
             ])
-            return ("style", attr, self.with_header())
+            return "style", attr, self.with_header()
 
 
 class PreprocessedCSS(StylesheetAsset):
