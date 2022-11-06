@@ -46,7 +46,7 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
-    for state, modifs in field.get("states",{}).items():
+    for state, modifs in field.get("states", {}).items():
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
@@ -358,7 +358,7 @@ actual arch.
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.raise_view_error(message, self.id)
                 if WRONGCLASS.search(node.get('expr', '')):
-                    _logger.warn(
+                    _logger.warning(
                         "Error-prone use of @class in view %s (%s): use the "
                         "hasclass(*classes) function to filter elements by "
                         "their classes", self.name, self.xml_id
@@ -798,7 +798,6 @@ actual arch.
         of those information in the architecture.
 
         """
-        result = False
         fields = {}
         children = True
 
@@ -809,7 +808,6 @@ actual arch.
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
-                attrs = {}
                 views = {}
                 xml_form = E.form(*(f for f in node if f.tag == 'field'))
                 xarch, xfields = self.with_context(base_model_name=model).postprocess_and_fields(node.get('object'), xml_form, view_id)
@@ -817,7 +815,6 @@ actual arch.
                     'arch': xarch,
                     'fields': xfields,
                 }
-                attrs = {'views': views}
                 fields = xfields
             if node.get('name'):
                 attrs = {}
