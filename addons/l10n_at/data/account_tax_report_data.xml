@@ -4,6 +4,35 @@
         <field name="name">Tax Report</field>
         <field name="country_id" ref="base.at"/>
         <field name="root_line_ids">
+            <record id="tax_report_line_l10n_at_non_tva_sale_report_title" model="account.tax.report.line">
+                <field name="name">3. Aufschlüsselung für die Zusammenfassende Meldung (ZM)</field>
+                <field name="report_id" ref="tax_report"/>
+                <field name="sequence" eval="5"/>
+                <field name="formula">(AT_ZM_IGL + AT_ZM_IGL3 + AT_ZM_DL)</field>
+                <field name="children_line_ids">
+                    <record id="tax_report_line_l10n_at_tva_line_3_zm_igl" model="account.tax.report.line">
+                        <field name="name">Innergemeinschaftliche Lieferungen</field>
+                        <field name="tag_name">KZ ZM IGL</field>
+                        <field name="code">AT_ZM_IGL</field>
+                        <field name="report_id" ref="tax_report"/>
+                        <field name="sequence" eval="10"/>
+                    </record>
+                    <record id="tax_report_line_l10n_at_tva_line_3_zm_igl3" model="account.tax.report.line">
+                        <field name="name">Innergemeinschaftliche Lieferungen (Dreiecksgeschäfte)</field>
+                        <field name="tag_name">KZ ZM IGL3</field>
+                        <field name="code">AT_ZM_IGL3</field>
+                        <field name="report_id" ref="tax_report"/>
+                        <field name="sequence" eval="20"/>
+                    </record>
+                    <record id="tax_report_line_l10n_at_tva_line_3_zm_dl" model="account.tax.report.line">
+                        <field name="name">Grenzüberschreitende Dienstleistungen (Sonstige Leistungen)</field>
+                        <field name="tag_name">KZ ZM DL</field>
+                        <field name="code">AT_ZM_DL</field>
+                        <field name="report_id" ref="tax_report"/>
+                        <field name="sequence" eval="30"/>
+                    </record>
+                </field>
+            </record>
             <record id="tax_report_line_l10n_at_tva_sale_report_title" model="account.tax.report.line">
                 <field name="name">4. Berechnung der Umsatzsteuer (U1/U30)</field>
                 <field name="sequence" eval="10"/>
