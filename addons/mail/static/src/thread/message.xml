@@ -40,7 +40,10 @@
                 </t>
                 </t>
                 <t t-if="message.type !== 'notification'">
-                    <div class="o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3">
+                    <div t-if="message.isNote" class="p-1">
+                        <t t-out="message.body"/>
+                    </div>
+                    <div t-else="" class="o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3">
                         <t t-out="message.body"/>
                     </div>
                 </t>

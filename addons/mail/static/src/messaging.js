@@ -206,6 +206,7 @@ export class Messaging {
             dateTimeStr: dateTime.toLocaleString(DateTime.DATETIME_SHORT),
             dateTime,
             isStarred,
+            isNote: data.is_note,
         };
         message.recordName = data.record_name;
         message.resId = data.res_id;
