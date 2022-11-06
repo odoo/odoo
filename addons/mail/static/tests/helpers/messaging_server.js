@@ -114,6 +114,9 @@ export class MessagingServer {
     }
 
     _mail_thread_data(params) {
+        if (!params.thread_id) {
+            return {};
+        }
         return {
             activities: [],
             attachments: [],

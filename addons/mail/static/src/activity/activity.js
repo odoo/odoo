@@ -22,7 +22,7 @@ export class Activity extends Component {
             showDetails: false,
         });
         this.delay = computeDelay(this.props.data.date_deadline);
-        onWillUpdateProps(nextProps => {
+        onWillUpdateProps((nextProps) => {
             this.delay = computeDelay(nextProps.data.date_deadline);
         });
     }

@@ -33,6 +33,11 @@
                     <t t-if="message.trackingValues.length">
                         <t t-call="mail.tracking_values"/>
                     </t>
+                <t t-if="message.body">
+                    <div class="o-mail-message-body text-break mb-0 px-3 bg-view">
+                        <t t-out="message.body"/>
+                    </div>
+                </t>
                 </t>
                 <t t-if="message.type !== 'notification'">
                     <div class="o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3">

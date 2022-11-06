@@ -288,10 +288,25 @@ export class Messaging {
     getChatterThread(resModel, resId) {
         let localId = resModel + "," + resId;
         if (localId in this.threads) {
+            if (resId === false) {
+                return this.threads[localId];
+            }
             // to force a reload
             this.threads[localId].status = "new";
         }
-        return this.createThread(localId, localId, "chatter", { resId, resModel });
+        const thread = this.createThread(localId, localId, "chatter", { resId, resModel });
+        if (resId === false) {
+            const tmpId = `virtual${this.nextId++}`;
+            const tmpData = {
+                id: tmpId,
+                author: { id: this.user.partnerId },
+                message_type: "notification",
+                trackingValues: [],
+            };
+            const body = this.env._t("Creating a new record...");
+            this.createMessage(body, tmpData, thread, false);
+        }
+        return thread;
     }
 
     async fetchThreadMessages(threadId) {
@@ -306,6 +321,9 @@ export class Messaging {
                 rawMessages = await this.rpc(`/mail/${threadId}/messages`, { limit: 30 });
                 break;
             case "chatter":
+                if (thread.resId === false) {
+                    return;
+                }
                 rawMessages = await this.rpc("/mail/thread/messages", {
                     thread_id: thread.resId,
                     thread_model: thread.resModel,

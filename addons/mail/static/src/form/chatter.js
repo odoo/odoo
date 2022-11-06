@@ -32,11 +32,19 @@ export class Chatter extends Component {
         onWillUpdateProps((nextProps) => {
             if (nextProps.resId !== this.props.resId) {
                 this.load(nextProps.resId);
+                if (nextProps.resId === false) {
+                    this.state.hasComposer = false;
+                }
             }
         });
     }
     load(resId = this.props.resId) {
         const thread = this.messaging.getChatterThread(this.props.resModel, resId);
+        this.thread = thread;
+        if (!resId) {
+            // todo: reset activities/attachments/followers
+            return;
+        }
         this.rpc("/mail/thread/data", {
             request_list: ["activities", "followers", "attachments", "messages"],
             thread_id: resId,
@@ -47,10 +55,9 @@ export class Chatter extends Component {
                 this.state.attachments = result.attachments;
                 this.state.followers = result.followers;
                 const partnerId = this.messaging.user.partnerId;
-                this.state.isFollower = !!result.followers.find(f => f.partner_id === partnerId)
+                this.state.isFollower = !!result.followers.find((f) => f.partner_id === partnerId);
             }
         });
-        this.thread = thread;
     }
 
     toggleComposer() {

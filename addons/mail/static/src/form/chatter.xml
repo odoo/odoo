@@ -2,29 +2,29 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.chatter" owl="1">
-    <div class="o-mail-chatter h-100 d-flex flex-column">
+    <div class="o-mail-chatter h-100 d-flex flex-column" t-att-class="props.resId === false ? 'o-chatter-disabled' : ''">
         <div class="o-mail-chatter-topbar d-flex border-bottom flex-shrink-0 flex-grow-0 pe-2">
-            <button class="btn btn-odoo p-2 my-2 mx-3" t-on-click="toggleComposer">
+            <button class="btn btn-odoo p-2 my-2 mx-3" t-att-disabled="!props.resId" t-on-click="toggleComposer">
                 Send message
             </button>
-            <button class="btn p-2 m-2">
+            <button class="btn p-2 m-2" t-att-disabled="!props.resId">
                 Log note
             </button>
-            <button class="btn p-2 m-2" t-on-click="scheduleActivity">
+            <button class="btn p-2 m-2" t-att-disabled="!props.resId" t-on-click="scheduleActivity">
                 <i class="fa fa-clock-o me-1"/>
                 Activities
             </button>
             <span class="flex-grow-1"/>
-            <button class="btn px-2">
+            <button class="btn px-2" t-att-disabled="!props.resId">
                 <i class="fa fa-paperclip fa-lg"/>
             </button>
-            <button class="btn px-2">
+            <button class="btn px-2" t-att-disabled="!props.resId">
                 <i class="fa fa-user-o"/>
                 <span class="ps-1">
                     <t t-esc="state.followers.length"/>
                 </span>
             </button>
-            <button t-if="state.isFollower" class="btn text-success">
+            <button t-if="state.isFollower" class="btn text-success" t-att-disabled="!props.resId">
                 <i class="fa fa-fw fa-check"/>
                 Following
             </button>
