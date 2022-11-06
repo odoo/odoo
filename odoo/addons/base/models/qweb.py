@@ -414,7 +414,7 @@ class QWeb(object):
                 starargs=None, kwargs=None
             )
         ))
-        # profiling = {}
+
         astmod.body.insert(0, ast.Assign(
             targets=[ast.Name(id='profiling', ctx=ast.Store())],
             value=ast.Dict(keys=[], values=[])
@@ -425,7 +425,6 @@ class QWeb(object):
         def prof(time):
             line_id[0] += 1
 
-            # profiling.setdefault($line_id, time() - $time)
             return ast.Expr(ast.Call(
                 func=ast.Attribute(
                     value=ast.Name(id='profiling', ctx=ast.Load()),
@@ -529,7 +528,6 @@ class QWeb(object):
         simply returns ``None``.
         """
         #assert body, "To create a compiled function 'body' ast list can't be empty"
-
         name = self._make_name(prefix)
 
         # def $name(self, append, values, options, log)
@@ -624,7 +622,6 @@ class QWeb(object):
         path = options['root'].getpath(el)
         if options['last_path_node'] != path:
             options['last_path_node'] = path
-            # options['last_path_node'] = $path
             body = [ast.Assign(
                 targets=[ast.Subscript(
                     value=ast.Name(id='log', ctx=ast.Load()),
