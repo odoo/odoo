@@ -138,7 +138,7 @@ QUnit.module("mail", (hooks) => {
 
         const sendMsgBtn = $(target).find("button:contains(Send message)")[0];
         const sendNoteBtn = $(target).find("button:contains(Log note)")[0];
-        
+
         await click(sendMsgBtn);
         const composer = target.querySelector(".o-mail-composer textarea");
         assert.strictEqual(document.activeElement, composer);
@@ -179,7 +179,7 @@ QUnit.module("mail", (hooks) => {
                         body: "hey",
                         attachment_ids: [],
                         message_type: "comment",
-                        partner_ids: [43],
+                        partner_ids: [],
                         subtype_xmlid: "mail.mt_comment",
                     },
                     thread_id: 43,
@@ -212,4 +212,47 @@ QUnit.module("mail", (hooks) => {
         ]);
     });
 
+    QUnit.test("can post a note on a record thread", async (assert) => {
+        assert.expect(10);
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => {
+            assert.step(route);
+            if (route === "/mail/message/post") {
+                const expected = {
+                    post_data: {
+                        attachment_ids: [],
+                        body: "hey",
+                        message_type: "comment",
+                        partner_ids: [],
+                        subtype_xmlid: "mail.mt_note",
+                    },
+                    thread_id: 43,
+                    thread_model: "somemodel",
+                };
+                assert.deepEqual(params, expected);
+            }
+            return server.rpc(route, params);
+        });
+        await mount(Chatter, target, {
+            env,
+            props: { resId: 43, resModel: "somemodel", displayName: "" },
+        });
+
+        assert.containsNone(target, ".o-mail-composer");
+        await click($(target).find("button:contains(Log note)")[0]);
+        assert.containsOnce(target, ".o-mail-composer");
+
+        await editInput(target, "textarea", "hey");
+
+        assert.containsNone(target, ".o-mail-message");
+        await click($(target).find(".o-mail-composer button:contains(Send)")[0]);
+        assert.containsOnce(target, ".o-mail-message");
+
+        assert.verifySteps([
+            "/mail/init_messaging",
+            "/mail/thread/data",
+            "/mail/thread/messages",
+            "/mail/message/post",
+        ]);
+    });
 });

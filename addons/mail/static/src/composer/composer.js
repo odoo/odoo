@@ -6,7 +6,8 @@ import { useEmojiPicker, loadEmojiData } from "./emoji_picker";
 
 export class Composer extends Component {
     static template = "mail.composer";
-    static props = ["threadId", "autofocus?", "onPostCallback?", "mode?", "placeholder?"];
+    static props = ["threadId", "autofocus?", "onPostCallback?", "mode?", "placeholder?", "type?"];
+    static defaultProps = { type: "message"};
 
     setup() {
         this.messaging = useMessaging();
@@ -34,7 +35,7 @@ export class Composer extends Component {
     async sendMessage() {
         const el = this.ref.el;
         if (el.value.trim()) {
-            const prom = this.messaging.postMessage(this.props.threadId, el.value);
+            const prom = this.messaging.postMessage(this.props.threadId, el.value, this.props.type === "note");
             await prom;
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();

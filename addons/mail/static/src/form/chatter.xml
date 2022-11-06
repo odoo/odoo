@@ -35,7 +35,8 @@
                 <span class="px-2 pb-1 pt-3" style="margin-left:48px;"><em class="text-muted">To followers of:</em> <b class="px-1">"<t t-esc="props.displayName"/>"</b></span>
             </t>
             <t t-set="placeholder" t-value="state.composing === 'message' ? 'Send a message to followers...' : 'Log an internal note...'"/>
-            <Composer threadId="thread.id" autofocus="true" onPostCallback.bind="toggleComposer" placeholder="placeholder"/> 
+            <t t-set="type" t-value="state.composing === 'message' ? 'message' : 'note'"/>
+            <Composer threadId="thread.id" autofocus="true" onPostCallback.bind="toggleComposer" placeholder="placeholder" type="type"/> 
         </t>
         <div class="overflow-auto">
             <t t-if="state.activities.length">

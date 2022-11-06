@@ -387,16 +387,17 @@ export class Messaging {
         }
         return this.previewsProm;
     }
-    async postMessage(threadId, body) {
+    async postMessage(threadId, body, isNote = false) {
         let tmpMsg;
         const thread = this.threads[threadId];
+        const subtype = isNote ? "mail.mt_note" : "mail.mt_comment"
         const params = {
             post_data: {
                 body,
                 attachment_ids: [],
                 message_type: "comment",
                 partner_ids: [],
-                subtype_xmlid: "mail.mt_comment",
+                subtype_xmlid: subtype,
             },
             thread_id: threadId,
             thread_model: "mail.channel",
@@ -404,7 +405,8 @@ export class Messaging {
         if (thread.type === "chatter") {
             params.thread_id = thread.resId;
             params.thread_model = thread.resModel;
-            params.post_data.partner_ids = [thread.resId]; // no idea why?
+            // need to get suggested recipients here, if !isNote...
+            params.post_data.partner_ids = []; 
         } else {
             const tmpId = `pending${this.nextId++}`;
             const tmpData = { id: tmpId, author: { id: this.user.partnerId } };
