@@ -184,13 +184,13 @@ class IrFieldsConverter(models.AbstractModel):
         :return: a function (fromtype -> field.write_type), if a converter is found
         :rtype: Callable | None
         """
-        assert isinstance(fromtype, (type, str))
-        # FIXME: return None
+        if not isinstance(fromtype, (type, str)):
+            return None
         typename = fromtype.__name__ if isinstance(fromtype, type) else fromtype
         converter = getattr(self, '_%s_to_%s' % (typename, field.type), None)
-        if not converter or str(typename) != 'str':
+        if not converter:
             return None
-        if str(field.type) in ['boolean']:
+        if isinstance(field.type, 'boolean'):
             return functools.partial(converter, field)
         else:
             return converter
