@@ -21,7 +21,17 @@ export function makeMessagingEnv(rpc) {
     const bus_service = new EventBus();
     const env = {
         _t: (s) => s,
-        services: { rpc, user, router, bus_service, action: {}, dialog: {}, ui, popover: {} },
+        services: {
+            rpc,
+            user,
+            router,
+            bus_service,
+            action: {},
+            dialog: {},
+            ui,
+            popover: {},
+            "mail.activity": {},
+        },
     };
     const hotkey = hotkeyService.start(env, { ui });
     env.services.hotkey = hotkey;

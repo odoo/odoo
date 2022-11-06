@@ -13,7 +13,7 @@ export class MessagingServer {
         if (!(snakeCaseRoute in this)) {
             throw new Error("Unhandled route: " + route);
         }
-        const result = this[snakeCaseRoute](route, params);
+        const result = this[snakeCaseRoute](params);
         if (QUnit.config.debug) {
             console.groupCollapsed(`rpc ${route}`);
             console.log(`Request parameters:`, params);
@@ -96,7 +96,7 @@ export class MessagingServer {
         return [];
     }
 
-    _mail_init_messaging(route, params) {
+    _mail_init_messaging(params) {
         return {
             current_partner: { id: 3, name: "Mitchell Admin" },
             partner_root: { id: 2, name: "OdooBot" },
@@ -109,11 +109,23 @@ export class MessagingServer {
         };
     }
 
-    _mail_message_post(route, params) {
+    _mail_message_post(params) {
         return this.addMessage("comment", this.nextMessageId++, 3, params.post_data.body);
     }
 
-    _web_dataset_call_kw_mail_channel_channel_get(route, params) {
+    _mail_thread_data(params) {
+        return {
+            activities: [],
+            attachments: [],
+            followers: [],
+        };
+    }
+
+    _mail_thread_messages(params) {
+        return [];
+    }
+
+    _web_dataset_call_kw_mail_channel_channel_get(params) {
         const partnerId = params.kwargs.partners_to[0];
         const chat = this.chats.find((c) => c.seen_partners_info[0].partner_id === partnerId);
         if (chat) {
@@ -122,16 +134,16 @@ export class MessagingServer {
         return this.addChat(this.nextChannelId++, "some name", partnerId);
     }
 
-    _web_dataset_call_kw_mail_channel_channel_create(route, params) {
+    _web_dataset_call_kw_mail_channel_channel_create(params) {
         return this.addChannel(this.nextChannelId++, params.args[0]);
     }
 
-    _web_dataset_call_kw_mail_channel_search_read(route, params) {
+    _web_dataset_call_kw_mail_channel_search_read(params) {
         const nameSearch = params.kwargs.domain[1][2];
         return this.channels.filter((channel) => channel.name.includes(nameSearch));
     }
 
-    _web_dataset_call_kw_res_partner_im_search(route, params) {
+    _web_dataset_call_kw_res_partner_im_search(params) {
         const searchStr = params.args[0];
         return this.partners.filter((p) => p.name.includes(searchStr));
     }
