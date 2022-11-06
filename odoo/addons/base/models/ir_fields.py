@@ -100,7 +100,7 @@ class IrFieldsConverter(models.AbstractModel):
         model = self.env[model._name]
 
         converters = {
-            name: self.to_field(model, field, fromtype)
+            name: self.to_field(field, fromtype)
             for name, field in model._fields.items()
         }
 
@@ -145,7 +145,7 @@ class IrFieldsConverter(models.AbstractModel):
         return fn
 
     @api.model
-    def to_field(self, model, field, fromtype=str):
+    def to_field(self, field, fromtype=str):
         """ Fetches a converter for the provided field object, from the
         specified type.
 
@@ -190,7 +190,7 @@ class IrFieldsConverter(models.AbstractModel):
         converter = getattr(self, '_%s_to_%s' % (typename, field.type), None)
         if not converter:
             return None
-        if isinstance(field.type, 'boolean'):
+        if isinstance(field.type, bool):
             return functools.partial(converter, field)
         else:
             return converter
