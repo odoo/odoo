@@ -8,7 +8,7 @@ import { Component, useState, xml } from "@odoo/owl";
 let target;
 
 class ChatterParent extends Component {
-    static template = xml`<Chatter resId="state.resId" resModel="props.resModel"/>`;
+    static template = xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName"/>`;
     static components = { Chatter };
     state = useState({ resId: this.props.resId });
 }
@@ -26,7 +26,7 @@ QUnit.module("mail", (hooks) => {
             assert.step(route);
             return server.rpc(route, params);
         });
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
         assert.containsOnce(target, ".o-mail-thread");
@@ -39,7 +39,7 @@ QUnit.module("mail", (hooks) => {
             assert.step(route);
             return server.rpc(route, params);
         });
-        await mount(Chatter, target, { env, props: { resId: false, resModel: "somemodel" } });
+        await mount(Chatter, target, { env, props: { resId: false, resModel: "somemodel" , displayName: ""} });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
         assert.containsOnce(target, ".o-mail-thread");
@@ -52,7 +52,7 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("composer is closed when creating record", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        const props = { resId: 43, resModel: "somemodel" };
+        const props = { resId: 43, resModel: "somemodel", displayName: "" };
         const parent = await mount(ChatterParent, target, { env, props });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -67,7 +67,7 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("composer has proper placeholder when sending message", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
         assert.containsNone(target, ".o-mail-composer");
 
         await click($(target).find("button:contains(Send message)")[0]);
@@ -78,7 +78,7 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("composer has proper placeholder when logging note", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
         assert.containsNone(target, ".o-mail-composer");
 
         await click($(target).find("button:contains(Log note)")[0]);
@@ -89,7 +89,7 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("send/log buttons are properly styled", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => server.rpc(route, params));
-        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "" } });
         assert.containsNone(target, ".o-mail-composer");
 
         const sendMsgBtn = $(target).find("button:contains(Send message)")[0];
@@ -104,6 +104,15 @@ QUnit.module("mail", (hooks) => {
         await click(sendMsgBtn);
         assert.ok(sendMsgBtn.classList.contains('btn-odoo'));
         assert.notOk(sendNoteBtn.classList.contains('btn-odoo'));
+    });
+
+    QUnit.test("displayname is used when sending a message", async (assert) => {
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" } });
+        await click($(target).find("button:contains(Send message)")[0]);
+        const msg = $(target).find("span:contains(Gnargl)")[0];
+        assert.ok(msg);
     });
 
 });

@@ -22,6 +22,7 @@ patch(FormController.prototype, "mail", {
             const chatterTag = doc.createElement("Chatter");
             chatterTag.setAttribute("resId", "props.record.resId");
             chatterTag.setAttribute("resModel", "props.record.resModel");
+            chatterTag.setAttribute("displayName", "props.record.data.display_name");
             rootT.appendChild(chatterTag);
             xmlDocChatter.replaceWith(rootT);
         }

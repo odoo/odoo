@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 export class Chatter extends Component {
     static template = "mail.chatter";
     static components = { Thread, Composer, ActivityList };
-    static props = ["resId", "resModel"];
+    static props = ["resId", "resModel", "displayName"];
 
     setup() {
         this.messaging = useMessaging();

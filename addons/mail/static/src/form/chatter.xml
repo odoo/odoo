@@ -3,7 +3,7 @@
 
 <t t-name="mail.chatter" owl="1">
     <div class="o-mail-chatter h-100 d-flex flex-column" t-att-class="props.resId === false ? 'o-chatter-disabled' : ''">
-        <div class="o-mail-chatter-topbar d-flex border-bottom flex-shrink-0 flex-grow-0 pe-2">
+        <div class="o-mail-chatter-topbar d-flex border-bottom flex-shrink-0 flex-grow-0 pe-2 mb-2">
             <button class="btn btn-odoo p-2 my-2 mx-3" t-att-class="{'btn-odoo': state.composing !== 'note'}" t-att-disabled="!props.resId" t-on-click="() => this.toggleComposer('message')">
                 Send message
             </button>
@@ -31,6 +31,9 @@
             <button t-else="" class="btn btn-link">Follow</button>
         </div>
         <t t-if="state.composing">
+            <t t-if="state.composing === 'message'">
+                <span class="px-2 pb-1 pt-3" style="margin-left:48px;"><em class="text-muted">To followers of:</em> <b class="px-1">"<t t-esc="props.displayName"/>"</b></span>
+            </t>
             <t t-set="placeholder" t-value="state.composing === 'message' ? 'Send a message to followers...' : 'Log an internal note...'"/>
             <Composer threadId="thread.id" autofocus="true" onPostCallback.bind="toggleComposer" placeholder="placeholder"/> 
         </t>
