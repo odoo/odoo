@@ -63,4 +63,47 @@ QUnit.module("mail", (hooks) => {
         await nextTick();
         assert.containsNone(target, ".o-mail-composer");
     });
+
+    QUnit.test("composer has proper placeholder when sending message", async (assert) => {
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        assert.containsNone(target, ".o-mail-composer");
+
+        await click($(target).find("button:contains(Send message)")[0]);
+        assert.containsOnce(target, ".o-mail-composer");
+        assert.strictEqual(target.querySelector("textarea").getAttribute("placeholder"), "Send a message to followers...")
+    });
+
+    QUnit.test("composer has proper placeholder when logging note", async (assert) => {
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        assert.containsNone(target, ".o-mail-composer");
+
+        await click($(target).find("button:contains(Log note)")[0]);
+        assert.containsOnce(target, ".o-mail-composer");
+        assert.strictEqual(target.querySelector("textarea").getAttribute("placeholder"), "Log an internal note...")
+    });
+
+    QUnit.test("send/log buttons are properly styled", async (assert) => {
+        const server = new MessagingServer();
+        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        await mount(Chatter, target, { env, props: { resId: 43, resModel: "somemodel" } });
+        assert.containsNone(target, ".o-mail-composer");
+
+        const sendMsgBtn = $(target).find("button:contains(Send message)")[0];
+        const sendNoteBtn = $(target).find("button:contains(Log note)")[0];
+        assert.ok(sendMsgBtn.classList.contains('btn-odoo'));
+        assert.notOk(sendNoteBtn.classList.contains('btn-odoo'));
+
+        await click(sendNoteBtn);
+        assert.notOk(sendMsgBtn.classList.contains('btn-odoo'));
+        assert.ok(sendNoteBtn.classList.contains('btn-odoo'));
+
+        await click(sendMsgBtn);
+        assert.ok(sendMsgBtn.classList.contains('btn-odoo'));
+        assert.notOk(sendNoteBtn.classList.contains('btn-odoo'));
+    });
+
 });
