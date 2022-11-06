@@ -6,7 +6,7 @@ import { useEmojiPicker, loadEmojiData } from "./emoji_picker";
 
 export class Composer extends Component {
     static template = "mail.composer";
-    static props = ["threadId", "autofocus?", "onPostCallback?", "mode?"];
+    static props = ["threadId", "autofocus?", "onPostCallback?", "mode?", "placeholder?"];
 
     setup() {
         this.messaging = useMessaging();

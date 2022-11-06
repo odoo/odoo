@@ -17,7 +17,7 @@
                     style="height:40px;"
                     t-on-keydown="onKeydown"
                     t-model="state.value"
-                    t-attf-placeholder="Message ##{thread.name}" />
+                    t-att-placeholder="props.placeholder or ('Message #' + thread.name)" />
             </div>
             <div class="d-flex flex-shrink-0 align-self-stretch">
                 <div class="d-flex py-1 border-top border-bottom">
