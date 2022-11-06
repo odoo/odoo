@@ -48,6 +48,7 @@
 # keecome <7017511@qq.com>, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # 
 msgid ""
 msgstr ""
@@ -55,7 +56,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: digitalliuzg8888, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,6 +455,8 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">文件的关注者和</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -636,7 +639,7 @@ msgstr "活动"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
-msgstr ""
+msgstr "活动必须链接到具有非空res_id的记录。"
 
 #. module: mail
 #. openerp-web
@@ -2903,7 +2906,7 @@ msgstr "完美的图标，例如FA任务"
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
-msgstr ""
+msgstr "对于 %（通道），channel_type应为“通道”，以获得基于组的授权或组自动订阅。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -3000,7 +3003,7 @@ msgstr "群组名称"
 msgid ""
 "Group authorization and group auto-subscription are only supported on "
 "channels."
-msgstr ""
+msgstr "仅频道支持群组授权和群组自动订阅。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -4941,7 +4944,7 @@ msgstr "仅有自定义模型能被修改."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
 msgid "Only internal user can receive notifications in Odoo"
-msgstr ""
+msgstr "只有内部用户才能在Odoo中接收通知"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5284,22 +5287,6 @@ msgid "Please complete customer's information"
 msgstr "请填写客户信息"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
-#, python-format
-msgid "Invalid Partner"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
-#, python-format
-msgid ""
-"The information you have entered does not match the existing contact "
-"information for this record. The partner was not created."
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
 msgstr "不要使用，请联系我们"
@@ -5584,7 +5571,7 @@ msgstr "读取日期"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "阅读更少"
 
 #. module: mail
 #. openerp-web
@@ -6502,7 +6489,7 @@ msgstr "停止屏幕共享"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
-msgstr ""
+msgstr "将电子邮件和回复存储在每条记录的聊天中"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -8066,7 +8053,7 @@ msgstr "例如 true.true..f"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g: \"info@mycompany.odoo.com\""
-msgstr ""
+msgstr "例如：“info@mycompany.odoo.com”"
 
 #. module: mail
 #. openerp-web
