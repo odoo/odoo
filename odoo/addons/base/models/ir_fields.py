@@ -188,12 +188,15 @@ class IrFieldsConverter(models.AbstractModel):
         # FIXME: return None
         typename = fromtype.__name__ if isinstance(fromtype, type) else fromtype
         converter = getattr(self, '_%s_to_%s' % (typename, field.type), None)
-        if not converter:
+        if not converter or str(typename) != 'str':
             return None
-        return functools.partial(converter, model, field)
+        if str(field.type) in ['boolean']:
+            return functools.partial(converter, field)
+        else:
+            return converter
 
     @api.model
-    def _str_to_boolean(self, model, field, value):
+    def _str_to_boolean(self, field, value):
         # all translatables used for booleans
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
@@ -224,7 +227,7 @@ class IrFieldsConverter(models.AbstractModel):
         )]
 
     @api.model
-    def _str_to_integer(self, model, field, value):
+    def _str_to_integer(self, value):
         try:
             return int(value), []
         except ValueError:
@@ -235,7 +238,7 @@ class IrFieldsConverter(models.AbstractModel):
             )
 
     @api.model
-    def _str_to_float(self, model, field, value):
+    def _str_to_float(self, value):
         try:
             return float(value), []
         except ValueError:
@@ -248,13 +251,13 @@ class IrFieldsConverter(models.AbstractModel):
     _str_to_monetary = _str_to_float
 
     @api.model
-    def _str_id(self, model, field, value):
+    def _str_id(self, value):
         return value, []
 
     _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_id
 
     @api.model
-    def _str_to_date(self, model, field, value):
+    def _str_to_date(self, value):
         try:
             parsed_value = fields.Date.from_string(value)
             return fields.Date.to_string(parsed_value), []
@@ -287,7 +290,7 @@ class IrFieldsConverter(models.AbstractModel):
         return pytz.UTC
 
     @api.model
-    def _str_to_datetime(self, model, field, value):
+    def _str_to_datetime(self, value):
         try:
             parsed_value = fields.Datetime.from_string(value)
         except ValueError:
@@ -347,7 +350,7 @@ class IrFieldsConverter(models.AbstractModel):
         return result
 
     @api.model
-    def _str_to_selection(self, model, field, value):
+    def _str_to_selection(self, field, value):
         # get untranslated values
         env = self.with_context(lang=None).env
         selection = field.get_description(env)['selection']
@@ -555,7 +558,7 @@ class IrFieldsConverter(models.AbstractModel):
 
     @api.model
     def _str_to_many2one_reference(self, model, field, value):
-        return self._str_to_integer(model, field, value)
+        return self._str_to_integer(value)
 
     @api.model
     def _str_to_many2many(self, model, field, value):
