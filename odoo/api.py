@@ -22,12 +22,16 @@ from contextlib import contextmanager
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
+from typing import TYPE_CHECKING
 
 from decorator import decorate
 
 from .exceptions import AccessError, CacheMiss
 from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, StackMap
 from .tools.translate import _
+
+if TYPE_CHECKING:
+    from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
 
@@ -516,7 +520,7 @@ class Environment(Mapping):
         """ Test whether the given model exists. """
         return model_name in self.registry
 
-    def __getitem__(self, model_name):
+    def __getitem__(self, model_name: str) -> "BaseModel":
         """ Return an empty recordset from the given model. """
         return self.registry[model_name](self, (), ())
 

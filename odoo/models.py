@@ -462,6 +462,7 @@ class BaseModel(metaclass=MetaModel):
     the :attr:`~odoo.models.BaseModel._register` attribute may be set to False.
     """
     __slots__ = ['env', '_ids', '_prefetch_ids']
+    env: api.Environment
 
     _auto = False
     """Whether a database table should be created.
@@ -5132,7 +5133,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
 
-    def sudo(self, flag=True):
+    def sudo(self, flag=True) -> 'BaseModel':
         """ sudo([flag=True])
 
         Returns a new version of this recordset with superuser mode enabled or
