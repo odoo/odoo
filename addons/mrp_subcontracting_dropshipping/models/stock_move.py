@@ -7,6 +7,10 @@ from odoo import models
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    def _is_purchase_return(self):
+        res = super()._is_purchase_return()
+        return res or self._is_dropshipped_returned()
+
     def _is_dropshipped(self):
         res = super()._is_dropshipped()
         return res or (
