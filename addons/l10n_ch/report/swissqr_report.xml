@@ -14,12 +14,7 @@
 
         <template id="l10n_ch_swissqr_template">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <t t-call="web.external_layout">
-                <!-- TODO master: remove this -->
-                <script t-if="0">document.body.className += " l10n_ch_qr";</script>
-                <!-- add default margin for header (matching A4 European margin) -->
-                <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
-
+            <div t-attf-class="header" t-att-style="report_header_style">
                 <t t-set="formated_amount" t-value="'{:,.2f}'.format(o.amount_residual).replace(',','\xa0')"/>
 
                 <t t-set="is_qrr" t-value="o.partner_bank_id.l10n_ch_qr_iban"/>
@@ -214,7 +209,7 @@
 
                     </div>
                 </div>
-            </t>
+            </div>
         </template>
 
         <template id="l10n_ch.qr_report_main">
@@ -229,6 +224,6 @@
             <body position="attributes">
                 <attribute name="t-att-data-report-id">report_xml_id</attribute>
             </body>
-        </template> 
+        </template>
     </data>
 </odoo>
