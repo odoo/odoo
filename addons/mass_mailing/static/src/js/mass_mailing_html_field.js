@@ -217,6 +217,8 @@ export class MassMailingHtmlField extends HtmlField {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
         const $codeview = this.wysiwyg.$iframe.contents().find('textarea.o_codeview');
+        // Unbind first the event handler as this method can be called multiple time during the component life.
+        $snippetsSideBar.off('click', '.o_codeview_btn');
         $snippetsSideBar.on('click', '.o_codeview_btn', () => {
             this.wysiwyg.odooEditor.observerUnactive();
             $codeview.toggleClass('d-none');
@@ -230,8 +232,10 @@ export class MassMailingHtmlField extends HtmlField {
             }
             this.onIframeUpdated();
         });
-
-        $snippetsSideBar.on('click', '.o_mobile_preview_btn', () => {
+        const $previewBtn = $snippetsSideBar.find('.o_mobile_preview_btn');
+        $previewBtn.off('click');
+        $previewBtn.on('click', () => {
+            $previewBtn.prop('disabled', true); // Prevent double execution when double-clicking on the button
             let mailingHtml = new DOMParser().parseFromString(this.wysiwyg.getValue(), 'text/html');
             [...mailingHtml.querySelectorAll('a')].forEach(el => {
                 el.style.setProperty('pointer-events', 'none');
@@ -239,6 +243,8 @@ export class MassMailingHtmlField extends HtmlField {
             this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
                 title: this.env._t("Mobile Preview"),
                 preview: mailingHtml.body.innerHTML,
+            }, {
+                onClose: () => $previewBtn.prop('disabled', false),
             });
         });
 
