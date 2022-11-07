@@ -5,7 +5,7 @@ import base64
 import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_round
+from odoo.tools import float_round, float_repr
 
 FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI', 'KODE_DOKUMEN_PENDUKUNG']
 
@@ -138,6 +138,7 @@ class AccountMove(models.Model):
         """Generate E-Faktur for customer invoice."""
         # Invoice of Customer
         company_id = self.company_id
+        dp = company_id.currency_id.decimal_places
         dp_product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
 
         output_head = '%s%s%s' % (
@@ -176,15 +177,15 @@ class AccountMove(models.Model):
             eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
             eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
             eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
-            eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0))
+            eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0, rounding_method="DOWN"))  # tax amount ALWAYS rounded down
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
             lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
-            eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
-            eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))
+            eTax['UANG_MUKA_DPP'] = abs(float_round(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 2))), 0))
+            eTax['UANG_MUKA_PPN'] = abs(float_round(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 2))), 0))
 
             fk_values_list = ['FK'] + [eTax[f] for f in FK_HEAD_LIST[1:]]
 
@@ -212,10 +213,10 @@ class AccountMove(models.Model):
                 line_dict = {
                     'KODE_OBJEK': line.product_id.default_code or '',
                     'NAMA': line.product_id.name or '',
-                    'HARGA_SATUAN': int(float_round(invoice_line_unit_price, 0)),
+                    'HARGA_SATUAN': float_repr(float_round(invoice_line_unit_price, dp), dp),
                     'JUMLAH_BARANG': line.quantity,
-                    'HARGA_TOTAL': int(float_round(invoice_line_total_price, 0)),
-                    'DPP': int(float_round(line.price_subtotal, 0)),
+                    'HARGA_TOTAL': float_repr(float_round(invoice_line_total_price, dp), dp),
+                    'DPP': float_round(line.price_subtotal, dp),
                     'product_id': line.product_id.id,
                 }
 
@@ -224,16 +225,16 @@ class AccountMove(models.Model):
                         free_tax_line += (line.price_subtotal * (tax.amount / 100.0)) * -1.0
 
                     line_dict.update({
-                        'DISKON': int(float_round(invoice_line_total_price - line.price_subtotal, 0)),
-                        'PPN': int(float_round(free_tax_line, 0)),
+                        'DISKON': float_round(invoice_line_total_price - line.price_subtotal, dp),
+                        'PPN': float_round(free_tax_line, dp),
                     })
                     free.append(line_dict)
                 elif line.price_subtotal != 0.0:
                     invoice_line_discount_m2m = invoice_line_total_price - line.price_subtotal
 
                     line_dict.update({
-                        'DISKON': int(float_round(invoice_line_discount_m2m, 0)),
-                        'PPN': int(float_round(tax_line, 0)),
+                        'DISKON': float_round(invoice_line_discount_m2m, dp),
+                        'PPN': float_round(tax_line, dp),
                     })
                     sales.append(line_dict)
 
@@ -264,6 +265,13 @@ class AccountMove(models.Model):
                 sub_total_ppn_before_adjustment += sale['PPN']
                 bruto_total += sale['DISKON']
                 total_discount += float_round(sale['DISKON'], 2)
+
+                # Change the values to string format after being used
+                sale.update({
+                    'DPP': float_repr(sale['DPP'], dp),
+                    'PPN': float_repr(sale['PPN'], dp),
+                    'DISKON': float_repr(sale['DISKON'], dp),
+                })
 
             output_head += _csv_row(fk_values_list, delimiter)
             for sale in sales:
