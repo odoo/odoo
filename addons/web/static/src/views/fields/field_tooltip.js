@@ -11,7 +11,6 @@ export function getTooltipInfo(params) {
         resModel: params.resModel,
         debug: Boolean(odoo.debug),
         field: {
-            label: params.field.string,
             name: params.field.name,
             help: params.fieldInfo.help !== null ? params.fieldInfo.help : params.field.help,
             type: params.field.type,
