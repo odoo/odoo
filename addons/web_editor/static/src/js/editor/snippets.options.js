@@ -4917,6 +4917,15 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 registry.layout_column = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    cleanForSave() {
+        // Remove the padding highlights.
+        this.$target[0].querySelectorAll('.o_we_padding_highlight').forEach(highlightedEl => {
+            highlightedEl._removePaddingPreview();
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -5061,6 +5070,24 @@ registry.layout_column = SnippetOptionWidget.extend({
         gridUtils._resizeGrid(rowEl);
         this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.cssProperty.startsWith('--grid-item-padding')) {
+            // Reset the animations.
+            this._removePaddingPreview();
+            void this.$target[0].offsetWidth; // Trigger a DOM reflow.
+
+            // Highlight the padding when changing it, by adding a pseudo-
+            // element with an animated colored border inside the grid items.
+            const rowEl = this.$target[0];
+            rowEl.classList.add('o_we_padding_highlight');
+            rowEl._removePaddingPreview = this._removePaddingPreview.bind(this);
+            rowEl.addEventListener('animationend', rowEl._removePaddingPreview);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -5172,6 +5199,18 @@ registry.layout_column = SnippetOptionWidget.extend({
 
         // Adding back an align-items-* class.
         rowEl.classList.add('align-items-start');
+    },
+    /**
+     * Removes the padding highlights that were added when changing the grid
+     * items padding.
+     *
+     * @private
+     */
+    _removePaddingPreview() {
+        const rowEl = this.$target[0];
+        rowEl.removeEventListener('animationend', rowEl._removePaddingPreview);
+        rowEl.classList.remove('o_we_padding_highlight');
+        delete rowEl._removePaddingPreview;
     },
 });
 
