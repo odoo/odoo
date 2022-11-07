@@ -8,16 +8,23 @@ import time
 import base64
 from lxml import etree
 
-from odoo.addons.product.tests.common import ProductCommon2
+from odoo.addons.base.tests.common import BaseCommon2
+from odoo.addons.product.tests.common import ProductCommon
 
 
-class AccountTestInvoicingCommon(ProductCommon2):
+class AccountTestInvoicingCommon(ProductCommon, BaseCommon2):
+
+    # def _create_product(self, **create_values):
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls, **kwargs):
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
         super().setUpClass()
+
+        # Give multi-uom group to users, only needed for tests using a Form View
+        # TODO LAS: move lower in the hierarchy, only for tests needing it
+        cls._enable_uom()
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
@@ -27,18 +34,22 @@ class AccountTestInvoicingCommon(ProductCommon2):
         cls.tax_armageddon = cls.setup_armageddon_tax('complex_tax', cls.company_data)
 
         # ==== Products ====
-        cls.product_a.write({
-            'property_account_income_id': cls.company_data['default_account_revenue'].id,
-            'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [(6, 0, cls.tax_sale_a.ids)],
-            'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
-        })
-        cls.product_b.write({
-            'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
-            'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
-            'taxes_id': [(6, 0, (cls.tax_sale_a + cls.tax_sale_b).ids)],
-            'supplier_taxes_id': [(6, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
-        })
+        cls.product_a = cls._create_product(
+            name='product_a',
+            list_price=1000.0,
+            standard_price=800.0,
+            supplier_taxes_id=[(6, 0, cls.tax_purchase_a.ids)],
+        )
+        cls.product_b = cls._create_product(
+            name='product_b',
+            uom_id=cls.uom_dozen.id,
+            lst_price=200.0,
+            standard_price=160.0,
+            property_account_income_id=cls.copy_account(cls.company_data['default_account_revenue']).id,
+            property_account_expense_id=cls.copy_account(cls.company_data['default_account_expense']).id,
+            taxes_id=[(6, 0, (cls.tax_sale_a + cls.tax_sale_b).ids)],
+            supplier_taxes_id=[(6, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
+        )
 
         # ==== Fiscal positions ====
         cls.fiscal_pos_a = cls.env['account.fiscal.position'].create({
@@ -81,6 +92,16 @@ class AccountTestInvoicingCommon(ProductCommon2):
                 }),
             ],
         })
+
+        # ==== Partners ====
+        cls.partner_a = cls._create_partner(name="partner_a")
+        cls.partner_b = cls._create_partner(
+            property_payment_term_id=cls.pay_terms_b.id,
+            property_supplier_payment_term_id=cls.pay_terms_b.id,
+            property_account_position_id=cls.fiscal_pos_a.id,
+            property_account_receivable_id=cls.company_data['default_account_receivable'].copy().id,
+            property_account_payable_id=cls.company_data['default_account_payable'].copy().id,
+        )
 
         # ==== Cash rounding ====
         cls.cash_rounding_a = cls.env['account.cash.rounding'].create({
@@ -186,28 +207,53 @@ class AccountTestInvoicingCommon(ProductCommon2):
             'default_tax_purchase': company.account_purchase_tax_id,
         }
 
+    # BaseCommon override
     @classmethod
-    def setup_partner_a(cls):
-        partner = super().setup_partner_a()
-        partner.write({
-            'property_payment_term_id': cls.pay_terms_a.id,
-            'property_supplier_payment_term_id': cls.pay_terms_a.id,
-            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
-            'property_account_payable_id': cls.company_data['default_account_payable'].id,
-        })
-        return partner
+    def _create_partner(cls, **create_values):
+        create_values.setdefault('property_payment_term_id', cls.pay_terms_a.id)
+        create_values.setdefault('property_supplier_payment_term_id', cls.pay_terms_a.id)
+        create_values.setdefault('property_account_receivable_id', cls.company_data['default_account_receivable'].id)
+        create_values.setdefault('property_account_payable_id', cls.company_data['default_account_payable'].id)
+        return super()._create_partner(**create_values)
+
+    # ProductCommon override
+    @classmethod
+    def _create_product(cls, **create_values):
+        create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'].id)
+        create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'].id)
+        create_values.setdefault('taxes_id', [(6, 0, cls.tax_sale_a.ids)])
+        return super()._create_product(**create_values)
 
     @classmethod
-    def setup_partner_b(cls):
-        partner = super().setup_partner_b()
-        partner.write({
-            'property_payment_term_id': cls.pay_terms_b.id,
-            'property_supplier_payment_term_id': cls.pay_terms_b.id,
-            'property_account_position_id': cls.fiscal_pos_a.id,
-            'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
-            'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
+    def setup_multi_currency_data(cls, rates, **kwargs):
+        currency = cls.env['res.currency'].create({
+            'rounding': 0.01,
+            'position': 'after',
+            **kwargs,
         })
-        return partner
+        rates = cls.env['res.currency.rate'].create([
+            {
+                'name': rate_date,
+                'rate': rate,
+                'currency_id': currency.id,
+                'company_id': cls.env.company.id,
+            }
+            for rate_date, rate in rates
+        ])
+        return {
+            'currency': currency,
+            'rates': rates,
+        }
+
+    @classmethod
+    def setup_gold_currency(cls):
+        return cls.setup_multi_currency_data(
+            [('2016-01-01', 3.0), ('2017-01-01', 2.0)],
+            name="Gold Coin",
+            symbol='☺',
+            currency_unit_label='Gold',
+            currency_subunit_label='Silver',
+        )
 
     @classmethod
     def copy_account(cls, account, default=None):

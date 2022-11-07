@@ -2,24 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import TransactionCase
-from odoo.addons.base.tests.common import BaseCommon
-
-
-class UomCommon2(BaseCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.uom_gram = cls.env.ref('uom.product_uom_gram')
-        cls.uom_kgm = cls.env.ref('uom.product_uom_kgm')
-        cls.uom_ton = cls.env.ref('uom.product_uom_ton')
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
-
-        cls.group_uom = cls.env.ref('uom.group_uom')
-
-        cls.env.user.groups_id += cls.group_uom
 
 
 class UomCommon(TransactionCase):
@@ -28,6 +10,7 @@ class UomCommon(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        # TODO ref without exists check
         cls.uom_gram = cls.env.ref('uom.product_uom_gram')
         cls.uom_kgm = cls.env.ref('uom.product_uom_kgm')
         cls.uom_ton = cls.env.ref('uom.product_uom_ton')

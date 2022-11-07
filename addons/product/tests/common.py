@@ -6,27 +6,8 @@ from unittest.mock import patch
 from odoo.fields import Command
 
 from odoo.addons.base.tests.common import BaseCommon, BaseCommon2
-from odoo.addons.uom.tests.common import UomCommon, UomCommon2
+from odoo.addons.uom.tests.common import UomCommon
 
-
-class ProductCommon2(BaseCommon2, UomCommon2):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.product_a = cls.env['product.product'].create({
-            'name': 'product_a',
-            'uom_id': cls.env.ref('uom.product_uom_unit').id,
-            'lst_price': 1000.0,
-            'standard_price': 800.0,
-        })
-        cls.product_b = cls.env['product.product'].create({
-            'name': 'product_b',
-            'uom_id': cls.env.ref('uom.product_uom_dozen').id,
-            'lst_price': 200.0,
-            'standard_price': 160.0,
-        })
 
 
 class ProductCommon(
@@ -70,6 +51,24 @@ class ProductCommon(
         cls.env['product.pricelist'].search([
             ('id', '!=', cls.pricelist.id),
         ]).action_archive()
+
+    @classmethod
+    def _create_pricelist(self, **create_vals):
+        return self.env['product.pricelist'].create({
+            'name': "Test Pricelist",
+            **create_vals,
+        })
+
+    @classmethod
+    def _create_product(self, **create_vals):
+        return self.env['product.product'].create({
+            'name': "Test Product",
+            'type': 'consu',
+            'list_price': 100.0,
+            'standard_price': 50.0,
+            'categ_id': self.product_category.id,
+            **create_vals,
+        })
 
 
 class ProductAttributesCommon(ProductCommon):

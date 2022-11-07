@@ -27,14 +27,16 @@ class BaseCommon2(TransactionCase):
             'name': "Test User",
             'login': 'test_user',
             'password': 'test_user',
+            # FIXME LAS: this makes the test depend on installed modules
+            # groups given should be fully specified, and not take the superadmin groups.
             'groups_id': [Command.set(cls.env.user.groups_id.ids)],
+            'email': 'test_user@test.com',
         })
-        user.partner_id.email = 'test_user@test.com'
 
         # Shadow the current environment/cursor with one having the report user.
         # This is mandatory to test access rights.
         cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env(user=user)
-        cls.cr = cls.env.cr
+        cls.cr = cls.env.cr  # FIXME LAS confusing and unnecessary variable, should not be in the BaseCommon
 
         cls.company_data = cls.setup_company_data('company_1_data')
 
@@ -57,51 +59,6 @@ class BaseCommon2(TransactionCase):
             'currency': company.currency_id,
         }
 
-    @classmethod
-    def setup_multi_currency_data(cls, rates, **kwargs):
-        currency = cls.env['res.currency'].create({
-            'rounding': 0.01,
-            'position': 'after',
-            **kwargs,
-        })
-        rates = cls.env['res.currency.rate'].create([
-            {
-                'name': rate_date,
-                'rate': rate,
-                'currency_id': currency.id,
-                'company_id': cls.env.company.id,
-            }
-            for rate_date, rate in rates
-        ])
-        return {
-            'currency': currency,
-            'rates': rates,
-        }
-
-    @classmethod
-    def setup_gold_currency(cls):
-        return cls.setup_multi_currency_data(
-            [('2016-01-01', 3.0), ('2017-01-01', 2.0)],
-            name="Gold Coin",
-            symbol='☺',
-            currency_unit_label='Gold',
-            currency_subunit_label='Silver',
-        )
-
-    @classmethod
-    def setup_partner_a(cls):
-        return cls.env['res.partner'].create({
-            'name': 'partner_a',
-            'company_id': False,
-        })
-
-    @classmethod
-    def setup_partner_b(cls):
-        return cls.env['res.partner'].create({
-            'name': 'partner_b',
-            'company_id': False,
-        })
-
 
 class BaseCommon(TransactionCase):
 
@@ -113,6 +70,11 @@ class BaseCommon(TransactionCase):
         # Mail API overrides should be tested with dedicated tests on purpose
         # Hack to use with_context and avoid manual context dict modification
         cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+
+        # TODO VFE try setuping a new company and put it as main company of the user
+
+        cls.group_portal = cls.env.ref('base.group_portal')
+        cls.group_user = cls.env.ref('base.group_user')
 
         cls.partner = cls.env['res.partner'].create({
             'name': 'Test Partner',
@@ -127,15 +89,34 @@ class BaseCommon(TransactionCase):
         currency.action_unarchive()
         return currency
 
+    @classmethod
+    def _create_company(cls, **create_values):
+        return cls.env['res.company'].create({
+            'name': "Test Company",
+        })
+
+    @classmethod
+    def _create_partner(cls, **create_values):
+        return cls.env['res.partner'].create({
+            'name': "Test Partner",
+            'company_id': False,
+        })
+
+    def _create_user(cls, **create_values):
+        return cls.env['res.users.'].create({
+            'name': "Test Internal User",
+            'login': 'internal_user',
+            'password': 'internal_user',
+            'email': 'test_user@test.com',
+            'groups_id': [Command.set([cls.group_user.id])],
+        })
+
 
 class BaseUsersCommon(BaseCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.group_portal = cls.env.ref('base.group_portal')
-        cls.group_user = cls.env.ref('base.group_user')
 
         cls.user_portal = cls.env['res.users'].create({
             'name': 'Test Portal User',
