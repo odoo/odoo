@@ -642,6 +642,7 @@ class PoFileReader:
             source = entry.msgid
             translation = entry.msgstr
             found_code_occurrence = False
+            flags = entry.flags
             for occurrence, line_number in entry.occurrences:
                 match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([^ ]+)', occurrence)
                 if match:
@@ -656,6 +657,7 @@ class PoFileReader:
                         'value': translation,
                         'comments': comments,
                         'module': module,
+                        'flags': flags,
                     }
                     continue
 
@@ -674,6 +676,7 @@ class PoFileReader:
                         'comments': comments,
                         'res_id': int(line_number),
                         'module': module,
+                        'flags': flags,
                     }
                     continue
 
@@ -734,6 +737,8 @@ class PoFileWriter:
             if not row.get('translation') and trad != src:
                 row['translation'] = trad
             row.setdefault('tnrs', []).append((type, name, res_id))
+            if type == 'code' and WEB_TRANSLATION_COMMENT not in comments:
+                row.setdefault('flags', []).append('python-format')
             row.setdefault('comments', set()).update(comments)
             modules.add(module)
 
@@ -743,7 +748,7 @@ class PoFileWriter:
                 row['translation'] = ''
             elif not row.get('translation'):
                 row['translation'] = ''
-            self.add_entry(row['modules'], sorted(row['tnrs']), src, row['translation'], row['comments'])
+            self.add_entry(row['modules'], sorted(row['tnrs']), src, row['translation'], row['comments'], row.get('flags'))
 
         import odoo.release as release
         self.po.header = "Translation of %s.\n" \
@@ -766,7 +771,7 @@ class PoFileWriter:
         # buffer expects bytes
         self.buffer.write(str(self.po).encode())
 
-    def add_entry(self, modules, tnrs, source, trad, comments=None):
+    def add_entry(self, modules, tnrs, source, trad, comments=None, flags=None):
         entry = polib.POEntry(
             msgid=source,
             msgstr=trad,
@@ -776,10 +781,8 @@ class PoFileWriter:
         if comments:
             entry.comment += "\n" + "\n".join(comments)
 
-        code = False
         for typy, name, res_id in tnrs:
             if typy == 'code':
-                code = True
                 res_id = 0
             if isinstance(res_id, int) or res_id.isdigit():
                 # second term of occurrence must be a digit
@@ -787,8 +790,8 @@ class PoFileWriter:
                 entry.occurrences.append((u"%s:%s" % (typy, name), str(res_id)))
             else:
                 entry.occurrences.append((u"%s:%s:%s" % (typy, name, res_id), ''))
-        if code:
-            entry.flags.append("python-format")
+        if flags:
+            entry.flags.extend(flags)
         self.po.append(entry)
 
 
@@ -1437,7 +1440,8 @@ class CodeTranslations:
         fileobj.seek(0)
         reader = TranslationFileReader(fileobj, fileformat=fileformat)
         for row in reader:
-            if row.get('value') and row.get('src') and row.get('type') == 'code':
+            if row.get('value') and row.get('src') and row.get('type') == 'code'\
+                    and 'python-format' in row['flags']:
                 python_translations[row['src']] = row['value']
         return python_translations
 
@@ -1448,8 +1452,8 @@ class CodeTranslations:
         fileobj.seek(0)
         reader = TranslationFileReader(fileobj, fileformat=fileformat)
         for row in reader:
-            if row.get('value') and row.get('src') and row.get('type') == 'code' and WEB_TRANSLATION_COMMENT in row[
-                'comments']:
+            if row.get('value') and row.get('src') and row.get('type') == 'code'\
+                    and WEB_TRANSLATION_COMMENT in row['comments']:
                 webclient_translations[row['src']] = row['value']
         return webclient_translations
 
