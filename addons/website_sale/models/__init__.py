@@ -14,6 +14,7 @@ from . import product_public_category
 from . import product_ribbon
 from . import product_tag
 from . import product_template
+from . import product_template_attribute_line
 from . import res_company
 from . import res_config_settings
 from . import res_country
@@ -22,5 +23,7 @@ from . import sale_order
 from . import sale_order_line
 from . import website
 from . import website_base_unit
+from . import website_sale_extra_field
 from . import website_snippet_filter
+from . import website_track
 from . import website_visitor

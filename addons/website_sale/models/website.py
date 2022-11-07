@@ -549,19 +549,3 @@ class Website(models.Model):
         self.ensure_one()
 
         return self.is_view_active('website_sale.address_b2b')
-
-class WebsiteSaleExtraField(models.Model):
-    _name = 'website.sale.extra.field'
-    _description = 'E-Commerce Extra Info Shown on product page'
-    _order = 'sequence'
-
-    website_id = fields.Many2one('website')
-    sequence = fields.Integer(default=10)
-    field_id = fields.Many2one(
-        'ir.model.fields',
-        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])],
-        required=True,
-        ondelete='cascade'
-    )
-    label = fields.Char(related='field_id.field_description')
-    name = fields.Char(related='field_id.name')
