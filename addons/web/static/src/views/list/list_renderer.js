@@ -718,7 +718,8 @@ export class ListRenderer extends Component {
         // in those situations, we put the value as title of the cells.
         // This is only necessary for some field types, as for the others, we hardcode
         // a minimum column width that should be enough to display the entire value.
-        if (!(fieldType in FIXED_FIELD_COLUMN_WIDTHS)) {
+        // Also, we don't set title for json fields, because it's not human readable anyway.
+        if (!(fieldType in FIXED_FIELD_COLUMN_WIDTHS) && fieldType != "json") {
             return this.getFormattedValue(column, record);
         }
     }
