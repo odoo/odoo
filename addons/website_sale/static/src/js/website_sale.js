@@ -1170,6 +1170,7 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
     selector: '.o_wsale_products_page',
     events: {
         'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
+        'click [data-link-href]': '_openLink',
     },
 
     //----------------------------------------------------------------------
@@ -1193,6 +1194,14 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         }
         this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
         window.location.search = $.param(search);
+    },
+
+    _openLink: function (ev) {
+        const productsDiv = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
+        if (productsDiv) {
+            productsDiv.classList.add('opacity-50');
+        }
+        window.location.href = ev.currentTarget.getAttribute('data-link-href');
     },
 });
 });
