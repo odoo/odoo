@@ -68,6 +68,9 @@
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             'website_sale/static/src/xml/website_sale_reorder_modal.xml',
             'website_sale/static/src/js/website_sale_reorder.js',
+            "website_sale/static/src/frontend/**/*.js",
+            "website_sale/static/src/frontend/**/*.scss",
+            "website_sale/static/src/frontend/**/*.xml",
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
@@ -79,6 +82,9 @@
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/xml/website_sale_dashboard.xml',
             'website_sale/static/src/js/tours/website_sale_shop.js',
+            "website_sale/static/src/backend/**/*.js",
+            "website_sale/static/src/backend/**/*.scss",
+            "website_sale/static/src/backend/**/*.xml",
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
