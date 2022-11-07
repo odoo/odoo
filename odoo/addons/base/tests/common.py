@@ -36,7 +36,6 @@ class BaseCommon2(TransactionCase):
         # Shadow the current environment/cursor with one having the report user.
         # This is mandatory to test access rights.
         cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env(user=user)
-        cls.cr = cls.env.cr  # FIXME LAS confusing and unnecessary variable, should not be in the BaseCommon
 
         cls.company_data = cls.setup_company_data('company_1_data')
 
@@ -93,6 +92,7 @@ class BaseCommon(TransactionCase):
     def _create_company(cls, **create_values):
         return cls.env['res.company'].create({
             'name': "Test Company",
+            **create_values,
         })
 
     @classmethod
@@ -100,15 +100,17 @@ class BaseCommon(TransactionCase):
         return cls.env['res.partner'].create({
             'name': "Test Partner",
             'company_id': False,
+            **create_values,
         })
 
-    def _create_user(cls, **create_values):
+    def _create_user(cls, groups=None, **create_values):
+        user_groups = groups or cls.group_user
         return cls.env['res.users.'].create({
             'name': "Test Internal User",
             'login': 'internal_user',
             'password': 'internal_user',
             'email': 'test_user@test.com',
-            'groups_id': [Command.set([cls.group_user.id])],
+            'groups_id': [Command.set(user_groups.ids)],
         })
 
 

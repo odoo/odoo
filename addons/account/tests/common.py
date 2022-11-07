@@ -21,6 +21,7 @@ class AccountTestInvoicingCommon(ProductCommon, BaseCommon2):
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
         super().setUpClass()
+        cls.cr = cls.env.cr  # NOTE: LAS confusing and unnecessary variable, should not be in the BaseCommon
 
         # Give multi-uom group to users, only needed for tests using a Form View
         # TODO LAS: move lower in the hierarchy, only for tests needing it
