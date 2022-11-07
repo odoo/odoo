@@ -285,22 +285,27 @@ export function getFurthestUneditableParent(node, parentLimit) {
     return nonEditableElement;
 }
 /**
- * Returns the closest HTMLElement of the provided Node
- * if a 'selector' is provided, Returns the closest HTMLElement that match the selector
+ * Returns the closest HTMLElement of the provided Node. If the predicate is a
+ * string, returns the closest HTMLElement that match the predicate selector. If
+ * the predicate is a function, returns the closest element that matches the
+ * predicate. Any returned element will be contained within the editable.
  *
  * @param {Node} node
- * @param {string} [selector=undefined]
- * @returns {HTMLElement}
+ * @param {string | Function} [predicate='*']
+ * @returns {HTMLElement|null}
  */
-export function closestElement(node, selector) {
-    let element = node;
-    while (element && element.nodeType !== Node.ELEMENT_NODE) {
-        element = element.parentNode;
+export function closestElement(node, predicate = "*") {
+    if (!node) return null;
+    let element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    if (typeof predicate === 'function') {
+        while (element && !predicate(element)) {
+            element = element.parentElement;
+        }
+    } else {
+        element = element?.closest(predicate);
     }
-    if (element && selector) {
-        element = element.closest(selector);
-    }
-    return element && element.querySelector('.odoo-editor-editable') ? null : element;
+
+    return element?.closest('.odoo-editor-editable') && element;
 }
 
 /**
