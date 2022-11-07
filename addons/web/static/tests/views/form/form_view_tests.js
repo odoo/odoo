@@ -1067,6 +1067,37 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
     });
 
+    QUnit.test(
+        "width of a field cell should be 100% (style.width = '') even with multiple conditional labels in an inner group",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="bar" invisible="1"/>
+                                <label string="Bar True" for="foo" modifiers="{&quot;invisible&quot;: [[&quot;bar&quot;, &quot;=&quot;, true]]}"/>
+                                <label string="Bar False" for="foo" modifiers="{&quot;invisible&quot;: [[&quot;bar&quot;, &quot;=&quot;, false]]}"/>
+                                <field name="foo" nolabel="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>`,
+            });
+
+            // We want to assert the width of the ".o_field_widget" element's parent which is wrapped
+            // in a ".o_cell" element. However, the label is also wrapped in a ".o_cell" element.
+            // So we query ".o_field_widget" and then get its parent.
+            const fieldCell = target.querySelector(".o_group .o_inner_group .o_field_widget")
+                .parentElement;
+            assert.strictEqual(fieldCell.style.width, "");
+        }
+    );
+
     QUnit.test("invisible fields are not used for the label generation", async function (assert) {
         await makeView({
             type: "form",
@@ -8235,222 +8266,6 @@ QUnit.module("Views", (hooks) => {
             },
         });
         await click(target.querySelector('.o_field_widget[name="trululu"] input'));
-    });
-
-    QUnit.test("form rendering with groups with col/colspan", async function (assert) {
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <group col="6" class="parent_group">
-                            <group col="4" colspan="3" class="group_4">
-                                <div colspan="3"/>
-                                <div colspan="2"/>
-                                <div/>
-                                <div colspan="4"/>
-                            </group>
-                            <group col="3" colspan="4" class="group_3">
-                                <group col="1" class="group_1">
-                                    <div/>
-                                    <div/>
-                                    <div/>
-                                </group>
-                                <div/>
-                                <group col="3" class="field_group">
-                                    <field name="foo" colspan="3"/>
-                                    <div/>
-                                    <field name="bar" nolabel="1"/>
-                                    <field name="qux"/>
-                                    <field name="int_field" colspan="3" nolabel="1"/>
-                                    <span/>
-                                    <field name="product_id"/>
-                                </group>
-                            </group>
-                        </group>
-                        <group>
-                            <field name="p">
-                                <tree>
-                                    <field name="display_name"/>
-                                    <field name="foo"/>
-                                    <field name="int_field"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </sheet>
-                </form>`,
-            resId: 1,
-        });
-
-        var $parentGroup = $(target.querySelector(".parent_group"));
-        var $group4 = $(target.querySelector(".group_4"));
-        var $group3 = $(target.querySelector(".group_3"));
-        var $group1 = $(target.querySelector(".group_1"));
-        var $fieldGroup = $(target.querySelector(".field_group"));
-
-        // Verify outergroup/innergroup
-        assert.strictEqual($parentGroup[0].tagName, "DIV", ".parent_group should be an outergroup");
-        assert.strictEqual($group4[0].tagName, "DIV", ".group_4 should be an innergroup");
-        assert.strictEqual($group3[0].tagName, "DIV", ".group_3 should be an outergroup");
-        assert.strictEqual($group1[0].tagName, "DIV", ".group_1 should be an innergroup");
-        assert.strictEqual($fieldGroup[0].tagName, "DIV", ".field_group should be an innergroup");
-
-        // Verify .parent_group content
-        var $parentGroupChildren = $parentGroup.children();
-        assert.strictEqual(
-            $parentGroupChildren.length,
-            2,
-            "there should be 2 groups in .parent_group"
-        );
-        assert.ok(
-            $parentGroupChildren.eq(0).is(".col-lg-6"),
-            "first .parent_group group should be 1/2 parent width"
-        );
-        assert.ok(
-            $parentGroupChildren.eq(1).is(".col-lg-8"),
-            "second .parent_group group should be 3/4 parent width"
-        );
-
-        // Verify .group_4 content
-        var $group4rows = $group4.find("> div.o_wrap_field");
-        assert.strictEqual($group4rows.length, 3, "there should be 3 rows in .group_4");
-        var $group4firstRowTd = $group4rows.eq(0).children("div.o_cell");
-        assert.strictEqual($group4firstRowTd.length, 1, "there should be 1 cell in first row");
-        assert.strictEqual(
-            $group4firstRowTd.attr("style").substr(0, 19),
-            "grid-column: span 3",
-            "the first cell column span should be 3"
-        );
-        assert.strictEqual(
-            $group4firstRowTd.attr("style").substr(0, 19),
-            "grid-column: span 3",
-            "the first cell should be 75% width"
-        );
-        assert.strictEqual(
-            $group4firstRowTd.children()[0].tagName,
-            "DIV",
-            "the first cell should contain a div"
-        );
-        var $group4secondRowTds = $group4rows.eq(1).children("div.o_cell");
-        assert.strictEqual($group4secondRowTds.length, 2, "there should be 2 cells in second row");
-        assert.strictEqual(
-            $group4secondRowTds.attr("style").substr(0, 29),
-            "grid-column: span 2;width: 50",
-            "the first cell colspan should be 2 and be 50% width"
-        );
-        assert.strictEqual(
-            $group4secondRowTds.eq(1).attr("style").substr(0, 9),
-            "width: 25",
-            "the second cell colspan should be default one (no style) and be 25% width"
-        );
-        var $group4thirdRowTd = $group4rows.eq(2).children(".o_cell");
-        assert.strictEqual($group4thirdRowTd.length, 1, "there should be 1 cell in third row");
-        assert.strictEqual(
-            $group4thirdRowTd.attr("style").substr(0, 30),
-            "grid-column: span 4;width: 100",
-            "the first cell colspan should be 4 and be 100% width"
-        );
-
-        // Verify .group_3 content
-        assert.strictEqual($group3.children().length, 3, ".group_3 should have 3 children");
-        assert.strictEqual(
-            $group3.children(".col-lg-4").length,
-            3,
-            ".group_3 should have 3 children of 1/3 width"
-        );
-
-        // Verify .group_1 content
-        assert.strictEqual(
-            $group1.find("> .o_wrap_field").length,
-            3,
-            "there should be 3 rows in .group_1"
-        );
-
-        // Verify .field_group content
-        var $fieldGroupRows = $fieldGroup.find("> .o_wrap_field");
-        assert.strictEqual($fieldGroupRows.length, 5, "there should be 5 rows in .o_wrap_field");
-        var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).children(".o_cell");
-        assert.strictEqual(
-            $fieldGroupFirstRowTds.length,
-            2,
-            "there should be 2 cells in first row"
-        );
-        assert.hasClass(
-            $fieldGroupFirstRowTds.eq(0),
-            "o_wrap_label",
-            "first cell should be a label cell"
-        );
-        assert.strictEqual(
-            $fieldGroupFirstRowTds.eq(1).attr("style").substr(0, 30),
-            "grid-column: span 2;width: 100",
-            "second cell colspan should be given colspan (3) - 1 (label) and be 100%"
-        );
-        var $fieldGroupSecondRowTds = $fieldGroupRows.eq(1).children(".o_cell");
-        assert.strictEqual(
-            $fieldGroupSecondRowTds.length,
-            2,
-            "there should be 2 cells in second row"
-        );
-        assert.strictEqual(
-            $fieldGroupSecondRowTds.eq(0).attr("style").substr(0, 9),
-            "width: 33",
-            "first cell colspan should be default one (no style) and be 33.3333%"
-        );
-        assert.strictEqual(
-            $fieldGroupSecondRowTds.eq(1).attr("style").substr(0, 9),
-            "width: 33",
-            "second cell colspan should be default one (no style) and be 33.3333%"
-        );
-        var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).children(".o_cell"); // new row as label/field pair colspan is greater than remaining space
-        assert.strictEqual(
-            $fieldGroupThirdRowTds.length,
-            2,
-            "there should be 2 cells in third row"
-        );
-        assert.hasClass(
-            $fieldGroupThirdRowTds.eq(0),
-            "o_wrap_label",
-            "first cell should be a label cell"
-        );
-        assert.strictEqual(
-            $fieldGroupThirdRowTds.eq(1).attr("style").substr(0, 9),
-            "width: 50",
-            "second cell colspan should be default one (no style) and be 50% width"
-        );
-        var $fieldGroupFourthRowTds = $fieldGroupRows.eq(3).children(".o_cell");
-        assert.strictEqual(
-            $fieldGroupFourthRowTds.length,
-            1,
-            "there should be 1 cell in fourth row"
-        );
-        assert.strictEqual(
-            $fieldGroupFourthRowTds.attr("style").substr(0, 30),
-            "grid-column: span 3;width: 100",
-            "the cell should have a colspan equal to 3 and have 100% width"
-        );
-        var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).children(".o_cell"); // label/field pair can be put after the 1-colspan span
-        assert.strictEqual(
-            $fieldGroupFifthRowTds.length,
-            3,
-            "there should be 3 cells in fourth row"
-        );
-        assert.strictEqual(
-            $fieldGroupFifthRowTds.eq(0).attr("style").substr(0, 9),
-            "width: 50",
-            "the first cell should 50% width"
-        );
-        assert.hasClass(
-            $fieldGroupFifthRowTds.eq(1),
-            "o_wrap_label",
-            "the second cell should be a label cell"
-        );
-        assert.strictEqual(
-            $fieldGroupFifthRowTds.eq(2).attr("style").substr(0, 9),
-            "width: 50",
-            "the third cell should 50% width"
-        );
     });
 
     QUnit.test(
