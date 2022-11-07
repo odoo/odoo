@@ -8,7 +8,7 @@ import { one, Model } from '@mail/model';
  * represent server record (e.g. Thread, Message) or UI elements (e.g.
  * MessagingMenu, ChatWindow). These instances are called "records".
  */
- Model({
+Model({
     /**
      * Name of the model. Important to refer to appropriate model like in
      * relational fields. Name of models must be unique.

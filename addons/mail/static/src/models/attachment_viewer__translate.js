@@ -9,7 +9,7 @@ import { attr, one, Model } from '@mail/model';
  * reasons (overhead of making vdom is too significant for each mouse
  * position changes while dragging)
  */
- Model({
+Model({
     name: 'AttachmentViewer.Translate',
     fields: {
         dx: attr({ default: 0 }),
