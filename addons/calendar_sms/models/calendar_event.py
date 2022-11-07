@@ -13,15 +13,19 @@ class CalendarEvent(models.Model):
         """
         return self.mapped('attendee_ids').filtered(lambda att: att.state != 'declined' and att.partner_id.phone_sanitized).mapped('partner_id')
 
-    def _do_sms_reminder(self, alarm):
+    def _do_sms_reminder(self, alarms):
         """ Send an SMS text reminder to attendees that haven't declined the event """
         for event in self:
-            event._message_sms_with_template(
-                template=alarm.sms_template_id,
-                template_fallback=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
-                partner_ids=self._sms_get_default_partners().ids,
-                put_in_queue=False
-            )
+            for alarm in alarms:
+                partners = event._sms_get_default_partners()
+                if event.user_id and not alarm.sms_notify_responsible:
+                    partners -= event.user_id.partner_id
+                event._message_sms_with_template(
+                    template=alarm.sms_template_id,
+                    template_fallback=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
+                    partner_ids=partners.ids,
+                    put_in_queue=False
+                )
 
     def action_send_sms(self):
         if not self.partner_ids:
