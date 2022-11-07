@@ -8,6 +8,10 @@
         </p>
 
         <ul class="o-tooltip--technical" t-if="debug" role="tooltip">
+            <li data-item="field" t-if="field and field.label">
+                <span class="o-tooltip--technical--title">Label:</span>
+                <t t-esc="field.label"/>
+            </li>
             <li data-item="field" t-if="field and field.name">
                 <span class="o-tooltip--technical--title">Field:</span>
                 <t t-esc="field.name"/>
