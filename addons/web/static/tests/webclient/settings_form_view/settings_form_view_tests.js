@@ -508,6 +508,34 @@ QUnit.module("SettingsFormView", (hooks) => {
         await nextTick();
     });
 
+    QUnit.test("correctly copy attributes to compiled labels", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <label for="foo" string="Label Before" class="a"/>
+                                            <field name="foo" class="b"/>
+                                            <label for="foo" string="Label After" class="c"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`,
+        });
+
+        assert.hasClass(target.querySelectorAll(".o_form_label")[0], "a");
+        assert.hasClass(target.querySelector(".o_field_widget.o_field_boolean"), "b");
+        assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
+    });
+
     QUnit.test("settings views does not write the id on the url", async function (assert) {
         serverData.actions = {
             1: {
