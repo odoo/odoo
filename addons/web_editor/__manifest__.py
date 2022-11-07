@@ -145,6 +145,7 @@ Odoo Web Editor widget.
             # utils
             'web_editor/static/src/js/editor/smooth_scroll_on_drag.js',
             'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
+            'web_editor/static/src/js/wysiwyg/MoveNodePlugin.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
             'web_editor/static/src/js/wysiwyg/conflict_dialog.js',
             'web_editor/static/src/js/wysiwyg/conflict_dialog.xml',

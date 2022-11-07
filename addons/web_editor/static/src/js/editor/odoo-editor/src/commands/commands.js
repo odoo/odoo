@@ -48,6 +48,7 @@ import {
     isWhitespace,
     isVisibleTextNode,
     getCursorDirection,
+    resetOuids,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -764,10 +765,7 @@ export const editorCommands = {
                 for (const column of columns) {
                     const columnContents = unwrapContents(column);
                     for (const node of columnContents) {
-                        node.ouid = undefined; // Allow move out of unbreakable
-                        for (const descendant of descendants(node)) {
-                            descendant.ouid = undefined; // Allow move out of unbreakable
-                        }
+                        resetOuids(node);
                     }
                 }
             }
@@ -784,10 +782,7 @@ export const editorCommands = {
             row.classList.add('row');
             container.append(row);
             const block = closestBlock(anchor);
-            block.ouid = undefined; // Allow move out of unbreakable
-            for (const descendant of descendants(block)) {
-                descendant.ouid = undefined; // Allow move out of unbreakable
-            }
+            resetOuids(block);
             const columnSize = Math.floor(12 / numberOfColumns);
             const columns = [];
             for (let i = 0; i < numberOfColumns; i++) {
@@ -846,10 +841,7 @@ export const editorCommands = {
                     const column = columns.pop();
                     const columnContents = unwrapContents(column);
                     for (const node of columnContents) {
-                        node.ouid = undefined; // Allow move out of unbreakable
-                        for (const descendant of descendants(node)) {
-                            descendant.ouid = undefined; // Allow move out of unbreakable
-                        }
+                        resetOuids(node);
                     }
                     contents.unshift(...columnContents);
                 }
