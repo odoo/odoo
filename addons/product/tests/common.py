@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo.fields import Command
 
-from odoo.addons.base.tests.common import BaseCommon, BaseCommon2
+from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.uom.tests.common import UomCommon
 
 

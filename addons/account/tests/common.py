@@ -8,13 +8,18 @@ import time
 import base64
 from lxml import etree
 
-from odoo.addons.base.tests.common import BaseCommon2
 from odoo.addons.product.tests.common import ProductCommon
 
 
-class AccountTestInvoicingCommon(ProductCommon, BaseCommon2):
+class AccountTestInvoicingCommon(ProductCommon):
 
-    # def _create_product(self, **create_values):
+    @classmethod
+    def _chart_template_ref(cls):
+        return "l10n_generic_coa.configurable_chart_template"
+
+    @classmethod
+    def _needs_independent_company(cls):
+        return True
 
     @classmethod
     def setUpClass(cls, **kwargs):
@@ -22,6 +27,20 @@ class AccountTestInvoicingCommon(ProductCommon, BaseCommon2):
 
         super().setUpClass()
         cls.cr = cls.env.cr  # NOTE: LAS confusing and unnecessary variable, should not be in the BaseCommon
+
+        cls.company_data = cls.setup_company_data(
+            company_name="", # Hacky temp sol to avoid breaking all existing classes and overrides
+            company=cls.env.company)
+
+        user = cls._create_user(
+            # FIXME LAS: this makes the test depend on installed modules
+            # groups given should be fully specified, and not take the superadmin groups.
+            groups=cls.env.user.groups_id,
+        )
+
+        # Shadow the current environment/cursor with one having the report user.
+        # This is mandatory to test access rights.
+        cls.env = cls.env(user=user)
 
         # Give multi-uom group to users, only needed for tests using a Form View
         # TODO LAS: move lower in the hierarchy, only for tests needing it
@@ -127,7 +146,7 @@ class AccountTestInvoicingCommon(ProductCommon, BaseCommon2):
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
 
     @classmethod
-    def setup_company_data(cls, company_name, **kwargs):
+    def setup_company_data(cls, company_name='', **create_values):
 
         def search_account(company, chart_template, field_name, domain):
             template_code = chart_template[field_name].code
@@ -141,26 +160,27 @@ class AccountTestInvoicingCommon(ProductCommon, BaseCommon2):
                 account = cls.env['account.account'].search(domain, limit=1)
             return account
 
-        if 'chart_template_id' not in kwargs:
+        company_rec = create_values.pop('company', None)
+        company = company_rec or cls._create_company(name=company_name, **create_values)
+
+        chart_template = company.chart_template_id or cls.env.company.chart_template_id
+        if not chart_template:
             chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
             if not chart_template:
                 cls.tearDownClass()
                 # skipTest raises exception
                 cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
 
-        result = super().setup_company_data(company_name, **kwargs)
-        company = result['company']
-
         # Install the chart template.
-        chart_template = company.chart_template_id or cls.env.company.chart_template_id
         chart_template.try_loading(company=company, install_demo=False)
 
         # The currency could be different after the installation of the chart template.
-        if kwargs.get('currency_id'):
-            company.write({'currency_id': kwargs['currency_id']})
+        if create_values.get('currency_id'):
+            company.write({'currency_id': create_values['currency_id']})
 
         return {
-            **result,
+            'company': cls.env.company,
+            'currency': cls.env.company.currency_id,
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'income'),
