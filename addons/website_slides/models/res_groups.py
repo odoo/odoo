@@ -13,6 +13,6 @@ class UserGroup(models.Model):
         if vals.get('users'):
             # TDE FIXME: maybe directly check users and subscribe them
             self.env['slide.channel'].sudo().search([
-                ('enroll_group_ids', 'any', [('id', 'in', self._ids)]),
+                ('enroll_group_ids', 'any', self),
             ])._add_groups_members()
         return write_res

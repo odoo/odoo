@@ -286,7 +286,7 @@ class User(models.Model):
             user.employee_id = employee_per_user.get(user)
 
     def _search_company_employee(self, operator, value):
-        return [('employee_ids', 'any', [('id', operator, value)])]
+        return [('employee_ids', operator, value)]
 
     def action_create_employee(self):
         self.ensure_one()

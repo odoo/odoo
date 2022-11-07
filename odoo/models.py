@@ -6117,7 +6117,7 @@ class BaseModel(metaclass=MetaModel):
                     real_records = self - new_records
                     records = model.browse()
                     if real_records and key.type in ('one2many', 'many2many'):
-                        records = model.search([(key.name, 'any', [('id', 'in', real_records.ids)])], order='id')
+                        records = model.search([(key.name, 'any', real_records)], order='id')
                     elif real_records:
                         records = model.search([(key.name, 'in', real_records.ids)], order='id')
                     if new_records:

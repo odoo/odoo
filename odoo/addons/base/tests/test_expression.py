@@ -1514,7 +1514,7 @@ class TestOne2many(TransactionCase):
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
-            self.Partner.search([('bank_ids', 'any', [('id', 'in', self.partner.bank_ids.ids)])])
+            self.Partner.search([('bank_ids', 'any', self.partner.bank_ids)])
 
         with self.assertQueries(['''
             SELECT "res_partner".id
@@ -1563,7 +1563,7 @@ class TestOne2many(TransactionCase):
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
-            self.Partner.search([('bank_ids', 'any', [('id', 'in', self.partner.bank_ids.ids)])])
+            self.Partner.search([('bank_ids', 'any', self.partner.bank_ids)])
 
         with self.assertQueries(['''
             SELECT "res_partner".id
@@ -1640,7 +1640,7 @@ class TestOne2many(TransactionCase):
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
-            self.Partner.search([('child_ids.bank_ids', 'any', [('id', 'in', self.partner.bank_ids.ids)])])
+            self.Partner.search([('child_ids.bank_ids', 'any', self.partner.bank_ids)])
 
     def test_autojoin_mixed(self):
         self.patch(self.Partner._fields['child_ids'], 'auto_join', True)
