@@ -13,10 +13,10 @@
             <form>
                 <field name="module_id" invisible="1"/>
                 <group string="Send to:">
-                    <field name="user_ids" widget="many2many_tags" nolabel="1"/>
+                    <field colspan="2" name="user_ids" widget="many2many_tags" nolabel="1"/>
                 </group>
                 <group string="Why do you need this module ?">
-                    <field name="body_html" widget="html" nolabel="1" placeholder="e.g. I'd like to use the SMS Marketing module to organize the promotion of our internal events, and exhibitions. I need access for 3 people of my team."/>
+                    <field colspan="2" name="body_html" widget="html" nolabel="1" placeholder="e.g. I'd like to use the SMS Marketing module to organize the promotion of our internal events, and exhibitions. I need access for 3 people of my team."/>
                 </group>
                 <footer>
                     <button string="Request Activation" class="btn-primary" type="object" name="action_send_request" data-hotkey="q"/>
