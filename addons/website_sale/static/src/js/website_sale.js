@@ -1,35 +1,3 @@
-odoo.define('website_sale.website_sale_offcanvas', function (require) {
-'use strict';
-
-var publicWidget = require('web.public.widget');
-
-publicWidget.registry.websiteSaleOffcanvas = publicWidget.Widget.extend({
-    selector: '#o_wsale_offcanvas',
-    events: {
-        'show.bs.offcanvas': '_toggleFilters',
-        'hidden.bs.offcanvas': '_toggleFilters',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Unfold active filters, fold inactive ones
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _toggleFilters: function (ev) {
-        for (const btn of this.el.querySelectorAll('button[data-status]')) {
-            if(btn.classList.contains('collapsed') && btn.dataset.status == "active" || ! btn.classList.contains('collapsed') && btn.dataset.status == "inactive" ) {
-                btn.click();
-            }
-        }
-    },
-});
-});
-
 odoo.define('website_sale.website_sale', function (require) {
 'use strict';
 
@@ -56,7 +24,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
         'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
-        'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
+        'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute', // => /shop
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'click .show_coupon': '_onClickShowCoupon',
@@ -574,7 +542,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @private
      * @param {Event} ev
      */
-    _onChangeAttribute: function (ev) {
+    _onChangeAttribute: function (ev) { // => website_sale_shop.js
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
             this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
@@ -999,49 +967,4 @@ return {
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
 };
 
-});
-
-odoo.define('website_sale.price_range_option', function (require) {
-'use strict';
-
-const publicWidget = require('web.public.widget');
-
-publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
-    selector: '.o_wsale_products_page',
-    events: {
-        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
-        'click [data-link-href]': '_openLink',
-    },
-
-    //----------------------------------------------------------------------
-    // Handlers
-    //----------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onPriceRangeSelected(ev) {
-        const range = ev.currentTarget;
-        const search = $.deparam(window.location.search.substring(1));
-        delete search.min_price;
-        delete search.max_price;
-        if (parseFloat(range.min) !== range.valueLow) {
-            search['min_price'] = range.valueLow;
-        }
-        if (parseFloat(range.max) !== range.valueHigh) {
-            search['max_price'] = range.valueHigh;
-        }
-        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
-        window.location.search = $.param(search);
-    },
-
-    _openLink: function (ev) {
-        const productsDiv = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
-        if (productsDiv) {
-            productsDiv.classList.add('opacity-50');
-        }
-        window.location.href = ev.currentTarget.getAttribute('data-link-href');
-    },
-});
 });
