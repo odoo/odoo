@@ -342,9 +342,9 @@ export class OdooEditor extends EventTarget {
         // By having one parent that contains a tree of containers, it is easy
         // to change the z-index of any container by changing their place in the
         // tree rather than tweaking a z-index number.
-        this._mainAbsoluteContainer = this.document.createElement('div');
-        this._mainAbsoluteContainer.classList.add('oe-absolute-container');
-        this.editable.before(this._mainAbsoluteContainer);
+        this.mainAbsoluteContainer = this.document.createElement('div');
+        this.mainAbsoluteContainer.classList.add('oe-absolute-container');
+        this.editable.before(this.mainAbsoluteContainer);
 
         // This container contains the users selections.
         this._selectionsContainer = this.makeAbsoluteContainer('oe-selections-container');
@@ -365,6 +365,7 @@ export class OdooEditor extends EventTarget {
             this.historySetInitialId(this.options.initialHistoryId);
         }
 
+        this._pluginCall('start', [editable]);
         this._pluginCall('sanitizeElement', [editable]);
 
         // ------
@@ -684,7 +685,7 @@ export class OdooEditor extends EventTarget {
         this._removeDomListener();
         this.powerbox.destroy();
         this.powerboxTablePicker.el.remove();
-        this._mainAbsoluteContainer.remove();
+        this.mainAbsoluteContainer.remove();
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
         this._pluginCall('destroy', []);
@@ -3386,6 +3387,22 @@ export class OdooEditor extends EventTarget {
         this.observer.takeRecords();
     }
 
+    disableAvatarForElement(element) {
+        this.enableAvatars();
+        for (const info of this._collabSelectionInfos.values()) {
+            if (info.avatarTargetElement === element) {
+                if (!info.avatarElement.classList.contains('opacity-0')) {
+                    info.avatarElement.classList.add('opacity-0');
+                }
+            }
+        }
+    }
+    enableAvatars() {
+        for (const element of this._avatarsContainer.querySelectorAll('.oe-collaboration-caret-avatar.opacity-0')) {
+            element.classList.remove('opacity-0');
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -5024,7 +5041,7 @@ export class OdooEditor extends EventTarget {
     _pluginAdd(Plugin) {
         this._plugins.push(new Plugin({ editor: this }));
     }
-    _pluginCall(method, args) {
+    _pluginCall(method, args = []) {
         for (const plugin of this._plugins) {
             if (plugin[method]) {
                 plugin[method](...args);
