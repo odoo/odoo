@@ -4,8 +4,8 @@
     <t t-name="mail.InlinePersonaView" owl="1">
         <div class="o_InlinePersonaView" t-attf-class="{{ className }}" t-ref="root">
             <div class="text-center m-3 d-flex">
-                <img class="o_FollowerView_avatar me-2 rounded-circle" t-att-src="inlinePersonaView.persona.avatarUrl" alt=""/>
-                <span t-esc="inlinePersonaView.persona.name"/>
+                <img class="o_FollowerView_avatar me-2 rounded-circle" t-att-src="persona.avatarUrl" alt=""/>
+                <span t-esc="persona.name"/>
             </div>
         </div>
     </t>

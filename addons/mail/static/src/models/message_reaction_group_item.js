@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one} from '@mail/model/model_field';
+import { one, Model } from '@mail/model';
 
-registerModel({
+
+Model({
     name: 'MessageReactionGroupItem',
     template: 'mail.MessageReactionGroupItem',
-    templateGetter: 'messageReactionGroupItem',
     recordMethods: {
         onClick() {
             if (!this.exists()) {

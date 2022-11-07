@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one, many} from '@mail/model/model_field';
+import { one, many, Model} from '@mail/model';
 
-registerModel({
+Model({
     name: 'PersonaListView',
     template: 'mail.PersonaListView',
-    templateGetter: 'personaListView',
     identifyingMode: 'xor',
     fields: {
         inlinePersonaViews: many('InlinePersonaView', { inverse: 'personaListViewOwner',

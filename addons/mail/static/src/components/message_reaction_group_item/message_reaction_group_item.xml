@@ -3,9 +3,9 @@
 
     <t t-name="mail.MessageReactionGroupItem" owl="1">
         <div class="o_MessageReactionGroupItem" t-attf-class="{{ className }}" t-ref="root">
-            <button class="btn p-1 rounded-1" t-att-title="messageReactionGroupItem.messageReactionGroup.content" t-on-click="messageReactionGroupItem.onClick">
-                <span class="o_MessageReactionGroupItem_content mx-1" t-esc="messageReactionGroupItem.messageReactionGroup.content" />
-                <span class="o_MessageReactionGroupItem_count mx-1" t-esc="messageReactionGroupItem.messageReactionGroup.count" />
+            <button class="btn p-1 rounded-1" t-att-title="messageReactionGroup.content" t-on-click="onClick">
+                <span class="o_MessageReactionGroupItem_content mx-1" t-esc="messageReactionGroup.content" />
+                <span class="o_MessageReactionGroupItem_count mx-1" t-esc="messageReactionGroup.count" />
             </button>
         </div>
     </t>

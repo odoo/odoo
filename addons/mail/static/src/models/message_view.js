@@ -2,7 +2,7 @@
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, increment, one, Model } from '@mail/model';
+import { attr, clear, increment, one, many, Model } from '@mail/model';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 Model({
@@ -63,7 +63,7 @@ Model({
                 !isEventHandled(ev, 'Message.ClickAuthorName') &&
                 !isEventHandled(ev, 'Message.ClickFailure') &&
                 !isEventHandled(ev, 'MessageActionList.Click') &&
-                !isEventHandled(ev, 'MessageReactionGroup.Click') &&
+                !isEventHandled(ev, 'MessageReactionGroupView.Click') &&
                 !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo') &&
                 !isEventHandled(ev, 'PersonaImStatusIcon.Click')
             ) {
@@ -142,6 +142,18 @@ Model({
                 this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                     message: this.message,
                 });
+            }
+        },
+        /**
+         * This listens to the right click event, and used to redirect the event
+         * as a dialog.
+         *
+         * @param {Event} ev
+         */
+         async onContextMenu(ev) {
+            ev.preventDefault();
+            if (this.message.messageReactionGroups.length > 0) {
+                this.update({ contextMenuDialog: {} });
             }
         },
         onHighlightTimerTimeout() {
@@ -338,6 +350,9 @@ Model({
          * Reference to the content of the message.
          */
         contentRef: attr({ ref: 'content' }),
+        contextMenuDialog: one('Dialog', {
+            inverse: 'messageViewOwnerAsContextMenu',
+        }),
         /**
          * States the time elapsed since date up to now.
          */
@@ -614,6 +629,17 @@ Model({
             },
         }),
         messageListViewItemOwner: one('MessageListViewItem', { identifying: true, inverse: 'messageView' }),
+        messageReactionGroupViews: many('MessageReactionGroupView', {
+            compute() {
+                if (this.message.messageReactionGroups.length === 0) {
+                    return clear();
+                }
+                return this.message.messageReactionGroups.map(messageReactionGroup => {
+                     return { messageReactionGroup: messageReactionGroup };
+                });
+            },
+            inverse: 'owner',
+        }),
         messageSeenIndicatorView: one('MessageSeenIndicatorView', { inverse: 'messageViewOwner',
             compute() {
                 if (

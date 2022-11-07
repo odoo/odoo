@@ -1,14 +1,12 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, Model } from '@mail/model';
 import { markEventHandled } from '@mail/utils/utils';
 import { sprintf } from '@web/core/utils/strings';
 
-registerModel({
+Model({
     name: 'MessageReactionGroupView',
     template: 'mail.MessageReactionGroupView',
-    templateGetter: 'messageReactionGroupView',
     recordMethods: {
         /**
          * Handles click on the reaction group.

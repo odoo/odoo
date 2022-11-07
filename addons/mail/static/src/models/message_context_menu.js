@@ -1,11 +1,15 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one, many, attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from '@mail/model';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 
-registerModel({
+
+Model({
     name: 'MessageContextMenu',
+    template: 'mail.MessageContextMenu',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+    },
     recordMethods: {
         /**
          * Returns whether the given html element is inside this message context menu.

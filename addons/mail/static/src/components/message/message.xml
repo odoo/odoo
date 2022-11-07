@@ -22,7 +22,7 @@
                 'px-1': isInChatWindow,
                 'opacity-50': (messageListViewItemOwner and messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView) and !isSelected,
             }" t-attf-class="{{ extraClass }} {{ className }}" role="group" t-att-aria-label="message.messageTypeText" t-on-click="onClick" t-on-mouseenter="onMouseenter" t-on-mouseleave="onMouseleave" t-att-data-id="message.id" t-att-data-message-id="message.id"
-            t-ref="root"
+            t-ref="root" t-on-contextmenu="onContextMenu"
         >
             <div class="o_MessageView_inReplyToWrap" t-att-class="{ 'me-5': isInDiscuss or isInChatWindowAndIsAlignedLeft, 'd-flex justify-content-end ms-5': isInChatWindowAndIsAlignedRight }">
                 <MessageInReplyToView t-if="messageInReplyToView" record="messageInReplyToView" className="'mb-1'" classNameObj="{ 'me-5': isInChatWindowAndIsAlignedLeft, 'ms-5': isInChatWindowAndIsAlignedRight }"/>
@@ -155,9 +155,9 @@
                     </div>
                     <AttachmentList t-if="attachmentList" record="attachmentList" className="'position-relative'"/>
                     <LinkPreviewListView t-if="linkPreviewListView" record="linkPreviewListView"/>
-                    <div t-if="message.messageReactionGroups.length > 0" class="position-relative d-flex flex-wrap"
+                    <div t-if="messageReactionGroupViews.length > 0" class="position-relative d-flex flex-wrap"
                     t-att-class="{ 'flex-row-reverse me-3': isInChatWindowAndIsAlignedRight, 'ms-3': !isInChatWindowAndIsAlignedRight and (message.isDiscussionOrNotification or message.message_type === 'sms')}" t-attf-class="{{ message.isDiscussionOrNotification or message.message_type === 'sms' ? 'mt-n2' : 'mt-1' }}">
-                        <MessageReactionGroup t-foreach="message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId" className="'mb-1'" classNameObj="{ 'ms-1': isInChatWindowAndIsAlignedRight, 'me-1': !(isInChatWindowAndIsAlignedRight) }" record="messageReactionGroup"/>
+                    <MessageReactionGroupView t-foreach="messageReactionGroupViews" t-as="messageReactionGroupView" t-key="messageReactionGroupView.localId" className="'mb-1'" classNameObj="{ 'ms-1': isInChatWindowAndIsAlignedRight, 'me-1': !(isInChatWindowAndIsAlignedRight) }" record="messageReactionGroupView"/>
                     </div>
                 </div>
             </div>
