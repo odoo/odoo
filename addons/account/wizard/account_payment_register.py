@@ -461,8 +461,18 @@ class AccountPaymentRegister(models.TransientModel):
                 batch_result = wizard._get_batches()[0]
                 wizard.amount = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
             else:
+<<<<<<< HEAD
                 # The wizard is not editable so no partial payment allowed and then, 'amount' is not used.
                 wizard.amount = None
+||||||| parent of 0b5108262a5b... temp
+                # Foreign currency on payment different than the one set on the journal entries.
+                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
+                wizard.amount = amount_payment_currency
+=======
+                # Foreign currency on payment different than the one set on the journal entries.
+                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date or fields.Date.today())
+                wizard.amount = amount_payment_currency
+>>>>>>> 0b5108262a5b... temp
 
     @api.depends('can_edit_wizard', 'amount')
     def _compute_payment_difference(self):
@@ -472,7 +482,17 @@ class AccountPaymentRegister(models.TransientModel):
                 total_amount_residual_in_wizard_currency = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
                 wizard.payment_difference = total_amount_residual_in_wizard_currency - wizard.amount
             else:
+<<<<<<< HEAD
                 wizard.payment_difference = 0.0
+||||||| parent of 0b5108262a5b... temp
+                # Foreign currency on payment different than the one set on the journal entries.
+                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
+                wizard.payment_difference = amount_payment_currency - wizard.amount
+=======
+                # Foreign currency on payment different than the one set on the journal entries.
+                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date or fields.Date.today())
+                wizard.payment_difference = amount_payment_currency - wizard.amount
+>>>>>>> 0b5108262a5b... temp
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
