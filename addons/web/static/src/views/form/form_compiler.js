@@ -386,7 +386,7 @@ export class FormCompiler extends ViewCompiler {
                                 `(addClass ? " " + addClass : "")`,
                                 `+`
                             );
-                        } else {
+                        } else if (slotContent.tagName !== "FormLabel") {
                             slotContent.setAttribute("class", groupClassExpr);
                         }
                     }
