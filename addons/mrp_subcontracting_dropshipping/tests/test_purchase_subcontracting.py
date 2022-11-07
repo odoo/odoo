@@ -138,7 +138,8 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
     def test_po_to_customer(self):
         """
         Create and confirm a PO with a subcontracted move. The picking type of
-        the PO is 'Dropship' and the delivery address a customer.
+        the PO is 'Dropship' and the delivery address a customer. Then, process
+        a return with the stock location as destination
         """
         subcontractor, client = self.env['res.partner'].create([
             {'name': 'SuperSubcontractor'},
@@ -192,6 +193,21 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(mo.state, 'done')
         self.assertEqual(po.order_line.qty_received, 1)
+
+        stock_location = self.warehouse.lot_stock_id
+        stock_location.return_location = True
+        return_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
+        return_form.location_id = stock_location
+        return_wizard = return_form.save()
+        return_picking_id, _pick_type_id = return_wizard._create_returns()
+
+        delivery_return = self.env['stock.picking'].browse(return_picking_id)
+        delivery_return.move_line_ids.qty_done = 1.0
+        delivery_return.button_validate()
+
+        self.assertEqual(delivery_return.state, 'done')
+        self.assertEqual(p_finished.qty_available, 1, 'One product has been returned to the stock location, so it should be available')
+        self.assertEqual(po.order_line.qty_received, 1, 'One product has been returned to the stock location, so we should still consider it as received')
 
     def test_po_to_subcontractor(self):
         """
