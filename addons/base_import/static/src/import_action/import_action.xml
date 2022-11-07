@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImportAction" owl="1">
+        <div class="o_import_action d-grid h-100 bg-white">
+            <ControlPanel display="{
+                'top-right': false,
+                'bottom-left': true,
+                'bottom-right': false,
+            }">
+                <t t-set-slot="control-panel-bottom-left-buttons">
+                    <div class="o_cp_buttons">
+                        <t t-if="isPreviewing">
+                            <button t-if="!state.isPaused" type="button" class="btn btn-primary m-1" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-else="" type="button" class="btn btn-primary m-1" t-on-click="() => this.handleImport(false)">Resume</button>
+                            <button type="button" class="btn btn-secondary me-1" t-on-click="() => this.handleImport(true)">Test</button>
+                        </t>
+                        <FileInput
+                            acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
+                            onUpload.bind="(data, files) => this.handleFilesUpdload(files)"
+                            resId="model.id"
+                            resModel="this.resModel"
+                            route="'/base_import/set_file'"
+                        >
+                            <button t-if="isPreviewing" type="button" class="btn btn-secondary me-1">Load File</button>
+                            <button t-else="" type="button" class="btn btn-primary me-1 o_import_file">Upload File</button>
+                        </FileInput>
+                        <button t-on-click="exit" type="button" class="btn btn-secondary me-1">Cancel</button>
+                    </div>
+                </t>
+            </ControlPanel>
+            <div t-if="isPreviewing" class="d-flex h-100 overflow-auto bg-white">
+                <ImportDataSidepanel
+                    filename="state.filename"
+                    options="importOptions"
+                    formattingOptions="formattingOptions"
+                    importTemplates="importTemplates"
+                    isBatched="isBatched"
+                    onOptionChanged.bind="onOptionChanged"
+                    onReload.bind="reload"
+                />
+                <ImportDataContent
+                    columns="model.columns"
+                    onFieldChanged.bind="onFieldChanged"
+                    onOptionChanged.bind="onOptionChanged"
+                    options="importOptions"
+                    isFieldSet.bind="isFieldSet"
+                    previewError="state.previewError"
+                    importMessages="model.importMessages"
+                />
+            </div>
+            <div t-else="" class="o_view_nocontent position-relative">
+                <div class="o_nocontent_help">
+                    <p class="o_view_nocontent_smiling_face">
+                        Upload an Excel or CSV file to import
+                    </p>
+                    <p>
+                        Excel files are recommended as formatting is automatic.
+                    </p>
+                    <div class="mt16 mb4">Need Help?</div>
+                    <div t-foreach="importTemplates" t-as="template" t-key="template">
+                        <a class="btn btn-outline-primary mb32 mt8" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
+                            <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                        </a>
+                    </div>
+                    <a href="https://www.odoo.com/documentation/master/applications/general/export_import_data.html" target="new">Import FAQ</a>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

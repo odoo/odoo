@@ -71,6 +71,7 @@ export class BlockUI extends Component {
 }
 BlockUI.props = {
     bus: EventBus,
+    customMessage: { type: Object, optional: true },
 };
 
 BlockUI.template = xml`
@@ -79,7 +80,11 @@ BlockUI.template = xml`
         <div class="o_spinner mb-4">
             <img src="/web/static/img/spin.svg" alt="Loading..."/>
         </div>
-        <div class="o_message text-center px-4">
+        <div t-if="props.customMessage.text or props.customMessage.component">
+            <div class="o_message text-center px-4" t-esc="props.customMessage.text" />
+            <t t-if="props.customMessage.component" t-component="props.customMessage.component" t-props="props.customMessage.props"/>
+        </div>
+        <div t-else="" class="o_message text-center px-4">
             <t t-esc="state.line1"/> <br/>
             <t t-esc="state.line2"/>
         </div>

@@ -8,7 +8,7 @@ import { browser } from "@web/core/browser/browser";
 import { getTabableElements } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
-import { EventBus, useEffect, useRef } from "@odoo/owl";
+import { EventBus, reactive, useEffect, useRef } from "@odoo/owl";
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 
@@ -124,13 +124,19 @@ export const uiService = {
         return MEDIAS.findIndex((media) => media.matches);
     },
     start(env) {
+        const customMessage = reactive({});
         // block/unblock code
         const bus = new EventBus();
-        registry.category("main_components").add("BlockUI", { Component: BlockUI, props: { bus } });
+        registry
+            .category("main_components")
+            .add("BlockUI", { Component: BlockUI, props: { bus, customMessage } });
 
         let blockCount = 0;
-        function block() {
+        function block(message, { component, props } = {}) {
             blockCount++;
+            customMessage.text = message;
+            customMessage.component = component;
+            customMessage.props = props;
             if (blockCount === 1) {
                 bus.trigger("BLOCK");
             }

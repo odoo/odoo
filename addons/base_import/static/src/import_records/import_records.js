@@ -3,8 +3,8 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 
-const { Component } = owl;
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 /**

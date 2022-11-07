@@ -71,7 +71,8 @@ export class FileInput extends Component {
      */
     async onFileInputChange() {
         const parsedFileData = await this.uploadFiles(this.httpParams);
-        this.props.onUpload(parsedFileData);
+        // When calling onUpload, also pass the files to allow to get data like their names
+        this.props.onUpload(parsedFileData, this.fileInputRef.el ? this.fileInputRef.el.files : []);
     }
 
     /**
