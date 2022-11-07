@@ -2137,7 +2137,7 @@ const Wysiwyg = Widget.extend({
                 description: _t('Insert an image.'),
                 fontawesome: 'fa-file-image-o',
                 callback: () => {
-                    this.openMediaDialog();
+                    this.openMediaDialog({activeTab: TABS.IMAGES.id});
                 },
             });
         }
@@ -2149,7 +2149,7 @@ const Wysiwyg = Widget.extend({
                 description: _t('Insert a video.'),
                 fontawesome: 'fa-file-video-o',
                 callback: () => {
-                    this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
+                    this.openMediaDialog({activeTab: TABS.VIDEOS.id});
                 },
             });
         }
