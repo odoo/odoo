@@ -5457,11 +5457,15 @@ class BaseModel(metaclass=MetaModel):
                     elif field and field.type in ('date', 'datetime'):
                         data = [Datetime.to_datetime(d) for d in data]
 
-                    if comparator == 'any':
+                    is_subquery_operator = comparator in ('any', 'all', 'not any', 'not all')
+                    if is_subquery_operator and isinstance(value, BaseModel):
+                        matches = data & value
+                    elif is_subquery_operator:
                         matches = data.filtered_domain(value)
+
+                    if comparator == 'any':
                         ok = len(matches) > 0
                     elif comparator == 'all':
-                        matches = data.filtered_domain(value)
                         ok = len(matches) == len(data)
                     elif comparator == '=':
                         ok = value in data

@@ -675,6 +675,8 @@ class expression(object):
             comodel = model.env.get(getattr(field, 'comodel_name', None))
 
             if len(path) == 1 and operator in SUBQUERY_OPERATORS:
+                if isinstance(right, BaseModel):
+                    right = [('id', 'in', right._ids)]
                 domain = (field.get_domain_list(model) or []) + right
                 is_simple_id_domain = len(domain) == 1 and domain[0][0] == 'id' and domain[0][1] not in HIERARCHY_FUNCS
                 use_inverted_domain = operator in ('all', 'not all')

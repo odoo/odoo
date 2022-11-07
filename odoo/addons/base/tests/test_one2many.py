@@ -191,6 +191,16 @@ class TestMany2ManyBase:
         domain = [(self.path, 'any', subdomain)]
         self.execute_test(domain, self.get_parents(self.children[0]))
 
+    def test_08_any(self):
+        domain = [(self.path, 'any', self.children[1:3])]
+        result = self.get_parents(self.children[1]) | self.get_parents(self.children[2])
+        self.execute_test(domain, result)
+
+    def test_09_all(self):
+        domain = [(self.path, 'all', self.children[1:3])]
+        result = self.parents - self.get_parents(self.children[0])
+        self.execute_test(domain, result)
+
 
 class TestSubfield:
     '''
