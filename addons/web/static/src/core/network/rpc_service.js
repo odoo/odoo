@@ -99,11 +99,20 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify(data));
     });
-    promise.abort = function () {
+    /**
+     * @param {Boolean} rejectError Returns an error if true. Allows you to cancel
+     *                  ignored rpc's in order to unblock the ui and not display an error.
+     */
+    promise.abort = function (rejectError = true) {
         if (request.abort) {
             request.abort();
         }
-        rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+        if (!settings.silent) {
+            bus.trigger("RPC:RESPONSE", data.id);
+        }
+        if (rejectError) {
+            rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+        }
     };
     return promise;
 }
