@@ -2988,8 +2988,8 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (sel.rangeCount) {
-            const closestStartContainer = closestElement(sel.getRangeAt(0).startContainer, '*');
-            const selectionStartStyle = getComputedStyle(closestStartContainer);
+            const closestStartContainer = closestElement(sel.getRangeAt(0).startContainer);
+            const selectionStartStyle = closestStartContainer && getComputedStyle(closestStartContainer);
 
             // queryCommandState does not take stylesheets into account
             for (const format of ['bold', 'italic', 'underline', 'strikeThrough', 'switchDirection']) {
