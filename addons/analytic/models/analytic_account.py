@@ -103,9 +103,6 @@ class AccountAnalyticAccount(models.Model):
         self.env['account.analytic.line'].flush_model(['account_id', 'company_id'])
 
         self._cr.execute('''
-        SELECT line.id, line.company_id, line.account_id FROM account_analytic_line line''')
-
-        self._cr.execute('''
             SELECT line.account_id
             FROM account_analytic_line line
             JOIN account_analytic_account account ON line.account_id = account.id
