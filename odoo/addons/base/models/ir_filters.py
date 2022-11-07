@@ -101,9 +101,7 @@ class IrFilters(models.Model):
             ('is_default', '=', True),
         ])
 
-        if not defaults:
-            return
-        if matching_filters and (matching_filters[0]['id'] == defaults.id):
+        if not defaults or (matching_filters and matching_filters[0]['id'] == defaults.id):
             return
 
         raise UserError(_("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {'model': vals.get('model_id')})
