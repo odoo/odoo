@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import { drag, dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { useSortable } from "@web/core/utils/sortable";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
@@ -88,7 +88,7 @@ QUnit.module("UI", ({ beforeEach }) => {
     });
 
     QUnit.test("Simple sorting in single group", async (assert) => {
-        assert.expect(19);
+        assert.expect(22);
 
         class List extends Component {
             setup() {
@@ -132,12 +132,18 @@ QUnit.module("UI", ({ beforeEach }) => {
         await mount(List, target);
 
         assert.containsN(target, ".item", 3);
+        assert.containsNone(target, ".o_dragged");
         assert.verifySteps([]);
 
         // First item after 2nd item
-        await dragAndDrop(".item:first-child", ".item:nth-child(2)");
+        const drop = await drag(".item:first-child", ".item:nth-child(2)");
+
+        assert.hasClass(target.querySelector(".item"), "o_dragged");
+
+        await drop();
 
         assert.containsN(target, ".item", 3);
+        assert.containsNone(target, ".o_dragged");
         assert.verifySteps(["start", "elemententer", "stop", "drop"]);
     });
 

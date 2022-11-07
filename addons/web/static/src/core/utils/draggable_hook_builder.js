@@ -81,6 +81,7 @@ const DEFAULT_DEFAULT_PARAMS = {
         threshold: 30,
     },
 };
+const DRAGGED_CLASS = "o_dragged";
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref", "elements"];
 
@@ -247,9 +248,6 @@ export function makeDraggableHook(hookParams = {}) {
                 ctx.offset.y -= eRect.y;
 
                 addStyle(ctx.currentElement, {
-                    position: "fixed",
-                    "pointer-events": "none",
-                    "z-index": 1000,
                     width: `${eRect.width}px`,
                     height: `${eRect.height}px`,
                     left: `${eRect.x}px`,
@@ -270,6 +268,9 @@ export function makeDraggableHook(hookParams = {}) {
                     const cleanupFn = setRecurringAnimationFrame(handleEdgeScrolling);
                     cleanups.push(cleanupFn);
                 }
+
+                ctx.currentElement.classList.add(DRAGGED_CLASS);
+                cleanups.push(() => ctx.currentElement.classList.remove(DRAGGED_CLASS));
 
                 execBuildHandler("onDragStart");
             };

@@ -530,7 +530,7 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.group]
      */
     sortStart({ element }) {
-        element.classList.add("o_dragged", "shadow");
+        element.classList.add("shadow");
     }
 
     /**
@@ -539,7 +539,7 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.group]
      */
     sortStop({ element, group }) {
-        element.classList.remove("o_dragged", "shadow");
+        element.classList.remove("shadow");
         if (group) {
             group.classList.remove("o_kanban_hover");
         }
