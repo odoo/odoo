@@ -105,7 +105,7 @@
                                     t-on-click="composerView.onClickButtonEmojis"
                                     t-ref="buttonEmojis"
                                 >
-                                    <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+                                    <i class="fa fa-smile-o overflow-visible" role="img" aria-label="Emojis"/>
                                 </button>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip border-0 rounded-pill bg-view" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
