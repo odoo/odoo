@@ -4,14 +4,15 @@
 <t t-name="mail.composer" owl="1">
     <t t-set="thread" t-value="messaging.threads[props.threadId]" />
     <t t-set="compact" t-value="props.mode === 'compact'"/>
-    <div class="o-mail-composer d-grid pe-3 ps-1 py-1 flex-shrink-0"
-            t-att-class="{'o-has-current-partner-avatar mb-3':!compact}">
+    <div class="o-mail-composer d-grid flex-shrink-0"
+            t-att-class="{'o-has-current-partner-avatar mb-3 me-3 ps-1 py-1':!compact}">
         <div class="o-mail-composer-sidebar" t-if="!compact">
             <img class="mt-1 rounded-circle" style="width:36px;height:36px;"
                 t-att-src="messaging.user.avatarUrl" alt="Avatar of user"/>
         </div>
         <div class="o-mail-composer-main d-flex flex-nowrap align-items-start flex-grow-1">
-            <div class="position-relative flex-grow-1 align-self-stretch rounded-start-3 border border-end-0">
+            <div class="position-relative flex-grow-1 align-self-stretch border border-end-0"
+                    t-att-class="{'rounder-start-3 ': !compact}">
                 <textarea class="o-mail-composer-textarea form-control px-3 border-0 shadow-none overflow-auto rounded-0 rounded-start-3"
                     t-ref="textarea"
                     style="height:40px;"
