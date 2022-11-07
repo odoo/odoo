@@ -31,15 +31,13 @@ class AutomaticEntryWizard(models.TransientModel):
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
-               "('account_type', 'not in', ('asset_receivable', 'liability_payable')),"
-               "('is_off_balance', '=', False)]",
+               "('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_expense_accrual_account",
         inverse="_inverse_expense_accrual_account",
     )
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
-               "('account_type', 'not in', ('asset_receivable', 'liability_payable')),"
-               "('is_off_balance', '=', False)]",
+               "('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
     )
