@@ -1745,18 +1745,14 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} params.element
      * @param {HTMLElement} [params.group]
      */
-    sortStart({ element }) {
-        element.classList.add("o_dragged");
-    }
+    sortStart() {}
 
     /**
      * @param {Object} params
      * @param {HTMLElement} params.element
      * @param {HTMLElement} [params.group]
      */
-    sortStop({ element }) {
-        element.classList.remove("o_dragged");
-    }
+    sortStop() {}
 }
 
 ListRenderer.template = "web.ListRenderer";

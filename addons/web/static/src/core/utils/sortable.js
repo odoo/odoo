@@ -139,8 +139,7 @@ export const useSortable = makeDraggableHook({
 
         const { width, height } = ctx.currentElementRect;
 
-        // Prepares the ghost element
-        ctx.ghostElement = ctx.currentElement.cloneNode(false);
+        // Ghost element is hidden and its size is frozen
         ctx.ghostElement.style = `visibility: hidden; display: block; width: ${width}px; height:${height}px;`;
 
         // Binds handlers on eligible groups, if the elements are not confined to
@@ -193,6 +192,7 @@ export const useSortable = makeDraggableHook({
                 ctx.currentContainer = ctx.currentGroup;
             }
         }
+        ctx.ghostElement = ctx.currentElement.cloneNode(false);
     },
     onCleanup({ ctx }) {
         if (ctx.ghostElement) {
