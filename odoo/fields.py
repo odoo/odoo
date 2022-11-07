@@ -3169,6 +3169,11 @@ class Json(Field):
             return None
         return PsycopgJson(value)
 
+    def convert_to_export(self, value, record):
+        if not value:
+            return ''
+        return json.dumps(value)
+
 
 class Properties(Field):
     """ Field that contains a list of properties (aka "sub-field") based on
