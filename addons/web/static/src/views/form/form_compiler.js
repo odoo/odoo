@@ -70,13 +70,6 @@ export class FormCompiler extends ViewCompiler {
     }
 
     createLabelFromField(fieldId, fieldName, fieldString, label, params) {
-        const props = {
-            id: `'${fieldId}'`,
-            fieldName: `'${fieldName}'`,
-            record: `props.record`,
-            fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
-            className: `"${label.className}"`,
-        };
         let labelText = label.textContent || fieldString;
         if (label.hasAttribute("data-no-label")) {
             labelText = toStringExpression("");
@@ -86,7 +79,11 @@ export class FormCompiler extends ViewCompiler {
                 : `props.record.fields['${fieldName}'].string`;
         }
         const formLabel = createElement("FormLabel", {
-            "t-props": objectToString(props),
+            id: `'${fieldId}'`,
+            fieldName: `'${fieldName}'`,
+            record: `props.record`,
+            fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
+            className: `"${label.className}"`,
             string: labelText,
         });
         const condition = label.getAttribute("t-if");
@@ -372,7 +369,20 @@ export class FormCompiler extends ViewCompiler {
 
                 const groupClassExpr = `scope && scope.className`;
                 if (isComponentNode(slotContent)) {
-                    if (getTag(child, true) !== "button") {
+                    if (getTag(slotContent) === "FormLabel") {
+                        mainSlot.prepend(
+                            createElement("t", {
+                                "t-set": "addClass",
+                                "t-value": groupClassExpr,
+                            })
+                        );
+                        combineAttributes(
+                            slotContent,
+                            "className",
+                            `(addClass ? " " + addClass : "")`,
+                            `+`
+                        );
+                    } else if (getTag(child, true) !== "button") {
                         if (slotContent.hasAttribute("class")) {
                             mainSlot.prepend(
                                 createElement("t", {

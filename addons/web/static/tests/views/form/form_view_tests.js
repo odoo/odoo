@@ -826,6 +826,35 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div.o_inner_group");
     });
 
+    QUnit.test("group with formLabel", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <!-- OuterGroup -->
+                            <field name="foo"/>
+                            <label for="foo" class="plop plop2"/>
+                            <group>
+                                <!-- InnerGroup -->
+                                <field name="display_name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_char");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "col-lg-6");
+
+        assert.hasClass(target.querySelector(".o_form_label[for=foo]"), "plop");
+        assert.hasClass(target.querySelector(".o_form_label[for=foo]"), "plop2");
+        assert.hasClass(target.querySelector(".o_form_label[for=foo]"), "col-lg-6");
+    });
+
     QUnit.test("group containing both a field and a group", async function (assert) {
         // The purpose of this test is to check that classnames defined in a
         // field widget and those added by the form renderer are correctly
