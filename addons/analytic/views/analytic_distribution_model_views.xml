@@ -4,11 +4,12 @@
         <field name="name">account.analytic.distribution.model.tree</field>
         <field name="model">account.analytic.distribution.model</field>
         <field name="arch" type="xml">
-            <tree string="Analytic Distribution Model">
+            <tree string="Analytic Distribution Model" editable="top" multi_edit="1">
                 <field name="partner_id" optional="show"/>
                 <field name="partner_category_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="analytic_distribution" widget="analytic_distribution" optional="show"/>
+                <button name="action_read_distribution_model" type="object" string="View" class="float-end btn-secondary"/>
             </tree>
         </field>
     </record>
