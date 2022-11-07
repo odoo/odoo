@@ -3,7 +3,7 @@ odoo.define('web_editor.wysiwyg', function (require) {
 
 const { ComponentWrapper } = require('web.OwlCompatibility');
 const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
-const { saveVideos, videoSpecificClasses } = require('@web_editor/components/media_dialog/video_selector');
+const { VideoSelector } = require('@web_editor/components/media_dialog/video_selector');
 const dom = require('web.dom');
 const core = require('web.core');
 const { browser } = require('@web/core/browser/browser');
@@ -150,8 +150,8 @@ const Wysiwyg = Widget.extend({
                 route: '/web_editor/video_url/data',
                 params: { video_url: url },
             });
-            const [savedVideo] = saveVideos([{src}]);
-            savedVideo.classList.add(...videoSpecificClasses);
+            const [savedVideo] = VideoSelector.createElements([{src}]);
+            savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
             return savedVideo;
         };
 
