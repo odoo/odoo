@@ -247,10 +247,17 @@ QUnit.test("check connection aborted", async (assert) => {
     const MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({ serviceRegistry });
+    env.bus.addEventListener("RPC:REQUEST", () => {
+        assert.step("RPC:REQUEST");
+    });
+    env.bus.addEventListener("RPC:RESPONSE", () => {
+        assert.step("RPC:RESPONSE");
+    });
 
     const connection = env.services.rpc();
     connection.abort();
     assert.rejects(connection, ConnectionAbortedError);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 });
 
 QUnit.test(
