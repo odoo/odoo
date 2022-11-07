@@ -84,7 +84,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
      *     false to mark the slide as not completed
      */
     _toggleSlideCompleted: async function (slide, completed = true) {
-        if (!!slide.completed === !!completed || !slide.isMember) {
+        if (!!slide.completed === !!completed || !slide.isMember || !slide.canSelfMarkCompleted) {
             // no useless RPC call
             return;
         }
