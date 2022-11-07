@@ -13,7 +13,7 @@ class AccountAccount(models.Model):
     _name = "account.account"
     _inherit = ['mail.thread']
     _description = "Account"
-    _order = "is_off_balance, code, company_id"
+    _order = "code, company_id"
     _check_company_auto = True
 
     @api.constrains('account_type', 'reconcile')
@@ -101,8 +101,6 @@ class AccountAccount(models.Model):
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit')
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit')
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance')
-
-    is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
 
     current_balance = fields.Float(compute='_compute_current_balance')
     related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
@@ -416,11 +414,6 @@ class AccountAccount(models.Model):
             codes_list = list(accounts_with_codes[account.company_id.id].keys())
             closest_index = bisect_left(codes_list, account.code) - 1
             account.account_type = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else 'asset_current'
-
-    @api.depends('internal_group')
-    def _compute_is_off_balance(self):
-        for account in self:
-            account.is_off_balance = account.internal_group == "off_balance"
 
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
