@@ -97,6 +97,8 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
 
 const KEYBOARD_TYPES = { VIRTUAL: 'VIRTUAL', PHYSICAL: 'PHYSICAL', UNKNOWN: 'UKNOWN' };
 
+export const AVATAR_SIZE = 25;
+
 const IS_KEYBOARD_EVENT_UNDO = ev => ev.key === 'z' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
@@ -334,9 +336,22 @@ export class OdooEditor extends EventTarget {
         // Collaborator selection and caret display.
         this._collabSelectionInfos = new Map();
         this._collabSelectionColor = `hsl(${(Math.random() * 360).toFixed(0)}, 75%, 50%)`;
-        this._collabSelectionsContainer = this.document.createElement('div');
-        this._collabSelectionsContainer.classList.add('oe-collaboration-selections-container');
-        this.editable.before(this._collabSelectionsContainer);
+        this._avatarsOverlaps = {}
+
+        // This main container is used to contain a tree of sub containers.
+        // By having one parent that contains a tree of containers, it is easy
+        // to change the z-index of any container by changing their place in the
+        // tree rather than tweaking a z-index number.
+        this._mainAbsoluteContainer = this.document.createElement('div');
+        this._mainAbsoluteContainer.classList.add('oe-absolute-container');
+        this.editable.before(this._mainAbsoluteContainer);
+
+        // This container contains the users selections.
+        this._selectionsContainer = this.makeAbsoluteContainer('oe-selections-container');
+        // This container contains the users avatars.
+        this._avatarsContainer = this.makeAbsoluteContainer('oe-avatars-container');
+        // This container contains the users counter that overlap the users avatars.
+        this._avatarsCountersContainer = this.makeAbsoluteContainer('oe-avatars-counters-container');
 
         // Promise for extra rendering, collaborative external steps will be
         // buffered (delayed) until it is resolved.
@@ -669,7 +684,7 @@ export class OdooEditor extends EventTarget {
         this._removeDomListener();
         this.powerbox.destroy();
         this.powerboxTablePicker.el.remove();
-        this._collabSelectionsContainer.remove();
+        this._mainAbsoluteContainer.remove();
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
         this._pluginCall('destroy', []);
@@ -818,6 +833,22 @@ export class OdooEditor extends EventTarget {
         const boundCallback = callback.bind(this);
         this._domListeners.push([element, eventName, boundCallback]);
         element.addEventListener(eventName, boundCallback);
+    }
+
+    /**
+     * Make an absolute container to organise floating elements inside it's own
+     * box and z-index isolation.
+     *
+     * @param {string} containerId An id to add to the container in order to make
+     *              the container more visible in the devtool and potentially
+     *              add css rules for the container and it's children.
+     */
+    makeAbsoluteContainer(containerId) {
+        const container = this.document.createElement('div');
+        container.className = `oe-absolute-container`;
+        container.setAttribute('data-oe-absolute-container-id', containerId);
+        this.mainAbsoluteContainer.append(container);
+        return container;
     }
 
     _generateId() {
@@ -1685,30 +1716,27 @@ export class OdooEditor extends EventTarget {
     // -------------------------------------------------------------------------
 
     onExternalMultiselectionUpdate(selection) {
-        this._multiselectionDisplayClient(selection);
         const { clientId } = selection;
-        if (this._collabSelectionInfos.has(clientId)) {
-            this._collabSelectionInfos.get(clientId).selection = selection;
+        const currentInfo = this._collabSelectionInfos.get(clientId);
+        if (currentInfo) {
+            currentInfo.selection = selection;
         } else {
             this._collabSelectionInfos.set(clientId, { selection });
         }
+        this._drawClientSelection(selection);
+        this._drawClientAvatar(selection);
+        this._updateAvatarCounters();
     }
 
     multiselectionRefresh() {
-        // Refresh the selection but keep the relevant images to avoid flickering.
-        const avatars = [...this._collabSelectionInfos.values()].map(info => info.avatarElement);
-        for (const element of this._collabSelectionsContainer.childNodes) {
-            const isAvatarElement = element.classList && element.classList.contains('oe-collaboration-caret-avatar');
-            if (!(isAvatarElement && avatars.includes(element))) {
-                element.remove();
-            }
-        }
         for (const { selection } of this._collabSelectionInfos.values()) {
-            this._multiselectionDisplayClient(selection);
+            this._drawClientSelection(selection);
+            this._drawClientAvatar(selection);
         }
+        this._updateAvatarCounters();
     }
 
-    _multiselectionDisplayClient({ selection, color, clientId, clientAvatarUrl = '', clientName = this.options._t('Anonymous') }) {
+    _drawClientSelection({ selection, color, clientId, clientName = this.options._t('Anonymous') }) {
         let clientRects;
 
         let anchorNode = this.idFind(selection.anchorNodeOid);
@@ -1753,7 +1781,7 @@ export class OdooEditor extends EventTarget {
         }
 
         // Draw rects (in case the selection is not collapsed).
-        const containerRect = this._collabSelectionsContainer.getBoundingClientRect();
+        const containerRect = this._selectionsContainer.getBoundingClientRect();
         const indicators = clientRects.map(({ x, y, width, height }) => {
             const rectElement = this.document.createElement('div');
             rectElement.style = `
@@ -1783,69 +1811,6 @@ export class OdooEditor extends EventTarget {
         caretTopSquare.setAttribute('data-client-name', clientName);
         caretElement.append(caretTopSquare);
 
-        // Draw user avatar.
-        const selectionInfo = this._collabSelectionInfos.get(clientId);
-        let caretAvatar = selectionInfo && selectionInfo.avatarElement;
-        if (!caretAvatar) {
-            caretAvatar = this.document.createElement('div');
-            caretAvatar.className = 'oe-collaboration-caret-avatar';
-            caretAvatar.style.display = 'none';
-            const image = this.document.createElement('img');
-            caretAvatar.append(image);
-            image.onload = () => caretAvatar.style.removeProperty('display');
-            image.setAttribute('src', clientAvatarUrl);
-            caretAvatar.setAttribute('data-selection-client-id', clientId);
-            this._collabSelectionsContainer.append(caretAvatar);
-        }
-        // Make sure data is up to date.
-        if (selectionInfo) {
-            selectionInfo.avatarElement = caretAvatar;
-            selectionInfo.clientName = clientName;
-        } else {
-            this._collabSelectionInfos.set(clientId, { avatarElement: caretAvatar, clientName: clientName });
-        }
-
-        const anchorBlockRect = closestBlock(anchorNode).getBoundingClientRect();
-        const previousTop = caretAvatar.style.top;
-        const top = anchorBlockRect.y - containerRect.y + 'px';
-        caretAvatar.style.top = top;
-        const closestList = closestElement(anchorNode, 'ul, ol'); // Prevent overlap bullets.
-        const anchorX = closestList ? closestList.getBoundingClientRect().x : anchorBlockRect.x;
-        const previousLeft = caretAvatar.style.left;
-        const left = anchorX - containerRect.x - 25 + 'px';
-        caretAvatar.style.left = left;
-
-        // Handle overlapping avatars.
-        if (previousTop !== top || previousLeft !== left) {
-            const allAvatarsInDom = [...this._collabSelectionsContainer.children].filter(child => child.classList.contains('oe-collaboration-caret-avatar'));
-            for (const position of [[previousTop, previousLeft], [top, left]]) {
-                // Filter clients at that position.
-                const [currentTop, currentLeft] = position;
-                const clients = new Map([...this._collabSelectionInfos.entries()].filter(([key, value]) => {
-                    const avatarTop = value.avatarElement && value.avatarElement.style.top;
-                    const avatarLeft = value.avatarElement && value.avatarElement.style.left;
-                    return value.avatarElement && avatarTop === currentTop && avatarLeft === currentLeft;
-                }));
-                // Update avatar values for that position.
-                const avatars = [...clients.values()].map(client => client.avatarElement);
-                const lastInDom = allAvatarsInDom.find(avatar => avatars.includes(avatar));
-                const newTitle = [...clients.values()].map(client => client.clientName).join('\n');
-                for (const client of clients.values()) {
-                    const avatar = client.avatarElement;
-                    // Only show the number of overlapping avatars on the z-top
-                    // element, and then only if there are indeed more than one
-                    // at the same position.
-                    if (clients.size > 1 && avatar === lastInDom) {
-                        avatar.setAttribute('data-overlapping-avatars', clients.size);
-                    } else {
-                        avatar.removeAttribute('data-overlapping-avatars');
-                    }
-                    if (avatar.firstElementChild.getAttribute('title') !== newTitle) {
-                        avatar.firstElementChild.setAttribute('title', newTitle);
-                    }
-                };
-            }
-        }
         if (direction === DIRECTIONS.LEFT) {
             const rect = clientRects[0];
             caretElement.style.height = `${rect.height * 1.2}px`;
@@ -1858,24 +1823,89 @@ export class OdooEditor extends EventTarget {
             caretElement.style.left = `${rect.right - containerRect.x}px`;
         }
         this._multiselectionRemoveClient(clientId);
-        this._collabSelectionsContainer.append(caretElement, ...indicators);
+        this._selectionsContainer.append(caretElement, ...indicators);
     }
 
-    multiselectionRemove(clientId) {
-        this._collabSelectionInfos.delete(clientId);
-        this._multiselectionRemoveClient(clientId);
-        const avatars = [...this._collabSelectionsContainer.children].filter(child => (
-            child.classList.contains('oe-collaboration-caret-avatar') &&
-            child.getAttribute('data-selection-client-id') === clientId
-        ));
-        for (const avatar of avatars) {
-            avatar.remove();
+    _drawClientAvatar({ selection, clientId, clientAvatarUrl = '', clientName = this.options._t('Anonymous') }) {
+        const anchorNode = this.idFind(selection.anchorNodeOid);
+        const focusNode = this.idFind(selection.focusNodeOid);
+        if (!anchorNode || !focusNode) {
+            return;
+        }
+        const anchorBlock = closestBlock(anchorNode);
+        if (!anchorBlock) return;
+
+        const containerRect = this._avatarsContainer.getBoundingClientRect();
+
+        // Draw user avatar.
+        const selectionInfo = this._collabSelectionInfos.get(clientId) || {};
+        let avatarElement = selectionInfo.avatarElement;
+        if (!avatarElement) {
+            avatarElement = this.document.createElement('div');
+            avatarElement.className = 'oe-collaboration-caret-avatar';
+            avatarElement.style.display = 'none';
+            const image = this.document.createElement('img');
+            avatarElement.append(image);
+            image.onload = () => avatarElement.style.removeProperty('display');
+            image.setAttribute('src', clientAvatarUrl);
+        }
+        // Avoid re-appending the element in the dom.
+        if (!avatarElement.parentElement) {
+            this._avatarsContainer.append(avatarElement);
+        }
+        // Make sure data is up to date.
+        selectionInfo.avatarElement = avatarElement;
+        selectionInfo.clientName = clientName;
+        selectionInfo.avatarTargetElement = anchorBlock;
+        this._collabSelectionInfos.set(clientId, selectionInfo);
+
+        const anchorBlockRect = anchorBlock.getBoundingClientRect();
+        const top = anchorBlockRect.y - containerRect.y;
+        avatarElement.style.top = top + 'px';
+        const closestList = closestElement(anchorNode, 'ul, ol'); // Prevent overlap bullets.
+        const anchorX = closestList ? closestList.getBoundingClientRect().x : anchorBlockRect.x;
+        const left = anchorX - containerRect.x - AVATAR_SIZE;
+        avatarElement.style.left = left + 'px';
+        selectionInfo.avatarPositionKey = `${left}|${top}`;
+    }
+
+    _updateAvatarCounters() {
+        this._avatarsOverlaps = {};
+        for (const info of this._collabSelectionInfos.values()) {
+            const key =  info.avatarPositionKey;
+            this._avatarsOverlaps[key] = this._avatarsOverlaps[key] || new Set();
+            this._avatarsOverlaps[key].add(info);
+        }
+
+        // Render avatars overlap.
+        this._avatarsCountersContainer.replaceChildren();
+        for (const [overlapKey, infos] of Object.entries(this._avatarsOverlaps)) {
+            const size = infos.size;
+            if (size > 1) {
+                const [left, top] = overlapKey.split('|').map((n) => parseInt(n, 10));
+                const div = document.createElement('div');
+                div.className = 'oe-overlapping-counter';
+                div.style.left = left + 10 + 'px';
+                div.style.top = top + 10 + 'px';
+                div.innerText = size;
+                this._avatarsCountersContainer.append(div);
+            }
         }
     }
 
+    multiselectionRemove(clientId) {
+        const selectionInfo = this._collabSelectionInfos.get(clientId);
+        if (selectionInfo && selectionInfo.avatarElement) {
+            selectionInfo.avatarElement.remove();
+        }
+        this._multiselectionRemoveClient(clientId)
+        this._collabSelectionInfos.delete(clientId);
+        this._updateAvatarCounters();
+    }
+
     _multiselectionRemoveClient(clientId) {
-        const elements = this._collabSelectionsContainer.querySelectorAll(
-            `[data-selection-client-id="${clientId}"]:not(.oe-collaboration-caret-avatar)`,
+        const elements = this._selectionsContainer.querySelectorAll(
+            `[data-selection-client-id="${clientId}"]`,
         );
         for (const element of elements) {
             element.remove();
