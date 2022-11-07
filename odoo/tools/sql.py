@@ -381,8 +381,10 @@ def value_to_translated_trigram_pattern(value):
         # matching less than 3 characters will not take advantage of the index
         return '%'
 
-    # apply JSON escaping to value
-    json_escaped = json.dumps(value)[1:-1]
+    # apply JSON escaping to value; the argument ensure_ascii=False prevents
+    # json.dumps from escaping unicode to ascii, which is consistent with the
+    # index function jsonb_path_query_array("column_name", '$.*')::text
+    json_escaped = json.dumps(value, ensure_ascii=False)[1:-1]
 
     # apply PG wildcard escaping to JSON-escaped text
     wildcard_escaped = re.sub(r'(_|%|\\)', r'\\\1', json_escaped)
@@ -413,8 +415,9 @@ def pattern_to_translated_trigram_pattern(pattern):
     # unescape PG wildcards from each sub pattern (\% becomes %)
     sub_texts = [re.sub(r'\\(.|$)', r'\1', t, flags=re.DOTALL) for t in sub_patterns]
 
-    # apply JSON escaping to sub texts having at least 3 characters (" becomes \")
-    json_escaped = [json.dumps(t)[1:-1] for t in sub_texts if len(t) >= 3]
+    # apply JSON escaping to sub texts having at least 3 characters (" becomes \");
+    # the argument ensure_ascii=False prevents from escaping unicode to ascii
+    json_escaped = [json.dumps(t, ensure_ascii=False)[1:-1] for t in sub_texts if len(t) >= 3]
 
     # apply PG wildcard escaping to JSON-escaped texts (% becomes \%)
     wildcard_escaped = [re.sub(r'(_|%|\\)', r'\\\1', t) for t in json_escaped]

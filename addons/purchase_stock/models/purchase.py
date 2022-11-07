@@ -522,7 +522,7 @@ class PurchaseOrderLine(models.Model):
         return {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
-            'name': (self.name or '')[:2000],
+            'name': (self.product_id.display_name or '')[:2000],
             'product_id': self.product_id.id,
             'date': date_planned,
             'date_deadline': date_planned,

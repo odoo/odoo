@@ -15,6 +15,9 @@ from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
 
+# a string with various unicode characters
+SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
+
 
 class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
@@ -858,6 +861,7 @@ class TestLanguageInstallPerformance(TransactionCase):
 
 class TestTranslationTrigramIndexPatterns(BaseCase):
     def test_value_conversion(self):
+        sc = SPECIAL_CHARACTERS
         cases = [
             # pylint: disable=bad-whitespace
             ( 'abc',    '%abc%',      'simple text is not escaped correctly'),
@@ -867,11 +871,13 @@ class TestTranslationTrigramIndexPatterns(BaseCase):
             ( 'a_bc',  r'%a\_bc%',    '_ is not escaped correctly'),
             ( 'a%bc',  r'%a\%bc%',    '% is not escaped correctly'),
             ( 'a_',     '%',          'values with less than 3 characters should be dropped'),
+            ( sc,      f'%{sc}%',     'special characters should not be escaped'),
         ]
         for value, expected, message in cases:
             self.assertEqual(sql.value_to_translated_trigram_pattern(value), expected, message)
 
     def test_pattern_conversion(self):
+        sc = SPECIAL_CHARACTERS
         cases = [
             # pylint: disable=bad-whitespace
             ( 'abc',      '%abc%',      'simple pattern is not escaped correctly'),
@@ -885,6 +891,7 @@ class TestTranslationTrigramIndexPatterns(BaseCase):
             (r'a\bc',     '%abc%',     r'redundant \ for pattern should be removed'),
             ( 'abc_de',   '%abc%',      'sub patterns less than 3 characters should be dropped'),
             ( 'ab',       '%',          'patterns without trigram should be simplified'),
+            ( sc,        f'%{sc}%',     'special characters should not be escaped'),
         ]
         for original_pattern, escaped_pattern, message in cases:
             self.assertEqual(sql.pattern_to_translated_trigram_pattern(original_pattern), escaped_pattern, message)

@@ -1166,11 +1166,238 @@ X[]
                     contentAfter: '<h1>[]<br></h1><p>def</p>',
                 });
             });
+            it('should delete last character of paragraph, ignoring the selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab[]</p><p>def</p>',
+                });
+            });
+            it('should delete first character of paragraph, as well as selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc[</p><p>d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>abc[]ef</p>',
+                });
+            });
+            it('should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p t="unbreak">]def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab[]</p><p t="unbreak">def</p>',
+                });
+            });
+            it('should delete first character of unbreakable, ignoring selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc[</p><p t="unbreak">d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>abc[]</p><p t="unbreak">ef</p>',
+                });
+            });
+            it('should remove a fully selected table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>a[]l</p>',
+                });
+            });
+            it('should only remove the text content of cells in a partly selected table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td class="o_selected_td">e[f</td><td>gh</td></tr>
+                            <tr><td>ij</td><td class="o_selected_td">k]l</td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>[]<br></td><td>gh</td></tr>
+                            <tr><td>ij</td><td><br></td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                });
+            });
+            it('should remove some text and a table (even if the table is partly selected)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>g]h</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>kl</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: unformat(
+                        `<p>a[]</p>
+                        <p>kl</p>`,
+                    ),
+                });
+            });
+            it('should remove a table and some text (even if the table is partly selected)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>ab</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>i[j</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: unformat(
+                        `<p>ab</p>
+                        <p>[]l</p>`,
+                    ),
+                });
+            });
+            it('should remove some text, a table and some more text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>a[]l</p>`,
+                });
+            });
+            it('should remove a selection of several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>e[f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>e]f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
+            it('should remove a selection including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>0[1</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>0[]</p>`,
+                });
+            });
+            it('should remove everything, including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>[01</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
             it('should empty an inline unremovable but remain in it', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
                     stepFunction: deleteForward,
                     contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
+                });
+            });it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before[o</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>intruder</p></div>
+                        </div>
+                        <p>o]after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]after</p>`),
+                });
+            });
+            it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before[o</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>intruder]</p></div>
+                        </div>
+                        <p>after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]</p><p>after</p>`),
+                });
+            });
+            it('should extend the range to fully include contenteditable=false that are partially selected at the start of the range', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>[intruder</p></div>
+                        </div>
+                        <p>o]after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]after</p>`),
                 });
             });
         });
@@ -2465,7 +2692,26 @@ X[]
                     contentAfter: '<p>a[]l</p>',
                 });
             });
-            it('should only remove the text content and full rows a partly selected table', async () => {
+            it('should only remove the text content of cells in a partly selected table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td class="o_selected_td">e[f</td><td>gh</td></tr>
+                            <tr><td>ij</td><td class="o_selected_td">k]l</td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>[]<br></td><td>gh</td></tr>
+                            <tr><td>ij</td><td><br></td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                });
+            });
+            it('should remove some text and a table (even if the table is partly selected)', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: unformat(
                         `<p>a[b</p>
@@ -2478,11 +2724,107 @@ X[]
                     stepFunction: deleteBackward,
                     contentAfter: unformat(
                         `<p>a[]</p>
-                        <table><tbody>
-                            <tr><td>h</td><td>ij</td></tr>
-                        </tbody></table>
                         <p>kl</p>`,
                     ),
+                });
+            });
+            it('should remove a table and some text (even if the table is partly selected)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>ab</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>i[j</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: unformat(
+                        `<p>ab</p>
+                        <p>[]l</p>`,
+                    ),
+                });
+            });
+            it('should remove some text, a table and some more text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>a[]l</p>`,
+                });
+            });
+            it('should remove a selection of several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>e[f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>e]f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
+            it('should remove a selection including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>0[1</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>0[]</p>`,
+                });
+            });
+            it('should remove everything, including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>[01</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
                 });
             });
             it('should empty an inline unremovable but remain in it', async () => {
@@ -2493,9 +2835,6 @@ X[]
                 });
             });
         });
-    });
-
-    describe('deleterange', () => {
         it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: unformat(`
@@ -3468,6 +3807,27 @@ X[]
                             ),
                         )
                         .to.eql(['abc', 'DIV', 'def']);
+                },
+            });
+        });
+        it('should return an image in a parent selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div id="parent-element-to-select"><img/></div>',
+                stepFunction: editor => {
+                    const sel = editor.document.getSelection();
+                    const range = editor.document.createRange();
+                    const parent = editor.document.querySelector('div#parent-element-to-select');
+                    range.setStart(parent, 0);
+                    range.setEnd(parent, 1);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    window.chai
+                        .expect(
+                            getTraversedNodes(editor.editable).map(node =>
+                                node.nodeType === Node.TEXT_NODE ? node.textContent : node.nodeName,
+                            ),
+                        )
+                        .to.eql(['DIV', 'IMG']);
                 },
             });
         });
