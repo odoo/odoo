@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, one, Model } from '@mail/model';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
@@ -8,8 +7,12 @@ import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 Model({
     name: 'WebClientViewAttachmentView',
     template: 'mail.WebClientViewAttachmentView',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (this.iframeViewerPdfRef.el) {
+                hidePDFJSButtons(this.iframeViewerPdfRef.el);
+            }
+        },
     },
     recordMethods: {
         /**
@@ -27,11 +30,6 @@ Model({
             ev.preventDefault();
             const index = this.thread.attachmentsInWebClientView.findIndex(attachment => attachment === this.thread.mainAttachment);
             this.setMainAttachmentFromIndex(index === 0 ? this.thread.attachmentsInWebClientView.length - 1 : index - 1);
-        },
-        onComponentUpdate() {
-            if (this.iframeViewerPdfRef.el) {
-                hidePDFJSButtons(this.iframeViewerPdfRef.el);
-            }
         },
         async setMainAttachmentFromIndex(index) {
             await this.thread.setMainAttachment(this.thread.attachmentsInWebClientView[index]);

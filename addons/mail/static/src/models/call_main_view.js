@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, many, one, Model } from '@mail/model';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -13,12 +12,19 @@ Model({
     template: 'mail.CallMainView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.onResize());
             this.resizeObserver.observe(this.root.el);
         });
         onWillUnmount(() => this.resizeObserver.disconnect());
+    },
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (!this.exists()) {
+                return;
+            }
+            this._updateLayout();
+        },
     },
     recordMethods: {
         /**
@@ -81,12 +87,6 @@ Model({
          */
         onClickShowSidebar(ev) {
             this.callView.update({ isSidebarOpen: true });
-        },
-        onComponentUpdate() {
-            if (!this.exists()) {
-                return;
-            }
-            this._updateLayout();
         },
         /**
          * @param {MouseEvent} ev

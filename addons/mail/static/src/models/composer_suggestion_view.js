@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, one, Model } from '@mail/model';
 import { sprintf } from '@web/core/utils/strings';
 
@@ -16,9 +15,20 @@ Model({
     template: 'mail.ComposerSuggestionView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     identifyingMode: 'xor',
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (
+                this.component.root.el &&
+                this.composerSuggestionListViewOwner.hasToScrollToActiveSuggestionView &&
+                this.composerSuggestionListViewOwnerAsActiveSuggestionView
+            ) {
+                this.component.root.el.scrollIntoView({ block: 'center' });
+                this.composerSuggestionListViewOwner.update({ hasToScrollToActiveSuggestionView: false });
+            }
+        },
+    },
     recordMethods: {
         /**
          * @param {Event} ev
@@ -30,16 +40,6 @@ Model({
             composerViewOwner.insertSuggestion();
             composerViewOwner.closeSuggestions();
             composerViewOwner.update({ doFocus: true });
-        },
-        onComponentUpdate() {
-            if (
-                this.component.root.el &&
-                this.composerSuggestionListViewOwner.hasToScrollToActiveSuggestionView &&
-                this.composerSuggestionListViewOwnerAsActiveSuggestionView
-            ) {
-                this.component.root.el.scrollIntoView({ block: 'center' });
-                this.composerSuggestionListViewOwner.update({ hasToScrollToActiveSuggestionView: false });
-            }
         },
     },
     fields: {

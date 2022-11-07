@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, one, Model } from '@mail/model';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -8,8 +7,19 @@ Model({
     name: 'ChatWindow',
     identifyingMode: 'xor',
     template: 'mail.ChatWindow',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (this.isDoFocus) {
+                this.update({ isDoFocus: false });
+                if (
+                    this.newMessageAutocompleteInputView &&
+                    this.newMessageAutocompleteInputView.component &&
+                    this.newMessageAutocompleteInputView.component.root.el
+                ) {
+                    this.newMessageAutocompleteInputView.component.root.el.focus();
+                }
+            }
+        },
     },
     recordMethods: {
         /**
@@ -273,18 +283,6 @@ Model({
                 isCallSettingsMenuOpen: false,
                 isMemberListOpened: true,
             });
-        },
-        onComponentUpdate() {
-            if (this.isDoFocus) {
-                this.update({ isDoFocus: false });
-                if (
-                    this.newMessageAutocompleteInputView &&
-                    this.newMessageAutocompleteInputView.component &&
-                    this.newMessageAutocompleteInputView.component.root.el
-                ) {
-                    this.newMessageAutocompleteInputView.component.root.el.focus();
-                }
-            }
         },
         /**
          * @param {Event} ev

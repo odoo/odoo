@@ -1,17 +1,75 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, one, Model } from '@mail/model';
 
 Model({
     name: 'ThreadViewTopbar',
     template: 'mail.ThreadViewTopbar',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
-    },
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
+        },
+        _componentUpdated() {
+            if (this.doFocusOnGuestNameInput) {
+                this.guestNameInputRef.el.focus();
+                this.update({ doFocusOnGuestNameInput: clear() });
+            }
+            if (this.doFocusOnThreadNameInput) {
+                this.threadNameInputRef.el.focus();
+                this.update({ doFocusOnThreadNameInput: clear() });
+            }
+            if (this.doFocusOnThreadDescriptionInput) {
+                this.threadDescriptionInputRef.el.focus();
+                this.update({ doFocusOnThreadDescriptionInput: clear() });
+            }
+            if (
+                this.doSetSelectionStartOnGuestNameInput !== undefined &&
+                this.doSetSelectionEndOnGuestNameInput !== undefined &&
+                this.doSetSelectionDirectionOnGuestNameInput !== undefined
+            ) {
+                this.guestNameInputRef.el.setSelectionRange(
+                    this.doSetSelectionStartOnGuestNameInput,
+                    this.doSetSelectionEndOnGuestNameInput,
+                    this.doSetSelectionDirectionOnGuestNameInput
+                );
+                this.update({
+                    doSetSelectionDirectionOnGuestNameInput: clear(),
+                    doSetSelectionEndOnGuestNameInput: clear(),
+                    doSetSelectionStartOnGuestNameInput: clear(),
+                });
+            }
+            if (
+                this.doSetSelectionStartOnThreadNameInput !== undefined &&
+                this.doSetSelectionEndOnThreadNameInput !== undefined &&
+                this.doSetSelectionDirectionOnThreadNameInput !== undefined
+            ) {
+                this.threadNameInputRef.el.setSelectionRange(
+                    this.doSetSelectionStartOnThreadNameInput,
+                    this.doSetSelectionEndOnThreadNameInput,
+                    this.doSetSelectionDirectionOnThreadNameInput
+                );
+                this.update({
+                    doSetSelectionDirectionOnThreadNameInput: clear(),
+                    doSetSelectionEndOnThreadNameInput: clear(),
+                    doSetSelectionStartOnThreadNameInput: clear(),
+                });
+            }
+            if (
+                this.doSetSelectionStartOnThreadDescriptionInput !== undefined &&
+                this.doSetSelectionEndOnThreadDescriptionInput !== undefined &&
+                this.doSetSelectionDirectionOnThreadDescriptionInput !== undefined
+            ) {
+                this.threadDescriptionInputRef.el.setSelectionRange(
+                    this.doSetSelectionStartOnThreadDescriptionInput,
+                    this.doSetSelectionEndOnThreadDescriptionInput,
+                    this.doSetSelectionDirectionOnThreadDescriptionInput
+                );
+                this.update({
+                    doSetSelectionDirectionOnThreadDescriptionInput: clear(),
+                    doSetSelectionEndOnThreadDescriptionInput: clear(),
+                    doSetSelectionStartOnThreadDescriptionInput: clear(),
+                });
+            }
         },
         _willDelete() {
             document.removeEventListener('click', this._onClickCaptureGlobal, true);
@@ -165,71 +223,6 @@ Model({
                 isMouseOverUserName: false,
                 pendingGuestName: this.messaging.currentGuest.name,
             });
-        },
-        /**
-         * Handles OWL update on this top bar component.
-         */
-        onComponentUpdate() {
-            if (this.doFocusOnGuestNameInput) {
-                this.guestNameInputRef.el.focus();
-                this.update({ doFocusOnGuestNameInput: clear() });
-            }
-            if (this.doFocusOnThreadNameInput) {
-                this.threadNameInputRef.el.focus();
-                this.update({ doFocusOnThreadNameInput: clear() });
-            }
-            if (this.doFocusOnThreadDescriptionInput) {
-                this.threadDescriptionInputRef.el.focus();
-                this.update({ doFocusOnThreadDescriptionInput: clear() });
-            }
-            if (
-                this.doSetSelectionStartOnGuestNameInput !== undefined &&
-                this.doSetSelectionEndOnGuestNameInput !== undefined &&
-                this.doSetSelectionDirectionOnGuestNameInput !== undefined
-            ) {
-                this.guestNameInputRef.el.setSelectionRange(
-                    this.doSetSelectionStartOnGuestNameInput,
-                    this.doSetSelectionEndOnGuestNameInput,
-                    this.doSetSelectionDirectionOnGuestNameInput
-                );
-                this.update({
-                    doSetSelectionDirectionOnGuestNameInput: clear(),
-                    doSetSelectionEndOnGuestNameInput: clear(),
-                    doSetSelectionStartOnGuestNameInput: clear(),
-                });
-            }
-            if (
-                this.doSetSelectionStartOnThreadNameInput !== undefined &&
-                this.doSetSelectionEndOnThreadNameInput !== undefined &&
-                this.doSetSelectionDirectionOnThreadNameInput !== undefined
-            ) {
-                this.threadNameInputRef.el.setSelectionRange(
-                    this.doSetSelectionStartOnThreadNameInput,
-                    this.doSetSelectionEndOnThreadNameInput,
-                    this.doSetSelectionDirectionOnThreadNameInput
-                );
-                this.update({
-                    doSetSelectionDirectionOnThreadNameInput: clear(),
-                    doSetSelectionEndOnThreadNameInput: clear(),
-                    doSetSelectionStartOnThreadNameInput: clear(),
-                });
-            }
-            if (
-                this.doSetSelectionStartOnThreadDescriptionInput !== undefined &&
-                this.doSetSelectionEndOnThreadDescriptionInput !== undefined &&
-                this.doSetSelectionDirectionOnThreadDescriptionInput !== undefined
-            ) {
-                this.threadDescriptionInputRef.el.setSelectionRange(
-                    this.doSetSelectionStartOnThreadDescriptionInput,
-                    this.doSetSelectionEndOnThreadDescriptionInput,
-                    this.doSetSelectionDirectionOnThreadDescriptionInput
-                );
-                this.update({
-                    doSetSelectionDirectionOnThreadDescriptionInput: clear(),
-                    doSetSelectionEndOnThreadDescriptionInput: clear(),
-                    doSetSelectionStartOnThreadDescriptionInput: clear(),
-                });
-            }
         },
         /**
          * @param {KeyboardEvent} ev

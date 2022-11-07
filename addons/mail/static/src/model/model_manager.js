@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
+import { useUpdate } from '@mail/component_hooks/use_update';
 import { IS_RECORD, patchesAppliedPromise, registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { ModelIndexAnd } from '@mail/model/model_index_and';
@@ -1238,6 +1239,14 @@ export class ModelManager {
                         for (const [fieldName, refName] of model.__fieldAndRefNames) {
                             useRefToModel({ fieldName, refName });
                         }
+                    });
+                }
+                const componentUpdatedHook = registry.get(model.name).get('lifecycleHooks').get('_componentUpdated');
+                if (componentUpdatedHook) {
+                    setupFunctions.push(function () {
+                        useUpdate({ func: () => {
+                            componentUpdatedHook.call(this.props.record);
+                        } });
                     });
                 }
                 if (setupFunctions.length > 0) {

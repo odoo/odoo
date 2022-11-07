@@ -67,6 +67,8 @@ function addFields(modelName, fields) {
     }
 }
 
+const validHookNames = ['_created', '_componentUpdated', '_willDelete'];
+
 /**
  * Adds the provided hooks to the model specified by the `modelName`.
  *
@@ -81,8 +83,9 @@ function addLifecycleHooks(modelName, hooks) {
     for (const [name, handler] of Object.entries(hooks)) {
         addContextToErrors(() => {
             assertIsFunction(handler);
-            assertIsValidHookName(name);
-            assertSectionDoesNotHaveKey('lifecycleHooks', name, definition);
+            if (!validHookNames.includes(name)) {
+                throw new Error(`unsupported hook name. Possible values: ${validHookNames.join(", ")}.`);
+            }
         }, `Cannot add lifecycle hook "${name}" to model "${modelName}": `);
         definition.get('lifecycleHooks').set(name, handler);
     }
@@ -240,23 +243,9 @@ function assertIsFunction(toAssert) {
  * @throws {Error} if name is not an existing hook name.
  */
 function assertIsValidHookName(name) {
-    const validHookNames = ['_created', '_willDelete'];
+    const validHookNames = ['_created', '_componentUpdated', '_willDelete'];
     if (!validHookNames.includes(name)) {
         throw new Error(`unsupported hook name. Possible values: ${validHookNames.join(", ")}.`);
-    }
-}
-
-/**
- * Asserts that the provided `key` is not already defined within the section
- * `sectionName` on the model `modelDefinition`.
- *
- * @param {string} sectionName The section of the `modelDefinition` to check into.
- * @param {string} key The key to check for.
- * @param {Object} modelDefinition The definition of the model to check.
- */
-function assertSectionDoesNotHaveKey(sectionName, key, modelDefinition) {
-    if (modelDefinition.get(sectionName).has(key)) {
-        throw new Error(`"${key}" is already defined on "${sectionName}".`);
     }
 }
 

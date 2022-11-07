@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, one, Model } from '@mail/model';
 
 Model({
@@ -9,14 +8,13 @@ Model({
     template: 'mail.ComposerTextInputView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        /**
-         * Updates the composer text input content when composer is mounted
-         * as textarea content can't be changed from the DOM.
-         */
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
-    recordMethods: {
-        onComponentUpdate() {
+    lifecycleHooks: {
+        /**
+         * Updates the composer text input content when composer is mounted as
+         * textarea content can't be changed from the DOM.
+         */
+        _componentUpdated() {
             if (!this.component.root.el) {
                 return;
             }

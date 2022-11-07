@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, one, Model } from '@mail/model';
 
 Model({
@@ -9,10 +8,9 @@ Model({
     template: 'mail.NotificationMessageView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
-    recordMethods: {
-        onComponentUpdate() {
+    lifecycleHooks: {
+        _componentUpdated() {
             if (!this.exists()) {
                 return;
             }

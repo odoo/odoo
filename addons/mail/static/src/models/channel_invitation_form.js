@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, link, many, one, Model, unlink } from '@mail/model';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
@@ -12,9 +11,17 @@ Model({
     template: 'mail.ChannelInvitationForm',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     identifyingMode: 'xor',
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (this.doFocusOnSearchInput && this.searchInputRef.el) {
+                this.searchInputRef.el.focus();
+                this.searchInputRef.el.setSelectionRange(this.searchTerm.length, this.searchTerm.length);
+                this.update({ doFocusOnSearchInput: clear() });
+            }
+        },
+    },
     recordMethods: {
         /**
          * Handles click on the "copy" button.
@@ -85,16 +92,6 @@ Model({
          */
         onClickSelectedPartner(partner) {
             this.update({ selectedPartners: unlink(partner) });
-        },
-        /**
-         * Handles OWL update on this channel invitation form component.
-         */
-        onComponentUpdate() {
-            if (this.doFocusOnSearchInput && this.searchInputRef.el) {
-                this.searchInputRef.el.focus();
-                this.searchInputRef.el.setSelectionRange(this.searchTerm.length, this.searchTerm.length);
-                this.update({ doFocusOnSearchInput: clear() });
-            }
         },
         /**
          * Handles focus on the invitation link.

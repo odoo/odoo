@@ -1,13 +1,19 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, increment, many, one, Model } from '@mail/model';
 
 Model({
     name: 'EmojiGridView',
     template: 'mail.EmojiGridView',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (
+                this.categorySelectedByUser &&
+                this.emojiPickerViewOwner.currentSearch === ""
+            ) {
+                this.doJumpToCategorySelectedByUser();
+            }
+        },
     },
     recordMethods: {
         doJumpToCategorySelectedByUser() {
@@ -15,17 +21,6 @@ Model({
                 top: this.rowHeight * this.categorySelectedByUser.emojiGridRowView.index,
             });
             this.update({ categorySelectedByUser: clear() });
-        },
-        /**
-         * Handles OWL update on component update.
-         */
-        onComponentUpdate() {
-            if (
-                this.categorySelectedByUser &&
-                this.emojiPickerViewOwner.currentSearch === ""
-            ) {
-                this.doJumpToCategorySelectedByUser();
-            }
         },
         onScroll() {
             if (!this.exists()) {

@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, one, Model } from '@mail/model';
 
 Model({
     name: 'DiscussSidebarView',
     template: 'mail.DiscussSidebarView',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
-    },
-    recordMethods: {
-        onComponentUpdate() {
+    lifecycleHooks: {
+        _componentUpdated() {
             if (this.quickSearchInputRef.el) {
                 this.quickSearchInputRef.el.value = this.owner.discuss.sidebarQuickSearchValue;
             }

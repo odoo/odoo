@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, many, one, Model } from '@mail/model';
 
 Model({
@@ -9,11 +8,14 @@ Model({
     template: 'mail.ChatWindowHiddenMenuView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
+        },
+        _componentUpdated() {
+            this.applyListHeight();
+            this.applyOffset();
         },
         _willDelete() {
             document.removeEventListener('click', this._onClickCaptureGlobal, true);
@@ -32,10 +34,6 @@ Model({
             const offset = this.owner.visual.hiddenMenuOffset;
             this.component.root.el.style[offsetFrom] = `${offset}px`;
             this.component.root.el.style[oppositeFrom] = 'auto';
-        },
-        onComponentUpdate() {
-            this.applyListHeight();
-            this.applyOffset();
         },
         /**
          * Closes the menu when clicking outside.

@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { many, Model } from '@mail/model';
 
 Model({
     name: 'DialogManager',
     template: 'mail.DialogManager',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
-    },
-    recordMethods: {
-        onComponentUpdate() {
+    lifecycleHooks: {
+        _componentUpdated() {
             if (this.dialogs.length > 0) {
                 document.body.classList.add('modal-open');
             } else {

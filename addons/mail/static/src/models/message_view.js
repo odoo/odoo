@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, increment, one, Model } from '@mail/model';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -10,9 +9,43 @@ Model({
     template: 'mail.MessageView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
     identifyingMode: 'xor',
+    lifecycleHooks: {
+        _componentUpdated() {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.doHighlight && this.component && this.component.root.el) {
+                this.component.root.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                this.highlight();
+                this.update({ doHighlight: clear() });
+            }
+            if (this.messageListViewItemOwner && this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem && this.messageListViewItemOwner.isPartiallyVisible()) {
+                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem.handleVisibleMessage(this.message);
+            }
+            if (this.prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
+                this.prettyBodyRef.el.innerHTML = this.message.prettyBody;
+                this.update({ lastPrettyBody: this.message.prettyBody });
+            }
+            if (!this.prettyBodyRef.el) {
+                this.update({ lastPrettyBody: clear() });
+            }
+            // Remove all readmore before if any before reinsert them with insertReadMoreLess.
+            // This is needed because insertReadMoreLess is working with direct DOM mutations
+            // which are not sync with Owl.
+            if (this.contentRef.el) {
+                for (const el of this.contentRef.el.querySelectorAll(':scope .o_MessageView_readMoreLess')) {
+                    el.remove();
+                }
+                this.update({ lastReadMoreIndex: clear() });
+                this.insertReadMoreLess($(this.contentRef.el));
+                this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+                    message: this.message,
+                });
+            }
+        },
+    },
     recordMethods: {
         /**
          * Briefly highlights the message.
@@ -110,39 +143,6 @@ Model({
         onClickOriginThread(ev) {
             ev.preventDefault();
             this.message.originThread.open();
-        },
-        onComponentUpdate() {
-            if (!this.exists()) {
-                return;
-            }
-            if (this.doHighlight && this.component && this.component.root.el) {
-                this.component.root.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                this.highlight();
-                this.update({ doHighlight: clear() });
-            }
-            if (this.messageListViewItemOwner && this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem && this.messageListViewItemOwner.isPartiallyVisible()) {
-                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem.handleVisibleMessage(this.message);
-            }
-            if (this.prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
-                this.prettyBodyRef.el.innerHTML = this.message.prettyBody;
-                this.update({ lastPrettyBody: this.message.prettyBody });
-            }
-            if (!this.prettyBodyRef.el) {
-                this.update({ lastPrettyBody: clear() });
-            }
-            // Remove all readmore before if any before reinsert them with insertReadMoreLess.
-            // This is needed because insertReadMoreLess is working with direct DOM mutations
-            // which are not sync with Owl.
-            if (this.contentRef.el) {
-                for (const el of this.contentRef.el.querySelectorAll(':scope .o_MessageView_readMoreLess')) {
-                    el.remove();
-                }
-                this.update({ lastReadMoreIndex: clear() });
-                this.insertReadMoreLess($(this.contentRef.el));
-                this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
-                    message: this.message,
-                });
-            }
         },
         onHighlightTimerTimeout() {
             this.update({

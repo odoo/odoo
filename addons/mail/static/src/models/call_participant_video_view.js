@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, one, Model } from '@mail/model';
 
 Model({
@@ -9,15 +8,14 @@ Model({
     template: 'mail.CallParticipantVideoView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
-    recordMethods: {
+    lifecycleHooks: {
         /**
          * Since it is not possible to directly put a mediaStreamObject as the src
          * or src-object of the template, the video src is manually inserted into
          * the DOM.
          */
-        onComponentUpdate() {
+        _componentUpdated() {
             if (!this.component.root.el) {
                 return;
             }
@@ -28,6 +26,8 @@ Model({
             }
             this.component.root.el.load();
         },
+    },
+    recordMethods: {
         /**
          * Plays the video as some browsers may not support or block autoplay.
          *

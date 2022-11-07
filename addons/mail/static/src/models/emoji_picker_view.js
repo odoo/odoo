@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, many, one, Model } from '@mail/model';
 
 Model({
@@ -9,7 +8,6 @@ Model({
     template: 'mail.EmojiPickerView',
     componentSetup() {
         useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'EmojiPickerView' });
     },
     lifecycleHooks: {
         _created() {
@@ -21,14 +19,11 @@ Model({
                 this.update({ isDoFocus: true });
             }
         },
-    },
-    recordMethods: {
-        /**
-         * Handles OWL update on the search bar.
-         */
-        onComponentUpdate() {
+        _componentUpdated() {
             this._handleFocus();
         },
+    },
+    recordMethods: {
         onFocusinInput() {
             if (!this.exists()) {
                 return;

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { attr, clear, one, Model } from '@mail/model';
 
 const getNextGuestNameInputId = (function () {
@@ -11,8 +10,10 @@ const getNextGuestNameInputId = (function () {
 Model({
     name: 'WelcomeView',
     template: 'mail.WelcomeView',
-    componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView' });
+    lifecycleHooks: {
+        _componentUpdated() {
+            this._handleFocus();
+        },
     },
     recordMethods: {
         /**
@@ -36,12 +37,6 @@ Model({
          */
         onClickJoinButton(ev) {
             this.joinChannel();
-        },
-        /**
-         * Handles OWL update on this WelcomeView component.
-         */
-        onComponentUpdate() {
-            this._handleFocus();
         },
         /**
          * @param {KeyboardEvent} ev
