@@ -151,9 +151,11 @@ var MockServer = Class.extend({
         if (abort) {
             abort = abort.bind(def);
         } else {
-            abort = function () {
-                throw new Error("Can't abort this request");
-            };
+            abort = function (rejectError = true) {
+                if (rejectError) {
+                    throw new Error("XmlHttpRequestError abort");
+                }
+            }
         }
 
         def = def.then(function (result) {
