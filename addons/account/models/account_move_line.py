@@ -82,7 +82,7 @@ class AccountMoveLine(models.Model):
         index=True,
         auto_join=True,
         ondelete="cascade",
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]",
         check_company=True,
         tracking=True,
     )
