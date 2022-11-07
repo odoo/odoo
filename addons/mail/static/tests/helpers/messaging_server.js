@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 export class MessagingServer {
+    activities = [];
     channels = [];
     chats = [];
     messages = [];
@@ -149,5 +150,9 @@ export class MessagingServer {
     _web_dataset_call_kw_res_partner_im_search(params) {
         const searchStr = params.args[0];
         return this.partners.filter((p) => p.name.includes(searchStr));
+    }
+
+    _web_dataset_call_kw_res_users_systray_get_activities(params) {
+        return [];
     }
 }
