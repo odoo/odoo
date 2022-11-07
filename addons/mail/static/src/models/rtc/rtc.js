@@ -111,6 +111,18 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * Update user audio devices known by this model.
+         */
+        async updateAudioDevices() {
+            const query = await browser.navigator.permissions.query({ name: 'microphone' });
+            if (query.state === 'prompt') {
+                await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => {});
+            }
+            const audioDevices = await browser.navigator.mediaDevices.enumerateDevices();
+            this.update({ audioDevices: audioDevices.filter(device => device.deviceId && device.label) });
+        }
+
+        /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
          *
          * @param {mail.rtc_session[]} currentSessions list of sessions of this call.
@@ -295,6 +307,7 @@ function factory(dependencies) {
                 try {
                     const audioStream = await browser.navigator.mediaDevices.getUserMedia({ audio: this.messaging.userSetting.getAudioConstraints() });
                     audioTrack = audioStream.getAudioTracks()[0];
+                    this.updateAudioDevices();
                 } catch (e) {
                     this.env.services.notification.notify({
                         message: _.str.sprintf(
@@ -1225,6 +1238,9 @@ function factory(dependencies) {
          * audio MediaStreamTrack of the current user
          */
         audioTrack: attr(),
+        audioDevices: attr({
+            default: [],
+        }),
         /**
          * The channel that is hosting the current RTC call.
          */

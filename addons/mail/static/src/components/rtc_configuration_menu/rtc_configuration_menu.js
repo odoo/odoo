@@ -2,10 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import { browser } from "@web/core/browser/browser";
-
 const { Component } = owl;
-const { useState } = owl.hooks;
 
 export class RtcConfigurationMenu extends Component {
 
@@ -14,13 +11,10 @@ export class RtcConfigurationMenu extends Component {
      */
     setup() {
         super.setup();
-        this.state = useState({
-            userDevices: undefined,
-        });
     }
 
-    async willStart() {
-        this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
+    async onWillStart() {
+        return this.messaging.rtc.updateAudioDevices();
     }
 
     //--------------------------------------------------------------------------
