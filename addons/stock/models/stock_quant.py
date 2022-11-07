@@ -213,6 +213,7 @@ class StockQuant(models.Model):
     def _load_records_create(self, values):
         """ Add default location if import file did not fill it"""
         company_user = self.env.company
+        self = self.with_context(inventory_mode=True)
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         for value in values:
             if 'location_id' not in value:
@@ -221,6 +222,7 @@ class StockQuant(models.Model):
 
     def _load_records_write(self, values):
         """ Only allowed fields should be modified """
+        self = self.with_context(inventory_mode=True)
         allowed_fields = self._get_inventory_fields_write()
         for field in values.keys():
             if field not in allowed_fields:
