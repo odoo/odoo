@@ -102,7 +102,7 @@
                                     t-on-click="composerView.onClickButtonEmojis"
                                     t-ref="buttonEmojis"
                                 >
-                                    <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+                                    <i class="o_Composer_EmojiIcon fa fa-smile-o" role="img" aria-label="Emojis"/>
                                 </button>
                                 <PopoverView t-if="composerView.emojisPopoverView" localId="composerView.emojisPopoverView.localId"/>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
