@@ -326,7 +326,7 @@ Model({
             },
         }),
         persona: one('Persona', { default: {}, inverse: 'partner', readonly: true, required: true }),
-        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'partner', readonly: true, required: true }),
+        suggestable: one('Suggestable', { default: {}, inverse: 'partner', readonly: true, required: true }),
         user: one('User', { inverse: 'partner' }),
         volumeSetting: one('res.users.settings.volumes', { inverse: 'partner_id' }),
     },

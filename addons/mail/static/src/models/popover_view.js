@@ -107,6 +107,9 @@ Model({
                 if (this.messageViewOwnerAsNotificationContent) {
                     return this.messageViewOwnerAsNotificationContent.notificationIconRef;
                 }
+                if (this.navigableListViewOwner) {
+                    return this.navigableListViewOwner.anchorRef;
+                }
                 return clear();
             },
         }),
@@ -173,6 +176,9 @@ Model({
                 if (this.messageNotificationPopoverContentView) {
                     return this.messageNotificationPopoverContentView;
                 }
+                if (this.navigableListPopoverContentView) {
+                    return this.navigableListPopoverContentView;
+                }
                 return clear();
             },
         }),
@@ -217,6 +223,9 @@ Model({
                 if (this.messageNotificationPopoverContentView) {
                     return 'MessageNotificationPopoverContentView';
                 }
+                if (this.navigableListPopoverContentView) {
+                    return 'NavigableListPopoverContentView';
+                }
                 return clear();
             },
         }),
@@ -255,6 +264,15 @@ Model({
             },
         }),
         messageViewOwnerAsNotificationContent: one('MessageView', { identifying: true, inverse: 'notificationPopoverView' }),
+        navigableListPopoverContentView: one('NavigableListPopoverContentView', { inverse: 'popoverViewOwner',
+            compute() {
+                return this.navigableListViewOwner ? {} : clear();
+            },
+        }),
+        /**
+         * If set, this popover view is owned by a navigable list view.
+         */
+        navigableListViewOwner: one('NavigableListView', { identifying: true, inverse: 'navigableListPopoverView' }),
         /**
          * Position of the popover view relative to its anchor point.
          * Valid values: 'top', 'right', 'bottom', 'left'
@@ -284,6 +302,9 @@ Model({
                 }
                 if (this.messageActionViewOwnerAsReaction) {
                     return 'top';
+                }
+                if (this.navigableListViewOwner) {
+                    return this.navigableListViewOwner.position;
                 }
                 return clear();
             },

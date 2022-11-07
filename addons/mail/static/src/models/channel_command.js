@@ -121,6 +121,6 @@ Model({
          *  The keyword to use a specific command.
          */
         name: attr({ identifying: true }),
-        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'channelCommand', readonly: true, required: true }),
+        suggestable: one('Suggestable', { default: {}, inverse: 'channelCommand', readonly: true, required: true }),
     },
 });

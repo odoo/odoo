@@ -18,46 +18,32 @@ Model({
         useComponentToModel({ fieldName: 'component' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
     },
-    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {Event} ev
          */
         onClick(ev) {
-            ev.preventDefault();
-            this.composerSuggestionListViewOwner.update({ rawActiveSuggestionView: this });
-            const composerViewOwner = this.composerSuggestionListViewOwner.composerViewOwner;
-            composerViewOwner.insertSuggestion();
-            composerViewOwner.closeSuggestions();
-            composerViewOwner.update({ doFocus: true });
+            // ev.preventDefault();
+            // this.navigableListViewAsSuggestion.update({ userExplicitSelection: this.navigableListItemView });
+            // const composerView = this.navigableListViewAsSuggestion.ownerAsComposerSuggestion;
+            // composerView.insertSuggestion();
+            // composerView.closeSuggestions();
+            // composerView.update({ doFocus: true });
         },
         onComponentUpdate() {
-            if (
-                this.component.root.el &&
-                this.composerSuggestionListViewOwner.hasToScrollToActiveSuggestionView &&
-                this.composerSuggestionListViewOwnerAsActiveSuggestionView
-            ) {
-                this.component.root.el.scrollIntoView({ block: 'center' });
-                this.composerSuggestionListViewOwner.update({ hasToScrollToActiveSuggestionView: false });
-            }
+            // if (
+            //     this.component.root.el &&
+            //     this.navigableListViewAsSuggestion.hasToScrollToActiveItem &&
+            //     this.navigableListViewAsSuggestion.activeItem &&
+            //     this.navigableListViewAsSuggestion.activeItem.composerSuggestionViewOwner === this
+            // ) {
+            //     this.component.root.el.scrollIntoView({ block: 'center' });
+            //     this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: false });
+            // }
         },
     },
     fields: {
         component: attr(),
-        composerSuggestionListViewOwner: one('ComposerSuggestionListView', { required: true,
-            compute() {
-                if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
-                    return this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.composerSuggestionListViewOwner;
-                }
-                if (this.composerSuggestionListViewMainComposerSuggestionViewItemOwner) {
-                    return this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.composerSuggestionListViewOwner;
-                }
-                return clear();
-            },
-        }),
-        composerSuggestionListViewOwnerAsActiveSuggestionView: one('ComposerSuggestionListView', { inverse: 'activeSuggestionView' }),
-        composerSuggestionListViewExtraComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewExtraComposerSuggestionViewItem', { identifying: true, inverse: 'composerSuggestionView' }),
-        composerSuggestionListViewMainComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewMainComposerSuggestionViewItem', { identifying: true, inverse: 'composerSuggestionView' }),
         /**
          * The text that identifies this suggestion in a mention.
          */
@@ -80,21 +66,22 @@ Model({
                 }
             },
         }),
+        navigableListItemViewOwner: one('NavigableListItemView', {
+            identifying: true,
+            inverse: 'composerSuggestionView',
+        }),
+        navigableListViewAsSuggestion: one('NavigableListView', {
+            compute() {
+                return this.navigableListItemViewOwner.navigableListMainOrExtraItemView.navigableListViewAsSuggestion;
+            },
+        }),
         personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'composerSuggestionViewOwner',
             compute() {
                 return this.suggestable && this.suggestable.partner && this.suggestable.partner.isImStatusSet ? {} : clear();
             },
         }),
-        suggestable: one('ComposerSuggestable', { required: true,
-            compute() {
-                if (this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner) {
-                    return this.composerSuggestionListViewExtraComposerSuggestionViewItemOwner.suggestable;
-                }
-                if (this.composerSuggestionListViewMainComposerSuggestionViewItemOwner) {
-                    return this.composerSuggestionListViewMainComposerSuggestionViewItemOwner.suggestable;
-                }
-                return clear();
-            },
+        suggestable: one('Suggestable', {
+            related: 'navigableListItemViewOwner.suggestable',
         }),
         /**
          * Descriptive title for this suggestion. Useful to be able to

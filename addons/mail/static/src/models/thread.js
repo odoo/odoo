@@ -1717,7 +1717,7 @@ Model({
          * @see localMessageUnreadCounter
          */
         serverLastMessage: one('Message'),
-        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'thread', readonly: true, required: true }),
+        suggestable: one('Suggestable', { default: {}, inverse: 'thread', readonly: true, required: true }),
         /**
          * Determines the `SuggestedRecipientInfo` concerning `this`.
          */

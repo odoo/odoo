@@ -90,7 +90,7 @@ QUnit.test('canned response suggestion active', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInputView_textarea', ":hello");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionView'),
+        document.querySelector('.o_DropdownItemView'),
         'active',
         "should be active initially"
     );

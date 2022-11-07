@@ -752,9 +752,9 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     );
 
     await insertText('.o_ComposerTextInputView_textarea', "@");
-    assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionListView_list'),
-        'show',
+    assert.containsOnce(
+        document.body,
+        '.o_DropdownMenuView',
         "should display mention suggestions on typing '@'"
     );
 
@@ -764,7 +764,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "mention suggestion should be closed after pressing escape on mention suggestion"
     );
     assert.containsOnce(

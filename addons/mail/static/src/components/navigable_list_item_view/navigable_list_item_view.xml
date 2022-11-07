@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NavigableListItemView" owl="1">
+        <div
+            class="o_NavigableListItemView"
+            t-att-class="{ 'active bg-300 fw-bold': isActive, 'bg-100': isHovered }"
+            t-attf-class="{{ className }}"
+            t-on-mouseenter="onMouseEnter"
+            t-on-mouseleave="onMouseLeave"
+            t-ref="root"
+        >
+            <t
+                t-component="constructor.components[contentComponentName]"
+                className="contentClassName"
+                t-props="{ record: content }"
+            />
+        </div>
+    </t>
+
+</templates>

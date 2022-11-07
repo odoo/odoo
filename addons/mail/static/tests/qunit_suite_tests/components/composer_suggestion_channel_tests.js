@@ -68,7 +68,7 @@ QUnit.test('channel mention suggestion active', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInputView_textarea', "#my-channel");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionView'),
+        document.querySelector('.o_DropdownItemView'),
         'active',
         "should be active initially"
     );

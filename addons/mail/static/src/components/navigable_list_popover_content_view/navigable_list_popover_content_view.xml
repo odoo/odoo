@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NavigableListPopoverContentView" owl="1">
+        <div class="o_NavigableListPopoverContentView overflow-auto bg-white text-start border shadow" t-attf-class="{{ className }}" t-ref="root">
+            <NavigableListItemView t-foreach="navigableListView.mainItems" t-as="item" t-key="item" record="item.navigableListMainOrExtraItemView.itemView"/>
+            <div t-if="navigableListView.mainItems.length > 0 and navigableListView.extraItems.length > 0" role="separator" class="dropdown-divider"/>
+            <NavigableListItemView t-foreach="navigableListView.extraItems" t-as="item" t-key="item" record="item.navigableListMainOrExtraItemView.itemView"/>
+        </div>
+    </t>
+
+</templates>

@@ -77,6 +77,6 @@ Model({
          * entered.
          */
         substitution: attr(),
-        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'cannedResponse', readonly: true, required: true }),
+        suggestable: one('Suggestable', { default: {}, inverse: 'cannedResponse', readonly: true, required: true }),
     },
 });

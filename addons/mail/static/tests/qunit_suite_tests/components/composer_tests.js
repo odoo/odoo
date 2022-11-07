@@ -262,13 +262,13 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "Canned responses suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInputView_textarea', ':');
-    assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionListView_list'),
-        'show',
+    assert.containsOnce(
+        document.body,
+        document.querySelector('.o_DropdownMenuView'),
         "should display canned response suggestions on typing ':'"
     );
 });
@@ -288,7 +288,7 @@ QUnit.test('use a canned response', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
@@ -413,13 +413,13 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "channel mention suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInputView_textarea', "#");
-    assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionListView_list'),
-        'show',
+    assert.containsOnce(
+        document.body,
+        document.querySelector('.o_DropdownMenuView'),
         "should display channel mention suggestions on typing '#'"
     );
 });
@@ -438,7 +438,7 @@ QUnit.test('mention a channel', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -561,13 +561,13 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "command suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInputView_textarea', "/");
-    assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionListView_list'),
-        'show',
+    assert.containsOnce(
+        document.body,
+        document.querySelector('.o_DropdownMenuView'),
         "should display command suggestions on typing '/'"
     );
 });
@@ -634,7 +634,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "command suggestions list should not be present"
     );
     assert.strictEqual(
@@ -750,13 +750,13 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "mention suggestions list should not be present"
     );
     await insertText('.o_ComposerTextInputView_textarea', "@");
-    assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionListView_list'),
-        'show',
+    assert.containsOnce(
+        document.body,
+        document.querySelector('.o_DropdownMenuView'),
         "should display mention suggestions on typing '@'"
     );
     assert.containsOnce(
@@ -786,7 +786,7 @@ QUnit.test('mention a partner', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionListView_list',
+        '.o_DropdownMenuView',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(

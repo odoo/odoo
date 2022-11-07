@@ -134,7 +134,7 @@ Model({
                     this.composer.textInputContent.length
                 );
             }
-            const recordReplacement = this.composerSuggestionListView.activeSuggestionView.mentionText;
+            const recordReplacement = this.navigableListViewAsSuggestion.activeItem.composerSuggestionViewOwner.mentionText;
             const updateData = {
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
                 textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
@@ -143,11 +143,11 @@ Model({
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
             // the target partner.
-            if (this.composerSuggestionListView.activeSuggestionView.suggestable.thread) {
-                Object.assign(updateData, { rawMentionedChannels: link(this.composerSuggestionListView.activeSuggestionView.suggestable.thread) });
+            if (this.navigableListViewAsSuggestion.activeItem.composerSuggestionViewOwner.suggestable.thread) {
+                Object.assign(updateData, { rawMentionedChannels: link(this.navigableListViewAsSuggestion.activeItem.composerSuggestionViewOwner.suggestable.thread) });
             }
-            if (this.composerSuggestionListView.activeSuggestionView.suggestable.partner) {
-                Object.assign(updateData, { rawMentionedPartners: link(this.composerSuggestionListView.activeSuggestionView.suggestable.partner) });
+            if (this.navigableListViewAsSuggestion.activeItem.composerSuggestionViewOwner.suggestable.partner) {
+                Object.assign(updateData, { rawMentionedPartners: link(this.navigableListViewAsSuggestion.activeItem.composerSuggestionViewOwner.suggestable.partner) });
             }
             this.composer.update(updateData);
             for (const composerView of this.composer.composerViews) {
@@ -427,9 +427,9 @@ Model({
                         this.threadView.startEditingLastMessageFromCurrentUser();
                         break;
                     }
-                    if (this.composerSuggestionListView) {
-                        this.composerSuggestionListView.setPreviousSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                    if (this.navigableListViewAsSuggestion) {
+                        this.navigableListViewAsSuggestion.setPreviousActive();
+                        this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
                     }
                     break;
                 case 'ArrowDown':
@@ -438,31 +438,31 @@ Model({
                         this.threadView.startEditingLastMessageFromCurrentUser();
                         break;
                     }
-                    if (this.composerSuggestionListView) {
-                        this.composerSuggestionListView.setNextSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                    if (this.navigableListViewAsSuggestion) {
+                        this.navigableListViewAsSuggestion.setNextActive();
+                        this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
                     }
                     break;
                 case 'Home':
-                    if (this.composerSuggestionListView) {
-                        this.composerSuggestionListView.setFirstSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                    if (this.navigableListViewAsSuggestion) {
+                        this.navigableListViewAsSuggestion.setFirstActive();
+                        this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
                     }
                     break;
                 case 'End':
-                    if (this.composerSuggestionListView) {
-                        this.composerSuggestionListView.setLastSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                    if (this.navigableListViewAsSuggestion) {
+                        this.navigableListViewAsSuggestion.setLastActive();
+                        this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
                     }
                     break;
                 case 'Tab':
-                    if (this.composerSuggestionListView) {
+                    if (this.navigableListViewAsSuggestion) {
                         if (ev.shiftKey) {
-                            this.composerSuggestionListView.setPreviousSuggestionViewActive();
-                            this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                            this.navigableListViewAsSuggestion.setPreviousActive();
+                            this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
                         } else {
-                            this.composerSuggestionListView.setNextSuggestionViewActive();
-                            this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                            this.navigableListViewAsSuggestion.setNextActive();
+                            this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
                         }
                     }
                     break;
@@ -967,8 +967,8 @@ Model({
                 extraSuggestions: extraSuggestedRecords.map(record => record.suggestable),
                 mainSuggestions: mainSuggestedRecords.map(record => record.suggestable),
             });
-            if (this.composerSuggestionListView) {
-                this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+            if (this.navigableListViewAsSuggestion) {
+                this.navigableListViewAsSuggestion.update({ hasToScrollToActiveItem: true });
             }
         },
         /**
@@ -1037,14 +1037,6 @@ Model({
                 return clear();
             },
         }),
-        composerSuggestionListView: one('ComposerSuggestionListView', { inverse: 'composerViewOwner',
-            compute() {
-                if (this.hasSuggestions) {
-                    return {};
-                }
-                return clear();
-            },
-        }),
         /**
          * Current partner image URL.
          */
@@ -1076,7 +1068,7 @@ Model({
          * Determines the emojis popover that is active on this composer view.
          */
         emojisPopoverView: one('PopoverView', { inverse: 'composerViewOwnerAsEmoji' }),
-        extraSuggestions: many('ComposerSuggestable'),
+        extraSuggestions: many('Suggestable'),
         fileUploader: one('FileUploader', { default: {}, inverse: 'composerView', readonly: true, required: true }),
         hasCurrentPartnerAvatar: attr({ default: true,
             compute() {
@@ -1263,11 +1255,16 @@ Model({
          * whether the current partner is typing something.
          */
         textareaLastInputValue: attr({ default: "" }),
-        mainSuggestions: many('ComposerSuggestable'),
+        mainSuggestions: many('Suggestable'),
         /**
          * States the message view on which this composer allows editing (if any).
          */
         messageViewInEditing: one('MessageView', { identifying: true, inverse: 'composerViewInEditing' }),
+        navigableListViewAsSuggestion: one('NavigableListView', { inverse: 'ownerAsComposerSuggestion',
+            compute() {
+                return this.hasSuggestions ? {} : clear();
+            },
+        }),
         /**
          * Determines the next function to execute after the current mention
          * RPC is done, if any.

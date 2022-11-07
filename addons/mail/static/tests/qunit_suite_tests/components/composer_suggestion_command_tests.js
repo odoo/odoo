@@ -78,7 +78,7 @@ QUnit.test('command suggestion active', async function (assert) {
     await openDiscuss();
     await insertText('.o_ComposerTextInputView_textarea', "/who");
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionView'),
+        document.querySelector('.o_DropdownItemView'),
         'active',
         "1st suggestion should be active initially"
     );
