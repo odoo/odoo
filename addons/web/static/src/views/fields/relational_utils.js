@@ -213,13 +213,17 @@ export class Many2XAutocomplete extends Component {
     }
 
     async loadOptionsSource(request) {
-        const records = await this.orm.call(this.props.resModel, "name_search", [], {
+        if (this.lastProm) {
+            this.lastProm.abort(false);
+        }
+        this.lastProm = this.orm.call(this.props.resModel, "name_search", [], {
             name: request,
             operator: "ilike",
             args: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
         });
+        const records = await this.lastProm;
 
         const options = records.map((result) => ({
             value: result[0],

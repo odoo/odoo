@@ -69,8 +69,11 @@ export function makeFakeRPCService(mockRPC) {
                         .then(resolve)
                         .catch(reject);
                 });
-                rpcProm.abort = () =>
-                    rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                rpcProm.abort = (rejectError = true) => {
+                    if (rejectError) {
+                        rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                    }
+                };
                 return rpcProm;
             };
         },
