@@ -76,6 +76,11 @@ Master Data:
     "demo": [
         "demo/demo_company.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_ec/static/src/js/**/*',
+        ],
+    },
     "installable": True,
     "auto_install": False,
     "application": False,

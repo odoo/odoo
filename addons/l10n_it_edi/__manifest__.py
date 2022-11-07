@@ -26,6 +26,11 @@ E-invoice implementation
     'demo': [
         'data/account_invoice_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_it_edi/static/src/js/**/*',
+        ],
+    },
     'post_init_hook': '_l10n_it_edi_post_init',
     'license': 'LGPL-3',
 }

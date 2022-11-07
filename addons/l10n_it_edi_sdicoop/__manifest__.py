@@ -21,6 +21,11 @@ and then fetched by this module.
         'views/l10n_it_view.xml',
         'views/res_config_settings_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_it_edi_sdicoop/static/src/js/**/*',
+        ],
+    },
     'post_init_hook': '_disable_pec_mail_post_init',
     'license': 'LGPL-3',
 }

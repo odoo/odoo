@@ -33,6 +33,7 @@
     'assets': {
         'web.assets_backend': [
             'l10n_eg_edi_eta/static/src/js/sign_invoice.js',
+            'l10n_eg_edi_eta/static/src/js/tours/*.js',
         ],
     },
     'external_dependencies': {

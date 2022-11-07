@@ -1,4 +1,4 @@
-odoo.define('account.tour', function(require) {
+odoo.define('account.tour', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -13,21 +13,21 @@ tour.register('account_tour', {
 }, [
     ...tour.stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
     {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
+        trigger: "a[data-method=action_open_base_onboarding_company]",
         content: _t("Start by checking your company's data."),
         position: "bottom",
     }, {
         trigger: "button[name=action_save_onboarding_company_step]",
-        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
+        extra_trigger: "a[data-method=action_open_base_onboarding_company]",
         content: _t("Looks good. Let's continue."),
         position: "bottom",
     }, {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
+        trigger: "a[data-method=action_open_base_document_layout]",
         content: _t("Customize your layout."),
         position: "bottom",
     }, {
         trigger: "button[name=document_layout_save]",
-        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
+        extra_trigger: "a[data-method=action_open_base_document_layout]",
         content: _t("Once everything is as you want it, validate."),
         position: "top",
     }, {
@@ -90,5 +90,4 @@ tour.register('account_tour', {
         position: "top"
     }
 ]);
-
 });
