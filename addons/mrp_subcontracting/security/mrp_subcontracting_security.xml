@@ -25,7 +25,7 @@
     <record model="ir.rule" id="consumption_warning_subcontractor_rule">
         <field name="name">MRP Consumption Warnings Subcontractor</field>
         <field name="model_id" ref="mrp.model_mrp_consumption_warning"/>
-        <field name="domain_force">[('mrp_production_ids', 'any', [('id', 'in', user.partner_id.commercial_partner_id.production_ids.ids)])]</field>
+        <field name="domain_force">[('mrp_production_ids', 'any', user.partner_id.commercial_partner_id.production_ids)]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
@@ -84,8 +84,8 @@
                 '|',
                     '|',
                         '|', 
-                            ('child_ids', 'any', [('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids)]),
-                            ('child_ids', 'any', [('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids)]),
+                            ('child_ids', 'any', user.partner_id.commercial_partner_id.picking_ids.location_id),
+                            ('child_ids', 'any', user.partner_id.commercial_partner_id.picking_ids.location_dest_id),
                         '|', 
                             ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
                             ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
