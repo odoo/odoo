@@ -30,6 +30,7 @@ from . import account_incoterms
 from . import digest
 from . import res_users
 from . import ir_actions_report
+from . import ir_http
 from . import res_currency
 from . import res_bank
 from . import mail_thread
