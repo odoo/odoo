@@ -98,7 +98,8 @@ class PortalAccount(CustomerPortal):
             return request.redirect('/my')
 
         if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
+            invoice = request.env['account.move'].browse(invoice_id)
+            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref=invoice._get_invoice_report_ref(), download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
         return request.render("account.portal_invoice_page", values)
