@@ -1,16 +1,21 @@
 {
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2019
+    "sourceType": "module"
   },
   "env": {
     "browser": true,
-    "es2017": true,
+    "es2022": true,
     "qunit": true
   },
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error", {
+      "tabWidth": 4,
+      "semi": true,
+      "singleQuote": false,
+      "printWidth": 100,
+      "endOfLine": "auto"
+    }],
     "no-undef": "error",
     "no-restricted-globals": ["error", "event", "self"],
     "no-const-assign": ["error"],
@@ -46,6 +51,18 @@
     "py": "readonly",
     "FullCalendar": "readonly",
     "ClipboardJS": "readonly",
-    "globalThis": "readonly"
+    "globalThis": "readonly",
+    "Modal": "readonly",
+    "Dropdown": "readonly",
+    "ScrollSpy": "readonly",
+    "Tooltip": "readonly",
+    "Collapse": "readonly",
+    "Alert": "readonly",
+    "module": "readonly",
+    "chai": "readonly",
+    "describe": "readonly",
+    "it": "readonly",
+    "mocha": "readonly",
+    "DOMPurify": "readonly"
   }
 }

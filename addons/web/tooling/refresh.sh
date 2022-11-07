@@ -10,9 +10,8 @@ fi
 refreshInDir () {
     cd $1
     cp "$tooling/_eslintignore" .eslintignore
-    cp "$tooling/_prettierignore" .prettierignore
     cp "$tooling/_eslintrc.json" .eslintrc.json
-    cp "$tooling/_prettierrc.json" .prettierrc.json
+    cp "$tooling/_jsconfig.json" jsconfig.json
     cp "$tooling/_package.json" package.json
     cd - &> /dev/null
 }
@@ -33,7 +32,7 @@ fi
 
 echo ""
 echo "The JS tooling config files have been refreshed"
-echo "Make sure to refresh the eslint service and configure your IDE so it uses the config files"
+echo "Make sure to refresh the eslint and typescript service and configure your IDE so it uses the config files"
 echo 'For VSCode, look inside your .vscode/settings.json file ("editor.defaultFormatter": "dbaeumer.vscode-eslint")'
 echo "If you still have issues, try doing a full reload instead which will reinstall the node modules"
 echo ""
