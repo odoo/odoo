@@ -197,6 +197,7 @@ var SnippetEditor = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
+        this.willDestroyEditors = true;
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
         const proms = _.map(this.styles, option => {
             return option.cleanForSave();
@@ -925,6 +926,10 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: function (ev) {
+        if (this.willDestroyEditors) {
+            // Do not update the option visibilities if we are destroying them.
+            return;
+        }
         ev.data.show = this._toggleVisibilityStatus(ev.data.show);
     },
     /**
@@ -1290,6 +1295,7 @@ var SnippetsMenu = Widget.extend({
         // may be the moment where the public widgets need to be destroyed).
         this.trigger_up('ready_to_clean_for_save');
 
+        this.willDestroyEditors = true;
         // Then destroy all snippet editors, making them call their own
         // "clean for save" methods (and options ones).
         await this._destroyEditors();
@@ -2840,6 +2846,10 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: async function (ev) {
+        if (this.willDestroyEditors) {
+            // Do not update the option visibilities if we are destroying them.
+            return;
+        }
         if (!ev.data.show) {
             await this._activateSnippet(false);
         }
