@@ -1133,6 +1133,7 @@ class TranslationModuleReader:
             translations = code_translations.get_python_translations(module, self._lang)
         else:
             translations = code_translations.get_web_translations(module, self._lang)
+            translations = {tran['id']: tran['string'] for tran in translations['messages']}
         try:
             for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords, options=options):
                 # Babel 0.9.6 yields lineno, message, comments
