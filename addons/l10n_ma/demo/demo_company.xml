@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="partner_demo_company_ma" model="res.partner">
-        <field name="name">MA Company CoA</field>
+        <field name="name">MA Company</field>
         <field name="vat">MA246697724</field>
         <field name="street">6 Rue Jbel Moussa</field>
         <field name="city">Rabat</field>
@@ -14,7 +14,7 @@
     </record>
 
     <record id="demo_company_ma" model="res.company">
-        <field name="name">MA Company CoA</field>
+        <field name="name">MA Company</field>
         <field name="partner_id" ref="partner_demo_company_ma"/>
     </record>
 
@@ -28,7 +28,7 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_ma.l10n_kzc_temp_chart')]"/>
+        <value eval="[ref('l10n_ma.l10nma_chart_template')]"/>
         <value model="res.company" eval="obj().env.ref('l10n_ma.demo_company_ma')"/>
     </function>
 </odoo>

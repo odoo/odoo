@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -15,7 +14,7 @@ This is the base module to manage the accounting chart for Morocco.
     'data': [
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
-        'data/account_cgnc_morocco.xml',
+        'data/account_chart_template_post_data.xml',
         'data/account_tax_group_data.xml',
         'data/account_tax_report_data.xml',
         'data/account_tax_data.xml',
