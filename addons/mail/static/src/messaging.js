@@ -391,7 +391,7 @@ export class Messaging {
     async postMessage(threadId, body, isNote = false) {
         let tmpMsg;
         const thread = this.threads[threadId];
-        const subtype = isNote ? "mail.mt_note" : "mail.mt_comment"
+        const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const params = {
             post_data: {
                 body,
@@ -407,7 +407,7 @@ export class Messaging {
             params.thread_id = thread.resId;
             params.thread_model = thread.resModel;
             // need to get suggested recipients here, if !isNote...
-            params.post_data.partner_ids = []; 
+            params.post_data.partner_ids = [];
         } else {
             const tmpId = `pending${this.nextId++}`;
             const tmpData = { id: tmpId, author: { id: this.user.partnerId } };

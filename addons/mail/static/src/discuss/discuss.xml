@@ -5,7 +5,7 @@
     <div class="d-flex h-100 flex-grow-1">
         <t t-set="thread" t-value="currentThread()"/>
         <Sidebar />
-        <div class="o-mail-discuss-content d-flex flex-column h-100 w-100" t-att-class="{'o-mail-with-composer':thread.type !== 'mailbox'}">
+        <div class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view" t-att-class="{'o-mail-with-composer':thread.type !== 'mailbox'}">
             <!-- top bar -->
             <div class="px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
                 <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>

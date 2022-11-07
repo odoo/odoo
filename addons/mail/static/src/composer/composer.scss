@@ -1,28 +1,10 @@
 $o-mail-message-sidebar-width: 48px !default;
 
 .o-mail-composer {
-    // Could be replaced by .d-grid after the migration to BS5.
-    display: grid;
-    grid-template-areas:
-        "sidebar-header core-header"
-        "sidebar-main core-main"
-        "sidebar-footer core-footer";
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr auto;
-
-    &.o-has-current-partner-avatar {
-        grid-template-columns: $o-mail-message-sidebar-width 1fr;
+    .o-mail-composer-sidebar {
+        width: 48px;
+        justify-self: center;
     }
-}
-
-.o-mail-composer-main {
-    grid-area: core-main;
-    min-width: 0;
-}
-
-.o-mail-composer-sidebar {
-    grid-area: sidebar-main;
-    justify-self: center;
 }
 
 .o-mail-composer-textarea {

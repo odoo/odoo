@@ -4,7 +4,7 @@
 <t t-name="mail.thread" owl="1">
     <t t-set="thread" t-value="messaging.threads[props.id]"/>
     <t t-set="isEmpty" t-value="thread.messages.length === 0"/>
-    <div class="o-mail-thread overflow-auto pb-4 flex-grow-1" t-ref="messages">
+    <div class="o-mail-thread overflow-auto pb-4 flex-grow-1 bg-view" t-ref="messages">
         <t t-if="!isEmpty">
             <div class="d-flex flex-column" t-att-class="{'justify-content-end': !env.inChatter}" style="min-height:100%">
                 <t t-set="currentDay" t-value="0"/>

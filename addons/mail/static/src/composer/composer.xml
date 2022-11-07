@@ -4,15 +4,17 @@
 <t t-name="mail.composer" owl="1">
     <t t-set="thread" t-value="messaging.threads[props.threadId]" />
     <t t-set="compact" t-value="props.mode === 'compact'"/>
-    <div class="o-mail-composer d-grid flex-shrink-0"
-            t-att-class="{'o-has-current-partner-avatar mb-3 me-3 ps-1 py-1':!compact}">
-        <div class="o-mail-composer-sidebar" t-if="!compact">
+    <t t-set="normal" t-value="props.mode === 'normal'"/>
+    <t t-set="extended" t-value="props.mode === 'extended'"/>
+    <div class="o-mail-composer d-flex flex-shrink-0" 
+            t-att-class="{'px-3 py-2': extended, 'p-3': normal}">
+        <div class="o-mail-composer-sidebar flex-shrink-0" t-if="!compact">
             <img class="mt-1 rounded-circle" style="width:36px;height:36px;"
                 t-att-src="messaging.user.avatarUrl" alt="Avatar of user"/>
         </div>
-        <div class="o-mail-composer-main d-flex flex-nowrap align-items-start flex-grow-1">
-            <div class="position-relative flex-grow-1 align-self-stretch border border-end-0"
-                    t-att-class="{'rounder-start-3 ': !compact}">
+        <div class="o-mail-composer-main d-flex flex-nowrap flex-grow-1" t-att-class="{'flex-column me-2': extended}">
+            <div class="position-relative flex-grow-1 align-self-stretch border-top"
+                    t-att-class="{'rounder-start-3 border': !compact, 'border-end-0': !extended, 'border-bottom-0': extended}">
                 <textarea class="o-mail-composer-textarea form-control px-3 border-0 shadow-none overflow-auto rounded-0 rounded-start-3"
                     t-ref="textarea"
                     style="height:40px;"
@@ -20,20 +22,17 @@
                     t-model="state.value"
                     t-att-placeholder="props.placeholder or ('Message #' + thread.name)" />
             </div>
-            <div class="d-flex flex-shrink-0 align-self-stretch">
-                <div class="d-flex py-1 border-top border-bottom">
-                    <div class="d-flex align-items-center px-2" >
-                        <button class="btn btn-light border-0 rounded-pill" t-ref="emoji-picker">
-                            <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
-                        </button>
-                        <button class="btn btn-light fa fa-paperclip border-0 rounded-pill" title="Add attachment" aria-label="Add attachment" type="button"/>
-                    </div>
+            <div class="d-flex py-1 border-top" t-att-class="{'border-bottom': normal, 'border': extended }">
+                <div class="d-flex align-items-center px-2" >
+                    <button class="btn border-0 rounded-pill" t-ref="emoji-picker">
+                        <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+                    </button>
+                    <button class="btn fa fa-paperclip border-0 rounded-pill" title="Add attachment" aria-label="Add attachment" type="button"/>
                 </div>
-                <t t-if="!compact">
-                    <t t-call="mail.Composer.actionButtons"/>
-                </t>
             </div>
-
+            <t t-if="!compact">
+                <t t-call="mail.Composer.actionButtons"/>
+            </t>
         </div>
 
     </div>
@@ -41,7 +40,8 @@
 
     <t t-name="mail.Composer.actionButtons" owl="1">
         <div class="d-flex">
-            <button class="btn btn-primary o-last border-start-0 rounded-0 rounded-end-3"
+            <button class="btn btn-primary o-last border-start-0"
+                t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended}"
                 t-on-click="sendMessage"           
                 type="button"
                 t-att-disabled="!state.value"

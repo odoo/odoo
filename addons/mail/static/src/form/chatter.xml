@@ -32,11 +32,12 @@
         </div>
         <t t-if="state.composing">
             <t t-if="state.composing === 'message'">
-                <span class="px-2 pb-1 pt-3" style="margin-left:48px;"><em class="text-muted">To followers of:</em> <b class="px-1">"<t t-esc="props.displayName"/>"</b></span>
+                <small class="px-3 pb-1 pt-2" style="margin-left:48px;"><em class="text-muted">To followers of:</em> <b class="px-1">"<t t-esc="props.displayName"/>"</b></small>
             </t>
             <t t-set="placeholder" t-value="state.composing === 'message' ? 'Send a message to followers...' : 'Log an internal note...'"/>
             <t t-set="type" t-value="state.composing === 'message' ? 'message' : 'note'"/>
-            <Composer threadId="thread.id" autofocus="true" onPostCallback.bind="toggleComposer" placeholder="placeholder" type="type"/> 
+            <Composer threadId="thread.id" autofocus="true" mode="'extended'" onPostCallback.bind="toggleComposer" placeholder="placeholder" type="type"/> 
+            <hr/>
         </t>
         <div class="overflow-auto">
             <t t-if="state.activities.length">
