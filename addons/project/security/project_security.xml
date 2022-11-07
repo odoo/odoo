@@ -114,5 +114,12 @@
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
+    <record id="access_project_portal_share_rule" model="ir.rule">
+        <field name="name">Project/Task: Allow to share tasks</field>
+        <field name="model_id" ref="portal.model_portal_share"/>
+        <field name="domain_force">[('res_model', '=', 'project.task')]</field>
+        <field name="groups" eval="[(4, ref('group_project_user'))]"/>
+    </record>
+
 </data>
 </odoo>
