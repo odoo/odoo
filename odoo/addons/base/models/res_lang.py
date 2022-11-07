@@ -116,12 +116,6 @@ class Lang(models.Model):
         if not self.search_count([]):
             _logger.error("No language is active.")
 
-    # TODO remove me after v14
-    def load_lang(self, lang, lang_name=None):
-        _logger.warning("Call to deprecated method load_lang, use _create_lang or _activate_lang instead")
-        language = self._activate_lang(lang) or self._create_lang(lang, lang_name)
-        return language.id
-
     def _activate_lang(self, code):
         """ Activate languages
         :param code: code of the language to activate
