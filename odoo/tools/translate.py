@@ -714,7 +714,7 @@ class CSVFileWriter:
 
 
     def write_rows(self, rows):
-        for module, type, name, res_id, src, trad, comments in rows:
+        for module, type, name, res_id, src, trad, comments, flags in rows:
             comments = '\n'.join(comments)
             self.writer.writerow((module, type, name, res_id, src, trad, comments))
 
@@ -731,15 +731,14 @@ class PoFileWriter:
         # we now group the translations by source. That means one translation per source.
         grouped_rows = {}
         modules = set([])
-        for module, type, name, res_id, src, trad, comments in rows:
+        for module, type, name, res_id, src, trad, comments, flags in rows:
             row = grouped_rows.setdefault(src, {})
             row.setdefault('modules', set()).add(module)
             if not row.get('translation') and trad != src:
                 row['translation'] = trad
             row.setdefault('tnrs', []).append((type, name, res_id))
-            if type == 'code' and WEB_TRANSLATION_COMMENT not in comments:
-                row.setdefault('flags', []).append('python-format')
             row.setdefault('comments', set()).update(comments)
+            row.setdefault('flags', set()).update(flags)
             modules.add(module)
 
         for src, row in sorted(grouped_rows.items()):
@@ -985,10 +984,10 @@ class TranslationModuleReader:
 
     def __iter__(self):
         """ Export ir.translation values for all retrieved records """
-        for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
-            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
+        for module, source, name, res_id, ttype, comments, flags, _record_id, value in self._to_translate:
+            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments, flags)
 
-    def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
+    def _push_translation(self, module, ttype, name, res_id, source, comments=None, flags=None, record_id=None, value=None):
         """ Insert a translation that will be used in the file generation
         In po file will create an entry
         #: <ttype>:<name>:<res_id>
@@ -1003,7 +1002,7 @@ class TranslationModuleReader:
         sanitized_term = re.sub(r'\W+', '', sanitized_term)
         if not sanitized_term or len(sanitized_term) <= 1:
             return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), tuple(flags or ()), record_id, value))
 
     def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
@@ -1123,7 +1122,7 @@ class TranslationModuleReader:
         return None, None, None, None
 
     def _babel_extract_terms(self, fname, path, root, extract_method="python", trans_type='code',
-                               extra_comments=None, extract_keywords={'_': None}):
+                               extra_comments=None, extract_keywords={'_': None}, flags=None):
 
         module, fabsolutepath, _, display_path = self._verified_module_filepaths(fname, path, root)
         if not module:
@@ -1144,7 +1143,7 @@ class TranslationModuleReader:
                 lineno, message, comments = extracted[:3]
                 value = translations.get(message, '')
                 self._push_translation(module, trans_type, display_path, lineno,
-                                 encode(message), comments + extra_comments, value=value)
+                                 encode(message), comments=comments + extra_comments, flags=flags, value=value)
         except Exception:
             _logger.exception("Failed to extract terms from %s", fabsolutepath)
         finally:
@@ -1173,21 +1172,22 @@ class TranslationModuleReader:
             for root, dummy, files in os.walk(path, followlinks=True):
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root,
-                                              extract_keywords={'_': None, '_lt': None})
+                                              extract_keywords={'_': None, '_lt': None},
+                                              flags=('python-format',))
                 if fnmatch.fnmatch(root, '*/static/src*'):
                     # Javascript source files
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
-                                                  extra_comments=[WEB_TRANSLATION_COMMENT],
-                                                  extract_keywords={'_t': None, '_lt': None})
+                                                  extract_keywords={'_t': None, '_lt': None},
+                                                  flags=('javascript-format',))
                     # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
-                                                  extra_comments=[WEB_TRANSLATION_COMMENT])
+                                                  flags=('javascript-format',))
                 if fnmatch.fnmatch(root, '*/data/*'):
                     for fname in fnmatch.filter(files, '*_dashboard.json'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:extract_spreadsheet_terms',
-                                                  extra_comments=[WEB_TRANSLATION_COMMENT])
+                                                  flags=('javascript-format',))
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break
@@ -1453,7 +1453,7 @@ class CodeTranslations:
         reader = TranslationFileReader(fileobj, fileformat=fileformat)
         for row in reader:
             if row.get('value') and row.get('src') and row.get('type') == 'code'\
-                    and WEB_TRANSLATION_COMMENT in row['comments']:
+                    and 'javascript-format' in row['flags']:
                 webclient_translations[row['src']] = row['value']
         return webclient_translations
 

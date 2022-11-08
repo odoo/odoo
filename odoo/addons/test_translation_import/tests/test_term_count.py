@@ -275,6 +275,13 @@ class TestTranslationFlow(common.TransactionCase):
                 for tran in new_web['messages']
             ), 'Python only translations should not be stored as webclient translations'
         )
+        self.assertIn('slot', new_python, 'translations for both python and webclient should be stored as python translations')
+        self.assertTrue(
+            any(
+                tran['id'] == 'slot'
+                for tran in new_web['messages']
+            ), 'translations for both python and webclient should be stored as webclient translations'
+        )
 
         # test model and model terms translations
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
@@ -349,7 +356,7 @@ class TestTranslationFlow(common.TransactionCase):
         trans_static = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
         for line in po_reader:
-            module, ttype, name, res_id, source, value, comments = line
+            module, ttype, name, res_id, source, value, comments, flags = line
             if name == "addons/test_translation_import/static/src/xml/js_templates.xml":
                 trans_static.append(source)
 
@@ -363,7 +370,7 @@ class TestTranslationFlow(common.TransactionCase):
         terms = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
         for line in po_reader:
-            _module, _ttype, name, _res_id, source, _value, _comments = line
+            _module, _ttype, name, _res_id, source, _value, _comments, _flags = line
             if name == "addons/test_translation_import/data/files/test_spreadsheet_dashboard.json":
                 terms.append(source)
         self.assertEqual(set(terms), {
