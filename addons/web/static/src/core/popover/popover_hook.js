@@ -27,7 +27,7 @@ export function usePopover() {
          * @param {function()}              [options.onClose]
          * @param {function()}              [options.preventClose]
          * @param {string}                  [options.popoverClass]
-         * @param {string}                  [options.position]
+         * @param {("top"|"bottom"|"left"|"right")}   [options.position]
          * @returns {function()}
          */
         add(target, Component, props, options = {}) {
