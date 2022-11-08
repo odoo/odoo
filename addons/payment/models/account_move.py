@@ -28,16 +28,12 @@ class AccountMove(models.Model):
                 lambda tx: tx.state == 'authorized'
             )
 
-    @api.depends('transaction_ids')
+    @api.depends('amount_total', 'amount_residual')
     def _compute_amount_paid(self):
-        """ Sum all the transaction amount for which state is in 'authorized' or 'done'
+        """ Compute the amount already paid for this invoice based on the total amount and the residual amount.
         """
         for invoice in self:
-            invoice.amount_paid = sum(
-                invoice.transaction_ids.filtered(
-                    lambda tx: tx.state in ('authorized', 'done')
-                ).mapped('amount')
-            )
+            invoice.amount_paid = invoice.amount_total - invoice.amount_residual
 
     def get_portal_last_transaction(self):
         self.ensure_one()
