@@ -117,6 +117,9 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_model_data': [
             'mail/static/src/composer/emoji_data.js',
         ],
+        'web._assets_primary_variables': [
+            'mail/static/src/primary_variables.scss',
+        ],
         'web.assets_backend': [
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/**/*',
