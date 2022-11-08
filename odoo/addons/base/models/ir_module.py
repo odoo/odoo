@@ -689,10 +689,8 @@ class Module(models.Model):
                 ('name', '!=', 'studio_customization'),
                 ('id', 'not in', self.ids),
             ]))
-        i = 0
-        while i < len(todo):
+        for i in range(len(todo)):
             module = todo[i]
-            i += 1
             if module.state not in ('installed', 'to upgrade'):
                 raise UserError(_("Can not upgrade module '%s'. It is not installed.") % (module.name,))
             if self.get_module_info(module.name).get("installable", True):
