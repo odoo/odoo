@@ -49,18 +49,10 @@
     'application': True,
     'post_init_hook': '_install_hr_localization',
     'assets': {
-        'mail.assets_messaging': [
-            'hr/static/src/models/*.js',
-        ],
         'web.assets_backend': [
-            'hr/static/src/views/**/*.js',
-            'hr/static/src/components/**/*',
-            'hr/static/src/user_menu/*.js',
-            'hr/static/src/scss/hr.scss',
-            'hr/static/src/js/m2x_avatar_employee.js',
-            'hr/static/src/js/standalone_m2o_avatar_employee.js',
-            'hr/static/src/js/work_permit_upload.js',
-            'hr/static/src/xml/*.xml',
+            'hr/static/src/**/*.js',
+            'hr/static/src/**/*.scss',
+            'hr/static/src/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/helpers/*.js',
