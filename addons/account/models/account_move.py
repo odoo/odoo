@@ -335,7 +335,7 @@ class AccountMove(models.Model):
     )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
-        related='company_id.qr_code',
+        compute='_compute_display_qr_code',
     )
     qr_code_method = fields.Selection(
         string="Payment QR-code", copy=False,
@@ -1466,6 +1466,14 @@ class AccountMove(models.Model):
             self.env['account.move'].browse(res['move_id']): self.env['account.move'].browse(res['duplicate_ids'])
             for res in self.env.cr.dictfetchall()
         }
+
+    @api.depends('company_id')
+    def _compute_display_qr_code(self):
+        for record in self:
+            record.display_qr_code = (
+                record.move_type in ('out_invoice', 'out_receipt')
+                and record.company_id.qr_code
+            )
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
@@ -3788,8 +3796,8 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
-        if not self.is_invoice():
-            raise UserError(_("QR-codes can only be generated for invoice entries."))
+        if not self.display_qr_code:
+            return None
 
         qr_code_method = self.qr_code_method
         if qr_code_method:
