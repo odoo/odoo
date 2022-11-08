@@ -35,7 +35,7 @@
         <template id="external_layout_din5008">
             <div>
                 <div t-attf-class="header din_page o_company_#{company.id}_layout">
-                        <table class="company_header" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
+                        <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
                             <tr>
                                 <td><h3 class="mt0" t-field="company.report_header"/></td>
                                 <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)"/></td>
@@ -44,7 +44,7 @@
                 </div>
 
                 <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-                    <table>
+                    <table class="table-borderless">
                         <tr>
                             <td>
                                 <div class="address">
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                     <div class="company_details">
-                        <table>
+                        <table class="table-borderless">
                             <tr>
                                 <td>
                                     <ul class="list-inline">
