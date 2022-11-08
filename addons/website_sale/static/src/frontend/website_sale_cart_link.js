@@ -96,10 +96,12 @@ export const WebsiteSaleCartLink = Widget.extend({
     _onMouseLeave: function (ev) {
         this.hovered = false;
         setTimeout(() => {
-            if (this.popover.tip.matches(":hover") || this.el.matches(":hover")) {
+            if ((this.popover.tip && this.popover.tip.matches(":hover")) || this.el.matches(":hover")) {
                 return;
             }
-            this.popover.tip.removeEventListener("mouseleave", this.tipLeaveEventHandler);
+            if (this.popover.tip) {
+                this.popover.tip.removeEventListener("mouseleave", this.tipLeaveEventHandler);
+            }
             this.popover.hide();
         }, 1000);
     },

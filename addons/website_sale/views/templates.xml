@@ -217,9 +217,8 @@
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
             <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
-                <a t-if="product._website_show_quick_add()"
+                <a t-if="product._website_show_quick_add()" t-att-data-product-id="product_variant_id" t-att-data-product-template-id="product.id"
                    href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart"/>
                 </a>

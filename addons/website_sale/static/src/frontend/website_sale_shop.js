@@ -1,12 +1,18 @@
 /** @odoo-module **/
 
 import { registry, Widget } from "web.public.widget";
+import { WebsiteSaleCartButtonParent } from "./website_sale_cart_button";
 
 /**
  * This widget is responsible for any logic necessary on the /shop page.
+ *
+ * NOTE: extending twice as extending once with multiple arguments does not yield the correct result.
  */
-export const WebsiteSaleShop = Widget.extend({
+export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend({
     selector: "#wrap.o_wsale_products_page",
+    // We do this to avoid registering a widget per button.
+    addToCartButtonSelector: ".o_wsale_products_grid_table_wrapper",
+    cartButtonAdditionalSelector: ".o_wsale_product_btn .btn",
     events: {
         // Offcanvas
         "show.bs.offcanvas #o_wsale_offcanvas": "toggleFilters",
@@ -75,6 +81,21 @@ export const WebsiteSaleShop = Widget.extend({
     onClickLink(ev) {
         this._obscureProductGrid();
         window.location.href = ev.currentTarget.dataset.linkHref;
+    },
+
+    // Add to cart
+
+    /**
+     * The button element actually contains the information we need
+     *
+     * @override
+     */
+    getProductInfo(ev) {
+        const target = ev.data.currentTarget;
+        Object.assign(ev.data.productInfo, {
+            product_id: target.dataset.productId,
+            product_template_id: target.dataset.productTemplateId,
+        });
     },
 });
 
