@@ -91,8 +91,10 @@ options.registry.SnippetPopup = options.Class.extend({
      * @see this.selectClass for parameters
      */
     moveBlock: function (previewMode, widgetValue, params) {
-        const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
-        this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
+        const containerEl = this.$target[0].ownerDocument.querySelector(widgetValue === 'moveToFooter' ? 'footer' : 'main');
+        const whereEl = $(containerEl).find('.oe_structure:o_editable')[0];
+        const popupEl = this.$target[0].closest('.s_popup');
+        whereEl.prepend(popupEl);
     },
     /**
      * @see this.selectClass for parameters
