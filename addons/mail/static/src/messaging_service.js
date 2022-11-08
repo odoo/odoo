@@ -11,10 +11,10 @@ export const messagingService = {
         // compute initial discuss thread
         let threadId = "inbox";
         const activeId = router.current.hash.active_id;
-        if (activeId && activeId.startsWith("mail.box_")) {
+        if (typeof activeId === 'string' && activeId.startsWith("mail.box_")) {
             threadId = activeId.slice(9);
         }
-        if (activeId && activeId.startsWith("mail.channel_")) {
+        if (typeof activeId === 'string' && activeId.startsWith("mail.channel_")) {
             threadId = parseInt(activeId.slice(13), 10);
         }
 
