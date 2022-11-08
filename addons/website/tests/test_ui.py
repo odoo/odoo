@@ -398,3 +398,6 @@ class TestUi(odoo.tests.HttpCase):
             snippet_key='s_text_block',
             template_key='website.snippets')
         self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
+
+    def test_25_website_edit_discard(self):
+        self.start_tour('/web', 'homepage_edit_discard', login='admin')
