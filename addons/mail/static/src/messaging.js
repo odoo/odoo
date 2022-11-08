@@ -133,7 +133,6 @@ export class Messaging {
             name,
             type,
             counter: 0,
-            messages: [],
             isUnread: false,
             icon: false,
             description: false,
