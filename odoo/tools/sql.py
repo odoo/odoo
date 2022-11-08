@@ -128,7 +128,7 @@ def convert_column(cr, tablename, columnname, columntype):
 
 def convert_column_translatable(cr, tablename, columnname, columntype):
     """ Convert the column from/to a 'jsonb' translated field column. """
-    drop_index(cr, f"{tablename}_{columnname}_index", tablename)
+    drop_index(cr, make_index_name(tablename, columnname), tablename)
     if columntype == "jsonb":
         using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
     else:
