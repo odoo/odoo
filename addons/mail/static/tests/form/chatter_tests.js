@@ -23,7 +23,9 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("simple chatter on a record", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (route.startsWith('/mail')) {
+                assert.step(route);
+            }
             return server.rpc(route, params);
         });
         await mount(Chatter, target, {
@@ -39,7 +41,9 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("simple chatter, with no record", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (route.startsWith('/mail')) {
+                assert.step(route);
+            }
             return server.rpc(route, params);
         });
         await mount(Chatter, target, {
@@ -164,7 +168,7 @@ QUnit.module("mail", (hooks) => {
             props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" },
         });
         await click($(target).find("button:contains(Send message)")[0]);
-        const msg = $(target).find("span:contains(Gnargl)")[0];
+        const msg = $(target).find("small:contains(Gnargl)")[0];
         assert.ok(msg);
     });
 
@@ -172,7 +176,9 @@ QUnit.module("mail", (hooks) => {
         assert.expect(10);
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (route.startsWith('/mail')) {
+                assert.step(route);
+            }
             if (route === "/mail/message/post") {
                 const expected = {
                     post_data: {
@@ -216,7 +222,9 @@ QUnit.module("mail", (hooks) => {
         assert.expect(10);
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (route.startsWith('/mail')) {
+                assert.step(route);
+            }
             if (route === "/mail/message/post") {
                 const expected = {
                     post_data: {

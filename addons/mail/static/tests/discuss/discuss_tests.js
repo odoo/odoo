@@ -21,7 +21,9 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("sanity check", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (route.startsWith('/mail')) {
+                assert.step(route);
+            }
             return server.rpc(route, params);
         });
 
@@ -63,7 +65,9 @@ QUnit.module("mail", (hooks) => {
         const server = new MessagingServer();
         server.addChannel(1, "general", "General announcements...");
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (route.startsWith('/mail')) {
+                assert.step(route);
+            }
             return server.rpc(route, params);
         });
         env.services["mail.messaging"].setDiscussThread(1);
@@ -83,7 +87,12 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("can create a new channel", async (assert) => {
         const server = new MessagingServer();
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (
+                route.startsWith('/mail') ||
+                ["/web/dataset/call_kw/mail.channel/search_read", "/web/dataset/call_kw/mail.channel/channel_create"].includes(route)
+            ) {
+                assert.step(route);
+            }
             return server.rpc(route, params);
         });
         await mount(Discuss, target, { env });
@@ -106,7 +115,12 @@ QUnit.module("mail", (hooks) => {
         const server = new MessagingServer();
         server.addPartner(43, "abc");
         const env = makeMessagingEnv((route, params) => {
-            assert.step(route);
+            if (
+                route.startsWith('/mail') ||
+                ["/web/dataset/call_kw/res.partner/im_search", "/web/dataset/call_kw/mail.channel/channel_get"].includes(route)
+            ) {
+                assert.step(route);
+            }
             if (route === "/web/dataset/call_kw/mail.channel/channel_get") {
                 assert.equal(params.kwargs.partners_to[0], 43);
             }
