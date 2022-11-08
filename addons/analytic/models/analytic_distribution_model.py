@@ -42,8 +42,8 @@ class AccountAnalyticDistributionModel(models.Model):
              WHERE account.company_id IS NOT NULL 
                AND (model.company_id IS NULL 
                 OR model.company_id != account.company_id)
-          GROUP BY model.id
         """
+        self.flush_model(['company_id', 'analytic_distribution'])
         self.env.cr.execute(query)
         if self.env.cr.dictfetchone():
             raise UserError(_('You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company'))
