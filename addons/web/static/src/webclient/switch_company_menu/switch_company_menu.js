@@ -19,15 +19,15 @@ export class SwitchCompanyMenu extends Component {
         this.state.companiesToToggle = symmetricalDifference(this.state.companiesToToggle, [
             companyId,
         ]);
-        browser.clearTimeout(this.toggleTimer);
-        this.toggleTimer = browser.setTimeout(() => {
-            this.companyService.setCompanies("toggle", ...this.state.companiesToToggle);
-        }, this.constructor.toggleDelay);
+        this.companyService.setCompanies("toggle", ...this.state.companiesToToggle);
     }
 
     logIntoCompany(companyId) {
-        browser.clearTimeout(this.toggleTimer);
         this.companyService.setCompanies("loginto", companyId);
+    }
+
+    setCompanies(companyIds) {
+        this.companyService.setCompanies("set", ...companyIds);
     }
 
     get selectedCompanies() {
@@ -38,7 +38,6 @@ export class SwitchCompanyMenu extends Component {
     }
 }
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
-SwitchCompanyMenu.toggleDelay = 1000;
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,

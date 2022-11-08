@@ -60,6 +60,9 @@ export const companyService = {
                 let nextCompanyIds;
                 if (mode === "toggle") {
                     nextCompanyIds = symmetricalDifference(allowedCompanyIds, companyIds);
+                } else if (mode === "set") {
+                    nextCompanyIds = companyIds
+                    nextCompanyIds = nextCompanyIds.length ? nextCompanyIds : [allowedCompanyIds[0]];
                 } else if (mode === "loginto") {
                     const companyId = companyIds[0];
                     if (allowedCompanyIds.length === 1) {
@@ -73,12 +76,12 @@ export const companyService = {
                         ];
                     }
                 }
-                nextCompanyIds = nextCompanyIds.length ? nextCompanyIds : [companyIds[0]];
-
-                // apply them
-                router.pushState({ cids: nextCompanyIds }, { lock: true });
-                cookie.setCookie("cids", nextCompanyIds);
-                browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
+                if (mode !== "toggle") {
+                     // apply them
+                    router.pushState({ cids: nextCompanyIds }, { lock: true });
+                    cookie.setCookie("cids", nextCompanyIds);
+                    browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
+                }
             },
         };
     },

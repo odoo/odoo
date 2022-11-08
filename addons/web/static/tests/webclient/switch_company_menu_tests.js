@@ -14,8 +14,7 @@ import { session } from "@web/session";
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
-async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
-    patchWithCleanup(SwitchCompanyMenu, { toggleDelay });
+async function createSwitchCompanyMenu(routerParams = {}) {
     if (routerParams.onPushState) {
         const pushState = browser.history.pushState;
         patchWithCleanup(browser, {
@@ -75,17 +74,15 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         );
         assert.strictEqual(
             scMenu.el.querySelector(".dropdown-menu").textContent,
-            "HermitHerman'sHeroes TM"
+            "HermitHerman'sHeroes TMApply"
         );
     });
 
     QUnit.test("companies can be toggled: toggle a second company", async (assert) => {
         assert.expect(10);
 
-        const prom = makeDeferred();
         function onPushState(url) {
             assert.step(url.split("#")[1]);
-            prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
@@ -107,50 +104,11 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ] Heroes TM
          */
         await click(scMenu.el.querySelectorAll(".toggle_company")[1]);
+        await click(scMenu.el.querySelector(".set_company"));
         assert.containsOnce(scMenu.el, ".dropdown-menu", "dropdown is still opened");
         assert.containsN(scMenu.el, "[data-company-id] .fa-check-square", 2);
         assert.containsN(scMenu.el, "[data-company-id] .fa-square-o", 1);
-        await prom;
         assert.verifySteps(["cids=3%2C2"]);
-    });
-
-    QUnit.test("can toggle multiple companies at once", async (assert) => {
-        assert.expect(11);
-
-        const prom = makeDeferred();
-        function onPushState(url) {
-            assert.step(url.split("#")[1]);
-            prom.resolve();
-        }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
-
-        /**
-         *   [x] **Hermit**
-         *   [ ] Herman's
-         *   [ ] Heroes TM
-         */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
-        assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
-        await click(scMenu.el.querySelector(".dropdown-toggle"));
-        assert.containsN(scMenu.el, "[data-company-id]", 3);
-        assert.containsN(scMenu.el, "[data-company-id] .fa-check-square", 1);
-        assert.containsN(scMenu.el, "[data-company-id] .fa-square-o", 2);
-
-        /**
-         *   [ ] **Hermit**  -> toggle all
-         *   [x] Herman's      -> toggle all
-         *   [x] Heroes TM      -> toggle all
-         */
-        await click(scMenu.el.querySelectorAll(".toggle_company")[0]);
-        await click(scMenu.el.querySelectorAll(".toggle_company")[1]);
-        await click(scMenu.el.querySelectorAll(".toggle_company")[2]);
-        assert.containsOnce(scMenu.el, ".dropdown-menu", "dropdown is still opened");
-        assert.containsN(scMenu.el, "[data-company-id] .fa-check-square", 2);
-        assert.containsN(scMenu.el, "[data-company-id] .fa-square-o", 1);
-
-        assert.verifySteps([]);
-        await prom; // await toggle promise
-        assert.verifySteps(["cids=2%2C1"]);
     });
 
     QUnit.test("single company selected: toggling it off will keep it", async (assert) => {
@@ -182,6 +140,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ] Heroes TM
          */
         await click(scMenu.el.querySelectorAll(".toggle_company")[0]);
+        await click(scMenu.el.querySelector(".set_company"));
         assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 3 });
         assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
@@ -282,13 +241,13 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.verifySteps(["cids=1%2C2"]);
     });
 
-    QUnit.test("companies can be logged in even if some toggled within delay", async (assert) => {
+    QUnit.test("companies can be logged in even if some toggled", async (assert) => {
         assert.expect(8);
 
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState });
 
         /**
          *   [x] **Hermit**
@@ -305,7 +264,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         /**
          *   [ ] **Hermit**  -> toggled
          *   [ ] Herman's      -> logged in
-         *   [ ] Heroes TM      -> toggled
+         *   [x] Heroes TM      -> toggled
          */
         await click(scMenu.el.querySelectorAll(".toggle_company")[2]);
         await click(scMenu.el.querySelectorAll(".toggle_company")[0]);
