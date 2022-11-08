@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from itertools import groupby
+from odoo.tools import groupby
 from re import search
 from functools import partial
 
