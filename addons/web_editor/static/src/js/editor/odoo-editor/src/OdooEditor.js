@@ -586,6 +586,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
         this.addDomListener(this.document, 'copy', this._onClipboardCopy);
+        this.addDomListener(this.document, 'cut', this._onClipboardCut);
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
@@ -3181,6 +3182,10 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    _onClipboardCut(clipboardEvent) {
+        this._onClipboardCopy(clipboardEvent);
+        this.deleteRange();
+    }
     _onClipboardCopy(clipboardEvent) {
         if (this.isSelectionInEditable()) {
             clipboardEvent.preventDefault();
