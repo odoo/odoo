@@ -19,6 +19,7 @@ export function useEmojiPicker(refName, onSelect) {
                 EmojiPicker,
                 { onSelect },
                 {
+                    onClose: () => (closePopover = false),
                     popoverClass: "o-fast-popover",
                 }
             );

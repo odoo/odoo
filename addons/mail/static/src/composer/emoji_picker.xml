@@ -14,7 +14,7 @@
             <input class="form-control border-0 flex-grow-1" t-ref="input" placeholder="Search an emoji" t-model="state.searchStr"/>
             <i class="oi oi-search p-2 fs-5" title="Search..." role="img" aria-label="Search..."></i>
         </div>
-        <div class="overflow-auto d-flex flex-wrap align-content-start align-items-center" t-ref="emoji-grid" t-on-click="selectEmoji">
+        <div class="o-mail-emoji-picker-content overflow-auto d-flex flex-wrap align-content-start align-items-center" t-ref="emoji-grid" t-on-click="selectEmoji">
             <t t-set="current" t-value=""/>
             <t t-foreach="getEmojis()" t-as="emoji" t-key="emoji_index">
                 <t t-if="!state.searchStr and current !== emoji.category">
