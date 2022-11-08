@@ -9,6 +9,7 @@
         """,
     'depends': ['product', 'account', 'point_of_sale', 'base'],
     'data': [
+        'security/groups.xml',
         'views/FgOrderDetails.xml',
         'views/FgImportOrders.xml',
         'views/FgMessageWizard.xml',
@@ -21,6 +22,7 @@
         'wizard/z_report_view.xml',
         'views/FgPosReport.xml',
         'views/x_report.xml',
+        'views/menuitem.xml',
         'security/ir.model.access.csv'
     ],
     'author': "1FG",
