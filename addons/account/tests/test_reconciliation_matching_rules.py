@@ -289,13 +289,6 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 self.bank_line_1: {'amls': self.invoice_line_1, 'model': self.rule_1},
             })
 
-            # Test matching with the partner name (reinitializing the statement line first)
-            self.bank_line_1.write({**st_line_initial_vals, st_line_field: self.partner_1.name})
-
-            self._check_statement_matching(self.rule_1, {
-                self.bank_line_1: {'amls': self.invoice_line_1, 'model': self.rule_1},
-            })
-
     def test_matching_fields_match_journal_ids(self):
         self.rule_1.match_journal_ids |= self.cash_line_1.journal_id
         self._check_statement_matching(self.rule_1, {
@@ -856,30 +849,6 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         # Matching is back thanks to "coincoin".
         self.assertEqual(st_line._retrieve_partner(), self.partner_1)
-
-    def test_partner_name_in_communication(self):
-        self.invoice_line_1.partner_id.write({'name': "Archibald Haddock"})
-        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK-Archibald'})
-        self.bank_line_2.write({'partner_id': None})
-        self.rule_1.write({'match_partner': False})
-
-        # bank_line_1 should match, as its communication contains the invoice's partner name
-        self._check_statement_matching(self.rule_1, {
-            self.bank_line_1: {'amls': self.invoice_line_1, 'model': self.rule_1},
-            self.bank_line_2: {},
-        })
-
-    def test_partner_name_with_regexp_chars(self):
-        self.invoice_line_1.partner_id.write({'name': "Archibald + Haddock"})
-        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK+Archibald'})
-        self.bank_line_2.write({'partner_id': None})
-        self.rule_1.write({'match_partner': False})
-
-        # The query should still work
-        self._check_statement_matching(self.rule_1, {
-            self.bank_line_1: {'amls': self.invoice_line_1, 'model': self.rule_1},
-            self.bank_line_2: {},
-        })
 
     def test_match_multi_currencies(self):
         ''' Ensure the matching of candidates is made using the right statement line currency.
