@@ -48,7 +48,7 @@
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
                         <field name="employee_type" invisible="1"/>
-                        <button name="action_open_contract_history"
+                        <button name="action_open_contract"
                             class="oe_stat_button"
                             icon="fa-book"
                             type="object"
@@ -68,7 +68,7 @@
                             </div>
                             <div attrs="{'invisible' : [('first_contract_date', '!=', False)]}" class="o_stat_info">
                                 <span class="o_stat_value text-danger">
-                                   <field name="contracts_count"/>
+                                    <field name="contracts_count"/>
                                 </span>
                                 <span attrs="{'invisible' : [('contracts_count', '!=', 1)]}" class="o_stat_text text-danger" >
                                     Contract
@@ -98,15 +98,15 @@
         </record>
 
         <record id="hr_user_view_form" model="ir.ui.view">
-        <field name="name">hr.user.preferences.view.form.contract.inherit</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='employee_bank_account_id']" position="replace">
-                <field name="employee_bank_account_id" context="{'display_partner':True}" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-            </xpath>
-        </field>
-    </record>
+            <field name="name">hr.user.preferences.view.form.contract.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_bank_account_id']" position="replace">
+                    <field name="employee_bank_account_id" context="{'display_partner':True}" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.search</field>
@@ -151,12 +151,33 @@
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
                 <form string="Current Contract">
-                    <header>
+                    <field name="contracts_count" invisible="1"/>
+                    <header attrs="{'invisible' : [('id', '=', False)]}">
                         <field name="state" groups="!hr_contract.group_hr_contract_manager" widget="statusbar"/>
                         <field name="state" groups="hr_contract.group_hr_contract_manager" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box"/>
+                        <field name="state" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_contract_history"
+                                class="oe_stat_button"
+                                icon="fa-book"
+                                type="object"
+                                attrs="{'invisible' : [('contracts_count', '=', 0)]}"
+                                groups="hr_contract.group_hr_contract_manager">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="contracts_count"/>
+                                    </span>
+                                    <span attrs="{'invisible' : [('contracts_count', '=', 1)]}" class="o_stat_text" >
+                                        Contracts
+                                    </span>
+                                    <span attrs="{'invisible' : [('contracts_count', '&gt;', 1)]}" class="o_stat_text">
+                                        Contract
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title pe-0 w-100 mw-100" name="title">
                             <h1 class="d-flex flex-row justify-content-between">
