@@ -342,9 +342,9 @@ class HrContract(models.Model):
                 date_end = datetime.combine(contract.date_end, datetime.max.time())
                 contract_domain += [('date_stop', '<=', date_end)]
             domain = expression.AND([domain, contract_domain])
-        work_entries = self.env['hr.work.entry'].search(domain)
+        work_entries = self.env['hr.work.entry'].sudo().search(domain)
         if work_entries:
-            work_entries.unlink()
+            work_entries.sudo().unlink()
 
     def write(self, vals):
         result = super(HrContract, self).write(vals)
