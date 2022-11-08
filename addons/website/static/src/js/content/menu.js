@@ -40,7 +40,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
         this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
-            if (config.device.size_class <= config.device.SIZES.SM) {
+            if (config.device.size_class <= config.device.SIZES.MD) {
                 $(document.body).addClass('overflow-hidden');
             }
         }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
