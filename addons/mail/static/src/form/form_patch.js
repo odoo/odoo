@@ -15,6 +15,8 @@ patch(FormController.prototype, "mail", {
     setup() {
         const archXml = this.props.archInfo.xmlDoc;
         const xmlDocChatter = archXml.querySelector("div.oe_chatter");
+        this.hasChatter = Boolean(xmlDocChatter);
+        this.hasActivity = this.hasChatter && Boolean(xmlDocChatter.querySelector("field[name='activity_ids']"));
         if (xmlDocChatter) {
             const doc = archXml.ownerDocument;
             const rootT = doc.createElement("t");
@@ -23,10 +25,10 @@ patch(FormController.prototype, "mail", {
             chatterTag.setAttribute("resId", "props.record.resId");
             chatterTag.setAttribute("resModel", "props.record.resModel");
             chatterTag.setAttribute("displayName", "props.record.data.display_name");
+            chatterTag.setAttribute("hasActivity", this.hasActivity);
             rootT.appendChild(chatterTag);
             xmlDocChatter.replaceWith(rootT);
         }
-        this.hasChatter = Boolean(xmlDocChatter);
         useChildSubEnv({ hasChatter: () => !this.hasSideChatter() });
         this.uiService = useService("ui");
 

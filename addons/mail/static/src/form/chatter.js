@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 export class Chatter extends Component {
     static template = "mail.chatter";
     static components = { Thread, Composer, ActivityList };
-    static props = ["resId", "resModel", "displayName"];
+    static props = ["hasActivity", "resId", "resModel", "displayName"];
 
     setup() {
         this.messaging = useMessaging();
@@ -44,8 +44,12 @@ export class Chatter extends Component {
             // todo: reset activities/attachments/followers
             return;
         }
+        const requestList = ["followers", "attachments", "messages"];
+        if (this.props.hasActivity) {
+            requestList.push("activities");
+        }
         this.rpc("/mail/thread/data", {
-            request_list: ["activities", "followers", "attachments", "messages"],
+            request_list: requestList,
             thread_id: resId,
             thread_model: this.props.resModel,
         }).then((result) => {

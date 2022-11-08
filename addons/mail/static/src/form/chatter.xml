@@ -11,7 +11,7 @@
                 Log note
             </button>
             <div class="border-bottom border-start flex-grow-1 d-flex">
-                <button class="btn p-2 m-2" t-att-disabled="!props.resId" t-on-click="scheduleActivity">
+                <button t-if="props.hasActivity" class="btn p-2 m-2" t-att-disabled="!props.resId" t-on-click="scheduleActivity">
                     <i class="fa fa-clock-o me-1"/>
                     Activities
                 </button>
@@ -38,11 +38,11 @@
             </t>
             <t t-set="placeholder" t-value="state.composing === 'message' ? 'Send a message to followers...' : 'Log an internal note...'"/>
             <t t-set="type" t-value="state.composing === 'message' ? 'message' : 'note'"/>
-            <Composer threadId="thread.id" autofocus="true" mode="'extended'" onPostCallback.bind="toggleComposer" placeholder="placeholder" type="type"/> 
+            <Composer threadId="thread.id" autofocus="true" mode="'extended'" onPostCallback.bind="toggleComposer" placeholder="placeholder" type="type"/>
             <hr/>
         </t>
         <div class="overflow-auto">
-            <t t-if="state.activities.length">
+            <t t-if="props.hasActivity and state.activities.length">
                 <ActivityList activities="state.activities" reload.bind="load" />
             </t>
             <Thread id="thread.id" t-key="thread.id"/>
