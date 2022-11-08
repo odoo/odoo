@@ -21,13 +21,13 @@ export class Messaging {
         // base data
         this.user = {
             partnerId: user.partnerId,
-            internalUserGroupId: null,
             uid: user.context.uid,
             avatarUrl: `/web/image?field=avatar_128&id=${user.userId}&model=res.users`,
         };
         this.partners = {};
         this.messages = {};
         this.threads = {};
+        this.internalUserGroupId = null;
 
         // messaging menu
         this.menu = {
@@ -87,7 +87,7 @@ export class Messaging {
             const settings = data.current_user_settings;
             this.discuss.channels.isOpen = settings.is_discuss_sidebar_category_channel_open;
             this.discuss.chats.isOpen = settings.is_discuss_sidebar_category_chat_open;
-            this.user.internalUserGroupId = data.internalUserGroupId;
+            this.internalUserGroupId = data.internalUserGroupId;
             this.discuss.starred.counter = data.starred_counter;
             this.isReady.resolve();
         });
@@ -432,7 +432,7 @@ export class Messaging {
     async createChannel(name) {
         const channel = await this.orm.call("mail.channel", "channel_create", [
             name,
-            this.user.internalUserGroupId,
+            this.internalUserGroupId,
         ]);
         this.createChannelThread(channel);
         this.sortChannels();
