@@ -35,7 +35,7 @@ Master Data:
     "author": "TRESCLOUD",
     "category": "Accounting/Localizations/Account Charts",
     "maintainer": "TRESCLOUD",
-    "website": "https://www.trescloud.com",
+    "website": "https://www.odoo.com/documentation/16.0/applications/finance/accounting/fiscal_localizations/localizations/ecuador.html",
     "license": "LGPL-3",
     "depends": [
         "base",
