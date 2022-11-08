@@ -96,9 +96,9 @@ class AccountEdiFormat(models.Model):
             errors.append(_("%s must have a country", seller.display_name))
 
         # <1.1.1.2>
-        if not seller.vat:
+        if not invoice.company_id.vat:
             errors.append(_("%s must have a VAT number", seller.display_name))
-        elif len(seller.vat) > 30:
+        if seller.vat and len(seller.vat) > 30:
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
