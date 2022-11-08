@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="EventConfiguratorPopup" owl="1">
+        <div class="popup event-configurator-popup">
+            <header class="title">
+                Event tickets
+            </header>
+            <main class="body">
+                <t t-foreach="props.data" t-as="event" t-key="event.id">
+                    <div class="event">
+                        <div class="event-title">
+                            <span class="event-name" t-out="event.name"/>
+                            <span t-if="event_registrations_open" class="badge">Registration closed</span>
+                        </div>
+                        <div class="event-info">
+                            <span>Start: <t t-out="event.date_begin"/></span>
+                            <span>End: <t t-out="event.date_end"/></span>
+                        </div>
+                    </div>
+                </t>
+            </main>
+            <footer>
+
+            </footer>
+        </div>
+    </t>
+
+</templates>
