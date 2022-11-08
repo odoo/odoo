@@ -844,7 +844,8 @@ const Wysiwyg = Widget.extend({
      * @returns {Boolean}
      */
     isDirty: function () {
-        return this._initialValue !== (this.getValue() || this.$editable.val());
+        const isDocumentDirty = this.$editable[0].ownerDocument.defaultView.$(".o_dirty").length;
+        return this._initialValue !== (this.getValue() || this.$editable.val()) && isDocumentDirty;
     },
     /**
      * Get the value of the editable element.
