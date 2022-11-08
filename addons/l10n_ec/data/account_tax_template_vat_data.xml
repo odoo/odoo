@@ -791,9 +791,9 @@
                     'minus_report_line_ids': [ref('tax_report_line_104_522')],
                 })]"/>
         </record>
-        <record id="tax_vat_sup_513" model="account.tax.template">
+        <record id="tax_vat_513_sup_01" model="account.tax.template">
             <!-- IVA en importaciones de servicios -->
-            <field name="name">IVA 12% (importación servicios)</field>
+            <field name="name">IVA 12% (513, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
@@ -1144,8 +1144,8 @@
                     'account_id': ref('l10n_ec.ec_purchase_vat_zero'),
                 })]"/>
         </record>
-        <record id="tax_vat_510_08" model="account.tax.template">
-            <field name="name">IVA 8%</field>
+        <record id="tax_vat_510_08_sup01" model="account.tax.template">
+            <field name="name">IVA 8% (510, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">50</field>
@@ -1216,7 +1216,7 @@
         </record>
         <record id="tax_vat_545" model="account.tax.template">
             <!-- IVA en compras por reembolso como intermediario -->
-            <field name="name">IVA 12% (Reembolso Intermediario)</field>
+            <field name="name">IVA 12% (545, 08 Reembolso)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
             <field name="sequence">10</field>
