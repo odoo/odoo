@@ -62,18 +62,10 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_messaging': [
-            'hr_holidays/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
-            'hr_holidays/static/src/components/*/*',
-        ],
         'web.assets_backend': [
             'hr_holidays/static/src/views/**/*.js',
             'hr_holidays/static/src/views/**/*.scss',
             'hr_holidays/static/src/views/**/*.xml',
-            'hr_holidays/static/src/components/*/*.scss',
-            'hr_holidays/static/src/components/*/*.xml',
             'hr_holidays/static/src/dashboard/**/*.js',
             'hr_holidays/static/src/dashboard/**/*.scss',
             'hr_holidays/static/src/dashboard/**/*.xml',
@@ -91,9 +83,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         "web.dark_mode_assets_backend": [
             'hr_holidays/static/src/views/**/*.dark.scss',
             'hr_holidays/static/src/dashboard/**/*.dark.scss',
-        ],
-        'web.tests_assets': [
-            'hr_holidays/static/tests/helpers/**/*',
         ],
         'web.qunit_suite_tests': [
             'hr_holidays/static/tests/qunit_suite_tests/**/*.js',
