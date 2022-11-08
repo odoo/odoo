@@ -23,7 +23,6 @@ QUnit.module('Google Calendar', {
                         partner_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.partner_id'},
                         name: {string: "name", type: "char"},
                         start_date: {string: "start date", type: "date"},
-                        start_date: {string: "start date", type: "date"},
                         stop_date: {string: "stop date", type: "date"},
                         start: {string: "start datetime", type: "datetime"},
                         stop: {string: "stop datetime", type: "datetime"},
