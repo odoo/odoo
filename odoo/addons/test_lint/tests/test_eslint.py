@@ -4,7 +4,7 @@
 import logging
 import re
 import subprocess
-from unittest import skipIf
+from unittest import skip, skipIf
 from odoo import tools
 from odoo.modules.module import get_resource_path
 from odoo.tests import tagged
@@ -18,8 +18,10 @@ try:
 except IOError:
     eslint = None
 
+
 @skipIf(eslint is None, "eslint tool not found on this system")
 @tagged("test_themes")
+@skip("es version cannot be checked if we want to use Public static fields because it is officially ES2022 (we don't want to support that version yet and the check tool doesn't even support it either.")
 class TestESLint(lint_case.LintCase):
 
     longMessage = True
