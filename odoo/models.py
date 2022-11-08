@@ -5382,8 +5382,6 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(func, str):
             name = func
             func = lambda rec: any(rec.mapped(name))
-            # populate cache
-            self.mapped(name)
         return self.browse([rec.id for rec in self if func(rec)])
 
     def grouped(self, key):
