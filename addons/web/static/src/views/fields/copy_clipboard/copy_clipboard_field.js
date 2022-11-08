@@ -13,7 +13,7 @@ import { Component } from "@odoo/owl";
 
 class CopyClipboardField extends Component {
     setup() {
-        this.copyText = this.props.label || this.env._t("Copy");
+        this.copyText = this.props.string || this.env._t("Copy");
         this.successText = this.env._t("Copied");
     }
     get copyButtonClassName() {
@@ -21,18 +21,18 @@ class CopyClipboardField extends Component {
     }
     get fieldProps() {
         const fieldProps = {...this.props};
-        delete fieldProps.label;
+        delete fieldProps.string;
         return fieldProps;
     }
 }
 CopyClipboardField.template = "web.CopyClipboardField";
 CopyClipboardField.props = {
     ...standardFieldProps,
-    label: { type: String, optional: true },
+    string: { type: String, optional: true },
 };
 CopyClipboardField.extractProps = ({ attrs }) => {
     return {
-        label: attrs.options.label,
+        string: attrs.string,
     };
 };
 
