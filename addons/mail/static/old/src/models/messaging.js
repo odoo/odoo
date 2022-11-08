@@ -332,16 +332,6 @@ registerPatch({
             },
         }),
         isInQUnitTest: attr({ default: false }),
-        isNotificationBlocked: attr({
-            compute() {
-                const windowNotification = this.browser.Notification;
-                return (
-                    windowNotification &&
-                    windowNotification.permission !== 'granted' &&
-                    !this.isNotificationPermissionDefault
-                );
-            },
-        }),
         /**
          * States whether browser Notification Permission is currently in its
          * 'default' state. This means it is allowed to make a request to the
