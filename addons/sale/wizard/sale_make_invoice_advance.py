@@ -43,10 +43,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
         store=True)
     amount = fields.Float(
         string="Down Payment Amount",
-        help="The percentage of amount to be invoiced in advance, taxes excluded.")
+        help="The percentage of amount to be invoiced in advance.")
     fixed_amount = fields.Monetary(
         string="Down Payment Amount (Fixed)",
-        help="The fixed amount to be invoiced in advance, taxes excluded.")
+        help="The fixed amount to be invoiced in advance.")
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         compute='_compute_currency_id',
@@ -244,10 +244,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _get_down_payment_amount(self, order):
         self.ensure_one()
         if self.advance_payment_method == 'percentage':
-            if all(self.product_id.taxes_id.mapped('price_include')):
-                amount = order.amount_total * self.amount / 100
-            else:
-                amount = order.amount_untaxed * self.amount / 100
+            amount = order.amount_total * self.amount / 100
         else:  # Fixed amount
             amount = self.fixed_amount
         return amount
