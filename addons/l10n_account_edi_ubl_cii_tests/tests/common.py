@@ -71,7 +71,7 @@ class TestUBLCommon(AccountEdiTestCommon):
         Create an account.move directly from an xml file, asserts the invoice obtained is the same as the expected
         invoice.
         """
-        new_invoice = self.edi_format.with_context(default_move_type=invoice.move_type)._create_invoice_from_xml_tree(
+        new_invoice = self.edi_format._create_invoice_from_xml_tree(
             xml_filename,
             xml_etree,
             invoice.journal_id,
