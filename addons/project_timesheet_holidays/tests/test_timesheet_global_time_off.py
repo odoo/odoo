@@ -7,8 +7,9 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import common
+from odoo.tests.common import tagged
 
-
+@tagged("-at_install", "post_install", "hr_tests")
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
     def setUp(self):
@@ -175,3 +176,52 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # The standard calendar is for 8 hours/day from 8 to 12 and from 13 to 17.
         # So we need to check that the timesheets don't have more than 8 hours per day.
         self.assertEqual(leave_task.effective_hours, 80)
+
+    def test_change_resource_calendar(self):
+        """test changing the resource calendar on an employee"""
+
+        # Create a timeoff in the parttime resource calendar, on Monday
+        # the fourth
+        leave_start_datetime_1 = datetime(2321, 1, 4, 7, 0, 0,
+                                        0)  # This is a monday
+        leave_end_datetime_1 = datetime(2321, 1, 4, 18, 0, 0,
+                                      0)  # This is a friday
+
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Parttime vacations',
+            'calendar_id': self.part_time_calendar.id,
+            'date_from': leave_start_datetime_1,
+            'date_to': leave_end_datetime_1,
+        })
+
+        # Create a timeoff in the main resource calendar on Monday the 11th
+        leave_start_datetime_2 = datetime(2321, 1, 11, 7, 0, 0,
+                                          0)  # This is a monday
+        leave_end_datetime_2 = datetime(2321, 1, 11, 18, 0, 0,
+                                        0)  # This is a Thursday
+        self.env["resource.calendar.leaves"].create({
+            'name': 'Full time vacations',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': leave_start_datetime_2,
+            'date_to': leave_end_datetime_2,
+        })
+
+        leave_task = self.test_company.leave_timesheet_task_id
+        # At this moment parttime employee should have one day off at 2321-1-4
+        timesheet = self.env["account.analytic.line"].search([
+            ("employee_id", "=", self.part_time_employee.id),
+            ("task_id", "=",  leave_task.id)
+        ])
+        self.assertEqual(timesheet.date, datetime(2321, 1, 4).date())
+
+        # Now we will change his resource calendar to full time
+        self.part_time_employee.write({'resource_calendar_id': self.test_company.resource_calendar_id.id})
+
+        # Now he has the day off on 2321-1-11 as it is in his/her new resource
+        # calendar
+        timesheet = self.env["account.analytic.line"].search([
+            ("employee_id", "=", self.part_time_employee.id),
+            ("task_id", "=", leave_task.id),
+        ])
+        self.assertEqual(timesheet.date, datetime(2321, 1, 11).date())
