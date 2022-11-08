@@ -3192,7 +3192,14 @@ export class OdooEditor extends EventTarget {
             clipboardEvent.preventDefault();
             const selection = this.document.getSelection();
             const range = selection.getRangeAt(0);
-            const rangeContent = range.cloneContents();
+            let rangeContent = range.cloneContents();
+
+            // Repair the copied range.
+            if (rangeContent.firstChild.nodeName === 'LI') {
+                const list = range.commonAncestorContainer.cloneNode();
+                list.replaceChildren(...rangeContent.childNodes);
+                rangeContent = list;
+            }
 
             const dataHtmlElement = document.createElement('data');
             dataHtmlElement.append(rangeContent);
