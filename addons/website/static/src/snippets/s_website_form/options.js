@@ -1481,7 +1481,7 @@ const DisableOverlayButtonOption = options.Class.extend({
 // Disable duplicate button for model fields
 options.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
     start: function () {
-        this.disableButton('clone', _t('You can\'t duplicate a model field.'));
+        this.disableButton('clone', _t('You cannot duplicate this field.'));
         return this._super.apply(this, arguments);
     }
 });
@@ -1489,7 +1489,7 @@ options.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
 // Disable delete button for model required fields
 options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
     start: function () {
-        this.disableButton('remove', _t('You can\'t remove a field that is required by the model itself.'));
+        this.disableButton('remove', _t('This field is mandatory for this Action. You cannot remove it.'));
         return this._super.apply(this, arguments);
     }
 });
