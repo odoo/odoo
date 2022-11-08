@@ -368,7 +368,6 @@ class ThreadedServer(CommonServer):
         # below. This variable is monitored by ``quit_on_signals()``.
         self.quit_signals_received = 0
 
-        #self.socket = None
         self.httpd = None
         self.limits_reached_threads = set()
         self.limit_reached_time = None
