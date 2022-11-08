@@ -5,20 +5,21 @@ from odoo import api, fields, models
 
 
 class MailTestPortal(models.Model):
-    """ A model intheriting from mail.thread with some fields used for portal
-    sharing, like a partner, ..."""
+    """ A model inheriting from mail.thread and portal.mixin with some fields
+    used for portal sharing, like a partner, ..."""
     _description = 'Chatter Model for Portal'
     _name = 'mail.test.portal'
     _inherit = [
-        'mail.thread',
         'portal.mixin',
+        'mail.thread',
     ]
 
     name = fields.Char()
     partner_id = fields.Many2one('res.partner', 'Customer')
+    user_id = fields.Many2one(comodel_name='res.users', string="Salesperson")
 
     def _compute_access_url(self):
-        self.access_url = False
+        super()._compute_access_url()
         for record in self.filtered('id'):
             record.access_url = '/my/test_portal/%s' % self.id
 
