@@ -63,7 +63,6 @@
             'project/static/src/services/**/*',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
-            'project/static/src/js/project_activity.js',
             'project/static/src/js/project_control_panel.js',
             'project/static/src/js/project_graph_view.js',
             'project/static/src/js/project_pivot_view.js',
@@ -206,9 +205,6 @@
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
-
-            'mail/static/src/scss/variables/*.scss',
-            'mail/static/src/widgets/**/*.scss',
 
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/views/project_task_form/*.scss',
