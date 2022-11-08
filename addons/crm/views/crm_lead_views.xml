@@ -472,14 +472,16 @@
                         <field name="email_from" string="Email" />
                         <field name="phone" string="Phone" />
                         <label for="expected_revenue"/>
-                        <div class="o_row">
-                            <field name="expected_revenue" class="oe_inline me-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                            <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
-                        </div>
-                        <div class="o_row" groups="crm.group_use_recurring_revenues">
-                            <field name="recurring_revenue" class="oe_inline pe-4" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                            <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
-                                   attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
+                        <div>
+                            <div class="o_row">
+                                <field name="expected_revenue" class="oe_inline me-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
+                            </div>
+                            <div class="o_row" groups="crm.group_use_recurring_revenues">
+                                <field name="recurring_revenue" class="oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                    attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
                         </div>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
