@@ -1131,14 +1131,14 @@
                 })]"/>
         </record>
         <record id="tax_withhold_profit_3440" model="account.tax.template">
-            <field name="name">3440 2.75% Otras Retenciones Aplicables el 2,75%</field>
+            <field name="name">3440-344 2.75% Otras Retenciones Aplicables el 2,75%</field>
             <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount">-2.75</field>
             <field name="description">3440</field>
             <field name="l10n_ec_code_applied">394</field>
-            <field name="l10n_ec_code_base">3440</field>
+            <field name="l10n_ec_code_base">344</field>
             <field name="l10n_ec_code_ats">3440</field>
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
@@ -1146,7 +1146,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_103_3440')],
+                    'plus_report_line_ids': [ref('tax_report_line_103_344')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -1158,7 +1158,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('tax_report_line_103_3440')],
+                    'minus_report_line_ids': [ref('tax_report_line_103_344')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
@@ -1649,11 +1649,11 @@
                 })]"/>
         </record>
         <record id="income_tax_withholding_302" model="account.tax.template">
-            <field name="name">352 En relación de Dependencia que Supera o no la Base Desgravada</field>
+            <field name="name">302 En relación de Dependencia que Supera o no la Base Desgravada</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
-            <field name="l10n_ec_code_base">352</field>
-            <field name="l10n_ec_code_applied">302</field>
+            <field name="l10n_ec_code_base">302</field>
+            <field name="l10n_ec_code_applied">352</field>
             <field name="l10n_ec_code_ats">352</field>
             <field name="amount">-22.0</field>
             <field name="description">352</field>
