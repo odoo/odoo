@@ -132,7 +132,7 @@ class Message(models.Model):
     _description = 'Test New API Message'
 
     discussion = fields.Many2one('test_new_api.discussion', ondelete='cascade')
-    body = fields.Text()
+    body = fields.Text(index='trigram')
     author = fields.Many2one('res.users', default=lambda self: self.env.user)
     name = fields.Char(string='Title', compute='_compute_name', store=True)
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
