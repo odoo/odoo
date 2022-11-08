@@ -75,8 +75,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 if (this.props.beforeEditorActive) {
                     await this.props.beforeEditorActive(this.$editable);
                 }
-                this._setObserver();
-
                 // The jquery instance inside the iframe needs to be aware of the wysiwyg.
                 this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
                 await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
@@ -92,6 +90,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                     }
                 }
                 this.props.wysiwygReady();
+                // Wait for widgets to be destroyed and restarted before setting
+                // the dirty observer (not to be confused with odooEditor
+                // observer) as the widgets might trigger DOM mutations.
+                this._setObserver();
                 this.widget.odooEditor.observerActive();
             };
 
