@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Sales menu item -->
+<!--        <menuitem id="sale.sale_menu_root"-->
+<!--                  groups="fg_custom.group_allow_extra_menus"-->
+<!--        />-->
+        <record model="ir.ui.menu" id="sale.sale_menu_root">
+            <field eval="[(6,0,[ref('fg_custom.group_allow_extra_menus')])]" name="groups_id"/>
+        </record>
+
+        <!-- Invoice menu item -->
+<!--        <menuitem id="account.menu_finance"-->
+<!--            groups="fg_custom.group_allow_extra_menus,account.group_account_readonly,account.group_account_invoice"-->
+<!--        />-->
+<!--        <delete model="website.menu" id="website.menu_contactus"/>-->
+<!--        <function model="ir.ui.menu" name="write">-->
+<!--                <value eval="[ref('account.menu_finance')]"/>-->
+<!--                <value eval="{'groups_id': [(6, 0, [ref('fg_custom.group_allow_extra_menus')])]}"/>-->
+<!--        </function>-->
+        <record model="ir.ui.menu" id="account.menu_finance">
+            <field eval="[(6,0,[ref('fg_custom.group_allow_extra_menus')])]" name="groups_id"/>
+        </record>
+        
+        <!-- Inventory menu item -->
+        <record model="ir.ui.menu" id="stock.menu_stock_root">
+            <field eval="[(6,0,[ref('fg_custom.group_allow_extra_menus')])]" name="groups_id"/>
+        </record>
+
+        <!-- Purchase menu item -->
+        <record model="ir.ui.menu" id="purchase.menu_purchase_root">
+            <field eval="[(6,0,[ref('fg_custom.group_allow_extra_menus')])]" name="groups_id"/>
+        </record>
+
+        <!-- Link Tracker menu item -->
+        <record model="ir.ui.menu" id="utm.menu_link_tracker_root">
+            <field eval="[(6,0,[ref('fg_custom.group_allow_extra_menus')])]" name="groups_id"/>
+        </record>
+
+        <!-- Apps menu item -->
+        <record model="ir.ui.menu" id="base.menu_management">
+            <field eval="[(6,0,[ref('fg_custom.group_allow_extra_menus')])]" name="groups_id"/>
+        </record>
+</odoo>
