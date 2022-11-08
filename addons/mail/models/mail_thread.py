@@ -2996,7 +2996,7 @@ class MailThread(models.AbstractModel):
             token = self._notify_encode_link(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, urls.url_encode(params))
+        link = '%s?%s' % (base_link, urls.url_encode(params, sort=True))
         if self:
             link = self[0].get_base_url() + link
 
