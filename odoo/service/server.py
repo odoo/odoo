@@ -16,7 +16,6 @@ import sys
 import threading
 import time
 import unittest
-from itertools import chain
 
 import psutil
 import werkzeug.serving
