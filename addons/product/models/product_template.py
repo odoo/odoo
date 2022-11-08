@@ -1264,7 +1264,7 @@ class ProductTemplate(models.Model):
     def _get_placeholder_filename(self, field):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
         if field in image_fields:
-            return 'product/static/img/placeholder.png'
+            return 'product/static/img/placeholder_thumbnail.png'
         return super()._get_placeholder_filename(field)
 
     def get_single_product_variant(self):
