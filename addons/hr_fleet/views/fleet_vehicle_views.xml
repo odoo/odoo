@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <field name="driver_id" position="replace" />
             <field name="date_end" position="after">
-                <field name="driver_id" string="Current Driver" optional="hide"/>
+                <field name="driver_id" string="Current Driver" optional="show"/>
                 <field name="attachment_number" optional="show" />
                 <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" />
             </field>
