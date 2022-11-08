@@ -2,7 +2,7 @@
 
 import { Discuss } from "@mail/discuss/discuss";
 import { click, editInput, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
+import { makeTestEnv, TestServer } from "../helpers/helpers";
 import { browser } from "@web/core/browser/browser";
 
 let target;
@@ -19,8 +19,8 @@ QUnit.module("mail", (hooks) => {
     QUnit.module("discuss");
 
     QUnit.test("sanity check", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => {
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => {
             if (route.startsWith('/mail')) {
                 assert.step(route);
             }
@@ -38,9 +38,9 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("can open #general", async (assert) => {
-        const server = new MessagingServer();
+        const server = new TestServer();
         server.addChannel(1, "general", "General announcements...");
-        const env = makeMessagingEnv((route, params) => {
+        const env = makeTestEnv((route, params) => {
             if (route === "/mail/channel/messages") {
                 assert.strictEqual(route, "/mail/channel/messages");
                 assert.strictEqual(params.channel_id, 1);
@@ -62,9 +62,9 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("can post a message", async (assert) => {
-        const server = new MessagingServer();
+        const server = new TestServer();
         server.addChannel(1, "general", "General announcements...");
-        const env = makeMessagingEnv((route, params) => {
+        const env = makeTestEnv((route, params) => {
             if (route.startsWith('/mail')) {
                 assert.step(route);
             }
@@ -85,8 +85,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("can create a new channel", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => {
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => {
             if (
                 route.startsWith('/mail') ||
                 ["/web/dataset/call_kw/mail.channel/search_read", "/web/dataset/call_kw/mail.channel/channel_create"].includes(route)
@@ -112,9 +112,9 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("can join a chat conversation", async (assert) => {
-        const server = new MessagingServer();
+        const server = new TestServer();
         server.addPartner(43, "abc");
-        const env = makeMessagingEnv((route, params) => {
+        const env = makeTestEnv((route, params) => {
             if (
                 route.startsWith('/mail') ||
                 ["/web/dataset/call_kw/res.partner/im_search", "/web/dataset/call_kw/mail.channel/channel_get"].includes(route)
@@ -144,10 +144,10 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("focus is set on composer when switching channel", async (assert) => {
-        const server = new MessagingServer();
+        const server = new TestServer();
         server.addChannel(1, "general", "General announcements...");
         server.addChannel(2, "other", "info");
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
 
         await mount(Discuss, target, { env });
         assert.containsNone(target, ".o-mail-composer-textarea");

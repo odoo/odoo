@@ -6,9 +6,9 @@ import { ormService } from "@web/core/orm_service";
 import { EventBus } from "@odoo/owl";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 
-export { MessagingServer } from "./messaging_server";
+export { TestServer } from "./test_server";
 
-export function makeMessagingEnv(rpc) {
+export function makeTestEnv(rpc) {
     const user = {
         context: { uid: 2 },
         partnerId: 3,

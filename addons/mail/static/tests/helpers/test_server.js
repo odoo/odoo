@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-export class MessagingServer {
+export class TestServer {
     activities = [];
     channels = [];
     chats = [];

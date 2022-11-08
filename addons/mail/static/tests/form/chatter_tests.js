@@ -2,7 +2,7 @@
 
 import { Chatter } from "@mail/form/chatter";
 import { click, editInput, nextTick, getFixture, mount } from "@web/../tests/helpers/utils";
-import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
+import { makeTestEnv, TestServer } from "../helpers/helpers";
 import { Component, useState, xml } from "@odoo/owl";
 
 let target;
@@ -21,8 +21,8 @@ QUnit.module("mail", (hooks) => {
     QUnit.module("chatter");
 
     QUnit.test("simple chatter on a record", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => {
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => {
             if (route.startsWith('/mail')) {
                 assert.step(route);
             }
@@ -39,8 +39,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("simple chatter, with no record", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => {
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => {
             if (route.startsWith('/mail')) {
                 assert.step(route);
             }
@@ -60,8 +60,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("composer is closed when creating record", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         const props = { resId: 43, resModel: "somemodel", displayName: "" };
         const parent = await mount(ChatterParent, target, { env, props });
         assert.containsNone(target, ".o-mail-composer");
@@ -75,8 +75,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("composer has proper placeholder when sending message", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
             props: { resId: 43, resModel: "somemodel", displayName: "" },
@@ -92,8 +92,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("composer has proper placeholder when logging note", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
             props: { resId: 43, resModel: "somemodel", displayName: "" },
@@ -109,8 +109,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("send/log buttons are properly styled", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
             props: { resId: 43, resModel: "somemodel", displayName: "" },
@@ -132,8 +132,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("composer is focused", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
             props: { resId: 43, resModel: "somemodel", displayName: "" },
@@ -161,8 +161,8 @@ QUnit.module("mail", (hooks) => {
     });
 
     QUnit.test("displayname is used when sending a message", async (assert) => {
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
             props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" },
@@ -174,8 +174,8 @@ QUnit.module("mail", (hooks) => {
 
     QUnit.test("can post a message on a record thread", async (assert) => {
         assert.expect(10);
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => {
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => {
             if (route.startsWith('/mail')) {
                 assert.step(route);
             }
@@ -220,8 +220,8 @@ QUnit.module("mail", (hooks) => {
 
     QUnit.test("can post a note on a record thread", async (assert) => {
         assert.expect(10);
-        const server = new MessagingServer();
-        const env = makeMessagingEnv((route, params) => {
+        const server = new TestServer();
+        const env = makeTestEnv((route, params) => {
             if (route.startsWith('/mail')) {
                 assert.step(route);
             }

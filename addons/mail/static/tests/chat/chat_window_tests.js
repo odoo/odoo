@@ -2,7 +2,7 @@
 
 import { ChatWindow } from "@mail/chat/chat_window";
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
-import { makeMessagingEnv, MessagingServer } from "../helpers/helpers";
+import { makeTestEnv, TestServer } from "../helpers/helpers";
 
 let target;
 
@@ -14,9 +14,9 @@ QUnit.module("mail", (hooks) => {
     QUnit.module("chat window");
 
     QUnit.test("clicking on chat window header toggle its fold status", async (assert) => {
-        const server = new MessagingServer();
+        const server = new TestServer();
         server.addChannel(43, "abc");
-        const env = makeMessagingEnv((route, params) => server.rpc(route, params));
+        const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(ChatWindow, target, { env, props: { threadId: 43 } });
 
         assert.containsOnce(target, ".o-mail-chat-window");
