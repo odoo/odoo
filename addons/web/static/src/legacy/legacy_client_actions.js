@@ -50,9 +50,17 @@ function registerClientAction(name, action) {
                 this.widget = this.props.state && this.props.state.__legacy_widget__;
                 this.onReverseBreadcrumb =
                     this.props.state && this.props.state.__on_reverse_breadcrumb__;
+
+                const rootRef = {
+                    get el() {
+                        return legacyRefs.widget && legacyRefs.widget.el;
+                    },
+                };
+
                 useSetupAction({
                     beforeLeave: () => legacyRefs.widget.canBeRemoved(),
                     getLocalState: () => legacyRefs.component.exportState(),
+                    rootRef,
                 });
             }
         }
