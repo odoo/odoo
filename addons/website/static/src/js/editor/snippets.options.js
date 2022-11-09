@@ -3,7 +3,7 @@ odoo.define('website.editor.snippets.options', function (require) {
 
 const {ColorpickerWidget} = require('web.Colorpicker');
 var core = require('web.core');
-const { loadBundle } = require("@web/core/assets");
+const { loadBundle, loadCSS } = require("@web/core/assets");
 var Dialog = require('web.Dialog');
 const {Markup, sprintf} = require('web.utils');
 const weUtils = require('web_editor.utils');
@@ -121,19 +121,39 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         await this._super(...arguments);
 
+        const fontsToLoad = [];
+        for (const font of this.googleFonts) {
+            const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}`;
+            fontsToLoad.push(fontURL);
+        }
+        for (const font of this.googleLocalFonts) {
+            const attachmentId = font.split(/\s*:\s*/)[1];
+            const fontURL = `/web/content/${attachmentId}`;
+            fontsToLoad.push(fontURL);
+        }
+        // TODO ideally, remove the <link> elements created once this widget
+        // instance is destroyed (although it should not hurt to keep them for
+        // the whole backend lifecycle).
+        const proms = fontsToLoad.map(async fontURL => loadCSS(fontURL));
+        const fontsLoadingProm = Promise.all(proms);
+
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
         _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
-            const fontName = fontKey === "'SYSTEM_FONTS'" ? _t("System Fonts") : fontKey.slice(1, -1);
+            let fontName = fontKey.slice(1, -1); // Unquote
+            let fontFamily = fontName;
+            if (fontName === "SYSTEM_FONTS") {
+                fontName = _t("System Fonts");
+                fontFamily = 'var(--o-system-fonts)';
+            }
             const fontEl = document.createElement('we-button');
-            fontEl.classList.add(`o_we_option_font_${realFontNb}`);
             fontEl.setAttribute('string', fontName);
             fontEl.dataset.variable = variable;
             fontEl.dataset[methodName] = fontKey;
-            fontEl.dataset.font = realFontNb;
+            fontEl.dataset.fontFamily = fontFamily;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
         });
@@ -160,6 +180,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
             variable: variable,
         })));
+
+        return fontsLoadingProm;
     },
 
     //--------------------------------------------------------------------------
@@ -172,14 +194,10 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     async setValue() {
         await this._super(...arguments);
 
-        for (const className of this.menuTogglerEl.classList) {
-            if (className.match(/^o_we_option_font_\d+$/)) {
-                this.menuTogglerEl.classList.remove(className);
-            }
-        }
+        this.menuTogglerEl.style.fontFamily = '';
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         if (activeWidget) {
-            this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
+            this.menuTogglerEl.style.fontFamily = activeWidget.el.dataset.fontFamily;
         }
     },
 

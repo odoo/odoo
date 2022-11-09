@@ -66,13 +66,6 @@ html[data-edit_translations="1"] {
 }
 
 // SNIPPET PANEL
-$i: 1;
-@each $font-name, $font-config in $o-theme-font-configs {
-    we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
-        font-family: o-safe-get($font-config, 'family', $font-family-base);
-    }
-    $i: $i + 1;
-}
 .o_we_add_google_font_btn {
     border-top: 1px solid currentColor !important;
 }
