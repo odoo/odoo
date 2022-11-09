@@ -112,9 +112,8 @@ class WebsiteBlog(http.Controller):
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
-        if not blog:
-            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
-                offset += 1
+        if not blog and use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
+            offset += 1
 
         options = self._get_blog_post_search_options(
             blog=blog,
@@ -128,7 +127,8 @@ class WebsiteBlog(http.Controller):
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         first_post = BlogPost
-        if posts and not blog and posts[0].website_published:
+        # TODO adapt next line in master.
+        if posts and not blog and posts[0].website_published and not search:
             first_post = posts[0]
         posts = posts[offset:offset + self._blog_post_per_page]
 
