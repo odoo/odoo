@@ -67,7 +67,7 @@ function migrate1to2(data) {
             if (cell.content && cell.content.startsWith("=")) {
                 try {
                     cell.content = migratePivotDaysParameters(cell.content);
-                } catch (_) {
+                } catch {
                     continue;
                 }
             }

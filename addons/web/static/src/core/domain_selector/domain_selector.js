@@ -33,7 +33,7 @@ export class DomainSelector extends Component {
             this.traverseNode(ctx);
 
             return ctx.parent;
-        } catch (_e) {
+        } catch {
             // WOWL TODO: rethrow error when not the expected type
             return false;
         }

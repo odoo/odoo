@@ -417,7 +417,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
                     var cwindow = self.$iframe[0].contentWindow;
                     try {
                         cwindow.document;
-                    } catch (_e) {
+                    } catch {
                         return;
                     }
                     cwindow.document
@@ -494,7 +494,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
         var value = text || "";
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
-        } catch (_e) {
+        } catch {
             if (value.match(/^\s*$/)) {
                 value = '<p><br/></p>';
             } else {

@@ -563,7 +563,7 @@ export class AnalyticDistribution extends Component {
     parse(value) {
         try {
             return typeof value === 'string' || value instanceof String ? oParseFloat(value.replace('%', '')) : value;
-        } catch (_error) {
+        } catch {
             return 0;
         }
     }

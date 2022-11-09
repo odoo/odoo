@@ -21,7 +21,7 @@ Model({
             try {
                 fetchedMessages = await this._loadMessages({ limit, maxId: Math.min(...messageIds) });
                 success = true;
-            } catch (_e) {
+            } catch {
                 success = false;
             }
             if (!this.exists()) {

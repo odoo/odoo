@@ -195,7 +195,7 @@ const PublicLivechatWindow = Widget.extend({
     async _postMessage(messageData) {
         try {
             await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
-        } catch (_err) {
+        } catch {
             await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
         }
         this.messaging.publicLivechatGlobal.publicLivechat.widget.postMessage(messageData)

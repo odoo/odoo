@@ -35,7 +35,7 @@ Model({
                 if (this.exists()) {
                     this.update({ isFullScreen: true });
                 }
-            } catch (_e) {
+            } catch {
                 if (this.exists()) {
                     this.update({ isFullScreen: false });
                 }

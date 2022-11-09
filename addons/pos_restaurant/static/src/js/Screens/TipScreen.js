@@ -143,7 +143,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
             try {
                 $(this.el).find('.pos-receipt-container').html(receipt);
                 window.print();
-            } catch (_err) {
+            } catch {
                 await this.showPopup('ErrorPopup', {
                     title: this.env._t('Printing is not supported on some browsers'),
                     body: this.env._t(

@@ -47,7 +47,7 @@ const ReCaptcha = Class.extend({
             return {
                 token: await window.grecaptcha.execute(this._publicKey, {action: action})
             };
-        } catch (_e) {
+        } catch {
             return {
                 error: _t("The recaptcha site key is invalid."),
             };

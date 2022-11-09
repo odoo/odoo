@@ -10,7 +10,7 @@ const { DateTime } = luxon;
 const isValidStaticFormat = (format) => {
     try {
         return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
-    } catch (_err) {
+    } catch {
         return false;
     }
 };

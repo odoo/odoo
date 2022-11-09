@@ -20,7 +20,7 @@ const DEFAULT_VIEWS_WITH_SEARCH_PANEL = ["kanban", "list"];
 function getContextGroubBy(context) {
     try {
         return makeContext([context]).group_by.split(":");
-    } catch (_err) {
+    } catch {
         return [];
     }
 }

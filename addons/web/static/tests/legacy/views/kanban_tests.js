@@ -5630,7 +5630,7 @@ QUnit.module('LegacyViews', {
         try {
             await testUtils.dom.click(kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_action"]'));
             assert.strictEqual(true, true, 'Everything went fine');
-        } catch (_e) {
+        } catch {
             assert.strictEqual(true, false, 'Error triggered at action execution');
         }
         kanban.destroy();

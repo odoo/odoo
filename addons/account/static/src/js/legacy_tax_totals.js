@@ -81,7 +81,7 @@ class LegacyTaxGroupComponent extends LegacyComponent {
             newValue = fieldUtils.parse.float(newValue); // Need a float for format the value
             newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits}); // Return a string rounded to currency precision
             newValue = fieldUtils.parse.float(newValue); // Convert back to Float to compare with oldValue to know if value has changed
-        } catch (_err) {
+        } catch {
             $(this.inputTax.el).addClass('o_field_invalid');
             this.setState('edit');
             return;

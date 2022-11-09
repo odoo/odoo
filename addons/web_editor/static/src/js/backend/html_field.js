@@ -409,7 +409,7 @@ export class HtmlField extends Component {
                 const cwindow = this.iframeRef.el.contentWindow;
                 try {
                     cwindow.document;
-                } catch (_e) {
+                } catch {
                     return;
                 }
                 cwindow.document

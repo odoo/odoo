@@ -22,7 +22,7 @@ export class ModelFieldSelectorPopover extends Component {
         this.fullFieldName = this.fieldNameChain.join(".");
         if (!this.env.isSmall) {
             useAutofocus();
-            useAutofocus({ refName: 'autofocusDefaultValue', selectAll: true });
+            useAutofocus({ refName: "autofocusDefaultValue", selectAll: true });
         }
 
         onWillStart(async () => {
@@ -48,9 +48,9 @@ export class ModelFieldSelectorPopover extends Component {
 
     async loadFields() {
         this.unfilteredFields = await this.modelField.loadModelFields(this.currentNode.resModel);
-        this.fields = {...this.unfilteredFields};
+        this.fields = { ...this.unfilteredFields };
         this.fieldKeys = this.sortedKeys(this.fields);
-        for (let key of this.fieldKeys) {
+        for (const key of this.fieldKeys) {
             const field = this.fields[key];
             if (!field.searchable || !this.props.filter(field)) {
                 delete this.fields[key];
@@ -75,7 +75,7 @@ export class ModelFieldSelectorPopover extends Component {
             case "ArrowUp":
                 ev.preventDefault();
                 ev.stopPropagation();
-                if (this.currentActiveFieldId> 0) {
+                if (this.currentActiveFieldId > 0) {
                     this.currentActiveFieldId--;
                     await this.render();
                 }
@@ -83,7 +83,7 @@ export class ModelFieldSelectorPopover extends Component {
             case "ArrowDown":
                 ev.preventDefault();
                 ev.stopPropagation();
-                if (this.currentActiveFieldId < this.fieldKeys.length-1) {
+                if (this.currentActiveFieldId < this.fieldKeys.length - 1) {
                     this.currentActiveFieldId++;
                     await this.render();
                 }
@@ -105,7 +105,10 @@ export class ModelFieldSelectorPopover extends Component {
                 if (this.isDefaultValueVisible) {
                     this.selectDefaultValue(true);
                 } else {
-                    const field = { ...this.fields[this.currentActiveField], name: this.currentActiveField }
+                    const field = {
+                        ...this.fields[this.currentActiveField],
+                        name: this.currentActiveField,
+                    };
                     this.onFieldSelected(field);
                 }
                 break;
@@ -142,7 +145,7 @@ export class ModelFieldSelectorPopover extends Component {
                 field: null,
             });
             this.update();
-        } else if(this.props.needDefaultValue) {
+        } else if (this.props.needDefaultValue) {
             this.isDefaultValueVisible = true;
             this.render();
             this.update();
@@ -152,7 +155,7 @@ export class ModelFieldSelectorPopover extends Component {
             this.props.validate(this.fieldNameChain, this.defaultValue);
         }
     }
-    selectDefaultValue (acceptDefaultValue) {
+    selectDefaultValue(acceptDefaultValue) {
         if (!acceptDefaultValue) {
             this.defaultValue = "";
         }
@@ -166,7 +169,7 @@ export class ModelFieldSelectorPopover extends Component {
         try {
             this.chain = await this.props.loadChain(resModel, this.fullFieldName);
             this.update();
-        } catch (_error) {
+        } catch {
             // WOWL TODO: rethrow error when not the expected type
             this.chain = [{ resModel, field: null }];
             await this.props.update([]);
@@ -186,13 +189,13 @@ ModelFieldSelectorPopover.props = {
     chain: Array,
     update: Function,
     showSearchInput: Boolean,
-    isDebugMode: { type: Boolean, optional: true},
+    isDebugMode: { type: Boolean, optional: true },
     loadChain: Function,
     filter: Function,
     close: Function,
     followRelations: { type: Boolean, optional: true },
-    needDefaultValue: { type: Boolean, optional: true},
-    validate: { type: Function, optional: true},
+    needDefaultValue: { type: Boolean, optional: true },
+    validate: { type: Function, optional: true },
 };
 
-ModelFieldSelectorPopover.template =  "web.ModelFieldSelectorPopover";
+ModelFieldSelectorPopover.template = "web.ModelFieldSelectorPopover";
