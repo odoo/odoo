@@ -96,6 +96,9 @@ export class Record extends DataPoint {
         this._domains = {};
         this._closeInvalidFieldsNotification = () => {};
 
+        this.onWillSaveRecord = params.onWillSaveRecord || (() => {});
+        this.onRecordSaved = params.onRecordSaved || (() => {});
+
         this._requiredFields = {};
         for (const [fieldName, activeField] of Object.entries(this.activeFields)) {
             const { modifiers } = activeField;
@@ -593,6 +596,9 @@ export class Record extends DataPoint {
             resolveSavePromise();
             return false;
         }
+        if ((await this.onWillSaveRecord(this)) === false) {
+            return false;
+        }
         const saveOptions = {
             reload: !options.noReload,
             savePoint: options.savePoint,
@@ -625,6 +631,8 @@ export class Record extends DataPoint {
         }
         this.model.notify();
         resolveSavePromise();
+
+        await this.onRecordSaved(this);
         return true;
     }
 
@@ -1124,6 +1132,9 @@ export class RelationalModel extends Model {
         };
 
         this.initialMode = params.mode;
+
+        this.onWillSaveRecord = params.onWillSaveRecord || (() => {});
+        this.onRecordSaved = params.onRecordSaved || (() => {});
     }
 
     async duplicateDatapoint(record, params) {
@@ -1306,6 +1317,8 @@ export class RelationalModel extends Model {
             {
                 __bm_load_params__: loadParams,
                 mode: this.initialMode,
+                onWillSaveRecord: this.onWillSaveRecord,
+                onRecordSaved: this.onRecordSaved,
             },
             state
         );

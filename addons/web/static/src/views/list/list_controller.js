@@ -73,6 +73,8 @@ export class ListController extends Component {
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
             rootState,
+            onRecordSaved: this.onRecordSaved.bind(this),
+            onWillSaveRecord: this.onWillSaveRecord.bind(this),
         });
 
         onWillStart(async () => {
@@ -154,6 +156,22 @@ export class ListController extends Component {
             () => [this.model.root.selection.length]
         );
     }
+
+    /**
+     * onRecordSaved is a callBack that will be executed after the save
+     * if it was done. It will therefore not be executed if the record
+     * is invalid or if a server error is thrown.
+     * @param {Record} record
+     */
+    async onRecordSaved(record) {}
+
+    /**
+     * onWillSaveRecord is a callBack that will be executed before the
+     * record save if the record is valid if the record is valid.
+     * If it returns false, it will prevent the save.
+     * @param {Record} record
+     */
+    async onWillSaveRecord(record) {}
 
     async createRecord({ group } = {}) {
         const list = (group && group.list) || this.model.root;
