@@ -14,7 +14,7 @@ export const activityService = {
         // not waiting for this on purpose: we do not want to delay the web client
         orm.call("res.users", "systray_get_activities").then((activities) => {
             let total = 0;
-            for (let activity of activities) {
+            for (const activity of activities) {
                 total += activity.total_count;
             }
             state.counter = total;
@@ -44,7 +44,7 @@ export const activityService = {
         }
 
         bus.addEventListener("notification", (notifEvent) => {
-            for (let notif of notifEvent.detail) {
+            for (const notif of notifEvent.detail) {
                 if (notif.type === "mail.activity/updated") {
                     if (notif.payload.activity_created) {
                         state.counter++;

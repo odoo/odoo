@@ -40,7 +40,7 @@ export function makeTestEnv(rpc) {
     const orm = ormService.start(env, { rpc, user });
     env.services.orm = orm;
     const activity = activityService.start(env, { action, bus_service, orm });
-    env.services['mail.activity'] = activity;
+    env.services["mail.activity"] = activity;
 
     const messaging = messagingService.start(env, { rpc, orm, user, router, bus_service });
     env.services["mail.messaging"] = messaging;

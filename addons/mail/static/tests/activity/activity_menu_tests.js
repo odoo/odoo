@@ -17,7 +17,9 @@ QUnit.module("mail", (hooks) => {
         const server = new TestServer();
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(ActivityMenu, target, { env });
-        await click(document.querySelector("i[aria-label='Activities']").closest('.dropdown-toggle'));
+        await click(
+            document.querySelector("i[aria-label='Activities']").closest(".dropdown-toggle")
+        );
         assert.containsOnce(target, ".o-mail-no-activity");
     });
 });

@@ -21,7 +21,7 @@ QUnit.module("mail", (hooks) => {
     QUnit.test("sanity check", async (assert) => {
         const server = new TestServer();
         const env = makeTestEnv((route, params) => {
-            if (route.startsWith('/mail')) {
+            if (route.startsWith("/mail")) {
                 assert.step(route);
             }
             return server.rpc(route, params);
@@ -65,7 +65,7 @@ QUnit.module("mail", (hooks) => {
         const server = new TestServer();
         server.addChannel(1, "general", "General announcements...");
         const env = makeTestEnv((route, params) => {
-            if (route.startsWith('/mail')) {
+            if (route.startsWith("/mail")) {
                 assert.step(route);
             }
             return server.rpc(route, params);
@@ -88,8 +88,11 @@ QUnit.module("mail", (hooks) => {
         const server = new TestServer();
         const env = makeTestEnv((route, params) => {
             if (
-                route.startsWith('/mail') ||
-                ["/web/dataset/call_kw/mail.channel/search_read", "/web/dataset/call_kw/mail.channel/channel_create"].includes(route)
+                route.startsWith("/mail") ||
+                [
+                    "/web/dataset/call_kw/mail.channel/search_read",
+                    "/web/dataset/call_kw/mail.channel/channel_create",
+                ].includes(route)
             ) {
                 assert.step(route);
             }
@@ -116,8 +119,11 @@ QUnit.module("mail", (hooks) => {
         server.addPartner(43, "abc");
         const env = makeTestEnv((route, params) => {
             if (
-                route.startsWith('/mail') ||
-                ["/web/dataset/call_kw/res.partner/im_search", "/web/dataset/call_kw/mail.channel/channel_get"].includes(route)
+                route.startsWith("/mail") ||
+                [
+                    "/web/dataset/call_kw/res.partner/im_search",
+                    "/web/dataset/call_kw/mail.channel/channel_get",
+                ].includes(route)
             ) {
                 assert.step(route);
             }

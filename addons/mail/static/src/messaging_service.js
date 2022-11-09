@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { _lt } from "@web/core/l10n/translation";
 import { Messaging } from "./messaging";
 import { reactive } from "@odoo/owl";
 
@@ -11,10 +10,10 @@ export const messagingService = {
         // compute initial discuss thread
         let threadId = "inbox";
         const activeId = router.current.hash.active_id;
-        if (typeof activeId === 'string' && activeId.startsWith("mail.box_")) {
+        if (typeof activeId === "string" && activeId.startsWith("mail.box_")) {
             threadId = activeId.slice(9);
         }
-        if (typeof activeId === 'string' && activeId.startsWith("mail.channel_")) {
+        if (typeof activeId === "string" && activeId.startsWith("mail.channel_")) {
             threadId = parseInt(activeId.slice(13), 10);
         }
 

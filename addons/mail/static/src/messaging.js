@@ -80,7 +80,7 @@ export class Messaging {
         this.rpc("/mail/init_messaging", {}, { silent: true }).then((data) => {
             this.createPartner(data.current_partner.id, data.current_partner.name);
             this.createPartner(data.partner_root.id, data.partner_root.name);
-            for (let channelData of data.channels) {
+            for (const channelData of data.channels) {
                 this.createChannelThread(channelData);
             }
             this.sortChannels();
@@ -143,7 +143,7 @@ export class Messaging {
             isAdmin: false,
             canLeave: data.canLeave || false,
         };
-        for (let key in data) {
+        for (const key in data) {
             thread[key] = data[key];
         }
         if (type === "channel") {
@@ -155,10 +155,10 @@ export class Messaging {
             this.discuss.chats.threads.push(thread.id);
             if (data.serverData) {
                 const avatarCacheKey = data.serverData.channel.avatarCacheKey;
-                for (let elem of data.serverData.channel.channelMembers[0][1]) {
+                for (const elem of data.serverData.channel.channelMembers[0][1]) {
                     this.createPartner(elem.persona.partner.id, elem.persona.partner.name);
                 }
-                for (let partner of data.serverData.seen_partners_info) {
+                for (const partner of data.serverData.seen_partners_info) {
                     if (partner.partner_id !== this.user.partnerId) {
                         thread.chatPartnerId = partner.partner_id;
                         thread.name = this.partners[partner.partner_id].name;
@@ -243,7 +243,7 @@ export class Messaging {
     // -------------------------------------------------------------------------
     handleNotification(notifications) {
         console.log("notifications received", notifications);
-        for (let notif of notifications) {
+        for (const notif of notifications) {
             switch (notif.type) {
                 case "mail.channel/new_message":
                     {
@@ -285,7 +285,7 @@ export class Messaging {
     }
 
     getChatterThread(resModel, resId) {
-        let localId = resModel + "," + resId;
+        const localId = resModel + "," + resId;
         if (localId in this.threads) {
             if (resId === false) {
                 return this.threads[localId];
@@ -340,7 +340,7 @@ export class Messaging {
                 throw new Error("Unknown thread type");
         }
         const lastMessage = rawMessages[0];
-        for (let data of rawMessages.reverse()) {
+        for (const data of rawMessages.reverse()) {
             this.createMessage(markup(data.body), data, thread);
         }
         thread.status = "ready";
@@ -359,8 +359,8 @@ export class Messaging {
         if (this.previewsProm) {
             return this.previewsProm;
         }
-        let ids = [];
-        for (let thread of Object.values(this.threads)) {
+        const ids = [];
+        for (const thread of Object.values(this.threads)) {
             if (thread.type === "channel" || thread.type === "chat") {
                 ids.push(thread.id);
             }
@@ -371,7 +371,7 @@ export class Messaging {
             this.previewsProm = this.orm
                 .call("mail.channel", "channel_fetch_preview", [ids])
                 .then((previews) => {
-                    for (let preview of previews) {
+                    for (const preview of previews) {
                         preview.last_message.date = markRaw(
                             deserializeDateTime(preview.last_message.date)
                         );
