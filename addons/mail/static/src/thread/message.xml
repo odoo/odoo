@@ -5,16 +5,16 @@
     <div class="o-mail-message py-1 mt-1 px-3 d-flex" t-att-class="{'o-mail-is-author': message.isAuthor}">
         <div class="o-mail-message-sidebar d-flex flex-shrink-0 justify-content-center">
             <div t-if="!props.squashed" class="o-mail-avatar-container position-relative">
-                <img class="w-100 h-100 rounded-circle o_object_fit_cover cursor-pointer o_redirect"
+                <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect" t-att-class="{ 'cursor-pointer': props.hasActions }"
                     t-attf-src="/mail/channel/1/partner/{{message.authorId}}/avatar_128"/>
             </div>
         </div>
         <div>
             <div t-if="!props.squashed" class="o-mail-msg-header d-flex flex-wrap align-items-baseline">
                 <span class="o-mail-own-name">
-                    <strong class="o_redirect me-1 text-truncate cursor-pointer">
+                    <strong class="o_redirect me-1 text-truncate" t-att-class="{ 'cursor-pointer': props.hasActions}">
                     <t t-esc="author.name"/>
-                    </strong> - 
+                    </strong> -
                 </span>
                 <small class="text-muted opacity-50 ms-2" t-att-title="message.dateTimeStr">
                     <RelativeTime datetime="message.dateTime" />
@@ -47,12 +47,14 @@
                         <t t-out="message.body"/>
                     </div>
                 </t>
-                <div class="o-mail-message-actions invisible">
+                <div t-if="props.hasActions" class="o-mail-message-actions invisible">
                     <div class="rounded-1 shadow-sm">
                         <i class="cursor-pointer px-1 py-2 fa fa-lg"
-                            t-att-class="message.isStarred ? 'fa-star' : 'fa-star-o'" 
+                            t-att-class="message.isStarred ? 'fa-star' : 'fa-star-o'"
                             t-on-click="toggleStar"
-                            role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"></i>
+                            role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"/>
+                        <i class="cursor-pointer px-1 py-2 fa fa-lg fa-trash" t-if="canBeDeleted" t-on-click="onClickDelete"
+                            role="button" tabindex="0" title="Delete" aria-label="Delete"/>
                     </div>
                 </div>
             </div>
