@@ -1429,7 +1429,6 @@ class DynamicList extends DataPoint {
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
         this.loadedCount = state.loadedCount || 0;
-        this.previousParams = state.previousParams || "[]";
 
         this.editedRecord = null;
         this.onCreateRecord = params.onCreateRecord || (() => {});
@@ -1468,10 +1467,6 @@ class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
-
-    get currentParams() {
-        return JSON.stringify([this.domain, this.groupBy]);
-    }
 
     get firstGroupBy() {
         return this.groupBy[0] || false;
@@ -1539,7 +1534,6 @@ class DynamicList extends DataPoint {
             limit: this.limit,
             loadedCount: this.records.length,
             orderBy: this.orderBy,
-            previousParams: this.currentParams,
         };
     }
 
@@ -2253,18 +2247,8 @@ export class DynamicGroupList extends DynamicList {
         this.limit = params.limit === undefined ? this.limit : params.limit;
         this.offset = params.offset === undefined ? this.offset : params.offset;
         /** @type {[Group, number][]} */
-        const previousGroups = this.groups.map((g, i) => [g, i]);
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
-        if (this.previousParams === this.currentParams) {
-            for (const [group, index] of previousGroups) {
-                const newGroup = this.groups.find((g) => group.valueEquals(g.value));
-                if (!group.deleted && !newGroup) {
-                    group.empty();
-                    this.groups.splice(index, 0, group);
-                }
-            }
-        }
     }
 
     get nbTotalRecords() {
