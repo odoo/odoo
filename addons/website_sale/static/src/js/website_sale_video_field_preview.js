@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+// TODO: move backend/views/fields
+
 import { registry } from "@web/core/registry";
 
 const { Component }  = owl;

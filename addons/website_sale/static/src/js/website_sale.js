@@ -1,195 +1,3 @@
-odoo.define('website_sale.cart', function (require) {
-'use strict';
-
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
-var _t = core._t;
-
-var timeout;
-
-publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
-    selector: '#top_menu a[href$="/shop/cart"]',
-    events: {
-        'mouseenter': '_onMouseEnter',
-        'mouseleave': '_onMouseLeave',
-        'click': '_onClick',
-    },
-
-    /**
-     * @constructor
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this._popoverRPC = null;
-        this._onVisibilityChange = this._onVisibilityChange.bind(this);
-    },
-    /**
-     * @override
-     */
-    willStart() {
-        return Promise.all([this._super.apply(this, arguments), this._updateCartQuantityValue()]);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this.$el.popover({
-            trigger: 'manual',
-            animation: true,
-            html: true,
-            title: function () {
-                return _t("My Cart");
-            },
-            container: 'body',
-            placement: 'auto',
-            template: '<div class="popover mycart-popover" role="tooltip"><div class="tooltip-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
-        });
-        window.addEventListener('visibilitychange', this._onVisibilityChange);
-        this._updateCartQuantityText();
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        window.removeEventListener('visibilitychange', this._onVisibilityChange);
-        this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMouseEnter: function (ev) {
-        let self = this;
-        self.hovered = true;
-        clearTimeout(timeout);
-        $(this.selector).not(ev.currentTarget).popover('hide');
-        timeout = setTimeout(function () {
-            if (!self.hovered || $('.mycart-popover:visible').length) {
-                return;
-            }
-            self._popoverRPC = $.get("/shop/cart", {
-                type: 'popover',
-            }).then(function (data) {
-                const popover = Popover.getInstance(self.$el[0]);
-                popover._config.content = data;
-                popover.setContent(popover.getTipElement());
-                self.$el.popover("show");
-                $('.popover').on('mouseleave', function () {
-                    self.$el.trigger('mouseleave');
-                });
-                self.cartQty = +$(data).find('.o_wsale_cart_quantity').text();
-                sessionStorage.setItem('website_sale_cart_quantity', self.cartQty);
-                self._updateCartQuantityText();
-            });
-        }, 300);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMouseLeave: function (ev) {
-        let self = this;
-        self.hovered = false;
-        setTimeout(function () {
-            if ($('.popover:hover').length) {
-                return;
-            }
-            if (!self.$el.is(':hover')) {
-               self.$el.popover('hide');
-            }
-        }, 1000);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClick: function (ev) {
-        // When clicking on the cart link, prevent any popover to show up (by
-        // clearing the related setTimeout) and, if a popover rpc is ongoing,
-        // wait for it to be completed before going to the link's href. Indeed,
-        // going to that page may perform the same computation the popover rpc
-        // is already doing.
-        clearTimeout(timeout);
-        if (this._popoverRPC && this._popoverRPC.state() === 'pending') {
-            ev.preventDefault();
-            var href = ev.currentTarget.href;
-            this._popoverRPC.then(function () {
-                window.location.href = href;
-            });
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onVisibilityChange(ev) {
-        if (ev.target.visibilityState === 'visible'){
-            this._updateCartQuantityValue().then(this._updateCartQuantityText.bind(this));
-        }
-    },
-    /**
-     * @private
-     */
-    async _updateCartQuantityValue() {
-        if ('website_sale_cart_quantity' in sessionStorage) {
-            this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
-        }
-        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
-            return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
-                this.cartQty = cartQty;
-                sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
-            });
-        }
-    },
-    /**
-     * @private
-     */
-    _updateCartQuantityText() {
-        if (this.cartQty !== undefined) {
-            this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
-        }
-    }
-});
-});
-
-odoo.define('website_sale.website_sale_offcanvas', function (require) {
-'use strict';
-
-var publicWidget = require('web.public.widget');
-
-publicWidget.registry.websiteSaleOffcanvas = publicWidget.Widget.extend({
-    selector: '#o_wsale_offcanvas',
-    events: {
-        'show.bs.offcanvas': '_toggleFilters',
-        'hidden.bs.offcanvas': '_toggleFilters',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Unfold active filters, fold inactive ones
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _toggleFilters: function (ev) {
-        for (const btn of this.el.querySelectorAll('button[data-status]')) {
-            if(btn.classList.contains('collapsed') && btn.dataset.status == "active" || ! btn.classList.contains('collapsed') && btn.dataset.status == "inactive" ) {
-                btn.click();
-            }
-        }
-    },
-});
-});
-
 odoo.define('website_sale.website_sale', function (require) {
 'use strict';
 
@@ -216,11 +24,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
         'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
-        'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'click .show_coupon': '_onClickShowCoupon',
-        'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
@@ -734,17 +540,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @private
      * @param {Event} ev
      */
-    _onChangeAttribute: function (ev) {
-        if (!ev.isDefaultPrevented()) {
-            ev.preventDefault();
-            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
-            $(ev.currentTarget).closest("form").submit();
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onMouseupAddCartLabel: function (ev) { // change price when they are variants
         var $label = $(ev.currentTarget);
         var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
@@ -763,23 +558,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onClickShowCoupon: function (ev) {
         $(".show_coupon").hide();
         $('.coupon_form').removeClass('d-none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onSubmitSaleSearch: function (ev) {
-        if (!this.$('.dropdown_sorty_by').length) {
-            return;
-        }
-        var $this = $(ev.currentTarget);
-        if (!ev.isDefaultPrevented() && !$this.is(".disabled")) {
-            ev.preventDefault();
-            var oldurl = $this.attr('action');
-            oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
-            var search = $this.find('input.search-query');
-            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
-        }
     },
     /**
      * @private
@@ -1159,40 +937,4 @@ return {
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
 };
 
-});
-
-odoo.define('website_sale.price_range_option', function (require) {
-'use strict';
-
-const publicWidget = require('web.public.widget');
-
-publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
-    selector: '.o_wsale_products_page',
-    events: {
-        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
-    },
-
-    //----------------------------------------------------------------------
-    // Handlers
-    //----------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onPriceRangeSelected(ev) {
-        const range = ev.currentTarget;
-        const search = $.deparam(window.location.search.substring(1));
-        delete search.min_price;
-        delete search.max_price;
-        if (parseFloat(range.min) !== range.valueLow) {
-            search['min_price'] = range.valueLow;
-        }
-        if (parseFloat(range.max) !== range.valueHigh) {
-            search['max_price'] = range.valueHigh;
-        }
-        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
-        window.location.search = $.param(search);
-    },
-});
 });
