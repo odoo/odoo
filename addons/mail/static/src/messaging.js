@@ -452,8 +452,7 @@ export class Messaging {
         const data = await this.orm.call("mail.channel", "channel_get", [], {
             partners_to: [id],
         });
-        this.createThread(data.id, undefined, "chat", { serverData: data });
-        this.discuss.threadId = data.id;
+        return this.createThread(data.id, undefined, "chat", { serverData: data });
     }
 
     async leaveChannel(id) {
