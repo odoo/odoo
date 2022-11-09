@@ -42,9 +42,13 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 });
             }
             _setOrder(order) {
-                if (!this.env.pos.config.iface_floorplan || order === this.env.pos.get_order()) {
+                const current_order = this.env.pos.get_order();
+                if (current_order){
+                    this.env.pos.sync_from_server(current_order.table, [current_order], [current_order.uid]);
+                }
+                if (!this.env.pos.config.iface_floorplan || order === current_order) {
                     super._setOrder(order);
-                } else if (order !== this.env.pos.get_order()) {
+                } else if (order !== current_order) {
                     // Only call set_table if the order is not the same as the current order.
                     // This is to prevent syncing to the server because syncing is only intended
                     // when going back to the floorscreen or opening a table.
@@ -127,6 +131,13 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     this.env.pos.set_table(this.getSelectedSyncedOrder().table ? this.getSelectedSyncedOrder().table : Object.values(this.env.pos.tables_by_id)[0]);
                 }
                 super._onDoRefund();
+            }
+            _onCreateNewOrder() {
+                const current_order = this.env.pos.get_order();
+                if (current_order){
+                    this.env.pos.sync_from_server(current_order.table, [current_order], [current_order.uid]);
+                }
+                super._onCreateNewOrder();
             }
         };
 

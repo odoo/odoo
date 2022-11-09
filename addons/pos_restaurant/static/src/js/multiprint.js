@@ -278,6 +278,13 @@ models.Order = models.Order.extend({
                 }
             }
         }
+        if (isPrintSuccessful) {
+            this.orderlines.each(function(line){
+                line.set_dirty(false);
+            });
+            this.saved_resume = this.build_line_resume();
+            this.pos.sync_from_server(this.table, [this], [this.uid]);
+        }
         return isPrintSuccessful;
     },
     hasChangesToPrint: function(){
