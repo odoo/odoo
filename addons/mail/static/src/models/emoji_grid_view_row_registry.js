@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
+import { fuzzyLookup } from "@web/core/utils/search";
 
 registerModel({
     name: 'EmojiGridViewRowRegistry',
@@ -35,7 +36,11 @@ registerModel({
             if (this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch === "") {
                 return clear();
             }
-            const emojis = this.messaging.emojiRegistry.allEmojis.filter(this.emojiGridViewOwner._filterEmoji);
+            const emojis = fuzzyLookup(
+                this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch,
+                this.messaging.emojiRegistry.allEmojis,
+                (emoji) => emoji.searchData,
+            );
             const value = [];
             let index = 0;
             let currentItems = [];

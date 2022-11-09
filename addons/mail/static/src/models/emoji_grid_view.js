@@ -42,14 +42,6 @@ registerModel({
                 }
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         * Filters emoji according to the current search terms.
-         */
-        _filterEmoji(emoji) {
-            return (emoji._isStringInEmojiKeywords(this.emojiPickerViewOwner.emojiSearchBarView.currentSearch));
-        },
     },
     fields: {
         amountOfItemsPerRow: attr({

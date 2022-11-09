@@ -6,40 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Emoji',
-    recordMethods: {
-        /**
-         * Compares two strings
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _fuzzySearch(string, search) {
-            let i = 0;
-            let j = 0;
-            while (i < string.length) {
-                if (string[i] === search[j]) {
-                    j += 1;
-                }
-                if (j === search.length) {
-                    return true;
-                }
-                i += 1;
-            }
-            return false;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _isStringInEmojiKeywords(string) {
-            for (let index in this.searchData) {
-                if (this._fuzzySearch(this.searchData[index], string)) { //If at least one correspondence is found, return true.
-                    return true;
-                }
-            }
-            return false;
-        },
-    },
     fields: {
         allEmojiInCategoryOfCurrent: many('EmojiInCategory', {
             compute() {

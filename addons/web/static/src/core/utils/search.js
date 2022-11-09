@@ -4,35 +4,46 @@ import { unaccent } from "./strings";
 
 /**
  * This private function computes a score that represent the fact that the
- * string contains the pattern, or not
+ * searchData contains the pattern, or not
  *
- * - If the score is 0, the string does not contain the letters of the pattern in
+ * - If the score is 0, the searchData does not contain the letters of the pattern in
  *   the correct order.
  * - if the score is > 0, it actually contains the letters.
  *
  * Better matches will get a higher score: consecutive letters are better,
- * and a match closer to the beginning of the string is also scored higher.
+ * and a match closer to the beginning of the matching keyword from searchData
+ * is also scored higher.
  */
-function match(pattern, str) {
-    let totalScore = 0;
-    let currentScore = 0;
-    const len = str.length;
-    let patternIndex = 0;
-
-    pattern = unaccent(pattern, false);
-    str = unaccent(str, false);
-
-    for (let i = 0; i < len; i++) {
-        if (str[i] === pattern[patternIndex]) {
-            patternIndex++;
-            currentScore += 100 + currentScore - i / 200;
-        } else {
-            currentScore = 0;
-        }
-        totalScore = totalScore + currentScore;
+function match(pattern, searchData) {
+    if (typeof searchData === 'string') {
+        searchData = [ searchData ];
     }
 
-    return patternIndex === pattern.length ? totalScore : 0;
+    pattern = unaccent(pattern, false);
+    const patternLen = pattern.length;
+    let finalScore = 0;
+
+    for (let keyword of searchData) {
+        keyword = unaccent(keyword, false);
+        let totalScore = 0;
+        let currentScore = 0;
+        const len = keyword.length;
+        let patternIndex = 0;
+
+        for (let i = 0; i < len; i++) {
+            if (keyword[i] === pattern[patternIndex]) {
+                patternIndex++;
+                currentScore += 100 + currentScore - i / 200;
+            } else {
+                currentScore = 0;
+            }
+            totalScore = totalScore + currentScore;
+        }
+
+        finalScore = Math.max(finalScore, patternIndex === patternLen ? totalScore : 0);
+    }
+
+    return finalScore;
 }
 
 /**
