@@ -737,7 +737,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
-            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+            const productGrid = this.el.querySelector(".o_wsale_products_grid_table_wrapper");
+            if (productGrid) {
+                productGrid.classList.add("opacity-50");
+            }
             $(ev.currentTarget).closest("form").submit();
         }
     },
