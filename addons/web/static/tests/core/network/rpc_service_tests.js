@@ -247,12 +247,22 @@ QUnit.test("check connection aborted", async (assert) => {
     const MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({ serviceRegistry });
+<<<<<<< HEAD
     env.bus.addEventListener("RPC:REQUEST", () => {
         assert.step("RPC:REQUEST");
     });
     env.bus.addEventListener("RPC:RESPONSE", () => {
         assert.step("RPC:RESPONSE");
     });
+||||||| parent of ecee1901e09b... temp
+=======
+    env.bus.on("RPC:REQUEST", null, (rpcId) => {
+        assert.step("RPC:REQUEST");
+    });
+    env.bus.on("RPC:RESPONSE", null, (rpcId) => {
+        assert.step("RPC:RESPONSE");
+    });
+>>>>>>> ecee1901e09b... temp
 
     const connection = env.services.rpc();
     connection.abort();
