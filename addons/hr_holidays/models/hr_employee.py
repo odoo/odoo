@@ -5,6 +5,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
@@ -129,7 +130,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('state', 'not in', ('cancel', 'refuse'))
+            ('state', '=', 'validate'),
         ])
         leave_data = {}
         for holiday in holidays:
@@ -163,6 +164,8 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.show_leaves = False
 
     def _search_absent_employee(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
         # This search is only used for the 'Absent Today' filter however
         # this only returns employees that are absent right now.
         today_date = datetime.datetime.utcnow().date()
@@ -170,14 +173,12 @@ class HrEmployeeBase(models.AbstractModel):
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
-            ('state', 'not in', ['cancel', 'refuse']),
+            ('state', '=', 'validate'),
             ('date_from', '<=', today_end),
             ('date_to', '>=', today_start),
         ])
-        op = 'not in'
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            op = 'in'
-        return [('id', op, holidays.mapped('employee_id').ids)]
+        operator = ['in', 'not in'][(operator == '=') != value]
+        return [('id', operator, holidays.mapped('employee_id').ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -242,7 +243,7 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('state', 'not in', ('cancel', 'refuse'))
+            ('state', '=', 'validate'),
         ])
         for holiday in holidays:
             employee = self.filtered(lambda e: e.id == holiday.employee_id.id)
