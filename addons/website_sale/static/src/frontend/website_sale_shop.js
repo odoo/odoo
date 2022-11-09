@@ -17,8 +17,10 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
         // Offcanvas
         "show.bs.offcanvas #o_wsale_offcanvas": "toggleFilters",
         "hidden.bs.offcanvas #o_wsale_offcanvas": "toggleFilters",
-        // Filters and options
+        // Filters, search and options
+        "submit .o_wsale_products_searchbar_form": "onSubmitSearch",
         'newRangeValue #o_wsale_price_range_option input[type="range"]': "onPriceRangeSelected",
+        "change form.js_attributes input, form.js_attributes select": "onChangeAttribute",
         "click [data-link-href]": "onClickLink",
     },
 
@@ -58,21 +60,120 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
     },
 
     /**
+     * Redirects to the same page, using the query keys and values as arguments.
+     *
+     * @param {Object} query new key/values to use, undefined value means removing the key.
+     * @param {Boolean} keepQuery whether or not to reset the query completely and just use the given query
+     */
+    _redirectNewQuery(query, keepQuery = true) {
+        const newQuery = (keepQuery && new URLSearchParams(window.location.search)) || new URLSearchParams();
+        for (const [key, value] of Object.entries(query)) {
+            if (value === undefined) {
+                newQuery.delete(key);
+            } else {
+                newQuery.set(key, value);
+            }
+        }
+        this._redirectQuery(newQuery);
+    },
+
+    /**
+     * Properly redirects to the current page given the new params.
+     * If no params are to be set, no url arguments are set.
+     * Removes empty values
+     *
+     * @param {URLSearchParams} query
+     */
+    _redirectQuery(query) {
+        const keysToRemove = [];
+        for (const [k, v] of query.entries()) {
+            if (!encodeURIComponent(v).length) {
+                keysToRemove.push(k);
+            }
+        }
+        keysToRemove.forEach((k) => query.delete(k));
+        let searchString = encodeURI(query);
+        if (searchString) {
+            searchString = "?" + searchString;
+        }
+        this._obscureProductGrid();
+        window.location.href = window.location.pathname + searchString;
+    },
+
+    /**
+     * Handle new search, when querying a new string,
+     * make sure we keep all current filters.
+     *
+     * @param {SubmitEvent} ev event
+     */
+    onSubmitSearch(ev) {
+        if (ev.isDefaultPrevented() || ev.currentTarget.classList.contains("disabled")) {
+            return;
+        }
+        ev.preventDefault();
+        const searchInput = ev.currentTarget.querySelector("input.search-query");
+        this._redirectNewQuery({ [searchInput.name]: encodeURIComponent(searchInput.value) });
+    },
+
+    /**
      * Handle change of price filter.
      */
     onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
+        this._redirectNewQuery({
+            min_price: parseFloat(range) !== range.valueLow ? range.valueLow : undefined,
+            max_price: parseFloat(range) !== range.valueHigh ? range.valueHigh : undefined,
+        });
+    },
+
+    /**
+     * Handle change of attribute filter
+     */
+    onChangeAttribute(ev) {
+        if (ev.isDefaultPrevented()) {
+            return;
+        }
+        ev.preventDefault();
+        const target = ev.currentTarget;
+        // We have 2 cases, a checkbox or a select
+        const valuesToRemove = [];
+        let valueToAdd = undefined;
+        switch (target.tagName) {
+            case "INPUT":
+                if (target.checked) {
+                    valueToAdd = target.value;
+                } else {
+                    valuesToRemove.push(target.value);
+                }
+                break;
+            case "SELECT":
+                const optionValues = [...target.options].map((opt) => opt.value);
+                if (target.value.length) {
+                    // Value Selected
+                    valuesToRemove.push(...optionValues.filter((opt) => opt !== target.value));
+                    valueToAdd = target.value;
+                } else {
+                    // Value removed
+                    valuesToRemove.push(...optionValues);
+                }
+                break;
+        }
+        // Initial value
         const searchParams = new URLSearchParams(window.location.search);
-        searchParams.delete("min_price");
-        searchParams.delete("max_price");
-        if (parseFloat(range.min) !== range.valueLow) {
-            searchParams.set("min_price", range.valueLow);
+        let attribQueryOpt = searchParams.getAll("attrib") || [];
+        // Remove invalid values
+        attribQueryOpt = attribQueryOpt.filter((opt) => !valuesToRemove.includes(opt));
+        // Add new value
+        if (valueToAdd) {
+            attribQueryOpt.push(valueToAdd);
         }
-        if (parseFloat(range.max) !== range.valueHigh) {
-            searchParams.set("max_price", range.valueHigh);
+        searchParams.delete("attrib");
+        if (attribQueryOpt) {
+            for (const attrib of attribQueryOpt) {
+                searchParams.append("attrib", attrib);
+            }
         }
-        this._obscureProductGrid();
-        window.location.href = window.location.pathname + "?" + searchParams.toString();
+        this._redirectQuery(searchParams);
     },
 
     /**

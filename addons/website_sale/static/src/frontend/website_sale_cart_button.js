@@ -100,6 +100,7 @@ export const OwnedWebsiteSaleCartButton = Widget.extend({
 
     onClick(ev) {
         const productInfo = this.getProductInfo(ev);
+        // TODO: we actually need either product_id or template + combination; both are fine
         if (!productInfo.product_id) {
             throw new Error(_t("The button does not have enough information to be able to add the product to cart."));
         }

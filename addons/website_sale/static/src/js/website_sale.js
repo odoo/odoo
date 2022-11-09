@@ -24,11 +24,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
         'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
-        'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute', // => /shop
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'click .show_coupon': '_onClickShowCoupon',
-        'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
@@ -542,17 +540,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @private
      * @param {Event} ev
      */
-    _onChangeAttribute: function (ev) { // => website_sale_shop.js
-        if (!ev.isDefaultPrevented()) {
-            ev.preventDefault();
-            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
-            $(ev.currentTarget).closest("form").submit();
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onMouseupAddCartLabel: function (ev) { // change price when they are variants
         var $label = $(ev.currentTarget);
         var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
@@ -571,23 +558,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onClickShowCoupon: function (ev) {
         $(".show_coupon").hide();
         $('.coupon_form').removeClass('d-none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onSubmitSaleSearch: function (ev) {
-        if (!this.$('.dropdown_sorty_by').length) {
-            return;
-        }
-        var $this = $(ev.currentTarget);
-        if (!ev.isDefaultPrevented() && !$this.is(".disabled")) {
-            ev.preventDefault();
-            var oldurl = $this.attr('action');
-            oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
-            var search = $this.find('input.search-query');
-            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
-        }
     },
     /**
      * @private
