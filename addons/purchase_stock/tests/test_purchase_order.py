@@ -452,3 +452,26 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             with po_form.order_line.edit(0) as pol_form:
                 pol_form.product_qty = 25
         self.assertEqual(pol.name, "[C02] Name02")
+
+    def test_packaging_and_qty_decrease(self):
+        packaging = self.env['product.packaging'].create({
+            'name': "Super Packaging",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.product_packaging_id, packaging)
+
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as line:
+                line.product_qty = 8
+
+        self.assertEqual(po.picking_ids.move_lines.product_uom_qty, 8)
