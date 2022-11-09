@@ -5,6 +5,9 @@ from . import db
 from . import model
 from . import server
 
+# deprecated since 15.3
+from . import wsgi_server
+
 import logging
 import threading
 
