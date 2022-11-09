@@ -9,10 +9,11 @@ import { htmlToTextContentInline, removeFromArray } from "./utils";
 const { DateTime } = luxon;
 
 export class Messaging {
-    constructor(env, rpc, orm, user, router, initialThreadId) {
+    constructor(env, rpc, orm, user, router, initialThreadId, notification) {
         this.env = env;
         this.rpc = rpc;
         this.orm = orm;
+        this.notification = notification;
         this.nextId = 1;
         this.router = router;
         this.isReady = new Deferred();
