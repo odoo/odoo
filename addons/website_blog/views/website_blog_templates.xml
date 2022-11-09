@@ -36,7 +36,7 @@ list of filtered posts (by date or tag).
 
         <div id="o_wblog_blog_top">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
-            <t t-if="not tag and not date_begin">
+            <t t-if="not tag and not date_begin and not search">
                 <div id="o_wblog_blog_top_droppable">
                     <t t-if="blog">
                         <t t-set="oe_structure_blog_single_header_description">Edit the '<t t-esc="blog.name"/>' page header.</t>
