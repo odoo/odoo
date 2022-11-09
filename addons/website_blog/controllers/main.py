@@ -100,8 +100,9 @@ class WebsiteBlog(http.Controller):
         offset = (page - 1) * self._blog_post_per_page
         first_post = BlogPost
         if not blog:
-            first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1)
-            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
+            # TODO adapt next line in master.
+            first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1) if not search else first_post
+            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
                 offset += 1
 
         if search:
