@@ -488,6 +488,10 @@
         .o_kanban_group,
         .o_column_quick_create {
             flex-basis: var(--KanbanGroup-width);
+
+            @include media-breakpoint-up(md) {
+                max-width: var(--KanbanGroup-width);
+            }
         }
     }
 
