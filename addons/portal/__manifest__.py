@@ -17,6 +17,7 @@ of this module is to allow the display of a customer portal without having
 a dependency towards website editing and customization capabilities.""",
     'depends': ['web', 'web_editor', 'http_routing', 'mail', 'auth_signup'],
     'data': [
+        'security/portal_security.xml',
         'security/ir.model.access.csv',
         'data/portal_data.xml',
         'views/assets.xml',

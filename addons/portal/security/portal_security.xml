@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_manager_all_portal_share_rule" model="ir.rule">
+        <field name="name">Portal Share: partner manager: see all</field>
+        <field name="model_id" ref="portal.model_portal_share"/>
+        <field name="domain_force">[(1, =, 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_partner_manager'))]"/>
+    </record>
+</odoo>
