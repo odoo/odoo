@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.partner_im_status" owl="1">
+        <span class="o-mail-partner-im-status d-flex flex-column fa-stack">
+            <t t-if="props.partner.im_status === 'online'">
+                <i class="o_PersonaImStatusIconView_icon o-online fa fa-circle fa-stack-1x text-primary" title="Online" role="img" aria-label="User is online" />
+            </t>
+            <t t-if="props.partner.im_status === 'away'">
+                <i class="o_PersonaImStatusIconView_icon o-away fa fa-circle fa-stack-1x text-warning" title="Idle" role="img" aria-label="User is idle" />
+            </t>
+            <t t-if="props.partner.im_status === 'offline'">
+                <i class="o_PersonaImStatusIconView_icon o-offline fa fa-circle-o fa-stack-1x text-700" title="Offline" role="img" aria-label="User is offline" />
+            </t>
+            <!-- TODO partnerRoot -->
+        </span>
+    </t>
+
+</templates>

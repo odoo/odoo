@@ -4,11 +4,12 @@ import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useMessaging } from "../messaging_hook";
+import { PartnerImStatus } from "../discuss/partner_im_status";
 import { RelativeTime } from "../thread/relative_time";
 
 export class MessagingMenu extends Component {
     static template = "mail.messaging_menu";
-    static components = { Dropdown, RelativeTime };
+    static components = { Dropdown, RelativeTime, PartnerImStatus };
     static props = [];
 
     setup() {

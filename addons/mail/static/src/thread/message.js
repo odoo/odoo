@@ -2,13 +2,14 @@
 
 import { useMessaging } from "../messaging_hook";
 import { RelativeTime } from "./relative_time";
+import { PartnerImStatus } from "../discuss/partner_im_status";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { MessageDeleteDialog } from "@mail/thread/message_delete_dialog";
 
 export class Message extends Component {
     static template = "mail.message";
-    static components = { RelativeTime };
+    static components = { RelativeTime, PartnerImStatus };
     static props = ["hasActions?", "message", "squashed?"];
     static defaultProps = { hasActions: true };
 

@@ -15,7 +15,7 @@ export class Messaging {
         return self;
     }
 
-    setup(env, rpc, orm, user, router, initialThreadId, notification) {
+    setup(env, rpc, orm, user, router, initialThreadId, im_status, notification) {
         this.env = env;
         this.rpc = rpc;
         this.orm = orm;
@@ -24,6 +24,7 @@ export class Messaging {
         this.router = router;
         this.isReady = new Deferred();
         this.previewsProm = null;
+        this.imStatusService = im_status;
 
         // base data
         this.user = {
@@ -92,6 +93,7 @@ export class Messaging {
                 this.createChannelThread(channelData);
             }
             this.sortChannels();
+            // this.updateImStatusRegistration();
             const settings = data.current_user_settings;
             this.discuss.channels.isOpen = settings.is_discuss_sidebar_category_channel_open;
             this.discuss.chats.isOpen = settings.is_discuss_sidebar_category_chat_open;
@@ -130,6 +132,16 @@ export class Messaging {
             const thread2 = this.threads[id2];
             return String.prototype.localeCompare.call(thread1.name, thread2.name);
         });
+    }
+
+    updateImStatusRegistration() {
+        const partnerIds = [];
+        for (const partner in this.partners) {
+            if (partner.im_status !== "im_partner" && !partner.is_public) {
+                partnerIds.push(partner);
+            }
+        }
+        this.imStatusService.registerToImStatus("res.partner", partnerIds);
     }
 
     createThread(id, name, type, data = {}) {
@@ -243,8 +255,9 @@ export class Messaging {
         if (id in this.partners) {
             return this.partners[id];
         }
-        const partner = { id, name };
+        const partner = { id, name, im_status: "" };
         this.partners[id] = partner;
+        this.updateImStatusRegistration();
         return partner;
     }
 
@@ -261,6 +274,15 @@ export class Messaging {
                         const thread = this.threads[id];
                         const body = markup(message.body);
                         this.createMessage(body, message, thread);
+                    }
+                    break;
+                case "mail.record/insert":
+                    {
+                        const partners_in_payload = notif.payload.Partner;
+                        for (const partner in partners_in_payload) {
+                            this.partners[partners_in_payload[partner].id] =
+                                partners_in_payload[partner];
+                        }
                     }
                     break;
             }

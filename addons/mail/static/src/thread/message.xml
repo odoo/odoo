@@ -6,7 +6,10 @@
         <div class="o-mail-message-sidebar d-flex flex-shrink-0 justify-content-center">
             <div t-if="!props.squashed" class="o-mail-avatar-container position-relative">
                 <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect" t-att-class="{ 'cursor-pointer': props.hasActions }"
-                    t-attf-src="/mail/channel/1/partner/{{message.authorId}}/avatar_128"/>
+                    t-attf-src="/mail/channel/1/partner/{{message.authorId}}/avatar_128" />
+                <div class="d-flex justify-content-center flex-shrink-0 position-absolute bottom-0 end-0 align-items-center rounded-circle bg-100 small o-muted">
+                    <PartnerImStatus partner="author"/> <!-- TODO openchat func associated with partner -->
+                </div>
             </div>
         </div>
         <div>
@@ -74,4 +77,3 @@
     </ul>
 </t>
 </templates>
-

@@ -3,6 +3,7 @@
 import { useMessaging } from "../messaging_hook";
 import { ThreadIcon } from "./thread_icon";
 import { ChannelSelector } from "./channel_selector";
+import { PartnerImStatus } from "./partner_im_status";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { onExternalClick } from "../utils";
@@ -10,7 +11,7 @@ import { Component, useState } from "@odoo/owl";
 
 export class Sidebar extends Component {
     static template = "mail.discuss_sidebar";
-    static components = { ChannelSelector, ThreadIcon };
+    static components = { ChannelSelector, ThreadIcon, PartnerImStatus };
     static props = [];
     setup() {
         this.messaging = useMessaging();
