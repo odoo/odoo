@@ -448,11 +448,11 @@ export class Messaging {
         this.discuss.threadId = id;
     }
 
-    async joinChat(id, name) {
+    async joinChat(id) {
         const data = await this.orm.call("mail.channel", "channel_get", [], {
             partners_to: [id],
         });
-        this.createThread(data.id, name, "chat", { serverData: data });
+        this.createThread(data.id, undefined, "chat", { serverData: data });
         this.discuss.threadId = data.id;
     }
 

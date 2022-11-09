@@ -19,10 +19,6 @@ function useDebouncedSearch(fn, delay = 250) {
 }
 
 export class ChannelSelector extends Component {
-    static template = "mail.channel_selector";
-    static props = ["category", "onSelect?"];
-    static components = { AutoComplete };
-
     setup() {
         this.messaging = useMessaging();
         this.orm = useService("orm");
@@ -83,7 +79,7 @@ export class ChannelSelector extends Component {
             if (this.props.category.id === "channels") {
                 this.messaging.joinChannel(choice.id, choice.label);
             } else {
-                this.messaging.joinChat(choice.id, choice.label);
+                this.messaging.joinChat(choice.id);
             }
         }
         if (this.props.onSelect) {
@@ -91,3 +87,9 @@ export class ChannelSelector extends Component {
         }
     }
 }
+
+Object.assign(ChannelSelector, {
+    components: { AutoComplete },
+    props: ["category", "onSelect?"],
+    template: "mail.channel_selector",
+});
