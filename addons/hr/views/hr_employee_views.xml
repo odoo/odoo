@@ -77,7 +77,7 @@
                                         <!-- Employee is not here but according to his work schedule, he should be connected -->
                                         <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
                                     </div>
-                                    <!-- <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/> -->
+                                    <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                 </div>
                             </h1>
                             <h2>
@@ -369,7 +369,7 @@
                                <div class="o_kanban_record_bottom">
                                    <div class="oe_kanban_bottom_left"/>
                                    <div class="oe_kanban_bottom_right float-end pe-auto">
-                                        <!-- <widget name="hr_employee_chat"/> -->
+                                        <widget name="hr_employee_chat"/>
                                         <div class="hr_activity_container mb-1 me-n1">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
