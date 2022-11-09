@@ -558,14 +558,24 @@ class TestSaleMrpKitBom(TransactionCase):
             - Kit 1 with a sales description("test"):
                 |- Compo 1
             - Product 1
+            - Kit 2
+                * Variant 1
+                    - Compo 1
+                * Variant 2
+                    - Compo 1
+            - Kit 4:
+                - Compo 1
+            - Kit 5
+                - Kit 4
+                - Compo 1
 
         This test ensures that, when delivering a Kit product with a sales description,
         the delivery report is correctly printed with all the products.
         """
-        kit_1, component_1, product_1 = self.env['product.product'].create([{
+        kit_1, component_1, product_1, kit_3, kit_4 = self.env['product.product'].create([{
             'name': n,
             'type': 'product',
-        } for n in ['Kit 1', 'Compo 1', 'Product 1']])
+        } for n in ['Kit 1', 'Compo 1', 'Product 1', 'Kit 3', 'Kit 4']])
         kit_1.description_sale = "test"
 
         self.env['mrp.bom'].create([{
@@ -574,6 +584,51 @@ class TestSaleMrpKitBom(TransactionCase):
             'type': 'phantom',
             'bom_line_ids': [
                 (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+        }])
+        colors = ['red', 'blue']
+        prod_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'always'})
+        prod_attr_values = self.env['product.attribute.value'].create([{'name': color, 'attribute_id': prod_attr.id, 'sequence': 1} for color in colors])
+        kit_2 = self.env['product.template'].create({
+            'name': 'Kit 2',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': prod_attr.id,
+                'value_ids': [(6, 0, prod_attr_values.ids)]
+            })]
+        })
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit_2.id,
+            'product_id': kit_2.product_variant_ids[0].id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+        }])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit_2.id,
+            'product_id': kit_2.product_variant_ids[1].id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+        }])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit_3.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+        }])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit_4.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': kit_3.id, 'product_qty': 1}),
             ],
         }])
         customer = self.env['res.partner'].create({
@@ -589,11 +644,27 @@ class TestSaleMrpKitBom(TransactionCase):
                 (0, 0, {
                     'product_id': product_1.id,
                     'product_uom_qty': 1.0,
+                }),
+                (0, 0, {
+                    'product_id': kit_2.product_variant_ids[0].id,
+                    'product_uom_qty': 1.0,
+                }),
+                (0, 0, {
+                    'product_id': kit_2.product_variant_ids[1].id,
+                    'product_uom_qty': 1.0,
+                }),
+                (0, 0, {
+                    'product_id': kit_3.id,
+                    'product_uom_qty': 1.0,
+                }),
+                (0, 0, {
+                    'product_id': kit_4.id,
+                    'product_uom_qty': 1.0,
                 })],
         })
         so.action_confirm()
         picking = so.picking_ids
-        self.assertEqual(len(so.picking_ids.move_ids_without_package), 2)
+        self.assertEqual(len(so.picking_ids.move_ids_without_package), 7)
         picking.move_lines.quantity_done = 1
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
@@ -601,7 +672,8 @@ class TestSaleMrpKitBom(TransactionCase):
         report = self.env['ir.actions.report']._get_report_from_name('stock.report_deliveryslip')
         html_report = report._render_qweb_html(picking.ids)[0].decode('utf-8').split('\n')
         keys = [
-            "Kit 1", "Compo 1",
+            "Kit 1", "Compo 1", "Kit 2 (red)", "Compo 1", "Kit 2 (blue)", "Compo 1",
+            "Kit 3", "Compo 1", "Kit 4", "Compo 1",
             "Products not associated with a kit", "Product 1",
         ]
         for line in html_report:

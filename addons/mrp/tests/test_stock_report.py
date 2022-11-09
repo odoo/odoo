@@ -246,7 +246,7 @@ class TestSaleStockReports(TestReportsCommon):
         keys = [
             "Package0001", "Compo 03",
             "Products with no package assigned", "Compo 01", "Compo 02",
-            "Super Kit", "Compo 01", "Compo 02",
+            "Super Kit", "Compo 01",
             "Sub Kit", "Compo 02", "Compo 03",
         ]
         for line in html_report:
