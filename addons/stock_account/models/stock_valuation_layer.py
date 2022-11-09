@@ -68,6 +68,15 @@ class StockValuationLayer(models.Model):
             fields.remove('unit_cost')
         return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
+    def action_open_layer(self):
+        self.ensure_one()
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }
+
     def action_open_reference(self):
         self.ensure_one()
         if self.stock_move_id:
