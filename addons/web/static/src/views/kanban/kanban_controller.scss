@@ -488,6 +488,7 @@
     .o_kanban_group {
         flex-basis: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
         padding: 0 var(--KanbanGroup-padding-h) var(--KanbanGroup-padding-bottom);
+        overflow: auto;
 
         .o_kanban_header > .o_kanban_header_title {
             // Makes the title come on top of the "no-content" background gradient.
