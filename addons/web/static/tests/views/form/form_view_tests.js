@@ -1942,6 +1942,31 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
+        "two mutually exclusive labels with a dynamic invisible attribute",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar" string="label1" attrs='{"invisible": [["bar", "=", True]]}'/>
+                            <label for="bar" string="label2" attrs='{"invisible": [["bar", "=", False]]}'/>
+                            <field name="bar" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                resId: 2,
+            });
+            assert.containsOnce(target, "label.o_form_label", "Only one label should be displayed");
+            assert.strictEqual(target.querySelector("label.o_form_label").textContent, "label2");
+            assert.containsOnce(target, ".o_inner_group > div", "This group should only contain one line");
+        }
+    );
+
+    QUnit.test(
         "label is not rendered when invisible and not at top-level in a group",
         async function (assert) {
             await makeView({

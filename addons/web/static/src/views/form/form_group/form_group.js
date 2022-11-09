@@ -61,6 +61,10 @@ export class InnerGroup extends Group {
         const items = this.getItems();
         while (items.length) {
             const [slotName, slot] = items.shift();
+            if (!slot.isVisible) {
+                continue;
+            }
+
             const { newline, itemSpan } = slot;
             if (newline) {
                 rows.push(currentRow);
