@@ -36,31 +36,35 @@ class TestPartner(TransactionCase):
             'user_id': user.id,
         } for user in cls.users])
         cls.leave_type = cls.env['hr.leave.type'].create({
+            'leave_validation_type': 'no_validation',
             'requires_allocation': 'no',
             'name': 'Legal Leaves',
             'time_type': 'leave',
         })
-        cls.leaves = cls.env['hr.leave'].create([{
-            'date_from': cls.today + relativedelta(days=-2),
-            'date_to': cls.today + relativedelta(days=2),
-            'employee_id': cls.employees[0].id,
-            'holiday_status_id': cls.leave_type.id,
-        }, {
-            'date_from': cls.today + relativedelta(days=-2),
-            'date_to': cls.today + relativedelta(days=3),
-            'employee_id': cls.employees[1].id,
-            'holiday_status_id': cls.leave_type.id,
-        }])
 
     def test_res_partner_mail_partner_format(self):
         self.assertEqual(
             self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
-            (self.today + relativedelta(days=2)).strftime(DEFAULT_SERVER_DATE_FORMAT),
-            'Return date is the first return date of all users associated with a partner',
-        )
-        self.leaves[1].unlink()
-        self.assertEqual(
-            self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
             False,
             'Partner is not considered out of office if one of their users is not on holiday',
+        )
+
+        self.env['hr.leave'].create([{
+            'date_from': self.today + relativedelta(days=-2),
+            'date_to': self.today + relativedelta(days=2),
+            'employee_id': self.employees[0].id,
+            'holiday_status_id': self.leave_type.id,
+        }, {
+            'date_from': self.today + relativedelta(days=-2),
+            'date_to': self.today + relativedelta(days=3),
+            'employee_id': self.employees[1].id,
+            'holiday_status_id': self.leave_type.id,
+        }])
+
+        self.employees.invalidate_cache(fnames=['leave_date_to'])
+        self.users.invalidate_cache(fnames=['leave_date_to'])
+        self.assertEqual(
+            self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
+            (self.today + relativedelta(days=2)).strftime(DEFAULT_SERVER_DATE_FORMAT),
+            'Return date is the first return date of all users associated with a partner',
         )
