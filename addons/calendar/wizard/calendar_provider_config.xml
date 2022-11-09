@@ -14,8 +14,8 @@
                         Synchronize your calendar with Google Calendar
                     </div>
                     <group>
-                        <field name="cal_client_id" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
-                        <field name="cal_client_secret" password="True" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
+                        <field name="cal_client_id" string="Client ID" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
+                        <field name="cal_client_secret" string="Client Secret" password="True" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
                     </group>
                 </div>
                 <div attrs="{'invisible': [('external_calendar_provider', '!=', 'microsoft')]}">
@@ -26,8 +26,8 @@
                         Synchronize your calendar with Outlook
                     </div>
                     <group>
-                        <field name="microsoft_outlook_client_identifier" attrs="{'required': [('external_calendar_provider', '=', 'microsoft')]}"/>
-                        <field name="microsoft_outlook_client_secret" password="True" attrs="{'required': [('external_calendar_provider', '=', 'microsoft')]}"/>
+                        <field name="microsoft_outlook_client_identifier" string="Client ID" attrs="{'required': [('external_calendar_provider', '=', 'microsoft')]}"/>
+                        <field name="microsoft_outlook_client_secret" string="Client Secret" password="True" attrs="{'required': [('external_calendar_provider', '=', 'microsoft')]}"/>
                     </group>
                 </div>
                 <footer>
