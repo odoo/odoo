@@ -5,14 +5,20 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { extractLayoutComponents } from "@web/search/layout";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 
-import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv, reactive } from "@odoo/owl";
+import {
+    Component,
+    markRaw,
+    onWillUpdateProps,
+    onWillStart,
+    toRaw,
+    useSubEnv,
+    reactive,
+} from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -25,8 +31,6 @@ const viewRegistry = registry.category("views");
  *  @property {() => Object} getPagerProps
  *  @property {Object[]} viewSwitcherEntry
  *  @property {Object[]} viewSwitcherEntry
- *  @property {Component} ControlPanel
- *  @property {Component} SearchPanel
  *  @property {Component} Banner
  */
 
@@ -60,8 +64,6 @@ export function getDefaultConfig() {
         },
         viewSwitcherEntries: [],
         views: [],
-        ControlPanel: ControlPanel,
-        SearchPanel: SearchPanel,
         Banner: OnboardingBanner,
     };
     return config;
