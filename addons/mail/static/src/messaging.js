@@ -28,6 +28,7 @@ export class Messaging {
         this.partners = {};
         this.messages = {};
         this.threads = {};
+        this.users = {};
         this.internalUserGroupId = null;
 
         // messaging menu
@@ -72,7 +73,11 @@ export class Messaging {
         };
 
         this.chatWindows = [];
+
+        this.setup();
     }
+
+    setup() {}
 
     /**
      * Import data received from init_messaging
@@ -153,6 +158,7 @@ export class Messaging {
             thread.imgUrl = `/web/image/mail.channel/${id}/avatar_128?unique=${avatarCacheKey}`;
         }
         if (type === "chat") {
+            thread.is_pinned = data.serverData.is_pinned;
             this.discuss.chats.threads.push(thread.id);
             if (data.serverData) {
                 const avatarCacheKey = data.serverData.channel.avatarCacheKey;
@@ -439,6 +445,42 @@ export class Messaging {
         this.discuss.threadId = channel.id;
     }
 
+    async getChat({ userId }) {
+        let user = this.users[userId];
+        if (!user) {
+            this.users[userId] = { id: userId };
+            user = this.users[userId];
+        }
+        if (!user.partner_id) {
+            const [userData] = await this.orm.silent.read("res.users", [user.id], ["partner_id"], {
+                context: { active_test: false },
+            });
+            if (userData) {
+                user.partner_id = userData.partner_id[0];
+            }
+        }
+        if (!user.partner_id) {
+            this.notification.add(this.env._t("You can only chat with existing users."), {
+                type: "warning",
+            });
+            return;
+        }
+        let chat = Object.values(this.threads).find(
+            (thread) => thread.type === "chat" && thread.chatPartnerId === user.partner_id
+        );
+        if (!chat || !chat.is_pinned) {
+            chat = await this.joinChat(user.partner_id);
+        }
+        if (!chat) {
+            this.notification.add(
+                this.env._t("An unexpected error occurred during the creation of the chat."),
+                { type: "warning" }
+            );
+            return;
+        }
+        return chat;
+    }
+
     async joinChannel(id, name) {
         await this.orm.call("mail.channel", "add_members", [[id]], {
             partner_ids: [this.user.partnerId],
@@ -461,6 +503,13 @@ export class Messaging {
         await this.orm.call("mail.channel", "action_unfollow", [id]);
         removeFromArray(this.discuss.channels.threads, id);
         this.setDiscussThread(this.discuss.channels.threads[0]);
+    }
+
+    async openChat(person) {
+        const chat = await this.getChat(person);
+        if (chat) {
+            this.openDiscussion(chat.id);
+        }
     }
 
     async toggleStar(messageId) {

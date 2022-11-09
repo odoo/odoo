@@ -10,17 +10,6 @@ Patch({
     recordMethods: {
         /**
          * @override
-         * @param {integer} [param0.employeeId]
-         */
-        async getChat({ employeeId }) {
-            if (employeeId) {
-                const employee = this.messaging.models['Employee'].insert({ id: employeeId });
-                return employee.getChat();
-            }
-            return this._super(...arguments);
-        },
-        /**
-         * @override
          */
         async openProfile({ id, model }) {
             if (model === 'hr.employee' || model === 'hr.employee.public') {

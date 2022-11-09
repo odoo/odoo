@@ -36,27 +36,6 @@ Model({
             return data2;
         },
         /**
-         * Performs the `read` RPC on the `hr.employee.public`.
-         *
-         * @param {Object} param0
-         * @param {Object} param0.context
-         * @param {string[]} param0.fields
-         * @param {integer[]} param0.ids
-         */
-        async performRpcRead({ context, fields, ids }) {
-            const employeesData = await this.messaging.rpc({
-                model: 'hr.employee.public',
-                method: 'read',
-                args: [ids, fields],
-                kwargs: {
-                    context,
-                },
-            });
-            this.messaging.models['Employee'].insert(employeesData.map(employeeData =>
-                this.messaging.models['Employee'].convertData(employeeData)
-            ));
-        },
-        /**
          * Performs the `search_read` RPC on `hr.employee.public`.
          *
          * @param {Object} param0
@@ -81,62 +60,6 @@ Model({
     },
     recordMethods: {
         /**
-         * Checks whether this employee has a related user and partner and links
-         * them if applicable.
-         */
-        async checkIsUser() {
-            return this.messaging.models['Employee'].performRpcRead({
-                ids: [this.id],
-                fields: ['user_id', 'user_partner_id'],
-                context: { active_test: false },
-            });
-        },
-        /**
-         * Gets the chat between the user of this employee and the current user.
-         *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @returns {Channel|undefined}
-         */
-        async getChat() {
-            if (!this.user && !this.hasCheckedUser) {
-                await this.checkIsUser();
-            }
-            if (!this.exists()) {
-                return;
-            }
-            // prevent chatting with non-users
-            if (!this.user) {
-                this.messaging.notify({
-                    message: this.env._t("You can only chat with employees that have a dedicated user."),
-                    type: 'info',
-                });
-                return;
-            }
-            return this.user.getChat();
-        },
-        /**
-         * Opens a chat between the user of this employee and the current user
-         * and returns it.
-         *
-         * If a chat is not appropriate, a notification is displayed instead.
-         *
-         * @param {Object} [options] forwarded to @see `Thread:open()`
-         */
-        async openChat(options) {
-            const chat = await this.getChat();
-            if (!this.exists()) {
-                return;
-            }
-            if (!chat) {
-                return;
-            }
-            await chat.thread.open(options);
-            if (!this.exists()) {
-                return;
-            }
-        },
-        /**
          * Opens the most appropriate view that is a profile for this employee.
          */
         async openProfile(model = 'hr.employee.public') {
@@ -147,13 +70,6 @@ Model({
         },
     },
     fields: {
-        /**
-         * Whether an attempt was already made to fetch the user corresponding
-         * to this employee. This prevents doing the same RPC multiple times.
-         */
-        hasCheckedUser: attr({
-            default: false,
-        }),
         /**
          * Unique identifier for this employee.
          */
