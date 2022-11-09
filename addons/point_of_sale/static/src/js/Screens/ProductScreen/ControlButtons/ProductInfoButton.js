@@ -5,6 +5,8 @@ odoo.define('point_of_sale.ProductInfoButton', function(require) {
     const ProductScreen = require('point_of_sale.ProductScreen');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service')
+    const { identifyError } = require('point_of_sale.utils');
 
     class ProductInfoButton extends PosComponent {
         setup() {
@@ -16,8 +18,22 @@ odoo.define('point_of_sale.ProductInfoButton', function(require) {
             if (orderline) {
                 const product = orderline.get_product();
                 const quantity = orderline.get_quantity();
-                const info = await this.env.pos.getProductInfo(product, quantity);
-                this.showPopup('ProductInfoPopup', { info: info , product: product });
+                try {
+                    const info = await this.env.pos.getProductInfo(product, quantity);
+                    this.showPopup('ProductInfoPopup', { info: info , product: product });
+                } catch (e) {
+                    if (identifyError(e) instanceof ConnectionLostError||ConnectionAbortedError) {
+                        this.showPopup('OfflineErrorPopup', {
+                            title: this.env._t('Network Error'),
+                            body: this.env._t('Cannot access product information screen if offline.'),
+                        });
+                    } else {
+                        this.showPopup('ErrorPopup', {
+                            title: this.env._t('Unknown error'),
+                            body: this.env._t('An unknown error prevents us from loading product information.'),
+                        });
+                    }
+                }
             }
         }
     }
