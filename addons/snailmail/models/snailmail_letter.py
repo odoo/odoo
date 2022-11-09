@@ -146,7 +146,7 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
-            pdf_bin, _ = self.env['ir.actions.report'].with_context(snailmail_layout=not self.cover)._render_qweb_pdf(report, self.res_id)
+            pdf_bin, _ = self.env['ir.actions.report'].with_context(snailmail_layout=not self.cover, lang='en_US')._render_qweb_pdf(report, self.res_id)
             if self.cover:
                 pdf_bin = self._append_cover_page(pdf_bin)
             attachment = self.env['ir.attachment'].create({
@@ -440,7 +440,7 @@ class SnailmailLetter(models.Model):
         return all(record[key] for key in required_keys)
 
     def _append_cover_page(self, invoice_bin: bytes):
-        address = self.partner_id.with_context(show_address=True)._get_name().replace('\n', '<br/>')
+        address = self.partner_id.with_context(show_address=True, lang='en_US')._get_name().replace('\n', '<br/>')
         address_x = 118 * mm
         address_y = 60 * mm
         frame_width = 85.5 * mm
