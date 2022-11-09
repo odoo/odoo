@@ -17,7 +17,7 @@ class PaymentLinkWizard(models.TransientModel):
             record = self.env[res['res_model']].browse(res['res_id'])
             res.update({
                 'description': record.name,
-                'amount': record.amount_total - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
+                'amount': record.amount_total - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.invoice_line_ids.sale_line_ids.order_id == record).mapped('amount_total')),
                 'currency_id': record.currency_id.id,
                 'partner_id': record.partner_id.id,
                 'amount_max': record.amount_total
