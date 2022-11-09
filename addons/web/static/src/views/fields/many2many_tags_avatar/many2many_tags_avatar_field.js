@@ -28,12 +28,11 @@ export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField
         return this.props.record.activeFields[this.props.name].viewType === "list" ? 5 : 3;
     }
 
-    get tags() {
-        return this.props.value.records.map((record) => ({
-            id: record.id, // datapoint_X
-            text: record.data.display_name,
+    getTagProps(record) {
+        return {
+            ...super.getTagProps(record),
             img: `/web/image/${this.props.relation}/${record.resId}/avatar_128`,
-        }));
+        };
     }
 }
 
