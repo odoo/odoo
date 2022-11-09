@@ -37,7 +37,7 @@ export async function monitorAudio(track, processorOptions) {
     let processor;
     try {
         processor = await _loadAudioWorkletProcessor(source, audioContext, processorOptions);
-    } catch (_e) {
+    } catch {
         // In case Worklets are not supported by the browser (eg: Safari)
         processor = _loadScriptProcessor(source, audioContext, processorOptions);
     }

@@ -253,7 +253,7 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 7);
             try {
                 await doAction(webClient, 7);
-            } catch (_e) {
+            } catch {
                 assert.step("error caught");
             }
             assert.verifySteps([

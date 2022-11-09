@@ -22,7 +22,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
         confirm() {
             try {
                 parse.float(this.state.inputAmount);
-            } catch (_error) {
+            } catch {
                 this.state.inputHasError = true;
                 this.errorMessage = this.env._t('Invalid amount');
                 return;

@@ -69,7 +69,7 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
             let params;
             try {
                 params = JSON.parse(request.response);
-            } catch (_) {
+            } catch {
                 reject(
                     new HTTPError(
                         `server responded with invalid JSON response (HTTP${request.status}): ${request.response}`

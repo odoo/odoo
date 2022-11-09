@@ -107,13 +107,13 @@ export function makeMockXHR(response, sendCb, def) {
                     if (typeof data === "string") {
                         try {
                             data = JSON.parse(data);
-                        } catch (_e) {
+                        } catch {
                             // Ignore
                         }
                     }
                     try {
                         await sendCb.call(this, data);
-                    } catch (_e) {
+                    } catch {
                         listener = this._errorListener;
                     }
                 }
@@ -148,7 +148,7 @@ export function makeMockFetch(mockRPC) {
         try {
             res = await _rpc(route, params);
             status = 200;
-        } catch (_e) {
+        } catch {
             status = 500;
         }
         const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });

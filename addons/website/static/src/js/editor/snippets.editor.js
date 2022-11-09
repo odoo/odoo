@@ -129,7 +129,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                                     class: 'ms-1',
                                 }));
                             }
-                        } catch (_e) {
+                        } catch {
                             $apiKeyHelp.text(_t("Check your connection and try again"));
                         } finally {
                             $button.prop("disabled", false);
@@ -377,7 +377,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             try {
                 range.surroundContents(animatedTextEl);
                 $snippet = $(animatedTextEl);
-            } catch (_e) {
+            } catch {
                 // This try catch is needed because 'surroundContents' may
                 // fail when the range has partially selected a non-Text node.
                 if (range.commonAncestorContainer.textContent === range.toString()) {

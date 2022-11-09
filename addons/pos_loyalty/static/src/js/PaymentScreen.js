@@ -64,7 +64,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                         });
                         return;
                     }
-                } catch (_e) {
+                } catch {
                     // Do nothing with error, while this validation step is nice for error messages
                     // it should not be blocking.
                 }

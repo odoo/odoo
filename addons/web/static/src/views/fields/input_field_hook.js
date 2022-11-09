@@ -55,7 +55,7 @@ export function useInputField(params) {
             if (params.parse) {
                 try {
                     val = params.parse(val);
-                } catch (_e) {
+                } catch {
                     if (component.props.record) {
                         component.props.record.setInvalidField(component.props.name);
                     }
@@ -103,7 +103,9 @@ export function useInputField(params) {
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
-        const isInvalid = component.props.record ? component.props.record.isInvalid(component.props.name) : false;
+        const isInvalid = component.props.record
+            ? component.props.record.isInvalid(component.props.name)
+            : false;
         if (inputRef.el && !isDirty && !isInvalid) {
             inputRef.el.value = params.getValue();
             lastSetValue = inputRef.el.value;
@@ -131,7 +133,7 @@ export function useInputField(params) {
             if (params.parse) {
                 try {
                     val = params.parse(val);
-                } catch (_e) {
+                } catch {
                     isInvalid = true;
                     if (urgent) {
                         return;

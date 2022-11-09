@@ -140,7 +140,7 @@ export class PropertyDefinition extends Component {
      * @param {event} event
      */
     onPropertyLabelKeypress(event) {
-        if (event.key !== 'Enter') {
+        if (event.key !== "Enter") {
             return;
         }
         this.props.close();
@@ -177,8 +177,8 @@ export class PropertyDefinition extends Component {
 
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
-        this.state.resModel = '';
-        this.state.resModelDescription = '';
+        this.state.resModel = "";
+        this.state.resModelDescription = "";
         this.state.typeLabel = this._typeLabel(newType);
     }
 
@@ -244,7 +244,7 @@ export class PropertyDefinition extends Component {
      * @param {string} direction, either 'up' or 'down'
      */
     onPropertyMove(direction) {
-        if (direction === 'up') {
+        if (direction === "up") {
             this.state.propertyIndex--;
         } else {
             this.state.propertyIndex++;
@@ -322,7 +322,7 @@ export class PropertyDefinition extends Component {
                     return;
                 }
                 this.state.resModelDescription = result[0].display_name;
-            } catch (_) {
+            } catch {
                 // can not read the ir.model
                 this.state.resModelDescription = sprintf(
                     _lt('You do not have access to the model "%s".'),

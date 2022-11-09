@@ -10,7 +10,7 @@ export class DomainSelectorFieldInput extends Component {
         const parser = parsers.get(this.props.field.type, (value) => value);
         try {
             return parser(value);
-        } catch (_) {
+        } catch {
             return value;
         }
     }

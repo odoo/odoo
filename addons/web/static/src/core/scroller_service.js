@@ -38,7 +38,7 @@ export const scrollerService = {
                     let matchingEl = null;
                     try {
                         matchingEl = document.querySelector(`.o_content #${href.value.substr(1)}`);
-                    } catch (_e) {
+                    } catch {
                         // Invalid selector: not an anchor anyway
                     }
                     const triggerEv = new CustomEvent("anchor-link-clicked", {

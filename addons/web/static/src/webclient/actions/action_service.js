@@ -15,7 +15,16 @@ import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 
-import { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml, reactive } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    onError,
+    useChildSubEnv,
+    xml,
+    reactive,
+} from "@odoo/owl";
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -194,7 +203,7 @@ function makeActionManager(env) {
     function _preprocessAction(action, context = {}) {
         try {
             action._originalAction = JSON.stringify(action);
-        } catch (_e) {
+        } catch {
             // do nothing, the action might simply not be serializable
         }
         action.context = makeContext([context, action.context], env.services.user.context);
@@ -1270,7 +1279,7 @@ function makeActionManager(env) {
                     // warning: quotes and double quotes problem due to json and xml clash
                     // maybe we should force escaping in xml or do a better parse of the args array
                     additionalArgs = JSON.parse(params.args.replace(/'/g, '"'));
-                } catch (_e) {
+                } catch {
                     browser.console.error("Could not JSON.parse arguments", params.args);
                 }
                 args = args.concat(additionalArgs);

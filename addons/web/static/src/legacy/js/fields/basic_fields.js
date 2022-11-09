@@ -612,7 +612,7 @@ var NumericField = InputField.extend({
                 value = this._formatValue(value);
                 // Set the computed value in the input
                 this.$input.val(value);
-            } catch (_err) {
+            } catch {
                 // in case of exception, set value as the original value
                 // that way the Webclient will show an error as
                 // it is expecting a numeric value.
@@ -801,7 +801,7 @@ var FieldDateRange = InputField.extend({
         const value = this.mode === "readonly" ? this.value : this.$input.val();
         try {
             return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
-        } catch (_error) {
+        } catch {
             return false;
         }
     },
@@ -821,7 +821,7 @@ var FieldDateRange = InputField.extend({
             // user may enter manual value in input and it may not be parsed as date/datetime value
             this.removeInvalidClass();
             return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
-        } catch (_error) {
+        } catch {
             this.setInvalidClass();
             return false;
         }
@@ -1094,7 +1094,7 @@ var FieldDate = InputField.extend({
                 if (this.datewidget.type_of_date === "datetime") {
                     value.add(-this.getSession().getTZOffset(value), "minutes");
                 }
-            } catch (_err) {}
+            } catch {}
             await this._setValue(value);
             this._render();
         }
@@ -3340,7 +3340,7 @@ var FieldProgressBar = AbstractField.extend({
         try {
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
-        } catch (_error) {
+        } catch {
             this.displayNotification({ message: _t("Please enter a numerical value"), type: 'danger' });
         }
 
@@ -4284,7 +4284,7 @@ var FieldColorPicker = FieldInteger.extend({
     _highlightSelectedColor: function(){
         try{
             $(this.$('li')[parseInt(this.value)]).css('border', '2px solid teal');
-        } catch(_err) {
+        } catch {
 
         }
     },

@@ -48,7 +48,7 @@ const PosMercuryPosGlobalState = (PosGlobalState) => class PosMercuryPosGlobalSt
             magtek_generated.shift(); // reader enc status
 
             return to_return;
-        } catch (_e) {
+        } catch {
             return 0;
         }
     }
