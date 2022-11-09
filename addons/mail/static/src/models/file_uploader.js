@@ -37,8 +37,8 @@ registerModel({
          */
         async uploadFiles(files) {
             await this._performUpload({ files });
-            if (this.fileInput && this.fileInput.el) {
-                this.fileInput.el.value = '';
+            if (this.fileInput) {
+                this.fileInput.value = '';
             }
         },
         /**
