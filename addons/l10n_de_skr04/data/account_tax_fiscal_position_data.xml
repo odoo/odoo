@@ -3,8 +3,8 @@
     <record id="tax_eu_19_purchase_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Innergem. Erwerb 19%USt/19%VSt</field>
-        <field name="description">innergem. Erwerb 19%</field>
+        <field name="name">Intragem. Acquisition 19%VAT/19%VSt</field>
+        <field name="description">Intragem. Acquisition 19%</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -53,8 +53,8 @@
     <record id="tax_eu_7_purchase_skr04" model="account.tax.template">
         <field name="sequence">25</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Innergem. Erwerb 7%USt/7%VSt</field>
-        <field name="description">innergem. Erwerb 7%</field>
+        <field name="name">Intragem. Acquisition 7%VAT/7%VSt</field>
+        <field name="description">Intragem. Acquisition 7%</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -103,8 +103,8 @@
     <record id="tax_eu_19_purchase_no_vst_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Innergem. Erwerb 19%USt/0%VSt</field>
-        <field name="description">innergem. Erwerb 19% - 0% Vorsteuer</field>
+        <field name="name">Intragem. Acquisition 19%VAT/0%VSt</field>
+        <field name="description">Intragem. Acquisition 19% - 0% Input tax</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -143,8 +143,8 @@
     <record id="tax_eu_7_purchase_no_vst_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Innergem. Erwerb 7%USt/0%VSt</field>
-        <field name="description">innergem. Erwerb 7% - 0% Vorsteuer</field>
+        <field name="name">Intragem. Acquisition 7%VAT/0%VSt</field>
+        <field name="description">Intragem. Acquisition 7% - 0% Input tax</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -183,8 +183,8 @@
     <record id="tax_eu_car_purchase_skr04" model="account.tax.template">
         <field name="sequence">23</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Innergem. Erwerb Neufahrzeug 19%USt/19%VSt</field>
-        <field name="description">innergem. Erwerb Neufahrzeug 19%</field>
+        <field name="name">Intra. Acquisition of new vehicle 19%VAT/19%VSt</field>
+        <field name="description">Intra. Acquisition of new vehicle 19%</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -231,8 +231,8 @@
     <record id="tax_eu_sale_skr04" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerfreie innergem. Lieferung (§4 Abs. 1b UStG)</field>
-        <field name="description">steuerfreie innergem. Lieferung</field>
+        <field name="name">Tax free intracomm. Delivery (§4 Abs. 1b UStG)</field>
+        <field name="description">Tax free intracomm. Delivery</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -261,8 +261,8 @@
     <record id="tax_export_skr04" model="account.tax.template">
         <field name="sequence">22</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerfreie Ausfuhr (§4 Nr. 1a UStG)</field>
-        <field name="description">steuerfreie Ausfuhr</field>
+        <field name="name">Tax free export (§4 Nr. 1a UStG)</field>
+        <field name="description">Tax free export</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -291,8 +291,8 @@
     <record id="tax_free_skr04_mit_vst" model="account.tax.template">
         <field name="sequence">23</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerfreier Umsatz mit Vorsteuerabzug (§ 4 Nr. 2-7)</field>
-        <field name="description">Steuerfr. Umsatz(§ 4 Nr. 2-7)</field>
+        <field name="name">Tax-exempt turnover with input tax deduction (§ 4 Nr. 2-7)</field>
+        <field name="description">Tax-free turnover(§ 4 Nr. 2-7)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -319,8 +319,8 @@
     <record id="tax_free_skr04_ohne_vst" model="account.tax.template">
         <field name="sequence">24</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerfreier Umsatz ohne Vorsteuerabzug (§ 4 Nr. 8-28)</field>
-        <field name="description">Steuerfr. Umsatz(§ 4 Nr. 8-28)</field>
+        <field name="name">Tax-exempt turnover without input tax deduction (§ 4 Nr. 8-28)</field>
+        <field name="description">Tax-free turnover(§ 4 Nr. 8-28)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -347,8 +347,8 @@
     <record id="tax_import_19_and_payable_skr04" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% Einfuhrumsatzsteuer (§21 Abs.3 UstG)</field>
-        <field name="description">Einfuhrumsatzsteuer 19%</field>
+        <field name="name">19% Import sales tax (§21 Abs.3 UstG)</field>
+        <field name="description">Import sales tax 19%</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -387,8 +387,8 @@
     <record id="tax_import_7_and_payable_skr04" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% Einfuhrumsatzsteuer (§21 Abs.3 UstG)</field>
-        <field name="description">Einfuhrumsatzsteuer 7%</field>
+        <field name="name">7% Import sales tax (§21 Abs.3 UstG)</field>
+        <field name="description">Import sales tax 7%</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -427,8 +427,8 @@
     <record id="tax_eu_purchase_tax_free_skr04" model="account.tax.template">
         <field name="sequence">22</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerfr. innergem. Erwerb (§§ 4b und 25c UStG)</field>
-        <field name="description">Steuerfr. innergem. Erwerb (§§ 4b und 25c UStG)</field>
+        <field name="name">Tax-free intracompany Acquisition (§§ 4b und 25c UStG)</field>
+        <field name="description">Tax-free intracompany Acquisition (§§ 4b und 25c UStG)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">purchase</field>
@@ -455,8 +455,8 @@
     <record id="tax_not_taxable_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">nicht steuerbare Umsätze</field>
-        <field name="description">nicht steuerbare Umsätze</field>
+        <field name="name">Non-taxable turnover</field>
+        <field name="description">Non-taxable turnover</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -483,8 +483,8 @@
     <record id="tax_ust_19_skr04" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% Umsatzsteuer</field>
-        <field name="description">19% USt</field>
+        <field name="name">19% Sales tax</field>
+        <field name="description">19% VAT</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="l10n_de_datev_code">3</field>
@@ -520,8 +520,8 @@
     <record id="tax_ust_7_skr04" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% Umsatzsteuer</field>
-        <field name="description">7% USt</field>
+        <field name="name">7% Sales tax</field>
+        <field name="description">7% VAT</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="l10n_de_datev_code">2</field>
@@ -557,8 +557,8 @@
     <record id="tax_ust_no_ustpflicht_skr04" model="account.tax.template">
         <field name="sequence">16</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% USt (Pflichtbefreit z.B. als Kleinunt. oder bei med. Leistg.)</field>
-        <field name="description">0% USt (Pflichtbefreit)</field>
+        <field name="name">0% VAT (Compulsory exemption e.g. as a small business or for medical services.)</field>
+        <field name="description">0% VAT (Mandatory Exempt)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -579,8 +579,8 @@
     <record id="tax_ust_19_taxinclusive_skr04" model="account.tax.template">
         <field name="sequence">17</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% Umsatzsteuer (inkludiert in Preis)</field>
-        <field name="description">19% USt (inkludiert in Preis)</field>
+        <field name="name">19% Value added tax (included in price)</field>
+        <field name="description">19% VAT (included in price)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">sale</field>
@@ -616,8 +616,8 @@
     <record id="tax_ust_7_taxinclusive_skr04" model="account.tax.template">
         <field name="sequence">18</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% Umsatzsteuer (inkludiert in Preis)</field>
-        <field name="description">7% USt (inkludiert in Preis)</field>
+        <field name="name">7% Value added tax (included in price)</field>
+        <field name="description">7% VAT (included in price)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">sale</field>
@@ -653,8 +653,8 @@
     <record id="tax_ust_55_farmer_skr04" model="account.tax.template">
         <field name="sequence">26</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">5,5 % Umsatzsteuer Land-/Forstwirtschaft</field>
-        <field name="description">5,5% USt Land-/Forstwirtschaft</field>
+        <field name="name">5,5 % Sales tax agriculture/forestry</field>
+        <field name="description">5,5% VAT Agriculture/Forestry</field>
         <field name="amount_type">percent</field>
         <field name="amount">5.5</field>
         <field name="type_tax_use">sale</field>
@@ -687,8 +687,8 @@
     <record id="tax_ust_107_farmer_skr04" model="account.tax.template">
         <field name="sequence">27</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">10,7 % Umsatzsteuer Land-/Forstwirtschaft</field>
-        <field name="description">10,7% USt Land-/Forstwirtschaft</field>
+        <field name="name">10,7 % Sales tax agriculture/forestry</field>
+        <field name="description">10,7% VAT agriculture/forestry</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.7</field>
         <field name="type_tax_use">sale</field>
@@ -721,8 +721,8 @@
     <record id="tax_ust_19_farmer_skr04" model="account.tax.template">
         <field name="sequence">28</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% Umsatzsteuer Land-/Forstwirtschaft (Alkohol u.a.)</field>
-        <field name="description">19% USt Land-/Forstwirtschaft (Alkohol u.a.)</field>
+        <field name="name">19% Sales tax agriculture/forestry (alcohol etc.)</field>
+        <field name="description">19% Sales tax agriculture/forestry (alcohol etc.)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">sale</field>
@@ -755,8 +755,8 @@
     <record id="tax_ust_x_skr04" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">x% Umsatzsteuer (zu anderen Steuersätzen)</field>
-        <field name="description">x% USt (zu anderen Steuersätzen)</field>
+        <field name="name">x% Sales tax (at other tax rates)</field>
+        <field name="description">x% VAT (at other tax rates)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -783,7 +783,7 @@
     <record id="tax_vst_19_skr04" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% Vorsteuer</field>
+        <field name="name">19% Input tax</field>
         <field name="description">19% VSt</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
@@ -814,7 +814,7 @@
     <record id="tax_vst_7_skr04" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% Vorsteuer</field>
+        <field name="name">7% Input tax</field>
         <field name="description">7% VSt</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
@@ -845,8 +845,8 @@
     <record id="tax_vst_no_ustpflicht_skr04" model="account.tax.template">
         <field name="sequence">16</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% VSt (Pflichtbefreit z.B. als Kleinunt. oder bei med. Leistg.)</field>
-        <field name="description">0% VSt (Pflichtbefreit)</field>
+        <field name="name">0% VSt (Compulsory exemption e.g. as a small business or for medical services.)</field>
+        <field name="description">0% VSt (Mandatory Exempt)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">purchase</field>
@@ -867,8 +867,8 @@
     <record id="tax_vst_19_taxinclusive_skr04" model="account.tax.template">
         <field name="sequence">16</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% Vorsteuer (inkludiert in Preis)</field>
-        <field name="description">19% VSt (inkludiert in Preis)</field>
+        <field name="name">19% Input tax (included in price)</field>
+        <field name="description">19% VSt (included in price)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -897,8 +897,8 @@
     <record id="tax_vst_7_taxinclusive_skr04" model="account.tax.template">
         <field name="sequence">17</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% Vorsteuer (inkludiert in Preis)</field>
-        <field name="description">7% VSt (inkludiert in Preis)</field>
+        <field name="name">7% Input tax (included in price)</field>
+        <field name="description">7% VSt (included in price)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -927,8 +927,8 @@
     <record id="tax_vst_55_farmer_skr04" model="account.tax.template">
         <field name="sequence">26</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">5,5% Vorsteuer Land-/Forstwirtschaft</field>
-        <field name="description">5,5% VSt Land-/Forstwirtschaft</field>
+        <field name="name">5,5% Input tax agriculture/forestry</field>
+        <field name="description">5,5% VSt agriculture/forestry</field>
         <field name="amount_type">percent</field>
         <field name="amount">5.5</field>
         <field name="type_tax_use">purchase</field>
@@ -957,8 +957,8 @@
     <record id="tax_vst_107_farmer_skr04" model="account.tax.template">
         <field name="sequence">27</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">10,7% Vorsteuer Land-/Forstwirtschaft</field>
-        <field name="description">10,7% VSt Land-/Forstwirtschaft</field>
+        <field name="name">10,7% Input tax agriculture/forestry</field>
+        <field name="description">10,7% VSt agriculture/forestry</field>
         <field name="amount_type">percent</field>
         <field name="amount">10.7</field>
         <field name="type_tax_use">purchase</field>
@@ -987,8 +987,8 @@
     <record id="tax_ust_19_eu_skr04" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19 % Umsatzsteuer EU Lieferung</field>
-        <field name="description">19% USt EU</field>
+        <field name="name">19 % VAT EU delivery</field>
+        <field name="description">19% VAT EU</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">sale</field>
@@ -1023,8 +1023,8 @@
     <record id="tax_ust_eu_skr04" model="account.tax.template">
         <field name="sequence">22</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% Umsatzsteuer EU Lieferung</field>
-        <field name="description">7% USt EU</field>
+        <field name="name">7% VAT EU delivery</field>
+        <field name="description">7% VAT EU</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">sale</field>
@@ -1059,8 +1059,8 @@
     <record id="tax_ust_19_13b_ausland_ohne_vst_skr04" model="account.tax.template">
         <field name="sequence">23</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% USt gem. §13b UStG - ohne VSt. - (ausländ. Werklieferungen u.ä.)</field>
-        <field name="description">19% USt EU gem. §13b UStG - ohne VSt. - (ausländ. Werklieferungen u.ä.)</field>
+        <field name="name">19% VAT according to §13b UStG - without VAT - (foreign supplies of goods and services, etc.)</field>
+        <field name="description">19% VAT EU according to §13b UStG - without VAT - (foreign supplies of goods and services, etc.)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1093,8 +1093,8 @@
     <record id="tax_ust_7_13b_ausland_ohne_vst_skr04" model="account.tax.template">
         <field name="sequence">24</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% USt gem. §13b UStG - ohne VSt. - (ausländ. Werklieferungen u.ä.)</field>
-        <field name="description">7% USt EU gem. §13b UStG - ohne VSt. - (ausländ. Werklieferungen u.ä.)</field>
+        <field name="name">7% VAT according to §13b UStG - without VAT - (foreign supplies of goods and services, etc.)</field>
+        <field name="description">7% VAT EU according to §13b UStG - without VAT - (foreign supplies of goods and services, etc.)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1127,8 +1127,8 @@
     <record id="tax_ust_19_13b_eu_ohne_vst_skr04" model="account.tax.template">
         <field name="sequence">25</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% USt gem. §13b UStG - ohne VSt. - (sonst. Leistungen EU)</field>
-        <field name="description">19% USt EU gem. §13b UStG - ohne VSt. - (sonst. Leistungen EU)</field>
+        <field name="name">19% VAT according to §13b UStG - without VAT - (other services EU)</field>
+        <field name="description">19% VAT EU according to §13b UStG - without VAT - (other services EU)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1161,8 +1161,8 @@
     <record id="tax_ust_7_13b_eu_ohne_vst_skr04" model="account.tax.template">
         <field name="sequence">26</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% USt gem. §13b UStG - ohne VSt. - (sonst. Leistungen EU)</field>
-        <field name="description">7% USt EU gem. §13b UStG - ohne VSt. - (sonst. Leistungen EU)</field>
+        <field name="name">7% VAT according to §13b UStG - without VAT - (other services EU)</field>
+        <field name="description">7% VAT EU according to §13b UStG - without VAT - (other services EU)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1195,8 +1195,8 @@
     <record id="tax_ust_19_13b_bau_ohne_vst_skr04" model="account.tax.template">
         <field name="sequence">27</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">19% USt gem. §13b UStG - ohne VSt. - (empf. Bauleistungen)</field>
-        <field name="description">19% USt EU gem. §13b UStG - ohne VSt. - (empf. Bauleistungen)</field>
+        <field name="name">19% VAT according to §13b UStG - without VAT - (rec. Construction work)</field>
+        <field name="description">19% VAT EU according to §13b UStG - without VAT - (rec. Construction work)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1229,8 +1229,8 @@
     <record id="tax_ust_7_13b_bau_ohne_vst_skr04" model="account.tax.template">
         <field name="sequence">28</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">7% USt gem. §13b UStG - ohne VSt. - (empf. Bauleistungen)</field>
-        <field name="description">7% USt EU gem. §13b UStG - ohne VSt. - (empf. Bauleistungen)</field>
+        <field name="name">7% VAT according to §13b UStG - without VAT - (recommended construction services)</field>
+        <field name="description">7% VAT EU according to §13b UStG - without VAT - (recommended construction services)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1263,8 +1263,8 @@
     <record id="tax_free_eu_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% Steuerfreie Leistung EU</field>
-        <field name="description">0% USt EU</field>
+        <field name="name">0% Tax free benefit EU</field>
+        <field name="description">0% VAT EU</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -1291,8 +1291,8 @@
     <record id="tax_free_third_country_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% Steuerfreie Leistung Drittland</field>
-        <field name="description">0% USt Drittland</field>
+        <field name="name">0% Tax free service third country</field>
+        <field name="description">0% VAT Third country</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -1319,8 +1319,8 @@
     <record id="tax_free_newcar_skr04" model="account.tax.template">
         <field name="sequence">30</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% Steuerfreie Neufahrzeuglieferung EU</field>
-        <field name="description">0% USt Neufahrzeug EU</field>
+        <field name="name">0% Tax free new vehicle delivery EU</field>
+        <field name="description">0% VAT New vehicle EU</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -1347,8 +1347,8 @@
     <record id="tax_ust_19_3eck_first_skr04" model="account.tax.template">
         <field name="sequence">40</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% Umsatzsteuer Dreiecksgeschäft erster Abnehmer</field>
-        <field name="description">0% USt Dreiecksgeschäft erster Abnehmer</field>
+        <field name="name">0% Sales tax triangular transaction first buyer</field>
+        <field name="description">0% VAT Triangular business first customer</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -1375,8 +1375,8 @@
     <record id="tax_ust_free_bau_skr04" model="account.tax.template">
         <field name="sequence">50</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% Umsatzsteuer Bauleistung (Erbringer §13b)</field>
-        <field name="description">0% Umsatzsteuer Bauleistung (Erbringer §13b)</field>
+        <field name="name">0% Sales tax construction service (provider §13b)</field>
+        <field name="description">0% Sales tax construction service (provider §13b)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -1403,8 +1403,8 @@
     <record id="tax_ust_free_mobil_skr04" model="account.tax.template">
         <field name="sequence">50</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">0% Umsatzsteuer Lieferung von Mobilfunkgeräten u.a. (§13b)</field>
-        <field name="description">0% USt Lieferung von Mobilfunkgeräten u.a. (§13b)</field>
+        <field name="name">0% Value added tax supply of mobile telephones etc. (§13b)</field>
+        <field name="description">0% VAT Supply of mobile telephones, etc. (§13b)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
@@ -1431,8 +1431,8 @@
     <record id="tax_eu_19_purchase_goods_skr04" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerpflichtige sonstige Leistungen EU 19%USt/19%VSt</field>
-        <field name="description">Leistungen EU 19%Ust/19%VSt</field>
+        <field name="name">Taxable other services EU 19%VAT/19%VSt</field>
+        <field name="description">Services EU 19%VAT/19%VAT</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1481,8 +1481,8 @@
     <record id="tax_eu_7_purchase_goods_skr04" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuerpflichtige sonstige Leistungen EU 7%USt/7%VSt</field>
-        <field name="description">Steuerpfl. sonst. Leistg. EU 7%Ust/7%VSt</field>
+        <field name="name">Taxable other services EU 7%VAT/7%VSt</field>
+        <field name="description">Tax ppl. Services EU 7%Tax/7%VAT</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1531,8 +1531,8 @@
     <record id="tax_ust_vst_19_purchase_13b_bau_skr04" model="account.tax.template">
         <field name="sequence">22</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13b UStG 19%USt/19%VSt (Bauleistung Empfänger)</field>
-        <field name="description">Steuer gem. §13b UStG 19%USt/19%VSt (Bauleistung Empfänger)</field>
+        <field name="name">Tax according to §13b UStG 19%VAT/19%VSt (construction service recipient)</field>
+        <field name="description">Tax according to §13b UStG 19%VAT/19%VSt (construction service recipient)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1581,8 +1581,8 @@
     <record id="tax_ust_vst_7_purchase_13b_bau_skr04" model="account.tax.template">
         <field name="sequence">23</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13b UStG 7%USt/7%VSt (Bauleistung Empfänger)</field>
-        <field name="description">Steuer gem. §13b UStG 7%USt/7%VSt (Bauleistung Empfänger)</field>
+        <field name="name">Tax according to §13b UStG 7%VAT/7%VSt (construction service recipient)</field>
+        <field name="description">Tax according to §13b UStG 7%VAT/7%VSt (construction service recipient)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1631,8 +1631,8 @@
     <record id="tax_vst_ust_19_purchase_13b_mobil_skr04" model="account.tax.template">
         <field name="sequence">24</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13b 19%USt/19%VSt (Empfang von Mobilfunkgeräten u.a.)</field>
-        <field name="description">Steuer gem. §13b 19%Ust/19%VSt (Empfang von Mobilfunkgeräten u.a.)</field>
+        <field name="name">Tax according to §13b 19%VAT/19%VSt (reception of mobile devices etc.)</field>
+        <field name="description">Tax according to §13b 19%VAT/19%VSt (reception of mobile devices etc.)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1681,8 +1681,8 @@
     <record id="tax_vst_ust_19_purchase_3eck_last_skr04" model="account.tax.template">
         <field name="sequence">25</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Dreiecksgeschäft Erwerb letzter Abnehmer 19%USt/19%VSt</field>
-        <field name="description">Dreiecksgeschäft Erwerb letzter Abnehmer 19%Ust/19%VSt</field>
+        <field name="name">Triangular transaction Acquisition of last customer 19%VAT/19%VSt</field>
+        <field name="description">Triangular transaction Acquisition of last customer 19%VAT/19%VAT</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1725,8 +1725,8 @@
     <record id="tax_vst_ust_19_purchase_13b_werk_ausland_skr04" model="account.tax.template">
         <field name="sequence">25</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13b 19%USt/19%VSt (ausländ. Werklieferungen u.ä.)</field>
-        <field name="description">Steuer gem. §13b 19%USt/19%VSt (ausländ. Werklieferungen u.ä.)</field>
+        <field name="name">Tax acc. to §13b 19%VAT/19%VSt (foreign work deliveries etc.)</field>
+        <field name="description">Tax acc. to §13b 19%VAT/19%VSt (foreign work deliveries etc.)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1775,8 +1775,8 @@
     <record id="tax_vst_ust_7_purchase_13b_werk_ausland_skr04" model="account.tax.template">
         <field name="sequence">26</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13b 7%USt/7%VSt (ausländ. Werklieferungen u.ä.)</field>
-        <field name="description">Steuer gem. §13b 7%USt/7%VSt (ausländ. Werklieferungen u.ä.)</field>
+        <field name="name">Tax acc. to §13b 7%VAT/7%VSt (foreign work deliveries etc.)</field>
+        <field name="description">Tax acc. to §13b 7%VAT/7%VSt (foreign work deliveries etc.)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1825,8 +1825,8 @@
     <record id="tax_vst_ust_19_purchase_13a_auslagerung_skr04" model="account.tax.template">
         <field name="sequence">27</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13a Abs. 1 Nr. 6 UStG 19%USt/19%VSt (Auslagerung)</field>
-        <field name="description">Steuer gem. §13a Abs. 1 Nr. 6 UStG 19%USt/19%VSt (Auslagerung)</field>
+        <field name="name">Tax acc. to §13a para. 1 no. 6 UStG 19%VAT/19%VSt (outsourcing)</field>
+        <field name="description">Tax acc. to §13a para. 1 no. 6 UStG 19%VAT/19%VSt (outsourcing)</field>
         <field name="amount_type">percent</field>
         <field name="amount">19</field>
         <field name="type_tax_use">purchase</field>
@@ -1869,8 +1869,8 @@
     <record id="tax_vst_ust_7_purchase_13a_auslagerung_skr04" model="account.tax.template">
         <field name="sequence">28</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Steuer gem. §13a Abs. 1 Nr. 6 UStG 7%USt/7%VSt (Auslagerung)</field>
-        <field name="description">Steuer gem. §13a Abs. 1 Nr. 6 UStG 7%USt/7VSt (Auslagerung)</field>
+        <field name="name">Tax acc. to §13a para. 1 no. 6 UStG 7%VAT/7%VSt (outsourcing)</field>
+        <field name="description">Tax acc. to §13a para. 1 no. 6 UStG 7%VAT/7%VSt (outsourcing)</field>
         <field name="amount_type">percent</field>
         <field name="amount">7</field>
         <field name="type_tax_use">purchase</field>
@@ -1912,7 +1912,7 @@
     </record>
     <record id="fiscal_position_domestic_skr04" model="account.fiscal.position.template">
         <field name="sequence">1</field>
-        <field name="name">Geschäftspartner Inland</field>
+        <field name="name">Domestic business partner</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         <field name="auto_apply" eval="True"/>
         <field name="country_id" ref="base.de"/>
@@ -1920,29 +1920,29 @@
     <record id="fiscal_position_non_eu_partner_service_skr04" model="account.fiscal.position.template">
         <field name="sequence">6</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Dienstleister Ausland (Nicht-EU)</field>
+        <field name="name">Service provider abroad (non-EU)</field>
     </record>
     <record id="fiscal_position_non_eu_partner_skr04" model="account.fiscal.position.template">
         <field name="sequence">5</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Geschäftspartner Ausland (Nicht-EU)</field>
+        <field name="name">Business partners abroad (non-EU)</field>
     </record>
     <record id="fiscal_position_eu_vat_id_partner_skr04" model="account.fiscal.position.template">
         <field name="sequence">2</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Geschäftspartner EU (mit USt-ID)</field>
+        <field name="name">Business partner EU (with VAT ID)</field>
         <field name="auto_apply" eval="True"/>
         <field name="country_group_id" ref="base.europe"/>
     </record>
     <record id="fiscal_position_eu_vat_id_partner_service_skr04" model="account.fiscal.position.template">
         <field name="sequence">3</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Dienstleister EU (mit USt-ID)</field>
+        <field name="name">Service provider EU (with VAT ID)</field>
     </record>
     <record id="fiscal_position_eu_no_id_partner_skr04" model="account.fiscal.position.template">
         <field name="sequence">4</field>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
-        <field name="name">Geschäftspartner EU (ohne USt-ID)</field>
+        <field name="name">Business partner EU (without VAT ID)</field>
     </record>
     <record id="chart_skr04_fiscal_position_tax_eu_vat_id_sale_19_skr04" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_eu_vat_id_partner_skr04"/>
