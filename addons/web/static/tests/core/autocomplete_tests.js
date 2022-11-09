@@ -8,7 +8,9 @@ import { makeTestEnv } from "../helpers/mock_env";
 import {
     click,
     getFixture,
+    makeDeferred,
     mount,
+    nextTick,
     patchWithCleanup,
     triggerEvent,
     triggerEvents,
@@ -200,5 +202,62 @@ QUnit.module("Components", (hooks) => {
 
         await triggerEvent(target, ".o-autocomplete--input", "blur");
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
+    });
+
+    QUnit.test("open twice should not display previous results", async (assert) => {
+        let def = makeDeferred();
+        class Parent extends Component {
+            get sources() {
+                return [
+                    {
+                        async options(search) {
+                            await def;
+                            if (search === "A") {
+                                return [{ label: "AB" }, { label: "AC" }];
+                            }
+                            return [{ label: "AB" }, { label: "AC" }, { label: "BC" }];
+                        },
+                    },
+                ];
+            }
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <AutoComplete value="''" sources="sources" onSelect="() => {}"/>
+        `;
+
+        await mount(Parent, target, { env });
+        assert.containsNone(target, ".o-autocomplete--dropdown-menu");
+
+        await triggerEvent(target, ".o-autocomplete--input", "click");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-item");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-item .fa-spin"); // loading
+
+        def.resolve();
+        await nextTick();
+        assert.containsN(target, ".o-autocomplete--dropdown-item", 3);
+        assert.containsNone(target, ".fa-spin");
+
+        def = makeDeferred();
+        target.querySelector(".o-autocomplete--input").value = "A";
+        await triggerEvent(target, ".o-autocomplete--input", "input");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-item");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-item .fa-spin"); // loading
+
+        def.resolve();
+        await nextTick();
+        assert.containsN(target, ".o-autocomplete--dropdown-item", 2);
+        assert.containsNone(target, ".fa-spin");
+
+        await click(target.querySelector(".o-autocomplete--dropdown-item"));
+        assert.containsNone(target, ".o-autocomplete--dropdown-menu");
+
+        // re-open the dropdown -> should not display the previous results
+        def = makeDeferred();
+        await triggerEvent(target, ".o-autocomplete--input", "click");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-item");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-item .fa-spin"); // loading
     });
 });
