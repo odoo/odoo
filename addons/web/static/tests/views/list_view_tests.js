@@ -1935,20 +1935,16 @@ QUnit.module("Views", (hooks) => {
         assert.expect(6);
 
         const listView = registry.category("views").get("list");
-        class ListViewCustom extends listView.Controller {
+        class CustomListController extends listView.Controller {
             openRecord(record) {
                 assert.step("openRecord");
                 assert.strictEqual(record.resId, 2);
             }
         }
-        registry.category("views").add(
-            "list",
-            {
-                ...listView,
-                Controller: ListViewCustom,
-            },
-            { force: true }
-        );
+        registry.category("views").add("custom_list", {
+            ...listView,
+            Controller: CustomListController,
+        });
 
         serverData.models.foo.fields.foo.sortable = true;
 
@@ -1956,7 +1952,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<tree js_class="custom_list"><field name="foo"/></tree>',
         });
 
         await click(target.querySelector("tr:nth-child(2) td:not(.o_list_record_selector)"));
@@ -1970,6 +1966,142 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps(["openRecord", "openRecord"]);
     });
+
+    QUnit.test(
+        "execute an action before and after each valid save in a list view",
+        async function (assert) {
+            const listView = registry.category("views").get("list");
+            class CustomListController extends listView.Controller {
+                async onRecordSaved(record) {
+                    assert.step(`onRecordSaved ${record.resId}`);
+                }
+
+                async onWillSaveRecord(record) {
+                    assert.step(`onWillSaveRecord ${record.resId}`);
+                }
+            }
+            registry.category("views").add(
+                "custom_list",
+                {
+                    ...listView,
+                    Controller: CustomListController,
+                },
+                { force: true }
+            );
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch:
+                    '<tree js_class="custom_list" editable="top"><field name="foo" required="1"/></tree>',
+                mockRPC: async (route, args) => {
+                    if (args.method === "write") {
+                        assert.step(`write ${args.args[0]}`);
+                    }
+                },
+            });
+
+            await click(target.querySelector(".o_data_cell"));
+            await editInput(target, "[name='foo'] input", "");
+            await click(target, ".o_list_view");
+            assert.verifySteps([]);
+
+            await editInput(target, "[name='foo'] input", "YOLO");
+            await click(target, ".o_list_view");
+            assert.verifySteps(["onWillSaveRecord 1", "write 1", "onRecordSaved 1"]);
+        }
+    );
+
+    QUnit.test(
+        "execute an action before and after each valid save in a grouped list view",
+        async function (assert) {
+            const listView = registry.category("views").get("list");
+            class CustomListController extends listView.Controller {
+                async onRecordSaved(record) {
+                    assert.step(`onRecordSaved ${record.resId}`);
+                }
+
+                async onWillSaveRecord(record) {
+                    assert.step(`onWillSaveRecord ${record.resId}`);
+                }
+            }
+            registry.category("views").add("custom_list", {
+                ...listView,
+                Controller: CustomListController,
+            });
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch:
+                    '<tree js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></tree>',
+                groupBy: ["bar"],
+                mockRPC: async (route, args) => {
+                    if (args.method === "write") {
+                        assert.step(`write ${args.args[0]}`);
+                    }
+                },
+            });
+
+            await click(target.querySelector(".o_data_cell[name='foo']"));
+            await editInput(target, "[name='foo'] input", "");
+            await click(target, ".o_list_view");
+            assert.verifySteps([]);
+
+            await editInput(target, "[name='foo'] input", "YOLO");
+            await click(target, ".o_list_view");
+            assert.verifySteps(["onWillSaveRecord 4", "write 4", "onRecordSaved 4"]);
+        }
+    );
+
+    QUnit.test(
+        "don't exec a valid save with onWillSaveRecord in a list view",
+        async function (assert) {
+            const listView = registry.category("views").get("list");
+            class ListViewCustom extends listView.Controller {
+                async onRecordSaved(record) {
+                    throw new Error("should not execute onRecordSaved");
+                }
+
+                async onWillSaveRecord(record) {
+                    assert.step(`onWillSaveRecord ${record.resId}`);
+                    return false;
+                }
+            }
+            registry.category("views").add(
+                "list",
+                {
+                    ...listView,
+                    Controller: ListViewCustom,
+                },
+                { force: true }
+            );
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+                mockRPC: async (route, args) => {
+                    if (args.method === "write") {
+                        throw new Error("should not save the record");
+                    }
+                },
+            });
+
+            await click(target.querySelector(".o_data_cell"));
+            await editInput(target, "[name='foo'] input", "");
+            await click(target, ".o_list_view");
+            assert.verifySteps([]);
+
+            await click(target.querySelector(".o_data_cell"));
+            await editInput(target, "[name='foo'] input", "YOLO");
+            await click(target, ".o_list_view");
+            assert.verifySteps(["onWillSaveRecord 1"]);
+        }
+    );
 
     QUnit.test("action/type attributes on tree arch, type='object'", async (assert) => {
         const list = await makeView({

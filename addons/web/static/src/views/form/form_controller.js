@@ -131,6 +131,8 @@ export class FormController extends Component {
                 mode,
                 beforeLoadProm,
                 component: this,
+                onRecordSaved: this.onRecordSaved.bind(this),
+                onWillSaveRecord: this.onWillSaveRecord.bind(this),
             },
             {
                 ignoreUseSampleModel: true,
@@ -255,6 +257,22 @@ export class FormController extends Component {
             );
         }
     }
+
+    /**
+     * onRecordSaved is a callBack that will be executed after the save
+     * if it was done. It will therefore not be executed if the record
+     * is invalid or if a server error is thrown.
+     * @param {Record} record
+     */
+    async onRecordSaved(record) {}
+
+    /**
+     * onWillSaveRecord is a callBack that will be executed before the
+     * record save if the record is valid if the record is valid.
+     * If it returns false, it will prevent the save.
+     * @param {Record} record
+     */
+    async onWillSaveRecord(record) {}
 
     displayName() {
         return this.model.root.data.display_name || this.env._t("New");
