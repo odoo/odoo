@@ -3,7 +3,8 @@
 
 import re
 
-from werkzeug import urls, utils
+from html import unescape
+from werkzeug import urls
 
 from odoo import api, models, tools
 
@@ -40,7 +41,7 @@ class MailRenderMixin(models.AbstractModel):
             label = (match[3] or '').strip()
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
-                create_vals = dict(link_tracker_vals, url=utils.unescape(long_url), label=utils.unescape(label))
+                create_vals = dict(link_tracker_vals, url=unescape(long_url), label=unescape(label))
                 link = self.env['link.tracker'].create(create_vals)
                 if link.short_url:
                     new_href = href.replace(long_url, link.short_url)
@@ -69,7 +70,7 @@ class MailRenderMixin(models.AbstractModel):
             if blacklist and any(item in parsed.path for item in blacklist):
                 continue
 
-            create_vals = dict(link_tracker_vals, url= utils.unescape(original_url))
+            create_vals = dict(link_tracker_vals, url=unescape(original_url))
             link = self.env['link.tracker'].create(create_vals)
             if link.short_url:
                 content = content.replace(original_url, link.short_url, 1)
