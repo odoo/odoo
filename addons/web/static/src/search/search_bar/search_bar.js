@@ -146,7 +146,7 @@ export class SearchBar extends Component {
                         value = parser(trimmedQuery);
                     }
                 }
-            } catch (_e) {
+            } catch {
                 continue;
             }
 
@@ -185,7 +185,7 @@ export class SearchBar extends Component {
         if (searchItem.domain) {
             try {
                 domain = new Domain(searchItem.domain).toList();
-            } catch (_e) {
+            } catch {
                 // Pass
             }
         }

@@ -68,7 +68,7 @@ class TaxGroupComponent extends Component {
         let newValue;
         try {
             newValue = parseFloat(this.inputTax.el.value); // Get the new value
-        } catch (_err) {
+        } catch {
             this.inputTax.el.value = oldValue;
             this.setState("edit");
             return;

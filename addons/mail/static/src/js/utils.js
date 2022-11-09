@@ -20,7 +20,7 @@ function parseAndTransform(htmlString, transformFunction) {
     var children;
     try {
         children = $('<div>').html(string).contents();
-    } catch (_e) {
+    } catch {
         children = $('<div>').html('<pre>' + string + '</pre>').contents();
     }
     return _parseAndTransform(children, transformFunction)
@@ -99,7 +99,7 @@ function htmlToTextContentInline(htmlString) {
     htmlString = htmlString.replace(/<br\s*\/?>/gi,' ');
     try {
         div.innerHTML = htmlString;
-    } catch (_e) {
+    } catch {
         div.innerHTML = `<pre>${htmlString}</pre>`;
     }
     return div

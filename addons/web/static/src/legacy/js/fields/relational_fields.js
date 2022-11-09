@@ -3178,7 +3178,7 @@ var FieldStatus = AbstractField.extend({
         // If not set, the statusbar is not clickable.
         try {
             this.isClickable = !!JSON.parse(this.attrs.clickable);
-        } catch (_) {
+        } catch {
             this.isClickable = !!this.nodeOptions.clickable;
         }
     },

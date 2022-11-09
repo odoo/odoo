@@ -204,7 +204,7 @@ Model({
                             message: this.env._t("No available collaborator, please try again later."),
                             sticky: true,
                         });
-                    } catch (_err) {
+                    } catch {
                         /**
                          * Failure in displaying notification happens when
                          * notification service doesn't exist, which is the case in
@@ -283,7 +283,7 @@ Model({
                         message: this.env._t("Session expired... Please refresh and try again."),
                         sticky: true,
                     });
-                } catch (_err) {
+                } catch {
                     /**
                      * Failure in displaying notification happens when
                      * notification service doesn't exist, which is the case

@@ -200,7 +200,7 @@ var KanbanController = BasicController.extend({
             }
             try {
                 var visible = new Domain(domain).compute(data.evalContext);
-            } catch (_e) {
+            } catch {
                 return;
             }
             if (!visible) {

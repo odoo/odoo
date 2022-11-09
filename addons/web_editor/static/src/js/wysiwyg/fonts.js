@@ -35,7 +35,7 @@ return {
                 // document.styleSheets[].cssRules[] for cross-domain
                 // stylesheets.
                 rules = sheets[i].rules || sheets[i].cssRules;
-            } catch (_e) {
+            } catch {
                 continue;
             }
             if (!rules) {

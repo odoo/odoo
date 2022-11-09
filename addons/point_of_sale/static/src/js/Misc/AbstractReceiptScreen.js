@@ -44,7 +44,7 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
             try {
                 window.print();
                 return true;
-            } catch (_err) {
+            } catch {
                 await this.showPopup('ErrorPopup', {
                     title: this.env._t('Printing is not supported on some browsers'),
                     body: this.env._t(

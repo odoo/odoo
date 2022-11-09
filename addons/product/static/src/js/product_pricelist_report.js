@@ -95,7 +95,7 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
             try {
                 this.context.active_ids = params.params.active_ids.split(',').map(id => parseInt(id));
                 this.context.active_model = params.params.active_model;
-            } catch(_e) {
+            } catch {
                 console.log('unable to load ids from the url fragment 🙁');
             }
         }

@@ -284,7 +284,7 @@ options.registry.SocialMedia = options.Class.extend({
             const iconNames = fonts.fontIcons[0].alias;
             const exactIcon = iconNames.find(el => el === `fa-${domain}`);
             return (exactIcon || iconNames.find(el => el.includes(domain))).split('fa-').pop();
-        } catch (_error) {
+        } catch {
             return false;
         }
     },
@@ -317,7 +317,7 @@ options.registry.SocialMedia = options.Class.extend({
         let url;
         try {
             url = new URL(str);
-        } catch (_error) {
+        } catch {
             return false;
         }
         return url.protocol.startsWith('http');

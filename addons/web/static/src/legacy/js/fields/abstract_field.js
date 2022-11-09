@@ -572,7 +572,7 @@ var AbstractField = Widget.extend({
         try {
             value = this._parseValue(value);
             this._isValid = true;
-        } catch (_e) {
+        } catch {
             this._isValid = false;
             this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
             return Promise.reject({message: "Value set is not valid"});

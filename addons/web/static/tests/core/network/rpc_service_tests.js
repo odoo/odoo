@@ -108,7 +108,7 @@ QUnit.test("trigger an error when response has 'error' key", async (assert) => {
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_error) {
+    } catch {
         assert.ok(true);
     }
     unpatch(browser, "mock.xhr");
@@ -234,7 +234,7 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_e) {
+    } catch {
         assert.ok(true);
     }
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());

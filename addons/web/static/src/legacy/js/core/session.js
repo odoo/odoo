@@ -157,7 +157,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if(cookie.indexOf(nameEQ) === 0) {
                 try {
                     return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
-                } catch(_err) {
+                } catch {
                     // wrong cookie, delete it
                     this.set_cookie(name, '', -1);
                 }

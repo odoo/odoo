@@ -24,7 +24,7 @@ export function getOdooFunctions(formula, matcher) {
     let ast;
     try {
         ast = parse(formula);
-    } catch (_) {
+    } catch {
         return [];
     }
     return _getOdooFunctionsFromAST(ast, matcher);

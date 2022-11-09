@@ -198,7 +198,7 @@ QUnit.module("MockServer", (hooks) => {
                 args: [],
                 kwargs: {},
             });
-        } catch (_) {
+        } catch {
             assert.step("name_get failed");
         }
         assert.verifySteps(["name_get failed"]);
@@ -246,7 +246,7 @@ QUnit.module("MockServer", (hooks) => {
                 args: [11111],
                 kwargs: {},
             });
-        } catch (_) {
+        } catch {
             assert.step("name_get failed");
         }
         assert.verifySteps(["name_get failed"]);

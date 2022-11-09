@@ -59,23 +59,27 @@ export class DomainField extends Component {
     }
 
     onButtonClick() {
-        this.addDialog(SelectCreateDialog, {
-            title: this.env._t("Selected records"),
-            noCreate: true,
-            multiSelect: false,
-            resModel: this.getResModel(this.props),
-            domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
-            context: this.getContext(this.props) || {},
-        }, {
-            // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
-            onClose: () => this.loadCount(this.props)
-        });
+        this.addDialog(
+            SelectCreateDialog,
+            {
+                title: this.env._t("Selected records"),
+                noCreate: true,
+                multiSelect: false,
+                resModel: this.getResModel(this.props),
+                domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
+                context: this.getContext(this.props) || {},
+            },
+            {
+                // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
+                onClose: () => this.loadCount(this.props),
+            }
+        );
     }
     get isValidDomain() {
         try {
             this.getDomain(this.props.value).toList();
             return true;
-        } catch (_e) {
+        } catch {
             // WOWL TODO: rethrow error when not the expected type
             return false;
         }
@@ -98,7 +102,7 @@ export class DomainField extends Component {
                 [domain],
                 { context: this.getContext(props) }
             );
-        } catch (_e) {
+        } catch {
             // WOWL TODO: rethrow error when not the expected type
             Object.assign(this.state, { recordCount: 0, isValid: false });
             return;

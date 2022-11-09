@@ -284,7 +284,7 @@ export class ImageSelector extends FileSelector {
                     media.dynamicColors = dynamicColors;
                 }
             }
-        } catch (_e) {
+        } catch {
             console.error('CORS is misconfigured on the API server, image will be treated as non-dynamic.');
         }
     }

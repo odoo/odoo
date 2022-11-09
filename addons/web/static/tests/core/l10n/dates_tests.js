@@ -44,13 +44,13 @@ function runTestSet(assert, testSet, options) {
         let res2;
         try {
             res1 = options.newFn(input);
-        } catch (_e) {
+        } catch {
             // continue
         }
 
         try {
             res2 = options.legacyFn(input);
-        } catch (_e) {
+        } catch {
             // continue
         }
 

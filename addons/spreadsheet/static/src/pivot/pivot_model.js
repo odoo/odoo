@@ -161,7 +161,7 @@ export class SpreadsheetPivotModel extends PivotModel {
         try {
             const { field } = this.parseGroupField(fieldName);
             return this._isCol(field);
-        } catch (_) {
+        } catch {
             false;
         }
     }
@@ -175,7 +175,7 @@ export class SpreadsheetPivotModel extends PivotModel {
         try {
             const { field } = this.parseGroupField(fieldName);
             return this._isRow(field);
-        } catch (_) {
+        } catch {
             return false;
         }
     }

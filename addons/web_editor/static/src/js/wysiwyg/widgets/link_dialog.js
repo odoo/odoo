@@ -125,7 +125,7 @@ const _DialogLinkWidget = Link.extend({
             const Url = URL || window.URL || window.webkitURL;
             const urlObj = url.startsWith('/') ? new Url(url, window.location.origin) : new Url(url);
             return (urlObj.origin !== window.location.origin);
-        } catch (_ignored) {
+        } catch {
             return true;
         }
     },

@@ -112,7 +112,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         _formatDate(date) {
             try {
                 return field_utils.format[this.typeOfDate](date, null, { timezone: false });
-            } catch (_err) {
+            } catch {
                 return false;
             }
         }
@@ -125,7 +125,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         _parseInput(inputValue) {
             try {
                 return field_utils.parse[this.typeOfDate](inputValue, null, { timezone: false });
-            } catch (_err) {
+            } catch {
                 return false;
             }
         }

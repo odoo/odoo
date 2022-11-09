@@ -187,7 +187,7 @@ Model({
                 try {
                     await transceiver.sender.replaceTrack(track);
                     transceiver.direction = transceiverDirection;
-                } catch (_e) {
+                } catch {
                     // ignored, the track is probably already on the peerConnection.
                 }
                 return;
@@ -195,7 +195,7 @@ Model({
             try {
                 await transceiver.sender.replaceTrack(null);
                 transceiver.direction = transceiverDirection;
-            } catch (_e) {
+            } catch {
                 // ignored, the transceiver is probably already removed
             }
             if (trackKind === 'video') {
@@ -224,7 +224,7 @@ Model({
                 this.audioElement.pause();
                 try {
                     this.audioElement.srcObject = undefined;
-                } catch (_error) {
+                } catch {
                     // ignore error during remove, the value will be overwritten at next usage anyway
                 }
             }
