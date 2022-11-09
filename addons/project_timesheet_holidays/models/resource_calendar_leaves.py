@@ -119,7 +119,7 @@ class ResourceCalendarLeaves(models.Model):
             ('employee_id', 'in', employee_ids_all),
             ('date_from', '<=', max_date),
             ('date_to', '>=', min_date),
-            ('state', 'not in', ('cancel', 'refuse')),
+            ('state', '=', 'validate'),
         ], ['employee_id'], ['date_from:array_agg', 'date_to:array_agg'])
         holidays_by_employee = {
             employee.id: [
