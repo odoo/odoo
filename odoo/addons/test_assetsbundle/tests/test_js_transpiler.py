@@ -430,3 +430,17 @@ return __exports;
 """
 
         self.assertEqual(result, expected_result)
+
+    def test_10_qunit(self):
+                input_content = """/** @odoo-module **/"""
+                result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+
+                expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
+        'use strict';
+        let __exports = {};
+        QUnit.module('test_assetsbundle', {/** @odoo-module **/}
+        return __exports;
+        });
+        """
+
+                self.assertEqual(result, expected_result)

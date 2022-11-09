@@ -46,6 +46,7 @@ def transpile_javascript(url, content):
         convert_variable_export,
         convert_object_export,
         convert_default_export,
+        partial(wrap_with_odoo_module, url),
         partial(wrap_with_odoo_define, module_path),
     ]
     for s in steps:
@@ -94,6 +95,17 @@ def url_to_module_path(url):
     else:
         raise ValueError("The js file %r must be in the folder '/static/src' or '/static/lib' or '/static/test'" % url)
 
+def wrap_with_odoo_module(url, content):
+    """
+    Wraps the current content (source code) with the odoo.define call.
+    Should logically be called once all other operations have been performed.
+    """
+    match = URL_RE.match(url)
+    module_name = match["module"]
+    if("tests" in url and content.find("QUnit.test(")):
+        return f"""QUnit.module("{module_name}", function() {{{content}}});"""
+    else:
+        return content
 
 def wrap_with_odoo_define(module_path, content):
     """
@@ -641,7 +653,7 @@ def relative_path_to_module_path(url, path_rel):
     path_rel_split = path_rel.split("/")
     nb_back = len([v for v in path_rel_split if v == ".."]) + 1
     result = "/".join(url_split[:-nb_back] + [v for v in path_rel_split if not v in ["..", "."]])
-    return url_to_module_path(result)
+    return url_to_module_path(result)[1]
 
 
 ODOO_MODULE_RE = re.compile(r"""
