@@ -158,12 +158,13 @@ export class Messaging {
                 const avatarCacheKey = data.serverData.channel.avatarCacheKey;
                 for (const elem of data.serverData.channel.channelMembers[0][1]) {
                     this.createPartner(elem.persona.partner.id, elem.persona.partner.name);
-                }
-                for (const partner of data.serverData.seen_partners_info) {
-                    if (partner.partner_id !== this.user.partnerId) {
-                        thread.chatPartnerId = partner.partner_id;
-                        thread.name = this.partners[partner.partner_id].name;
-                        break;
+                    if (
+                        elem.persona.partner.id !== this.user.partnerId ||
+                        (data.serverData.channel.channelMembers[0][1].length === 1 &&
+                            elem.persona.partner.id === this.user.partnerId)
+                    ) {
+                        thread.chatPartnerId = elem.persona.partner.id;
+                        thread.name = this.partners[elem.persona.partner.id].name;
                     }
                 }
                 thread.imgUrl = `/web/image/res.partner/${thread.chatPartnerId}/avatar_128?unique=${avatarCacheKey}`;
