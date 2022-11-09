@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, UTC
 
@@ -466,3 +466,48 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': datetime(2022, 3, 11, 23, 59, 59),
         })
         self.assertEqual(leave.number_of_days, 1)
+
+    def test_current_leave_status(self):
+        types = ('no_validation', 'manager', 'hr', 'both')
+        employee = self.employee_emp
+
+        def run_validation_flow(leave_validation_type):
+            LeaveType = self.env['hr.leave.type'].with_user(self.user_hrmanager_id)
+            leave_type = LeaveType.with_context(tracking_disable=True).create({
+                'name': leave_validation_type.capitalize(),
+                'leave_validation_type': leave_validation_type,
+                'allocation_type': 'no',
+            })
+            current_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'holiday_type': 'employee',
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': datetime.today() - timedelta(days=1),
+                'date_to': datetime.today() + timedelta(days=1),
+            })
+
+            if leave_validation_type in ('manager', 'both'):
+                self.assertFalse(employee.is_absent)
+                self.assertFalse(employee.current_leave_id)
+                self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
+                self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
+                current_leave.with_user(self.user_hruser_id).action_approve()
+
+            if leave_validation_type in ('hr', 'both'):
+                self.assertFalse(employee.is_absent)
+                self.assertFalse(employee.current_leave_id)
+                self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
+                self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
+                current_leave.with_user(self.user_hrmanager_id).action_validate()
+
+            self.assertTrue(employee.is_absent)
+            self.assertEqual(employee.current_leave_id, current_leave.holiday_status_id)
+            self.assertFalse(employee.filtered_domain([('is_absent', '=', False)]))
+            self.assertEqual(employee.filtered_domain([('is_absent', '=', True)]), employee)
+
+            raise RuntimeError()
+
+        for leave_validation_type in types:
+            with self.assertRaises(RuntimeError), self.env.cr.savepoint():
+                run_validation_flow(leave_validation_type)
