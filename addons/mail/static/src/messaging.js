@@ -476,6 +476,19 @@ export class Messaging {
         await this.orm.call("mail.message", "toggle_message_starred", [[messageId]]);
     }
 
+    async deleteMessage(message) {
+        if (message.isStarred) {
+            this.discuss.starred.counter--;
+            removeFromArray(this.discuss.starred.messages, message.id);
+        }
+        removeFromArray(this.threads[message.resId].messages, message.id);
+        return this.rpc("/mail/message/update_content", {
+            attachment_ids: [],
+            body: "",
+            message_id: message.id,
+        });
+    }
+
     async unstarAll() {
         // apply the change immediately for faster feedback
         this.discuss.starred.counter = 0;

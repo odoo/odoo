@@ -208,15 +208,15 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/inbox/messages', methods=['POST'], type='json', auth='user')
     def discuss_inbox_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', True)], max_id=max_id, min_id=min_id, limit=limit)._filter_not_empty().message_format()
 
     @http.route('/mail/history/messages', methods=['POST'], type='json', auth='user')
     def discuss_history_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', False)], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('needaction', '=', False)], max_id=max_id, min_id=min_id, limit=limit)._filter_not_empty().message_format()
 
     @http.route('/mail/starred/messages', methods=['POST'], type='json', auth='user')
     def discuss_starred_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', 'in', [request.env.user.partner_id.id])], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', 'in', [request.env.user.partner_id.id])], max_id=max_id, min_id=min_id, limit=limit)._filter_not_empty().message_format()
 
     # --------------------------------------------------------------------------
     # Thread API (channel/chatter common)
@@ -403,7 +403,7 @@ class DiscussController(http.Controller):
             ('res_id', '=', channel_id),
             ('model', '=', 'mail.channel'),
             ('message_type', '!=', 'user_notification'),
-        ], max_id=max_id, min_id=min_id, limit=limit)
+        ], max_id=max_id, min_id=min_id, limit=limit)._filter_not_empty()
         if not request.env.user._is_public():
             messages.set_message_done()
         return messages.message_format()
@@ -447,7 +447,7 @@ class DiscussController(http.Controller):
             ('res_id', '=', int(thread_id)),
             ('model', '=', thread_model),
             ('message_type', '!=', 'user_notification'),
-        ], max_id=max_id, min_id=min_id, limit=limit)
+        ], max_id=max_id, min_id=min_id, limit=limit)._filter_not_empty()
         if not request.env.user._is_public():
             messages.set_message_done()
         return messages.message_format()

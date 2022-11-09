@@ -8,10 +8,15 @@ import { Component, useState, xml } from "@odoo/owl";
 let target;
 
 class ChatterParent extends Component {
-    static template = xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName"/>`;
-    static components = { Chatter };
-    state = useState({ resId: this.props.resId });
+    setup() {
+        this.state = useState({ resId: this.props.resId });
+    }
 }
+
+Object.assign(ChatterParent, {
+    components: { Chatter },
+    template: xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName"/>`,
+});
 
 QUnit.module("mail", (hooks) => {
     hooks.beforeEach(async () => {
