@@ -117,6 +117,7 @@ class WebsiteBlog(http.Controller):
             total=total,
             page=page,
             step=self._blog_post_per_page,
+            url_args={'search': search, 'date_begin': date_begin, 'date_end': date_end},
         )
 
         if not blogs:
