@@ -7,15 +7,16 @@
                     <NumeroLinea t-out="line_dict['line_number']"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
                         <CodiceTipo>EAN</CodiceTipo>
-                        <CodiceValore t-out="format_alphanumeric(line.product_id.barcode)[:35]"/>
+                        <CodiceValore t-out="format_alphanumeric(line.product_id.barcode, 35)"/>
                     </CodiceArticolo>
                     <CodiceArticolo t-elif="line.product_id.default_code">
                         <CodiceTipo>INTERNAL</CodiceTipo>
-                        <CodiceValore t-out="format_alphanumeric(line.product_id.default_code)[:35]"/>
+                        <CodiceValore t-out="format_alphanumeric(line.product_id.default_code, 35)"/>
                     </CodiceArticolo>
-                    <Descrizione t-out="format_alphanumeric(line_dict['description'])[:1000]"/>
+                    <Descrizione t-out="format_alphanumeric(line_dict['description'], 1000)"/>
                     <Quantita t-out="format_numbers(abs(line.quantity))"/>
-                    <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-out="format_alphanumeric(line.product_uom_id.name)[:10]"/>
+                    <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"
+                                 t-out="format_alphanumeric(line.product_uom_id.name, 10)"/>
                     <PrezzoUnitario t-out="'%.06f' % (line_dict['unit_price'])"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
                         <Tipo t-out="discount_type(line.discount)"/>
@@ -43,41 +44,39 @@
     <FatturaElettronicaHeader>
         <DatiTrasmissione>
             <IdTrasmittente>
-                <IdPaese t-out="get_vat_country(sender.vat)"/>
-                <IdCodice t-out="normalize_codice_fiscale(sender.l10n_it_codice_fiscale) or get_vat_number(sender.vat)"/>
+                <IdPaese t-out="sender_info['country_code']"/>
+                <IdCodice t-out="sender_info['vat']"/>
             </IdTrasmittente>
-            <ProgressivoInvio t-out="format_alphanumeric(record.name.replace('/','')[-10:])"/>
+            <ProgressivoInvio t-out="format_alphanumeric(record.name.replace('/',''), -10)"/>
             <FormatoTrasmissione t-out="formato_trasmissione"/>
-            <CodiceDestinatario t-out="codice_destinatario"/>
+            <CodiceDestinatario t-out="buyer_info['pa_index']"/>
             <ContattiTrasmittente>
-                <Telefono t-if="sender_partner.phone" t-out="format_alphanumeric(format_phone(sender_partner.phone))"/>
-                <Telefono t-elif="sender_partner.mobile" t-out="format_alphanumeric(format_phone(sender_partner.mobile))"/>
-                <Email t-if="sender_partner.email" t-out="sender_partner.email[:256]"/>
+                <Telefono t-if="sender.phone" t-out="format_phone(sender.phone)"/>
+                <Email t-if="sender.email" t-out="format_alphanumeric(sender.email, 256)"/>
             </ContattiTrasmittente>
-            <PECDestinatario t-if="not is_self_invoice and partner.l10n_it_pec_email" t-out="partner.l10n_it_pec_email[:256]"/>
+            <PECDestinatario t-if="not is_self_invoice and buyer.l10n_it_pec_email" t-out="format_alphanumeric(buyer.l10n_it_pec_email, 256)"/>
         </DatiTrasmissione>
         <CedentePrestatore>
             <DatiAnagrafici>
-                <IdFiscaleIVA t-if="seller.vat and in_eu(seller)">
-                    <IdPaese t-out="get_vat_country(seller.vat)"/>
-                    <IdCodice t-out="get_vat_number(seller.vat)"/>
+                <IdFiscaleIVA>
+                    <IdPaese t-out="seller_info['country_code']"/>
+                    <IdCodice t-out="seller_info['vat']"/>
                 </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="seller.vat and not in_eu(seller)">
-                    <IdPaese t-out="seller.country_id.code"/>
-                    <IdCodice t-out="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not seller.vat and seller.country_id.code != 'IT'">
-                    <IdPaese t-out="seller.country_id.code"/>
-                    <IdCodice t-out="'0000000'"/>
-                </IdFiscaleIVA>
-                <CodiceFiscale t-if="seller.l10n_it_codice_fiscale" t-out="normalize_codice_fiscale(seller.l10n_it_codice_fiscale)"/>
+                <CodiceFiscale t-if="seller_info['codice_fiscale']" t-out="seller_info['codice_fiscale']"/>
                 <Anagrafica>
-                    <Denominazione t-out="format_alphanumeric(seller_partner.display_name[:80])"/>
+                <t t-if="seller_info['is_company']">
+                    <Denominazione t-out="format_alphanumeric(seller.display_name, 80)"/>
+                </t>
+                <t t-else="">
+                    <Nome t-out="format_alphanumeric(seller_info['first_name'], 60)"/>
+                    <Cognome t-out="format_alphanumeric(seller_info['last_name'], 60)"/>
+                </t>
                 </Anagrafica>
                 <RegimeFiscale t-out="regime_fiscale"/>
             </DatiAnagrafici>
             <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
-                <t t-set="partner" t-value="seller_partner"/>
+                <t t-set="partner" t-value="seller"/>
+                <t t-set="partner_info" t-value="seller_info"/>
             </t>
             <IscrizioneREA t-if="not is_self_invoice and company.l10n_it_has_eco_index">
                 <Ufficio t-out="company.l10n_it_eco_index_office.code"/>
@@ -90,48 +89,41 @@
         <RappresentanteFiscale t-if="not is_self_invoice and representative">
             <DatiAnagrafici>
                 <IdFiscaleIVA>
-                    <IdPaese t-out="get_vat_country(representative.vat)"/>
-                    <IdCodice t-out="get_vat_number(representative.vat)"/>
+                    <IdPaese t-out="representative_info['country_code']"/>
+                    <IdCodice t-out="representative_info['vat']"/>
                 </IdFiscaleIVA>
-                <CodiceFiscale t-if="representative.l10n_it_codice_fiscale" t-out="normalize_codice_fiscale(representative.l10n_it_codice_fiscale)"/>
+                <CodiceFiscale t-if="representative_info['codice_fiscale']" t-out="representative_info['codice_fiscale']"/>
                 <Anagrafica>
-                <t t-if="representative.is_company">
-                    <Denominazione t-out="format_alphanumeric(representative.display_name[:80])"/>
+                <t t-if="representative_info['is_company']">
+                    <Denominazione t-out="format_alphanumeric(representative.display_name, 80)"/>
                 </t>
                 <t t-else="">
-                    <Nome t-out="format_alphanumeric(' '.join(representative.name.split()[:1])[:60])"/>
-                    <Cognome t-out="format_alphanumeric(' '.join(representative.name.split()[1:])[:60])"/>
+                    <Nome t-out="format_alphanumeric(representative_info['first_name'], 60)"/>
+                    <Cognome t-out="format_alphanumeric(representative_info['last_name'], 60)"/>
                 </t>
                 </Anagrafica>
             </DatiAnagrafici>
         </RappresentanteFiscale>
         <CessionarioCommittente>
             <DatiAnagrafici>
-                <IdFiscaleIVA t-if="buyer.vat and in_eu(buyer)">
-                    <IdPaese t-out="get_vat_country(buyer.vat)"/>
-                    <IdCodice t-out="get_vat_number(buyer.vat)"/>
+                <IdFiscaleIVA t-if="buyer_info['vat']">
+                    <IdPaese t-out="buyer_info['country_code']"/>
+                    <IdCodice t-out="buyer_info['vat']"/>
                 </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="buyer.vat and not in_eu(buyer)">
-                    <IdPaese t-out="buyer.country_id.code"/>
-                    <IdCodice t-out="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not buyer.vat and buyer.country_id.code != 'IT'">
-                    <IdPaese t-out="buyer.country_id.code"/>
-                    <IdCodice t-out="'0000000'"/>
-                </IdFiscaleIVA>
-                <CodiceFiscale t-if="buyer.l10n_it_codice_fiscale" t-out="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
+                <CodiceFiscale t-if="buyer_info['codice_fiscale']" t-out="buyer_info['codice_fiscale']"/>
                 <Anagrafica>
-                    <t t-if="buyer_is_company">
-                        <Denominazione t-out="format_alphanumeric(buyer.display_name[:80])"/>
+                    <t t-if="buyer_info['is_company']">
+                        <Denominazione t-out="format_alphanumeric(buyer.display_name, 80)"/>
                     </t>
                     <t t-else="">
-                        <Nome t-out="format_alphanumeric(' '.join(buyer.name.split()[:1])[:60])"/>
-                        <Cognome t-out="format_alphanumeric(' '.join(buyer.name.split()[1:])[:60])"/>
+                        <Nome t-out="format_alphanumeric(buyer_info['first_name'], 60)"/>
+                        <Cognome t-out="format_alphanumeric(buyer_info['last_name'], 60)"/>
                     </t>
                 </Anagrafica>
             </DatiAnagrafici>
             <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
-                <t t-set="partner" t-value="buyer_partner"/>
+                <t t-set="partner" t-value="buyer"/>
+                <t t-set="partner_info" t-value="buyer_info"/>
             </t>
         </CessionarioCommittente>
     </FatturaElettronicaHeader>
@@ -141,7 +133,7 @@
                 <TipoDocumento t-out="document_type"/>
                 <Divisa t-out="currency.name"/>
                 <Data t-out="format_date(record.invoice_date)"/>
-                <Numero t-out="format_alphanumeric(record.name[-20:])"/>
+                <Numero t-out="format_alphanumeric(record.name, -20)"/>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
                     <BolloVirtuale>SI</BolloVirtuale>
                     <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
@@ -149,7 +141,7 @@
                 <ImportoTotaleDocumento t-out="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="record.ref and not record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.ref[:20])"/>
+                <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
             </DatiOrdineAcquisto>
             <DatiFattureCollegate t-if="record.reversed_entry_id">
                 <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name[-20:])"/>
@@ -160,7 +152,7 @@
                 <Data t-out="format_date(downpayment_move.invoice_date)"/>
             </DatiFattureCollegate>
             <DatiDDT t-if="record.l10n_it_ddt_id">
-                <NumeroDDT t-out="format_alphanumeric(record.l10n_it_ddt_id.name[-20:])"/>
+                <NumeroDDT t-out="format_alphanumeric(record.l10n_it_ddt_id.name, -20)"/>
                 <DataDDT t-out="format_date(record.l10n_it_ddt_id.date)"/>
             </DatiDDT>
         </DatiGenerali>
@@ -187,7 +179,7 @@
                         <Imposta t-out="format_monetary(abs(tax_line['tax_amount']), currency)"/>
                     </t>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-out="tax.l10n_it_vat_due_date"/>
-                    <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-out="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
+                    <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-out="format_alphanumeric(tax.l10n_it_law_reference, 100)"/>
                 </DatiRiepilogo>
             </t>
         </DatiBeniServizi>
@@ -199,15 +191,15 @@
                     <ModalitaPagamento>MP05</ModalitaPagamento>
                     <DataScadenzaPagamento t-out="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-out="format_monetary(abs(payment.amount_currency), currency)"/>
-                    <IstitutoFinanziario t-if="partner_bank.bank_id" t-out="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
+                    <IstitutoFinanziario t-if="partner_bank.bank_id" t-out="format_alphanumeric(partner_bank.bank_id.name, 80)"/>
                     <IBAN t-if="partner_bank.acc_type == 'iban'" t-out="partner_bank.sanitized_acc_number"/>
                     <BIC t-elif="partner_bank.acc_type == 'bank' and partner_bank.bank_id.bic" t-out="partner_bank.bank_id.bic"/>
-                    <CodicePagamento t-if="record.payment_reference" t-out="format_alphanumeric(record.payment_reference[:60])"/>
+                    <CodicePagamento t-if="record.payment_reference" t-out="format_alphanumeric(record.payment_reference, 60)"/>
                 </DettaglioPagamento>
             </t>
         </DatiPagamento>
         <Allegati t-if="pdf">
-            <NomeAttachment t-out="format_alphanumeric(pdf_name[:60])"/>
+            <NomeAttachment t-out="format_alphanumeric(pdf_name, 60)"/>
             <FormatoAttachment>PDF</FormatoAttachment>
             <Attachment t-out="pdf"/>
         </Allegati>
@@ -217,11 +209,11 @@
 
 <template id="account_invoice_it_FatturaPA_sede">
             <Sede>
-                <Indirizzo><t t-if="partner.street or partner.street2" t-out="format_alphanumeric((partner.street or '') + ' ' + (partner.street2 or ''))[:60]"/></Indirizzo>
-                <CAP><t t-if="partner.country_id.code != 'IT'" t-out="'00000'"/><t t-elif="partner.zip" t-out="partner.zip"/></CAP>
-                <Comune t-out="format_alphanumeric(partner.city[:60])"/>
-                <Provincia t-if="partner.country_id.code == 'IT' and partner.state_id" t-out="partner.state_id.code[:2]"/>
-                <Nazione t-out="partner.country_id.code"/>
+                <Indirizzo><t t-if="partner.street or partner.street2" t-out="format_address(partner.street, partner.street2, 60)"/></Indirizzo>
+                <CAP><t t-out="partner_info['zip']"/></CAP>
+                <Comune t-out="format_alphanumeric(partner.city, 60)"/>
+                <Provincia t-if="partner_info['state_code']" t-out="format_alphanumeric(partner_info['state_code'], 2)"/>
+                <Nazione t-out="partner_info['country_code']"/>
             </Sede>
 </template>
 

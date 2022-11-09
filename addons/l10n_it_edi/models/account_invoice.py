@@ -24,13 +24,9 @@ class AccountMove(models.Model):
 
     l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
     l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment", ondelete="restrict")
-
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
-
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
-
     l10n_it_einvoice_name = fields.Char(compute='_compute_l10n_it_einvoice')
-
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", compute='_compute_l10n_it_einvoice')
 
     @api.depends('edi_document_ids', 'edi_document_ids.attachment_id')
@@ -183,31 +179,34 @@ class AccountMove(models.Model):
         def discount_type(discount):
             return 'SC' if discount > 0 else 'MG'
 
+        def format_alphanumeric(text, maxlen=None):
+            if not text:
+                return False
+            text = text.encode('latin-1', 'replace').decode('latin-1')
+            if maxlen and maxlen > 0:
+                text = text[:maxlen]
+            elif maxlen and maxlen < 0:
+                text = text[maxlen:]
+            return text
+
         def format_phone(number):
             if not number:
                 return False
             number = number.replace(' ', '').replace('/', '').replace('.', '')
             if len(number) > 4 and len(number) < 13:
-                return number
+                return format_alphanumeric(number)
             return False
 
-        def get_vat_number(vat):
-            if vat[:2].isdecimal():
-                return vat.replace(' ', '')
-            return vat[2:].replace(' ', '')
-
-        def get_vat_country(vat):
-            if vat[:2].isdecimal():
-                return 'IT'
-            return vat[:2].upper()
-
-        def format_alphanumeric(text_to_convert):
-            return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
+        def format_address(street, street2, maxlen=60):
+            street, street2 = street or '', street2 or ''
+            if street and len(street) >= maxlen:
+                street2 = ''
+            sep = ' ' if street and street2 else ''
+            return format_alphanumeric(f"{street}{sep}{street2}", maxlen)
 
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
         # Flags
-        in_eu = self.env['account.edi.format']._l10n_it_edi_partner_in_eu
         is_self_invoice = self.env['account.edi.format']._l10n_it_edi_is_self_invoice(self)
         document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
         if self.env['account.edi.format']._l10n_it_is_simplified_document_type(document_type):
@@ -229,13 +228,13 @@ class AccountMove(models.Model):
 
         company = self.company_id
         partner = self.commercial_partner_id
+        sender = company
         buyer = partner if not is_self_invoice else company
         seller = company if not is_self_invoice else partner
-        codice_destinatario = (
-            (is_self_invoice and company.partner_id.l10n_it_pa_index)
-            or partner.l10n_it_pa_index
-            or (partner.country_id.code == 'IT' and '0000000')
-            or 'XXXXXXX')
+        sender_info_values = company.partner_id._l10n_it_edi_get_values()
+        buyer_info_values = (partner if not is_self_invoice else company.partner_id)._l10n_it_edi_get_values()
+        seller_info_values = (company.partner_id if not is_self_invoice else partner)._l10n_it_edi_get_values()
+        representative_info_values = company.l10n_it_tax_representative_partner_id._l10n_it_edi_get_values()
 
         # Self-invoices are technically -100%/+100% repartitioned
         # but functionally need to be exported as 100%
@@ -261,29 +260,21 @@ class AccountMove(models.Model):
         # Create file content.
         template_values = {
             'record': self,
-            'balance_multiplicator': -1 if self.is_inbound() else 1,
             'company': company,
-            'sender': company,
-            'sender_partner': company.partner_id,
             'partner': partner,
+            'sender': sender,
             'buyer': buyer,
-            'buyer_partner': partner if not is_self_invoice else company.partner_id,
-            'buyer_is_company': is_self_invoice or partner.is_company,
             'seller': seller,
-            'seller_partner': company.partner_id if not is_self_invoice else partner,
+            'representative': company.l10n_it_tax_representative_partner_id,
+            'sender_info': sender_info_values,
+            'buyer_info': buyer_info_values,
+            'seller_info': seller_info_values,
+            'representative_info': representative_info_values,
             'currency': self.currency_id or self.company_currency_id if not convert_to_euros else self.env.ref('base.EUR'),
             'document_total': document_total,
-            'representative': company.l10n_it_tax_representative_partner_id,
-            'codice_destinatario': codice_destinatario,
             'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
             'is_self_invoice': is_self_invoice,
             'partner_bank': self.partner_bank_id,
-            'format_date': format_date,
-            'format_monetary': format_monetary,
-            'format_numbers': format_numbers,
-            'format_numbers_two': format_numbers_two,
-            'format_phone': format_phone,
-            'format_alphanumeric': format_alphanumeric,
             'discount_type': discount_type,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
@@ -291,15 +282,19 @@ class AccountMove(models.Model):
             'pdf_name': pdf_name,
             'tax_details': tax_details,
             'downpayment_moves': downpayment_moves,
-            'abs': abs,
-            'normalize_codice_fiscale': partner._l10n_it_normalize_codice_fiscale,
-            'get_vat_number': get_vat_number,
-            'get_vat_country': get_vat_country,
-            'in_eu': in_eu,
             'rc_refund': reverse_charge_refund,
             'invoice_lines': invoice_lines,
             'tax_lines': tax_lines,
             'conversion_rate': conversion_rate,
+            'balance_multiplicator': -1 if self.is_inbound() else 1,
+            'abs': abs,
+            'format_date': format_date,
+            'format_monetary': format_monetary,
+            'format_numbers': format_numbers,
+            'format_numbers_two': format_numbers_two,
+            'format_phone': format_phone,
+            'format_alphanumeric': format_alphanumeric,
+            'format_address': format_address,
         }
         return template_values
 
