@@ -55,6 +55,9 @@ function _addTitleAndAllowedAttributes(el, title, options) {
         const titleEl = _buildTitleElement(title);
         tooltipEl = titleEl;
         el.appendChild(titleEl);
+        if (options && options.dataAttributes && options.dataAttributes.fontFamily) {
+            titleEl.style.fontFamily = options.dataAttributes.fontFamily;
+        }
     }
 
     if (options && options.classes) {
