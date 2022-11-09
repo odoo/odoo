@@ -2,12 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
-from unittest.mock import patch, MagicMock
 
 from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyClientUser
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdi(AccountEdiTestCommon):
@@ -20,6 +18,9 @@ class TestItEdi(AccountEdiTestCommon):
         cls.company = cls.company_data_2['company']
         cls.company.write({
             'vat': 'IT01234560157',
+            'phone': '0266766700',
+            'mobile': '+393288088988',
+            'email': 'test@test.it',
             'street': "1234 Test Street",
             'zip': "12345",
             'city': "Prova",
@@ -103,7 +104,11 @@ class TestItEdi(AccountEdiTestCommon):
         with tools.file_open(path, mode='rb') as fd:
             expected_tree = etree.fromstring(fd.read())
         invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice))
-        self.assertXmlTreeEqual(invoice_etree, expected_tree)
+        try:
+            self.assertXmlTreeEqual(invoice_etree, expected_tree)
+        except AssertionError as ae:
+            ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
+            raise
 
     def _cleanup_etree(self, content, xpaths=None):
         xpaths = {
@@ -136,8 +141,12 @@ class TestItEdi(AccountEdiTestCommon):
             if 'invoice_line_ids' in invoice_values:
                 expected_invoice_line_ids_values_list += invoice_values.pop('invoice_line_ids')
             expected_invoice_values_list.append(invoice_values)
-        self.assertRecordValues(invoices, expected_invoice_values_list)
-        if expected_invoice_line_ids_values_list:
-            self.assertRecordValues(invoices.invoice_line_ids, expected_invoice_line_ids_values_list)
+        try:
+            self.assertRecordValues(invoices, expected_invoice_values_list)
+            if expected_invoice_line_ids_values_list:
+                self.assertRecordValues(invoices.invoice_line_ids, expected_invoice_line_ids_values_list)
+        except AssertionError as ae:
+            ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
+            raise
 
         return invoices
