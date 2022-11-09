@@ -48,7 +48,7 @@
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
                         <div class="card-title h5" t-field="record.display_name"/>
-                        <div class="card-text text-muted h6" t-field="record.description_sale"/>
+                        <div class="card-text flex-grow-1 text-muted h6" t-field="record.description_sale"/>
                         <div class="mt-2">
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                                 <t t-set="rating_avg" t-value="record.rating_avg"/>
@@ -210,7 +210,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="card-title h6 w-100 mt-2 mb-3" t-field="record.display_name"/>
+                        <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-field="record.display_name"/>
                         <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
                             <button type="button" role="button" class="btn btn-primary js_add_cart w-100" title="Add to Cart">
                                 Add to Cart
@@ -291,7 +291,9 @@
                                     </t>
                                 </div>
                                 <div class="d-flex align-items-center flex-wrap">
-                                    <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                                    <div class="my-2">
+                                        <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                                    </div>
                                     <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper ms-auto">
                                         <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
                                             <i class="fa fa-fw fa-shopping-cart"/>
@@ -327,7 +329,7 @@
                                     <t t-set="rating_count" t-value="record.rating_count"/>
                                 </t>
                         </div>
-                        <div class="card-text h6" t-field="record.description_sale"/>
+                        <div class="card-text h6 flex-grow-1" t-field="record.description_sale"/>
                         <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
                             <div class="h5 mb-0 me-2">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
@@ -356,13 +358,11 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
-                        <div class="row">
-                            <div class="col-8 d-flex flex-wrap">
-                                <div class="mb-3">
-                                    <div class="card-title h5" t-field="record.display_name"/>
-                                </div>
+                        <div class="row h-100">
+                            <div class="col-8 d-flex flex-column">
+                                <div class="card-title h5" t-field="record.display_name"/>
                                 <div class="card-text h6 text-muted" t-field="record.description_sale"/>
-                                <div class="d-flex justify-content-between align-items-center align-self-end flex-wrap mt-4 w-100">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
                                     <div class="h5 text-primary mb-0 me-2">
                                         <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                                     </div>
