@@ -5,12 +5,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
-
     const { useState } = owl;
 
-    /**
-     * This popup needs to be self-dependent because it needs to be called from different place.
-     */
     class ClosePosPopup extends AbstractAwaitablePopup {
         setup() {
             super.setup();
