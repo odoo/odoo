@@ -188,7 +188,13 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='sale_line_id']" position="attributes">
+                <xpath expr="//field[@name='sale_line_id'][@groups='!sales_team.group_sale_salesman']" position="attributes">
+                    <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>
+                    <attribute name="attrs">
+                        {'invisible': [('allow_billable', '=', False)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//field[@name='sale_line_id'][@groups='sales_team.group_sale_salesman']" position="attributes">
                     <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>
                     <attribute name="attrs">
                         {'invisible': [('allow_billable', '=', False)]}
