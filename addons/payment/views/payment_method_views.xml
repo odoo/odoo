@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_icon_form" model="ir.ui.view">
-        <field name="name">payment.icon.form</field>
-        <field name="model">payment.icon</field>
+    <record id="payment_method_form" model="ir.ui.view">
+        <field name="name">payment.method.form</field>
+        <field name="model">payment.method</field>
         <field name="arch" type="xml">
-            <form string="Payment Icon">
+            <form string="Payment Method">
                 <sheet>
                     <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
@@ -21,9 +21,9 @@
         </field>
     </record>
 
-    <record id="payment_icon_tree" model="ir.ui.view">
-        <field name="name">payment.icon.tree</field>
-        <field name="model">payment.icon</field>
+    <record id="payment_method_tree" model="ir.ui.view">
+        <field name="name">payment.method.tree</field>
+        <field name="model">payment.method</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence" widget="handle"/>
@@ -32,13 +32,13 @@
         </field>
     </record>
 
-    <record id="action_payment_icon" model="ir.actions.act_window">
-        <field name="name">Payment Icons</field>
-        <field name="res_model">payment.icon</field>
+    <record id="action_payment_method" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">payment.method</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a payment icon
+                Create a payment method
             </p>
         </field>
     </record>

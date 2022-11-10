@@ -55,12 +55,12 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         # Filter payment method types by available payment method
-        existing_pms = [pm.name.lower() for pm in self.env['payment.icon'].search([])]
-        linked_pms = [pm.name.lower() for pm in self.provider_id.payment_icon_ids]
+        existing_pms = [pm.name.lower() for pm in self.env['payment.method'].search([])]
+        linked_pms = [pm.name.lower() for pm in self.provider_id.payment_method_ids]
         pm_filtered_pmts = filter(
             lambda pmt: pmt.name == 'card'
-            # If the PM (payment.icon) record related to a PMT doesn't exist, don't filter out the
-            # PMT because the user couldn't even have linked it to the provider in the first place.
+            # If the PM record related to a PMT doesn't exist, don't filter out the PMT because the
+            # user couldn't even have linked it to the provider in the first place.
             or (pmt.name in linked_pms or pmt.name not in existing_pms),
             PAYMENT_METHOD_TYPES
         )

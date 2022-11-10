@@ -47,8 +47,8 @@ class PaymentProvider(models.Model):
         related='company_id.currency_id',
         help="The main currency of the company, used to display monetary fields.",
     )
-    payment_icon_ids = fields.Many2many(
-        string="Supported Payment Icons", comodel_name='payment.icon')
+    payment_method_ids = fields.Many2many(
+        string="Supported Payment Methods", comodel_name='payment.method')
     allow_tokenization = fields.Boolean(
         string="Allow Saving Payment Methods",
         help="This controls whether customers can save their payment methods as payment tokens.\n"
@@ -194,7 +194,7 @@ class PaymentProvider(models.Model):
     show_credentials_page = fields.Boolean(compute='_compute_view_configuration_fields')
     show_allow_tokenization = fields.Boolean(compute='_compute_view_configuration_fields')
     show_allow_express_checkout = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_payment_icon_ids = fields.Boolean(compute='_compute_view_configuration_fields')
+    show_payment_method_ids = fields.Boolean(compute='_compute_view_configuration_fields')
     show_pre_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     show_pending_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     show_auth_msg = fields.Boolean(compute='_compute_view_configuration_fields')
@@ -246,7 +246,7 @@ class PaymentProvider(models.Model):
         - `show_credentials_page`: Whether the "Credentials" notebook page should be shown.
         - `show_allow_tokenization`: Whether the `allow_tokenization` field should be shown.
         - `show_allow_express_checkout`: Whether the `allow_express_checkout` field should be shown.
-        - `show_payment_icon_ids`: Whether the `payment_icon_ids` field should be shown.
+        - `show_payment_method_ids`: Whether the `payment_method_ids` field should be shown.
         - `show_pre_msg`: Whether the `pre_msg` field should be shown.
         - `show_pending_msg`: Whether the `pending_msg` field should be shown.
         - `show_auth_msg`: Whether the `auth_msg` field should be shown.
@@ -263,7 +263,7 @@ class PaymentProvider(models.Model):
             'show_credentials_page': True,
             'show_allow_tokenization': True,
             'show_allow_express_checkout': True,
-            'show_payment_icon_ids': True,
+            'show_payment_method_ids': True,
             'show_pre_msg': True,
             'show_pending_msg': True,
             'show_auth_msg': True,
