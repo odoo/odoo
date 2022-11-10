@@ -412,6 +412,8 @@ def image_apply_opt(image, output_format, **params):
     :return: the image formatted
     :rtype: bytes
     """
+    if output_format == 'JPEG' and image.mode not in ['1', 'L', 'RGB']:
+        image = image.convert("RGB")
     stream = io.BytesIO()
     image.save(stream, format=output_format, **params)
     return stream.getvalue()
