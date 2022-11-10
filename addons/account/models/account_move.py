@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re, float_is_zero
 from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.osv import expression
 
 from datetime import date, timedelta
 from collections import defaultdict
@@ -4388,11 +4389,11 @@ class AccountMoveLine(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator == 'ilike':
-            args = ['|', '|',
+            domain = ['|', '|',
                     ('name', 'ilike', name),
                     ('move_id', 'ilike', name),
                     ('product_id', 'ilike', name)]
-            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
         return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
