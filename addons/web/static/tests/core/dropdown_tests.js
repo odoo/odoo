@@ -15,6 +15,7 @@ import {
     mouseEnter,
     nextTick,
     patchWithCleanup,
+    triggerEvent,
     triggerHotkey,
 } from "../helpers/utils";
 
@@ -57,7 +58,10 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = owl.tags.xml`<DropdownItem>coucou</DropdownItem>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        assert.strictEqual(parent.el.outerHTML, '<span class="dropdown-item">coucou</span>');
+        assert.strictEqual(
+            parent.el.outerHTML,
+            '<span tabindex="0" class="dropdown-item">coucou</span>'
+        );
     });
 
     QUnit.test("DropdownItem (with href prop) can be rendered as <a/>", async (assert) => {
@@ -65,7 +69,10 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = owl.tags.xml`<DropdownItem href="'#'">coucou</DropdownItem>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        assert.strictEqual(parent.el.outerHTML, '<a href="#" class="dropdown-item">coucou</a>');
+        assert.strictEqual(
+            parent.el.outerHTML,
+            '<a href="#" tabindex="0" class="dropdown-item">coucou</a>'
+        );
     });
 
     QUnit.test("DropdownItem: prevents click default with href", async (assert) => {
@@ -569,8 +576,30 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsOnce(parent.el, ".dropdown-menu");
     });
 
+    QUnit.test("siblings dropdowns: toggler focused on mouseenter", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+        <div>
+            <Dropdown class="one" />
+            <Dropdown class="two" />
+        </div>
+        `;
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        // Click on one
+        parent.el.querySelector(".one button").focus(); // mocks a real click flow
+        await click(parent.el, ".one button");
+        assert.strictEqual(document.activeElement, parent.el.querySelector(".one button"));
+        assert.containsOnce(parent.el, ".dropdown-menu");
+        // Hover on two
+        const two = parent.el.querySelector(".two");
+        two.querySelector("button").dispatchEvent(new MouseEvent("mouseenter"));
+        await nextTick();
+        assert.strictEqual(document.activeElement, two.querySelector("button"));
+    });
+
     QUnit.test("dropdowns keynav", async (assert) => {
-        assert.expect(26);
+        assert.expect(41);
         class Parent extends owl.Component {
             onItemSelected(ev) {
                 const { payload } = ev.detail;
@@ -625,6 +654,10 @@ QUnit.module("Components", ({ beforeEach }) => {
             triggerHotkey(step.hotkey);
             await nextTick();
             assert.hasClass(parent.el.querySelector(".dropdown-menu > .focus"), step.expected);
+            assert.strictEqual(
+                document.activeElement,
+                parent.el.querySelector(".dropdown-menu > .focus")
+            );
         }
 
         // Select last one activated in previous scenario (item1)
@@ -716,8 +749,38 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsN(parent, ".dropdown .dropdown-menu .dropdown-item", 2);
     });
 
+    QUnit.test("props toggler='parent': refocus toggler on close with keynav", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+            <div>
+                <div class="my_custom_toggler">
+                    Click Me
+                    <Dropdown toggler="'parent'">
+                        <DropdownItem>Element 1</DropdownItem>
+                        <DropdownItem>Element 2</DropdownItem>
+                    </Dropdown>
+                </div>
+            </div>`;
+
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        assert.strictEqual(document.activeElement, document.body);
+        parent.el.querySelector(".my_custom_toggler").focus(); // mocks a real click flow
+        await click(parent.el, ".my_custom_toggler");
+        assert.strictEqual(document.activeElement, parent.el.querySelector(".my_custom_toggler"));
+        triggerHotkey("ArrowDown");
+        await nextTick();
+        assert.strictEqual(
+            document.activeElement,
+            parent.el.querySelector(".dropdown-item:first-child")
+        );
+        triggerHotkey("Escape");
+        await nextTick();
+        assert.strictEqual(document.activeElement, parent.el.querySelector(".my_custom_toggler"));
+    });
+
     QUnit.test("multi-level dropdown: keynav", async (assert) => {
-        assert.expect(125);
+        assert.expect(213);
         class Parent extends owl.Component {
             onItemSelected(ev) {
                 const { payload } = ev.detail;
@@ -807,6 +870,20 @@ QUnit.module("Components", ({ beforeEach }) => {
                 );
                 for (const element of activeElements) {
                     assert.hasClass(element, step.highlighted[index++]);
+                }
+                const lastActiveElement = activeElements.slice(-1)[0];
+                if (lastActiveElement) {
+                    assert.hasClass(lastActiveElement, step.highlighted.slice(-1)[0]);
+                    assert.strictEqual(
+                        document.activeElement,
+                        lastActiveElement.classList.contains("dropdown")
+                            ? lastActiveElement.querySelector(":scope > .dropdown-toggle")
+                            : lastActiveElement
+                    );
+                } else {
+                    // no active element means that the main dropdown is closed
+                    assert.hasClass(document.activeElement, "dropdown-toggle");
+                    assert.hasClass(document.activeElement.parentElement, "first");
                 }
             }
             if (step.selected !== undefined) {
