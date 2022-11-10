@@ -305,3 +305,9 @@ class TestImage(TransactionCase):
         self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, 0)), expected[1])         # top/right
         self._assertAlmostEqualSequence(fixed_image.getpixel((0, size - 1)), expected[2])         # bottom/left
         self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, size - 1)), expected[3])  # bottom/right
+
+    def test_ptype_image_to_jpeg(self):
+        """converts to RGB when saving as JPEG"""
+        image1 = Image.new('P', (1, 1), color='red')
+        image2 = Image.new('RGB', (1, 1), color='red')
+        self.assertEqual(tools.image.image_apply_opt(image1, 'JPEG'), tools.image.image_apply_opt(image2, 'JPEG'))
