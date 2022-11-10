@@ -7251,7 +7251,7 @@ QUnit.module("Views", (hooks) => {
         registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
-            type: "form",
+            type: "kanban",
             resModel: "partner",
             serverData,
             arch: `
@@ -7263,7 +7263,6 @@ QUnit.module("Views", (hooks) => {
                         </div>
                     </templates>
                 </kanban>`,
-            resId: 1,
         });
 
         await click(target.querySelector("a[type='action']"));

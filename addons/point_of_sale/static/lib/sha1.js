@@ -5,7 +5,7 @@
 /*  - see http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html                              */
 /*        http://csrc.nist.gov/groups/ST/toolkit/examples.html                                    */
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
-
+(function (_window) {
 /* jshint node:true *//* global define, escape, unescape */
 'use strict';
 
@@ -16,7 +16,7 @@
  * @namespace
  */
 var Sha1 = {};
-
+_window.Sha1 = Sha1;
 
 /**
  * Generates SHA-1 hash of string.
@@ -157,3 +157,4 @@ if (typeof String.prototype.utf8Decode == 'undefined') {
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 if (typeof module != 'undefined' && module.exports) module.exports = Sha1; // CommonJs export
 if (typeof define == 'function' && define.amd) define([], function() { return Sha1; }); // AMD
+})(window)
