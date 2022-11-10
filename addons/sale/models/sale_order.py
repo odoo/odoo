@@ -1328,11 +1328,49 @@ class SaleOrder(models.Model):
     # PORTAL #
 
     def _has_to_be_signed(self, include_draft=False):
-        return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_signature and not self.signature
+        """A sale order has to be signed when:
+        - its state is `sent`, or `draft` if draft sale orders are included;
+        - it's not expired;
+        - it requires a signature;
+        - it's not already signed.
+
+        Note: self.ensure_one()
+
+        :param bool include_draft: Whether including `draft` sale orders, defaults to False.
+        :return: Whether the sale order has to be signed.
+        :rtype: bool
+        """
+        self.ensure_one()
+        return (
+            (self.state == 'sent' or (self.state == 'draft' and include_draft))
+            and not self.is_expired
+            and self.require_signature
+            and not self.signature
+        )
 
     def _has_to_be_paid(self, include_draft=False):
+        """A sale order has to be paid when:
+        - its state is `sent`, or `draft` if draft sale orders are included;
+        - it's not expired;
+        - it requires a payment;
+        - the last transaction's state isn't `done`;
+        - the total amount is strictly positive.
+
+        Note: self.ensure_one()
+
+        :param bool include_draft: Whether including `draft` sale orders, defaults to False.
+        :return: Whether the sale order has to be paid.
+        :rtype: bool
+        """
+        self.ensure_one()
         transaction = self.get_portal_last_transaction()
-        return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
+        return (
+            (self.state == 'sent' or (self.state == 'draft' and include_draft))
+            and not self.is_expired
+            and self.require_payment
+            and transaction.state != 'done'
+            and self.amount_total > 0
+        )
 
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """
