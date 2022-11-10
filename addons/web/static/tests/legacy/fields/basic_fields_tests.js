@@ -3162,7 +3162,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('image fields are correctly rendered', async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = MY_IMAGE;
 
         var form = await createView({
@@ -3175,7 +3175,7 @@ QUnit.module('Legacy basic_fields', {
             res_id: 1,
             async mockRPC(route, args) {
                 if (route === '/web/dataset/call_kw/partner/read') {
-                    assert.deepEqual(args.args[1], ['document', '__last_update', 'display_name'], "The fields document, display_name and __last_update should be present when reading an image");
+                    assert.deepEqual(args.args[1], ['document', 'write_date', 'display_name'], "The fields document, display_name and write_date should be present when reading an image");
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3200,7 +3200,7 @@ QUnit.module('Legacy basic_fields', {
         assert.expect(6);
 
         this.data.partner.fields.picture = { string: 'Picture', type: 'binary' };
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage1';
         this.data.partner.records[0].picture = 'myimage2';
 
@@ -3241,7 +3241,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('image fields are correctly replaced when given an incorrect value', async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'incorrect_base64_value';
 
         testUtils.mock.patch(basicFields.FieldBinaryImage, {
@@ -3316,7 +3316,7 @@ QUnit.module('Legacy basic_fields', {
     QUnit.test('image fields in subviews are loaded correctly', async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].write_date = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = MY_IMAGE;
         this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
         this.data.partner_type.records[0].image = PRODUCT_IMAGE;

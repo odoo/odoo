@@ -478,7 +478,7 @@ class Stream:
         elif attachment.db_datas:
             self.type = 'data'
             self.data = attachment.raw
-            self.last_modified = attachment['__last_update']
+            self.last_modified = attachment.write_date
             self.size = len(self.data)
 
         elif attachment.url:
@@ -511,7 +511,7 @@ class Stream:
             type='data',
             data=data,
             etag=request.env['ir.attachment']._compute_checksum(data),
-            last_modified=record['__last_update'] if record._log_access else None,
+            last_modified=record.write_date if record._log_access else None,
             size=len(data),
         )
 

@@ -239,7 +239,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
                 id: id
             };
             if (isCurrentRecord) {
-                params.unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
+                params.unique = this.record.write_date && this.record.write_date.value.replace(/[^0-9]/g, '');
             }
             url = session.url('/web/image', params);
         }

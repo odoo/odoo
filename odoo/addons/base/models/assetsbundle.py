@@ -682,7 +682,7 @@ class AssetsBundle(object):
                 old_attachments += attachments
                 for attachment in attachments:
                     asset = assets[attachment.url]
-                    if asset.last_modified > attachment['__last_update']:
+                    if asset.last_modified > attachment.write_date:
                         outdated = True
                         break
                     if asset._content is None:
@@ -887,7 +887,7 @@ class WebAsset(object):
             if self._filename:
                 return datetime.fromtimestamp(os.path.getmtime(self._filename))
             elif self._ir_attach:
-                return self._ir_attach['__last_update']
+                return self._ir_attach.write_date
         except Exception:
             pass
         return datetime(1970, 1, 1)
