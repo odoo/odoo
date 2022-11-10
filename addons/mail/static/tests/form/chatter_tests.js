@@ -8,7 +8,7 @@ import { Component, useState, xml } from "@odoo/owl";
 let target;
 
 class ChatterParent extends Component {
-    static template = xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName"/>`;
+    static template = xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName" hasActivity="true"/>`;
     static components = { Chatter };
     state = useState({ resId: this.props.resId });
 }
@@ -30,7 +30,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true, },
         });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
@@ -48,7 +48,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: false, resModel: "somemodel", displayName: "" },
+            props: { resId: false, resModel: "somemodel", displayName: "", hasActivity: true },
         });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
@@ -79,7 +79,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -96,7 +96,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true, },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -113,7 +113,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true, },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -136,7 +136,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true, },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -165,7 +165,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" },
+            props: { resId: 43, resModel: "somemodel", displayName: "Gnargl", hasActivity: true, },
         });
         await click($(target).find("button:contains(Send message)")[0]);
         const msg = $(target).find("small:contains(Gnargl)")[0];
@@ -197,7 +197,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true, },
         });
 
         assert.containsNone(target, ".o-mail-composer");
@@ -243,7 +243,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" },
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
 
         assert.containsNone(target, ".o-mail-composer");
