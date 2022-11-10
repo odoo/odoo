@@ -447,6 +447,13 @@ export function formatText(value) {
     return value || "";
 }
 
+export function formatHtml(value) {
+    if (!value || !value.length || value.valueOf().trim() == 'false') {
+        return "";
+    }
+    return value
+}
+
 registry
     .category("formatters")
     .add("binary", formatBinary)
@@ -457,7 +464,7 @@ registry
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
     .add("float_time", formatFloatTime)
-    .add("html", (value) => value)
+    .add("html", formatHtml)
     .add("integer", formatInteger)
     .add("many2one", formatMany2one)
     .add("many2one_reference", formatInteger)
