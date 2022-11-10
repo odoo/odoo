@@ -87,7 +87,7 @@ function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
             model,
             field,
             id,
-            unique: imageCacheKey(record.data.__last_update),
+            unique: imageCacheKey(record.data.write_date),
         });
     }
 }

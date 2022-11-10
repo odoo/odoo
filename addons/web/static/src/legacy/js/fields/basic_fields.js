@@ -2078,7 +2078,7 @@ var AbstractFieldBinary = AbstractField.extend({
 var FieldBinaryImage = AbstractFieldBinary.extend({
     description: _lt("Image"),
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
-        __last_update: {type: 'datetime'},
+        write_date: {type: 'datetime'},
     }),
 
     template: 'FieldBinaryImage',
@@ -2101,7 +2101,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
      * @param {string} model    model from which to retrieve the image
      * @param {string} res_id   id of the record
      * @param {string} field    name of the image field
-     * @param {string} unique   an unique integer for the record, usually __last_update
+     * @param {string} unique   an unique integer for the record, usually write_date
      * @returns {string} URL of the image
      */
     _getImageUrl: function (model, res_id, field, unique) {
@@ -2122,7 +2122,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 url = 'data:image/' + (this.file_type_magic_word[this.value[0]] || 'png') + ';base64,' + this.value;
             } else {
                 var field = this.nodeOptions.preview_image || this.name;
-                var unique = this.recordData.__last_update;
+                var unique = this.recordData.write_date;
                 url = this._getImageUrl(this.model, this.res_id, field, unique);
             }
         }
@@ -2166,7 +2166,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     _renderReadonly: function () {
         this._super.apply(this, arguments);
 
-        var unique = this.recordData.__last_update;
+        var unique = this.recordData.write_date;
         var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
         var $img;
         var imageField = _.find(Object.keys(this.recordData), function(o) {

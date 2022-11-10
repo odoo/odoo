@@ -9089,12 +9089,12 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
     });
 
-    QUnit.test("test displaying image (__last_update field)", async (assert) => {
-        // the presence of __last_update field ensures that the image is reloaded when necessary
+    QUnit.test("test displaying image (write_date field)", async (assert) => {
+        // the presence of write_date field ensures that the image is reloaded when necessary
         assert.expect(2);
 
         const rec = serverData.models.partner.records.find((r) => r.id === 1);
-        rec.__last_update = "2022-08-05 08:37:00";
+        rec.write_date = "2022-08-05 08:37:00";
 
         await makeView({
             type: "kanban",
@@ -9109,7 +9109,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             mockRPC(route, { method, kwargs }) {
                 if (method === "web_search_read") {
-                    assert.deepEqual(kwargs.fields, ["id", "__last_update"]);
+                    assert.deepEqual(kwargs.fields, ["id", "write_date"]);
                 }
             },
             domain: [["id", "in", [1]]],

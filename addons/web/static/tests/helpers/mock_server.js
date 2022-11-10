@@ -66,7 +66,7 @@ export class MockServer {
                 id: { string: "ID", type: "integer" },
                 display_name: { string: "Display Name", type: "char" },
                 name: { string: "Name", type: "char", default: "name" },
-                __last_update: { string: "Last Modified on", type: "datetime" },
+                write_date: { string: "Last Modified on", type: "datetime" },
                 ...model.fields,
             };
             for (const fieldName in model.fields) {
@@ -151,7 +151,7 @@ export class MockServer {
         if (["kanban", "list", "form"].includes(viewType)) {
             for (const fieldNames of Object.values(models)) {
                 fieldNames.add("id");
-                fieldNames.add("__last_update");
+                fieldNames.add("write_date");
             }
         } else if (viewType === "search") {
             models[modelName] = Object.keys(this.models[modelName].fields);

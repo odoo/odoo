@@ -102,8 +102,8 @@ export class KanbanArchParser extends XMLParser {
             // Keep track of last update so images can be reloaded when they may have changed.
             if (node.tagName === "img") {
                 const attSrc = node.getAttribute("t-att-src");
-                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.__last_update) {
-                    fieldNodes.__last_update = { type: "datetime" };
+                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.write_date) {
+                    fieldNodes.write_date = { type: "datetime" };
                 }
             }
         });

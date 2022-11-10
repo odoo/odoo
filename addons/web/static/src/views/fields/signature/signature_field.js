@@ -21,12 +21,12 @@ export class SignatureField extends Component {
             isValid: true,
         });
 
-        this.rawCacheKey = this.props.record.data.__last_update;
+        this.rawCacheKey = this.props.record.data.write_date;
         onWillUpdateProps((nextProps) => {
             const { record } = this.props;
             const { record: nextRecord } = nextProps;
             if (record.resId !== nextRecord.resId || nextRecord.mode === "readonly") {
-                this.rawCacheKey = nextRecord.data.__last_update;
+                this.rawCacheKey = nextRecord.data.write_date;
             }
         });
     }
