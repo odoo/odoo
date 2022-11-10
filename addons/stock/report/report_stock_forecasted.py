@@ -60,6 +60,114 @@ class ReplenishmentReport(models.AbstractModel):
             }
         }
 
+<<<<<<< HEAD:addons/stock/report/report_stock_forecasted.py
+||||||| parent of b0dc0957e6d6... temp
+    def _serialize_docs(self, docs, product_template_ids=False, product_variant_ids=False):
+        """
+        Since conversion from report to owl client_action, adapt/override this method to make records available from js code.
+        """
+        res = copy.copy(docs)
+        if product_template_ids:
+            res['product_templates'] = docs['product_templates'].read(fields=['id', 'display_name'])
+            product_variants = []
+            for pv in docs['product_variants']:
+                product_variants.append({
+                        'id' : pv.id,
+                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
+                    })
+            res['product_variants'] = product_variants
+        elif product_variant_ids:
+            res['product_variants'] = docs['product_variants'].read(fields=['id', 'display_name'])
+
+        res['lines'] = []
+        for index, line in enumerate(docs['lines']):
+            res['lines'].append({
+                'index': index,
+                'document_in' : {
+                    '_name' : line['document_in']._name,
+                    'id' : line['document_in']['id'],
+                    'name' : line['document_in']['name'],
+                } if line['document_in'] else False,
+                'document_out' : {
+                    '_name' : line['document_out']._name,
+                    'id' : line['document_out']['id'],
+                    'name' : line['document_out']['name'],
+                } if line['document_out'] else False,
+                'uom_id' : line['uom_id'].read()[0],
+                'move_out' : line['move_out'].read()[0] if line['move_out'] else False,
+                'move_in' : line['move_in'].read()[0] if line['move_in'] else False,
+                'product': line['product'],
+                'replenishment_filled': line['replenishment_filled'],
+                'receipt_date': line['receipt_date'],
+                'delivery_date': line['delivery_date'],
+                'is_late': line['is_late'],
+                'quantity': line['quantity'],
+                'reservation': line['reservation'],
+                'is_matched': line['is_matched'],
+            })
+            if line['move_out'] and line['move_out']['picking_id']:
+                res['lines'][-1]['move_out'].update({
+                    'picking_id' : line['move_out']['picking_id'].read(fields=['id', 'priority'])[0],
+                    })
+
+        return res
+
+=======
+    @api.model
+    def _fields_for_serialized_moves(self):
+        return ['picking_id', 'state']
+
+    def _serialize_docs(self, docs, product_template_ids=False, product_variant_ids=False):
+        """
+        Since conversion from report to owl client_action, adapt/override this method to make records available from js code.
+        """
+        res = copy.copy(docs)
+        if product_template_ids:
+            res['product_templates'] = docs['product_templates'].read(fields=['id', 'display_name'])
+            product_variants = []
+            for pv in docs['product_variants']:
+                product_variants.append({
+                        'id' : pv.id,
+                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
+                    })
+            res['product_variants'] = product_variants
+        elif product_variant_ids:
+            res['product_variants'] = docs['product_variants'].read(fields=['id', 'display_name'])
+
+        res['lines'] = []
+        for index, line in enumerate(docs['lines']):
+            res['lines'].append({
+                'index': index,
+                'document_in' : {
+                    '_name' : line['document_in']._name,
+                    'id' : line['document_in']['id'],
+                    'name' : line['document_in']['name'],
+                } if line['document_in'] else False,
+                'document_out' : {
+                    '_name' : line['document_out']._name,
+                    'id' : line['document_out']['id'],
+                    'name' : line['document_out']['name'],
+                } if line['document_out'] else False,
+                'uom_id' : line['uom_id'].read()[0],
+                'move_out' : line['move_out'].read(self._fields_for_serialized_moves())[0] if line['move_out'] else False,
+                'move_in' : line['move_in'].read(self._fields_for_serialized_moves())[0] if line['move_in'] else False,
+                'product': line['product'],
+                'replenishment_filled': line['replenishment_filled'],
+                'receipt_date': line['receipt_date'],
+                'delivery_date': line['delivery_date'],
+                'is_late': line['is_late'],
+                'quantity': line['quantity'],
+                'reservation': line['reservation'],
+                'is_matched': line['is_matched'],
+            })
+            if line['move_out'] and line['move_out']['picking_id']:
+                res['lines'][-1]['move_out'].update({
+                    'picking_id' : line['move_out']['picking_id'].read(fields=['id', 'priority'])[0],
+                    })
+
+        return res
+
+>>>>>>> b0dc0957e6d6... temp:addons/stock/report/stock_forecasted.py
     @api.model
     def _get_report_values(self, docids, data=None):
         return {
