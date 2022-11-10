@@ -331,7 +331,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         var attributeIds = _.map($attributes, function (elem) {
             return $(elem).data('value_id');
         });
-        window.location.hash = 'attr=' + attributeIds.join(',');
+        window.location.replace('#attr=' + attributeIds.join(','));
     },
     /**
      * Set the checked values active.
@@ -893,7 +893,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
 
                 if (selectedCombination && selectedCombination.length) {
-                    window.location.hash = `attr=${selectedCombination.join(',')}`;
+                    window.location.replace('#attr=' + selectedCombination.join(','));
                 }
             }
         }
