@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, html_escape, is_html_empty, sql
 from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
 
@@ -2159,10 +2160,10 @@ class AccountMove(models.Model):
                  WHERE line.move_id IN %s
               GROUP BY line.move_id, currency.decimal_places
             )
-            SELECT * 
+            SELECT *
               FROM error_moves
-             WHERE balance !=0 
-                OR negative_normal 
+             WHERE balance !=0
+                OR negative_normal
                 OR positive_storno
         ''', [tuple(self.ids)])
 
@@ -4938,11 +4939,11 @@ class AccountMoveLine(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator == 'ilike':
-            args = ['|', '|',
+            domain = ['|', '|',
                     ('name', 'ilike', name),
                     ('move_id', 'ilike', name),
                     ('product_id', 'ilike', name)]
-            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
         return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
