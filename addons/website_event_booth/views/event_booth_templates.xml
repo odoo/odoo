@@ -22,22 +22,29 @@
                         </div>
                     </div>
                 </section>
-                <div t-if="event.is_finished" class="container d-flex flex-column flex-grow-1">
-                    <span class="alert alert-info">This event is finished. It's no longer possible to book a booth.</span>
+                <div t-if="event.is_finished" class="container">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+                            <h2>Event Finished</h2>
+                            <p>It's no longer possible to book a booth.</p>
+                        </div>
+                    </div>
                 </div>
-                <div t-elif="not event_booths" class="container d-flex flex-column flex-grow-1">
-                    <span class="alert alert-info">This event is not open to exhibitors registration,
-                        <span t-if="request.env.user.has_group('event.group_event_manager')">
-                            you can
-                            <a class="text-nowrap" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
-                                <i class="fa fa-gear me-1" role="img" aria-label="Configure" title="Configure event booths"/><em>Configure Booths</em>
-                            </a>
-                            for this event.
-                        </span>
-                        <span t-else="">
-                            check our <a href="/event">list of future events</a>.
-                        </span>
-                    </span>
+                <div t-elif="not event_booths" class="container">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+                            <h2>Registration Not Open.</h2>
+                            <p>This event is not open to exhibitors registration at this time.</p>
+                            <p>Check our <a href="/event" title="List of Future Events" aria-label="Link to list of future events">list of future events</a>.</p>
+                            <div class="o_not_editable my-3" groups="event.group_event_manager">
+                                <a class="btn o_wevent_cta mb-4" target="_blank" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+                                    <span class="fa fa-gear me-1"/> Configure Booths
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </t>

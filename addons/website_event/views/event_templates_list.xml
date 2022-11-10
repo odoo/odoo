@@ -147,14 +147,18 @@
     <t t-if="opt_events_list_columns" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4'"/>
     <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-10 offset-xl-1'"/>
     <!-- No events -->
-    <t t-if="not event_ids">
-        <div class="col-12">
-            <div class="h2 mb-3">No events found.</div>
-            <div class="alert alert-info text-center" groups="event.group_event_user">
-                <p class="m-0">Use the top button '<b>+ New</b>' to create an event.</p>
-            </div>
+    <div t-if="not event_ids" class="col-12 text-center">
+        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <h3>No events scheduled yet</h3>
+        <p t-if="searches['search']">We couldn't find any event matching your search for: <strong t-out="searches['search']"/>.</p>
+        <p t-elif="searches['tags']">No event matching your search criteria could be found.</p>
+        <p t-else="">We couldn't find any event scheduled at this moment.</p>
+        <div class="o_not_editable my-3" groups="event.group_event_user">
+            <a class="o_wevent_cta btn" target="_blank" href="/web?#model=event.event&amp;view_type=form&amp;action=event.action_event_view">
+                <span class="fa fa-plus me-1"/> Create an Event
+            </a>
         </div>
-    </t>
+    </div>
     <!-- Fuzzy search -->
     <div t-if="event_ids and original_search" class="col-12 alert alert-warning mt8">
         No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="searches['search']"/>'.
