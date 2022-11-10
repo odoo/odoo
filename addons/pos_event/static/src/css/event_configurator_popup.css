@@ -1,24 +1,90 @@
 .pos .popup.event-configurator-popup {
     max-width: 768px;
+    height: 750px;
 }
 
 .pos .popup.event-configurator-popup .body {
-    border: solid 1px #212529;
-    background: #714B67;
+    border-top: solid 1px #212529;
+    height: 590px;
+    overflow-y: auto;
 }
 
 .pos .popup.event-configurator-popup .event {
-    height: 75px;
-    border-bottom: solid 1px #212529;
     color: white;
     cursor: pointer;
+    padding: 15px;
+    background: #714B67;
+    border-left: solid 1px #212529;
+    border-right: solid 1px #212529;
+    height: 90px;
+    box-sizing: border-box;
 }
 
 .pos .popup.event-configurator-popup .event:hover{
-    background: rgba(0, 0, 0, 0.08);
+    background: #68455f;
+}
+
+.pos .popup.event-configurator-popup .event:active:not(.disabled){
+    color: #EEE;
 }
 
 .pos .popup.event-configurator-popup .event.disabled {
-    background: #e2e2e2;
+    background: #aa93a4;
     cursor: unset;
+}
+
+.pos .popup.event-configurator-popup .event .event-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pos .popup.event-configurator-popup .event .event-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.pos .popup.event-configurator-popup .event .badge-closed {
+    background-color: red;
+    border-radius: 30px;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.pos .popup.event-configurator-popup .tickets {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    border: solid 1px #212529;
+}
+
+.pos .popup.event-configurator-popup .tickets:last-child {
+    border-bottom: solid 1px #212529;
+}
+
+.pos .popup.event-configurator-popup .tickets.open{
+    max-height: 600px;
+    transition: max-height 0.8s ease-in;
+}
+
+.pos .popup.event-configurator-popup .ticket:nth-child(2n) {
+    background-color: #e7e7e7;
+}
+
+.pos .popup.event-configurator-popup .ticket {
+    padding: 10px;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-info .ticket-name {
+    font-weight: bold;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-info .ticket-description {
+    font-size: 0.8em;
 }

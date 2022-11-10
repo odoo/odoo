@@ -7,21 +7,38 @@
                 Event tickets
             </header>
             <main class="body">
-                <t t-foreach="props.data" t-as="event" t-key="event.id">
-                    <div class="event">
-                        <div class="event-title">
-                            <span class="event-name" t-out="event.name"/>
-                            <span t-if="event_registrations_open" class="badge">Registration closed</span>
-                        </div>
+                <t t-foreach="props.eventData" t-as="event" t-key="event.id">
+                    <div class="event" t-att-class="{'disabled': !event.event_registrations_open}"
+                         t-on-click="() => event.event_registrations_open ? this._toggleEvent(event.id) : null">
+                        <div class="event-title" t-out="event.name"/>
                         <div class="event-info">
                             <span>Start: <t t-out="event.date_begin"/></span>
+                            <span t-if="!event.event_registrations_open" class="badge-closed">Registration closed</span>
                             <span>End: <t t-out="event.date_end"/></span>
+                        </div>
+                    </div>
+                    <div class="tickets" t-if="event.event_registrations_open" t-ref="{{event.id}}-tickets">
+                        <div t-foreach="event.tickets" t-as="ticket" t-key="ticket.id" class="ticket">
+                            <div class="ticket-info">
+                                <span class="ticket-name" t-out="ticket.name"/>
+                                <span t-if="ticket.description" class="ticket-description" t-out="ticket.description"/>
+                            </div>
+                            <div class="ticket-quantity">
+                                <i class="fa fa-solid fa-circle-minus"/>
+                                <input/>
+                                <i class="fa fa-solid fa-circle-plus"></i>
+                            </div>
                         </div>
                     </div>
                 </t>
             </main>
-            <footer>
-
+            <footer class="footer footer-flex">
+                <div class="button confirm highlight" t-on-click="confirm">
+                    Ok
+                </div>
+                <div class="button cancel" t-on-click="cancel">
+                    Cancel
+                </div>
             </footer>
         </div>
     </t>
