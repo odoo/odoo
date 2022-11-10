@@ -24,7 +24,7 @@ export class CopyButton extends Component {
         try {
             // any kind of content can be copied into the clipboard using
             // the appropriate native methods
-            if (typeof this.props.content === "string") {
+            if (typeof this.props.content === "string" || this.props.content instanceof String) {
                 browser.navigator.clipboard.writeText(this.props.content).then(() => {
                     this.showTooltip();
                 });
