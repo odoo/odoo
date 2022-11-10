@@ -2,7 +2,14 @@
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+<<<<<<< HEAD
 from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, is_html_empty, sql
+||||||| parent of 1462362d444e... temp
+from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, html_escape, is_html_empty, sql
+=======
+from odoo.osv import expression
+from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, html_escape, is_html_empty, sql
+>>>>>>> 1462362d444e... temp
 from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -4764,6 +4771,32 @@ class AccountMoveLine(models.Model):
         return result
 
     @api.model
+<<<<<<< HEAD
+||||||| parent of 1462362d444e... temp
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator == 'ilike':
+            args = ['|', '|',
+                    ('name', 'ilike', name),
+                    ('move_id', 'ilike', name),
+                    ('product_id', 'ilike', name)]
+            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+        return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+    @api.model
+=======
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator == 'ilike':
+            domain = ['|', '|',
+                    ('name', 'ilike', name),
+                    ('move_id', 'ilike', name),
+                    ('product_id', 'ilike', name)]
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+
+        return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+    @api.model
+>>>>>>> 1462362d444e... temp
     def invalidate_cache(self, fnames=None, ids=None):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
