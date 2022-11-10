@@ -363,6 +363,7 @@
             <field name="arch" type="xml">
                 <tree string="Leads" sample="1" multi_edit="1">
                     <field name="company_id" invisible="1"/>
+                    <field name="user_company_ids" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead" readonly="1"/>
@@ -767,6 +768,7 @@
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
                     <field name="company_id" invisible="1"/>
+                    <field name="user_company_ids" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity" readonly="1"/>
