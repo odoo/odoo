@@ -15,7 +15,7 @@ class ChatterParent extends Component {
 
 Object.assign(ChatterParent, {
     components: { Chatter },
-    template: xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName"/>`,
+    template: xml`<Chatter resId="state.resId" resModel="props.resModel" displayName="props.displayName" hasActivity="true"/>`,
 });
 
 QUnit.module("mail", (hooks) => {
@@ -35,7 +35,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
@@ -53,7 +53,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: false, resModel: "somemodel", displayName: "" }
+            props: { resId: false, resModel: "somemodel", displayName: "", hasActivity: true },
         });
 
         assert.containsOnce(target, ".o-mail-chatter-topbar");
@@ -84,7 +84,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -101,7 +101,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -118,7 +118,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -141,7 +141,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
         assert.containsNone(target, ".o-mail-composer");
 
@@ -170,7 +170,7 @@ QUnit.module("mail", (hooks) => {
         const env = makeTestEnv((route, params) => server.rpc(route, params));
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "Gnargl" }
+            props: { resId: 43, resModel: "somemodel", displayName: "Gnargl", hasActivity: true },
         });
         await click($(target).find("button:contains(Send message)")[0]);
         const msg = $(target).find("small:contains(Gnargl)")[0];
@@ -191,10 +191,10 @@ QUnit.module("mail", (hooks) => {
                         attachment_ids: [],
                         message_type: "comment",
                         partner_ids: [],
-                        subtype_xmlid: "mail.mt_comment"
+                        subtype_xmlid: "mail.mt_comment",
                     },
                     thread_id: 43,
-                    thread_model: "somemodel"
+                    thread_model: "somemodel",
                 };
                 assert.deepEqual(params, expected);
             }
@@ -202,7 +202,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
 
         assert.containsNone(target, ".o-mail-composer");
@@ -219,7 +219,7 @@ QUnit.module("mail", (hooks) => {
             "/mail/init_messaging",
             "/mail/thread/data",
             "/mail/thread/messages",
-            "/mail/message/post"
+            "/mail/message/post",
         ]);
     });
 
@@ -237,10 +237,10 @@ QUnit.module("mail", (hooks) => {
                         body: "hey",
                         message_type: "comment",
                         partner_ids: [],
-                        subtype_xmlid: "mail.mt_note"
+                        subtype_xmlid: "mail.mt_note",
                     },
                     thread_id: 43,
-                    thread_model: "somemodel"
+                    thread_model: "somemodel",
                 };
                 assert.deepEqual(params, expected);
             }
@@ -248,7 +248,7 @@ QUnit.module("mail", (hooks) => {
         });
         await mount(Chatter, target, {
             env,
-            props: { resId: 43, resModel: "somemodel", displayName: "" }
+            props: { resId: 43, resModel: "somemodel", displayName: "", hasActivity: true },
         });
 
         assert.containsNone(target, ".o-mail-composer");
@@ -265,7 +265,7 @@ QUnit.module("mail", (hooks) => {
             "/mail/init_messaging",
             "/mail/thread/data",
             "/mail/thread/messages",
-            "/mail/message/post"
+            "/mail/message/post",
         ]);
     });
 });

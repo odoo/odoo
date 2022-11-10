@@ -5,8 +5,8 @@ import { Messaging } from "./messaging";
 import { reactive } from "@odoo/owl";
 
 export const messagingService = {
-    dependencies: ["rpc", "orm", "user", "router", "bus_service"],
-    start(env, { rpc, orm, user, router, bus_service: bus }) {
+    dependencies: ["rpc", "orm", "user", "router", "bus_service", "notification"],
+    start(env, { rpc, orm, user, router, bus_service: bus, notification }) {
         // compute initial discuss thread
         let threadId = "inbox";
         const activeId = router.current.hash.active_id;
@@ -17,7 +17,9 @@ export const messagingService = {
             threadId = parseInt(activeId.slice(13), 10);
         }
 
-        const messaging = reactive(new Messaging(env, rpc, orm, user, router, threadId));
+        const messaging = reactive(
+            new Messaging(env, rpc, orm, user, router, threadId, notification)
+        );
         messaging.initialize();
         bus.addEventListener("notification", (notifEvent) => {
             messaging.handleNotification(notifEvent.detail);
