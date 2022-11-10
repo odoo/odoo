@@ -74,16 +74,16 @@ class PaymentProvider(models.Model):
     def _onchange_authorize_payment_method_type(self):
         if self.authorize_payment_method_type == 'bank_account':
             self.display_as = _("Bank (powered by Authorize)")
-            self.payment_icon_ids = [Command.clear()]
+            self.payment_method_ids = [Command.clear()]
         else:
             self.display_as = _("Credit Card (powered by Authorize)")
-            self.payment_icon_ids = [Command.set([self.env.ref(icon_xml_id).id for icon_xml_id in (
-                'payment.payment_icon_cc_maestro',
-                'payment.payment_icon_cc_mastercard',
-                'payment.payment_icon_cc_discover',
-                'payment.payment_icon_cc_diners_club_intl',
-                'payment.payment_icon_cc_jcb',
-                'payment.payment_icon_cc_visa',
+            self.payment_method_ids = [Command.set([self.env.ref(pm_xml_id).id for pm_xml_id in (
+                'payment.payment_method_maestro',
+                'payment.payment_method_mastercard',
+                'payment.payment_method_discover',
+                'payment.payment_method_diners_club_intl',
+                'payment.payment_method_jcb',
+                'payment.payment_method_visa',
             )])]
 
     # === ACTION METHODS ===#
