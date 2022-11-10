@@ -45,7 +45,7 @@ tour.register('sale_matrix_tour', {
         $('.o_matrix_input').val(1);
     }
 }, {
-    trigger: 'span:contains("Confirm")',
+    trigger: 'button:contains("Confirm")',
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
@@ -74,7 +74,7 @@ tour.register('sale_matrix_tour', {
         $('.o_matrix_input').val(3);
     }
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 3 => check the total to be sure all qties are set to 3
@@ -91,7 +91,7 @@ tour.register('sale_matrix_tour', {
         $('.o_matrix_input').val(1);
     }
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
@@ -112,7 +112,7 @@ tour.register('sale_matrix_tour', {
         $('.o_matrix_input').slice(8, 16).val(4);
     } // set the qty to 4 for half of the matrix products.
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, {
     trigger: '.o_form_button_save',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
@@ -134,6 +134,6 @@ tour.register('sale_matrix_tour', {
         $("input[value='4']").slice(0, 4).val(8.2);
     }
 }, {
-    trigger: 'span:contains("Confirm")',  // apply the matrix
+    trigger: 'button:contains("Confirm")',  // apply the matrix
 }, ...tour.stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("8.20")'),
 ]);
