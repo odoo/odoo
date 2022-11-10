@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markRaw, markup } from "@odoo/owl";
+import { markRaw, markup, reactive } from "@odoo/owl";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Deferred } from "@web/core/utils/concurrency";
 import { url } from "@web/core/utils/urls";
@@ -9,7 +9,13 @@ import { htmlToTextContentInline, removeFromArray } from "./utils";
 const { DateTime } = luxon;
 
 export class Messaging {
-    constructor(env, rpc, orm, user, router, initialThreadId, notification) {
+    constructor(...args) {
+        const self = reactive(this);
+        self.setup(...args);
+        return self;
+    }
+
+    setup(env, rpc, orm, user, router, initialThreadId, notification) {
         this.env = env;
         this.rpc = rpc;
         this.orm = orm;
@@ -73,11 +79,7 @@ export class Messaging {
         };
 
         this.chatWindows = [];
-
-        this.setup();
     }
-
-    setup() {}
 
     /**
      * Import data received from init_messaging

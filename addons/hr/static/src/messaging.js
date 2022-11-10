@@ -5,7 +5,8 @@ import { Messaging } from "@mail/messaging";
 import { patch } from 'web.utils';
 
 patch(Messaging.prototype, "hr", {
-    setup() {
+    setup(...args) {
+        this._super(...args);
         this.employees = {};
     },
     async getChat({ employeeId, userId }) {
