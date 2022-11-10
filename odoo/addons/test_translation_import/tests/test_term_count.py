@@ -7,7 +7,7 @@ import io
 import odoo
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import TranslationModuleReader, code_translations, CodeTranslations
+from odoo.tools.translate import TranslationModuleReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -252,12 +252,23 @@ class TestTranslationFlow(common.TransactionCase):
         # a hack to load code translations for new_code_translations
         with io.BytesIO(base64.b64decode(po_file_data)) as po_file:
             po_file.name = 'fr_FR.po'
+
+            def filter_func_for_python(row):
+                return row.get('value') and (
+                        PYTHON_TRANSLATION_COMMENT in row['comments']
+                        or JAVASCRIPT_TRANSLATION_COMMENT not in row['comments'])
             new_code_translations.python_translations[('test_translation_import', 'fr_FR')] = \
-                new_code_translations._trans_load_code_python(po_file, 'po', 'fr_FR')
+                CodeTranslations._read_code_translations_file(po_file, filter_func_for_python)
+
+            def filter_func_for_javascript(row):
+                return row.get('value') and (
+                        JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
+                        or WEB_TRANSLATION_COMMENT in row['comments'])
             new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = {
                 "messages": [
                     {"id": src, "string": value}
-                    for src, value in new_code_translations._trans_load_code_webclient(po_file, 'po', 'fr_FR').items()
+                    for src, value in CodeTranslations._read_code_translations_file(
+                        po_file, filter_func_for_javascript).items()
                 ]
             }
 
@@ -269,6 +280,7 @@ class TestTranslationFlow(common.TransactionCase):
         new_web = new_code_translations.get_web_translations('test_translation_import', 'fr_FR')
         self.assertEqual(old_web, new_web, 'web client code translations are not exported/imported correctly')
 
+        self.assertNotIn('text node', new_python, 'web client only translations should not be stored as python translations')
         self.assertFalse(
             any(
                 tran['id'] == 'Code Lazy, English'
