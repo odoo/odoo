@@ -26,9 +26,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'click .a-submit': '_onClickSubmit',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'click .show_coupon': '_onClickShowCoupon',
-        'change select[name="country_id"]': '_onChangeCountry',
-        'change #shipping_use_same': '_onChangeShippingUseSame',
+        'click .show_coupon': '_onClickShowCoupon', // checkout
+        'change select[name="country_id"]': '_onChangeCountry', // address
+        'change #shipping_use_same': '_onChangeShippingUseSame', // checkout
         'click .toggle_summary': '_onToggleSummary',
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',

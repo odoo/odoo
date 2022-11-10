@@ -61,12 +61,13 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
 
     /**
      * Redirects to the same page, using the query keys and values as arguments.
+     * If a pending query is still loading, that query is used as base instead of the url.
      *
      * @param {Object} query new key/values to use, undefined value means removing the key.
      * @param {Boolean} keepQuery whether or not to reset the query completely and just use the given query
      */
     _redirectNewQuery(query, keepQuery = true) {
-        const newQuery = (keepQuery && new URLSearchParams(window.location.search)) || new URLSearchParams();
+        const newQuery = (keepQuery && this.pendingQuery || new URLSearchParams(window.location.search)) || new URLSearchParams();
         for (const [key, value] of Object.entries(query)) {
             if (value === undefined) {
                 newQuery.delete(key);
@@ -80,7 +81,7 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
     /**
      * Properly redirects to the current page given the new params.
      * If no params are to be set, no url arguments are set.
-     * Removes empty values
+     * Also removes empty values.
      *
      * @param {URLSearchParams} query
      */
@@ -97,6 +98,7 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
             searchString = "?" + searchString;
         }
         this._obscureProductGrid();
+        this.pendingQuery = query;
         window.location.href = window.location.pathname + searchString;
     },
 
@@ -159,7 +161,7 @@ export const WebsiteSaleShop = Widget.extend(WebsiteSaleCartButtonParent).extend
                 break;
         }
         // Initial value
-        const searchParams = new URLSearchParams(window.location.search);
+        const searchParams = this.pendingQuery || new URLSearchParams(window.location.search);
         let attribQueryOpt = searchParams.getAll("attrib") || [];
         // Remove invalid values
         attribQueryOpt = attribQueryOpt.filter((opt) => !valuesToRemove.includes(opt));
