@@ -70,8 +70,8 @@ export class AnalyticDistribution extends Component {
             fieldString: this.env._t("Analytic Distribution Template"),
         });
         this.allPlans = [];
-        this.lastAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
-        this.lastProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+        this.lastAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
+        this.lastProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
     }
 
     // Lifecycle
@@ -88,8 +88,8 @@ export class AnalyticDistribution extends Component {
         // or a model applies that contains unavailable plans
         // This should only execute when these fields have changed, therefore we use the `_field` props.
         const valueChanged = JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value);
-        const currentAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
-        const currentProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+        const currentAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
+        const currentProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
         const accountChanged = !shallowEqual(this.lastAccount, currentAccount);
         const productChanged = !shallowEqual(this.lastProduct, currentProduct);
         if (valueChanged || accountChanged || productChanged) {
