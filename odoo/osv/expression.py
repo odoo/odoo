@@ -857,7 +857,7 @@ class expression(object):
                     push_result(f"""
                         {exists} (
                             SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
-                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}"."id"
                             AND "{rel_alias}"."{rel_id2}" IN {term_id2}
                         )
                     """, params)
@@ -869,7 +869,7 @@ class expression(object):
                     push_result(f"""
                         {exists} (
                             SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
-                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}"."id"
                         )
                     """, [])
 
