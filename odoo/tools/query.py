@@ -160,7 +160,7 @@ class Query(object):
         """ Return the SELECT query as a pair ``(query_string, query_params)``. """
         from_clause, where_clause, params = self.get_sql()
         query_str = 'SELECT {} FROM {} WHERE {}{}{}{}'.format(
-            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+            ", ".join(args or [f'"{next(iter(self._tables))}"."id"']),
             from_clause,
             where_clause or "TRUE",
             (" ORDER BY %s" % self.order) if self.order else "",
@@ -179,7 +179,7 @@ class Query(object):
 
         from_clause, where_clause, params = self.get_sql()
         query_str = 'SELECT {} FROM {} WHERE {}'.format(
-            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+            ", ".join(args or [f'"{next(iter(self._tables))}"."id"']),
             from_clause,
             where_clause or "TRUE",
         )
