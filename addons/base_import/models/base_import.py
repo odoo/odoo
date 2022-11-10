@@ -276,7 +276,7 @@ class Import(models.TransientModel):
             return importable_fields
 
         model_fields = Model.fields_get()
-        blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
+        blacklist = models.MAGIC_COLUMNS
         for name, field in model_fields.items():
             if name in blacklist:
                 continue

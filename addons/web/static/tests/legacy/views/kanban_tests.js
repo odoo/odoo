@@ -7161,8 +7161,8 @@ QUnit.module('LegacyViews', {
         kanban.destroy();
     });
 
-    QUnit.test('test displaying image (__last_update field)', async function (assert) {
-        // the presence of __last_update field ensures that the image is reloaded when necessary
+    QUnit.test('test displaying image (write_date field)', async function (assert) {
+        // the presence of write_date field ensures that the image is reloaded when necessary
         assert.expect(1);
 
         var kanban = await createView({
@@ -7178,7 +7178,7 @@ QUnit.module('LegacyViews', {
                 </kanban>`,
             mockRPC(route, args) {
                 if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.fields, ['id', '__last_update']);
+                    assert.deepEqual(args.fields, ['id', 'write_date']);
                 }
                 return this._super(...arguments);
             },

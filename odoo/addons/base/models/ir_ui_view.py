@@ -2691,8 +2691,10 @@ class Model(models.AbstractModel):
         :rtype: list
         """
         if view_type in ('kanban', 'tree', 'form'):
-            for model_fields in models.values():
-                model_fields.update({'id', self.CONCURRENCY_CHECK_FIELD})
+            for model, model_fields in models.items():
+                model_fields.add('id')
+                if 'write_date' in self.env[model]._fields:
+                    model_fields.add('write_date')
         elif view_type == 'search':
             models[self._name] = list(self._fields.keys())
         elif view_type == 'graph':

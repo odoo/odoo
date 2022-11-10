@@ -2438,6 +2438,11 @@ class Image(Binary):
     max_height = 0
     verify_resolution = True
 
+    def setup(self, model):
+        super().setup(model)
+        if not model._abstract and not model._log_access:
+            warnings.warn(f"Image field {self} requires the model to have _log_access = True")
+
     def create(self, record_values):
         new_record_values = []
         for record, value in record_values:

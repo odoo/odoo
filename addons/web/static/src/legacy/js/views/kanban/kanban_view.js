@@ -127,7 +127,7 @@ var KanbanView = BasicView.extend({
     },
     /**
      * Detect <img t-att-src="kanban_image(...)"/> nodes to automatically add the
-     * '__last_update' field in the fieldsInfo to ensure that the images is
+     * 'write_date' field in the fieldsInfo to ensure that the images is
      * properly reloaded when necessary.
      *
      * @override
@@ -136,8 +136,8 @@ var KanbanView = BasicView.extend({
         const isKanbanImage = node.tag === 'img' &&
                               node.attrs['t-att-src'] &&
                               node.attrs['t-att-src'].includes('kanban_image');
-        if (isKanbanImage && !fv.fieldsInfo.kanban.__last_update) {
-            fv.fieldsInfo.kanban.__last_update = { type: 'datetime' };
+        if (isKanbanImage && !fv.fieldsInfo.kanban.write_date) {
+            fv.fieldsInfo.kanban.write_date = { type: 'datetime' };
         }
         return this._super(...arguments);
     },

@@ -47,7 +47,6 @@ patch(MockServer.prototype, "mail/models/res_users_settings", {
             "name",
             "write_date",
             "write_uid",
-            "__last_update",
         ]);
         const filterPredicate = fieldsToFormat
             ? ([fieldName]) => fieldsToFormat.includes(fieldName)

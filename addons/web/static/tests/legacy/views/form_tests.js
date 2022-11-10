@@ -453,7 +453,7 @@ QUnit.module('LegacyViews', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                // NOTE: actually, the current web client always request the __last_update
+                // NOTE: actually, the current web client always request the write_date
                 // field, not sure why.  Maybe this test should be modified.
                 assert.deepEqual(args.args[1], ["foo", "display_name"],
                     "should only fetch requested fields");

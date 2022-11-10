@@ -215,9 +215,6 @@ class MetaModel(api.Meta):
                     field.__set_name__(self, name)
 
             add('id', fields.Id(automatic=True))
-            add(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
-                string='Last Modified on', automatic=True,
-                compute='_compute_concurrency_field', compute_sudo=False))
             add_default('display_name', fields.Char(
                 string='Display Name', automatic=True, compute='_compute_display_name'))
 
@@ -566,8 +563,6 @@ class BaseModel(metaclass=MetaModel):
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
     "maximum idle lifetime (in hours), unlimited if ``0``"
 
-    CONCURRENCY_CHECK_FIELD = '__last_update'
-
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
         return name == 'related_sudo'
@@ -600,15 +595,6 @@ class BaseModel(metaclass=MetaModel):
                     dep for dep in cls.pool.field_depends[cls.display_name] if dep != name
                 )
         return field
-
-    @api.depends(lambda model: ('create_date', 'write_date') if model._log_access else ())
-    def _compute_concurrency_field(self):
-        fname = self.CONCURRENCY_CHECK_FIELD
-        if self._log_access:
-            for record in self:
-                record[fname] = record.write_date or record.create_date or Datetime.now()
-        else:
-            self[fname] = odoo.fields.Datetime.now()
 
     #
     # Goal: try to apply inheritance at the instantiation level and
@@ -4136,7 +4122,7 @@ class BaseModel(metaclass=MetaModel):
         cachetoclear = []
         records = self.browse(ids)
         inverses_update = defaultdict(list)     # {(field, value): ids}
-        common_set_vals = set(LOG_ACCESS_COLUMNS + [self.CONCURRENCY_CHECK_FIELD, 'id', 'parent_path'])
+        common_set_vals = set(LOG_ACCESS_COLUMNS + ['id', 'parent_path'])
         for data, record in zip(data_list, records):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many

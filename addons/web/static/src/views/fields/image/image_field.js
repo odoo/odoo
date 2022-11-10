@@ -26,7 +26,7 @@ const placeholder = "/web/static/img/placeholder.png";
  * fetch requests with the url as key).
  *
  * For records, a not-so-bad approximation is to compute that key on the basis
- * of the record's __last_update field.
+ * of the record's write_date field.
  */
 export function imageCacheKey(value) {
     if (value instanceof DateTime) {
@@ -43,12 +43,12 @@ export class ImageField extends Component {
             isValid: true,
         });
 
-        this.rawCacheKey = this.props.record.data.__last_update;
+        this.rawCacheKey = this.props.record.data.write_date;
         onWillUpdateProps((nextProps) => {
             const { record } = this.props;
             const { record: nextRecord } = nextProps;
             if (record.resId !== nextRecord.resId || nextRecord.mode === "readonly") {
-                this.rawCacheKey = nextRecord.data.__last_update;
+                this.rawCacheKey = nextRecord.data.write_date;
             }
         });
     }
@@ -77,7 +77,7 @@ export class ImageField extends Component {
         if (this.state.isValid && this.props.value) {
             if (isBinarySize(this.props.value)) {
                 if (!this.rawCacheKey) {
-                    this.rawCacheKey = this.props.record.data.__last_update;
+                    this.rawCacheKey = this.props.record.data.write_date;
                 }
                 return url("/web/image", {
                     model: this.props.record.resModel,
@@ -132,7 +132,7 @@ ImageField.displayName = _lt("Image");
 ImageField.supportedTypes = ["binary"];
 
 ImageField.fieldDependencies = {
-    __last_update: { type: "datetime" },
+    write_date: { type: "datetime" },
 };
 
 ImageField.extractProps = ({ attrs }) => {

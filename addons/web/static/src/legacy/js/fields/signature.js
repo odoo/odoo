@@ -17,7 +17,7 @@ odoo.define('web.Signature', function (require) {
 var FieldBinarySignature = AbstractFieldBinary.extend({
     description: _lt("Signature"),
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
-        __last_update: {type: 'datetime'},
+        write_date: {type: 'datetime'},
     }),
     resetOnAnyFieldChange: true,
     custom_events: _.extend({}, AbstractFieldBinary.prototype.custom_events, {
@@ -76,7 +76,7 @@ var FieldBinarySignature = AbstractFieldBinary.extend({
                     id: JSON.stringify(this.res_id),
                     field: this.nodeOptions.preview_image || this.name,
                     // unique forces a reload of the image when the record has been updated
-                    unique: field_utils.format.datetime(this.recordData.__last_update).replace(/[^0-9]/g, ''),
+                    unique: field_utils.format.datetime(this.recordData.write_date).replace(/[^0-9]/g, ''),
                 });
             }
             $img = $(qweb.render("FieldBinarySignature-img", {widget: this, url: url}));

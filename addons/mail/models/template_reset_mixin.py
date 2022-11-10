@@ -40,10 +40,9 @@ class TemplateResetMixin(models.AbstractModel):
     def _load_records_write(self, values):
         # OVERRIDE to make the fields blank that are not present in xml record
         if self.env.context.get('reset_template'):
-            # We don't want to change anything for magic columns, values present in XML record, and
-            # special fields self.CONCURRENCY_CHECK_FIELD (__last_update) and 'template_fs'
+            # We don't want to change anything for magic columns, values present in XML record, and 'template_fs'
             fields_in_xml_record = values.keys()
-            fields_not_to_touch = set(models.MAGIC_COLUMNS) | fields_in_xml_record | {self.CONCURRENCY_CHECK_FIELD, 'template_fs'}
+            fields_not_to_touch = set(models.MAGIC_COLUMNS) | fields_in_xml_record | {'template_fs'}
             fields_to_empty = self._fields.keys() - fields_not_to_touch
             # For the fields not defined in xml record, if they have default values, we should not
             # enforce empty values for them and the default values should be kept

@@ -60,11 +60,10 @@ class website_form_model(models.Model):
         # Remove readonly and magic fields
         # Remove string domains which are supposed to be evaluated
         # (e.g. "[('product_id', '=', product_id)]")
-        MAGIC_FIELDS = models.MAGIC_COLUMNS + [model.CONCURRENCY_CHECK_FIELD]
         for field in list(fields_get):
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
-            if fields_get[field].get('readonly') or field in MAGIC_FIELDS or fields_get[field]['type'] == 'many2one_reference':
+            if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or fields_get[field]['type'] == 'many2one_reference':
                 del fields_get[field]
 
         return fields_get

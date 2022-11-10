@@ -80,7 +80,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("ImageField is correctly rendered", async function (assert) {
         assert.expect(10);
 
-        serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
+        serverData.models.partner.records[0].write_date = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
 
         await makeView({
@@ -96,8 +96,8 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/read") {
                     assert.deepEqual(
                         args[1],
-                        ["__last_update", "document", "display_name"],
-                        "The fields document, display_name and __last_update should be present when reading an image"
+                        ["write_date", "document", "display_name"],
+                        "The fields document, display_name and write_date should be present when reading an image"
                     );
                 }
             },
@@ -275,7 +275,7 @@ QUnit.module("Fields", (hooks) => {
 
             const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
             rec.document = "3 kb";
-            rec.__last_update = "2022-08-05 08:37:00"; // 1659688620000
+            rec.write_date = "2022-08-05 08:37:00"; // 1659688620000
 
             await makeView({
                 type: "form",
@@ -289,7 +289,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 mockRPC(_route, { method, args }) {
                     if (method === "write") {
-                        args[1].__last_update = "2022-08-05 09:37:00"; // 1659692220000
+                        args[1].write_date = "2022-08-05 09:37:00"; // 1659692220000
                         args[1].document = "4 kb";
                     }
                 },
@@ -427,7 +427,7 @@ QUnit.module("Fields", (hooks) => {
         "ImageField displays the right images with zoom and preview_image options (readonly)",
         async function (assert) {
             serverData.models.partner.records[0].document = "3 kb";
-            serverData.models.partner.records[0].__last_update = "2022-08-05 08:37:00";
+            serverData.models.partner.records[0].write_date = "2022-08-05 08:37:00";
 
             await makeView({
                 type: "form",
@@ -463,7 +463,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("ImageField in subviews is loaded correctly", async function (assert) {
-        serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
+        serverData.models.partner.records[0].write_date = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
         serverData.models.partner_type.fields.image = { name: "image", type: "binary" };
         serverData.models.partner_type.records[0].image = PRODUCT_IMAGE;
@@ -571,7 +571,7 @@ QUnit.module("Fields", (hooks) => {
 
         const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
         rec.document = "3 kb";
-        rec.__last_update = "2022-08-05 08:37:00";
+        rec.write_date = "2022-08-05 08:37:00";
 
         await makeView({
             resId: 1,
@@ -588,12 +588,12 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "onchange") {
                     return {
                         value: {
-                            __last_update: "", // actual return of the server
+                            write_date: "", // actual return of the server
                         },
                     };
                 }
                 if (method === "write") {
-                    args[1].__last_update = "2022-08-05 09:37:00";
+                    args[1].write_date = "2022-08-05 09:37:00";
                 }
             },
         });
@@ -619,11 +619,11 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("unique in url change on record change", async (assert) => {
         const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
         rec.document = "3 kb";
-        rec.__last_update = "2022-08-05 08:37:00";
+        rec.write_date = "2022-08-05 08:37:00";
 
         const rec2 = serverData.models.partner.records.find((rec) => rec.id === 2);
         rec2.document = "3 kb";
-        rec2.__last_update = "2022-08-05 09:37:00";
+        rec2.write_date = "2022-08-05 09:37:00";
 
         await makeView({
             resIds: [1, 2],
