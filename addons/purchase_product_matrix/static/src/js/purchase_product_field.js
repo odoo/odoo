@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import Dialog from 'web.Dialog';
-import { qweb } from "web.core";
 import { registry } from '@web/core/registry';
 import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
-import { formatMonetary } from "@web/views/fields/formatters";
+import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
+import { useService } from "@web/core/utils/hooks";
 
-const { markup, onWillUpdateProps } = owl;
+const { onWillUpdateProps } = owl;
 
 
 export class PurchaseOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
+        this.dialog = useService("dialog");
 
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.record.mode === 'edit' && nextProps.value) {
@@ -95,61 +95,12 @@ export class PurchaseOrderLineProductField extends Many2OneField {
 
     _openMatrixConfigurator(jsonInfo, productTemplateId, editedCellAttributes) {
         const infos = JSON.parse(jsonInfo);
-        const saleOrderRecord = this.props.record.model.root;
-        const MatrixDialog = new Dialog(this, {
-            title: this.env._t('Choose Product Variants'),
-            size: 'extra-large', // adapt size depending on matrix size?
-            $content: $(qweb.render(
-                'product_matrix.matrix', {
-                    header: infos.header,
-                    rows: infos.matrix,
-                    format({price, currency_id}) {
-                        if (!price) { return ""; }
-                        const sign = price < 0 ? '-' : '+';
-                        const formatted = formatMonetary(
-                            Math.abs(price),
-                            {
-                                currencyId: currency_id,
-                            },
-                        );
-                        return markup(`${sign}&nbsp;${formatted}`);
-                    }
-                }
-            )),
-            buttons: [
-                {text: this.env._t('Confirm'), classes: 'btn-primary', close: true, click: function (result) {
-                    const $inputs = this.$('.o_matrix_input');
-                    var matrixChanges = [];
-                    _.each($inputs, function (matrixInput) {
-                        if (matrixInput.value && matrixInput.value !== matrixInput.attributes.value.nodeValue) {
-                            matrixChanges.push({
-                                qty: parseFloat(matrixInput.value),
-                                ptav_ids: matrixInput.attributes.ptav_ids.nodeValue.split(",").map(function (id) {
-                                      return parseInt(id);
-                                }),
-                            });
-                        }
-                    });
-                    if (matrixChanges.length > 0) {
-                        // NB: server also removes current line opening the matrix
-                        saleOrderRecord.update({
-                            grid: JSON.stringify({changes: matrixChanges, product_template_id: productTemplateId}),
-                            grid_update: true // to say that the changes to grid have to be applied to the SO.
-                        });
-                    }
-                }},
-                {text: this.env._t('Close'), close: true},
-            ],
-        }).open();
-
-        MatrixDialog.opened(function () {
-            MatrixDialog.$content.closest('.o_dialog_container').removeClass('d-none');
-            if (editedCellAttributes.length > 0) {
-                const str = editedCellAttributes.toString();
-                MatrixDialog.$content.find('.o_matrix_input').filter((k, v) => v.attributes.ptav_ids.nodeValue === str)[0].focus();
-            } else {
-                MatrixDialog.$content.find('.o_matrix_input:first()').focus();
-            }
+        this.dialog.add(ProductMatrixDialog, {
+            header: infos.header,
+            rows: infos.matrix,
+            editedCellAttributes: editedCellAttributes.toString(),
+            product_template_id: productTemplateId,
+            record: this.props.record.model.root,
         });
     }
 }
