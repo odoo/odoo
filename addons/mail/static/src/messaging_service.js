@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { Messaging } from "./messaging";
-import { reactive } from "@odoo/owl";
 
 export const messagingService = {
     dependencies: ["rpc", "orm", "user", "router", "bus_service", "notification"],
@@ -17,9 +16,7 @@ export const messagingService = {
             threadId = parseInt(activeId.slice(13), 10);
         }
 
-        const messaging = reactive(
-            new Messaging(env, rpc, orm, user, router, threadId, notification)
-        );
+        const messaging = new Messaging(env, rpc, orm, user, router, threadId, notification);
         messaging.initialize();
         bus.addEventListener("notification", (notifEvent) => {
             messaging.handleNotification(notifEvent.detail);

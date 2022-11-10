@@ -306,7 +306,7 @@ function patchFields(patch) {
         } else {
             for (const [attributeName, attributeData] of Object.entries(fieldData)) {
                 switch (attributeName) {
-                    case "compute":
+                    case "compute": {
                         if (!originalFieldDefinition.compute) {
                             throw new Error(
                                 `Cannot patch compute of field ${patch.name}/${fieldName}: the field is not a compute in the original definition.`
@@ -325,6 +325,7 @@ function patchFields(patch) {
                             return attributeData.call(this);
                         };
                         break;
+                    }
                     case "sort":
                         if (originalFieldDefinition.sort) {
                             if (typeof attributeData !== "function") {

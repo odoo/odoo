@@ -24,3 +24,9 @@ Object.assign(ChatWindowContainer, {
 registry.category("main_components").add("mail.ChatWindowContainer", {
     Component: ChatWindowContainer,
 });
+
+Object.assign(ChatWindowContainer, {
+    components: { ChatWindow },
+    props: [],
+    template: "mail.chat_window_container",
+});

@@ -49,9 +49,9 @@ export class ActivityMenu extends Component {
 }
 
 Object.assign(ActivityMenu, {
-    template: "mail.activity_menu",
     components: { Dropdown },
     props: [],
+    template: "mail.activity_menu",
 });
 
 const systrayItem = {

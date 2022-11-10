@@ -10,7 +10,7 @@ export class EmojisDropdown extends Component {
         this.emojis = emojis;
         super.setup();
         onMounted(() => {
-            new Dropdown(this.toggleRef.el, {
+            new window.Dropdown(this.toggleRef.el, {
                 popperConfig: { placement: "bottom-end", strategy: "fixed" },
             });
         });
