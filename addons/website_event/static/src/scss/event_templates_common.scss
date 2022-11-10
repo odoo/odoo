@@ -180,6 +180,21 @@ $o-wevent-color: mix(map-get($theme-colors, 'primary'), $body-color, $o-wevent-c
             }
         }
     }
+
+    .o_wevent_cta  {
+        color: #fff;
+        background-color: $o-enterprise-color;
+        border: $o-enterprise-color;
+        &:hover {
+            color: #fff;
+            background-color: #624159;
+            border-color: #52374b;
+        }
+        &:focus {
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(134, 102, 126, 0.5);
+        }
+    }
 }
 
 .o_wevent_badge {

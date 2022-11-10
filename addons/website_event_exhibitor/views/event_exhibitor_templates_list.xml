@@ -119,19 +119,17 @@
 <!-- Exhibitors Main Display -->
 <template id="exhibitors_main" name="Exhibitors: Main Display">
     <!-- No exhibitors -->
-    <t t-if="not sponsor_categories">
-        <div class="col-12">
-            <div class="h2 mb-3">No exhibitor found.</div>
-            <div t-if="search_key" class="alert alert-info text-center">
-                <p class="m-0">We did not find any exhibitor matching your <strong t-out="search_key"/> search.</p>
-            </div>
-            <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
-                <a target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
-                    <p class="m-0">Add some exhibitors to get started!</p>
-                </a>
-            </div>
+    <div t-if="not sponsor_categories" class="col-12 text-center">
+        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <h2>No exhibitor found.</h2>
+        <p t-if="search_key">We could not find any exhibitor matching your search for: <strong t-out="search_key"/>.</p>
+        <p t-else="">We could not find any exhibitor at this moment.</p>
+        <div class="o_not_editable my-3" groups="event.group_event_user">
+            <a class="btn o_wevent_cta" target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
+                <span class="fa fa-plus me-1"/> Add Exhibitors
+            </a>
         </div>
-    </t>
+    </div>
     <!-- Cards -->
     <div class="col-12" t-call="website_event_exhibitor.exhibitors_display_cards"/>
 </template>

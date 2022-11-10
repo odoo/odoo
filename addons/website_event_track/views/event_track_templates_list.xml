@@ -115,19 +115,17 @@
 <!-- Tracks Main Display -->
 <template id="tracks_main" name="Tracks: Main Display">
     <!-- No tracks -->
-    <t t-if="not tracks">
-        <div class="col-12">
-            <div class="h2 mb-3">No track found.</div>
-            <div t-if="search_key" class="alert alert-info text-center">
-                <p class="m-0">We did not find any track matching your <strong t-out="search_key"/> search.</p>
-            </div>
-            <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
-                <a target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
-                    <p class="m-0">Schedule some tracks to get started</p>
-                </a>
-            </div>
+    <div t-if="not tracks" class="col-12 text-center">
+        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <h2>No track found.</h2>
+        <p t-if="search_key">We could not find any track matching your search for: <strong t-out="search_key"/>.</p>
+        <p t-else="">We could not find any track at this moment.</p>
+        <div class="o_not_editable my-3" groups="event.group_event_user">
+            <a class="o_wevent_cta btn" target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
+                <span class="fa fa-plus me-1"/> Schedule Tracks
+            </a>
         </div>
-    </t>
+    </div>
     <!-- Cards -->
     <div class="col-12" t-call="website_event_track.tracks_display_cards"/>
     <!-- List -->
