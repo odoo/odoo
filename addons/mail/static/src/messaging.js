@@ -429,6 +429,19 @@ export class Messaging {
         this.createMessage(markup(data.body), data, thread);
     }
 
+    async updateMessage(messageId, body) {
+        const message = this.messages[messageId];
+        if (htmlToTextContentInline(message.body) === body) {
+            return;
+        }
+        const data = await this.rpc("/mail/message/update_content", {
+            attachment_ids: [],
+            body: markup(body),
+            message_id: message.id,
+        });
+        message.body = markup(data.body);
+    }
+
     openDiscussion(threadId) {
         if (this.discuss.isActive) {
             this.setDiscussThread(threadId);

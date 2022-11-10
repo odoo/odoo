@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 import { useMessaging } from "../messaging_hook";
 import { useEmojiPicker, loadEmojiData } from "./emoji_picker";
 
@@ -8,8 +8,14 @@ export class Composer extends Component {
     setup() {
         this.messaging = useMessaging();
         this.ref = useRef("textarea");
-        this.state = useState({ value: "", autofocus: 0 });
-        useEmojiPicker("emoji-picker", (str) => this.addEmoji(str));
+        this.state = useState({
+            autofocus: 0,
+            value: this.props.message ? this.convertBrToLineBreak(this.props.message.body) : "",
+        });
+        useEmojiPicker("emoji-picker", {
+            onSelect: (str) => this.addEmoji(str),
+            preventClickPropagation: true,
+        });
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
@@ -18,25 +24,52 @@ export class Composer extends Component {
             },
             () => [this.props.autofocus + this.state.autofocus, this.props.placeholder]
         );
+        onWillUpdateProps(({ message }) => {
+            this.state.value = message ? this.convertBrToLineBreak(message.body) : "";
+        });
+    }
+
+    convertBrToLineBreak(str) {
+        return new DOMParser().parseFromString(
+            str.replaceAll("<br>", "\n").replaceAll("</br>", "\n"),
+            "text/html"
+        ).body.textContent;
     }
 
     onKeydown(ev) {
         loadEmojiData();
-        if (ev.keyCode === 13) {
+        if (ev.key === "Enter") {
             ev.preventDefault(); // to prevent useless return
-            this.sendMessage();
+            if (this.props.message) {
+                this.editMessage();
+            } else {
+                this.sendMessage();
+            }
+        } else if (ev.key === "Escape") {
+            this.props.onDiscardCallback();
         }
     }
 
     async sendMessage() {
         const el = this.ref.el;
         if (el.value.trim()) {
-            const prom = this.messaging.postMessage(
+            await this.messaging.postMessage(
                 this.props.threadId,
                 el.value,
                 this.props.type === "note"
             );
-            await prom;
+            if (this.props.onPostCallback) {
+                this.props.onPostCallback();
+            }
+        }
+        this.state.value = "";
+        el.focus();
+    }
+
+    async editMessage() {
+        const el = this.ref.el;
+        if (el.value.trim()) {
+            await this.messaging.updateMessage(this.props.message.id, this.ref.el.value);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -52,7 +85,16 @@ export class Composer extends Component {
 }
 
 Object.assign(Composer, {
-    defaultProps: { type: "message", mode: "normal" }, // mode = compact, normal, extended
-    props: ["threadId", "autofocus?", "onPostCallback?", "mode?", "placeholder?", "type?"],
+    defaultProps: { type: "message", mode: "normal", onDiscardCallback: () => {} }, // mode = compact, normal, extended
+    props: [
+        "threadId?",
+        "message?",
+        "autofocus?",
+        "onDiscardCallback?",
+        "onPostCallback?",
+        "mode?",
+        "placeholder?",
+        "type?",
+    ],
     template: "mail.composer",
 });

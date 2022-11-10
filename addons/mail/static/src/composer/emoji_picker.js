@@ -5,7 +5,14 @@ import { getBundle, loadBundle } from "@web/core/assets";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
 
-export function useEmojiPicker(refName, onSelect) {
+/**
+ *
+ * @param {string} refName
+ * @param {object} props
+ * @param {function} [props.onSelect]
+ * @param {boolean} [props.preventClickPropagation]
+ */
+export function useEmojiPicker(refName, props) {
     const ref = useRef(refName);
     const popover = usePopover();
     let closePopover = false;
@@ -14,15 +21,10 @@ export function useEmojiPicker(refName, onSelect) {
             closePopover();
             closePopover = false;
         } else {
-            closePopover = popover.add(
-                ref.el,
-                EmojiPicker,
-                { onSelect },
-                {
-                    onClose: () => (closePopover = false),
-                    popoverClass: "o-fast-popover",
-                }
-            );
+            closePopover = popover.add(ref.el, EmojiPicker, props, {
+                onClose: () => (closePopover = false),
+                popoverClass: "o-fast-popover",
+            });
         }
     };
     onMounted(() => {
@@ -60,6 +62,12 @@ export class EmojiPicker extends Component {
                 this.shouldScrollElem = null;
             }
         });
+    }
+
+    onClick(ev) {
+        if (this.props.preventClickPropagation) {
+            ev.stopPropagation();
+        }
     }
 
     getEmojis() {
@@ -100,6 +108,6 @@ export class EmojiPicker extends Component {
 }
 
 Object.assign(EmojiPicker, {
-    props: ["onSelect", "close"],
+    props: ["onSelect", "close", "preventClickPropagation?"],
     template: "mail.emoji_picker",
 });

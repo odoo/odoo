@@ -2,17 +2,29 @@
 
 import { useMessaging } from "../messaging_hook";
 import { RelativeTime } from "./relative_time";
-import { Component } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { Composer } from "@mail/composer/composer";
 import { MessageDeleteDialog } from "@mail/thread/message_delete_dialog";
 
 export class Message extends Component {
     setup() {
+        this.state = useState({
+            isEditing: false,
+        });
+        this.ref = useRef("ref");
         this.messaging = useMessaging();
         this.action = useService("action");
         this.user = useService("user");
         this.message = this.props.message;
         this.author = this.messaging.partners[this.message.authorId];
+        useExternalListener(document, "click", ({ target }) => {
+            // Stop editing the message on click away.
+            if (target === this.ref.el || this.ref.el.contains(target)) {
+                return;
+            }
+            this.state.isEditing = false;
+        });
     }
 
     get canBeDeleted() {
@@ -26,6 +38,10 @@ export class Message extends Component {
             return false;
         }
         return this.message.isNote || this.message.resModel === "mail.channel";
+    }
+
+    get canBeEdited() {
+        return this.canBeDeleted;
     }
 
     toggleStar() {
@@ -50,7 +66,7 @@ export class Message extends Component {
 }
 
 Object.assign(Message, {
-    components: { RelativeTime },
+    components: { Composer, RelativeTime },
     defaultProps: { hasActions: true },
     props: ["hasActions?", "message", "squashed?"],
     template: "mail.message",

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.emoji_picker" owl="1">
-    <div class="o-mail-emoji-picker">
+    <div class="o-mail-emoji-picker" t-on-click="onClick">
         <div class="o-mail-emoji-picker-top d-flex align-items-center bg-200" t-on-click="selectCategory">
             <t t-foreach="categories" t-as="category" t-key="category.sortId">
                 <span class="o-emoji p-1 cursor-pointer" t-att-class="{'bg-white': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId">

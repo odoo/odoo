@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.message" owl="1">
-    <div class="o-mail-message py-1 mt-1 px-3 d-flex" t-att-class="{'o-mail-is-author': message.isAuthor}">
+    <div class="o-mail-message py-1 mt-1 px-3 d-flex" t-att-class="{'o-mail-is-author': message.isAuthor}" t-ref="ref">
         <div class="o-mail-message-sidebar d-flex flex-shrink-0 justify-content-center">
             <div t-if="!props.squashed" class="o-mail-avatar-container position-relative">
                 <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect" t-att-class="{ 'cursor-pointer': props.hasActions }"
                     t-attf-src="/mail/channel/1/partner/{{message.authorId}}/avatar_128"/>
             </div>
         </div>
-        <div>
+        <div t-att-class="{ 'flex-grow-1': state.isEditing }">
             <div t-if="!props.squashed" class="o-mail-msg-header d-flex flex-wrap align-items-baseline">
                 <span class="o-mail-own-name">
                     <strong class="o_redirect me-1 text-truncate" t-att-class="{ 'cursor-pointer': props.hasActions}">
@@ -25,7 +25,7 @@
                     </small>
                 </t>
             </div>
-            <div class="o-mail-message-content d-flex">
+            <div t-if="!state.isEditing" class="o-mail-message-content d-flex">
                 <t t-if="message.type === 'notification'">
                     <t t-if="message.subtype_description">
                         <p class="mb-0"><t t-esc="message.subtype_description"/></p>
@@ -33,17 +33,16 @@
                     <t t-if="message.trackingValues.length">
                         <t t-call="mail.tracking_values"/>
                     </t>
-                <t t-if="message.body">
-                    <div class="o-mail-message-body text-break mb-0 px-3 bg-view">
+                    <div t-if="message.body" class="o-mail-message-body text-break mb-0 px-3 bg-view">
                         <t t-out="message.body"/>
                     </div>
-                </t>
                 </t>
                 <t t-if="message.type !== 'notification'">
-                    <div t-if="message.isNote" class="p-1">
-                        <t t-out="message.body"/>
-                    </div>
-                    <div t-else="" class="o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3">
+                    <div t-att-class="{
+                        'p-1': message.isNote,
+                        'o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3': !message.isNote,
+                        'flex-grow-1': state.isEditing,
+                    }">
                         <t t-out="message.body"/>
                     </div>
                 </t>
@@ -55,8 +54,16 @@
                             role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"/>
                         <i class="cursor-pointer px-1 py-2 fa fa-lg fa-trash" t-if="canBeDeleted" t-on-click="onClickDelete"
                             role="button" tabindex="0" title="Delete" aria-label="Delete"/>
+                        <i class="cursor-pointer px-1 py-2 fa fa-lg fa-pencil" t-if="canBeEdited" t-on-click="() => state.isEditing = true"
+                            role="button" tabindex="1" title="Edit" aria-label="Edit"/>
                     </div>
                 </div>
+            </div>
+            <div t-else="" class="o-mail-message-editable-content flex-grow-1" t-att-class="{
+                'p-1': message.isNote,
+                'o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3': !message.isNote,
+            }">
+                <Composer autofocus="true" message="message" onDiscardCallback="() => state.isEditing = false" onPostCallback="() => state.isEditing = false" mode="'compact'" />
             </div>
         </div>
     </div>
