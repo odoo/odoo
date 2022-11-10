@@ -133,6 +133,12 @@ export class Dropdown extends Component {
                         }
                         this.toggle();
                     };
+                    if (this.rootRef.el.parentElement.tabIndex === -1) {
+                        // If the parent is not focusable, make it focusable programmatically.
+                        // This code may look weird, but an element with a negative tabIndex is
+                        // focusable programmatically ONLY if its tabIndex is explicitly set.
+                        this.rootRef.el.parentElement.tabIndex = -1;
+                    }
                     this.rootRef.el.parentElement.addEventListener("click", onClick);
                     return () => {
                         this.rootRef.el.parentElement.removeEventListener("click", onClick);
@@ -261,6 +267,7 @@ export class Dropdown extends Component {
      */
     onTogglerMouseEnter() {
         if (this.state.groupIsOpen && !this.state.open) {
+            this.togglerRef.el.focus();
             this.open();
         }
     }
