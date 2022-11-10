@@ -15850,6 +15850,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, "[name='foo'] input");
 
             await click(target.querySelectorAll(".o_data_cell")[0]);
+            await nextTick();
             assert.containsOnce(target, ".o_dialog_error");
 
             await click(target, ".o_dialog_error .btn-primary.o-default-button");
@@ -15857,6 +15858,7 @@ QUnit.module("Views", (hooks) => {
             assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
 
             await click(target.querySelectorAll(".o_data_cell")[0]);
+            await nextTick();
             assert.containsOnce(target, ".o_dialog_error");
 
             await click(target, ".o_dialog_error .btn-primary.o-default-button");
