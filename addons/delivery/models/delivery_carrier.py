@@ -99,11 +99,12 @@ class DeliveryCarrier(models.Model):
             c.debug_logging = not c.debug_logging
 
     def install_more_provider(self):
+        exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
         return {
-            'name': 'New Providers',
+            'name': _('New Providers'),
             'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
             'type': 'ir.actions.act_window',
             'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
