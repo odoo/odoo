@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
-        return self.amount_total - delivery_cost
+        return self.env['delivery.carrier']._compute_currency(self, self.amount_total - delivery_cost, 'pricelist_to_company')
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
