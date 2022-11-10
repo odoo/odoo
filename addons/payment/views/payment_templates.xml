@@ -93,7 +93,7 @@
                                 </span>
                             </t>
                         </label>
-                        <!-- === Payment icon list === -->
+                        <!-- === Payment method icons list === -->
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
                         <div t-if="not is_html_empty(provider.pre_msg)"
@@ -238,7 +238,7 @@
                                 Unpublished
                             </span>
                         </label>
-                        <!-- === Payment icon list === -->
+                        <!-- === Payment method icons list === -->
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
                         <div t-if="not is_html_empty(provider.pre_msg)"
@@ -358,30 +358,30 @@
         </form>
     </template>
 
-    <!-- Expandable payment icon list -->
-    <template id="icon_list" name="Payment Icon List">
-        <ul class="payment_icon_list float-end list-inline" data-max-icons="3">
+    <!-- Expandable payment methods icons list -->
+    <template id="icon_list" name="Payment Icons List">
+        <ul class="payment_icon_list float-end list-inline" data-max-icons-displayed="3">
             <t t-set="icon_index" t-value="0"/>
-            <t t-set="MAX_ICONS" t-value="3"/>
-            <!-- === Icons === -->
+            <t t-set="MAX_ICONS_DISPLAYED" t-value="3"/>
+            <!-- === Icons list === -->
             <!-- Only shown if in the first 3 icons -->
-            <t t-foreach="provider.payment_icon_ids.filtered(lambda r: r.image_payment_form)" t-as="icon">
-                <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
-                    <span t-esc="icon.image_payment_form"
+            <t t-foreach="provider.payment_method_ids.filtered(lambda r: r.image_payment_form)" t-as="payment_method">
+                <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS_DISPLAYED) else ' d-none'}}">
+                    <span t-esc="payment_method.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
                           data-bs-toggle="tooltip"
-                          t-att-title="icon.name"/>
+                          t-att-title="payment_method.name"/>
                 </li>
                 <t t-set="icon_index" t-value="icon_index + 1"/>
             </t>
-            <t t-if="icon_index >= MAX_ICONS">
+            <t t-if="icon_index >= MAX_ICONS_DISPLAYED">
                 <!-- === "show more" button === -->
-                <!-- Only displayed if too many payment icons -->
+                <!-- Only displayed if too many icons -->
                 <li style="display:block;" class="list-inline-item">
                     <span class="float-end more_option text-info">
                         <a name="o_payment_icon_more"
                            data-bs-toggle="tooltip"
-                           t-att-title="', '.join([icon.name for icon in provider.payment_icon_ids[MAX_ICONS:]])">
+                           t-att-title="', '.join([pm.name for pm in provider.payment_method_ids[MAX_ICONS_DISPLAYED:]])">
                             show more
                         </a>
                     </span>

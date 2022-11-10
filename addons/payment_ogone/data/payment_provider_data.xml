@@ -8,13 +8,13 @@
                type="base64"
                file="payment_ogone/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_ogone"/>
-        <field name="payment_icon_ids"
+        <field name="payment_method_ids"
                eval="[(6, 0, [
-                   ref('payment.payment_icon_cc_ideal'),
-                   ref('payment.payment_icon_cc_bancontact'),
-                   ref('payment.payment_icon_cc_maestro'),
-                   ref('payment.payment_icon_cc_mastercard'),
-                   ref('payment.payment_icon_cc_visa'),
+                   ref('payment.payment_method_ideal'),
+                   ref('payment.payment_method_bancontact'),
+                   ref('payment.payment_method_maestro'),
+                   ref('payment.payment_method_mastercard'),
+                   ref('payment.payment_method_visa'),
                ])]"/>
         <field name="code">ogone</field>
         <field name="redirect_form_view_id" ref="redirect_form"/>
