@@ -37,6 +37,13 @@ class IrDefault(models.Model):
             self.clear_caches()
         return super(IrDefault, self).unlink()
 
+    def _default_setting(self, user_id, company_id):
+        if user_id is True:
+            user_id = self.env.uid
+        if company_id is True:
+            company_id = self.env.company.id
+        return user_id, company_id
+
     @api.model
     def set(self, model_name, field_name, value, user_id=False, company_id=False, condition=False):
         """ Defines a default value for the given field. Any entry for the same
@@ -55,10 +62,7 @@ class IrDefault(models.Model):
                               opaque string, but the client typically uses
                               single-field conditions in the form ``'key=val'``.
         """
-        if user_id is True:
-            user_id = self.env.uid
-        if company_id is True:
-            company_id = self.env.company.id
+        user_id, company_id = self._default_setting(user_id, company_id)
 
         # check consistency of model_name, field_name, and value
         try:
@@ -109,10 +113,7 @@ class IrDefault(models.Model):
                               opaque string, but the client typically uses
                               single-field conditions in the form ``'key=val'``.
         """
-        if user_id is True:
-            user_id = self.env.uid
-        if company_id is True:
-            company_id = self.env.company.id
+        user_id, company_id = self._default_setting(user_id, company_id)
 
         field = self.env['ir.model.fields']._get(model_name, field_name)
         default = self.search([
