@@ -8,7 +8,7 @@
 
 {
     'name' : 'Venezuela - Accounting',
-    'author': ['Odoo S.A.', 'Vauxoo'],
+    'author': 'Odoo S.A., Vauxoo',
     'category': 'Accounting/Localizations/Account Charts',
     'description':
 """

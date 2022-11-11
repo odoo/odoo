@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_sale_product_configurator',
+    'name': 'POS - Sale Product Configurator',
     'version': '1.0',
     'category': 'Hidden',
     'summary': 'Link module between point_of_sale and sale_product_configurator',

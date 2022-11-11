@@ -3,7 +3,7 @@
 {
     "name": "Sweden - Accounting",
     "version": "1.0",
-    "author": "XCLUDE, Odoo SA",
+    "author": "XCLUDE, Odoo S.A.",
     "category": "Accounting/Localizations/Account Charts",
     'description': """
 Swedish Accounting

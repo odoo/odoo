@@ -10,7 +10,7 @@ To configure product attributes, activate *Attributes & Variants* in the Website
 
 Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).
     """,
-    'author': 'Odoo SA',
+    'author': 'Odoo S.A.',
     'category': 'Website/Website',
     'version': '1.0',
     'depends': ['website_sale'],

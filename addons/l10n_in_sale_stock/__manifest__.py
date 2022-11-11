@@ -15,7 +15,7 @@
         useful when you setup the multiple GSTIN units.
     """,
 
-    'author': "Odoo",
+    'author': "Odoo S.A.",
     'website': "https://www.odoo.com",
     'category': 'Accounting/Localizations/Sale',
     'version': '0.1',

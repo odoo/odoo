@@ -6,7 +6,7 @@
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "A Dutch payment provider covering several European countries.",
-    'author': 'Odoo S.A, Applix BV, Droggol Infotech Pvt. Ltd.',
+    'author': 'Odoo S.A., Applix BV, Droggol Infotech Pvt. Ltd.',
     'website': 'https://www.mollie.com',
     'depends': ['payment'],
     'data': [

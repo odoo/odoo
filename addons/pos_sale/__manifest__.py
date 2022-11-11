@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_sale',
+    'name': 'POS - Sales',
     'version': '1.1',
     'category': 'Hidden',
     'sequence': 6,
