@@ -4,7 +4,7 @@
     "version": "2.0",
     'summary': "PCGE Simplified",
     'category': 'Accounting/Localizations/Account Charts',
-    'author': 'Vauxoo, Odoo',
+    'author': 'Vauxoo, Odoo S.A.',
     'website': 'https://www.odoo.com/documentation/master/accounting/fiscal_localizations/localizations/peru.html',
     'license': 'LGPL-3',
     'depends': [
