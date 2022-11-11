@@ -836,10 +836,12 @@ class Transaction:
         """ Flush pending computations and updates in the transaction. """
         env_to_flush = None
         for env in self.envs:
-            if isinstance(env.uid, int) or env.uid is None:
+            if isinstance(env.uid, int):
                 env_to_flush = env
-                if env.uid is not None:
-                    break
+                break
+            if env.uid is None:
+                env_to_flush = env
+
         if env_to_flush is not None:
             env_to_flush.flush_all()
 
