@@ -126,7 +126,7 @@ class Field(MetaField('DummyField', (object,), {})):
         Note: this has no effect on non-stored and virtual fields.
         The possible values are:
 
-        * ``"btree"`` or ``True``: standard index, good for many2one
+        * ``"btree"`` or ``True``: standard index, good for Char field
         * ``"btree_not_null"``: BTREE index without NULL values (useful when most
                                 values are NULL, or when NULL is never searched for)
         * ``"trigram"``: Generalized Inverted Index (GIN) with trigrams (good for full-text search)
