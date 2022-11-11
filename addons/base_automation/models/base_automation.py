@@ -342,14 +342,9 @@ class BaseAutomation(models.Model):
     def _check_trigger_fields(self, record):
         """ Return whether any of the trigger fields has been modified on ``record``. """
         self_sudo = self.sudo()
-        if not self_sudo.trigger_field_ids:
-            # all fields are implicit triggers
+        if not self_sudo.trigger_field_ids or not self._context.get('old_values'):
+            # all fields are implicit triggers or this is a create: all fields are considered modified
             return True
-
-        if not self._context.get('old_values'):
-            # this is a create: all fields are considered modified
-            return True
-
         # Note: old_vals are in the format of read()
         old_vals = self._context['old_values'].get(record.id, {})
 
