@@ -3285,10 +3285,7 @@ class AccountMove(models.Model):
         for invoice in to_post:
             # Fix inconsistencies that may occure if the OCR has been editing the invoice at the same time of a user. We force the
             # partner on the lines to be the same as the one on the move, because that's the only one the user can see/edit.
-            wrong_lines = invoice.is_invoice() and invoice.line_ids.filtered(lambda aml:
-                aml.partner_id != invoice.commercial_partner_id
-                and aml.display_type not in ('line_note', 'line_section')
-            )
+            wrong_lines = invoice._get_wrong_lines()
             if wrong_lines:
                 wrong_lines.write({'partner_id': invoice.commercial_partner_id.id})
 
@@ -3343,6 +3340,14 @@ class AccountMove(models.Model):
         )._invoice_paid_hook()
 
         return to_post
+
+    def _get_wrong_lines(self):
+        """This method could be inherit to allow change the logic on the filtered."""
+        self.ensure_one()
+        return self.is_invoice() and self.line_ids.filtered(lambda aml:
+            aml.partner_id != self.commercial_partner_id
+            and aml.display_type not in ('line_note', 'line_section')
+        )
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
