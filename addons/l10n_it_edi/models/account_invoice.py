@@ -345,7 +345,7 @@ class AccountTax(models.Model):
             ("N6.7", "[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"),
             ("N6.8", "[N6.8] Inversione contabile – operazioni settore energetico"),
             ("N6.9", "[N6.9] Inversione contabile – altri casi"),
-            ("N7", "[N7] IVA assolta in altro stato UE (vendite a distanza ex art. 40 c. 3 e 4 e art. 41 c. 1 lett. b,  DL 331/93; prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-sexies lett. f, g, art. 74-sexies DPR 633/72)")],
+            ("N7", "[N7] IVA assolta in altro stato UE (prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, comma 1 lett. a, b, art. 74-sexies DPR 633/72)")],
         string="Exoneration",
         help="Exoneration type",
         default="N1")
