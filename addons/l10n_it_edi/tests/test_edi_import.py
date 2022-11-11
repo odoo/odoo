@@ -76,13 +76,6 @@ class TestItEdiImport(TestItEdi):
             ('signed', 'IT01234567890_FPR01.xml.p7m'),
         ]}
 
-    @classmethod
-    def _get_test_file_content(cls, filename):
-        """ Get the content of a test file inside this module """
-        path = 'l10n_it_edi/tests/expected_xmls/' + filename
-        with tools.file_open(path, mode='rb') as test_file:
-            return test_file.read()
-
     # -----------------------------
     #
     # Vendor bills
