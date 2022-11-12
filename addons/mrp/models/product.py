@@ -161,11 +161,11 @@ class ProductProduct(models.Model):
                 ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
-                    'virtual_available': min(ratios_virtual_available) // 1,
-                    'qty_available': min(ratios_qty_available) // 1,
-                    'incoming_qty': min(ratios_incoming_qty) // 1,
-                    'outgoing_qty': min(ratios_outgoing_qty) // 1,
-                    'free_qty': min(ratios_free_qty) // 1,
+                    'virtual_available': min(ratios_virtual_available) * bom_kits[product].product_qty // 1,
+                    'qty_available': min(ratios_qty_available) * bom_kits[product].product_qty // 1,
+                    'incoming_qty': min(ratios_incoming_qty) * bom_kits[product].product_qty // 1,
+                    'outgoing_qty': min(ratios_outgoing_qty) * bom_kits[product].product_qty // 1,
+                    'free_qty': min(ratios_free_qty) * bom_kits[product].product_qty // 1,
                 }
             else:
                 res[product.id] = {
