@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# 陕西_jack, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/PartnerLine.js:0
 #, python-format
 msgid "%s Points"
-msgstr "%s点数"
+msgstr "%s积分"
 
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
@@ -149,7 +149,7 @@ msgstr "优惠券代码"
 #: model:loyalty.reward,point_name:pos_loyalty.15_pc_on_next_order_reward
 #: model:loyalty.rule,reward_point_name:pos_loyalty.15_pc_on_next_order_rule
 msgid "Coupon point(s)"
-msgstr "优惠券点数"
+msgstr "优惠券积分"
 
 #. module: pos_loyalty
 #. openerp-web
@@ -247,7 +247,7 @@ msgstr "礼品卡或折扣代码"
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Gift cards & eWallet"
-msgstr "礼品卡与电子钱包"
+msgstr "礼品卡和电子钱包"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
@@ -258,13 +258,13 @@ msgstr "这个奖励在优惠券上花了多少积分？"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr ""
+msgstr "无效礼品卡方案奖励。使用1货币每点折扣。"
 
 #. module: pos_loyalty
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr ""
+msgstr "礼品卡方案无效。每个货币使用1个积分。"
 
 #. module: pos_loyalty
 #: code:addons/pos_loyalty/models/pos_config.py:0
@@ -298,7 +298,7 @@ msgstr "会员优惠"
 #: model:loyalty.reward,point_name:pos_loyalty.loyalty_program_reward
 #: model:loyalty.rule,reward_point_name:pos_loyalty.loyalty_program_rule
 msgid "Loyalty Points"
-msgstr "会员点数"
+msgstr "会员积分"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
@@ -402,12 +402,12 @@ msgstr "POS会话"
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "Points"
-msgstr "点数"
+msgstr "积分"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
 msgid "Points Cost"
-msgstr "点数成本"
+msgstr "积分成本"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
@@ -446,7 +446,7 @@ msgstr "使用电子钱包退款"
 msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
-msgstr ""
+msgstr "对于电子钱包或礼品卡方案，不允许退款充值或奖励产品。"
 
 #. module: pos_loyalty
 #. openerp-web
@@ -570,21 +570,21 @@ msgstr "该客户没有可申请的奖励。"
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
 msgid "There are not enough points for the coupon: %s."
-msgstr "优惠券没有足够的点数：%s"
+msgstr "优惠券没有足够的积分：%s"
 
 #. module: pos_loyalty
 #. openerp-web
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
+msgstr "优惠券上没有足够的积分来领取这个奖励。"
 
 #. module: pos_loyalty
 #. openerp-web
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
+msgstr "购物车里没有足够的产品来领取这个奖励。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -754,4 +754,4 @@ msgstr "电子钱包要求选择一位客户"
 #: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr "没有到期"
+msgstr "没有过期"

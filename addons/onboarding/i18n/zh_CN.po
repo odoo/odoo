@@ -5,9 +5,9 @@
 # Translators:
 # Martin Trigaux, 2022
 # Emily Jia <eji@odoo.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Allen Likey, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Allen Likey, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,19 +160,19 @@ msgstr "让我们开始吧"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__name
 msgid "Name of the onboarding"
-msgstr ""
+msgstr "入职名称"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Name of the onboarding model action to execute when closing the panel."
-msgstr ""
+msgstr "关闭面板时要执行的入职模型动作的名称。"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
 msgid ""
 "Name of the onboarding step model action to execute when opening the step, "
 "e.g. action_open_onboarding_1_step_1"
-msgstr ""
+msgstr "打开步骤时要执行的入职步骤模型动作的名称，例如action_open_onboarding_1_step_1"
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__none
@@ -217,7 +217,7 @@ msgstr "入职进度步骤跟踪表"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__current_progress_step_id
 msgid "Onboarding Progress Step for the current context (company)."
-msgstr ""
+msgstr "当前内容 (公司) 的入职进度步骤。"
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_progress
@@ -227,7 +227,7 @@ msgstr "入职进度跟踪表"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__current_progress_id
 msgid "Onboarding Progress for the current context (company)."
-msgstr ""
+msgstr "当前内容 (公司) 的入职进度。"
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_onboarding_step
@@ -249,7 +249,7 @@ msgstr "入职步骤"
 #. module: onboarding
 #: model:ir.model.constraint,message:onboarding.constraint_onboarding_onboarding_route_name_uniq
 msgid "Onboarding alias must be unique."
-msgstr ""
+msgstr "入职别名必须是唯一的。"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__onboarding_state
@@ -306,12 +306,12 @@ msgstr "入职步骤跟踪表"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__progress_id
 msgid "Related Onboarding Progress Tracker"
-msgstr ""
+msgstr "相关的入职进度跟踪器"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__onboarding_id
 msgid "Related onboarding tracked"
-msgstr ""
+msgstr "相关的入职跟踪"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__sequence
@@ -322,7 +322,7 @@ msgstr "序号"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__is_per_company
 msgid "Should be done per company?"
-msgstr ""
+msgstr "每家公司都应该完成吗？"
 
 #. module: onboarding
 #: code:addons/onboarding/models/onboarding_step.py:0
@@ -338,26 +338,26 @@ msgstr "步骤进展"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__button_text
 msgid "Text on the panel's button to start this step"
-msgstr ""
+msgstr "开始此步骤的面板按钮上的文本"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__done_text
 msgid "Text to show when step is completed"
-msgstr ""
+msgstr "步骤完成时显示的文本"
 
 #. module: onboarding
 #: model:ir.model.constraint,message:onboarding.constraint_onboarding_progress_onboarding_company_uniq
 msgid ""
 "There cannot be multiple records of the same onboarding completion for the "
 "same company."
-msgstr ""
+msgstr "同一家公司的同一入职完成情况不能有多个记录。"
 
 #. module: onboarding
 #: model:ir.model.constraint,message:onboarding.constraint_onboarding_progress_step_progress_step_uniq
 msgid ""
 "There cannot be multiple records of the same onboarding step completion for "
 "the same Progress record."
-msgstr ""
+msgstr "对于同一进度记录，不能有多个相同的入职步骤完成记录。"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__title
@@ -368,7 +368,7 @@ msgstr "称谓"
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_tree
 msgid "Toggle visibility"
-msgstr ""
+msgstr "切换可见性"
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__violet

@@ -855,7 +855,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Arabisch/Engels voor GCC + lot/SN-nummers\n"
+"        Arabisch/Engels voor GCC + partij/serienummers\n"
 "    "
 
 #. module: base
@@ -4462,7 +4462,7 @@ msgstr ""
 " * Navigatie op volledig scherm\n"
 " * Ondersteuning van YouTube-video's, Google-documenten, PDF, afbeeldingen, artikelen\n"
 " * Test kennis met quizzen\n"
-" * Filter en tag\n"
+" * Filter en label\n"
 " * Statistieken\n"
 
 #. module: base
@@ -5926,9 +5926,9 @@ msgid ""
 msgstr ""
 "\n"
 "In veel landen wordt een debetnota gebruikt als verhoging van de bedragen van een bestaande factuur\n"
-"of in sommige specifieke gevallen om een creditnota te annuleren.\n"
+"of in sommige specifieke gevallen om een creditfactuur te annuleren.\n"
 "Het is als een gewone factuur, maar we moeten de link met de originele factuur bijhouden.\n"
-"De gebruikte wizard is vergelijkbaar met die voor de creditnota."
+"De gebruikte wizard is vergelijkbaar met die voor de creditfactuur."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -7611,7 +7611,7 @@ msgstr ""
 "* Het mechanisme voor het verzenden van de elektronische boleta-informatie heeft speciale servers nodig, die verschillen van de servers die worden gebruikt bij de ontvangst van de elektronische factuur (\"Palena\" voor de productieomgeving - palena.sii.cl en \"Maullin\" voor de testomgeving - maullin.sii.cl ).\n"
 "* De authenticatiediensten, het opvragen van de status van een levering en de status van een document zullen anders zijn.\n"
 "* Het verkregen authenticatietoken\n"
-"* Het XML-schema voor het verzenden van de elektronische boleta's is bijgewerkt met de toevoeging van nieuwe tags\n"
+"* Het XML-schema voor het verzenden van de elektronische boleta's is bijgewerkt met de toevoeging van nieuwe labels\n"
 "* De validatiediagnose van elektronische boleta's wordt geleverd via een \"REST\" webservice die de track-id van de levering als invoer heeft. Elektronische facturen blijven hun diagnoses via e-mail ontvangen.\n"
 "* De track-id (\"identificador de envío\") die bij de elektronische boleta's hoort, zal 15 cijfers lang zijn. (Elektronica factuur is 10)\n"
 "\n"
@@ -8940,7 +8940,7 @@ msgid ""
 "This module adapts the behavior of the PoS when the pos_hr and pos_restaurant are installed.\n"
 msgstr ""
 "\n"
-"Deze module past het gedrag van de PoS aan wanneer de pos_hr en pos_restaurant zijn geïnstalleerd.\n"
+"Deze module past het gedrag van de kassa aan wanneer de pos_hr en pos_restaurant zijn geïnstalleerd.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter
@@ -9375,7 +9375,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Met deze module kun je je resellers / relaties op je website publiceren en inkomende leads / opportunities naar hen doorsturen.\n"
+"Met deze module kun je je resellers / relaties op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
 "\n"
 "\n"
 "** Publiceer een partner **\n"
@@ -9384,7 +9384,7 @@ msgstr ""
 "\n"
 "** Forward leads **\n"
 "\n"
-"Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen partner * van de lead- / opportunityformulierweergave en in het menu * Actie * van de lijstweergave.\n"
+"Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen partner * van de lead- / verkoopkansformulierweergave en in het menu * Actie * van de lijstweergave.\n"
 "\n"
 "De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Relaties krijgen leads die zich om hen heen bevinden."
 
@@ -13440,7 +13440,8 @@ msgid ""
 "and wishes. There is no central tag repository across clients."
 msgstr ""
 "Een willekeurige tekenreeks geïnterpreteerd door de klant op basis van zijn "
-"eigen behoeften en wensen. Er is geen centrale tag repository over klanten."
+"eigen behoeften en wensen. Er is geen centrale label repository over "
+"klanten."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module__auto_install
@@ -13781,7 +13782,7 @@ msgstr "Argentijnse e-commerce"
 #: model:ir.model.fields,help:base.field_ir_actions_client__params
 msgid "Arguments sent to the client along with the view tag"
 msgstr ""
-"Argumenten welke naar de cliënt worden verzonden, inclusief de 'view tag'"
+"Argumenten welke naar de cliënt worden verzonden, inclusief de 'view label'"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -15575,7 +15576,7 @@ msgstr "Client-actie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
 msgid "Client action tag"
-msgstr "Client actie tag"
+msgstr "Client actie label"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -21811,7 +21812,7 @@ msgstr "Integreer je Kassa met een Six-betaalterminal"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_stripe
 msgid "Integrate your POS with a Stripe payment terminal"
-msgstr "Integreer je POS met een Stripe-betaalterminal"
+msgstr "Integreer je kassa met een Stripe-betaalterminal"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
@@ -22446,8 +22447,8 @@ msgid ""
 "Label tag must contain a \"for\". To match label style without corresponding"
 " field or button, use 'class=\"o_form_label\"'."
 msgstr ""
-"Label-tag moet een \"voor\" bevatten. Gebruik 'class = \"o_form_label\"' om "
-"de labelstijl zonder bijbehorend veld of knop te matchen."
+"Label moet een \"voor\" bevatten. Gebruik 'class = \"o_form_label\"' om de "
+"labelstijl zonder bijbehorend veld of knop te matchen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -23021,7 +23022,7 @@ msgstr "Link module tussen Kassa en Verkoop Marge"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
-msgstr "Link module tussen Pos Blackbox Be en Pos HR"
+msgstr "Link module tussen kassa Blackbox Be en kassa HR"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_product_configurator
@@ -23845,7 +23846,7 @@ msgstr "Bulkmailing op sprekers"
 #: model:ir.module.module,description:base.module_mass_mailing_crm_sms
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_crm_sms
 msgid "Mass mailing sms on lead / opportunities"
-msgstr "Massamailing sms on lead / opportunities"
+msgstr "Massamailing sms op lead / verkoopkansen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale_sms
@@ -26007,7 +26008,7 @@ msgstr ""
 "--------------------\n"
 "\n"
 "Met de chatfunctie kun je sneller en efficiënter communiceren met\n"
-"je klant. Laat documenten automatisch maken (leads, opportunities,\n"
+"je klant. Laat documenten automatisch maken (leads, verkoopkansen,\n"
 "taken, ...) op basis van antwoorden op je massamailingcampagnes Volg de\n"
 "discussie direct over de zakelijke documenten binnen Odoo of via e-mail.\n"
 "\n"
@@ -26172,7 +26173,7 @@ msgstr ""
 "\n"
 "### Notities zijn privé, maar kunnen worden gedeeld\n"
 "\n"
-"Schrijf je ideeën op in blokken, houd je aantekeningen binnen handbereik, voeg gerelateerde documenten toe en gebruik tags en kleuren om de informatie te ordenen. Zodra je ideeën volwassen zijn, kun je ze delen met andere gebruikers, erover beginnen en samenwerken door de specificatie in de pad te verbeteren.\n"
+"Schrijf je ideeën op in blokken, houd je aantekeningen binnen handbereik, voeg gerelateerde documenten toe en gebruik labels en kleuren om de informatie te ordenen. Zodra je ideeën volwassen zijn, kun je ze delen met andere gebruikers, erover beginnen en samenwerken door de specificatie in de pad te verbeteren.\n"
 "\n"
 "Notulen van gezamenlijke vergaderingen\n"
 "-----------------------------\n"
@@ -27974,7 +27975,7 @@ msgstr "Kassa Adyen Restaurants"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_stripe
 msgid "POS Restaurant Stripe"
-msgstr "POS Restaurant streep"
+msgstr "Kassa restaurant Stripe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -27984,7 +27985,7 @@ msgstr "Kassa Six"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_stripe
 msgid "POS Stripe"
-msgstr "POS-streep"
+msgstr "Kassa Stripe"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -28563,7 +28564,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_restaurant
 msgid "PoS HR Restaurant"
-msgstr "PoS HR-restaurant"
+msgstr "Kassa HR-restaurant"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
@@ -31261,7 +31262,7 @@ msgstr "Instellingen"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_settle_due
 msgid "Settle partner's due in the POS UI."
-msgstr "Vereffen de partnerbijdragen in de POS-gebruikersinterface."
+msgstr "Verreken klantschulden in de kassa-gebruikersinterface."
 
 #. module: base
 #: model:res.country,name:base.sc

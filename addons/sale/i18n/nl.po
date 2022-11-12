@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -564,15 +564,15 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"marge: 0px; padding: 0px;\">\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
-"        Beste <t t-out=\"object.partner_id.name of ''\">gebruiker</t>,\n"
+"        Beste <t t-out=\"object.partner_id.name or ''\">gebruiker</t>,\n"
 "        <br/><br/>\n"
 "        Houd er rekening mee dat je\n"
-"        <t t-out=\"doc_name of ''\">citaat</t> <strong t-out=\"object.name of ''\">S00052</strong>\n"
-"        <t t-if=\"object.oorsprong\">\n"
-"            (met referentie: <t t-out=\"object.origin of ''\">S00052</t> )\n"
+"        <t t-out=\"doc_name or ''\">citaat</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (met referentie: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
 "        is geannuleerd. Daarom hoeven er voor deze bestelling geen kosten meer in rekening te worden gebracht.\n"
 "        Als een terugbetaling nodig is, zal dit zo goed mogelijk worden uitgevoerd.\n"
@@ -3191,7 +3191,7 @@ msgstr "Product kenmerk aangepaste waarde"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr "Product catalogus"
+msgstr "Productcatalogus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
@@ -3943,7 +3943,7 @@ msgstr "Delen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Shipping"
-msgstr "Afleveradres"
+msgstr "Verzenden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4834,7 +4834,7 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
-"Je kunt geen orderregel verwijderen eenmaal de verkooporder bevestigd is.\n"
+"Je kunt een orderregel niet verwijderen als de verkooporder bevestigd is.\n"
 "Je moet de hoeveelheid naar 0 zetten."
 
 #. module: sale
@@ -4989,4 +4989,4 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.type_name }} Geannuleerd (Ref {{ "
-"object.name of 'n/a' }})"
+"object.name or 'n/a' }})"

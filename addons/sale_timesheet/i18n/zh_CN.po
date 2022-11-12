@@ -5,9 +5,9 @@
 # Translators:
 # e2f <projects@e2f.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +141,7 @@ msgstr ""
 "根据产品配置，交货数量可以通过机制自动计算：\n"
 " - 手动：在线手动输入数量\n"
 " - 费用分析：数量是来自过账费用的数量总和\n"
-" - 时间表：数量是与此销售线相关联的任务记录的时数\n"
+" - 工时表：数量是与此销售线相关联的任务记录的时数\n"
 " - 库存变动：数量来自已确认的选择\n"
 
 #. module: sale_timesheet
@@ -607,7 +607,7 @@ msgstr "结算单政策"
 msgid ""
 "Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
 " create later on."
-msgstr "根据您以后创建的项目或任务的时间表（交付数量）来开具结算单。"
+msgstr "根据您以后创建的项目或任务的工时表（交付数量）来开具结算单。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -735,7 +735,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "手动设置订单数量：基于手动输入数量的结算单，不创建分析账户。\n"
-"时间表：在合同的基础上对相关结算单跟踪小时时间表。\n"
+"工时表：在合同的基础上对相关结算单跟踪小时工时表。\n"
 "创建任务和跟踪时间：在销售订单验证上创建任务并跟踪工作时间。"
 
 #. module: sale_timesheet
@@ -1047,7 +1047,7 @@ msgstr "剩余)"
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
-msgstr "按计费类型审查您的考勤表，确保您的时间是可以计费的。"
+msgstr "按计费类型审查您的工时表，确保您的时间是可以计费的。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
@@ -1111,7 +1111,7 @@ msgid ""
 msgstr ""
 "默认情况下将在相应员工的工时表上选择的销售订单项目。 它绕过在项目和任务上定义的销售订单项目，并且可以在必要时在每个工时表条目上修改。 换句话说，它定义了根据员工的专业知识，技能或经验对员工的时间进行计费的费率。\n"
 "如果要以不同的费率为同一服务计费，则需要创建两个单独的销售订单项目，因为每个销售订单项目一次只能有一个单价。\n"
-"您还可以为此项目专门定义员工工时表的每小时公司成本。 它将绕过员工设定的时间表成本。"
+"您还可以为此项目专门定义员工工时表的每小时公司成本。 它将绕过员工设定的工时表成本。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1247,7 +1247,7 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"无法创建销售订单，因为您没有输入此项目上产生工时单的某些员工。创建销售订单前，请列出所有相关员工。\n"
+"无法创建销售订单，因为您没有输入此项目上产生工时表的某些员工。创建销售订单前，请列出所有相关员工。\n"
 "缺失员工：%s"
 
 #. module: sale_timesheet
@@ -1340,7 +1340,7 @@ msgstr "工时表"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr "时间表成本"
+msgstr "工时表成本"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1397,7 +1397,7 @@ msgstr "与此销售相关的工时表活动"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 #, python-format
 msgid "Timesheets"
-msgstr "工时单"
+msgstr "工时表"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1463,7 +1463,7 @@ msgstr "%s 的工时表"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "时间表项目（一个票价每/项目）"
+msgstr "工时表项目（一个票价每/项目）"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
@@ -1473,7 +1473,7 @@ msgstr "工时表收入减去成本"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr "在为您的时间开具开票时考虑到了时间表"
+msgstr "在为您的时间开具开票时考虑到了工时表"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
@@ -1624,13 +1624,13 @@ msgstr "您不能把一个应收账款项目与一个不是服务的销售订单
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
-msgstr "您不能修改已经开具结算单的考勤表。"
+msgstr "您不能修改已经开具结算单的工时表。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "您不能删除已经开过结算单的考勤表。"
+msgstr "您不能删除已经开过结算单的工时表。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0

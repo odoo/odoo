@@ -6,6 +6,7 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -259,6 +260,29 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">认证： <t t-out=\"object.survey_id.display_name or ''\">反馈表</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>尊敬 <span t-out=\"object.partner_id.name or 'participant'\">的参与者</span></p>\n"
+"                <p>请随函附上您的\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">家具创作</strong>\n"
+"                    认证                </p>\n"
+"                <p>恭喜您以 <strong j=\"10/\">% !</p>\n"
+"            </strong></td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -295,6 +319,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">尊敬 <t t-out=\"object.partner_id.name or 'participant'\">的参与者</t><br/><br/>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            您已被邀请参加新的认证。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            我们正在进行调查，您的回复将不胜感激。\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    开始认证\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    开始调查\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">请回答 05 <t t-out=\"format_date(object.deadline) or ''\">/05/2021</t> 的调查。<br/><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            祝你好运！\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            提前感谢您的参与。\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -510,6 +563,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_scored_question', '!=', "
 "True)]}\">Points</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_scored_question', '!=', True)]}\">点</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -613,6 +667,9 @@ msgid ""
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
+"start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
+"position-relative\">钥匙</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -670,6 +727,8 @@ msgid ""
 "<span>Click on the filter icon (<span class=\"fa fa-filter text-primary\"/>)\n"
 "                                    next to an answer to filter surveys on similar answers only.</span>"
 msgstr ""
+"<span>单击过滤器图标 （<span j=\"0/\">）\n"
+"                                    以仅根据相似答案筛选调查。</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -883,7 +942,7 @@ msgstr "活动状态"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1048,7 +1107,7 @@ msgstr "已归档"
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p1_q1_sug4
 msgid "Art & Culture"
-msgstr "艺术与文化"
+msgstr "艺术和文化"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug1
@@ -1761,7 +1820,7 @@ msgstr "显示名称"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Display Progress as"
-msgstr ""
+msgstr "将进度显示为"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1914,7 +1973,7 @@ msgstr "榕树"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "Filter surveys"
-msgstr ""
+msgstr "筛选调查"
 
 #. module: survey
 #. openerp-web
@@ -2108,7 +2167,7 @@ msgstr "您使用我们的产品频率有多少？"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How good of a presenter are you? Let's find out!"
-msgstr ""
+msgstr "你有多好的演讲者？让我们来了解一下！"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -2276,6 +2335,8 @@ msgid ""
 "If checked, this question will be displayed only\n"
 "        if the specified conditional answer have been selected in a previous question"
 msgstr ""
+"如果选中，将仅显示此问题\n"
+"        如果在上一个问题中选择了指定的条件答案"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -2467,13 +2528,13 @@ msgstr "它可以帮助与会者记住演示文稿的内容"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is a small bit of text, displayed to help participants answer"
-msgstr ""
+msgstr "它是一小段文字，显示以帮助参与者回答"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is an option that can be different for each Survey"
-msgstr ""
+msgstr "对于每个调查，这是一个可能不同的选项"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row2
@@ -2629,7 +2690,7 @@ msgstr "让我们开始吧！"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's give it a spin!"
-msgstr ""
+msgstr "让我们试一试吧！"
 
 #. module: survey
 #. openerp-web
@@ -2649,7 +2710,7 @@ msgstr "让我们打开您刚刚提交的调查。"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Likely"
-msgstr ""
+msgstr "可能"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3093,7 +3154,7 @@ msgstr "数字答案"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Object-Directed Open Organization"
-msgstr ""
+msgstr "面向对象的开放组织"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -3122,7 +3183,7 @@ msgstr "经常(每周1-3次)"
 #, python-format
 msgid ""
 "On Survey questions, one can define \"placeholders\". But what are they for?"
-msgstr ""
+msgstr "在调查问题上，可以定义“占位符”。但是它们有什么用呢？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p1_q3_sug1
@@ -3155,13 +3216,13 @@ msgstr "每行一个选项"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "One needs to answer at least half the questions correctly"
-msgstr ""
+msgstr "一个人需要正确回答至少一半的问题"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "One needs to get 50% of the total score"
-msgstr ""
+msgstr "一个人需要得到 50% of 的总分"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_question
@@ -3189,7 +3250,7 @@ msgstr "只剩下一个问题了！"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "Only show survey results having selected this answer"
-msgstr ""
+msgstr "仅显示选择了此答案的调查结果"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -3201,7 +3262,7 @@ msgstr "只有调查用户可以管理会话。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Oops! No survey matches this code."
-msgstr ""
+msgstr "哎呀！没有与此代码匹配的调查。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3213,7 +3274,7 @@ msgstr "打开会话管理器"
 #: code:addons/survey/static/src/question_page/description_page_field.xml:0
 #, python-format
 msgid "Open section"
-msgstr ""
+msgstr "打开部分"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__lang
@@ -3236,7 +3297,7 @@ msgstr "选项"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Organizational Development for Operation Officers"
-msgstr ""
+msgstr "行动干事的组织发展"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -3338,12 +3399,12 @@ msgstr "通过的"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Passed and Failed"
-msgstr ""
+msgstr "通过和失败"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Passed only"
-msgstr ""
+msgstr "仅通过"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -3353,7 +3414,7 @@ msgstr "注意主机屏幕直到下一个问题。"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__percent
 msgid "Percentage left"
-msgstr ""
+msgstr "百分比显示在左侧"
 
 #. module: survey
 #. openerp-web
@@ -3413,7 +3474,7 @@ msgstr "占位符"
 msgid ""
 "Please complete this very short survey to let us know how satisfied your are"
 " with our products."
-msgstr ""
+msgstr "请完成这个非常简短的调查，让我们知道您对我们产品的满意度。"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:0
@@ -3486,7 +3547,7 @@ msgstr "疑问"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Question & Pages"
-msgstr ""
+msgstr "问题 & 页面"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__matrix_question_id
@@ -3496,7 +3557,7 @@ msgstr "问题（矩阵行）"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_form
 msgid "Question Answer Form"
-msgstr ""
+msgstr "问答表"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_answer_count
@@ -3507,7 +3568,7 @@ msgstr "问题回答数量"
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
 #: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
 msgid "Question Selection"
-msgstr ""
+msgstr "问题选择"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3535,7 +3596,7 @@ msgstr "包含显示当前问题的触发答案的问题。"
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "Question type should be empty for these pages: %s"
-msgstr ""
+msgstr "这些页面的问题类型应为空：%s"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
@@ -3549,7 +3610,7 @@ msgstr "问题"
 #. module: survey
 #: model:ir.ui.menu,name:survey.survey_menu_questions
 msgid "Questions & Answers"
-msgstr "问题与答案"
+msgstr "问题和答案"
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -3569,7 +3630,7 @@ msgstr "通过测验"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
 msgid "Randomized per Section"
-msgstr ""
+msgstr "每个部分随机化"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
@@ -3587,12 +3648,12 @@ msgstr "就绪"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Ready to change the way you <b>gather data</b>?"
-msgstr ""
+msgstr "准备好改变您 <b>收集数据</b>的方式了吗？"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Ready to test? Pick a sample..."
-msgstr ""
+msgstr "准备好测试了吗？选择一个样本..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -3650,7 +3711,7 @@ msgstr "重新发送邀请"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Responded"
-msgstr ""
+msgstr "应答"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__user_id
@@ -3848,7 +3909,7 @@ msgstr "发送"
 #. module: survey
 #: model:mail.template,description:survey.mail_template_certification
 msgid "Sent to participant if they succeeded the certification"
-msgstr ""
+msgstr "如果参与者成功获得认证，则发送给参与者"
 
 #. module: survey
 #: model:mail.template,description:survey.mail_template_user_input_invite
@@ -3917,7 +3978,7 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Show them slides with a ton of text they need to read fast"
-msgstr ""
+msgstr "向他们展示幻灯片，其中包含他们需要快速阅读的大量文本"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
@@ -3999,7 +4060,7 @@ msgstr "开始认证"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Start Live Session"
-msgstr ""
+msgstr "开始实时会话"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -4415,14 +4476,14 @@ msgstr "调查验证过程中出现错误。"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "They are a default answer, used if the participant skips the question"
-msgstr ""
+msgstr "它们是默认答案，在参与者跳过问题时使用"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid ""
 "They are technical parameters that guarantees the responsiveness of the page"
-msgstr ""
+msgstr "它们是保证页面响应性的技术参数"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -4674,7 +4735,7 @@ msgstr "唯一的"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Unlikely"
-msgstr ""
+msgstr "不太可能"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -4685,20 +4746,20 @@ msgstr "即将开始的活动"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Use a fun visual support, like a live presentation"
-msgstr ""
+msgstr "使用有趣的视觉支持，例如实时演示"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Use humor and make jokes"
-msgstr ""
+msgstr "使用幽默和开玩笑"
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
-msgstr ""
+msgstr "使用痕迹导航快速返回到仪表板。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
@@ -4812,7 +4873,7 @@ msgstr "网上沟通记录"
 msgid ""
 "Welcome to this Odoo certification. You will receive 2 random questions out "
 "of a pool of 3."
-msgstr ""
+msgstr "欢迎来到这个Odoo认证。您将从 3 个问题中随机收到 2 个问题。"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_5
@@ -4847,25 +4908,25 @@ msgstr "您对这项调查有什么看法？"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does \"ODOO\" stand for?"
-msgstr ""
+msgstr "“ODOO”代表什么？"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does one need to get to pass an Odoo Survey?"
-msgstr ""
+msgstr "通过Odoo调查需要什么？"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What is a frequent mistake public speakers do?"
-msgstr ""
+msgstr "公众演讲者经常犯什么错误？"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What is the best way to catch the attention of an audience?"
-msgstr ""
+msgstr "吸引观众注意力的最佳方式是什么？"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q2
@@ -4917,7 +4978,7 @@ msgstr "您的出生日期是什么时候？"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Whenever you pick an answer, Odoo saves it for you."
-msgstr ""
+msgstr "每当您选择答案时，Odoo都会为您保存答案。"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q3
@@ -4992,7 +5053,7 @@ msgstr "谁因发现中微子振荡而获得诺贝尔物理学奖，这表明中
 #, python-format
 msgid ""
 "Why should you consider making your presentation more fun with a small quiz?"
-msgstr ""
+msgstr "为什么要考虑通过小测验让您的演示文稿更有趣？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_3
@@ -5015,6 +5076,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5022,12 +5085,14 @@ msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD hh:mm:ss\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Yellow Pen"
-msgstr ""
+msgstr "黄色笔"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q6_sug1
@@ -5052,7 +5117,7 @@ msgstr "您只能为具有评分机制的调查创建证书。"
 msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
-msgstr ""
+msgstr "您可以通过不同的方式共享您的链接：电子邮件，邀请快捷方式，实时演示，..."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -5103,28 +5168,28 @@ msgstr "您的感觉"
 msgid ""
 "Your responses will help us improve our product range to serve you even "
 "better."
-msgstr ""
+msgstr "您的回复将帮助我们改进产品范围，为您提供更好的服务。"
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoom in"
-msgstr ""
+msgstr "放大"
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoom out"
-msgstr ""
+msgstr "缩小"
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoomed Image"
-msgstr ""
+msgstr "图片放大"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5151,32 +5216,32 @@ msgstr "关闭"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
+msgstr "下拉项 D-flex 对齐项居中对齐内容之间"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "e.g. \"Thank you very much for your feedback!\""
-msgstr ""
+msgstr "例如，“非常感谢您的反馈！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "e.g. \"The following Survey will help us...\""
-msgstr ""
+msgstr "例如，“以下调查将帮助我们...”"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "e.g. \"What is the...\""
-msgstr ""
+msgstr "例如：乔最喜欢的格言是什么？"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "e.g. 4812"
-msgstr ""
+msgstr "例如 4812"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "e.g. Guidelines, instructions, picture, ... to help attendees answer"
-msgstr ""
+msgstr "例如指南、说明、图片等帮助与会者回答"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -5196,7 +5261,7 @@ msgstr "例如: 满意度调查"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q1
 msgid "ex@mple.com"
-msgstr ""
+msgstr "ex@mple.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
@@ -5248,7 +5313,7 @@ msgstr "或按回车键"
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press ⌘+Enter"
-msgstr ""
+msgstr "或按回车键"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression

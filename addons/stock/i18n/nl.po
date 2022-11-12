@@ -527,7 +527,7 @@ msgstr "<span><strong>Leveranciersadres</strong></span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>Afleveradres:</strong></span>"
+msgstr "<span><strong>Magazijnadres:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1567,7 +1567,7 @@ msgstr "Kies de lay-out van het vel om de labels af te drukken"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr "Kies of je product- of lot-/sn-labels wilt afdrukken"
+msgstr "Kies of je product- oflpartij/serienummerlabels wilt afdrukken"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -5832,7 +5832,7 @@ msgstr "Afdrukken"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr "GS1-barcodes afdrukken voor lot- en serienummers"
+msgstr "GS1-barcodes afdrukken voor partij/serienummer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
@@ -7430,7 +7430,7 @@ msgstr "Ontvangsten/Leveringen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping"
-msgstr "Afleveradres"
+msgstr "Verzenden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8860,6 +8860,11 @@ msgid "Type"
 msgstr "Soort"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+msgid "Type a message..."
+msgstr "Schrijf een bericht..."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_type_code
@@ -9052,9 +9057,8 @@ msgid ""
 "can't be found then 1D barcodes will be printed."
 msgstr ""
 "Gebruik GS1 nomenclatuur datamatrix wanneer barcodes worden afgedrukt voor "
-"lot- en serienummers. Voor het printen van datamatrix is extra software "
-"nodig. Als er geen software kan worden gevonden, worden 1D-barcodes "
-"afgedrukt."
+"partij/serienummer. Voor het printen van datamatrix is extra software nodig."
+" Als er geen software kan worden gevonden, worden 1D-barcodes afgedrukt."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report

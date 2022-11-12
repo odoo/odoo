@@ -10,14 +10,16 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
 # Emily Jia <eji@odoo.com>, 2022
+# digitalliuzg8888, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-11-03 16:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -105,13 +107,6 @@ msgstr "$7.50"
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "$9.00"
 msgstr "$9.00"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "%s (id:%s)"
-msgstr "%s (id:%s)"
 
 #. module: website
 #. openerp-web
@@ -266,8 +261,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...并切换时间线内容以满足您的需求。"
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -999,6 +992,9 @@ msgid ""
 "                                        <i class=\"fa fa-info\"/>: type some of the first chars after 'google' is enough, we'll guess the rest.\n"
 "                                    </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                            <i class=\"fa fa-info\"/>:输入'谷歌'后面的第一个字符就足够了，我们将猜剩下的。\n"
+"                                        </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1157,7 +1153,7 @@ msgstr "<span class=\"o_form_label\">实时聊天</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Robots.txt</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">机器人.记录</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1661,7 +1657,7 @@ msgstr "地址"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing<br/>(optional)"
-msgstr "广告与营销<br/>(可选)"
+msgstr "广告和营销<br/>(可选)"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
@@ -1976,6 +1972,13 @@ msgstr "已归档"
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "您确定要删除该页面吗？"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "Are you sure you want to delete those pages ?"
+msgstr "您确定要删除那些页面吗？"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -3765,8 +3768,8 @@ msgstr "域"
 #. openerp-web
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "Don't forget to update all links referring to this page."
-msgstr "不要忘记更新所有指向该页面的链接。"
+msgid "Don't forget to update all links referring to it."
+msgstr "别忘记更新所有指向它的链接。"
 
 #. module: website
 #. openerp-web
@@ -3921,8 +3924,16 @@ msgstr "编辑"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/services/website_custom_menus.js:0
+#, python-format
+msgid "Edit %s"
+msgstr "编辑 %s"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
+#: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #, python-format
 msgid "Edit Menu"
 msgstr "编辑菜单"
@@ -4010,7 +4021,7 @@ msgstr "Email"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Email &amp; Marketing"
-msgstr "电子邮件与营销"
+msgstr "电子邮件和营销"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5316,7 +5327,7 @@ msgstr "在主菜单中"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
-msgstr ""
+msgstr "适当"
 
 #. module: website
 #. openerp-web
@@ -6214,7 +6225,7 @@ msgstr "石工"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Max Axis"
-msgstr ""
+msgstr "最大中枢"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6265,10 +6276,8 @@ msgid "Men"
 msgstr "男士"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
-#, python-format
 msgid "Menu"
 msgstr "菜单"
 
@@ -6299,9 +6308,7 @@ msgid "Menu using a copy of me"
 msgstr "菜单使用我的副本"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#, python-format
 msgid "Menus"
 msgstr "菜单"
 
@@ -6337,14 +6344,14 @@ msgstr "中间"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Min Axis"
-msgstr ""
+msgstr "最大中枢"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Min-Height"
-msgstr ""
+msgstr "最低高度"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -6631,7 +6638,7 @@ msgstr "网络"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.neutralize_ribbon
 msgid "Neutralized"
-msgstr ""
+msgstr "中立化的 "
 
 #. module: website
 #. openerp-web
@@ -6787,12 +6794,6 @@ msgid "Normal"
 msgstr "正常"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "不可用于销售"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "未发布"
@@ -6855,17 +6856,6 @@ msgstr "或"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Odoo Information"
 msgstr "Odoo 信息"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#, python-format
-msgid "Odoo Logo"
-msgstr "Odoo 徽标"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7111,7 +7101,7 @@ msgstr "我们团队的客服工作人员将会尽快回信联系您。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Out"
-msgstr ""
+msgstr "支出"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7147,8 +7137,6 @@ msgstr "内边距"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
@@ -7159,18 +7147,6 @@ msgstr "内边距"
 #, python-format
 msgid "Page"
 msgstr "页"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> contains a link to this page"
-msgstr "页面 <b>%s</b> 包含跳转链接"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> is calling this file"
-msgstr "页面 <b>%s</b> 正在调用此文件"
 
 #. module: website
 #. openerp-web
@@ -7252,8 +7228,6 @@ msgstr "使用我的副本页面"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -8321,7 +8295,7 @@ msgstr "服务"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Session &amp; Security<br/>(essential)"
-msgstr "会话与安全<br/>(必要的)"
+msgstr "会话和安全<br/>(必要的)"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -8928,38 +8902,16 @@ msgid "Tell what's the value for the <br/>customer for this feature."
 msgstr "告诉客户<br/>该功能的价值。"
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Template"
 msgstr "模板"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "模板 <b>%s (id:%s)</b> 含跳转链接"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "模板 <b>%s (id:%s)</b> 正在调用该文件"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "模板回滚"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Templates"
-msgstr "模板"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -9280,6 +9232,13 @@ msgid "Third Menu"
 msgstr "第三个菜单"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "This URL is contained in the '%s' of the following '%s'"
+msgstr "这个URL包含在以下“%s”的“%s”中。"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
@@ -9362,12 +9321,6 @@ msgid ""
 "This page does not exist, but you can create it as you are editor of this "
 "site."
 msgstr "此页面不存在，但您可以作为本网站的编辑，您可以创建它。"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "This page is in the menu <b>%s</b>"
-msgstr "该页面位于菜单 <b>%s</b>"
 
 #. module: website
 #. openerp-web
@@ -11206,7 +11159,7 @@ msgstr "o-color-"
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
-msgstr ""
+msgstr "或編輯母版"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
