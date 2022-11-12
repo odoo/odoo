@@ -82,6 +82,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
 
+            'web/static/lib/event-target/min.js',
+            'web/static/lib/resize-observer-polyfill/dist/ResizeObserver.js',
             'web/static/lib/underscore/underscore.js',
             'web/static/lib/underscore.string/lib/underscore.string.js',
             'web/static/lib/moment/moment.js',

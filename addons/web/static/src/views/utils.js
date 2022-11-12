@@ -276,7 +276,8 @@ export function stringToOrderBy(string) {
  * @return {string}     the valid string to be injected into a component's node props.
  */
 export function toStringExpression(str) {
-    return `\`${str.replaceAll("`", "\\`")}\``;
+    //return `\`${str.replaceAll("`", "\\`")}\``;
+    return `\`${str.replace(/`/g, "\\`")}\``;
 }
 
 /**

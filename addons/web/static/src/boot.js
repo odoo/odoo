@@ -98,6 +98,7 @@
             var job;
 
             function processJob(job) {
+                job.status = "RESOLVING";
                 var require = makeRequire(job);
 
                 var jobExec;
@@ -109,20 +110,22 @@
                 var def = new Promise(function (resolve) {
                     try {
                         jobExec = job.factory.call(null, require);
-                        jobs.splice(jobs.indexOf(job), 1);
+                        // jobs.splice(jobs.indexOf(job), 1);
                     } catch (e) {
                         onError(e);
                     }
                     if (!job.error) {
                         Promise.resolve(jobExec)
                             .then(function (data) {
+                                console.log("RESOLVE JOB", job.name);
                                 services[job.name] = data;
                                 resolve();
                                 odoo.__DEBUG__.processJobs();
                             })
                             .guardedCatch(function (e) {
                                 job.rejected = e || true;
-                                jobs.push(job);
+                                // jobs.push(job);
+                                jobs.status = "NULL";
                             })
                             .catch(function (e) {
                                 if (e instanceof Error) {
@@ -140,6 +143,7 @@
 
             function isReady(job) {
                 return (
+                    job.status == "NULL" &&
                     !job.error &&
                     !job.rejected &&
                     job.factory.deps.every(function (name) {
@@ -223,6 +227,7 @@
             promiseResolve = resolve;
         });
         jobs.push({
+            status: "NULL",
             name: name,
             factory: factory,
             deps: deps,
