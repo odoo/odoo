@@ -7,6 +7,7 @@
 # 陕西_jack, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -509,7 +510,7 @@ msgstr "活动状态"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_type_icon
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -586,7 +587,7 @@ msgstr "容许工单依赖"
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_auto_consume_components_lots
 msgid "Allow automatic consumption of tracked components that are reserved"
-msgstr ""
+msgstr "允许自动使用保留的跟踪组件"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -778,7 +779,7 @@ msgid ""
 "level BOM, the manufacturing lead times of the components will be added. In "
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
-msgstr ""
+msgstr "制造此产品的平均交货时间（天）。在多级物料清单的情况下，将增加组件的制造提前期。如果产品是分包的，这可用于确定将组件发送给分包商的日期。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -1104,7 +1105,7 @@ msgstr "产能"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_positive_capacity
 msgid "Capacity should be a positive number."
-msgstr ""
+msgstr "容量应为正数。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -1252,7 +1253,7 @@ msgstr "从BOM计算"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
-msgstr ""
+msgstr "通过购买或制造组件和/或子装配体，计算从物料清单重新供应所有组件所需的天数。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1445,6 +1446,8 @@ msgid ""
 "Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
 msgstr ""
+"提前很多天创建和确认制造订单，以便有足够的时间来补充组件或制造半成品。\n"
+"请注意，这不会影响 MO 计划日期，该日期仍遵循实时机制。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1634,6 +1637,8 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"可在该工作中心并行（同时）生产的默认件数（以产品单位为单位）。例如：产能为 5，您需要生产 10 个单位，那么物料清单上列出的操作时间将乘以 "
+"2。但是，请注意，生产前后的时间将只计算一次。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -1659,6 +1664,11 @@ msgid ""
 "  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"定义是否可以消耗比物料清单上定义的数量更多或更少的组件：\n"
+"  * 允许：允许所有制造用户使用。\n"
+"  * 允许但有警告：允许所有制造用户在关闭制造订单时提供消耗差异摘要。\n"
+"  请注意，对于组件手动消耗，其中消耗是专门手动注册的，则在适当的时候仍将发出消耗警告。\n"
+"  * 已阻止：当物料清单消耗量未得到遵守时，只有经理才能关闭制造订单。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -1741,7 +1751,7 @@ msgstr "显示名称"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_serial_mass_produce
 msgid "Display the serial mass produce wizard action"
-msgstr ""
+msgstr "显示串行批量生产向导操作"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
@@ -3254,7 +3264,7 @@ msgstr "发送错误的消息数量"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__capacity
 msgid "Number of pieces that can be produced in parallel for this product."
-msgstr ""
+msgstr "本产品可并行生产的件数。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3380,12 +3390,12 @@ msgstr "作业搜索过滤器"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 msgid "Operations that cannot start before this operation is completed."
-msgstr ""
+msgstr "在此操作完成之前无法启动的操作。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
 msgid "Operations that need to be completed before this operation can start."
-msgstr ""
+msgstr "在此操作开始之前需要完成的操作。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
@@ -3891,7 +3901,7 @@ msgstr "生产开始延迟"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
 msgid "Productions To Split"
-msgstr ""
+msgstr "制作拆分"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__productive
@@ -4008,7 +4018,7 @@ msgstr "待生产数量"
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_production_split__production_capacity
 msgid "Quantity that can be produced with the current stock of components"
-msgstr ""
+msgstr "使用当前组件库存可以生产的数量"
 
 #. module: mrp
 #. openerp-web
@@ -4050,7 +4060,7 @@ msgstr "实际时长"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Reception time estimation."
-msgstr ""
+msgstr "接收时间估计。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4431,7 +4441,7 @@ msgstr "显示制造欠单明细"
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
 #, python-format
 msgid "Slides viewer"
-msgstr ""
+msgstr "幻灯片查看器"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -4502,13 +4512,13 @@ msgstr "源位置"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Specific Capacities"
-msgstr ""
+msgstr "特定容量"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
 msgid ""
 "Specific number of pieces that can be produced in parallel per product."
-msgstr ""
+msgstr "每个产品可以并行生产的特定件数。"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -4524,25 +4534,25 @@ msgstr "拆分 #"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
 msgid "Split Details"
-msgstr ""
+msgstr "拆分详细信息"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Production"
-msgstr ""
+msgstr "拆分生产"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_line
 msgid "Split Production Detail"
-msgstr ""
+msgstr "拆分生产细节"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Productions"
-msgstr ""
+msgstr "拆分生产"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split
@@ -4791,7 +4801,7 @@ msgstr "容量必须严格为正数."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
-msgstr ""
+msgstr "组件 %s 不应与要生产的产品相同。"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
@@ -4847,7 +4857,7 @@ msgstr "该产品已至少使用过一次，编辑其结构可能会导致不良
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_reported_from_previous_wo
 msgid ""
 "The quantity already produced awaiting allocation in the backorders chain."
-msgstr ""
+msgstr "在延期交货链中等待分配的已生产数量。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4985,7 +4995,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "This production has been merge in %s"
-msgstr ""
+msgstr "该作品已于%s合并"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -5006,7 +5016,7 @@ msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
-msgstr ""
+msgstr "这应该是该产品可以生产的最小数量。如果物料清单包含工序，请确保工作中心产能准确无误。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5273,7 +5283,7 @@ msgstr "拆解：%s"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
 msgid "Unbuilds"
-msgstr ""
+msgstr "拆解"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5422,7 +5432,7 @@ msgstr "使用操作依赖"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
-msgstr ""
+msgstr "将接收报告与制造订单一起使用"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -5595,6 +5605,8 @@ msgid ""
 "When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
+"激活后，将以独占方式手动记录该组件的消耗注册。\n"
+"如果未激活，并且任何组件消耗量在制造订单上手动编辑，Odoo也会假定手动消耗。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -5636,7 +5648,7 @@ msgstr "如果在警告/严格状态下使用向导，并且MO使用了更多组
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
 msgid "Wizard to Split Multiple Productions"
-msgstr ""
+msgstr "用于拆分多个作品的向导"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split

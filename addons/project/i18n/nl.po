@@ -6,8 +6,8 @@
 # Eric Geens <ericgeens@yahoo.com>, 2022
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Jolien De Paepe, 2022
+# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -992,7 +992,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Ancestor Task"
-msgstr "Vooroudertaak"
+msgstr "Hoofdtaak"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -2760,10 +2760,24 @@ msgstr ""
 "Problemen volg module is geïnstalleerd)."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr "Interne notities worden alleen getoond aan interne gebruikers."
+
+#. module: project
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
 msgstr "Foutieve aggregatie functie %r."
+
+#. module: project
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid field %r on model %r"
+msgstr "Ongeldig veld %r op model %r"
 
 #. module: project
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
@@ -3621,7 +3635,13 @@ msgstr "Niet geblokkeerd"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Not Blocking"
-msgstr "Niet blokkeren"
+msgstr "Niet blokkerend"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Not Implemented."
+msgstr "Niet geïmplementeerd."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -3831,7 +3851,7 @@ msgstr "Bovenliggende record Thread ID"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr "Hoofdtaak"
+msgstr "Bovenliggende taak"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -4244,6 +4264,7 @@ msgstr "Project: Beoordelingsverzoek taak"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
+#, python-format
 msgid "Projects"
 msgstr "Projecten"
 
@@ -4692,6 +4713,13 @@ msgstr "Zaterdag"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Schedule your activity once it is ready."
+msgstr "Plan je activiteit zodra deze gereed is."
+
+#. module: project
+#. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Script"
@@ -4881,6 +4909,12 @@ msgid "Share Readonly"
 msgstr "Deel alleen lezen"
 
 #. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "Should repeat at least once"
+msgstr "Moet minstens één keer herhalen"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on Dashboard"
 msgstr "Toon project op dashboard"
@@ -4906,7 +4940,7 @@ msgstr "Software ontwikkeling"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Sorry. Je kunt een taak niet instellen als zijn hoofdtaak."
+msgstr "Sorry. Je kunt een taak niet instellen als zijn bovenliggende taak."
 
 #. module: project
 #. openerp-web
@@ -5335,7 +5369,9 @@ msgid "Tasks Stages"
 msgstr "Takenfases"
 
 #. module: project
+#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
+#, python-format
 msgid "Tasks in Recurrence"
 msgstr "Taak wordt herhaald"
 
@@ -5364,6 +5400,18 @@ msgid "The current user's personal task stage."
 msgstr "De persoonlijke taakfase van de huidige gebruiker."
 
 #. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "The end date should be after the day of the month"
+msgstr "De einddatum moet na de dag van de maand liggen"
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "The end date should be in the future"
+msgstr "De einddatum moet in de toekomst liggen"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
 msgstr "De volgende milestone is toegevoegd:"
@@ -5372,6 +5420,12 @@ msgstr "De volgende milestone is toegevoegd:"
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
 msgstr "De volgende milestones zijn toegevoegd:"
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "The interval should be greater than 0"
+msgstr "De interval moet groter zijn dan 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -5423,6 +5477,12 @@ msgstr ""
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
 msgstr "De startdatum van het project moet voor de einddatum vallen."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The search does not support the %s operator or %s value."
+msgstr "De zoekopdracht ondersteunt de %soperator of %s waarde niet."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5663,8 +5723,8 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
-"Transparante tags zijn niet zichtbaar in de kanbanweergave van je projecten "
-"en taken."
+"Transparante labels zijn niet zichtbaar in de kanbanweergave van je "
+"projecten en taken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -6019,9 +6079,9 @@ msgid ""
 "creating a tag that is already existing in other projects, it won't generate"
 " any duplicates."
 msgstr ""
-"Je kunt alleen tags zien die al aanwezig zijn in je project. Als je een "
-"label probeert te maken die al in andere projecten bestaat, genereert deze "
-"geen dubbele labels."
+"Je kunt alleen labels zien die al aanwezig zijn in je project. Als je een "
+"label probeert te maken die al in andere projecten bestaat, maakt deze geen "
+"dubbele labels."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -6110,6 +6170,12 @@ msgid ""
 msgstr ""
 "Je moet op zijn minst één persoonlijke fase hebben. Maak een nieuwe fase aan"
 " waarnaar de taken kunnen worden overgedragen nadat deze is verwijderd."
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "You should select a least one day"
+msgstr "Je moet minimaal één dag selecteren"
 
 #. module: project
 #. openerp-web

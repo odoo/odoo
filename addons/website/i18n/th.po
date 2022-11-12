@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-11-03 16:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -104,13 +104,6 @@ msgstr "$7.50"
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "$9.00"
 msgstr "$9.00"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "%s (id:%s)"
-msgstr "%s (id:%s)"
 
 #. module: website
 #. openerp-web
@@ -263,8 +256,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...และเปลี่ยนเนื้อหาไทม์ไลน์ให้เหมาะกับความต้องการของคุณ"
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1948,6 +1939,13 @@ msgstr "เก็บถาวรแล้ว"
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบหน้านี้?"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "Are you sure you want to delete those pages ?"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -3756,8 +3754,8 @@ msgstr "โดเมน"
 #. openerp-web
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "Don't forget to update all links referring to this page."
-msgstr "อย่าลืมอัปเดตลิงก์ทั้งหมดที่อ้างอิงถึงหน้านี้"
+msgid "Don't forget to update all links referring to it."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3914,8 +3912,16 @@ msgstr "การแก้ไข"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/services/website_custom_menus.js:0
+#, python-format
+msgid "Edit %s"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
+#: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #, python-format
 msgid "Edit Menu"
 msgstr "แก้ไขเมนู"
@@ -6289,10 +6295,8 @@ msgid "Men"
 msgstr "ผู้ชาย"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
-#, python-format
 msgid "Menu"
 msgstr "เมนู"
 
@@ -6323,9 +6327,7 @@ msgid "Menu using a copy of me"
 msgstr "เมนูที่ใช้สำเนาของฉัน"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#, python-format
 msgid "Menus"
 msgstr "เมนู"
 
@@ -6820,12 +6822,6 @@ msgid "Normal"
 msgstr "ปกติ"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr ""
@@ -6891,17 +6887,6 @@ msgstr "หรือ"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Odoo Information"
 msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#, python-format
-msgid "Odoo Logo"
-msgstr "โลโก้ Odoo "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7183,8 +7168,6 @@ msgstr "Paddings"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
@@ -7195,18 +7178,6 @@ msgstr "Paddings"
 #, python-format
 msgid "Page"
 msgstr "เพจ"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> contains a link to this page"
-msgstr "เพจ <b>%s </b> มีลิงก์ไปยังหน้านี้"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> is calling this file"
-msgstr "เพจ<b>%s</b> เรียกไฟล์นี้"
 
 #. module: website
 #. openerp-web
@@ -7288,8 +7259,6 @@ msgstr "หน้าที่ใช้สำเนาของฉัน"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -8978,38 +8947,16 @@ msgid "Tell what's the value for the <br/>customer for this feature."
 msgstr "บอกคุณค่าของฟีเจอร์นี้ <br/>แก่ลูกค้า"
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Template"
 msgstr "เทมเพลต"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "เทมเพลต <b>%s (id:%s)</b> มีลิงค์ไปยังหน้านี้"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "เทมเพลต <b>%s (id:%s)</b> เรียกไฟล์นี้"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "Template fallback"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Templates"
-msgstr "เทมเพลต"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -9337,6 +9284,13 @@ msgid "Third Menu"
 msgstr "เมนูที่สาม"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "This URL is contained in the '%s' of the following '%s'"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
@@ -9422,12 +9376,6 @@ msgid ""
 "site."
 msgstr ""
 "ไม่มีหน้านี้ แต่คุณสามารถสร้างได้เนื่องจากคุณเป็นผู้มีสิทธิแก้ไขของไซต์นี้"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "This page is in the menu <b>%s</b>"
-msgstr "หน้านี้อยู่ในเมนู <b>%s</b>"
 
 #. module: website
 #. openerp-web

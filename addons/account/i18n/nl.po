@@ -5,10 +5,10 @@
 # Translators:
 # Thomas Pot <thomas@open2bizz.nl>, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Dylan Kiss, 2022
-# Jolien De Paepe, 2022
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -813,7 +813,7 @@ msgid ""
 "<span class=\"o_form_label\">Cash Discount Tax Reduction</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Btw-vermindering op contante korting</span>\n"
+"<span class=\"o_form_label\">BTW-vermindering op betalingskorting</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" role=\"img\" aria-label=\"Waardes die je hier instelt, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
@@ -1840,8 +1840,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
-"Account: post conceptboekingen met auto_post ingeschakeld en boekhouddatum "
-"tot vandaag"
+"Boekhouding: post conceptboekingen met auto_post ingeschakeld en "
+"boekhouddatum tot vandaag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2234,8 +2234,8 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "domains"
 msgstr ""
-"Extra tags die door deze herpartitieregel worden toegewezen voor gebruik in "
-"domeinen"
+"Extra labels die door deze herpartitieregel worden toegewezen voor gebruik "
+"in domeinen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -3641,7 +3641,7 @@ msgstr "Kasverschil winst"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income Account"
-msgstr "Cash verschil inkomstenrekening"
+msgstr "Kasverschil inkomstenrekening"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3653,40 +3653,40 @@ msgstr "Kasverschil verlies"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Gain"
-msgstr "Kas kortingswinst"
+msgstr "Betalingskortingswinst"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
-msgstr "Cash Discount Gain-account"
+msgstr "Betalingskorting winstrekening"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Loss"
-msgstr "Kas kortingsverlies"
+msgstr "Betalingskortingsverlies"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Loss account"
-msgstr "Contant Korting Verliesrekening"
+msgstr "Betalingskorting verliesrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr "Contante korting Belastingvermindering"
+msgstr "Betalingskorting BTW-vermindering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "Account voor afschrijving van contante korting"
+msgstr "Betalingskorting winstafschrijvingsrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr "Contante korting afschrijving verliesrekening"
+msgstr "Betalingskorting verliesafschrijvingsrekening"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3696,7 +3696,7 @@ msgstr "Kassasystemen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Cash Rounding"
-msgstr "Cash afronding"
+msgstr "Kasafronding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -4439,7 +4439,7 @@ msgstr "Maak een boeking"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid "Create a new cash log"
-msgstr "Maak een nieuw cash log"
+msgstr "Maak een nieuw kaslog"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -4719,7 +4719,7 @@ msgstr "Valuta van creditfactuur"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr "Creditnota: Verzenden"
+msgstr "Creditfactuur: Verzenden"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -5317,7 +5317,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Definieer de kleinste munteenheid van de valuta waarmee cash betaald kan "
+"Definieer de kleinste munteenheid van de valuta waarmee contact betaald kan "
 "worden"
 
 #. module: account
@@ -5911,7 +5911,7 @@ msgid ""
 "vendor bill/credit note."
 msgstr ""
 "Dubbele leveranciersreferentie gedetecteerd. Je hebt waarschijnlijk tweemaal"
-" dezelfde leveranciersfactuur/creditnota gecodeerd."
+" dezelfde leveranciersfactuur/creditfactuur gecodeerd."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -7856,7 +7856,7 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"De verdeling van facturen en creditnota's moet elk precies één regel als "
+"De verdeling van facturen en creditfactuur's moet elk precies één regel als "
 "grondslag hebben."
 
 #. module: account
@@ -7865,7 +7865,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
-"De verdeling van factuur en creditnota moet hetzelfde aantal regels hebben."
+"De verdeling van factuur en creditfactuur moet hetzelfde aantal regels "
+"hebben."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7874,7 +7875,7 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"De verdeling van facturen en creditnota's moet overeenkomen (dezelfde "
+"De verdeling van facturen en creditfactuur's moet overeenkomen (dezelfde "
 "percentages, in dezelfde volgorde)."
 
 #. module: account
@@ -9701,7 +9702,7 @@ msgid ""
 "directly from the vendor bill."
 msgstr ""
 "Houd er rekening mee dat de eenvoudigste manier om een "
-"leverancierscreditnota te maken, is om dit rechtstreeks vanaf de "
+"leverancierscreditfactuur te maken, is om dit rechtstreeks vanaf de "
 "leveranciersrekening te doen."
 
 #. module: account
@@ -12345,7 +12346,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr "Verzonden naar klanten met de creditnota in bijlage"
+msgstr "Verzonden naar klanten met de creditfactuur in bijlage"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -13343,8 +13344,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Uitdrukkingen voor belastingaangiften waarvan de tag '+' wordt toegewezen om"
-" regels te verplaatsen door deze herpartitieregel"
+"Uitdrukkingen voor belastingaangiften waarvan het label '+' wordt toegewezen"
+" om regels te verplaatsen door deze herpartitieregel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13352,8 +13353,8 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Uitdrukkingen voor belastingaangiften waarvan de tag '-' wordt toegewezen "
-"aan het verplaatsen van regels door deze herpartitieregel"
+"Uitdrukkingen voor belastingaangiften waarvan het label '-' wordt toegewezen"
+" aan het verplaatsen van regels door deze herpartitieregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
@@ -15179,7 +15180,7 @@ msgid ""
 "Total Receivable amount exceeding a limit."
 msgstr ""
 "Activeer waarschuwingen bij het maken van facturen en verkooporders voor "
-"partners met een totaal te ontvangen bedrag dat een limiet overschrijdt."
+"klanten met een totaal te ontvangen bedrag dat een limiet overschrijdt."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -15209,6 +15210,11 @@ msgstr "Soort"
 #: model:ir.model.fields,field_description:account.field_account_payment__type_name
 msgid "Type Name"
 msgstr "Type naam"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
+msgid "Type a message..."
+msgstr "Schrijf een bericht..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__qr_code_method
@@ -15843,7 +15849,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "When will the tax be reduced when offering a cash discount"
 msgstr ""
-"Wanneer wordt de belasting verlaagd bij het aanbieden van een contantkorting"
+"Wanneer wordt de BTW verlaagd bij het aanbieden van een betalingskorting"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard

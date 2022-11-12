@@ -5,8 +5,8 @@
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
-# 陕西_jack, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -500,7 +500,7 @@ msgstr "活动类型"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_menu_config_activity_types
@@ -607,6 +607,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"由于您是无销售团队的成员，因此 <b>默认情况下会显示第一个团队</b>的管道。\n"
+"                                        要使用 CRM，您应该 <a name=\"%d\" type=\"action\" tabindex=\"-1\">加入一个团队。</a>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -615,6 +617,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"由于您是无销售团队的成员，因此 <b>默认情况下会显示第一个团队</b>的管道。\n"
+"                                        要使用 CRM，您应该加入一个团队。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -796,7 +800,7 @@ msgstr "活动"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Campaign:"
-msgstr ""
+msgstr "广告活动（Campaign）:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -847,7 +851,7 @@ msgstr "归类分析线索/商机的类别， 例如：培训，服务"
 msgid ""
 "Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
 "modifications as you navigate."
-msgstr ""
+msgstr "单击痕迹导航以返回到管道。Odoo将在您导航时保存所有修改。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -868,7 +872,7 @@ msgstr "关闭不能转化为商机的线索。"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
 msgid "Closing Note"
-msgstr ""
+msgstr "结束说明"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -1254,7 +1258,7 @@ msgstr "说明"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Did you know emails sent to"
-msgstr ""
+msgstr "您知道发送到"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -1415,7 +1419,7 @@ msgstr "根据公司电子邮件地址自动使用公司数据丰富您的潜在
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
-msgstr "根据潜在客户的电子邮件地址，用公司数据丰富客户的信息"
+msgstr "根据线索的电子邮件地址，用公司数据丰富客户的信息"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1709,7 +1713,7 @@ msgstr "如果已净化电话号码在黑名单中，则该联系人将不会再
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
 msgid "Import & Synchronize"
-msgstr "导入并同步"
+msgstr "导入和同步"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1939,7 +1943,7 @@ msgstr "线索挖掘"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
-msgstr ""
+msgstr "铅属性"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
@@ -2162,7 +2166,7 @@ msgstr "丢失"
 #: code:addons/crm/wizard/crm_lead_lost.py:0
 #, python-format
 msgid "Lost Comment"
-msgstr ""
+msgstr "丢失的评论"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
@@ -3019,7 +3023,7 @@ msgstr "引荐于"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Referred By:"
-msgstr ""
+msgstr "引荐于"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
@@ -3426,6 +3430,8 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
+"以下联系人已添加为此线索的关注者\n"
+"                        因为他们在不到 30 天前被联系过"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3668,7 +3674,7 @@ msgstr "类型："
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "UTM活动"
+msgstr "UTM营销"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
@@ -3897,7 +3903,7 @@ msgstr "是"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "You can make your opportunity advance through your pipeline from here."
-msgstr ""
+msgstr "您可以从这里通过管道推进您的机会。"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3967,7 +3973,7 @@ msgstr "对于目前创建的潜在客户日期截至"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "generate opportunities in your pipeline?<br>"
-msgstr ""
+msgstr "在您的管道中创造机会？<br>"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

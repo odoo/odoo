@@ -9,16 +9,16 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Rachid Al Assir <rachidalassir@gmail.com>, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-11-03 16:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,18 +108,12 @@ msgid "$9.00"
 msgstr "$9.00"
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "%s (id:%s)"
-msgstr "%s (id:%s)"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "%s record(s) selected, are you sure you want to publish them all?"
 msgstr ""
+"لقد تم تحديد %s سجل (سجلات)، هل أنت متأكد من أنك ترغب في نشرها جميعاً؟ "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -210,7 +204,7 @@ msgstr "+ حقل "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "+ New Website"
-msgstr ""
+msgstr "+ موقع إلكتروني جديد "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -258,6 +252,8 @@ msgid ""
 ".\n"
 "                    Changing its name will break these calls."
 msgstr ""
+".\n"
+"                    سيؤدي تغيير الاسم إلى إيقاف تلك الاستدعاءات. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -265,8 +261,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...وقم بتغيير محتوى المخطط الزمني ليناسب احتياجاتك. "
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -332,7 +326,7 @@ msgstr "15 كم "
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "2 <span class=\"visually-hidden\">(current)</span>"
-msgstr ""
+msgstr "2 <span class=\"visually-hidden\">(الحالي)</span> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
@@ -637,6 +631,10 @@ msgid ""
 "                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
 "                    <code class=\"ms-4\">Allow: *</code>"
 msgstr ""
+"<br/><br/>\n"
+"                    مثال على القاعدة:<br/>\n"
+"                    <code class=\"ms-4\">عدم السماح: /الويب/تسجيل الدخول</code><br/>\n"
+"                    <code class=\"ms-4\">السماح: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -714,6 +712,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-envelope "
 "me-2\"/><span>info@yourcompany.example.com</span>"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-envelope "
+"me-2\"/><span>info@yourcompany.example.com</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
@@ -721,6 +721,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>250 Executive Park Blvd, "
 "Suite 3400 • San Francisco CA 94134 • United States"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>250 Executive Park Blvd, "
+"Suite 3400 • San Francisco CA 94134 • United States"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -728,6 +730,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                        How to create my Plausible Shared Link"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                        كيفية إنشاء رابط مشترك فعّال "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -735,16 +739,18 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                        How to get my Measurement ID"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                        كيفية الحصول على معرف القياسات الخاص بي "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "<i class=\"fa fa-eye ms-2 text-muted\" title=\"Go to View\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye ms-2 text-muted\" title=\"الذهاب إلى العرض \"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "<i class=\"fa fa-files-o ms-2 text-muted\" title=\"Show Arch Diff\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-files-o ms-2 text-muted\" title=\"إظهار فرق البنية \"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -759,7 +765,7 @@ msgstr "<i class=\"fa fa-fw fa-heart\"/> قلوب "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<i class=\"fa fa-fw fa-refresh me-1\"/> Replace Icon"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-refresh me-1\"/> استبدال الأيقونة "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -797,7 +803,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"الموقع الإلكتروني \"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -835,6 +841,8 @@ msgid ""
 "<i class=\"fa fa-map-marker fa-fw me-2\"/><span class=\"o_force_ltr\">3575 "
 "Fake Buena Vista Avenue</span>"
 msgstr ""
+"<i class=\"fa fa-map-marker fa-fw me-2\"/><span class=\"o_force_ltr\">3575 "
+"Fake Buena Vista Avenue</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -845,6 +853,8 @@ msgid ""
 "<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
 "555-0111</span>"
 msgstr ""
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
+"555-0111</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -861,6 +871,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
 "                            <b>Events</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
+"                            <b>الفعاليات</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -868,6 +880,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
 "                            <b>About us</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
+"                            <b>من نحن</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -875,6 +889,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
 "                            <b>Partners</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
+"                            <b>الشركاء</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -882,6 +898,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/>\n"
 "                            <b>Services</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/>\n"
+"                            <b>الخدمات</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -889,6 +907,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
 "                            <b>Help center</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
+"                            <b>مركز المساعدة</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -896,6 +916,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
 "                            <b>Guides</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
+"                            <b>الدليل</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -903,6 +925,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/>\n"
 "                            <b>Our blog</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/>\n"
+"                            <b>مدونتنا</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -910,6 +934,8 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
 "                            <b>Customers</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
+"                            <b>العملاء</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -917,16 +943,20 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
 "                            <b>Products</b>"
 msgstr ""
+"<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
+"                            <b>المنتجات</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> Contact us"
 msgstr ""
+"<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> تواصل معنا "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> Free returns"
 msgstr ""
+"<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> الإرجاع مجاناً "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -934,12 +964,15 @@ msgid ""
 "<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> Pickup"
 " in store"
 msgstr ""
+"<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> "
+"الاستلام من المحل "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid ""
 "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> Express delivery"
 msgstr ""
+"<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> التوصيل السريع "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -958,6 +991,8 @@ msgid ""
 "<small class=\"s_social_media_title d-none\" "
 "contenteditable=\"true\"><b>Follow us</b></small>"
 msgstr ""
+"<small class=\"s_social_media_title d-none\" "
+"contenteditable=\"true\"><b>تابعنا</b></small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
@@ -965,6 +1000,8 @@ msgid ""
 "<small class=\"s_social_media_title text-muted d-none\" "
 "contenteditable=\"true\"><b>Follow us</b></small>"
 msgstr ""
+"<small class=\"s_social_media_title text-muted d-none\" "
+"contenteditable=\"true\"><b>تابعنا</b></small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1032,6 +1069,8 @@ msgid ""
 "<span class=\"carousel-control-next-icon\"/>\n"
 "                <span class=\"visually-hidden\">Next</span>"
 msgstr ""
+"<span class=\"carousel-control-next-icon\"/>\n"
+"                <span class=\"visually-hidden\">التالي</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1040,6 +1079,8 @@ msgid ""
 "<span class=\"carousel-control-prev-icon\"/>\n"
 "                <span class=\"visually-hidden\">Previous</span>"
 msgstr ""
+"<span class=\"carousel-control-prev-icon\"/>\n"
+"                <span class=\"visually-hidden\">السابق</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -1068,6 +1109,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left fa-2x text-white\"/>\n"
 "                    <span class=\"visually-hidden\">Previous</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left fa-2x text-white\"/>\n"
+"                    <span class=\"visually-hidden\">السابق</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -1075,6 +1118,8 @@ msgid ""
 "<span class=\"fa fa-chevron-right fa-2x text-white\"/>\n"
 "                    <span class=\"visually-hidden\">Next</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-right fa-2x text-white\"/>\n"
+"                    <span class=\"visually-hidden\">التالي</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
@@ -1094,7 +1139,7 @@ msgstr "<span class=\"mx-2\">/</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<span class=\"mx-2\">to</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">إلى</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -1102,6 +1147,8 @@ msgid ""
 "<span class=\"o_add_language list-inline-item\" "
 "groups=\"website.group_website_restricted_editor\">|</span>"
 msgstr ""
+"<span class=\"o_add_language list-inline-item\" "
+"groups=\"website.group_website_restricted_editor\">|</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_copyright_company_name
@@ -1109,26 +1156,27 @@ msgid ""
 "<span class=\"o_footer_copyright_name me-2\">Copyright &amp;copy; Company "
 "name</span>"
 msgstr ""
+"<span class=\"o_footer_copyright_name me-2\">حقوق النشر واسم الشركة</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Email Marketing</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">التسويق عبر البريد الإلكتروني</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Livechat</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">الدردشة المباشرة</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Robots.txt</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Robots.txt</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Sitemap</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">خريطة الموقع</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
@@ -1136,6 +1184,8 @@ msgid ""
 "<span class=\"pe-1\">We use cookies to provide you a better user experience "
 "on this website.</span>"
 msgstr ""
+"<span class=\"pe-1\">نستخدم ملفات تعريف الارتباط لمنحك تجربة مستخدم أفضل على"
+" هذا الموقع الإلكتروني.</span> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_badge
@@ -1144,6 +1194,9 @@ msgid ""
 "        <i class=\"fa fa-1x fa-fw fa-folder o_not-animable\"/>Category\n"
 "    </span>"
 msgstr ""
+"<span class=\"s_badge badge text-bg-secondary o_animable\" data-name=\"Badge\">\n"
+"        <i class=\"fa fa-1x fa-fw fa-folder o_not-animable\"/>Category\n"
+"    </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -1235,7 +1288,7 @@ msgstr "<span class=\"s_progress_bar_text\">80% تطوير</span>"
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">الشركة</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1250,6 +1303,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Email</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">البريد الإلكتروني</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1258,6 +1313,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Name</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">الاسم</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1269,7 +1326,7 @@ msgstr "<span class=\"s_website_form_label_content\">رقم الهاتف</span>"
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:website.page,arch_db:website.contactus_page
 msgid "<span class=\"s_website_form_label_content\">Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">السؤال</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1440,7 +1497,7 @@ msgstr "إدارة الحساب والمبيعات"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Accounts are usable across all your multiple websites"
-msgstr ""
+msgstr "يمكن استخدام الحسابات عبر كافة مواقعك الإلكترونية المتعددة "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
@@ -1483,7 +1540,7 @@ msgstr "إضافة"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Elements"
-msgstr ""
+msgstr "إضافة عناصر "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
@@ -1513,7 +1570,7 @@ msgstr "إضافة عنصر للقائمة "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_social_media_options
 msgid "Add New Social Network"
-msgstr ""
+msgstr "إضافة شبكة تواصل جديدة "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_add_product_widget
@@ -1596,7 +1653,7 @@ msgstr "إضافة حقل جديد في النهاية "
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Add languages"
-msgstr ""
+msgstr "إضافة لغات "
 
 #. module: website
 #. openerp-web
@@ -1608,7 +1665,7 @@ msgstr "إضافة %s جديد "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Add to Cart Button"
-msgstr ""
+msgstr "زر الإضافة إلى عربة التسوق "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -1631,7 +1688,7 @@ msgstr "العنوان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing<br/>(optional)"
-msgstr ""
+msgstr "الإعلان والتسويق<br/>(اختياري) "
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
@@ -1730,7 +1787,7 @@ msgstr "كل هذه الأيقونات مجانية تمامًا للاستخد�
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Allow all cookies"
-msgstr ""
+msgstr "السماح بكافة ملفات تعريف الارتباط "
 
 #. module: website
 #. openerp-web
@@ -1738,6 +1795,8 @@ msgstr ""
 #, python-format
 msgid "Allow the use of cookies from this website on this browser?"
 msgstr ""
+"أتود السماح باستخدام ملفات تعريف الارتباط من هذا الموقع الإلكتروني على هذا "
+"المتصفح؟ "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__track
@@ -1754,12 +1813,12 @@ msgstr "يسمح بإستخدامها في الاستمارات "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Allows to do mass mailing campaigns to contacts"
-msgstr ""
+msgstr "يسمح لك بإطلاق حملات المراسلات الجماعية إلى جهات الاتصال "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Alows your visitors to chat with you"
-msgstr ""
+msgstr "يتيح لزائريك الدردشة معك "
 
 #. module: website
 #. openerp-web
@@ -1848,7 +1907,7 @@ msgstr "ملفات تعريف ارتباط التحليلات ومعلومات �
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Analytics<br/>(optional)"
-msgstr ""
+msgstr "التحليلات<br/>(اختياري) "
 
 #. module: website
 #. openerp-web
@@ -1892,7 +1951,7 @@ msgstr "متحرك "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Animation"
-msgstr ""
+msgstr "التحريك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -1954,6 +2013,13 @@ msgid "Are you sure you want to delete this page ?"
 msgstr "هل أنت متأكد من أنك تريد حذف هذه الصفحة؟ "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "Are you sure you want to delete those pages ?"
+msgstr "هل أنت متأكد من أنك ترغب في حذف تلك الصفحات؟ "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Arrows"
 msgstr "أسهم "
@@ -2013,7 +2079,7 @@ msgstr "الكاتب "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Authorized Groups"
-msgstr ""
+msgstr "المجموعات المصرح لها "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2664,7 +2730,7 @@ msgstr "انقر هنا للعودة إلى علامة تبويب الكتل ا�
 #: code:addons/website/static/src/snippets/s_social_media/options.js:0
 #, python-format
 msgid "Click here to setup your social networks"
-msgstr ""
+msgstr "اضغط هنا لإعداد شبكات التواصل الخاصة بك "
 
 #. module: website
 #. openerp-web
@@ -2679,6 +2745,7 @@ msgid ""
 "Click on <b>\"Edit\"</b> in the right panel to replace this with your own "
 "HTML code"
 msgstr ""
+"اضغط على <b>\"تحرير\"</b> في اللوحة على اليمين للاستبدال بكود HTML الخاص بك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -2749,7 +2816,7 @@ msgstr "اللون"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Color Presets"
-msgstr ""
+msgstr "الألوان المعدة مسبقاً "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -2862,7 +2929,7 @@ msgstr "تأكيد"
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Connect Plausible"
-msgstr ""
+msgstr "الاتصال الممكن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -2877,7 +2944,7 @@ msgstr "متصل "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
 msgid "Connector"
-msgstr ""
+msgstr "موصل "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
@@ -2973,7 +3040,7 @@ msgstr "عرض المحتوى "
 #: code:addons/website/static/src/components/editor/editor.js:0
 #, python-format
 msgid "Content saved."
-msgstr ""
+msgstr "تم حفظ المحتوى. "
 
 #. module: website
 #. openerp-web
@@ -2985,7 +3052,7 @@ msgstr "المحتوى المطلوب ترجمته"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-msgstr ""
+msgstr "متابعة القراءة <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: website
 #. openerp-web
@@ -3180,7 +3247,7 @@ msgstr "أنشئ في"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
 msgid "Curved arrow"
-msgstr ""
+msgstr "سهم منحني "
 
 #. module: website
 #. openerp-web
@@ -3684,7 +3751,7 @@ msgstr "اسم العرض "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display a customizable cookies bar on your website"
-msgstr ""
+msgstr "قم بعرض شريط ملفات تعريف الارتباط قابل للتخصيص على موقعك الإلكتروني "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_cookies_bar
@@ -3761,8 +3828,8 @@ msgstr "النطاق"
 #. openerp-web
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "Don't forget to update all links referring to this page."
-msgstr "لا تنس تحديث كافة الروابط التي تشير لهذه الصفحة."
+msgid "Don't forget to update all links referring to it."
+msgstr "لا تنسَ تحديث كافة الروابط المشيرة إليه. "
 
 #. module: website
 #. openerp-web
@@ -3882,7 +3949,7 @@ msgstr "محتوى ديناميكي "
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
 #: model:ir.model.fields,help:website.field_website__homepage_url
 msgid "E.g. /contactus or /shop"
-msgstr ""
+msgstr "مثال: /contactus أو /shop "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_domain
@@ -3919,8 +3986,16 @@ msgstr "تحرير"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/services/website_custom_menus.js:0
+#, python-format
+msgid "Edit %s"
+msgstr "تحرير %s"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
+#: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #, python-format
 msgid "Edit Menu"
 msgstr "تحرير القائمة"
@@ -3964,7 +4039,7 @@ msgstr "تحرير robots.txt"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "Edit this content"
-msgstr ""
+msgstr "تحرير هذا المحتوى "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -3984,7 +4059,7 @@ msgstr "المحرر والمصمم"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Effect"
-msgstr ""
+msgstr "التأثير "
 
 #. module: website
 #: code:addons/website/models/website_snippet_filter.py:0
@@ -4301,7 +4376,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "نموذج مساعد لنشر الملفات للمتحكمين "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -4539,42 +4614,42 @@ msgstr "تسجيل مجاني"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Bottom"
-msgstr ""
+msgstr "من الأسفل "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Bottom Left"
-msgstr ""
+msgstr "من أسفل اليسار "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Bottom Right"
-msgstr ""
+msgstr "من أسفل اليمين "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Left"
-msgstr ""
+msgstr "من اليسار "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Right"
-msgstr ""
+msgstr "من اليمين "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Top"
-msgstr ""
+msgstr "من الأعلى "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Top Left"
-msgstr ""
+msgstr "من أعلى اليسار "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "From Top Right"
-msgstr ""
+msgstr "من أعلى اليمين "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -4698,7 +4773,7 @@ msgstr "الذهاب إلى علامة تبويب السمات "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "Go to your Odoo Apps"
-msgstr ""
+msgstr "الذهاب إلى تطبيقات أودو "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -4856,7 +4931,7 @@ msgstr "العنوان الفرعي لبطاقة H5 "
 #. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
 msgid "HTML / CSS Editor"
-msgstr ""
+msgstr "محرر HTML / CSS "
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -4932,7 +5007,7 @@ msgstr "الترويسة مرئية "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings"
-msgstr ""
+msgstr "الترويسات "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5083,7 +5158,7 @@ msgstr "الرئيسية"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Home <span class=\"visually-hidden\">(current)</span>"
-msgstr ""
+msgstr "الرئيسية <span class=\"visually-hidden\">(الحالية)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -5096,7 +5171,7 @@ msgstr "الملف الصوتي للصفحة الرئيسية "
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 #, python-format
 msgid "Home page of the current website"
-msgstr ""
+msgstr "الصفحة الرئيسية للموقع الإلكتروني الحالي "
 
 #. module: website
 #. openerp-web
@@ -5111,13 +5186,13 @@ msgstr "الصفحة الرئيسية"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Homepage URL"
-msgstr ""
+msgstr "رابط URL للصفحة الرئيسية "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_homepage_url
 #: model:ir.model.fields,field_description:website.field_website__homepage_url
 msgid "Homepage Url"
-msgstr ""
+msgstr "رابط URL للصفحة الرئيسية "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -5305,7 +5380,7 @@ msgstr "غلاف الصورة "
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #, python-format
 msgid "Image Gallery Dialog"
-msgstr ""
+msgstr "ديالوج معرض الصور "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5346,12 +5421,12 @@ msgstr "في"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "In Main Menu"
-msgstr ""
+msgstr "في القائمة الرئيسية "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
-msgstr ""
+msgstr "في المكان "
 
 #. module: website
 #. openerp-web
@@ -5368,6 +5443,8 @@ msgid ""
 "In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.\n"
 "            Each modification on the master page is automatically applied to all translated versions."
 msgstr ""
+"في هذا الوضع، يمكنك ترجمة النصوص فقط. لتغيير بنية الصفحة، يجب تحرير الصفحة الرئيسية.\n"
+"        كل تعديل تقوم به في الصفحة الرئيسية، يُطبق تلقائيًا على كافة الإصدارات المترجمة."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__include
@@ -5393,7 +5470,7 @@ msgstr "معلومات"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Info Page"
-msgstr ""
+msgstr "صفحة المعلومات "
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_about_us
@@ -5485,7 +5562,7 @@ msgstr "تثبيت اللغة"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Install languages"
-msgstr ""
+msgstr "تثبيت اللغات "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -5513,12 +5590,12 @@ msgstr "تثبيت \"%s\""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Intensity"
-msgstr ""
+msgstr "الحدة "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Interaction History<br/>(optional)"
-msgstr ""
+msgstr "سجل التفاعل<br/>(اختياري) "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -5553,12 +5630,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Is In Main Menu"
-msgstr ""
+msgstr "في القائمة الرئيسية "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__is_in_menu
 msgid "Is In Menu"
-msgstr ""
+msgstr "في القائمة "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
@@ -6223,7 +6300,7 @@ msgstr "الإجراءات الرئيسية "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Main page of your website served to visitors"
-msgstr ""
+msgstr "الصفة الرئيسية لموقعك الإلكتروني التي يتم تقديمها لزائريك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -6253,7 +6330,7 @@ msgstr "البناء "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Max Axis"
-msgstr ""
+msgstr "الحد الأقصى للمحور "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6304,10 +6381,8 @@ msgid "Men"
 msgstr "الرجال "
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
-#, python-format
 msgid "Menu"
 msgstr "القائمة"
 
@@ -6319,7 +6394,7 @@ msgstr "شركة القائمة "
 #. module: website
 #: model:ir.ui.menu,name:website.menu_edit_menu
 msgid "Menu Editor"
-msgstr ""
+msgstr "محرر القائمة "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
@@ -6338,9 +6413,7 @@ msgid "Menu using a copy of me"
 msgstr "قائمة تستخدم نسخة مني "
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#, python-format
 msgid "Menus"
 msgstr "القوائم"
 
@@ -6379,14 +6452,14 @@ msgstr "الوسط"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Min Axis"
-msgstr ""
+msgstr "الحد الأدنى للمحور "
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Min-Height"
-msgstr ""
+msgstr "الارتفاع الأدنى "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -6412,7 +6485,7 @@ msgstr "الهاتف المحمول"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Mobile Preview"
-msgstr ""
+msgstr "معاينة الهاتف المحمول "
 
 #. module: website
 #. openerp-web
@@ -6470,12 +6543,12 @@ msgstr "التطبيق "
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_marketing_automation
 msgid "Module Marketing Automation"
-msgstr ""
+msgstr "تطبيق أتمتة التسويق "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_livechat
 msgid "Module Website Livechat"
-msgstr ""
+msgstr "تطبيق الدردشة المباشرة في الموقع الإلكتروني "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6762,7 +6835,7 @@ msgstr "ليس هناك أي زوار بعد! "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "No condition"
-msgstr ""
+msgstr "لا توجد شروط "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -6832,15 +6905,9 @@ msgid "Normal"
 msgstr "عادي"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
-msgstr ""
+msgstr "غير منشور "
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_3
@@ -6875,6 +6942,8 @@ msgstr ""
 msgid ""
 "Note: To hide this page, uncheck it from the Customize tab in edit mode."
 msgstr ""
+"ملاحظة: لإخفاء هذه الصفحة، قم بإلغاء تحديدها من علامة تبويب التخصيص في وضع "
+"التحرير. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -6903,18 +6972,7 @@ msgstr "أو "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Odoo Information"
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#, python-format
-msgid "Odoo Logo"
-msgstr "شعار أودو"
+msgstr "معلومات أودو "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6954,7 +7012,7 @@ msgstr "غير متصل بالإنترنت "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Offset (X, Y)"
-msgstr ""
+msgstr "إزاحة (X, Y) "
 
 #. module: website
 #. openerp-web
@@ -6976,7 +7034,7 @@ msgstr "حسنًا، لا تعرض هذه الرسالة مرة أخرى "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "On Appearance"
-msgstr ""
+msgstr "عند الظهور "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6996,7 +7054,7 @@ msgstr "عند التمرير فوقه "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "On Scroll"
-msgstr ""
+msgstr "عند التمرير "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7034,7 +7092,7 @@ msgstr "عبر الإنترنت "
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Only allow essential cookies"
-msgstr ""
+msgstr "السماح بملفات تعريف الارتباط الأساسية فقط "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__mode
@@ -7064,7 +7122,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
 msgid "Only essentials"
-msgstr ""
+msgstr "الضروريات فقط "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -7074,7 +7132,7 @@ msgstr "تخطيط موارد المؤسسات مفتوح المصدر "
 #. module: website
 #: model:ir.actions.client,name:website.action_open_website_configurator
 msgid "Open Website Configurator"
-msgstr ""
+msgstr "فتح أداة تهيئة الموقع الإلكتروني "
 
 #. module: website
 #. openerp-web
@@ -7160,7 +7218,7 @@ msgstr "سوف يتواصل معك فريقنا في أقرب وقت ممكن. "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Out"
-msgstr ""
+msgstr "الخارج "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7196,8 +7254,6 @@ msgstr "الهوامش "
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
@@ -7208,18 +7264,6 @@ msgstr "الهوامش "
 #, python-format
 msgid "Page"
 msgstr "الصفحة"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> contains a link to this page"
-msgstr "تحتوي الصفحة <b>%s</b> على رابط لهذه الصفحة"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> is calling this file"
-msgstr "الصفحة <b>%s</b> بحاجة إلى هذا الملف "
 
 #. module: website
 #. openerp-web
@@ -7303,8 +7347,6 @@ msgstr "صفحة تستخدم نسخة مني "
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -7356,7 +7398,7 @@ msgstr "الفقرة. "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Parallax"
-msgstr ""
+msgstr "اختلاف المنظر "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__parent_id
@@ -7450,27 +7492,27 @@ msgstr "سادة "
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_plausible_shared_key
 msgid "Plausible Analytics"
-msgstr ""
+msgstr "التحليلات القابلة للتحقيق "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__plausible_shared_key
 msgid "Plausible Shared Key"
-msgstr ""
+msgstr "المفتاح المشترك القابل للتحقيق "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__plausible_site
 msgid "Plausible Site"
-msgstr ""
+msgstr "الموقع القابل للتحقيق "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__plausible_site
 msgid "Plausible Site (e.g. domain.com)"
-msgstr ""
+msgstr "الموقع القابل للتحقيق (مثال: domain.com) "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__plausible_shared_key
 msgid "Plausible auth Key"
-msgstr ""
+msgstr "مفتاح auth القابل للتحقيق "
 
 #. module: website
 #. openerp-web
@@ -7515,7 +7557,7 @@ msgstr "بطاقة بريدية"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Preferences<br/>(essential)"
-msgstr ""
+msgstr "التفضيلات<br/>(ضروري) "
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__prepend
@@ -7691,7 +7733,7 @@ msgstr "نشر"
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "Publish Website Content"
-msgstr ""
+msgstr "نشر محتوى الموقع الإلكتروني "
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_career
@@ -8048,7 +8090,7 @@ msgstr "أمثلية محركات البحث (‫SEO)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "SEO Optimized"
-msgstr ""
+msgstr "تم تحسين محركات البحث"
 
 #. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
@@ -8159,7 +8201,7 @@ msgstr "زر التمرير للأعلى "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Scroll Zone"
-msgstr ""
+msgstr "منطقة التمرير "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8353,7 +8395,7 @@ msgstr "التسلسل "
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Serve font from Google servers"
-msgstr ""
+msgstr "تقديم الخط من خوادم Google "
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -8393,7 +8435,7 @@ msgstr "الإعدادات"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Settings of Website"
-msgstr ""
+msgstr "إعدادات الموقع الإلكتروني "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8434,12 +8476,12 @@ msgstr "شارك أفضل دراسات الحالات "
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__shared_user_account
 msgid "Shared Customer Accounts"
-msgstr ""
+msgstr "حسابات العملاء المشتركة "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Shared Link Auth"
-msgstr ""
+msgstr "تفويض الرابط المشترك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -8514,17 +8556,17 @@ msgstr "إظها سياسة reCaptcha "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
-msgstr ""
+msgstr "إظهار خريطة الموقع "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Desktop"
-msgstr ""
+msgstr "إظهار/إخفاء من سطح المكتب "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Mobile"
-msgstr ""
+msgstr "إظهار/إخفاء من الهاتف المحمول "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8545,7 +8587,7 @@ msgstr "تم تسجيل الدخول "
 #: model:ir.ui.menu,name:website.menu_site
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Site"
-msgstr ""
+msgstr "الموقع "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8664,7 +8706,7 @@ msgstr "مواقع التواصل الاجتماعي"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_social_media_options
 msgid "Social Networks"
-msgstr ""
+msgstr "منصات التواصل الاجتماعي "
 
 #. module: website
 #. openerp-web
@@ -8699,7 +8741,7 @@ msgstr "الصوت "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Spacing"
-msgstr ""
+msgstr "المسافات "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -8768,7 +8810,7 @@ msgstr "قياسي"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Start After"
-msgstr ""
+msgstr "البدء بعد "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
@@ -8841,7 +8883,7 @@ msgstr "سرد القصص أداة قوية.<br/> تجذب القراء وتحث
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
 msgid "Straight arrow"
-msgstr ""
+msgstr "سهم مستقيم "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8927,7 +8969,7 @@ msgstr "تبديل السمة "
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "System Fonts"
-msgstr ""
+msgstr "خطوط النظام "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -8995,38 +9037,16 @@ msgid "Tell what's the value for the <br/>customer for this feature."
 msgstr "تمكن من تحديد القيمة <br/>للعميل لهذه الخاصية. "
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Template"
 msgstr "قالب"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "يحتوي القالب <b>%s (id:%s)</b> على رابط لهذه الصفحة"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "يتطلب القالب <b>%s (id:%s)</b> هذا الملف "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "ارتداد القالب"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Templates"
-msgstr "القوالب "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -9182,7 +9202,7 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "The homepage URL should be relative and start with '/'."
-msgstr ""
+msgstr "يجب أن يكون رابط URL للصفحة الرئيسية ذي صلة ويبدأ بـ '/'. "
 
 #. module: website
 #. openerp-web
@@ -9318,7 +9338,7 @@ msgstr "لا توجد أي معلومات اتصال و/أو بريد إلكتر
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "There is no field available for this option."
-msgstr ""
+msgstr "لا يوجد حقل متاح لهذا الخيار "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -9360,6 +9380,13 @@ msgstr "الخاصية الثالثة"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Third Menu"
 msgstr "القائمة الثالثة "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "This URL is contained in the '%s' of the following '%s'"
+msgstr "رابط URL هذا موجود في '%s' لـ'%s' التالي "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -9405,7 +9432,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
-msgstr ""
+msgstr "هذا الخط مستضاف ويتم تقديمه إلى زائريك بواسطة خوادم Google "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -9447,12 +9474,6 @@ msgid ""
 "site."
 msgstr ""
 "هذه الصفحة غير موجودة، ولكن بمقدورك إنشاؤها بما أنك محرر لهذا الموقع. "
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "This page is in the menu <b>%s</b>"
-msgstr "هذه الصفحة في القائمة <b>%s</b>"
 
 #. module: website
 #. openerp-web
@@ -9648,7 +9669,7 @@ msgstr "المسار "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Track visits using Google Analytics"
-msgstr ""
+msgstr "تتبع الزيارات باستخدام تحليلات Google "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -9891,7 +9912,7 @@ msgstr "رابط URL لصورة علم ثابت "
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Url or Email"
-msgstr ""
+msgstr "رابط URL أو البريد الإلكتروني "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -9908,13 +9929,13 @@ msgstr "استخدام خرائط Google في موقعك (صفحة تواصل م
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
 msgid "Use Main Menu As Parent"
-msgstr ""
+msgstr "استخدام القائمة الرئيسية كالأصل "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "Use Plausible.io, Simple and privacy-friendly Google Analytics alternative"
-msgstr ""
+msgstr "استخدم Plausible.io، بديل لتحليلات Google بسيط ويحمي خصوصيتك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -10361,6 +10382,9 @@ msgid ""
 "We use cookies to provide improved experience on this website. You can learn"
 " more about our cookies and how we use them in our"
 msgstr ""
+"نستخدم ملفات تعريف الارتباط لمنح الزائرين تجربة محسنة على هذا الموقع "
+"الإلكتروني. يمكنك معرفة المزيد عن ملفات تعريف الارتباط التي نستخدمها وكيف "
+"نستخدمها في "
 
 #. module: website
 #. openerp-web
@@ -10369,6 +10393,8 @@ msgstr ""
 msgid ""
 "We use cookies to provide you a better user experience on this website."
 msgstr ""
+"نستخدم ملفات تعريف الارتباط لمنحك تجربة مستخدم أفضل على هذا الموقع "
+"الإلكتروني. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -10445,7 +10471,7 @@ msgstr "نطاق الموقع الإلكتروني "
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_domain_unique
 msgid "Website Domain should be unique."
-msgstr ""
+msgstr "يجب أن يكون نطاق الموقع الإلكتروني فريداً. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
@@ -10465,7 +10491,7 @@ msgstr "استمارات الموقع الإلكتروني "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Info"
-msgstr ""
+msgstr "معلومات الموقع الإلكتروني "
 
 #. module: website
 #. openerp-web
@@ -10520,7 +10546,7 @@ msgstr "مسار الموقع الإلكتروني "
 #. module: website
 #: model:ir.actions.client,name:website.website_preview
 msgid "Website Preview"
-msgstr ""
+msgstr "معاينة الموقع الإلكتروني "
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
@@ -10588,7 +10614,7 @@ msgstr "زائر الموقع الإلكتروني #%s"
 #: model:ir.cron,cron_name:website.website_visitor_cron
 #: model:ir.cron,name:website.website_visitor_cron
 msgid "Website Visitor : clean inactive visitors"
-msgstr ""
+msgstr "زائر الموقع الإلكتروني: مسح الزوار غير النشطين "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -10918,7 +10944,7 @@ msgstr ""
 #: code:addons/website/static/src/components/editor/editor.js:0
 #, python-format
 msgid "Your modifications were saved to apply this option."
-msgstr ""
+msgstr "تم حفظ تعديلاتك لتطبيق هذا الخيار. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -11142,7 +11168,7 @@ msgstr "مثال: دي بروكير، براسيلز، بلجيكا "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "e.g. Home Page"
-msgstr ""
+msgstr "مثال: الصفحة الرئيسية "
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
@@ -11343,7 +11369,7 @@ msgstr "o-color-"
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
-msgstr ""
+msgstr "أو تحرير النسخة الأصلية "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

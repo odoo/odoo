@@ -7,14 +7,15 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-11-03 16:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,13 +101,6 @@ msgstr "$7.50"
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "$9.00"
 msgstr "$9.00"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "%s (id:%s)"
-msgstr "%s (id:%s)"
 
 #. module: website
 #. openerp-web
@@ -262,8 +256,6 @@ msgstr ""
 "... y cambie el contenido de su línea de tiempo según sus necesidades."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -2032,6 +2024,13 @@ msgstr "Archivado"
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "¿Está seguro de que desea eliminar esta página?"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "Are you sure you want to delete those pages ?"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -3848,9 +3847,8 @@ msgstr "Dominio"
 #. openerp-web
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "Don't forget to update all links referring to this page."
+msgid "Don't forget to update all links referring to it."
 msgstr ""
-"No olvide actualizar todos los enlaces que hacen referencia a esta página."
 
 #. module: website
 #. openerp-web
@@ -4008,8 +4006,16 @@ msgstr "Editar"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/services/website_custom_menus.js:0
+#, python-format
+msgid "Edit %s"
+msgstr "Editar %s"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
+#: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #, python-format
 msgid "Edit Menu"
 msgstr "Editar menú"
@@ -6400,10 +6406,8 @@ msgid "Men"
 msgstr "Hombres"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
-#, python-format
 msgid "Menu"
 msgstr "Menú"
 
@@ -6434,9 +6438,7 @@ msgid "Menu using a copy of me"
 msgstr "Menú que utiliza una copia de mí"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#, python-format
 msgid "Menus"
 msgstr "Menús"
 
@@ -6934,12 +6936,6 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "No está disponible para venta"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Sin publicar"
@@ -7008,17 +7004,6 @@ msgstr "OR"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Odoo Information"
 msgstr "Información de Odoo"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#, python-format
-msgid "Odoo Logo"
-msgstr "Logo de Odoo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7304,8 +7289,6 @@ msgstr "Paddings"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
@@ -7316,18 +7299,6 @@ msgstr "Paddings"
 #, python-format
 msgid "Page"
 msgstr "Página"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> contains a link to this page"
-msgstr "La página <b>%s</b> contiene un enlace a esta página"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> is calling this file"
-msgstr "La página <b>%s</b> está enlazando este archivo"
 
 #. module: website
 #. openerp-web
@@ -7411,8 +7382,6 @@ msgstr "Página que utiliza una copia de mí"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -9107,38 +9076,16 @@ msgid "Tell what's the value for the <br/>customer for this feature."
 msgstr "Mencione el valor de esta característica para el <br/>cliente."
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Template"
 msgstr "Plantilla"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "La plantilla <b>%s (id:%s)</b> contiene un enlace a esta página"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "La plantilla <b>%s (id:%s)</b> está enlazando este archivo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "Alternativa a la plantilla"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Templates"
-msgstr "Plantillas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -9476,6 +9423,13 @@ msgid "Third Menu"
 msgstr "Tercer menú"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "This URL is contained in the '%s' of the following '%s'"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
@@ -9567,12 +9521,6 @@ msgid ""
 "site."
 msgstr ""
 "Esta página no existe, pero puede crearla ya que es editor de este sitio."
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "This page is in the menu <b>%s</b>"
-msgstr "Esta página está en el menú <b>%s</b>"
 
 #. module: website
 #. openerp-web

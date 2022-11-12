@@ -7,13 +7,14 @@
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2022-11-03 16:41+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -169,6 +170,8 @@ msgid ""
 "<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Post date\" "
 "title=\"Post date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Post date\" "
+"title=\"Post date\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -227,6 +230,8 @@ msgid ""
 "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">Read "
 "Next</span>"
 msgstr ""
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 "
+"rounded-1\">阅读下一页</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -235,16 +240,19 @@ msgid ""
 "                                    <i class=\"fa fa-angle-right fa-3x text-white\" aria-label=\"Read next\" title=\"Read Next\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"h4 d-inline-block py-1 px-2 rounded-1 text-white\">\n"
+"                                    <i j=\"1/\">\n"
+"                                </i></span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "<span class=\"me-1\">Show:</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">显示：</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 msgid "<span class=\"nav-link disabled ps-0\">Blogs:</span>"
-msgstr ""
+msgstr "<span class=\"nav-link disabled ps-0\">博客：</span>"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_2
@@ -530,26 +538,11 @@ msgid "Blog Page"
 msgstr "博客页面"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:0
-#: code:addons/website_blog/models/website.py:0
 #: model:ir.model,name:website_blog.model_blog_post
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
-#, python-format
 msgid "Blog Post"
 msgstr "博文"
-
-#. module: website_blog
-#: code:addons/website_blog/models/website.py:0
-#, python-format
-msgid "Blog Post <b>%s</b> seems to be calling this file !"
-msgstr "博文 <b>%s</b> 似乎调用了此文件！"
-
-#. module: website_blog
-#: code:addons/website_blog/models/website.py:0
-#, python-format
-msgid "Blog Post <b>%s</b> seems to have a link to this page !"
-msgstr "博文 <b>%s</b> 似乎有一个链接到这个网页！"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -559,7 +552,7 @@ msgstr "博文封面"
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 msgid "Blog Post Pages"
-msgstr ""
+msgstr "博客文章页面"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -572,11 +565,8 @@ msgid "Blog Post Title"
 msgstr "博文标题"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:0
-#: code:addons/website_blog/models/website.py:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
-#, python-format
 msgid "Blog Posts"
 msgstr "博文"
 
@@ -809,7 +799,7 @@ msgstr "显示名称"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Drop Zone for Building Blocks"
-msgstr ""
+msgstr "构建块的放置区"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -853,14 +843,14 @@ msgstr "编辑 '筛选结果”的页眉。"
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Edit your title, the subtitle is optional."
-msgstr ""
+msgstr "编辑标题，副标题是可选的。"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Enter your post's title"
-msgstr ""
+msgstr "输入帖子标题"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1359,7 +1349,7 @@ msgstr "名称"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Name / Latest Post"
-msgstr ""
+msgstr "姓名/最新帖子"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.blog_post_action_add
@@ -1473,7 +1463,7 @@ msgstr ""
 msgid ""
 "Once you have reviewed the content on mobile, you can switch back to the "
 "normal view by clicking here again"
-msgstr ""
+msgstr "查看移动设备上的内容后，您可以再次单击此处切换回普通视图"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
@@ -1595,7 +1585,7 @@ msgstr "阅读更多"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Read more <i class=\"fa fa-chevron-right ms-2\"/>"
-msgstr ""
+msgstr "阅读更多 <i class=\"fa fa-chevron-right ms-2\"/>"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1681,12 +1671,12 @@ msgstr "选择此菜单项新建一篇博文。"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Select to Comment"
-msgstr ""
+msgstr "选择以评论"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Select to Tweet"
-msgstr ""
+msgstr "选择发推"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__seo_name
@@ -1920,7 +1910,7 @@ msgstr "预告"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Teaser & Tags"
-msgstr ""
+msgstr "预告片和标签"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser_manual
@@ -2115,12 +2105,12 @@ msgstr "称谓"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Above Cover"
-msgstr ""
+msgstr "封面上方标题"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Inside Cover"
-msgstr ""
+msgstr "标题内封面"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2426,7 +2416,7 @@ msgstr "未发布"
 msgid ""
 "|\n"
 "                            <i class=\"fa fa-comment text-muted me-1\"/>"
-msgstr ""
+msgstr "<i j=\"0/\">评论</i>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover

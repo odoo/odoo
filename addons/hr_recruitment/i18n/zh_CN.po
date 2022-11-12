@@ -7,6 +7,7 @@
 # 陕西_jack, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -100,6 +101,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
 "class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
+"class=\"oe_read_only\">远程</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -112,6 +115,11 @@ msgid ""
 "                            </span>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                            </span>\n"
+"                            <span class=\"text-danger\">所有申请都将失去其雇用日期和雇用状态。                            </span>\n"
+"                        </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -138,6 +146,9 @@ msgid ""
 "attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
 " False)]}\">Refused</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" "
+"attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
+" False)]}\">拒绝</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -161,7 +172,7 @@ msgstr "<span class=\"o_stat_text\">跟踪器</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_value\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">员工</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -254,6 +265,60 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"background-color: white; border-collapse: collapse; margin-left: "
+"20px;\"><tr><td valign=\"top\" style=\"padding: 0px 10px;\"><div "
+"style=\"font-size: 13px; margin: 0px; padding: "
+"0px;\">你好，<br/><br/>我们确认我们已成功收到您对<strong t-out=\"object.company_id.name or "
+"''\">YourCompany</strong>的“<a t-att-href=\"hasattr(object.job_id, "
+"'website_url') and object.job_id.website_url or ''\" "
+"style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or "
+"''\">经验丰富的开发人员</strong></a>”职位的申请。<br/><br/>我们会尽快回复您。<div "
+"t-if=\"'website_url' in object.job_id and object.job_id.website_url\" "
+"style=\"padding: 16px 8px 16px 8px;\"><a t-att-"
+"href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-"
+"decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: "
+"5px;\">职位描述</a></div><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/><t"
+" t-if=\"object.user_id\"><h3 "
+"style=\"color:#9A6C8E;\"><strong>您的联系人：</strong></h3><p><strong "
+"t-out=\"object.user_id.name or ''\">米切尔管理员</strong><br/><span>电子邮件：</span><t"
+" t-out=\"object.user_id.email or ''\"> "
+"<span>admin@yourcompany.example.com</span></t><br/><span>电话：</span><t "
+"t-out=\"object.user_id.phone or ''\"> <span>+1 "
+"650-123-4567</span></t></p><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px "
+"0px;\"/></t><h3 "
+"style=\"color:#9A6C8E;\"><strong>你下一步怎么做？</strong></h3>我们通常会<strong>在几天内回复申请。</strong><br/><br/><strong>如果您想要更快的反馈或者您没有足够快地收到我们的消息，请随时与我们联系</strong>（只需回复此电子邮件）。<hr"
+" width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium "
+"none; clear: both; display: block; font-size: 0px; min-height: 1px; line-"
+"height: 0; margin: 17px 0px 16px 0px;\"/><t t-set=\"location\" "
+"t-value=\"''\"/><t t-if=\"object.job_id.address_id.name\"><strong "
+"t-out=\"object.job_id.address_id.name or ''\">泰克萨公司</strong><br/></t><t "
+"t-if=\"object.job_id.address_id.street\"><t "
+"t-out=\"object.job_id.address_id.street or ''\">马德罗港 9710</t><br/><t "
+"t-set=\"location\" t-value=\"object.job_id.address_id.street\"/></t><t "
+"t-if=\"object.job_id.address_id.street2\"><t "
+"t-out=\"object.job_id.address_id.street2 or ''\"> A15, 圣地亚哥 (RM)</t><br/><t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/></t><t "
+"t-if=\"object.job_id.address_id.city\"><t "
+"t-out=\"object.job_id.address_id.city or ''\">普达韦尔</t>,<t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/></t><t "
+"t-if=\"object.job_id.address_id.state_id.name\"><t "
+"t-out=\"object.job_id.address_id.state_id.name or ''\"> C1</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/></t><t "
+"t-if=\"object.job_id.address_id.zip\"><t "
+"t-out=\"object.job_id.address_id.zip or ''\"> 98450</t><t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/></t><br/><t "
+"t-if=\"object.job_id.address_id.country_id.name\"><t "
+"t-out=\"object.job_id.address_id.country_id.name or ''\">阿根廷</t><br/><t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/></t><br/></div></td></tr></table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -338,6 +403,58 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"background-color: white; border-collapse: collapse; margin-left: "
+"20px;\"><tr><td valign=\"top\" style=\"padding: 0px 10px;\"><div "
+"style=\"text-align: center\"><h2>恭喜！</h2><div "
+"style=\"color:grey;\">您的简历已获得积极评价。</div></div><div style=\"font-size: 13px; "
+"margin: 0px; padding: "
+"0px;\">我们刚刚审查了您的简历，它引起了我们的注意。我们认为您可能适合该职位，因此您的申请已被列入电话或面试的候选名单。<br/><br/><div"
+" t-if=\"'website_url' in object.job_id and object.job_id.website_url\" "
+"style=\"padding: 16px 8px 16px 8px;\"><a t-att-"
+"href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-"
+"decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: "
+"5px;\">职位描述</a></div><t t-if=\"object.user_id\">您很快就会被联系到：<br/><strong "
+"t-out=\"object.user_id.name or ''\">米切尔管理员</strong><br/><span>电子邮件：</span><t"
+" t-out=\"object.user_id.email or ''\"> "
+"<span>admin@yourcompany.example.com</span></t><br/><span>电话：</span><t "
+"t-out=\"object.user_id.phone or ''\"> <span>+1 "
+"650-123-4567</span></t><br/><br/></t>再见，<div style=\"font-size: 11px; color:"
+" grey;\"> --<br/>人力资源团队<t t-if=\"'website_url' in object.job_id and "
+"hasattr(object.job_id, 'website_url') and object.job_id.website_url\">发现<a "
+"href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">我们所有的工作</a>。<br/></t></div><hr "
+"width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium "
+"none; clear: both; display: block; font-size: 0px; min-height: 1px; line-"
+"height: 0; margin: 16px 0px 16px 0px;\"/><h3 "
+"style=\"color:#9A6C8E;\"><strong>你下一步怎么做？</strong></h3>我们通常会<strong>在几天内回复申请</strong>。<br/><br/>下一步是在我们的办公室打电话或开会。<br/><strong>如果您想要更快的反馈或者您没有足够快地收到我们的消息，请随时与我们联系</strong>（只需回复此电子邮件）。<br/><hr"
+" width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium "
+"none; clear: both; display: block; font-size: 0px; min-height: 1px; line-"
+"height: 0; margin: 17px 0px 16px 0px;\"/><t t-set=\"location\" "
+"t-value=\"''\"/><t t-if=\"object.job_id.address_id.name\"><strong "
+"t-out=\"object.job_id.address_id.name or ''\">泰克萨公司</strong><br/></t><t "
+"t-if=\"object.job_id.address_id.street\"><t "
+"t-out=\"object.job_id.address_id.street or ''\">马德罗港 9710</t><br/><t "
+"t-set=\"location\" t-value=\"object.job_id.address_id.street\"/></t><t "
+"t-if=\"object.job_id.address_id.street2\"><t "
+"t-out=\"object.job_id.address_id.street2 or ''\"> A15, 圣地亚哥 (RM)</t><br/><t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/></t><t "
+"t-if=\"object.job_id.address_id.city\"><t "
+"t-out=\"object.job_id.address_id.city or ''\">普达韦尔</t>,<t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/></t><t "
+"t-if=\"object.job_id.address_id.state_id.name\"><t "
+"t-out=\"object.job_id.address_id.state_id.name or ''\"> C1</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/></t><t "
+"t-if=\"object.job_id.address_id.zip\"><t "
+"t-out=\"object.job_id.address_id.zip or ''\"> 98450</t><t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/></t><br/><t "
+"t-if=\"object.job_id.address_id.country_id.name\"><t "
+"t-out=\"object.job_id.address_id.country_id.name or ''\">阿根廷</t><br/><t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/></t><br/></div></td></tr></table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -518,12 +635,16 @@ msgstr "活动"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
 msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来活动。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "今天的活动"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -538,7 +659,7 @@ msgstr "活动状态"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -679,7 +800,7 @@ msgstr "申请人"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "聘用的申请人"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -724,7 +845,7 @@ msgstr "应用数量"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "表单状态"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -750,7 +871,7 @@ msgstr "应用"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email or phone or mobile"
-msgstr ""
+msgstr "具有相同电子邮件、电话或移动设备的应用程序"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -858,12 +979,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Digitization (OCR)"
-msgstr ""
+msgstr "简历数字化 （OCR）"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Display"
-msgstr ""
+msgstr "简历显示"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -930,7 +1051,7 @@ msgstr "配置"
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Confirmation email sent to all new job applications"
-msgstr ""
+msgstr "发送给所有新工作申请的确认电子邮件"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1129,7 +1250,7 @@ msgstr "摘要"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your CV to extract name and email automatically."
-msgstr ""
+msgstr "数字化您的简历以自动提取姓名和电子邮件。"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1312,7 +1433,7 @@ msgstr "扩展筛选"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
+msgstr "扩展面试官"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1403,7 +1524,7 @@ msgstr "灰色看板标签"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
 msgid "Group Applicant Cv Display"
-msgstr ""
+msgstr "团体申请人简历展示"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1419,7 +1540,7 @@ msgstr "人力资源主管"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "有域"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
@@ -1551,7 +1672,7 @@ msgstr "面试表单"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "面试 官"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -1594,7 +1715,7 @@ msgstr "职位申请"
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr "招聘活动"
+msgstr "招聘营销"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__address_id
@@ -1791,7 +1912,7 @@ msgstr "让我们回到仪表板。"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
 msgid "LinkedIn Profile"
-msgstr ""
+msgstr "LinkedIn个人资料"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
@@ -2059,7 +2180,7 @@ msgstr "Odoo帮助您在招聘过程中跟踪申请人及跟进所有操作：�
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer : Manage all applicants"
-msgstr ""
+msgstr "干事 ： 管理所有申请人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
@@ -2249,7 +2370,7 @@ msgstr "招聘分析"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Recruitment Interviewer"
-msgstr ""
+msgstr "招聘面试官"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2264,22 +2385,22 @@ msgstr "招聘阶段"
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr ""
+msgstr "招聘：申请确认"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Recruitment: Interest"
-msgstr ""
+msgstr "招聘：兴趣"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Recruitment: Not interested anymore"
-msgstr ""
+msgstr "招聘：不再感兴趣"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Recruitment: Refuse"
-msgstr ""
+msgstr "招聘：拒绝"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -2336,7 +2457,7 @@ msgstr "已拒绝"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "远程"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
@@ -2379,7 +2500,7 @@ msgstr "还原"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr ""
+msgstr "参选申请人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2441,7 +2562,7 @@ msgstr "发送"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
-msgstr ""
+msgstr "将简历发送到 OCR 以填写申请"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -2473,7 +2594,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "向申请人发送邮件"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2498,7 +2619,7 @@ msgstr "序号"
 msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
-msgstr ""
+msgstr "将此模板设置为招聘阶段，以便在申请达到该阶段时发送"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2601,7 +2722,7 @@ msgstr "主题"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr ""
+msgstr "主题/应用"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2636,7 +2757,7 @@ msgstr "标签"
 msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
-msgstr ""
+msgstr "UTM营销“%s”不能删除，因为它用于招聘过程。"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
@@ -2665,7 +2786,7 @@ msgstr "由于以下申请人没有电子邮件地址，该邮件将不会发送
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "以下申请人缺少电子邮件地址：%s。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -2748,7 +2869,7 @@ msgstr "提示"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "运单/面单的追踪链接"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2763,7 +2884,7 @@ msgstr "记录的异常活动类型。"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "UTM活动"
+msgstr "UTM营销"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_source
@@ -2794,7 +2915,7 @@ msgstr "未读消息"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the CV or the file itself"
-msgstr ""
+msgstr "使用 OCR 从简历图片或文件本身填充数据"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -2850,7 +2971,7 @@ msgstr "您今天想招聘什么？选择一个职位名称..."
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr ""
+msgstr "当您拒绝申请时，您可以选择此模板"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -2861,7 +2982,7 @@ msgstr "在这里写下您的留言..."
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "你不允许执行此操作。"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2879,6 +3000,8 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"您无法删除这些UTM来源，因为它们链接到招聘中的以下招聘来源：\n"
+"%(recruitment_sources)s"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0

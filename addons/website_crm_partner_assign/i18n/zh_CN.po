@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -30,7 +31,7 @@ msgstr "#商机"
 #: code:addons/website_crm_partner_assign/static/src/js/crm_partner_assign.js:0
 #, python-format
 msgid "%s's Opportunity"
-msgstr ""
+msgstr "%s's 商机"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_view_kanban
@@ -38,6 +39,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\" aria-label=\"Assigned Partner\" "
 "title=\"Assigned Partner\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-circle-right\" aria-label=\"Assigned Partner\" "
+"title=\"Assigned Partner\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -52,7 +55,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> 我不感兴趣"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i j=\"0/\">编辑</i>"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
@@ -63,7 +66,7 @@ msgstr "<p>我对此线索感兴趣。</p>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<small class=\"me-2 mt-1 float-start\"><b>Stage:</b></small>"
-msgstr ""
+msgstr "<small class=\"me-2 mt-1 float-start\"><b>阶段：</b></small>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -138,6 +141,9 @@ msgid ""
 "                                                                <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"input-group-text\" data-target=\"#exp_closing_div\" data-toggle=\"datetimepicker\">\n"
+"                                                                <span j=\"1/\">\n"
+"                                                            </span></span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -146,6 +152,9 @@ msgid ""
 "                                                                <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"input-group-text\" data-target=\"#next_activity_div\" data-toggle=\"datetimepicker\">\n"
+"                                                                <span j=\"1/\">\n"
+"                                                            </span></span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -323,6 +332,76 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\"><tbody><!-- HEADER --><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"middle\"><span style=\"font-size: "
+"10px;\">您的线索</span><br/></td><td valign=\"middle\" align=\"right\"><img "
+"t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: "
+"0px; margin: 0px; height: auto; width: 80px;\" t-att-"
+"alt=\"user.company_id.name\"/></td></tr><tr><td colspan=\"2\" style=\"text-"
+"align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px "
+"0px;\"/></td></tr></table></td></tr><!-- CONTENT --><tr><td align=\"center\""
+" style=\"min-width: 590px;\"><table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
+"white; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td "
+"valign=\"top\" style=\"font-size: "
+"13px;\"><div>你好，<br/>您所在地区的线索已与我们联系。因此，以下线索已分配给<t "
+"t-out=\"ctx['partner_id'].name or ''\"/>：<br/><ol><li "
+"t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-"
+"href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject "
+"Undefined'\">主题未定义</a>，<t t-out=\"lead['lead_id'].partner_name or "
+"lead['lead_id'].contact_name or 'Contact Name Undefined'\">联系人姓名未定义</t>,<t "
+"t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or "
+"'Country Undefined'\">国家未定义</t>,<t t-out=\"lead['lead_id'].email_from or "
+"'Email Undefined' or ''\">电子邮件未定义</t>,<t t-out=\"lead['lead_id'].phone or "
+"''\"> +1 650-123-4567</t></li><br/></ol><t "
+"t-if=\"ctx.get('partner_in_portal')\">请连接到您的<a href=\"{{ '%s?db=%s' % "
+"(record.get_base_url(), record.env.cr.dbname) "
+"}}\">合作伙伴门户</a>以获取详细信息。每条线索的左上角有两个按钮，您在联系线索后应该按下它们：“我感兴趣”和“我不感兴趣”。<br/></t><t"
+" t-else=\"\">您还没有访问我们数据库的门户网站。请联系<t t-out=\"ctx['partner_id'].user_id and "
+"ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % "
+"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or "
+"'us'\">我们</t>.<br/></t>如果您在 20 天内未联系线索，则该线索将被发送给另一个合作伙伴。<br/><br/>谢谢，<br/><t"
+" t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature "
+"or ''\"/><br/><t t-if=\"not ctx['partner_id'].user_id\"> "
+"PS：您好像没有分配给您的客户经理，请联系我们。 </t></div></td></tr><tr><td style=\"text-"
+"align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px "
+"0px;\"/></td></tr></table></td></tr><!-- FOOTER --><tr><td align=\"center\" "
+"style=\"min-width: 590px;\"><table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
+"white; font-size: 11px; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"middle\" align=\"left\"><t "
+"t-out=\"user.company_id.name or ''\">你的公司</t></td></tr><tr><td "
+"valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\"><t "
+"t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t><t "
+"t-if=\"user.company_id.phone and (user.company_id.email or "
+"user.company_id.website)\"> |</t> <a t-if=\"user.company_id.email\" t-attf-"
+"href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\"user.company_id.email or "
+"''\">info@yourcompany.com</a><t t-if=\"user.company_id.email and "
+"user.company_id.website\"> |</t> <a t-if=\"user.company_id.website\" t-attf-"
+"href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"user.company_id.website or "
+"''\">http://www.example.com</a> "
+"</td></tr></table></td></tr></tbody></table></td></tr><!-- POWERED BY "
+"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: #F1F1F1; color: #454748; padding: 8px; border-"
+"collapse:separate;\"><tr><td style=\"text-align: center; font-size: "
+"13px;\">由<a target=\"_blank\" "
+"href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" "
+"style=\"color: #875A7B;\">Odoo</a>提供支持</td></tr></table></td></tr></table>"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -390,7 +469,7 @@ msgstr "指定的合作伙伴"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Assigned Partner:"
-msgstr ""
+msgstr "指定的伙伴"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -498,12 +577,12 @@ msgstr "创建商机"
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
 msgid "Create a Partner Activation"
-msgstr ""
+msgstr "创建合作伙伴激活"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_grade_action
 msgid "Create a Partner Level"
-msgstr ""
+msgstr "创建伙伴等级"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
@@ -670,7 +749,7 @@ msgstr "地理位置"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Geolocation:"
-msgstr ""
+msgstr "地理位置"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
@@ -730,7 +809,7 @@ msgstr "执行参考"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr ""
+msgstr "实施的伙伴数"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
@@ -1002,7 +1081,7 @@ msgstr "合作伙伴分配日期"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Partner Assignment Date:"
-msgstr ""
+msgstr "合作伙伴分配日期"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
@@ -1021,13 +1100,13 @@ msgstr "合作伙伴级别"
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_res_partner_grade_action
 msgid "Partner Levels"
-msgstr ""
+msgstr "伙伴等级"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_grade_action
 msgid ""
 "Partner Levels allow you to rank your Partners based on their performances."
-msgstr ""
+msgstr "合作伙伴级别允许您根据合作伙伴的表现对合作伙伴进行排名。"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_location
@@ -1193,7 +1272,7 @@ msgstr "发送邮件"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr ""
+msgstr "在将潜在顾客分配给合作伙伴时发送给他"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1282,7 +1361,7 @@ msgstr "这儿没有商机。"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "There is no country set in addresses for %(lead_names)s."
-msgstr ""
+msgstr "%(lead_names)s 的地址中没有设置国家/地区。"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
@@ -1307,7 +1386,7 @@ msgstr "这应该是一个大于0的数值，这将决定该合作伙伴争取�
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
 msgid ""
 "Those are used to know where your Partners stand in your onboarding process."
-msgstr ""
+msgstr "这些用于了解您的合作伙伴在入职流程中所处的位置。"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
@@ -1391,12 +1470,12 @@ msgstr "例如，金牌合作伙伴"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "latitude,"
-msgstr ""
+msgstr "纬度"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "longitude"
-msgstr ""
+msgstr "经度"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity

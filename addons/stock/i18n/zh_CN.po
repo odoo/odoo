@@ -9,6 +9,7 @@
 # Martin Trigaux, 2022
 # 226408 台北 <226408@so8d.com>, 2022
 # 徐 文郁, 2022
+# digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
@@ -797,7 +798,7 @@ msgstr "活动状态"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -975,7 +976,7 @@ msgstr "对于不在有周期性库存日期的地点的产品的年度库存月
 msgid ""
 "Another parent/sub replenish location %s exists, if you wish to change it, "
 "uncheck it first"
-msgstr ""
+msgstr "另一个父/子补充位置 %s 存在，如果您希望更改它，请先取消选中"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -4140,7 +4141,7 @@ msgstr "长度必须为正"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__length_uom_name
 msgid "Length unit of measure label"
-msgstr "‎度量标签的长度单位‎"
+msgstr "‎计量标签的长度单位‎"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
@@ -5254,7 +5255,7 @@ msgstr "概述"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Owner"
-msgstr "所有者"
+msgstr "货主"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__restrict_partner_id
@@ -6571,7 +6572,7 @@ msgstr "要求计数"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr "要求在送货单上签名"
+msgstr "请求在送货单上签字"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_method
@@ -7341,7 +7342,7 @@ msgstr "签署"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__signature
 #: model:ir.model.fields,help:stock.field_stock_picking__signature
 msgid "Signature"
-msgstr "签名"
+msgstr "签字"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -7915,6 +7916,10 @@ msgid ""
 "            On the operation type you could e.g. specify if packing is needed by default,\n"
 "            if it should show the customer."
 msgstr ""
+"操作类型系统允许您分配每个库存\n"
+"            操作一个特定类型，该类型将相应地改变其视图。\n"
+"            在操作类型上，你可以指定默认情况下是否需要包装，\n"
+"            如果它应该显示给客户。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8084,7 +8089,7 @@ msgstr "这是使用此作业类型手动创建拣货时的默认目标位置。
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
 msgid "This is the owner of the quant"
-msgstr "这是库存分析所有者"
+msgstr "这是库存分析货主"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_qty
@@ -8269,7 +8274,7 @@ msgstr "创建欠单"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "To Count"
-msgstr "(数量)"
+msgstr "(点数)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -8525,6 +8530,11 @@ msgstr "尝试添加一些传入或传出的调拨。"
 #: model:ir.model.fields,field_description:stock.field_product_template__type
 msgid "Type"
 msgstr "类型"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+msgid "Type a message..."
+msgstr "输入一个消息……"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
@@ -9140,6 +9150,10 @@ msgid ""
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
+"在验证转账时:\n"
+" *询问:要求用户选择是否要对剩余产品进行延期订购\n"
+" * 总是:为剩余的产品自动创建延迟订单\n"
+" * 从不:剩余的产品被取消"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id

@@ -6,6 +6,7 @@
 # Ermin Trevisan <trevi@twanda.com>, 2022
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Robert Förster <hello@suppliot.eu>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Robert Förster <hello@suppliot.eu>, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -290,6 +291,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
 "                                                <span>Continue<span class=\"d-none d-md-inline\"> Shopping</span></span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                                <span>Weiter<span class=\"d-none d-md-inline\"> Einkaufen</span></span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -406,6 +409,8 @@ msgid ""
 "<span>Process Checkout</span>\n"
 "                                                <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>Zur Kasse</span>\n"
+"                                                <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -3501,6 +3506,12 @@ msgstr "Das Zugangs-Token ist ungültig."
 #: model:ir.model.fields,help:website_sale.field_product_template__compare_list_price
 msgid ""
 "The amount will be displayed strikethroughed on the eCommerce product page"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
 msgstr ""
 
 #. module: website_sale
