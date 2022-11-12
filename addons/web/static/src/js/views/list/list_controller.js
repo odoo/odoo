@@ -738,7 +738,13 @@ var ListController = BasicController.extend({
      */
     _onButtonClicked: function (ev) {
         ev.stopPropagation();
-        this._callButtonAction(ev.data.attrs, ev.data.record);
+        if (ev.data.attrs.confirm) {
+            Dialog.confirm(this, ev.data.attrs.confirm, {
+                confirm_callback: this._callButtonAction.bind(this, ev.data.attrs, ev.data.record),
+            });
+        } else {
+            this._callButtonAction(ev.data.attrs, ev.data.record);
+        }
     },
     /**
      * When the user clicks on the 'create' button, two things can happen. We
