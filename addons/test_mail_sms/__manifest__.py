@@ -3,7 +3,7 @@
 {
     'name': 'SMS Tests',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Tests',
     'sequence': 9876,
     'summary': 'SMS Tests: performances and tests specific to SMS',
     'description': """This module contains tests related to SMS. Those are

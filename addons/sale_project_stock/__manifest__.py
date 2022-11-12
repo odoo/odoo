@@ -7,7 +7,7 @@
     'description': 'Adds a full traceability of inventory operations on the profitability report.',
     'summary': 'Adds a full traceability of inventory operations on the profitability report.',
     'license': 'LGPL-3',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'depends': ['sale_project', 'sale_stock'],
     'data': [
         'views/stock_move_views.xml',

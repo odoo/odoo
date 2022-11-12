@@ -3,7 +3,7 @@
 {
     'name': "Spreadsheet Accounting Formulas",
     'version': '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'summary': 'Spreadsheet Accounting formulas',
     'description': 'Spreadsheet Accounting formulas',
     'depends': ['spreadsheet', 'account'],

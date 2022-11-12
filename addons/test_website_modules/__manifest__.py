@@ -4,7 +4,7 @@
 {
     'name': 'Website Modules Test',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Tests',
     'sequence': 9876,
     'description': """This module contains tests related to website modules.
 It allows to test website business code when another website module is

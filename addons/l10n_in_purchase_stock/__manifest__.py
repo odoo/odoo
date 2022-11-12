@@ -16,7 +16,7 @@
     """,
 
     'website': "https://www.odoo.com",
-    'category': 'Accounting/Localizations/Purchase',
+    'category': 'Inventory/Purchase',
     'version': '1.0',
 
     'depends': ['l10n_in_purchase', 'l10n_in_stock'],

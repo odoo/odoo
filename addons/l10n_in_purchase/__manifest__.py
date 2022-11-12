@@ -6,7 +6,7 @@
     'icon': '/l10n_in/static/description/icon.png',
     'version': '1.0',
     'description': """GST Purchase Report""",
-    'category': 'Accounting/Localizations/Purchase',
+    'category': 'Inventory/Purchase',
     'depends': [
         'l10n_in',
         'purchase',

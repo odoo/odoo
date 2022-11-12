@@ -2,7 +2,7 @@
 {
     'name': 'test-populate',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to test populate.""",
     'depends': ['base'],
     'data': [

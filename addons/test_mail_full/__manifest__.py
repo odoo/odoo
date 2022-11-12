@@ -3,7 +3,7 @@
 {
     'name': 'Mail Tests (Full)',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Tests',
     'sequence': 9876,
     'summary': 'Mail Tests: performances and tests specific to mail with all sub-modules',
     'description': """This module contains tests related to various mail features

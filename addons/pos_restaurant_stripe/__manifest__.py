@@ -4,7 +4,7 @@
 {
     'name': 'POS Restaurant Stripe',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Adds American style tipping to Stripe',
     'depends': ['pos_stripe', 'pos_restaurant', 'payment_stripe'],
