@@ -26,8 +26,8 @@
 # Netta Waizer, 2022
 # hed shefer <hed@laylinetech.com>, 2022
 # Sagi Ahiel, 2022
-# NoaFarkash, 2022
 # Roy Sayag, 2022
+# NoaFarkash, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Roy Sayag, 2022\n"
+"Last-Translator: NoaFarkash, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1309,7 +1309,7 @@ msgstr "קיבולת"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr ""
+msgstr "קיבולת לפי חבילה"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -4702,7 +4702,7 @@ msgstr "מספר השגיאות"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_in
 msgid "Number of incoming stock moves in the past 12 months"
-msgstr ""
+msgstr "מספר תנועות המלאי הנכנסות ב-12 החודשים האחרונים"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4722,7 +4722,7 @@ msgstr "מספר הודעות עם שגיאת משלוח"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
-msgstr ""
+msgstr "מספר תנועות המלאי היוצאות ב-12 החודשים האחרונים"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -5134,7 +5134,7 @@ msgstr "שימוש בחבילה"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Package type"
-msgstr ""
+msgstr "סוג חבילה"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -6270,16 +6270,18 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
+"שמור רק אריזות מלאות: לא ישמור אריזות חלקיות. אם הלקוח מזמין 2 משטחים של 1000 יחידות כל אחד ויש לך רק 1600 במלאי, אז רק 1000 יישמרו\n"
+"שמירת אריזות חלקיות: לאפשר שמירת אריזות חלקיות. אם הלקוח מזמין 2 משטחים של 1000 יחידות כל אחד ויש לך רק 1600 במלאי, אז 1600 יישמרו"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
 msgid "Reserve Packagings"
-msgstr ""
+msgstr "אריזות שמורות"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr ""
+msgstr "אריזות לא שלמות "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7547,7 +7549,7 @@ msgstr ""
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr ""
+msgstr "התאריך הצפוי של ההעברה שנוצרה יחושב על סמך זמן אספקה ​​זה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -8848,6 +8850,12 @@ msgstr ""
 "הסוג, אתה צריך תחילה להסיר את השמירה של התנועה מהמלאי."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8897,6 +8905,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
+"לא ניתן לבטל תנועת מלאי שהוגדרה כ'בוצע'. צור החזרה על מנת להפוך את המהלכים "
+"שהתרחשו."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
