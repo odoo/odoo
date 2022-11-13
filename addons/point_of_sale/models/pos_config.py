@@ -654,7 +654,7 @@ class PosConfig(models.Model):
             'limit': self.limited_products_amount
         }
         self.env.cr.execute(query, params)
-        product_ids = self.env.cr.fetchall()
+        product_ids = [r[0] for r in self.env.cr.fetchall()]
         products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
         return products
 

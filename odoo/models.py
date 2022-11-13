@@ -1633,14 +1633,14 @@ class BaseModel(metaclass=MetaModel):
         Private implementation of name_search, allows passing a dedicated user
         for the name_get part to solve some access rights issues.
         """
-        args = list(args or [])
+        args = expression.D(args or [])
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
             _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
         # optimize out the default criterion of ``like ''`` that matches everything
         elif not (name == '' and operator in ('like', 'ilike')):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain = aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+            domain = aggregator(expression.D(field_name, operator, name) for field_name in search_fnames)
             args += domain
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
@@ -1767,13 +1767,14 @@ class BaseModel(metaclass=MetaModel):
                 result[key][count_field] = line[count_field]
 
         # fill in missing results from all groups
+        list_domain = list(domain) if domain else []
         for value in values:
             key = value2key(value)
             if not result[key]:
                 line = dict.fromkeys(aggregated_fields, False)
                 line[groupby] = value
                 line[groupby + '_count'] = 0
-                line['__domain'] = [(groupby, '=', key)] + domain
+                line['__domain'] = [(groupby, '=', key)] + list_domain
                 if remaining_groupbys:
                     line['__context'] = {'group_by': remaining_groupbys}
                 result[key] = line
@@ -2128,22 +2129,18 @@ class BaseModel(metaclass=MetaModel):
                         )
                     data[gb['groupby']] = ('%s/%s' % (range_start, range_end), label)
                     data.setdefault('__range', {})[gb['groupby']] = {'from': range_start, 'to': range_end}
-                    d = [
-                        '&',
-                        (gb['field'], '>=', range_start),
-                        (gb['field'], '<', range_end),
-                    ]
+                    d = expression.D(gb['field'], '>=', range_start) & expression.D(gb['field'], '<', range_end)
             elif ftype in ('date', 'datetime'):
                 # Set the __range of the group containing records with an unset
                 # date/datetime field value to False.
                 data.setdefault('__range', {})[gb['groupby']] = False
 
             if d is None:
-                d = [(gb['field'], '=', value)]
+                d = expression.D(gb['field'], '=', value)
             sections.append(d)
         sections.append(domain)
 
-        data['__domain'] = expression.AND(sections)
+        data['__domain'] = list(expression.AND(sections))
         if len(groupby) - len(annotated_groupbys) >= 1:
             data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
         del data['id']
@@ -2231,9 +2228,10 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         self.check_access_rights('read')
-        query = self._where_calc(domain)
-        fields = fields or [f.name for f in self._fields.values() if f.store]
+        expr = self._where_expression_calc(domain)
+        query, domain = expr.query, expr.expression
 
+        fields = fields or [f.name for f in self._fields.values() if f.store]
         groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
@@ -2241,7 +2239,6 @@ class BaseModel(metaclass=MetaModel):
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
-        self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             if gb not in self._fields:
                 raise UserError(_("Unknown field %r in 'groupby'", gb))
@@ -3201,11 +3198,11 @@ class BaseModel(metaclass=MetaModel):
             # 'English2'should is flushed before query as it is the fallback of empty 'fr_FR'
             if translated_field_names:
                 self.flush_recordset(translated_field_names)
-            self._flush_search([], order='id')
 
             # make a query object for selecting ids, and apply security rules to it
-            query = Query(cr, self._table, self._table_query)
-            self._apply_ir_rules(query, 'read')
+            expr = self._where_expression_calc(expression.TRUE_DOMAIN, active_test=False)
+            query, domain = expr.query, expr.expression
+            self._flush_search(domain, order='id')
 
             # the query may involve several tables: we need fully-qualified names
             def qualify(field):
@@ -3464,8 +3461,7 @@ class BaseModel(metaclass=MetaModel):
         if not self._ids:
             return self
 
-        query = Query(self.env.cr, self._table, self._table_query)
-        self._apply_ir_rules(query, operation)
+        query = self._where_expression_calc([], active_test=False, rules_mode=operation, flush_fields=['id']).query
         if not query.where_clause:
             return self
 
@@ -3473,7 +3469,6 @@ class BaseModel(metaclass=MetaModel):
         valid_ids = set()
         query.add_where(f'"{self._table}".id IN %s')
         query_str, params = query.select()
-        self._flush_search([])
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
             self._cr.execute(query_str, params + [sub_ids])
             valid_ids.update(row[0] for row in self._cr.fetchall())
@@ -4383,7 +4378,6 @@ class BaseModel(metaclass=MetaModel):
 
         return original_self.concat(*(data['record'] for data in data_list))
 
-    # TODO: ameliorer avec NULL
     @api.model
     def _where_calc(self, domain, active_test=True):
         """Computes the WHERE clause needed to implement an OpenERP domain.
@@ -4394,18 +4388,43 @@ class BaseModel(metaclass=MetaModel):
         :return: the query expressing the given domain as provided in domain
         :rtype: Query
         """
+        warnings.warn("use _where_expression_calc() instead", DeprecationWarning)
+        return self._where_expression_calc(domain, active_test, None, None).query
+
+    @api.model
+    def _where_expression_calc(self, domain, active_test=True, rules_mode='read', flush_fields=None):
+        """Computes the query needed to implement an OpenERP domain.
+
+        :param list domain: the domain to compute
+        :param bool active_test: whether the default filtering of records with
+            ``active`` field set to ``False`` should be applied.
+        :param str rules_mode: mode with which to apply the ir_rules
+        :param list flush_fields: whether to _flush_search and which fields
+        :return: the expression for the domain
+        :rtype: expression
+        """
         # if the object has an active field ('active', 'x_active'), filter out all
         # inactive records unless they were explicitly asked for
         if self._active_name and active_test and self._context.get('active_test', True):
             # the item[0] trick below works for domain items and '&'/'|'/'!'
             # operators too
+            # equivalent to:
+            #   domain = D(domain)
+            #   not any(domain.collect_domain(lambda n, _: n.field == 'active'))
             if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
+                domain = expression.D(self._active_name, '=', True) & domain
 
-        if domain:
-            return expression.expression(domain, self).query
-        else:
-            return Query(self.env.cr, self._table, self._table_query)
+        expr = expression.expression(domain, self)
+
+        # add rules only when the expression is not already False
+        if rules_mode and expr.expression.const() is not False:
+            self._apply_ir_rules(expr.query, rules_mode)
+
+        if flush_fields is not None:
+            # the default order fields will be also flushed
+            self._flush_search(expr.expression, flush_fields)
+
+        return expr
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -4535,69 +4554,59 @@ class BaseModel(metaclass=MetaModel):
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
-    def _flush_search(self, domain, fields=None, order=None, seen=None):
+    def _flush_search(self, domain, fields=None, order=None, to_flush=None):
         """ Flush all the fields appearing in `domain`, `fields` and `order`. """
-        if seen is None:
-            seen = set()
-        elif self._name in seen:
-            return
-        seen.add(self._name)
+        if run_flush := (to_flush is None):
+            to_flush = defaultdict(set)             # {model_name: set(field_names)}
+        flush_access_rules = self._name not in to_flush
 
-        to_flush = defaultdict(set)             # {model_name: field_names}
-        if fields:
-            to_flush[self._name].update(fields)
-
-        def collect_from_domain(model, domain):
-            for arg in domain:
-                if isinstance(arg, str):
-                    continue
-                if not isinstance(arg[0], str):
-                    continue
-                comodel = collect_from_path(model, arg[0])
-                if arg[1] in ('child_of', 'parent_of') and comodel._parent_store:
-                    # hierarchy operators need the parent field
-                    collect_from_path(comodel, comodel._parent_name)
-
-        def collect_from_path(model, path):
-            # path is a dot-separated sequence of field names
-            for fname in path.split('.'):
-                field = model._fields.get(fname)
-                if not field:
-                    break
-                to_flush[model._name].add(fname)
-                if field.type == 'one2many' and field.inverse_name:
-                    to_flush[field.comodel_name].add(field.inverse_name)
-                    field_domain = field.get_domain_list(model)
-                    if field_domain:
-                        collect_from_domain(self.env[field.comodel_name], field_domain)
-                # DLE P111: `test_message_process_email_partner_find`
-                # Search on res.users with email_normalized in domain
-                # must trigger the recompute and flush of res.partner.email_normalized
-                if field.related:
-                    # DLE P129: `test_transit_multi_companies`
-                    # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
-                    # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
-                    # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
-                    collect_from_path(model, field.related)
-                if field.relational:
-                    model = self.env[field.comodel_name]
-            # return the model found by traversing all fields (used in collect_from_domain)
-            return model
-
-        # also take into account the fields in the record rules
-        domain = list(domain) + (self.env['ir.rule']._compute_domain(self._name, 'read') or [])
-        collect_from_domain(self, domain)
-
-        # flush the order fields
+        # add from order
         order_spec = order or self._order
-        for order_part in order_spec.split(','):
-            order_field = order_part.split()[0]
-            field = self._fields.get(order_field)
-            if field is not None:
-                to_flush[self._name].add(order_field)
-                if field.relational:
-                    self.env[field.comodel_name]._flush_search([], seen=seen)
+        for fname in [
+            order_part.split()[0]
+            for order_part in order_spec.split(',')
+        ]:
+            to_flush[self._name].add(fname)
+            field = self._fields.get(fname)
+            if field is None:
+                raise ValueError('Invalid field in order condition %s' % fname)
+            if field.relational and field.comodel_name not in to_flush:
+                comodel = self.env[field.comodel_name]
+                comodel._flush_search([], order=comodel._order, to_flush=to_flush)
 
+        # parse domain and add ir.rules (if not already seen) before adding anything
+        domain = expression.D(domain)
+        if flush_access_rules:
+            domain &= (self.env['ir.rule']._compute_domain(self._name, 'read') or [])
+
+        # add from domain
+        def collect_fields(node, model):
+            if model is None:
+                return
+            field_name = node.field
+            field = model._fields.get(field_name)
+            if not field:
+                return
+            to_flush[model._name].add(field_name)
+            comodel = model.env.get(field.comodel_name)
+            # if we have a relation field, flush model's domain if not already done
+            if (
+                comodel is not None
+                and getattr(field, 'inverse_name', None)
+            ):
+                to_flush[field.comodel_name].add(field.inverse_name)
+                field_domain = field.get_domain_list(model)
+                comodel._flush_search(field_domain or [], order='id', to_flush=to_flush)
+            # if we have a related field, flush it
+            if field.related:
+                related_domain = expression.D(field.related, '=', False).optimize()
+                related_domain.transform_domain(collect_fields, model)
+        # domain is often optimized already, let's make sure before collecting
+        domain.transform_domain(collect_fields, self)
+
+        # add fields
+        if fields:
+            to_flush[self._name] |= set(fields)
         if self._active_name:
             to_flush[self._name].add(self._active_name)
 
@@ -4610,8 +4619,9 @@ class BaseModel(metaclass=MetaModel):
                     to_flush[model_name].update(field_names)
                     models.append(self.env[model_name])
 
-        for model_name, field_names in to_flush.items():
-            self.env[model_name].flush_model(field_names)
+        if run_flush:
+            for model_name, field_names in to_flush.items():
+                self.env[model_name].flush_model(field_names)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -4623,20 +4633,18 @@ class BaseModel(metaclass=MetaModel):
 
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
-        :return: a list of record ids or an integer (if count is True)
+        :return: a list of record ids (or Query) or an integer (if count is True)
         """
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
-        if expression.is_false(self, domain):
+        expr = model._where_expression_calc(domain)
+        query, domain = expr.query, expr.expression
+        if domain.const() is False:
             # optimization: no need to query, as no record satisfies the domain
             return 0 if count else []
+        model._flush_search(domain, order='id' if count else order)
 
-        # the flush must be done before the _where_calc(), as the latter can do some selects
-        self._flush_search(domain, order=order)
-
-        query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
         query.limit = limit
 
         if count:
@@ -4892,7 +4900,7 @@ class BaseModel(metaclass=MetaModel):
                        'id2': [] }
         """
         result = defaultdict(list)
-        domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
+        domain = expression.D('model', '=', self._name) & expression.D('res_id', 'in', self.ids)
         for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id'], order='id'):
             result[data['res_id']].append('%(module)s.%(name)s' % data)
         return {
@@ -5383,112 +5391,15 @@ class BaseModel(metaclass=MetaModel):
         """
         if not domain or not self:
             return self
-
-        stack = []
-        for leaf in reversed(domain):
-            if leaf == '|':
-                stack.append(stack.pop() | stack.pop())
-            elif leaf == '!':
-                stack.append(set(self._ids) - stack.pop())
-            elif leaf == '&':
-                stack.append(stack.pop() & stack.pop())
-            elif leaf == expression.TRUE_LEAF:
-                stack.append(set(self._ids))
-            elif leaf == expression.FALSE_LEAF:
-                stack.append(set())
-            else:
-                (key, comparator, value) = leaf
-                if comparator in ('child_of', 'parent_of'):
-                    stack.append(set(self.search([('id', 'in', self.ids), leaf], order='id')._ids))
-                    continue
-
-                if key.endswith('.id'):
-                    key = key[:-3]
-                if key == 'id':
-                    key = ''
-
-                # determine the field with the final type for values
-                field = None
-                if key:
-                    model = self.browse()
-                    for fname in key.split('.'):
-                        field = model._fields[fname]
-                        model = model[fname]
-
-                if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
-                    value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                if comparator in ('in', 'not in'):
-                    if isinstance(value, (list, tuple)):
-                        value = set(value)
-                    else:
-                        value = (value,)
-                    if field and field.type in ('date', 'datetime'):
-                        value = {Datetime.to_datetime(v) for v in value}
-                elif field and field.type in ('date', 'datetime'):
-                    value = Datetime.to_datetime(value)
-
-                matching_ids = set()
-                for record in self:
-                    data = record.mapped(key)
-                    if isinstance(data, BaseModel):
-                        v = value
-                        if isinstance(value, (list, tuple, set)) and value:
-                            v = next(iter(value))
-                        if isinstance(v, str):
-                            data = data.mapped('display_name')
-                        else:
-                            data = data and data.ids or [False]
-                    elif field and field.type in ('date', 'datetime'):
-                        data = [Datetime.to_datetime(d) for d in data]
-
-                    if comparator == '=':
-                        ok = value in data
-                    elif comparator in ('!=', '<>'):
-                        ok = value not in data
-                    elif comparator == '=?':
-                        ok = not value or (value in data)
-                    elif comparator == 'in':
-                        ok = value and any(x in value for x in data)
-                    elif comparator == 'not in':
-                        ok = not (value and any(x in value for x in data))
-                    elif comparator == '<':
-                        ok = any(x is not None and x < value for x in data)
-                    elif comparator == '>':
-                        ok = any(x is not None and x > value for x in data)
-                    elif comparator == '<=':
-                        ok = any(x is not None and x <= value for x in data)
-                    elif comparator == '>=':
-                        ok = any(x is not None and x >= value for x in data)
-                    elif comparator == 'ilike':
-                        data = [(x or "").lower() for x in data]
-                        ok = fnmatch.filter(data, '*' + (value_esc or '').lower() + '*')
-                    elif comparator == 'not ilike':
-                        value = value.lower()
-                        ok = not any(value in (x or "").lower() for x in data)
-                    elif comparator == 'like':
-                        data = [(x or "") for x in data]
-                        ok = fnmatch.filter(data, value and '*' + value_esc + '*')
-                    elif comparator == 'not like':
-                        ok = not any(value in (x or "") for x in data)
-                    elif comparator == '=like':
-                        data = [(x or "") for x in data]
-                        ok = fnmatch.filter(data, value_esc)
-                    elif comparator == '=ilike':
-                        data = [(x or "").lower() for x in data]
-                        ok = fnmatch.filter(data, value and value_esc.lower())
-                    else:
-                        raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
-
-                    if ok:
-                        matching_ids.add(record.id)
-
-                stack.append(matching_ids)
-
-        while len(stack) > 1:
-            stack.append(stack.pop() & stack.pop())
-
-        [result_ids] = stack
-        return self.browse(id_ for id_ in self._ids if id_ in result_ids)
+        # create the domain with simple optimizations
+        # the filtered_model will optimize further if needed
+        domain = expression.D(domain).optimize()
+        result = domain.filtered_model(self, set(self._ids))
+        if not result:
+            return self.browse()
+        if len(result) == len(self):
+            return self
+        return self.browse(id for id in self._ids if id in result)
 
     def sorted(self, key=None, reverse=False):
         """Return the recordset ``self`` ordered by ``key``.

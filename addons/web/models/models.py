@@ -6,16 +6,13 @@ import base64
 import json
 
 from odoo import _, _lt, api, fields, models
-from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
+from odoo.osv.expression import AND, D
 from odoo.tools import date_utils, lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
-
-def is_true_domain(domain):
-    return normalize_domain(domain) == TRUE_DOMAIN
 
 
 class lazymapping(defaultdict):
@@ -236,8 +233,8 @@ class Base(models.AbstractModel):
 
         enable_counters = kwargs.get('enable_counters')
         only_counters = kwargs.get('only_counters')
-        extra_domain = kwargs.get('extra_domain', [])
-        no_extra = is_true_domain(extra_domain)
+        extra_domain = D(kwargs.get('extra_domain', [])).optimize()
+        no_extra = extra_domain.const() is True
         model_domain = kwargs.get('model_domain', [])
         count_domain = AND([model_domain, extra_domain])
 
@@ -674,7 +671,7 @@ class Base(models.AbstractModel):
                     if enable_counters:
                         count = self.search_count(search_count_domain)
                     if not expand:
-                        if enable_counters and is_true_domain(local_extra_domain):
+                        if enable_counters and D(local_extra_domain).optimize().const() is True:
                             inImage = count
                         else:
                             inImage = self.search(search_domain, limit=1)

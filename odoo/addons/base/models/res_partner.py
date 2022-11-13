@@ -16,7 +16,7 @@ from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.osv.expression import get_unaccent_wrapper
+from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 # Global variables used for the warning fields declared on the res.partner
@@ -875,8 +875,8 @@ class Partner(models.Model):
         """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
         always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
         # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in') \
-                and args[0][2] != [False]:
+        args = expression.D(args).optimize()
+        if args.field == 'parent_id' and args.operator == 'in' and args.value != {False}:
             self = self.with_context(active_test=False)
         return super(Partner, self)._search(args, offset=offset, limit=limit, order=order,
                                             count=count, access_rights_uid=access_rights_uid)

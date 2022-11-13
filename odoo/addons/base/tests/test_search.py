@@ -144,9 +144,13 @@ class test_search(TransactionCase):
         kw = dict(groups_id=[Command.set([self.ref('base.group_system'),
                                      self.ref('base.group_partner_manager')])])
 
-        u1 = Users.create(dict(name='Q', login='m', **kw)).id
+        # use a default user to fix https://github.com/odoo/odoo/issues/54796
+        # because __system__ gets sorted differently based on collation of the DB
+        ua = Users.create(dict(name='System', login='a', **kw)).id
+
+        u1 = Users.with_user(ua).create(dict(name='Q', login='m', **kw)).id
         u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
-        u3 = Users.create(dict(name='C', login='c', **kw)).id
+        u3 = Users.with_user(ua).create(dict(name='C', login='c', **kw)).id
         u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
 
         expected_ids = [u2, u4, u3, u1]

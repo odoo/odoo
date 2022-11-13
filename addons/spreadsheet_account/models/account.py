@@ -93,7 +93,7 @@ class AccountMove(models.Model):
             "view_mode": "list",
             "views": [[False, "list"]],
             "target": "current",
-            "domain": domain,
+            "domain": list(domain),
             "name": _("Journal items for account prefix %s", args["code"]),
         }
 

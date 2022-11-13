@@ -648,11 +648,10 @@ actual arch.
         """
         self.check_access_rights('read')
         domain = self._get_inheriting_views_domain()
-        e = expression(domain, self.env['ir.ui.view'])
+        e = self._where_expression_calc(domain, flush_fields=['inherit_id', 'priority', 'model', 'mode'])
         from_clause, where_clause, where_params = e.query.get_sql()
         assert from_clause == '"ir_ui_view"', f"Unexpected from clause: {from_clause}"
 
-        self._flush_search(domain, fields=['inherit_id', 'priority', 'model', 'mode'], order='id')
         query = f"""
             WITH RECURSIVE ir_ui_view_inherits AS (
                 SELECT id, inherit_id, priority, mode, model

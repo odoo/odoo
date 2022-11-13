@@ -85,15 +85,13 @@ class ChannelUsersRelation(models.Model):
         Override unlink method :
         Remove attendee from a channel, then also remove slide.slide.partner related to.
         """
-        removed_slide_partner_domain = []
-        for channel_partner in self:
-            # find all slide link to the channel and the partner
-            removed_slide_partner_domain = expression.OR([
-                removed_slide_partner_domain,
-                [('partner_id', '=', channel_partner.partner_id.id),
-                 ('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)]
-            ])
-        if removed_slide_partner_domain:
+        # find all slide link to the channel and the partner
+        removed_slide_partner_domain = expression.OR([
+            [('partner_id', '=', channel_partner.partner_id.id),
+                ('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)]
+            for channel_partner in self
+        ])
+        if removed_slide_partner_domain.const() is None:
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
         return super(ChannelUsersRelation, self).unlink()
 

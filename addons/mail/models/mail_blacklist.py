@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class MailBlackList(models.Model):
@@ -54,19 +55,19 @@ class MailBlackList(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """ Override _search in order to grep search on email field and make it
         lower-case and sanitized """
-        if args:
-            new_args = []
-            for arg in args:
-                if isinstance(arg, (list, tuple)) and arg[0] == 'email' and isinstance(arg[2], str):
-                    normalized = tools.email_normalize(arg[2])
-                    if normalized:
-                        new_args.append([arg[0], arg[1], normalized])
-                    else:
-                        new_args.append(arg)
+        def use_normalized_value(node, model):
+            if node.field == 'email':
+                value = node.value
+                if isinstance(value, str):
+                    normalized = tools.email_normalize(value)
+                elif isinstance(value, set):
+                    normalized = {result for v in value if (result := tools.email_normalize(v))}
                 else:
-                    new_args.append(arg)
-        else:
-            new_args = args
+                    normalized = None
+                if normalized and normalized != value:
+                    return expression.D(node.field, node.operator, normalized)
+            return None
+        new_args = expression.D(args or []).transform_domain(use_normalized_value)
         return super(MailBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     def _add(self, email, message=None):

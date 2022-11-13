@@ -518,7 +518,7 @@ class ProductTemplate(models.Model):
         tmpl_without_variant_ids = []
         if not limit or len(searched_ids) < limit:
             tmpl_without_variant_ids = self.env['product.template'].search(
-                [('id', 'not in', self.env['product.template']._search([('product_variant_ids.active', '=', True)]))]
+                [('product_variant_ids', 'none', [('active', '=', True)])]
             )
         if tmpl_without_variant_ids:
             domain = expression.AND([args or [], [('id', 'in', tmpl_without_variant_ids.ids)]])

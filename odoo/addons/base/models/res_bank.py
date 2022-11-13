@@ -114,18 +114,16 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        pos = 0
-        while pos < len(args):
-            # DLE P14
-            if args[pos][0] == 'acc_number':
-                op = args[pos][1]
-                value = args[pos][2]
+        def use_sanitized_value(node, model):
+            if node.field == 'acc_number':
+                value = node.value
                 if not isinstance(value, str) and isinstance(value, Iterable):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)
-                if 'like' in op:
-                    value = '%' + value + '%'
-                args[pos] = ('sanitized_acc_number', op, value)
-            pos += 1
+                if node.operator.endswith('like'):
+                    value = f"%{value}%"
+                return expression.D('sanitized_acc_number', node.operator, value)
+            return None
+        args = expression.D(args or []).transform_domain(use_sanitized_value)
         return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)

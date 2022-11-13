@@ -55,7 +55,7 @@ from odoo.models import BaseModel
 from odoo.exceptions import AccessError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
-from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
+from odoo.osv.expression import D
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
@@ -2229,7 +2229,7 @@ class Form(object):
         inherited_modifiers = ['invisible']
         fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]}}
+        modifiers = fvg['modifiers'] = {'id': {'required': D(False), 'readonly': D(True)}}
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
         field_level = fvg['tree'].xpath('count(ancestor::field)')
@@ -2251,23 +2251,26 @@ class Form(object):
             node_modifiers = {}
             for modifier, domain in json.loads(f.get('modifiers', '{}')).items():
                 if isinstance(domain, int):
-                    node_modifiers[modifier] = [TRUE_LEAF] if domain else [FALSE_LEAF]
+                    node_modifiers[modifier] = D(bool(domain))
                 elif isinstance(domain, str):
-                    node_modifiers[modifier] = normalize_domain(safe_eval(domain, eval_context))
+                    node_modifiers[modifier] = D(safe_eval(domain, eval_context))
                 else:
-                    node_modifiers[modifier] = normalize_domain(domain)
+                    node_modifiers[modifier] = D(domain)
 
             for a in f.xpath('ancestor::*[@modifiers][count(ancestor::field) = %s]' % field_level):
                 ancestor_modifiers = json.loads(a.get('modifiers'))
                 for modifier in inherited_modifiers:
                     if modifier in ancestor_modifiers:
                         domain = ancestor_modifiers[modifier]
-                        ancestor_domain = ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
-                        node_domain = node_modifiers.get(modifier, [])
+                        ancestor_domain = D(bool(domain)) if isinstance(domain, int) else D(domain)
                         # Combine the field modifiers with his ancestor modifiers with an OR connector
                         # e.g. A field is invisible if its own invisible modifier is True
                         # OR if one of its ancestor invisible modifier is True
-                        node_modifiers[modifier] = expression.OR([ancestor_domain, node_domain])
+                        if modifier in node_modifiers:
+                            node_domain = ancestor_domain | node_modifiers[modifier]
+                        else:
+                            node_domain = ancestor_domain
+                        node_modifiers[modifier] = node_domain
 
             if fname in modifiers:
                 # The field is multiple times in the view, combine the modifier domains with an AND connector
@@ -2275,8 +2278,8 @@ class Form(object):
                 # e.g. a field is readonly if all occurences of the field are readonly in the view.
                 for modifier in set(node_modifiers.keys()).union(modifiers[fname].keys()):
                     modifiers[fname][modifier] = expression.AND([
-                        modifiers[fname].get(modifier, [FALSE_LEAF]),
-                        node_modifiers.get(modifier, [FALSE_LEAF]),
+                        modifiers[fname].get(modifier, D(False)),
+                        node_modifiers.get(modifier, D(False)),
                     ])
             else:
                 modifiers[fname] = node_modifiers
@@ -2338,71 +2341,52 @@ class Form(object):
             view = self._view
 
         d = (modmap or view['modifiers'])[field].get(modifier, default)
-        if isinstance(d, bool):
-            return d
+        d = D(d).optimize()
+        if d.const() is not None:
+            return d.const()
 
+        # transform with operations similar to filtered_domain,
+        # eval leaves here (result is a const), then reduce to single value and get
         if vals is None:
             vals = self._values
-        stack = []
-        for it in reversed(d):
-            if it == '!':
-                stack.append(not stack.pop())
-            elif it == '&':
-                e1 = stack.pop()
-                e2 = stack.pop()
-                stack.append(e1 and e2)
-            elif it == '|':
-                e1 = stack.pop()
-                e2 = stack.pop()
-                stack.append(e1 or e2)
-            elif isinstance(it, tuple):
-                if it == TRUE_LEAF:
-                    stack.append(True)
-                    continue
-                elif it == FALSE_LEAF:
-                    stack.append(False)
-                    continue
-                f, op, val = it
+        def eval_leaf(leaf, _model):
+            # quick leaf evaluation based on values in this view
+            if not isinstance(leaf, expression.DomainLeaf):
+                return None
+            f, op, val = leaf.field, leaf.operator, leaf.value
+            if neg := (op in expression.NEGATIVE_TERM_OPERATORS):
+                op = expression.TERM_OPERATORS_NEGATION[op]
+            if is_parent := (f == 'parent' and op == 'any'):
                 # hack-ish handling of parent.<field> modifiers
-                f, n = re.subn(r'^parent\.', '', f, 1)
-                if n:
-                    field_val = vals['•parent•'][f]
-                else:
-                    field_val = vals[f]
-                    # apparent artefact of JS data representation: m2m field
-                    # values are assimilated to lists of ids?
-                    # FIXME: SSF should do that internally, but the requirement
-                    #        of recursively post-processing to generate lists of
-                    #        commands on save (e.g. m2m inside an o2m) means the
-                    #        data model needs proper redesign
-                    # we're looking up the "current view" so bits might be
-                    # missing when processing o2ms in the parent (see
-                    # values_to_save:1450 or so)
-                    f_ = view['fields'].get(f, {'type': None})
-                    if f_['type'] == 'many2many':
-                        # field value should be [(6, _, ids)], we want just the ids
-                        field_val = field_val[0][2] if field_val else []
-
-                stack.append(self._OPS[op](field_val, val))
+                assert isinstance(val, expression.DomainLeaf)
+                f, op, val = val.field, val.operator, val.value
+            check = leaf._get_filter_operator_function(op, val)
+            if is_parent:
+                field_val = vals['•parent•'][f]
             else:
-                raise ValueError("Unknown domain element %s" % [it])
-        [result] = stack
-        return result
-    _OPS = {
-        '=': operator.eq,
-        '==': operator.eq,
-        '!=': operator.ne,
-        '<': operator.lt,
-        '<=': operator.le,
-        '>=': operator.ge,
-        '>': operator.gt,
-        'in': lambda a, b: (a in b) if isinstance(b, (tuple, list)) else (b in a),
-        'not in': lambda a, b: (a not in b) if isinstance(b, (tuple, list)) else (b not in a),
-        'like': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a in b,
-        'ilike': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a.lower() in b.lower(),
-        'not like': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a not in b,
-        'not ilike': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a.lower() not in b.lower(),
-    }
+                field_val = vals[f]
+                # apparent artefact of JS data representation: m2m field
+                # values are assimilated to lists of ids?
+                # FIXME: SSF should do that internally, but the requirement
+                #        of recursively post-processing to generate lists of
+                #        commands on save (e.g. m2m inside an o2m) means the
+                #        data model needs proper redesign
+                # we're looking up the "current view" so bits might be
+                # missing when processing o2ms in the parent (see
+                # values_to_save:1450 or so)
+                f_ = view['fields'].get(f, {'type': None})
+                if f_['type'] == 'many2many':
+                    # field value should be [(6, _, ids)], we want just the ids
+                    field_val = field_val[0][2] if field_val else []
+
+            if isinstance(field_val, list) and val != {False}:
+                # check each id in the list, except when checking for existence
+                op_many = all if neg else any
+                return D(op_many(check(v) for v in field_val) != neg)
+            return D(check(field_val) != neg)
+        d = d.transform_domain(eval_leaf)
+        return d.optimize().const()
+
     def _get_context(self, field):
         c = self._view['contexts'].get(field)
         if not c:

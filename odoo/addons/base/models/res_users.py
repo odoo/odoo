@@ -181,10 +181,11 @@ class Groups(models.Model):
                 sub_where = expression.AND([group_domain, category_domain])
             else:
                 sub_where = expression.OR([group_domain, category_domain])
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                where = expression.AND([where, sub_where])
-            else:
-                where = expression.OR([where, sub_where])
+            where.append(sub_where)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            where = expression.AND(where)
+        else:
+            where = expression.OR(where)
         return where
 
     @api.model
@@ -708,7 +709,7 @@ class Users(models.Model):
     @tools.ormcache('self.id')
     def _get_company_ids(self):
         # use search() instead of `self.company_ids` to avoid extra query for `active_test`
-        domain = [('active', '=', True), ('user_ids', 'in', self.id)]
+        domain = [('active', '=', True), ('user_ids', '=', self.id)]
         return self.env['res.company'].search(domain)._ids
 
     @api.model

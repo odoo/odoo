@@ -5,7 +5,6 @@ from lxml import etree
 
 from odoo.exceptions import AccessError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import TransactionCase
 from odoo.tools.misc import mute_logger
 from odoo import Command
 

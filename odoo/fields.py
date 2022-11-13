@@ -4246,7 +4246,11 @@ class _RelationalMulti(_Relational):
 
         for idx, (recs, value) in enumerate(records_commands_list):
             if isinstance(value, tuple):
-                value = [Command.set(value)]
+                # check if we have already a command
+                if (1 <= len(value) <= 3 and isinstance(value[0], Command)):
+                    value = [value]  # already a command
+                else:
+                    value = [Command.set(value)]
             elif isinstance(value, BaseModel) and value._name == self.comodel_name:
                 value = [Command.set(value._ids)]
             elif value is False or value is None:
@@ -4716,9 +4720,7 @@ class Many2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
         domain = self.get_domain_list(records)
-        comodel._flush_search(domain)
-        wquery = comodel._where_calc(domain)
-        comodel._apply_ir_rules(wquery, 'read')
+        wquery = comodel._where_expression_calc(domain, flush_fields=[]).query
         order_by = comodel._generate_order_by(None, wquery)
         from_c, where_c, where_params = wquery.get_sql()
         query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}

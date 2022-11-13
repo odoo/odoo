@@ -6,6 +6,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -62,20 +63,23 @@ class PhoneBlackList(models.Model):
 
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """ Override _search in order to grep search on sanitized number field """
-        if args:
-            new_args = []
-            for arg in args:
-                if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
-                    number = arg[2]
+        def use_normalized_value(node, model):
+            if node.field == 'number':
+                number = node.value
+                if isinstance(number, str):
                     sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-                    if sanitized:
-                        new_args.append([arg[0], arg[1], sanitized])
-                    else:
-                        new_args.append(arg)
+                elif isinstance(number, set):
+                    sanitized = {
+                        v['sanitized']
+                        for v in phone_validation.phone_sanitize_numbers_w_record(list(number), self.env.user).values()
+                        if v and v['sanitized']
+                    }
                 else:
-                    new_args.append(arg)
-        else:
-            new_args = args
+                    sanitized = None
+                if sanitized and sanitized != number:
+                    return expression.D(node.field, node.operator, sanitized)
+            return None
+        new_args = expression.D(args or []).transform_domain(use_normalized_value)
         return super(PhoneBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     def add(self, number, message=None):

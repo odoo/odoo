@@ -581,6 +581,8 @@ class TestExpenses(TestExpenseCommon):
         Test the check content when printing a check
         that comes from an expense
         """
+        if not self.env["ir.module.module"].search([("name", "=", "account_check_printing"), ("state", "=", "installed")]):
+            self.skipTest("account_check_printing is required for this test")  # for payment_method_line
         sheet = self.env['hr.expense.sheet'].create({
             'company_id': self.env.company.id,
             'employee_id': self.expense_employee.id,

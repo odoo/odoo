@@ -258,13 +258,12 @@ class MailActivityMixin(models.AbstractModel):
 
         # explicitly check access rights, since we bypass the ORM
         self.check_access_rights('read')
-        self._flush_search(domain, fields=[group_by_fname], order='id')
+        expr = self._where_expression_calc(domain, flush_fields=[group_by_fname, 'id'])
+        query, domain = expr.query, expr.expression
         self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
         self.env['res.users'].flush_model(['partner_id'])
         self.env['res.partner'].flush_model(['tz'])
 
-        query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
         gb = group_by.partition(':')[0]
         annotated_groupbys = [
             self._read_group_process_groupby(gb, query)

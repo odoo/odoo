@@ -134,7 +134,7 @@ class MicrosoftSync(models.AbstractModel):
                 else [('microsoft_id', '=', False)]
             )
         return (
-            ['|'] * (len(value) - 1) + [_domain(v) for v in value]
+            expression.OR(_domain(v) for v in value)
             if operator.lower() == 'in'
             else [_domain(value)]
         )

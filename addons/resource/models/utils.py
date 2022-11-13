@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.osv.expression import normalize_domain, NOT_OPERATOR, DOMAIN_OPERATORS
+from odoo.osv.expression import normalize_domain, Domain, NOT_OPERATOR, DOMAIN_OPERATORS
 
 def filter_domain_leaf(domain, leaf_check):
     """
-    filter_domain_lead only keep the leaves of a domain that verify a given check. Logical operators that involves
+    filter_domain_leaf only keep the leaves of a domain that verify a given check. Logical operators that involves
     a leaf that is undetermined (because it does not pass the check) are ignored.
 
     each operator is a logic gate:
@@ -16,6 +16,20 @@ def filter_domain_leaf(domain, leaf_check):
         - leaf_check: the function that the field used in the leaf needs to verify to keep the leaf
     returns: The filtered version of the domain
     """
+    undetermined = object()
+    def _transform(node, model):
+        field = node.field
+        if field:
+            return None if leaf_check(field) else undetermined
+        if hasattr(node, 'children') and any(c == undetermined for c in node.children):
+            return type(node)(node.zero if c == undetermined else c for c in node.children)
+        if getattr(node, 'child', None) == undetermined:
+            return undetermined
+        return None
+
+    if isinstance(domain, Domain):
+        # XXX could always use this
+        return domain.transform_domain(_transform)
     def _filter_domain_leaf_recursive(domain, leaf_check, operator=False):
         """
         return domain, rest_domain -> rest_domain should be empty if the operation is finished

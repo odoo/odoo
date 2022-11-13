@@ -528,7 +528,7 @@ class IrAttachment(models.Model):
         discard_binary_fields_attachments = False
         if not any(arg[0] in ('id', 'res_field') for arg in args):
             discard_binary_fields_attachments = True
-            args.insert(0, ('res_field', '=', False))
+            args &= expression.D('res_field', '=', False)
 
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)

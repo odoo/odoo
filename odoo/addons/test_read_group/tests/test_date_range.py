@@ -96,9 +96,9 @@ class TestDateRange(common.TransactionCase):
         self.Model.create({'date': '1916-02-11', 'value': 1})
 
         expected = [{
-            '__domain': ['&',
-                '&', ('date', '>=', '1916-01-01'), ('date', '<', '1916-04-01'),
-                '&', ('date', '>=', '1916-02-11'), ('date', '<', '1916-02-12')
+            '__domain': ['&', '&', '&',
+                ('date', '>=', '1916-01-01'), ('date', '<', '1916-04-01'),
+                ('date', '>=', '1916-02-11'), ('date', '<', '1916-02-12')
             ],
             '__range': {
                 'date:quarter': {'from': '1916-01-01', 'to': '1916-04-01'},

@@ -72,7 +72,7 @@ class IrRule(models.Model):
         are OR-ed together, the entire group succeeds or fails, while global
         rules get AND-ed and can each fail)
         """
-        Model = for_records.browse(()).sudo()
+        Model = for_records.browse().sudo().with_context(active_test=False)
         eval_context = self._eval_context()
 
         all_rules = self._get_rules(Model._name, mode=mode).sudo()
@@ -81,20 +81,17 @@ class IrRule(models.Model):
         # searching on (records, group_rules) filters out some of the records)
         group_rules = all_rules.filtered(lambda r: r.groups and r.groups & self.env.user.groups_id)
         group_domains = expression.OR([
-            safe_eval(r.domain_force, eval_context) if r.domain_force else []
+            safe_eval(r.domain_force, eval_context) if r.domain_force else expression.TRUE_DOMAIN
             for r in group_rules
         ])
         # if all records get returned, the group rules are not failing
-        if Model.search_count(expression.AND([[('id', 'in', for_records.ids)], group_domains])) == len(for_records):
+        if Model.search_count(expression.D('id', 'in', for_records.ids) & group_domains) == len(for_records):
             group_rules = self.browse(())
 
         # failing rules are previously selected group rules or any failing global rule
         def is_failing(r, ids=for_records.ids):
             dom = safe_eval(r.domain_force, eval_context) if r.domain_force else []
-            return Model.search_count(expression.AND([
-                [('id', 'in', ids)],
-                expression.normalize_domain(dom)
-            ])) < len(ids)
+            return Model.search_count(expression.D('id', 'in', ids) & dom) < len(ids)
 
         return all_rules.filtered(lambda r: r in group_rules or (not r.groups and is_failing(r))).with_user(self.env.user)
 
@@ -128,7 +125,7 @@ class IrRule(models.Model):
     def _compute_domain(self, model_name, mode="read"):
         rules = self._get_rules(model_name, mode=mode)
         if not rules:
-            return
+            return None
 
         # browse user and rules as SUPERUSER_ID to avoid access errors!
         eval_context = self._eval_context()
@@ -137,17 +134,21 @@ class IrRule(models.Model):
         group_domains = []                      # list of domains
         for rule in rules.sudo():
             # evaluate the domain for the current user
-            dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
-            dom = expression.normalize_domain(dom)
+            dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else expression.TRUE_DOMAIN
             if not rule.groups:
                 global_domains.append(dom)
             elif rule.groups & user_groups:
                 group_domains.append(dom)
 
         # combine global domains and group domains
-        if not group_domains:
-            return expression.AND(global_domains)
-        return expression.AND(global_domains + [expression.OR(group_domains)])
+        # optimize here, since the result is cached
+        domain = expression.AND(global_domains)
+        if group_domains:
+            domain &= expression.OR(group_domains)
+        # optimization with model can result in a query or evaluated ids
+        # prevent this by adding optimize_execute=False
+        domain = domain.optimize(self.env[model_name].with_context(optimize_execute=False))
+        return domain
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():

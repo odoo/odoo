@@ -991,6 +991,9 @@ class ModuleDependency(models.Model):
             dep.depend_id = name_mod.get(dep.name)
 
     def _search_depend(self, operator, value):
+        if operator == '=':
+            operator = 'in'
+            value = {value}
         assert operator == 'in'
         modules = self.env['ir.module.module'].browse(set(value))
         return [('name', 'in', modules.mapped('name'))]
