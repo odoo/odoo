@@ -19,7 +19,7 @@
 # marcescu, 2022
 # Harcogourmet, 2022
 # CristianCruzParra, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: Josep Anton Belchi, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -502,6 +502,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"Les quantitats de tots els productes han de ser més grans o iguals a 0.\n"
+"Les línies amb quantitats 0 es poden usar com a línies opcionals. \n"
+"Hauríeu d'instal·lar el mòdul mrp_byproduct si voleu gestionar productes extra a les LdMs."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
@@ -678,7 +681,7 @@ msgstr "Variants del producte BOM"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr ""
+msgstr "Per a aplicar aquesta línia calen variants de producte de la LdM."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -842,12 +845,12 @@ msgstr "Llista de materials (LdM)"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr ""
+msgstr "Components de la LdM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Cost"
-msgstr ""
+msgstr "Cost de la LdM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -899,6 +902,8 @@ msgstr ""
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr ""
+"El producte %s de la línia de la LdM no pot ser el mateix que el producte de"
+" la LdM."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -3830,7 +3835,7 @@ msgstr "Configuració"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
 msgid "Show BoM column"
-msgstr ""
+msgstr "Mostrar columna LdM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots

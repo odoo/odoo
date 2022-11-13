@@ -295,30 +295,30 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        Hello,\n"
+"        Xin chào,\n"
 "        <br/><br/>\n"
 "        % set transaction = object.get_portal_last_transaction()\n"
-"        Your order <strong>${object.name}</strong> amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        Đơn hàng của bạn <strong>${object.name}</strong> với tổng giá trị <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        % if object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized')) :\n"
-"            has been confirmed.<br/>\n"
-"            Thank you for your trust!\n"
+"            đã được xác nhận.<br/>\n"
+"            Chân thành cảm ơn sự tin tưởng từ bạn!\n"
 "        % elif transaction and transaction.state == 'pending' :\n"
-"            is pending. It will be confirmed when the payment is received.\n"
+"            đang tạm dừng. Nó sẽ được xác nhận khi các khoản thanh được nhận đầy đủ.\n"
 "            % if object.reference:\n"
-"                Your payment reference is <strong>${object.reference}</strong>.\n"
+"                Khoản thanh toán liên quan của bạn là <strong>${object.reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
+"        Đừng ngần ngại liên hệ chúng tôi nếu bạn có bất kỳ câu hỏi nào.\n"
 "        <br/><br/>\n"
 "    </p>\n"
 "% if object.website_id:\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><strong>Products</strong></td>\n"
+"                <td style=\"width: 150px;\"><strong>Sản phẩm</strong></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><strong>Quantity</strong></td>\n"
+"                <td width=\"15%\" align=\"center\"><strong>Số lượng</strong></td>\n"
 "                <td width=\"20%\" align=\"right\"><strong>\n"
 "                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):\n"
 "                    VAT Excl.\n"
@@ -366,12 +366,12 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Delivery:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Giao hàng:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_delivery, object.currency_id)}</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Tổng cộng:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -381,7 +381,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Tổng cộng:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -391,7 +391,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxes:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Thuế:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -406,7 +406,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
-"                    <strong>Bill to:</strong>\n"
+"                    <strong>Cần thanh toán:</strong>\n"
 "                    ${object.partner_invoice_id.street or ''}\n"
 "                    ${object.partner_invoice_id.city or ''}\n"
 "                    ${object.partner_invoice_id.state_id.name or ''}\n"
@@ -416,7 +416,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <strong>Payment Method:</strong>\n"
+"                    <strong>Phương thức thanh toán:</strong>\n"
 "                    % if transaction.payment_token_id:\n"
 "                        ${transaction.payment_token_id.name}\n"
 "                    % else:\n"
@@ -434,7 +434,7 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <strong>Ship to:</strong>\n"
+"                    <strong>Giao đến:</strong>\n"
 "                    ${object.partner_shipping_id.street or ''}\n"
 "                    ${object.partner_shipping_id.city or ''}\n"
 "                    ${object.partner_shipping_id.state_id.name or ''}\n"
@@ -447,7 +447,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <strong>Shipping Method:</strong>\n"
+"                    <strong>Phương thức giao hàng:</strong>\n"
 "                    ${object.carrier_id.name}\n"
 "                    % if object.carrier_id.fixed_price == 0.0:\n"
 "                        (Free)\n"
@@ -569,8 +569,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
-"title=\"Sales orders\"/>"
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Đơn bán hàng\" "
+"title=\"Đơn bán hàng\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1006,8 +1006,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
-"An order is to upsell when delivered quantities are above initially\n"
-"                ordered quantities, and the invoicing policy is based on ordered quantities."
+"Một đơn hàng chờ bổ sung khi số lượng giao lớn hơn số lượng ban đầu\n"
+"                đã đặt hàng, và chính sách tính hóa đơn dựa theo số lượng của Đơn đặt hàng."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1150,7 +1150,7 @@ msgstr "Hủy"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Cancel Sales Order"
-msgstr "Cancel Sales Order"
+msgstr "Hủy đơn hàng"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1495,7 +1495,7 @@ msgstr "Điều chỉnh bố cục báo giá của bạn."
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr "Customize your quotes and orders."
+msgstr "Tùy chỉnh báo giá và đơn hàng của bạn."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1784,7 +1784,7 @@ msgstr "Báo giá dự thảo"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr "Draft invoices for this order will be cancelled."
+msgstr "Hóa đơn dự thảo cho Đơn hàng này sẽ bị hủy bỏ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2614,7 +2614,7 @@ msgstr "Không tìm thấy đơn hàng nào phải lên hóa đơn"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr "No orders to upsell found."
+msgstr "Không tìm thấy đơn hàng chờ bổ sung."
 
 #. module: sale
 #. openerp-web
@@ -2765,7 +2765,7 @@ msgstr "Open Sales app to send your first quotation in a few clicks."
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
-msgstr "Lệnh"
+msgstr "Đơn hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_id
@@ -2776,7 +2776,7 @@ msgstr "Đơn hàng #"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Order Confirmation"
-msgstr "Order Confirmation"
+msgstr "Đơn hàng xác nhận"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
@@ -2810,7 +2810,7 @@ msgstr "Chi tiết đơn hàng"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__name
 msgid "Order Reference"
-msgstr "Mã đơn hàng"
+msgstr "Đơn hàng liên quan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__state
@@ -2820,7 +2820,7 @@ msgstr "Trạng thái Đơn hàng"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr "Đơn hàng bán gia tăng"
+msgstr "Đơn hàng bán bổ sung"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2837,7 +2837,7 @@ msgstr "Đơn hàng chờ hóa đơn"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
+msgstr "Số lượng đặt hàng: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2871,7 +2871,7 @@ msgstr "Đơn hàng cho hóa đơn"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "Đơn bán hàng gia tăng"
+msgstr "Đơn hàng bán bổ sung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3473,7 +3473,7 @@ msgstr "Đơn bán hàng"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Sales Order Cancel"
+msgstr "Hủy đơn hàng"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -3642,7 +3642,8 @@ msgstr "Chọn một sản phẩm, hoặc tạo mới."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr "Select product attributes and optional products from the sales order"
+msgstr ""
+"Chọn một thuột tính sản phẩm và tùy chọn sản phẩm thêm từ Đơn bán hàng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4274,7 +4275,7 @@ msgstr "Số lượng cần xuất hóa đơn"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "Bán hàng gia tăng"
+msgstr "Chờ bổ sung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4464,7 +4465,7 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
-"Bán hàng gia tăng <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> cho "
+"Bán hàng bổ sung <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> cho "
 "khách hàng <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
@@ -4481,7 +4482,7 @@ msgstr "Có hiệu lực đến"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Validate Order"
-msgstr "Xác nhận báo giá"
+msgstr "Xác nhận đơn hàng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4675,7 +4676,7 @@ msgstr "ngày"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "sale order"
-msgstr "đơn hàng"
+msgstr "đơn bán hàng"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group
