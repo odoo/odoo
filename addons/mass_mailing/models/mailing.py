@@ -175,13 +175,14 @@ class MassMailing(models.Model):
     mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
     mailing_filter_count = fields.Integer('# Favorite Filters', compute='_compute_mailing_filter_count')
     # A/B Testing
-    ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed', store=True)
+    ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed')
     ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")
     ab_testing_enabled = fields.Boolean(
         string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
              'This lets you send different mailings to randomly selected recipients and test '
              'the effectiveness of the mailings, without causing duplicate messages.')
+    ab_testing_is_winner_mailing = fields.Boolean('Is the Winner of its Campaign', compute='_compute_ab_testing_is_winner_mailing')
     ab_testing_mailings_count = fields.Integer(related="campaign_id.ab_testing_mailings_count")
     ab_testing_pc = fields.Integer(
         string='A/B Testing percentage',
@@ -233,6 +234,11 @@ class MassMailing(models.Model):
                 raise ValidationError(
                     _("The saved filter targets different recipients and is incompatible with this mailing.")
                 )
+
+    @api.depends('campaign_id.ab_testing_winner_mailing_id')
+    def _compute_ab_testing_is_winner_mailing(self):
+        for mailing in self:
+            mailing.ab_testing_is_winner_mailing = mailing.campaign_id.ab_testing_winner_mailing_id == mailing
 
     @api.depends('mail_server_id')
     def _compute_email_from(self):
@@ -834,12 +840,10 @@ class MassMailing(models.Model):
         self.ensure_one()
         if not self.ab_testing_enabled:
             raise ValueError(_("A/B test option has not been enabled"))
-        self.campaign_id.write({
-            'ab_testing_completed': True,
-        })
         final_mailing = self.copy({
             'ab_testing_pc': 100,
         })
+        self.campaign_id.ab_testing_winner_mailing_id = final_mailing
         final_mailing.action_launch()
         action = self.env['ir.actions.act_window']._for_xml_id('mass_mailing.action_ab_testing_open_winner_mailing')
         action['res_id'] = final_mailing.id
@@ -851,14 +855,12 @@ class MassMailing(models.Model):
 
     def _get_ab_testing_description_values(self):
         self.ensure_one()
-
-        other_ab_testing_mailings = self._get_ab_testing_siblings_mailings().filtered(lambda m: m.id != self.id)
-        other_ab_testing_pc = sum([mailing.ab_testing_pc for mailing in other_ab_testing_mailings])
         return {
             'mailing': self,
             'ab_testing_winner_selection_description': self._get_ab_testing_winner_selection()['description'],
-            'other_ab_testing_pc': other_ab_testing_pc,
-            'remaining_ab_testing_pc': 100 - (other_ab_testing_pc + self.ab_testing_pc),
+            'total_ab_testing_pc': sum([
+                mailing.ab_testing_pc for mailing in self._get_ab_testing_siblings_mailings()
+            ]),
         }
 
     def _get_ab_testing_siblings_mailings(self):
@@ -988,7 +990,7 @@ class MassMailing(models.Model):
         res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
-        if self.ab_testing_enabled and self.ab_testing_pc < 100:
+        if self.ab_testing_enabled and not self.ab_testing_is_winner_mailing:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
             topick = 0
             if contact_nbr:
@@ -1006,8 +1008,8 @@ class MassMailing(models.Model):
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
         trace_domain = [('model', '=', self.mailing_model_real)]
-        if self.ab_testing_enabled and self.ab_testing_pc == 100:
-            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', '=', self._get_ab_testing_siblings_mailings().ids)]])
+        if self.ab_testing_enabled and self.ab_testing_is_winner_mailing:
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
         else:
             trace_domain = expression.AND([trace_domain, [
                 ('res_id', 'in', res_ids),
