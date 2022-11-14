@@ -137,9 +137,9 @@ class Project(models.Model):
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     alias_value = fields.Char(string='Alias email', compute='_compute_alias_value')
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited internal users'),
+            ('followers', 'Invited internal users (private)'),
             ('employees', 'All internal users'),
-            ('portal', 'Invited portal users and all internal users'),
+            ('portal', 'Invited portal users and all internal users (public)'),
         ],
         string='Visibility', required=True,
         default='portal',
@@ -339,9 +339,9 @@ class Project(models.Model):
     def _compute_access_instruction_message(self):
         for project in self:
             if project.privacy_visibility == 'portal':
-                project.access_instruction_message = _('Grant portal users access to your project or tasks by adding them as followers.')
+                project.access_instruction_message = _('Grant portal users access to your project or tasks by adding them as followers. Customers automatically get access to their tasks in their portal.')
             elif project.privacy_visibility == 'followers':
-                project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers.')
+                project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
             else:
                 project.access_instruction_message = ''
 
