@@ -200,7 +200,7 @@ export function usePartnerAutocomplete() {
      * @private
      */
     async function getClearbitSuggestions(value) {
-        const url = `https://autocomplete.clearbit.com/v1/companies/suggest?query=${value}`;
+        const url = `http://localhost:8069/partner_autocomplete?query=${value}`;
         const prom = http.get(url);
         return keepLastClearbit.add(prom);
     }
