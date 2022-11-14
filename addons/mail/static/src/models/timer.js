@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { one, Patch } from '@mail/model';
+import { one, Patch } from "@mail/model";
 
 Patch({
-    name: 'Timer',
+    name: "Timer",
     recordMethods: {
         /**
          * @override
@@ -49,9 +49,18 @@ Patch({
         },
     },
     fields: {
-        blurManagerOwnerAsFrameRequest: one('BlurManager', { identifying: true, inverse: 'frameRequestTimer' }),
-        callMainViewAsShowOverlay: one('CallMainView', { identifying: true, inverse: 'showOverlayTimer' }),
-        chatterOwnerAsAttachmentsLoader: one('Chatter', { identifying: true, inverse: 'attachmentsLoaderTimer' }),
+        blurManagerOwnerAsFrameRequest: one("BlurManager", {
+            identifying: true,
+            inverse: "frameRequestTimer",
+        }),
+        callMainViewAsShowOverlay: one("CallMainView", {
+            identifying: true,
+            inverse: "showOverlayTimer",
+        }),
+        chatterOwnerAsAttachmentsLoader: one("Chatter", {
+            identifying: true,
+            inverse: "attachmentsLoaderTimer",
+        }),
         duration: {
             compute() {
                 if (this.blurManagerOwnerAsFrameRequest) {
@@ -84,11 +93,27 @@ Patch({
                 return this._super();
             },
         },
-        messageViewOwnerAsHighlight: one('MessageView', { identifying: true, inverse: 'highlightTimer' }),
-        otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', { identifying: true, inverse: 'timer', isCausal: true }),
-        rtcSessionOwnerAsBroadcast: one('RtcSession', { identifying: true, inverse: 'broadcastTimer' }),
-        threadAsCurrentPartnerInactiveTypingTimerOwner: one('Thread', { identifying: true, inverse: 'currentPartnerInactiveTypingTimer' }),
-        threadAsCurrentPartnerLongTypingTimerOwner: one('Thread', { identifying: true, inverse: 'currentPartnerLongTypingTimer' }),
-        throttleOwner: one('Throttle', { identifying: true, inverse: 'cooldownTimer' }),
+        messageViewOwnerAsHighlight: one("MessageView", {
+            identifying: true,
+            inverse: "highlightTimer",
+        }),
+        otherMemberLongTypingInThreadTimerOwner: one("OtherMemberLongTypingInThreadTimer", {
+            identifying: true,
+            inverse: "timer",
+            isCausal: true,
+        }),
+        rtcSessionOwnerAsBroadcast: one("RtcSession", {
+            identifying: true,
+            inverse: "broadcastTimer",
+        }),
+        threadAsCurrentPartnerInactiveTypingTimerOwner: one("Thread", {
+            identifying: true,
+            inverse: "currentPartnerInactiveTypingTimer",
+        }),
+        threadAsCurrentPartnerLongTypingTimerOwner: one("Thread", {
+            identifying: true,
+            inverse: "currentPartnerLongTypingTimer",
+        }),
+        throttleOwner: one("Throttle", { identifying: true, inverse: "cooldownTimer" }),
     },
 });

@@ -7,7 +7,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 
-import { onMounted, onWillUpdateProps } from '@odoo/owl';
+import { onMounted, onWillUpdateProps } from "@odoo/owl";
 
 export class FieldMany2ManyTagsEmailTagsList extends TagsList {}
 FieldMany2ManyTagsEmailTagsList.template = "FieldMany2ManyTagsEmailTagsList";
@@ -45,16 +45,20 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.
         const dialogDefs = [];
         for (const record of invalidRecords) {
-            dialogDefs.push(this.openMany2xRecord({
-                resId: record.resId,
-                context: props.record.getFieldContext(this.props.name),
-                title: sprintf(this.env._t("Edit: %s"), record.data.display_name),
-            }));
+            dialogDefs.push(
+                this.openMany2xRecord({
+                    resId: record.resId,
+                    context: props.record.getFieldContext(this.props.name),
+                    title: sprintf(this.env._t("Edit: %s"), record.data.display_name),
+                })
+            );
         }
         this.openedDialogs += invalidRecords.length;
-        const invalidRecordIds = invalidRecords.map(rec => rec.resId);
+        const invalidRecordIds = invalidRecords.map((rec) => rec.resId);
         if (invalidRecordIds.length) {
-            this.props.value.replaceWith(props.value.currentIds.filter(id => !invalidRecordIds.includes(id)));
+            this.props.value.replaceWith(
+                props.value.currentIds.filter((id) => !invalidRecordIds.includes(id))
+            );
         }
         return Promise.all(dialogDefs).then(() => {
             this.openedDialogs -= invalidRecords.length;
@@ -73,22 +77,20 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             acc[record.resId] = record.data.email;
             return acc;
         }, {});
-        tags.forEach(tag => tag.email = emailByResId[tag.resId]);
+        tags.forEach((tag) => (tag.email = emailByResId[tag.resId]));
         return tags;
     }
-};
+}
 
 FieldMany2ManyTagsEmail.components = {
     ...FieldMany2ManyTagsEmail.components,
     TagsList: FieldMany2ManyTagsEmailTagsList,
 };
 
-FieldMany2ManyTagsEmail.fieldsToFetch = Object.assign({},
-    Many2ManyTagsField.fieldsToFetch,
-    {email: {name: 'email', type: 'char'}}
-);
+FieldMany2ManyTagsEmail.fieldsToFetch = Object.assign({}, Many2ManyTagsField.fieldsToFetch, {
+    email: { name: "email", type: "char" },
+});
 
 FieldMany2ManyTagsEmail.additionalClasses = ["o_field_many2many_tags"];
 
 registry.category("fields").add("many2many_tags_email", FieldMany2ManyTagsEmail);
-

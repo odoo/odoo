@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import KanbanRecord from 'web.KanbanRecord';
+import KanbanRecord from "web.KanbanRecord";
 
 var ActivityRecord = KanbanRecord.extend({
     /**
      * @override
      */
     init: function (parent, state) {
-        this._super.apply(this,arguments);
+        this._super.apply(this, arguments);
 
         this.fieldsInfo = state.fieldsInfo.activity;
     },
@@ -22,9 +22,9 @@ var ActivityRecord = KanbanRecord.extend({
      */
     _render: function () {
         this.defs = [];
-        this._replaceElement(this.qweb.render('activity-box', this.qweb_context));
-        this.$el.on('click', this._onGlobalClick.bind(this));
-        this.$el.addClass('o_activity_record');
+        this._replaceElement(this.qweb.render("activity-box", this.qweb_context));
+        this.$el.on("click", this._onGlobalClick.bind(this));
+        this.$el.addClass("o_activity_record");
         this._processFields();
         this._setupColor();
         return Promise.all(this.defs);
@@ -38,7 +38,7 @@ var ActivityRecord = KanbanRecord.extend({
 
         // attribute muted
         if (this.fieldsInfo[fieldName].muted) {
-            $el.addClass('text-muted');
+            $el.addClass("text-muted");
         }
     },
     /**

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, Model } from '@mail/model';
+import { attr, Model } from "@mail/model";
 
 Model({
-    name: 'SoundEffect',
+    name: "SoundEffect",
     recordMethods: {
         /**
          * @param {Object} param0
@@ -15,7 +15,7 @@ Model({
             if (this.messaging.isInQUnitTest) {
                 return;
             }
-            if (typeof(Audio) === "undefined") {
+            if (typeof Audio === "undefined") {
                 return;
             }
             if (!this.audio) {
@@ -28,7 +28,7 @@ Model({
             this.audio.currentTime = 0;
             this.audio.loop = loop;
             this.audio.volume = volume !== undefined ? volume : this.defaultVolume;
-            Promise.resolve(this.audio.play()).catch(()=>{});
+            Promise.resolve(this.audio.play()).catch(() => {});
         },
         /**
          * Resets the audio to the start of the track and pauses it.

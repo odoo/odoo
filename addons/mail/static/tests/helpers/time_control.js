@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { nextTick } from '@mail/utils/utils';
+import { nextTick } from "@mail/utils/utils";
 
-import { browser } from '@web/core/browser/browser';
+import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 export function getAdvanceTime() {
@@ -11,12 +11,12 @@ export function getAdvanceTime() {
     // key: timeoutId, value: func + remaining duration
     const timeouts = new Map();
     patchWithCleanup(browser, {
-        clearTimeout: id => {
+        clearTimeout: (id) => {
             timeouts.delete(id);
-            timedOutIds = timedOutIds.filter(i => i !== id);
+            timedOutIds = timedOutIds.filter((i) => i !== id);
         },
         setTimeout: (func, duration) => {
-            const timeoutId = _.uniqueId('timeout_');
+            const timeoutId = _.uniqueId("timeout_");
             const timeout = {
                 id: timeoutId,
                 isTimedOut: false,

@@ -1,14 +1,16 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'EmojiCategory',
+    name: "EmojiCategory",
     fields: {
-        allEmojiInCategoryOfCurrent: many('EmojiInCategory', { inverse: 'category' }),
-        allEmojiPickerViewCategory: many('EmojiPickerView.Category', { inverse: 'category' }),
-        allEmojis: many('Emoji', { inverse: 'emojiCategories' }),
-        emojiRegistry: one("EmojiRegistry", { inverse: "allCategories", required: true,
+        allEmojiInCategoryOfCurrent: many("EmojiInCategory", { inverse: "category" }),
+        allEmojiPickerViewCategory: many("EmojiPickerView.Category", { inverse: "category" }),
+        allEmojis: many("Emoji", { inverse: "emojiCategories" }),
+        emojiRegistry: one("EmojiRegistry", {
+            inverse: "allCategories",
+            required: true,
             compute() {
                 return this.messaging.emojiRegistry;
             },

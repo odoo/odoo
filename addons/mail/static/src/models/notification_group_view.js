@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'NotificationGroupView',
-    template: 'mail.NotificationGroupView',
+    name: "NotificationGroupView",
+    template: "mail.NotificationGroupView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -34,8 +34,8 @@ Model({
     fields: {
         imageSrc: attr({
             compute() {
-                if (this.notificationGroup.notification_type === 'email') {
-                    return '/mail/static/src/img/smiley/mailfailure.jpg';
+                if (this.notificationGroup.notification_type === "email") {
+                    return "/mail/static/src/img/smiley/mailfailure.jpg";
                 }
                 return clear();
             },
@@ -44,8 +44,14 @@ Model({
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
          */
-        markAsReadRef: attr({ ref: 'markAsRead' }),
-        notificationGroup: one('NotificationGroup', { identifying: true, inverse: 'notificationGroupViews' }),
-        notificationListViewOwner: one('NotificationListView', { identifying: true, inverse: 'notificationGroupViews' }),
+        markAsReadRef: attr({ ref: "markAsRead" }),
+        notificationGroup: one("NotificationGroup", {
+            identifying: true,
+            inverse: "notificationGroupViews",
+        }),
+        notificationListViewOwner: one("NotificationListView", {
+            identifying: true,
+            inverse: "notificationGroupViews",
+        }),
     },
 });

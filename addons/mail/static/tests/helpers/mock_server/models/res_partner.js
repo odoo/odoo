@@ -3,20 +3,20 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'mail/models/res_partner', {
+patch(MockServer.prototype, "mail/models/res_partner", {
     async _performRPC(route, args) {
-        if (args.model === 'res.partner' && args.method === 'im_search') {
+        if (args.model === "res.partner" && args.method === "im_search") {
             const name = args.args[0] || args.kwargs.search;
             const limit = args.args[1] || args.kwargs.limit;
             return this._mockResPartnerImSearch(name, limit);
         }
-        if (args.model === 'res.partner' && args.method === 'search_for_channel_invite') {
+        if (args.model === "res.partner" && args.method === "search_for_channel_invite") {
             const search_term = args.args[0] || args.kwargs.search_term;
             const channel_id = args.args[1] || args.kwargs.channel_id;
             const limit = args.args[2] || args.kwargs.limit;
             return this._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
         }
-        if (args.model === 'res.partner' && args.method === 'get_mention_suggestions') {
+        if (args.model === "res.partner" && args.method === "get_mention_suggestions") {
             return this._mockResPartnerGetMentionSuggestions(args);
         }
         return this._super(route, args);
@@ -29,7 +29,7 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
      * @returns {Array[]}
      */
     _mockResPartnerGetMentionSuggestions(args) {
-        const search = (args.args[0] || args.kwargs.search || '').toLowerCase();
+        const search = (args.args[0] || args.kwargs.search || "").toLowerCase();
         const limit = args.args[1] || args.kwargs.limit || 8;
         const channel_id = args.args[2] || args.kwargs.channel_id;
 
@@ -45,34 +45,47 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
          * @returns {Object[]}
          */
         const mentionSuggestionsFilter = (partners, search, limit) => {
-            const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
-                partners
-                    .filter(partner => {
-                        if (channel_id) {
-                            const [member] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', partner.id]]);
-                            if (!member) {
-                                return false;
+            const matchingPartners = [
+                ...this._mockResPartnerMailPartnerFormat(
+                    partners
+                        .filter((partner) => {
+                            if (channel_id) {
+                                const [member] = this.getRecords("mail.channel.member", [
+                                    ["channel_id", "=", channel_id],
+                                    ["partner_id", "=", partner.id],
+                                ]);
+                                if (!member) {
+                                    return false;
+                                }
                             }
-                        }
-                        // no search term is considered as return all
-                        if (!search) {
-                            return true;
-                        }
-                        // otherwise name or email must match search term
-                        if (partner.name && partner.name.toLowerCase().includes(search)) {
-                            return true;
-                        }
-                        if (partner.email && partner.email.toLowerCase().includes(search)) {
-                            return true;
-                        }
-                        return false;
-                    })
-                    .map(partner => partner.id)
-            ).values()].map(partnerFormat => {
+                            // no search term is considered as return all
+                            if (!search) {
+                                return true;
+                            }
+                            // otherwise name or email must match search term
+                            if (partner.name && partner.name.toLowerCase().includes(search)) {
+                                return true;
+                            }
+                            if (partner.email && partner.email.toLowerCase().includes(search)) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        .map((partner) => partner.id)
+                ).values(),
+            ].map((partnerFormat) => {
                 if (channel_id) {
-                    const [member] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', partnerFormat.id]]);
-                    partnerFormat['persona'] = {
-                        'channelMembers': [['insert', this._mockMailChannelMember_MailChannelMemberFormat([member.id])]],
+                    const [member] = this.getRecords("mail.channel.member", [
+                        ["channel_id", "=", channel_id],
+                        ["partner_id", "=", partnerFormat.id],
+                    ]);
+                    partnerFormat["persona"] = {
+                        channelMembers: [
+                            [
+                                "insert",
+                                this._mockMailChannelMember_MailChannelMemberFormat([member.id]),
+                            ],
+                        ],
                     };
                 }
                 return partnerFormat;
@@ -83,16 +96,18 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
         };
 
         // add main suggestions based on users
-        const partnersFromUsers = this.getRecords('res.users', [])
-            .map(user => this.getRecords('res.partner', [['id', '=', user.partner_id]])[0])
-            .filter(partner => partner);
+        const partnersFromUsers = this.getRecords("res.users", [])
+            .map((user) => this.getRecords("res.partner", [["id", "=", user.partner_id]])[0])
+            .filter((partner) => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
 
         let extraMatchingPartners = [];
         // if not enough results add extra suggestions based on partners
         const remainingLimit = limit - mainMatchingPartners.length;
         if (mainMatchingPartners.length < limit) {
-            const partners = this.getRecords('res.partner', [['id', 'not in', mainMatchingPartners.map(partner => partner.id)]]);
+            const partners = this.getRecords("res.partner", [
+                ["id", "not in", mainMatchingPartners.map((partner) => partner.id)],
+            ]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
         return mainMatchingPartners.concat(extraMatchingPartners);
@@ -105,10 +120,10 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
      * @returns {integer}
      */
     _mockResPartner_GetNeedactionCount(id) {
-        const partner = this.getRecords('res.partner', [['id', '=', id]])[0];
-        return this.getRecords('mail.notification', [
-            ['res_partner_id', '=', partner.id],
-            ['is_read', '=', false],
+        const partner = this.getRecords("res.partner", [["id", "=", id]])[0];
+        return this.getRecords("mail.notification", [
+            ["res_partner_id", "=", partner.id],
+            ["is_read", "=", false],
         ]).length;
     },
     /**
@@ -119,12 +134,12 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
      * @param {integer} [limit=20]
      * @returns {Object[]}
      */
-    _mockResPartnerImSearch(name = '', limit = 20) {
+    _mockResPartnerImSearch(name = "", limit = 20) {
         name = name.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = this.getRecords('res.users', [])
-            .filter(user => {
-                const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+        const matchingPartners = this.getRecords("res.users", [])
+            .filter((user) => {
+                const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]])[0];
                 // user must have a partner
                 if (!partner) {
                     return false;
@@ -141,15 +156,21 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
                     return true;
                 }
                 return false;
-            }).map(user => {
-                const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+            })
+            .map((user) => {
+                const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]])[0];
                 return {
                     id: partner.id,
                     name: partner.name,
                 };
-            }).sort((a, b) => (a.name === b.name) ? (a.id - b.id) : (a.name > b.name) ? 1 : -1);
+            })
+            .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
         matchingPartners.length = Math.min(matchingPartners.length, limit);
-        return [...this._mockResPartnerMailPartnerFormat(matchingPartners.map(partner => partner.id)).values()];
+        return [
+            ...this._mockResPartnerMailPartnerFormat(
+                matchingPartners.map((partner) => partner.id)
+            ).values(),
+        ];
     },
     /**
      * Simulates `mail_partner_format` on `res.partner`.
@@ -159,33 +180,38 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
      * @returns {Map}
      */
     _mockResPartnerMailPartnerFormat(ids) {
-        const partners = this.getRecords(
-            'res.partner',
-            [['id', 'in', ids]],
-            { active_test: false }
-        );
+        const partners = this.getRecords("res.partner", [["id", "in", ids]], {
+            active_test: false,
+        });
         // Servers is also returning `is_internal_user` but not
         // done here for simplification.
-        return new Map(partners.map(partner => {
-            const users = this.getRecords('res.users', [['id', 'in', partner.user_ids]]);
-            const internalUsers = users.filter(user => !user.share);
-            let mainUser;
-            if (internalUsers.length > 0) {
-                mainUser = internalUsers[0];
-            } else if (users.length > 0) {
-                mainUser = users[0];
-            }
-            return [partner.id, {
-                "active": partner.active,
-                "email": partner.email,
-                "id": partner.id,
-                "im_status": partner.im_status,
-                "name": partner.name,
-                "user": mainUser ? {
-                    'id': mainUser.id,
-                } : [['clear']],
-            }];
-        }));
+        return new Map(
+            partners.map((partner) => {
+                const users = this.getRecords("res.users", [["id", "in", partner.user_ids]]);
+                const internalUsers = users.filter((user) => !user.share);
+                let mainUser;
+                if (internalUsers.length > 0) {
+                    mainUser = internalUsers[0];
+                } else if (users.length > 0) {
+                    mainUser = users[0];
+                }
+                return [
+                    partner.id,
+                    {
+                        active: partner.active,
+                        email: partner.email,
+                        id: partner.id,
+                        im_status: partner.im_status,
+                        name: partner.name,
+                        user: mainUser
+                            ? {
+                                  id: mainUser.id,
+                              }
+                            : [["clear"]],
+                    },
+                ];
+            })
+        );
     },
     /**
      * Simulates `search_for_channel_invite` on `res.partner`.
@@ -199,34 +225,38 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
     _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
         search_term = search_term.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
-            this.getRecords('res.users', [])
-            .filter(user => {
-                const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
-                // user must have a partner
-                if (!partner) {
-                    return false;
-                }
-                // not current partner
-                if (partner.id === this.currentPartnerId) {
-                    return false;
-                }
-                // no name is considered as return all
-                if (!search_term) {
-                    return true;
-                }
-                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
-                    return true;
-                }
-                return false;
-            })
-            .map(user => user.partner_id)
-        ).values()];
+        const matchingPartners = [
+            ...this._mockResPartnerMailPartnerFormat(
+                this.getRecords("res.users", [])
+                    .filter((user) => {
+                        const partner = this.getRecords("res.partner", [
+                            ["id", "=", user.partner_id],
+                        ])[0];
+                        // user must have a partner
+                        if (!partner) {
+                            return false;
+                        }
+                        // not current partner
+                        if (partner.id === this.currentPartnerId) {
+                            return false;
+                        }
+                        // no name is considered as return all
+                        if (!search_term) {
+                            return true;
+                        }
+                        if (partner.name && partner.name.toLowerCase().includes(search_term)) {
+                            return true;
+                        }
+                        return false;
+                    })
+                    .map((user) => user.partner_id)
+            ).values(),
+        ];
         const count = matchingPartners.length;
         matchingPartners.length = Math.min(count, limit);
         return {
             count,
-            partners: matchingPartners
+            partners: matchingPartners,
         };
     },
     /**
@@ -237,23 +267,25 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
      * @returns {Object[]}
      */
     _mockResPartner_MessageFetchFailed(id) {
-        const partner = this.getRecords('res.partner', [['id', '=', id]])[0];
-        const messages = this.getRecords('mail.message', [
-            ['author_id', '=', partner.id],
-            ['res_id', '!=', 0],
-            ['model', '!=', false],
-            ['message_type', '!=', 'user_notification'],
-        ]).filter(message => {
+        const partner = this.getRecords("res.partner", [["id", "=", id]])[0];
+        const messages = this.getRecords("mail.message", [
+            ["author_id", "=", partner.id],
+            ["res_id", "!=", 0],
+            ["model", "!=", false],
+            ["message_type", "!=", "user_notification"],
+        ]).filter((message) => {
             // Purpose is to simulate the following domain on mail.message:
             // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
             // But it's not supported by getRecords domain to follow a relation.
-            const notifications = this.getRecords('mail.notification', [
-                ['mail_message_id', '=', message.id],
-                ['notification_status', 'in', ['bounce', 'exception']],
+            const notifications = this.getRecords("mail.notification", [
+                ["mail_message_id", "=", message.id],
+                ["notification_status", "in", ["bounce", "exception"]],
             ]);
             return notifications.length > 0;
         });
-        return this._mockMailMessage_MessageNotificationFormat(messages.map(message => message.id));
+        return this._mockMailMessage_MessageNotificationFormat(
+            messages.map((message) => message.id)
+        );
     },
     /**
      * Simulates `_get_channels_as_member` on `res.partner`.
@@ -262,21 +294,23 @@ patch(MockServer.prototype, 'mail/models/res_partner', {
      * @param {integer[]} ids
      * @returns {Object}
      */
-     _mockResPartner_GetChannelsAsMember(ids) {
-        const partner = this.getRecords('res.partner', [['id', 'in', ids]])[0];
-        const channelMembers = this.getRecords('mail.channel.member', [['partner_id', '=', partner.id]]);
-        const channels = this.getRecords('mail.channel', [
-            ['channel_type', 'in', ['channel', 'group']],
-            ['channel_member_ids', 'in', channelMembers.map(member => member.id)],
+    _mockResPartner_GetChannelsAsMember(ids) {
+        const partner = this.getRecords("res.partner", [["id", "in", ids]])[0];
+        const channelMembers = this.getRecords("mail.channel.member", [
+            ["partner_id", "=", partner.id],
         ]);
-        const directMessagesMembers = this.getRecords('mail.channel.member', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
-        const directMessages = this.getRecords('mail.channel', [
-            ['channel_type', '=', 'chat'],
-            ['channel_member_ids', 'in', directMessagesMembers.map(member => member.id)],
+        const channels = this.getRecords("mail.channel", [
+            ["channel_type", "in", ["channel", "group"]],
+            ["channel_member_ids", "in", channelMembers.map((member) => member.id)],
         ]);
-        return [
-            ...channels,
-            ...directMessages,
-        ];
+        const directMessagesMembers = this.getRecords("mail.channel.member", [
+            ["partner_id", "=", partner.id],
+            ["is_pinned", "=", true],
+        ]);
+        const directMessages = this.getRecords("mail.channel", [
+            ["channel_type", "=", "chat"],
+            ["channel_member_ids", "in", directMessagesMembers.map((member) => member.id)],
+        ]);
+        return [...channels, ...directMessages];
     },
 });

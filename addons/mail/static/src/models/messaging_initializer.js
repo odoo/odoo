@@ -1,17 +1,20 @@
 /** @odoo-module **/
 
-import { insert, Model } from '@mail/model';
+import { insert, Model } from "@mail/model";
 
 Model({
-    name: 'MessagingInitializer',
+    name: "MessagingInitializer",
     recordMethods: {
         /**
          * @returns {Object}
          */
         async performInitRpc() {
-            return await this.messaging.rpc({
-                route: '/mail/init_messaging',
-            }, { shadow: true });
+            return await this.messaging.rpc(
+                {
+                    route: "/mail/init_messaging",
+                },
+                { shadow: true }
+            );
         },
         /**
          * Fetch messaging data initially to populate the store specifically for
@@ -83,7 +86,7 @@ Model({
             });
             // init mail user settings
             if (current_user_settings) {
-                this.messaging.models['res.users.settings'].insert(current_user_settings);
+                this.messaging.models["res.users.settings"].insert(current_user_settings);
             }
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
@@ -116,20 +119,22 @@ Model({
          * @param {Object[]} channelsData
          */
         async _initChannels(channelsData) {
-            return this.messaging.executeGracefully(channelsData.map(channelData => () => {
-                if (!this.exists()) {
-                    return;
-                }
-                const convertedData = this.messaging.models['Thread'].convertData(channelData);
-                const channel = this.messaging.models['Thread'].insert(
-                    Object.assign({ model: 'mail.channel' }, convertedData)
-                );
-                // flux specific: channels received at init have to be
-                // considered pinned. task-2284357
-                if (!channel.isPinned) {
-                    channel.pin();
-                }
-            }));
+            return this.messaging.executeGracefully(
+                channelsData.map((channelData) => () => {
+                    if (!this.exists()) {
+                        return;
+                    }
+                    const convertedData = this.messaging.models["Thread"].convertData(channelData);
+                    const channel = this.messaging.models["Thread"].insert(
+                        Object.assign({ model: "mail.channel" }, convertedData)
+                    );
+                    // flux specific: channels received at init have to be
+                    // considered pinned. task-2284357
+                    if (!channel.isPinned) {
+                        channel.pin();
+                    }
+                })
+            );
         },
         /**
          * @private
@@ -139,20 +144,20 @@ Model({
                 commands: insert([
                     {
                         help: this.env._t("Show a helper message"),
-                        methodName: 'execute_command_help',
+                        methodName: "execute_command_help",
                         name: "help",
                     },
                     {
                         help: this.env._t("Leave this channel"),
-                        methodName: 'execute_command_leave',
+                        methodName: "execute_command_leave",
                         name: "leave",
                     },
                     {
-                        channel_types: ['channel', 'chat', 'group'],
+                        channel_types: ["channel", "chat", "group"],
                         help: this.env._t("List users in the current channel"),
-                        methodName: 'execute_command_who',
+                        methodName: "execute_command_who",
                         name: "who",
-                    }
+                    },
                 ]),
             });
         },
@@ -162,10 +167,7 @@ Model({
          * @param {integer} param0.needaction_inbox_counter
          * @param {integer} param0.starred_counter
          */
-        _initMailboxes({
-            needaction_inbox_counter,
-            starred_counter,
-        }) {
+        _initMailboxes({ needaction_inbox_counter, starred_counter }) {
             this.messaging.inbox.update({ counter: needaction_inbox_counter });
             this.messaging.starred.update({ counter: starred_counter });
         },
@@ -174,19 +176,21 @@ Model({
          * @param {Object[]} mailFailuresData
          */
         async _initMailFailures(mailFailuresData) {
-            await this.messaging.executeGracefully(mailFailuresData.map(messageData => () => {
-                if (!this.exists()) {
-                    return;
-                }
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
-                );
-                // implicit: failures are sent by the server at initialization
-                // only if the current partner is author of the message
-                if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: this.messaging.currentPartner });
-                }
-            }));
+            await this.messaging.executeGracefully(
+                mailFailuresData.map((messageData) => () => {
+                    if (!this.exists()) {
+                        return;
+                    }
+                    const message = this.messaging.models["Message"].insert(
+                        this.messaging.models["Message"].convertData(messageData)
+                    );
+                    // implicit: failures are sent by the server at initialization
+                    // only if the current partner is author of the message
+                    if (!message.author && this.messaging.currentPartner) {
+                        message.update({ author: this.messaging.currentPartner });
+                    }
+                })
+            );
         },
         /**
          * @private
@@ -220,9 +224,12 @@ Model({
          * @private
          */
         async _loadMessageFailures() {
-            const data = await this.messaging.rpc({
-                route: '/mail/load_message_failures',
-            }, { shadow: true });
+            const data = await this.messaging.rpc(
+                {
+                    route: "/mail/load_message_failures",
+                },
+                { shadow: true }
+            );
             this._initMailFailures(data);
         },
     },

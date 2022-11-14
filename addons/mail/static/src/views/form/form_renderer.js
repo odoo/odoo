@@ -6,7 +6,7 @@ import { WebClientViewAttachmentViewContainer } from "@mail/components/web_clien
 import { patch } from "@web/core/utils/patch";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-patch(FormRenderer.prototype, 'mail', {
+patch(FormRenderer.prototype, "mail", {
     get compileParams() {
         return {
             ...this._super(),

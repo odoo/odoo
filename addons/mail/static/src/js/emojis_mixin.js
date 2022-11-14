@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { escape } from '@web/core/utils/strings';
-import emojis from '@mail/js/emojis';
+import { escape } from "@web/core/utils/strings";
+import emojis from "@mail/js/emojis";
 
 /**
  * This mixin gathers a few methods that are used to handle emojis.
@@ -33,9 +33,15 @@ export default {
         const textInput = this._getTargetTextElement($(ev.currentTarget));
         const selectionStart = textInput.selectionStart;
 
-        textInput.value = textInput.value.slice(0, selectionStart) + unicode + textInput.value.slice(selectionStart);
+        textInput.value =
+            textInput.value.slice(0, selectionStart) +
+            unicode +
+            textInput.value.slice(selectionStart);
         textInput.focus();
-        textInput.setSelectionRange(selectionStart + unicode.length, selectionStart + unicode.length);
+        textInput.setSelectionRange(
+            selectionStart + unicode.length,
+            selectionStart + unicode.length
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -52,7 +58,7 @@ export default {
     _formatText(message) {
         message = escape(message);
         message = this._wrapEmojis(message);
-        message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        message = message.replace(/(?:\r\n|\r|\n)/g, "<br>");
 
         return message;
     },
@@ -66,11 +72,11 @@ export default {
     _wrapEmojis(message) {
         emojis.forEach(function (emoji) {
             message = message.replace(
-                new RegExp(emoji.unicode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-                '<span class="o_mail_emoji">' + emoji.unicode + '</span>'
+                new RegExp(emoji.unicode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+                '<span class="o_mail_emoji">' + emoji.unicode + "</span>"
             );
         });
 
         return message;
-    }
+    },
 };

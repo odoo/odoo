@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'ActivityButtonView',
-    template: 'mail.ActivityButtonView',
-    identifyingMode: 'xor',
+    name: "ActivityButtonView",
+    template: "mail.ActivityButtonView",
+    identifyingMode: "xor",
     recordMethods: {
         onClick(ev) {
             if (!this.exists()) {
@@ -18,7 +18,9 @@ Model({
         },
     },
     fields: {
-        activityListPopoverView: one('PopoverView', { inverse: 'activityButtonViewOwnerAsActivityList' }),
+        activityListPopoverView: one("PopoverView", {
+            inverse: "activityButtonViewOwnerAsActivityList",
+        }),
         buttonClass: attr({
             compute() {
                 if (!this.thread) {
@@ -26,26 +28,26 @@ Model({
                 }
                 const classes = [];
                 switch (this.webRecord.data.activity_state) {
-                    case 'overdue':
-                        classes.push('text-danger');
+                    case "overdue":
+                        classes.push("text-danger");
                         break;
-                    case 'today':
-                        classes.push('text-warning');
+                    case "today":
+                        classes.push("text-warning");
                         break;
-                    case 'planned':
-                        classes.push('text-success');
+                    case "planned":
+                        classes.push("text-success");
                         break;
                     default:
-                        classes.push('text-muted');
+                        classes.push("text-muted");
                         break;
                 }
                 switch (this.webRecord.data.activity_exception_decoration) {
-                    case 'warning':
-                        classes.push('text-warning');
+                    case "warning":
+                        classes.push("text-warning");
                         classes.push(this.webRecord.data.activity_exception_icon);
                         break;
-                    case 'danger':
-                        classes.push('text-danger');
+                    case "danger":
+                        classes.push("text-danger");
                         classes.push(this.webRecord.data.activity_exception_icon);
                         break;
                     default:
@@ -53,16 +55,23 @@ Model({
                             classes.push(this.webRecord.data.activity_type_icon);
                             break;
                         }
-                        classes.push('fa-clock-o');
+                        classes.push("fa-clock-o");
                         break;
                 }
-                return classes.join(' ');
+                return classes.join(" ");
             },
         }),
-        buttonRef: attr({ ref: 'button' }),
-        kanbanFieldActivityViewOwner: one('KanbanFieldActivityView', { identifying: true, inverse: 'activityButtonView' }),
-        listFieldActivityViewOwner: one('ListFieldActivityView', { identifying: true, inverse: 'activityButtonView' }),
-        thread: one('Thread', { required: true,
+        buttonRef: attr({ ref: "button" }),
+        kanbanFieldActivityViewOwner: one("KanbanFieldActivityView", {
+            identifying: true,
+            inverse: "activityButtonView",
+        }),
+        listFieldActivityViewOwner: one("ListFieldActivityView", {
+            identifying: true,
+            inverse: "activityButtonView",
+        }),
+        thread: one("Thread", {
+            required: true,
             compute() {
                 if (this.kanbanFieldActivityViewOwner) {
                     return this.kanbanFieldActivityViewOwner.thread;
@@ -73,7 +82,8 @@ Model({
                 return clear();
             },
         }),
-        webRecord: attr({ required: true,
+        webRecord: attr({
+            required: true,
             compute() {
                 if (this.kanbanFieldActivityViewOwner) {
                     return this.kanbanFieldActivityViewOwner.webRecord;

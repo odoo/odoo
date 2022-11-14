@@ -1,16 +1,26 @@
 /** @odoo-module **/
 
-import { clear, one, Model } from '@mail/model';
+import { clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'ThreadIconView',
-    template: 'mail.ThreadIconView',
-    identifyingMode: 'xor',
+    name: "ThreadIconView",
+    template: "mail.ThreadIconView",
+    identifyingMode: "xor",
     fields: {
-        chatWindowHeaderViewOwner: one('ChatWindowHeaderView', { identifying: true, inverse: 'threadIconView' }),
-        discussSidebarCategoryItemOwner: one('DiscussSidebarCategoryItem', { identifying: true, inverse: 'threadIconView' }),
-        discussSidebarMailboxViewOwner: one('DiscussSidebarMailboxView', { identifying: true, inverse: 'threadIconView' }),
-        thread: one('Thread', { required: true,
+        chatWindowHeaderViewOwner: one("ChatWindowHeaderView", {
+            identifying: true,
+            inverse: "threadIconView",
+        }),
+        discussSidebarCategoryItemOwner: one("DiscussSidebarCategoryItem", {
+            identifying: true,
+            inverse: "threadIconView",
+        }),
+        discussSidebarMailboxViewOwner: one("DiscussSidebarMailboxView", {
+            identifying: true,
+            inverse: "threadIconView",
+        }),
+        thread: one("Thread", {
+            required: true,
             compute() {
                 if (this.chatWindowHeaderViewOwner) {
                     return this.chatWindowHeaderViewOwner.chatWindowOwner.thread;
@@ -26,11 +36,12 @@ Model({
                 }
             },
         }),
-        threadTypingIconView: one('ThreadTypingIconView', { inverse: 'threadIconViewOwner',
+        threadTypingIconView: one("ThreadTypingIconView", {
+            inverse: "threadIconViewOwner",
             compute() {
                 if (
                     this.thread.channel &&
-                    this.thread.channel.channel_type === 'chat' &&
+                    this.thread.channel.channel_type === "chat" &&
                     this.thread.channel.correspondent &&
                     this.thread.orderedOtherTypingMembers.length > 0
                 ) {
@@ -39,6 +50,9 @@ Model({
                 return clear();
             },
         }),
-        threadViewTopbarOwner: one('ThreadViewTopbar', { identifying: true, inverse: 'threadIconView' }),
+        threadViewTopbarOwner: one("ThreadViewTopbar", {
+            identifying: true,
+            inverse: "threadIconView",
+        }),
     },
 });

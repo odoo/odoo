@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'Guest',
+    name: "Guest",
     modelMethods: {
         /**
          * @param {Object} param0
@@ -12,7 +12,7 @@ Model({
          */
         async performRpcGuestUpdateName({ id, name }) {
             await this.messaging.rpc({
-                route: '/mail/guest/update_name',
+                route: "/mail/guest/update_name",
                 params: {
                     guest_id: id,
                     name,
@@ -21,7 +21,7 @@ Model({
         },
     },
     fields: {
-        authoredMessages: many('Message', { inverse: 'guestAuthor' }),
+        authoredMessages: many("Message", { inverse: "guestAuthor" }),
         avatarUrl: attr({
             compute() {
                 return `/web/image/mail.guest/${this.id}/avatar_128?unique=${this.name}`;
@@ -31,11 +31,11 @@ Model({
         im_status: attr(),
         isOnline: attr({
             compute() {
-                return ['online', 'away'].includes(this.im_status);
+                return ["online", "away"].includes(this.im_status);
             },
         }),
         name: attr(),
-        persona: one('Persona', { default: {}, inverse: 'guest', readonly: true, required: true }),
-        volumeSetting: one('res.users.settings.volumes', { inverse: 'guest_id' }),
+        persona: one("Persona", { default: {}, inverse: "guest", readonly: true, required: true }),
+        volumeSetting: one("res.users.settings.volumes", { inverse: "guest_id" }),
     },
 });

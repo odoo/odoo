@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { clear, many, one, Model } from '@mail/model';
+import { clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'EmojiGridViewRowRegistry',
-    identifyingMode: 'xor',
+    name: "EmojiGridViewRowRegistry",
+    identifyingMode: "xor",
     recordMethods: {
         computeNonSearchRows() {
             const value = [];
             let index = 0;
-            for (let viewCategory of this.emojiGridViewOwner.emojiPickerViewOwner.categories) {
+            for (const viewCategory of this.emojiGridViewOwner.emojiPickerViewOwner.categories) {
                 value.push({ viewCategory, index });
                 index++;
                 let currentItems = [];
-                for (let emojiInCategory of viewCategory.category.allEmojiInCategoryOfCurrent) {
+                for (const emojiInCategory of viewCategory.category.allEmojiInCategoryOfCurrent) {
                     currentItems.push({ emojiOrEmojiInCategory: { emojiInCategory } });
                     if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
                         value.push({ items: currentItems, index });
@@ -33,11 +33,13 @@ Model({
             if (this.emojiGridViewOwner.emojiPickerViewOwner.currentSearch === "") {
                 return clear();
             }
-            const emojis = this.messaging.emojiRegistry.allEmojis.filter(this.emojiGridViewOwner._filterEmoji);
+            const emojis = this.messaging.emojiRegistry.allEmojis.filter(
+                this.emojiGridViewOwner._filterEmoji
+            );
             const value = [];
             let index = 0;
             let currentItems = [];
-            for (let emoji of emojis) {
+            for (const emoji of emojis) {
                 currentItems.push({ emojiOrEmojiInCategory: { emoji } });
                 if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
                     value.push({ items: currentItems, index });
@@ -54,7 +56,8 @@ Model({
         },
     },
     fields: {
-        rows: many('EmojiGridRowView', { inverse: 'emojiGridViewRowRegistryOwner',
+        rows: many("EmojiGridRowView", {
+            inverse: "emojiGridViewRowRegistryOwner",
             compute() {
                 if (!this.emojiGridViewOwner) {
                     return clear();
@@ -67,14 +70,20 @@ Model({
                 }
                 return clear();
             },
-            sort: [['smaller-first', 'index']],
+            sort: [["smaller-first", "index"]],
         }),
-        emojiGridViewOwner: one('EmojiGridView', {
+        emojiGridViewOwner: one("EmojiGridView", {
             compute() {
                 return this.emojiGridViewOwnerAsNonSearch || this.emojiGridViewOwnerAsSearch;
             },
         }),
-        emojiGridViewOwnerAsNonSearch: one('EmojiGridView', { identifying: true, inverse: 'nonSearchRowRegistry' }),
-        emojiGridViewOwnerAsSearch: one('EmojiGridView', { identifying: true, inverse: 'searchRowRegistry' }),
+        emojiGridViewOwnerAsNonSearch: one("EmojiGridView", {
+            identifying: true,
+            inverse: "nonSearchRowRegistry",
+        }),
+        emojiGridViewOwnerAsSearch: one("EmojiGridView", {
+            identifying: true,
+            inverse: "searchRowRegistry",
+        }),
     },
 });

@@ -8,14 +8,17 @@ import { attr, one, Model } from "@mail/model";
  */
 Model({
     name: "AttachmentViewerViewable",
-    identifyingMode: 'xor',
+    identifyingMode: "xor",
     recordMethods: {
         download() {
             return this.attachmentOwner.download();
         },
     },
     fields: {
-        attachmentOwner: one("Attachment", { identifying: true, inverse: 'attachmentViewerViewable' }),
+        attachmentOwner: one("Attachment", {
+            identifying: true,
+            inverse: "attachmentViewerViewable",
+        }),
         defaultSource: attr({
             compute() {
                 return this.attachmentOwner.defaultSource;

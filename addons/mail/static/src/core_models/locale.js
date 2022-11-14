@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, Model } from '@mail/model';
+import { attr, Model } from "@mail/model";
 
-import { localization } from '@web/core/l10n/localization';
+import { localization } from "@web/core/l10n/localization";
 
 Model({
-    name: 'Locale',
+    name: "Locale",
     fields: {
         /**
          * Language used by interface, formatted like {language ISO 2}_{country ISO 2} (eg: fr_FR).

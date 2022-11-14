@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, link, many, one, Model, unlink } from '@mail/model';
+import { attr, clear, insert, link, many, one, Model, unlink } from "@mail/model";
 
 Model({
-    name: 'Follower',
+    name: "Follower",
     modelMethods: {
         /**
          * @param {Object} data
@@ -11,13 +11,13 @@ Model({
          */
         convertData(data) {
             const data2 = {};
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('is_active' in data) {
+            if ("is_active" in data) {
                 data2.isActive = data.is_active;
             }
-            if ('partner_id' in data) {
+            if ("partner_id" in data) {
                 if (!data.partner_id) {
                     data2.partner = clear();
                 } else {
@@ -58,11 +58,11 @@ Model({
             const followedThread = this.followedThread;
             await this.messaging.rpc({
                 model: this.followedThread.model,
-                method: 'message_unsubscribe',
-                args: [[this.followedThread.id], partner_ids]
+                method: "message_unsubscribe",
+                args: [[this.followedThread.id], partner_ids],
             });
             if (followedThread.exists()) {
-                followedThread.fetchData(['suggestedRecipients']);
+                followedThread.fetchData(["suggestedRecipients"]);
             }
             if (!this.exists()) {
                 return;
@@ -82,7 +82,7 @@ Model({
          */
         async showSubtypes() {
             const subtypesData = await this.messaging.rpc({
-                route: '/mail/read_subscription_data',
+                route: "/mail/read_subscription_data",
                 params: { follower_id: this.id },
             });
             if (!this.exists()) {
@@ -90,8 +90,8 @@ Model({
             }
             this.update({ subtypes: clear() });
             for (const data of subtypesData) {
-                const subtype = this.messaging.models['FollowerSubtype'].insert(
-                    this.messaging.models['FollowerSubtype'].convertData(data)
+                const subtype = this.messaging.models["FollowerSubtype"].insert(
+                    this.messaging.models["FollowerSubtype"].convertData(data)
                 );
                 this.update({ subtypes: link(subtype) });
                 if (data.followed) {
@@ -118,14 +118,14 @@ Model({
                 this.remove();
             } else {
                 const kwargs = {
-                    subtype_ids: this.selectedSubtypes.map(subtype => subtype.id),
+                    subtype_ids: this.selectedSubtypes.map((subtype) => subtype.id),
                 };
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
                 await this.messaging.rpc({
                     model: this.followedThread.model,
-                    method: 'message_subscribe',
+                    method: "message_subscribe",
                     args: [[this.followedThread.id]],
                     kwargs,
                 });
@@ -133,7 +133,7 @@ Model({
                     return;
                 }
                 this.messaging.notify({
-                    type: 'success',
+                    type: "success",
                     message: this.env._t("The subscription preferences were successfully applied."),
                 });
             }
@@ -141,8 +141,9 @@ Model({
         },
     },
     fields: {
-        followedThread: one('Thread', { inverse: 'followers' }),
-        followedThreadAsFollowerOfCurrentPartner: one('Thread', { inverse: 'followerOfCurrentPartner',
+        followedThread: one("Thread", { inverse: "followers" }),
+        followedThreadAsFollowerOfCurrentPartner: one("Thread", {
+            inverse: "followerOfCurrentPartner",
             compute() {
                 if (!this.followedThread) {
                     return clear();
@@ -156,8 +157,8 @@ Model({
                 return clear();
             },
         }),
-        followerSubtypeListDialog: one('Dialog', { inverse: 'followerOwnerAsSubtypeList' }),
-        followerViews: many('FollowerView', { inverse: 'follower' }),
+        followerSubtypeListDialog: one("Dialog", { inverse: "followerOwnerAsSubtypeList" }),
+        followerViews: many("FollowerView", { inverse: "follower" }),
         id: attr({ identifying: true }),
         isActive: attr({ default: true }),
         /**
@@ -165,12 +166,16 @@ Model({
          */
         isEditable: attr({
             compute() {
-                const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-                return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
+                const hasWriteAccess = this.followedThread
+                    ? this.followedThread.hasWriteAccess
+                    : false;
+                return this.messaging.currentPartner === this.partner
+                    ? this.followedThread.hasReadAccess
+                    : hasWriteAccess;
             },
         }),
-        partner: one('Partner', { required: true }),
-        selectedSubtypes: many('FollowerSubtype'),
-        subtypes: many('FollowerSubtype'),
+        partner: one("Partner", { required: true }),
+        selectedSubtypes: many("FollowerSubtype"),
+        subtypes: many("FollowerSubtype"),
     },
 });

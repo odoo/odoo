@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 /**
  * Mirrors the fields of the python model res.users.settings.volumes.
  */
 Model({
-    name: 'res.users.settings.volumes',
+    name: "res.users.settings.volumes",
     recordMethods: {
         /**
          * @private
@@ -24,16 +24,20 @@ Model({
         },
     },
     fields: {
-        guest_id: one('Guest', { inverse: 'volumeSetting' }),
+        guest_id: one("Guest", { inverse: "volumeSetting" }),
         id: attr({ identifying: true }),
-        partner_id: one('Partner', { inverse: 'volumeSetting' }),
-        user_setting_id: one('res.users.settings', { inverse: 'volume_settings_ids', readonly: true, required: true }),
+        partner_id: one("Partner", { inverse: "volumeSetting" }),
+        user_setting_id: one("res.users.settings", {
+            inverse: "volume_settings_ids",
+            readonly: true,
+            required: true,
+        }),
         volume: attr({ default: 0.5 }),
     },
     onChanges: [
         {
-            dependencies: ['volume'],
-            methodName: '_onChangeVolume',
+            dependencies: ["volume"],
+            methodName: "_onChangeVolume",
         },
     ],
 });

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'ComposerSuggestedRecipientListView',
-    template: 'mail.ComposerSuggestedRecipientListView',
+    name: "ComposerSuggestedRecipientListView",
+    template: "mail.ComposerSuggestedRecipientListView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -26,22 +26,30 @@ Model({
         },
     },
     fields: {
-        composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
+        composerSuggestedRecipientViews: many("ComposerSuggestedRecipientView", {
             compute() {
                 if (!this.thread) {
                     return clear();
                 }
                 if (this.hasShowMoreButton) {
-                    return this.thread.suggestedRecipientInfoList.map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
+                    return this.thread.suggestedRecipientInfoList.map((suggestedRecipientInfo) => ({
+                        suggestedRecipientInfo,
+                    }));
                 } else {
-                    return this.thread.suggestedRecipientInfoList.slice(0, 3).map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
+                    return this.thread.suggestedRecipientInfoList
+                        .slice(0, 3)
+                        .map((suggestedRecipientInfo) => ({ suggestedRecipientInfo }));
                 }
             },
-            inverse: 'composerSuggestedRecipientListViewOwner',
+            inverse: "composerSuggestedRecipientListViewOwner",
         }),
-        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'composerSuggestedRecipientListView' }),
+        composerViewOwner: one("ComposerView", {
+            identifying: true,
+            inverse: "composerSuggestedRecipientListView",
+        }),
         hasShowMoreButton: attr({ default: false }),
-        thread: one('Thread', { required: true,
+        thread: one("Thread", {
+            required: true,
             compute() {
                 return this.composerViewOwner.composer.activeThread;
             },

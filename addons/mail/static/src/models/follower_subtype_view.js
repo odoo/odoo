@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 Model({
-    name: 'FollowerSubtypeView',
-    template: 'mail.FollowerSubtypeView',
+    name: "FollowerSubtypeView",
+    template: "mail.FollowerSubtypeView",
     recordMethods: {
         /**
          * Called when clicking on cancel button.
@@ -20,8 +20,11 @@ Model({
         },
     },
     fields: {
-        follower: one('Follower', { related: 'followerSubtypeListOwner.follower' }),
-        followerSubtypeListOwner: one('FollowerSubtypeList', { identifying: true, inverse: 'followerSubtypeViews' }),
-        subtype: one('FollowerSubtype', { identifying: true, inverse: 'followerSubtypeViews' }),
+        follower: one("Follower", { related: "followerSubtypeListOwner.follower" }),
+        followerSubtypeListOwner: one("FollowerSubtypeList", {
+            identifying: true,
+            inverse: "followerSubtypeViews",
+        }),
+        subtype: one("FollowerSubtype", { identifying: true, inverse: "followerSubtypeViews" }),
     },
 });

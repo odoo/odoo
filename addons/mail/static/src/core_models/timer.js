@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
-import { attr, clear, Model } from '@mail/model';
+import { attr, clear, Model } from "@mail/model";
 
 Model({
-    name: 'Timer',
-    identifyingMode: 'xor',
+    name: "Timer",
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
-            this.update({ timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration) });
+            this.update({
+                timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration),
+            });
         },
         _willDelete() {
             this.messaging.browser.clearTimeout(this.timeoutId);
@@ -39,7 +41,8 @@ Model({
          * Duration, in milliseconds, until timer times out and calls the
          * timeout function.
          */
-        duration: attr({ required: true,
+        duration: attr({
+            required: true,
             compute() {
                 return clear();
             },
@@ -53,7 +56,7 @@ Model({
     onChanges: [
         {
             dependencies: ["doReset"],
-            methodName: '_onChangeDoReset',
+            methodName: "_onChangeDoReset",
         },
     ],
 });

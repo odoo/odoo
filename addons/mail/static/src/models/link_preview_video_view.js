@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'LinkPreviewVideoView',
-    template: 'mail.LinkPreviewVideoView',
+    name: "LinkPreviewVideoView",
+    template: "mail.LinkPreviewVideoView",
     recordMethods: {
         /**
          * Handles mouse enter event for the container of this element.
@@ -27,8 +27,9 @@ Model({
     },
     fields: {
         isHovered: attr({ default: false }),
-        linkPreview: one('LinkPreview', { identifying: true, inverse: 'linkPreviewVideoView' }),
-        linkPreviewAsideView: one('LinkPreviewAsideView', { inverse: 'linkPreviewVideoView',
+        linkPreview: one("LinkPreview", { identifying: true, inverse: "linkPreviewVideoView" }),
+        linkPreviewAsideView: one("LinkPreviewAsideView", {
+            inverse: "linkPreviewVideoView",
             compute() {
                 if (!this.linkPreview.isDeletable) {
                     return clear();
@@ -36,12 +37,19 @@ Model({
                 if (this.messaging.device.isMobileDevice) {
                     return {};
                 }
-                if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
+                if (
+                    this.isHovered ||
+                    (this.linkPreviewAsideView &&
+                        this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)
+                ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        linkPreviewListViewOwner: one('LinkPreviewListView', { identifying: true, inverse: 'linkPreviewAsVideoViews' }),
+        linkPreviewListViewOwner: one("LinkPreviewListView", {
+            identifying: true,
+            inverse: "linkPreviewAsVideoViews",
+        }),
     },
 });

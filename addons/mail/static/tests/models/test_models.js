@@ -1,46 +1,43 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'TestAddress',
+    name: "TestAddress",
     fields: {
         id: attr({
             identifying: true,
         }),
         addressInfo: attr(),
-        contact: one('TestContact', {
-            inverse: 'address',
+        contact: one("TestContact", {
+            inverse: "address",
         }),
     },
 });
 
 Model({
-    name: 'TestContact',
+    name: "TestContact",
     fields: {
         id: attr({
             identifying: true,
         }),
-        address: one('TestAddress', {
-            inverse: 'contact',
+        address: one("TestAddress", {
+            inverse: "contact",
         }),
-        favorite: one('TestHobby', {
-            default: { description: 'football' },
+        favorite: one("TestHobby", {
+            default: { description: "football" },
         }),
-        hobbies: many('TestHobby', {
-            default: [
-                { description: 'hiking' },
-                { description: 'fishing' },
-            ],
+        hobbies: many("TestHobby", {
+            default: [{ description: "hiking" }, { description: "fishing" }],
         }),
-        tasks: many('TestTask', {
-            inverse: 'responsible'
+        tasks: many("TestTask", {
+            inverse: "responsible",
         }),
     },
 });
 
 Model({
-    name: 'TestHobby',
+    name: "TestHobby",
     fields: {
         description: attr({
             identifying: true,
@@ -49,7 +46,7 @@ Model({
 });
 
 Model({
-    name: 'TestTask',
+    name: "TestTask",
     fields: {
         id: attr({
             identifying: true,
@@ -58,8 +55,8 @@ Model({
         difficulty: attr({
             default: 1,
         }),
-        responsible: one('TestContact', {
-            inverse: 'tasks'
+        responsible: one("TestContact", {
+            inverse: "tasks",
         }),
     },
 });

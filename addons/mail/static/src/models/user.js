@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, many, one, Model } from '@mail/model';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'User',
+    name: "User",
     modelMethods: {
         /**
          * @param {Object} data
@@ -11,14 +11,14 @@ Model({
          */
         convertData(data) {
             const data2 = {};
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('partner_id' in data) {
+            if ("partner_id" in data) {
                 if (!data.partner_id) {
                     data2.partner = clear();
                 } else {
-                    const partnerNameGet = data['partner_id'];
+                    const partnerNameGet = data["partner_id"];
                     const partnerData = {
                         display_name: partnerNameGet[1],
                         id: partnerNameGet[0],
@@ -37,17 +37,20 @@ Model({
          * @param {integer[]} param0.ids
          */
         async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.messaging.rpc({
-                model: 'res.users',
-                method: 'read',
-                args: [ids, fields],
-                kwargs: {
-                    context,
+            const usersData = await this.messaging.rpc(
+                {
+                    model: "res.users",
+                    method: "read",
+                    args: [ids, fields],
+                    kwargs: {
+                        context,
+                    },
                 },
-            }, { shadow: true });
-            return this.messaging.models['User'].insert(usersData.map(userData =>
-                this.messaging.models['User'].convertData(userData)
-            ));
+                { shadow: true }
+            );
+            return this.messaging.models["User"].insert(
+                usersData.map((userData) => this.messaging.models["User"].convertData(userData))
+            );
         },
     },
     recordMethods: {
@@ -55,9 +58,9 @@ Model({
          * Fetches the partner of this user.
          */
         async fetchPartner() {
-            return this.messaging.models['User'].performRpcRead({
+            return this.messaging.models["User"].performRpcRead({
                 ids: [this.id],
-                fields: ['partner_id'],
+                fields: ["partner_id"],
                 context: { active_test: false },
             });
         },
@@ -82,7 +85,7 @@ Model({
                 //   another tab or by another user.
                 this.messaging.notify({
                     message: this.env._t("You can only chat with existing users."),
-                    type: 'warning',
+                    type: "warning",
                 });
                 return;
             }
@@ -91,7 +94,7 @@ Model({
             if (!chat || !chat.thread.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
-                chat = await this.messaging.models['Channel'].performRpcCreateChat({
+                chat = await this.messaging.models["Channel"].performRpcCreateChat({
                     partnerIds: [this.partner.id],
                 });
                 if (!this.exists()) {
@@ -100,8 +103,10 @@ Model({
             }
             if (!chat) {
                 this.messaging.notify({
-                    message: this.env._t("An unexpected error occurred during the creation of the chat."),
-                    type: 'warning',
+                    message: this.env._t(
+                        "An unexpected error occurred during the creation of the chat."
+                    ),
+                    type: "warning",
                 });
                 return;
             }
@@ -145,7 +150,7 @@ Model({
                 //   another tab or by another user.
                 this.messaging.notify({
                     message: this.env._t("You can only open the profile of existing users."),
-                    type: 'warning',
+                    type: "warning",
                 });
                 return;
             }
@@ -153,7 +158,7 @@ Model({
         },
     },
     fields: {
-        activitiesAsAssignee: many('Activity', { inverse: 'assignee' }),
+        activitiesAsAssignee: many("Activity", { inverse: "assignee" }),
         id: attr({ identifying: true }),
         /**
          * Determines whether this user is an internal user. An internal user is
@@ -162,7 +167,8 @@ Model({
          */
         isInternalUser: attr(),
         display_name: attr(),
-        displayName: attr({ default: "",
+        displayName: attr({
+            default: "",
             compute() {
                 if (this.display_name) {
                     return this.display_name;
@@ -173,13 +179,13 @@ Model({
                 return clear();
             },
         }),
-        model: attr({ default: 'res.user' }),
+        model: attr({ default: "res.user" }),
         nameOrDisplayName: attr({
             compute() {
-                return this.partner && this.partner.nameOrDisplayName || this.display_name;
+                return (this.partner && this.partner.nameOrDisplayName) || this.display_name;
             },
         }),
-        partner: one('Partner', { inverse: 'user' }),
-        res_users_settings_id: one('res.users.settings', { inverse: 'user_id' }),
+        partner: one("Partner", { inverse: "user" }),
+        res_users_settings_id: one("res.users.settings", { inverse: "user_id" }),
     },
 });

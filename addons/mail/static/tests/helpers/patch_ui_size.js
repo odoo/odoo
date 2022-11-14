@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { browser } from '@web/core/browser/browser';
-import { MEDIAS_BREAKPOINTS, SIZES, uiService } from '@web/core/ui/ui_service';
+import { browser } from "@web/core/browser/browser";
+import { MEDIAS_BREAKPOINTS, SIZES, uiService } from "@web/core/ui/ui_service";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
-import config from 'web.config';
+import config from "web.config";
 
 /**
  * Return the width corresponding to the given size. If an upper and lower bound
@@ -58,7 +58,7 @@ function legacyPatchUiSize(height, size, width) {
         device: {
             ...legacyEnv.device,
             isMobile: size <= SIZES.SM,
-        }
+        },
     });
     patchWithCleanup(config, {
         device: {
@@ -82,8 +82,8 @@ function legacyPatchUiSize(height, size, width) {
  * @param {number|undefined} [params.height]
  */
 function patchUiSize({ height, size, width }) {
-    if (!size && !width || size && width) {
-        throw new Error('Either size or width must be given to the patchUiSize function');
+    if ((!size && !width) || (size && width)) {
+        throw new Error("Either size or width must be given to the patchUiSize function");
     }
     size = size === undefined ? getSizeFromWidth(width) : size;
     width = width || getWidthFromSize(size);
@@ -100,7 +100,4 @@ function patchUiSize({ height, size, width }) {
     legacyPatchUiSize(height, size, width);
 }
 
-export {
-    patchUiSize,
-    SIZES
-};
+export { patchUiSize, SIZES };

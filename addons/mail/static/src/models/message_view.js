@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, increment, one, Model } from '@mail/model';
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, increment, one, Model } from "@mail/model";
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
 Model({
-    name: 'MessageView',
-    template: 'mail.MessageView',
+    name: "MessageView",
+    template: "mail.MessageView",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+        useComponentToModel({ fieldName: "component" });
+        useUpdateToModel({ methodName: "onComponentUpdate" });
     },
-    identifyingMode: 'xor',
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Briefly highlights the message.
@@ -27,12 +27,12 @@ Model({
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
-            if (ev.target.closest('.o_channel_redirect')) {
+            if (ev.target.closest(".o_channel_redirect")) {
                 // avoid following dummy href
                 ev.preventDefault();
-                const channel = this.messaging.models['Thread'].insert({
+                const channel = this.messaging.models["Thread"].insert({
                     id: Number(ev.target.dataset.oeId),
-                    model: 'mail.channel',
+                    model: "mail.channel",
                 });
                 if (!channel.isPinned) {
                     await channel.join();
@@ -40,14 +40,14 @@ Model({
                 }
                 channel.open();
                 return;
-            } else if (ev.target.closest('.o_mail_redirect')) {
+            } else if (ev.target.closest(".o_mail_redirect")) {
                 ev.preventDefault();
                 this.messaging.openChat({
-                    partnerId: Number(ev.target.dataset.oeId)
+                    partnerId: Number(ev.target.dataset.oeId),
                 });
                 return;
             }
-            if (ev.target.tagName === 'A') {
+            if (ev.target.tagName === "A") {
                 if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
                     // avoid following dummy href
                     ev.preventDefault();
@@ -59,13 +59,13 @@ Model({
                 return;
             }
             if (
-                !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
-                !isEventHandled(ev, 'Message.ClickAuthorName') &&
-                !isEventHandled(ev, 'Message.ClickFailure') &&
-                !isEventHandled(ev, 'MessageActionList.Click') &&
-                !isEventHandled(ev, 'MessageReactionGroup.Click') &&
-                !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo') &&
-                !isEventHandled(ev, 'PersonaImStatusIcon.Click')
+                !isEventHandled(ev, "Message.ClickAuthorAvatar") &&
+                !isEventHandled(ev, "Message.ClickAuthorName") &&
+                !isEventHandled(ev, "Message.ClickFailure") &&
+                !isEventHandled(ev, "MessageActionList.Click") &&
+                !isEventHandled(ev, "MessageReactionGroup.Click") &&
+                !isEventHandled(ev, "MessageInReplyToView.ClickMessageInReplyTo") &&
+                !isEventHandled(ev, "PersonaImStatusIcon.Click")
             ) {
                 if (this.messagingAsClickedMessageView) {
                     this.messaging.update({ clickedMessageView: clear() });
@@ -78,7 +78,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onClickAuthorAvatar(ev) {
-            markEventHandled(ev, 'Message.ClickAuthorAvatar');
+            markEventHandled(ev, "Message.ClickAuthorAvatar");
             if (!this.hasAuthorOpenChat) {
                 return;
             }
@@ -88,7 +88,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onClickAuthorName(ev) {
-            markEventHandled(ev, 'Message.ClickAuthorName');
+            markEventHandled(ev, "Message.ClickAuthorName");
             if (!this.message.author) {
                 return;
             }
@@ -98,7 +98,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onClickFailure(ev) {
-            markEventHandled(ev, 'Message.ClickFailure');
+            markEventHandled(ev, "Message.ClickFailure");
             this.message.openResendAction();
         },
         onClickNotificationIcon() {
@@ -116,12 +116,18 @@ Model({
                 return;
             }
             if (this.doHighlight && this.component && this.component.root.el) {
-                this.component.root.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                this.component.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
                 this.highlight();
                 this.update({ doHighlight: clear() });
             }
-            if (this.messageListViewItemOwner && this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem && this.messageListViewItemOwner.isPartiallyVisible()) {
-                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem.handleVisibleMessage(this.message);
+            if (
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem &&
+                this.messageListViewItemOwner.isPartiallyVisible()
+            ) {
+                this.messageListViewItemOwner.threadViewOwnerAsLastMessageListViewItem.handleVisibleMessage(
+                    this.message
+                );
             }
             if (this.prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
                 this.prettyBodyRef.el.innerHTML = this.message.prettyBody;
@@ -134,12 +140,14 @@ Model({
             // This is needed because insertReadMoreLess is working with direct DOM mutations
             // which are not sync with Owl.
             if (this.contentRef.el) {
-                for (const el of this.contentRef.el.querySelectorAll(':scope .o_MessageView_readMoreLess')) {
+                for (const el of this.contentRef.el.querySelectorAll(
+                    ":scope .o_MessageView_readMoreLess"
+                )) {
                     el.remove();
                 }
                 this.update({ lastReadMoreIndex: clear() });
                 this.insertReadMoreLess($(this.contentRef.el));
-                this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+                this.messaging.messagingBus.trigger("o-component-message-read-more-less-inserted", {
                     message: this.message,
                 });
             }
@@ -182,34 +190,32 @@ Model({
 
             // nodeType 1: element_node
             // nodeType 3: text_node
-            const $children = $element.contents()
-                .filter((index, content) =>
-                    content.nodeType === 1 || (content.nodeType === 3 && content.nodeValue.trim())
+            const $children = $element
+                .contents()
+                .filter(
+                    (index, content) =>
+                        content.nodeType === 1 ||
+                        (content.nodeType === 3 && content.nodeValue.trim())
                 );
 
             for (const child of $children) {
                 let $child = $(child);
 
                 // Hide Text nodes if "stopSpelling"
-                if (
-                    child.nodeType === 3 &&
-                    $child.prevAll('[id*="stopSpelling"]').length > 0
-                ) {
+                if (child.nodeType === 3 && $child.prevAll('[id*="stopSpelling"]').length > 0) {
                     // Convert Text nodes to Element nodes
-                    $child = $('<span>', {
+                    $child = $("<span>", {
                         text: child.textContent,
-                        'data-o-mail-quote': '1',
+                        "data-o-mail-quote": "1",
                     });
                     child.parentNode.replaceChild($child[0], child);
                 }
 
                 // Create array for each 'read more' with nodes to toggle
                 if (
-                    $child.attr('data-o-mail-quote') ||
-                    (
-                        $child.get(0).nodeName === 'BR' &&
-                        $child.prev('[data-o-mail-quote="1"]').length > 0
-                    )
+                    $child.attr("data-o-mail-quote") ||
+                    ($child.get(0).nodeName === "BR" &&
+                        $child.prev('[data-o-mail-quote="1"]').length > 0)
                 ) {
                     if (!readMoreNodes) {
                         readMoreNodes = [];
@@ -226,9 +232,9 @@ Model({
             for (const group of groups) {
                 const index = this.update({ lastReadMoreIndex: increment() });
                 // Insert link just before the first node
-                const $readMoreLess = $('<a>', {
-                    class: 'o_MessageView_readMoreLess d-block',
-                    href: '#',
+                const $readMoreLess = $("<a>", {
+                    class: "o_MessageView_readMoreLess d-block",
+                    href: "#",
                     text: this.readMoreText,
                 }).insertBefore(group[0]);
 
@@ -244,7 +250,7 @@ Model({
                     }
                     $readMoreLess.text(isReadMore ? this.readMoreText : this.readLessText);
                 };
-                $readMoreLess.click(e => {
+                $readMoreLess.click((e) => {
                     e.preventDefault();
                     this.isReadMoreByIndex.set(index, !this.isReadMoreByIndex.get(index));
                     updateFromState();
@@ -257,7 +263,10 @@ Model({
          */
         replyTo() {
             // When already replying to this messageView, discard the reply.
-            if (this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this) {
+            if (
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                    .replyingToMessageView === this
+            ) {
                 this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView.discard();
                 return;
             }
@@ -278,7 +287,10 @@ Model({
          */
         startEditing() {
             const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(this.message.body.replaceAll('<br>', '\n').replaceAll('</br>', '\n'), "text/html");
+            const htmlDoc = parser.parseFromString(
+                this.message.body.replaceAll("<br>", "\n").replaceAll("</br>", "\n"),
+                "text/html"
+            );
             const textInputContent = htmlDoc.body.textContent;
             this.update({
                 composerForEditing: {
@@ -286,7 +298,7 @@ Model({
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
                     textInputCursorStart: textInputContent.length,
-                    textInputSelectionDirection: 'none',
+                    textInputSelectionDirection: "none",
                 },
                 composerViewInEditing: {
                     doFocus: true,
@@ -298,8 +310,14 @@ Model({
          * Stops editing this message.
          */
         stopEditing() {
-            if (this.messageListViewItemOwner && this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView && !this.messaging.device.isMobileDevice) {
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView.update({ doFocus: true });
+            if (
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView &&
+                !this.messaging.device.isMobileDevice
+            ) {
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView.update(
+                    { doFocus: true }
+                );
             }
             this.update({
                 composerForEditing: clear(),
@@ -312,32 +330,34 @@ Model({
          * Determines the attachment list displaying the attachments of this
          * message (if any).
          */
-        attachmentList: one('AttachmentList', { inverse: 'messageViewOwner',
+        attachmentList: one("AttachmentList", {
+            inverse: "messageViewOwner",
             compute() {
-                return (this.message && this.message.attachments.length > 0)
-                    ? {}
-                    : clear();
+                return this.message && this.message.attachments.length > 0 ? {} : clear();
             },
         }),
         authorTitleText: attr({
             compute() {
-                return this.hasAuthorOpenChat ? this.env._t("Open chat") : '';
+                return this.hasAuthorOpenChat ? this.env._t("Open chat") : "";
             },
         }),
-        clockWatcher: one('ClockWatcher', { default: { clock: { frequency: 60 * 1000 } }, inverse: 'messageViewOwner' }),
+        clockWatcher: one("ClockWatcher", {
+            default: { clock: { frequency: 60 * 1000 } },
+            inverse: "messageViewOwner",
+        }),
         /**
          * States the component displaying this message view (if any).
          */
         component: attr(),
-        composerForEditing: one('Composer', { inverse: 'messageViewInEditing' }),
+        composerForEditing: one("Composer", { inverse: "messageViewInEditing" }),
         /**
-        * Determines the composer that is used to edit this message (if any).
-        */
-        composerViewInEditing: one('ComposerView', { inverse: 'messageViewInEditing' }),
+         * Determines the composer that is used to edit this message (if any).
+         */
+        composerViewInEditing: one("ComposerView", { inverse: "messageViewInEditing" }),
         /**
          * Reference to the content of the message.
          */
-        contentRef: attr({ ref: 'content' }),
+        contentRef: attr({ ref: "content" }),
         /**
          * States the time elapsed since date up to now.
          */
@@ -353,7 +373,7 @@ Model({
                     return clear();
                 }
                 const now = moment(this.clockWatcher.clock.date.getTime());
-                if (now.diff(this.message.momentDate, 'seconds') < 45) {
+                if (now.diff(this.message.momentDate, "seconds") < 45) {
                     return this.env._t("now");
                 }
                 return this.message.momentDate.fromNow();
@@ -363,7 +383,10 @@ Model({
          * States the delete message confirm view that is displaying this
          * message view.
          */
-        deleteMessageConfirmViewOwner: one('DeleteMessageConfirmView', { identifying: true, inverse: 'messageView' }),
+        deleteMessageConfirmViewOwner: one("DeleteMessageConfirmView", {
+            identifying: true,
+            inverse: "messageView",
+        }),
         /**
          * Determines whether this message view should be highlighted at next
          * render. Scrolls into view and briefly highlights it.
@@ -372,20 +395,23 @@ Model({
         /**
          * Determines which extra class this message view component should have.
          */
-        extraClass: attr({ default: '',
+        extraClass: attr({
+            default: "",
             compute() {
                 if (this.messageListViewItemOwner) {
-                    return 'o_MessageListView_item o_MessageListView_message';
+                    return "o_MessageListView_item o_MessageListView_message";
                 }
                 return clear();
             },
         }),
-        failureNotificationIconClassName: attr({ default: 'fa fa-envelope',
+        failureNotificationIconClassName: attr({
+            default: "fa fa-envelope",
             compute() {
                 return clear();
             },
         }),
-        failureNotificationIconLabel: attr({ default: '',
+        failureNotificationIconLabel: attr({
+            default: "",
             compute() {
                 return clear();
             },
@@ -407,8 +433,10 @@ Model({
                 if (
                     this.messageListViewItemOwner &&
                     this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel &&
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel.correspondent === this.message.author
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread
+                        .channel &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread
+                        .channel.correspondent === this.message.author
                 ) {
                     return false;
                 }
@@ -418,7 +446,7 @@ Model({
         /**
          * Current timer that will reset isHighlighted to false.
          */
-        highlightTimer: one('Timer', { inverse: 'messageViewOwnerAsHighlight' }),
+        highlightTimer: one("Timer", { inverse: "messageViewOwnerAsHighlight" }),
         /**
          * Whether the message is "active", ie: hovered or clicked, and should
          * display additional things (date in sidebar, message actions, etc.)
@@ -427,9 +455,17 @@ Model({
             compute() {
                 return Boolean(
                     this.isHovered ||
-                    this.messagingAsClickedMessageView ||
-                    (this.messageActionList && this.messageActionList.actionReaction && this.messageActionList.actionReaction.messageActionView && this.messageActionList.actionReaction.messageActionView.reactionPopoverView) ||
-                    (this.messageActionList && this.messageActionList.actionDelete && this.messageActionList.actionDelete.messageActionView && this.messageActionList.actionDelete.messageActionView.deleteConfirmDialog)
+                        this.messagingAsClickedMessageView ||
+                        (this.messageActionList &&
+                            this.messageActionList.actionReaction &&
+                            this.messageActionList.actionReaction.messageActionView &&
+                            this.messageActionList.actionReaction.messageActionView
+                                .reactionPopoverView) ||
+                        (this.messageActionList &&
+                            this.messageActionList.actionDelete &&
+                            this.messageActionList.actionDelete.messageActionView &&
+                            this.messageActionList.actionDelete.messageActionView
+                                .deleteConfirmDialog)
                 );
             },
         }),
@@ -450,10 +486,10 @@ Model({
             compute() {
                 return Boolean(
                     this.messageListViewItemOwner &&
-                    (
-                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
-                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
-                    )
+                        (this.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                            .threadViewer.discuss ||
+                            this.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                                .threadViewer.discussPublicView)
                 );
             },
         }),
@@ -464,7 +500,8 @@ Model({
             compute() {
                 return Boolean(
                     this.messageListViewItemOwner &&
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatWindow
+                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                            .threadViewer.chatWindow
                 );
             },
         }),
@@ -475,7 +512,8 @@ Model({
             compute() {
                 return Boolean(
                     this.messageListViewItemOwner &&
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatter
+                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                            .threadViewer.chatter
                 );
             },
         }),
@@ -485,9 +523,7 @@ Model({
         isInChatWindowAndIsAlignedRight: attr({
             compute() {
                 return Boolean(
-                    this.isInChatWindow &&
-                    this.message &&
-                    this.message.isCurrentUserOrGuestAuthor
+                    this.isInChatWindow && this.message && this.message.isCurrentUserOrGuestAuthor
                 );
             },
         }),
@@ -497,9 +533,7 @@ Model({
         isInChatWindowAndIsAlignedLeft: attr({
             compute() {
                 return Boolean(
-                    this.isInChatWindow &&
-                    this.message &&
-                    !this.message.isCurrentUserOrGuestAuthor
+                    this.isInChatWindow && this.message && !this.message.isCurrentUserOrGuestAuthor
                 );
             },
         }),
@@ -524,17 +558,11 @@ Model({
                 return Boolean(
                     !(
                         this.isInChatWindow &&
-                        (
-                            (
-                                this.message &&
-                                this.message.isCurrentUserOrGuestAuthor
-                            ) ||
-                            (
-                                this.messageListViewItemOwner &&
+                        ((this.message && this.message.isCurrentUserOrGuestAuthor) ||
+                            (this.messageListViewItemOwner &&
                                 this.messageListViewItemOwner.messageListViewOwner.thread.channel &&
-                                this.messageListViewItemOwner.messageListViewOwner.thread.channel.channel_type === 'chat'
-                            )
-                        )
+                                this.messageListViewItemOwner.messageListViewOwner.thread.channel
+                                    .channel_type === "chat"))
                     )
                 );
             },
@@ -542,18 +570,21 @@ Model({
         /**
          * Tells whether the message is selected in the current thread viewer.
          */
-        isSelected: attr({ default: false,
+        isSelected: attr({
+            default: false,
             compute() {
                 return Boolean(
                     this.messageListViewItemOwner &&
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this
+                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                            .replyingToMessageView === this
                 );
             },
         }),
         /**
          * Determines whether this message view should be squashed visually.
          */
-        isSquashed: attr({ default: false,
+        isSquashed: attr({
+            default: false,
             compute() {
                 if (this.messageListViewItemOwner) {
                     return this.messageListViewItemOwner.isSquashed;
@@ -572,15 +603,17 @@ Model({
          * is re-rendered.
          */
         lastReadMoreIndex: attr({ default: 0 }),
-        linkPreviewListView: one('LinkPreviewListView', { inverse: 'messageViewOwner',
+        linkPreviewListView: one("LinkPreviewListView", {
+            inverse: "messageViewOwner",
             compute() {
-                return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();
+                return this.message && this.message.linkPreviews.length > 0 ? {} : clear();
             },
         }),
         /**
          * Determines the message action list of this message view (if any).
          */
-        messageActionList: one('MessageActionList', { inverse: 'messageView',
+        messageActionList: one("MessageActionList", {
+            inverse: "messageView",
             compute() {
                 return this.deleteMessageConfirmViewOwner ? clear() : {};
             },
@@ -588,7 +621,9 @@ Model({
         /**
          * Determines the message that is displayed by this message view.
          */
-        message: one('Message', { inverse: 'messageViews', required: true,
+        message: one("Message", {
+            inverse: "messageViews",
+            required: true,
             compute() {
                 if (this.messageListViewItemOwner) {
                     return this.messageListViewItemOwner.message;
@@ -603,44 +638,55 @@ Model({
          * States the message in reply to view that displays the message of
          * which this message is a reply to (if any).
          */
-        messageInReplyToView: one('MessageInReplyToView', { inverse: 'messageView',
+        messageInReplyToView: one("MessageInReplyToView", {
+            inverse: "messageView",
             compute() {
-                return (
-                    this.message &&
+                return this.message &&
                     this.message.originThread &&
-                    this.message.originThread.model === 'mail.channel' &&
+                    this.message.originThread.model === "mail.channel" &&
                     this.message.parentMessage
-                ) ? {} : clear();
+                    ? {}
+                    : clear();
             },
         }),
-        messageListViewItemOwner: one('MessageListViewItem', { identifying: true, inverse: 'messageView' }),
-        messageSeenIndicatorView: one('MessageSeenIndicatorView', { inverse: 'messageViewOwner',
+        messageListViewItemOwner: one("MessageListViewItem", {
+            identifying: true,
+            inverse: "messageView",
+        }),
+        messageSeenIndicatorView: one("MessageSeenIndicatorView", {
+            inverse: "messageViewOwner",
             compute() {
                 if (
                     this.message.isCurrentUserOrGuestAuthor &&
                     this.messageListViewItemOwner &&
                     this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread
+                        .hasSeenIndicators
                 ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        messagingAsClickedMessageView: one('Messaging', { inverse: 'clickedMessageView' }),
-        notificationIconClassName: attr({ default: 'fa fa-envelope-o',
+        messagingAsClickedMessageView: one("Messaging", { inverse: "clickedMessageView" }),
+        notificationIconClassName: attr({
+            default: "fa fa-envelope-o",
             compute() {
                 return clear();
             },
         }),
-        notificationIconLabel: attr({ default: '',
+        notificationIconLabel: attr({
+            default: "",
             compute() {
                 return clear();
             },
         }),
-        notificationIconRef: attr({ ref: 'notificationIcon' }),
-        notificationPopoverView: one('PopoverView', { inverse: 'messageViewOwnerAsNotificationContent' }),
-        personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'messageViewOwner',
+        notificationIconRef: attr({ ref: "notificationIcon" }),
+        notificationPopoverView: one("PopoverView", {
+            inverse: "messageViewOwnerAsNotificationContent",
+        }),
+        personaImStatusIconView: one("PersonaImStatusIconView", {
+            inverse: "messageViewOwner",
             compute() {
                 if (this.message.guestAuthor && this.message.guestAuthor.im_status) {
                     return {};
@@ -652,7 +698,7 @@ Model({
          * Reference to element containing the prettyBody. Useful to be able to
          * replace prettyBody with new value in JS (which is faster than t-raw).
          */
-        prettyBodyRef: attr({ ref: 'prettyBody' }),
+        prettyBodyRef: attr({ ref: "prettyBody" }),
         readLessText: attr({
             compute() {
                 return this.env._t("Read Less");

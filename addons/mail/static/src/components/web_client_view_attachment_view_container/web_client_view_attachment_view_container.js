@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
+import { Component, onWillDestroy, onWillUpdateProps } from "@odoo/owl";
 
 const getNextId = (function () {
     let tmpId = 0;
@@ -22,7 +22,6 @@ const getNextId = (function () {
  * mounting of attachment view until it becomes initialized.
  */
 export class WebClientViewAttachmentViewContainer extends Component {
-
     /**
      * @override
      */
@@ -32,7 +31,7 @@ export class WebClientViewAttachmentViewContainer extends Component {
         this.webClientViewAttachmentView = undefined;
         this.webClientViewAttachmentViewId = getNextId();
         this._insertFromProps(this.props);
-        onWillUpdateProps(nextProps => this._insertFromProps(nextProps));
+        onWillUpdateProps((nextProps) => this._insertFromProps(nextProps));
         onWillDestroy(() => this._deleteRecord());
     }
 
@@ -61,17 +60,16 @@ export class WebClientViewAttachmentViewContainer extends Component {
             this._deleteRecord();
             return;
         }
-        const thread = messaging.models['Thread'].insert({
+        const thread = messaging.models["Thread"].insert({
             id: props.threadId,
             model: props.threadModel,
         });
-        this.webClientViewAttachmentView = messaging.models['WebClientViewAttachmentView'].insert({
+        this.webClientViewAttachmentView = messaging.models["WebClientViewAttachmentView"].insert({
             id: this.webClientViewAttachmentViewId,
             thread,
         });
         this.render();
     }
-
 }
 
 Object.assign(WebClientViewAttachmentViewContainer, {
@@ -82,5 +80,5 @@ Object.assign(WebClientViewAttachmentViewContainer, {
         },
         threadModel: String,
     },
-    template: 'mail.WebClientViewAttachmentViewContainer',
+    template: "mail.WebClientViewAttachmentViewContainer",
 });

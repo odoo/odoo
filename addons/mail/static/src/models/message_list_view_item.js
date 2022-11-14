@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 /**
  * Models a relation between a message list view and a message view where
  * message is used as iterating field.
  */
 Model({
-    name: 'MessageListViewItem',
+    name: "MessageListViewItem",
     recordMethods: {
         /**
          * Tell whether the item is partially visible on browser window or not.
@@ -25,27 +25,35 @@ Model({
             }
             const parentRect = itemView.component.root.el.parentNode.getBoundingClientRect();
             // intersection with 5px offset
-            return (
-                elRect.top < parentRect.bottom + 5 &&
-                parentRect.top < elRect.bottom + 5
-            );
+            return elRect.top < parentRect.bottom + 5 && parentRect.top < elRect.bottom + 5;
         },
     },
     fields: {
         isSquashed: attr({ required: true }),
-        message: one('Message', { identifying: true, inverse: 'messageListViewItems' }),
-        messageListViewOwner: one('MessageListView', { identifying: true, inverse: 'messageListViewItems' }),
-        notificationMessageView: one('NotificationMessageView', { inverse: 'messageListViewItemOwner',
+        message: one("Message", { identifying: true, inverse: "messageListViewItems" }),
+        messageListViewOwner: one("MessageListView", {
+            identifying: true,
+            inverse: "messageListViewItems",
+        }),
+        notificationMessageView: one("NotificationMessageView", {
+            inverse: "messageListViewItemOwner",
             compute() {
-                if (this.message.message_type === 'notification' && this.message.originThread.channel) {
+                if (
+                    this.message.message_type === "notification" &&
+                    this.message.originThread.channel
+                ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        messageView: one('MessageView', { inverse: 'messageListViewItemOwner',
+        messageView: one("MessageView", {
+            inverse: "messageListViewItemOwner",
             compute() {
-                if (this.message.message_type !== 'notification' || !this.message.originThread.channel) {
+                if (
+                    this.message.message_type !== "notification" ||
+                    !this.message.originThread.channel
+                ) {
                     return {};
                 }
                 return clear();
@@ -55,6 +63,9 @@ Model({
          * States whether this message list view item is the last one of its thread view.
          * Computed from inverse relation.
          */
-        threadViewOwnerAsLastMessageListViewItem: one('ThreadView', { inverse: 'lastMessageListViewItem', readonly: true }),
+        threadViewOwnerAsLastMessageListViewItem: one("ThreadView", {
+            inverse: "lastMessageListViewItem",
+            readonly: true,
+        }),
     },
 });

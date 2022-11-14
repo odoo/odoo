@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { attr, one, Model } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
 Model({
-    name: 'ChannelCommand',
+    name: "ChannelCommand",
     modelMethods: {
         /**
          * Fetches channel commands matching the given search term to extend the
@@ -40,12 +40,18 @@ Model({
                 if (!isATypeSpecific && isBTypeSpecific) {
                     return 1;
                 }
-                const cleanedAName = cleanSearchTerm(a.name || '');
-                const cleanedBName = cleanSearchTerm(b.name || '');
-                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                const cleanedAName = cleanSearchTerm(a.name || "");
+                const cleanedBName = cleanSearchTerm(b.name || "");
+                if (
+                    cleanedAName.startsWith(cleanedSearchTerm) &&
+                    !cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedAName.startsWith(cleanedSearchTerm) &&
+                    cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAName < cleanedBName) {
@@ -72,15 +78,17 @@ Model({
                 return [[]];
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.messaging.commands.filter(command => {
-                if (!cleanSearchTerm(command.name).includes(cleanedSearchTerm)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel.channel_type);
-                }
-                return true;
-            })];
+            return [
+                this.messaging.commands.filter((command) => {
+                    if (!cleanSearchTerm(command.name).includes(cleanedSearchTerm)) {
+                        return false;
+                    }
+                    if (command.channel_types) {
+                        return command.channel_types.includes(thread.channel.channel_type);
+                    }
+                    return true;
+                }),
+            ];
         },
     },
     recordMethods: {
@@ -91,9 +99,9 @@ Model({
          * @param {Thread} param0.channel
          * @param {Object} [param0.body='']
          */
-        async execute({ channel, body = '' }) {
+        async execute({ channel, body = "" }) {
             return this.messaging.rpc({
-                model: 'mail.channel',
+                model: "mail.channel",
                 method: this.methodName,
                 args: [[channel.id]],
                 kwargs: { body },
@@ -121,6 +129,11 @@ Model({
          *  The keyword to use a specific command.
          */
         name: attr({ identifying: true }),
-        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'channelCommand', readonly: true, required: true }),
+        suggestable: one("ComposerSuggestable", {
+            default: {},
+            inverse: "channelCommand",
+            readonly: true,
+            required: true,
+        }),
     },
 });

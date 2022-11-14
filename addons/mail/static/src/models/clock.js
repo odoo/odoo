@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { attr, many, Model } from '@mail/model';
+import { attr, many, Model } from "@mail/model";
 
 /**
  * Models a record that provides the current date, updated at a given frequency.
  */
 Model({
-    name: 'Clock',
+    name: "Clock",
     lifecycleHooks: {
         _created() {
             // The date is set here rather than via a default value so that the
@@ -55,12 +55,12 @@ Model({
          *
          * The clock self-destructs when there are no more watchers.
          */
-        watchers: many('ClockWatcher', { inverse: 'clock', isCausal: true }),
+        watchers: many("ClockWatcher", { inverse: "clock", isCausal: true }),
     },
     onChanges: [
         {
-            dependencies: ['watchers'],
-            methodName: '_onChangeWatchers',
+            dependencies: ["watchers"],
+            methodName: "_onChangeWatchers",
         },
     ],
 });

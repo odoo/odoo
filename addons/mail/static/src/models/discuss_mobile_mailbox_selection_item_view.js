@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 Model({
-    name: 'DiscussMobileMailboxSelectionItemView',
-    template: 'mail.DiscussMobileMailboxSelectionItemView',
+    name: "DiscussMobileMailboxSelectionItemView",
+    template: "mail.DiscussMobileMailboxSelectionItemView",
     recordMethods: {
         onClick() {
             if (!this.exists()) {
@@ -14,7 +14,7 @@ Model({
         },
     },
     fields: {
-        mailbox: one('Mailbox', { identifying: true, inverse: 'discussMobileSelectionItems' }),
-        owner: one('DiscussMobileMailboxSelectionView', { identifying: true, inverse: 'items' }),
+        mailbox: one("Mailbox", { identifying: true, inverse: "discussMobileSelectionItems" }),
+        owner: one("DiscussMobileMailboxSelectionView", { identifying: true, inverse: "items" }),
     },
 });

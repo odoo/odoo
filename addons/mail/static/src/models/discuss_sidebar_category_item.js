@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
-import Dialog from 'web.Dialog';
+import Dialog from "web.Dialog";
 
 Model({
-    name: 'DiscussSidebarCategoryItem',
-    template: 'mail.DiscussSidebarCategoryItem',
+    name: "DiscussSidebarCategoryItem",
+    template: "mail.DiscussSidebarCategoryItem",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -19,10 +19,13 @@ Model({
          */
         async onClickCommandLeave(ev) {
             ev.stopPropagation();
-            if (this.channel.channel_type !== 'group' && this.thread.creator === this.messaging.currentUser) {
+            if (
+                this.channel.channel_type !== "group" &&
+                this.thread.creator === this.messaging.currentUser
+            ) {
                 await this._askAdminConfirmation();
             }
-            if (this.channel.channel_type === 'group') {
+            if (this.channel.channel_type === "group") {
                 await this._askLeaveGroupConfirmation();
             }
             this.thread.leave();
@@ -35,11 +38,11 @@ Model({
         onClickCommandSettings(ev) {
             ev.stopPropagation();
             return this.env.services.action.doAction({
-                type: 'ir.actions.act_window',
+                type: "ir.actions.act_window",
                 res_model: this.thread.model,
                 res_id: this.thread.id,
-                views: [[false, 'form']],
-                target: 'current',
+                views: [[false, "form"]],
+                target: "current",
             });
         },
         /**
@@ -54,14 +57,17 @@ Model({
          * @returns {Promise}
          */
         _askAdminConfirmation() {
-            return new Promise(resolve => {
-                Dialog.confirm(this,
-                    this.env._t("You are the administrator of this channel. Are you sure you want to leave?"),
+            return new Promise((resolve) => {
+                Dialog.confirm(
+                    this,
+                    this.env._t(
+                        "You are the administrator of this channel. Are you sure you want to leave?"
+                    ),
                     {
                         buttons: [
                             {
                                 text: this.env._t("Leave"),
-                                classes: 'btn-primary',
+                                classes: "btn-primary",
                                 close: true,
                                 click: resolve,
                             },
@@ -79,22 +85,25 @@ Model({
          * @returns {Promise}
          */
         _askLeaveGroupConfirmation() {
-            return new Promise(resolve => {
-                Dialog.confirm(this,
-                    this.env._t("You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"),
+            return new Promise((resolve) => {
+                Dialog.confirm(
+                    this,
+                    this.env._t(
+                        "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                    ),
                     {
                         buttons: [
                             {
                                 text: this.env._t("Leave"),
-                                classes: 'btn-primary',
+                                classes: "btn-primary",
                                 close: true,
-                                click: resolve
+                                click: resolve,
                             },
                             {
                                 text: this.env._t("Discard"),
-                                close: true
-                            }
-                        ]
+                                close: true,
+                            },
+                        ],
                     }
                 );
             });
@@ -107,21 +116,21 @@ Model({
         avatarUrl: attr({
             compute() {
                 switch (this.channel.channel_type) {
-                    case 'channel':
-                    case 'group':
+                    case "channel":
+                    case "group":
                         return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
-                    case 'chat':
+                    case "chat":
                         if (this.channel.correspondent) {
                             return this.channel.correspondent.avatarUrl;
                         }
                 }
-                return '/mail/static/src/img/smiley/avatar.jpg';
+                return "/mail/static/src/img/smiley/avatar.jpg";
             },
         }),
         /**
          * Determines the discuss sidebar category displaying this item.
          */
-        category: one('DiscussSidebarCategory', { identifying: true, inverse: 'categoryItems' }),
+        category: one("DiscussSidebarCategory", { identifying: true, inverse: "categoryItems" }),
         /**
          * Determines the contribution of this discuss sidebar category item to
          * the counter of this category.
@@ -132,15 +141,15 @@ Model({
                     return clear();
                 }
                 switch (this.channel.channel_type) {
-                    case 'channel':
+                    case "channel":
                         return this.thread.message_needaction_counter > 0 ? 1 : 0;
-                    case 'chat':
-                    case 'group':
+                    case "chat":
+                    case "group":
                         return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
                 }
             },
         }),
-        channel: one('Channel', { identifying: true, inverse: 'discussSidebarCategoryItem' }),
+        channel: one("Channel", { identifying: true, inverse: "discussSidebarCategoryItem" }),
         /**
          * Amount of unread/action-needed messages
          */
@@ -150,10 +159,10 @@ Model({
                     return clear();
                 }
                 switch (this.channel.channel_type) {
-                    case 'channel':
+                    case "channel":
                         return this.thread.message_needaction_counter;
-                    case 'chat':
-                    case 'group':
+                    case "chat":
+                    case "group":
                         return this.channel.localMessageUnreadCounter;
                 }
             },
@@ -167,7 +176,7 @@ Model({
                     return clear();
                 }
                 return (
-                    ['channel', 'group'].includes(this.channel.channel_type) &&
+                    ["channel", "group"].includes(this.channel.channel_type) &&
                     !this.thread.message_needaction_counter &&
                     !this.thread.group_based_subscription
                 );
@@ -178,7 +187,7 @@ Model({
          */
         hasSettingsCommand: attr({
             compute() {
-                return this.channel.channel_type === 'channel';
+                return this.channel.channel_type === "channel";
             },
         }),
         /**
@@ -186,7 +195,9 @@ Model({
          */
         hasUnpinCommand: attr({
             compute() {
-                return this.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
+                return (
+                    this.channel.channel_type === "chat" && !this.channel.localMessageUnreadCounter
+                );
             },
         }),
         /**
@@ -194,7 +205,9 @@ Model({
          */
         isActive: attr({
             compute() {
-                return this.messaging.discuss && this.thread === this.messaging.discuss.activeThread;
+                return (
+                    this.messaging.discuss && this.thread === this.messaging.discuss.activeThread
+                );
             },
         }),
         /**
@@ -208,18 +221,19 @@ Model({
         /**
          * The related thread.
          */
-        thread: one('Thread', { related: 'channel.thread' }),
-        threadIconView: one('ThreadIconView', { inverse: 'discussSidebarCategoryItemOwner',
+        thread: one("Thread", { related: "channel.thread" }),
+        threadIconView: one("ThreadIconView", {
+            inverse: "discussSidebarCategoryItemOwner",
             compute() {
                 if (!this.thread) {
                     return clear();
                 }
                 switch (this.channel.channel_type) {
-                    case 'channel':
+                    case "channel":
                         return this.thread.authorizedGroupFullName ? clear() : {};
-                    case 'chat':
+                    case "chat":
                         return {};
-                    case 'group':
+                    case "group":
                         return clear();
                 }
             },

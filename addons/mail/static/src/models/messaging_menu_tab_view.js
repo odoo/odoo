@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'MessagingMenuTabView',
-    template: 'mail.MessagingMenuTabView',
-    identifyingMode: 'xor',
+    name: "MessagingMenuTabView",
+    template: "mail.MessagingMenuTabView",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -19,16 +19,17 @@ Model({
          * Note: when possible, better use the relations with MessagingMenu
          * rather than these hardcoded IDs.
          */
-        id: attr({ required: true,
+        id: attr({
+            required: true,
             compute() {
                 if (this.ownerAsAll) {
-                    return 'all';
+                    return "all";
                 }
                 if (this.ownerAsChannel) {
-                    return 'channel';
+                    return "channel";
                 }
                 if (this.ownerAsChat) {
-                    return 'chat';
+                    return "chat";
                 }
             },
         }),
@@ -37,7 +38,8 @@ Model({
                 return this.messaging.messagingMenu.activeTab === this;
             },
         }),
-        name: attr({ required: true,
+        name: attr({
+            required: true,
             compute() {
                 if (this.ownerAsAll) {
                     return this.env._t("All");
@@ -50,8 +52,8 @@ Model({
                 }
             },
         }),
-        ownerAsAll: one('MessagingMenu', { identifying: true, inverse: 'allTab' }),
-        ownerAsChannel: one('MessagingMenu', { identifying: true, inverse: 'channelTab' }),
-        ownerAsChat: one('MessagingMenu', { identifying: true, inverse: 'chatTab' }),
+        ownerAsAll: one("MessagingMenu", { identifying: true, inverse: "allTab" }),
+        ownerAsChannel: one("MessagingMenu", { identifying: true, inverse: "channelTab" }),
+        ownerAsChat: one("MessagingMenu", { identifying: true, inverse: "chatTab" }),
     },
 });

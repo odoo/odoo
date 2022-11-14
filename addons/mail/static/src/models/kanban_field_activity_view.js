@@ -1,14 +1,18 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'KanbanFieldActivityView',
-    template: 'mail.KanbanFieldActivityView',
+    name: "KanbanFieldActivityView",
+    template: "mail.KanbanFieldActivityView",
     fields: {
-        activityButtonView: one('ActivityButtonView', { default: {}, inverse: 'kanbanFieldActivityViewOwner', required: true }),
+        activityButtonView: one("ActivityButtonView", {
+            default: {},
+            inverse: "kanbanFieldActivityViewOwner",
+            required: true,
+        }),
         id: attr({ identifying: true }),
-        thread: one('Thread', { required: true }),
+        thread: one("Thread", { required: true }),
         webRecord: attr({ required: true }),
     },
 });

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, one, many, Model } from '@mail/model';
+import { attr, clear, one, many, Model } from "@mail/model";
 
 Model({
-    name: 'Channel',
+    name: "Channel",
     modelMethods: {
         /**
          * Performs the `channel_get` RPC on `mail.channel`.
@@ -19,8 +19,8 @@ Model({
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             // TODO FIX: potential duplicate chat task-2276490
             const data = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_get',
+                model: "mail.channel",
+                method: "channel_get",
                 kwargs: {
                     partners_to: partnerIds,
                     pin: pinForCurrentPartner,
@@ -29,8 +29,8 @@ Model({
             if (!data) {
                 return;
             }
-            const { channel } = this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(data)
+            const { channel } = this.messaging.models["Thread"].insert(
+                this.messaging.models["Thread"].convertData(data)
             );
             return channel;
         },
@@ -38,11 +38,11 @@ Model({
     recordMethods: {
         async fetchChannelMembers() {
             const channelData = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'load_more_members',
+                model: "mail.channel",
+                method: "load_more_members",
                 args: [[this.id]],
                 kwargs: {
-                    known_member_ids: this.channelMembers.map(channelMember => channelMember.id),
+                    known_member_ids: this.channelMembers.map((channelMember) => channelMember.id),
                 },
             });
             if (!this.exists()) {
@@ -52,7 +52,7 @@ Model({
         },
     },
     fields: {
-        activeRtcSession: one('RtcSession'),
+        activeRtcSession: one("RtcSession"),
         areAllMembersLoaded: attr({
             compute() {
                 return this.memberCount === this.channelMembers.length;
@@ -62,7 +62,7 @@ Model({
          * Cache key to force a reload of the avatar when avatar is changed.
          */
         avatarCacheKey: attr(),
-        callParticipants: many('ChannelMember', {
+        callParticipants: many("ChannelMember", {
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -74,28 +74,33 @@ Model({
                 return callParticipants;
             },
             sort: [
-                ['truthy-first', 'rtcSession'],
-                ['smaller-first', 'rtcSession.id'],
+                ["truthy-first", "rtcSession"],
+                ["smaller-first", "rtcSession.id"],
             ],
         }),
-        channelMembers: many('ChannelMember', { inverse: 'channel', isCausal: true }),
-        channelPreviewViews: many('ChannelPreviewView', { inverse: 'channel' }),
+        channelMembers: many("ChannelMember", { inverse: "channel", isCausal: true }),
+        channelPreviewViews: many("ChannelPreviewView", { inverse: "channel" }),
         channel_type: attr(),
-        correspondent: one('Partner', {
+        correspondent: one("Partner", {
             compute() {
-                if (this.channel_type === 'channel') {
+                if (this.channel_type === "channel") {
                     return clear();
                 }
                 const correspondents = this.channelMembers
-                    .filter(member => member.persona && member.persona.partner && !member.isMemberOfCurrentUser)
-                    .map(member => member.persona.partner);
+                    .filter(
+                        (member) =>
+                            member.persona &&
+                            member.persona.partner &&
+                            !member.isMemberOfCurrentUser
+                    )
+                    .map((member) => member.persona.partner);
                 if (correspondents.length === 1) {
                     // 2 members chat
                     return correspondents[0];
                 }
                 const partners = this.channelMembers
-                    .filter(member => member.persona && member.persona.partner)
-                    .map(member => member.persona.partner);
+                    .filter((member) => member.persona && member.persona.partner)
+                    .map((member) => member.persona.partner);
                 if (partners.length === 1) {
                     // chat with oneself
                     return partners[0];
@@ -103,12 +108,10 @@ Model({
                 return clear();
             },
         }),
-        correspondentOfDmChat: one('Partner', { inverse: 'dmChatWithCurrentPartner',
+        correspondentOfDmChat: one("Partner", {
+            inverse: "dmChatWithCurrentPartner",
             compute() {
-                if (
-                    this.channel_type === 'chat' &&
-                    this.correspondent
-                ) {
+                if (this.channel_type === "chat" && this.correspondent) {
                     return this.correspondent;
                 }
                 return clear();
@@ -118,13 +121,13 @@ Model({
         /**
          * Useful to compute `discussSidebarCategoryItem`.
          */
-        discussSidebarCategory: one('DiscussSidebarCategory', {
+        discussSidebarCategory: one("DiscussSidebarCategory", {
             compute() {
                 switch (this.channel_type) {
-                    case 'channel':
+                    case "channel":
                         return this.messaging.discuss.categoryChannel;
-                    case 'chat':
-                    case 'group':
+                    case "chat":
+                    case "group":
                         return this.messaging.discuss.categoryChat;
                     default:
                         return clear();
@@ -135,7 +138,8 @@ Model({
          * Determines the discuss sidebar category item that displays this
          * channel.
          */
-        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', { inverse: 'channel',
+        discussSidebarCategoryItem: one("DiscussSidebarCategoryItem", {
+            inverse: "channel",
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -154,13 +158,16 @@ Model({
                 if (!this.thread) {
                     return;
                 }
-                if (this.channel_type === 'chat' && this.correspondent) {
-                    return this.custom_channel_name || this.thread.getMemberName(this.correspondent.persona);
+                if (this.channel_type === "chat" && this.correspondent) {
+                    return (
+                        this.custom_channel_name ||
+                        this.thread.getMemberName(this.correspondent.persona)
+                    );
                 }
-                if (this.channel_type === 'group' && !this.thread.name) {
+                if (this.channel_type === "group" && !this.thread.name) {
                     return this.channelMembers
-                        .filter(channelMember => channelMember.persona)
-                        .map(channelMember => this.thread.getMemberName(channelMember.persona))
+                        .filter((channelMember) => channelMember.persona)
+                        .map((channelMember) => this.thread.getMemberName(channelMember.persona))
                         .join(this.env._t(", "));
                 }
                 return this.thread.name;
@@ -179,7 +186,9 @@ Model({
                 // By default trust the server up to the last message it used
                 // because it's not possible to do better.
                 let baseCounter = this.serverMessageUnreadCounter;
-                let countFromId = this.thread.serverLastMessage ? this.thread.serverLastMessage.id : 0;
+                let countFromId = this.thread.serverLastMessage
+                    ? this.thread.serverLastMessage.id
+                    : 0;
                 // But if the client knows the last seen message that the server
                 // returned (and by assumption all the messages that come after),
                 // the counter can be computed fully locally, ignoring potentially
@@ -207,17 +216,19 @@ Model({
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
-        memberOfCurrentUser: one('ChannelMember', { inverse: 'channelAsMemberOfCurrentUser' }),
-        orderedOfflineMembers: many('ChannelMember', { inverse: 'channelAsOfflineMember',
+        memberOfCurrentUser: one("ChannelMember", { inverse: "channelAsMemberOfCurrentUser" }),
+        orderedOfflineMembers: many("ChannelMember", {
+            inverse: "channelAsOfflineMember",
             sort: [
-                ['truthy-first', 'persona.name'],
-                ['case-insensitive-asc', 'persona.name'],
+                ["truthy-first", "persona.name"],
+                ["case-insensitive-asc", "persona.name"],
             ],
         }),
-        orderedOnlineMembers: many('ChannelMember', { inverse: 'channelAsOnlineMember',
+        orderedOnlineMembers: many("ChannelMember", {
+            inverse: "channelAsOnlineMember",
             sort: [
-                ['truthy-first', 'persona.name'],
-                ['case-insensitive-asc', 'persona.name'],
+                ["truthy-first", "persona.name"],
+                ["case-insensitive-asc", "persona.name"],
             ],
         }),
         /**
@@ -235,11 +246,14 @@ Model({
          * Determines whether we only display the participants who broadcast a video or all of them.
          */
         showOnlyVideo: attr({ default: false }),
-        thread: one('Thread', { inverse: 'channel', isCausal: true, required: true,
+        thread: one("Thread", {
+            inverse: "channel",
+            isCausal: true,
+            required: true,
             compute() {
                 return {
                     id: this.id,
-                    model: 'mail.channel',
+                    model: "mail.channel",
                 };
             },
         }),

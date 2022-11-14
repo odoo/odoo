@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import BasicView from 'web.BasicView';
+import BasicView from "web.BasicView";
 
-const mailWidgets = ['kanban_activity'];
+const mailWidgets = ["kanban_activity"];
 
 const chatterFields = ["message_ids", "message_follower_ids", "activity_ids"];
 
@@ -13,19 +13,22 @@ BasicView.include({
         this._super.apply(this, arguments);
         this.rendererParams.hasChatter = this.hasChatter;
         this.rendererParams.hasAttachmentViewerFeature = this.hasAttachmentViewerFeature;
-        const post_refresh = this._getFieldOption('message_ids', 'post_refresh', false);
-        const followers_post_refresh = this._getFieldOption('message_follower_ids', 'post_refresh', false);
+        const post_refresh = this._getFieldOption("message_ids", "post_refresh", false);
+        const followers_post_refresh = this._getFieldOption(
+            "message_follower_ids",
+            "post_refresh",
+            false
+        );
         this.chatterFields = {
-            hasActivityIds: this._hasField('activity_ids'),
-            hasMessageFollowerIds: this._hasField('message_follower_ids'),
-            hasMessageIds: this._hasField('message_ids'),
-            hasRecordReloadOnAttachmentsChanged: post_refresh === 'always',
+            hasActivityIds: this._hasField("activity_ids"),
+            hasMessageFollowerIds: this._hasField("message_follower_ids"),
+            hasMessageIds: this._hasField("message_ids"),
+            hasRecordReloadOnAttachmentsChanged: post_refresh === "always",
             hasRecordReloadOnMessagePosted: !!post_refresh,
             hasRecordReloadOnFollowersUpdate: !!followers_post_refresh,
-            isAttachmentBoxVisibleInitially: (
-                this._getFieldOption('message_ids', 'open_attachments', false) ||
-                this._getFieldOption('message_follower_ids', 'open_attachments', false)
-            ),
+            isAttachmentBoxVisibleInitially:
+                this._getFieldOption("message_ids", "open_attachments", false) ||
+                this._getFieldOption("message_follower_ids", "open_attachments", false),
         };
         const fieldsInfo = this.fieldsInfo[this.viewType];
         this.rendererParams.chatterFields = this.chatterFields;
@@ -82,7 +85,7 @@ BasicView.include({
             const fieldsInfo = fv.fieldsInfo[viewType];
             const fields = fv.viewFields;
             for (const child of node.children) {
-                if (child.tag === 'field' && chatterFields.includes(child.attrs.name)) {
+                if (child.tag === "field" && chatterFields.includes(child.attrs.name)) {
                     const attrs = { ...child.attrs, modifiers: {}, __no_fetch: true };
                     const fieldName = attrs.name;
                     fieldsInfo[fieldName] = this._processField(viewType, fields[fieldName], attrs);
@@ -92,7 +95,7 @@ BasicView.include({
             }
             return false;
         }
-        if (node.tag === 'div' && node.attrs.class === 'o_attachment_preview') {
+        if (node.tag === "div" && node.attrs.class === "o_attachment_preview") {
             this.hasAttachmentViewerFeature = true;
         }
         return this._super(...arguments);

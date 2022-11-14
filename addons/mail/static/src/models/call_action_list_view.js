@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'CallActionListView',
-    template: 'mail.CallActionListView',
+    name: "CallActionListView",
+    template: "mail.CallActionListView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -80,7 +80,8 @@ Model({
         },
     },
     fields: {
-        callButtonTitle: attr({ default: '',
+        callButtonTitle: attr({
+            default: "",
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -92,9 +93,10 @@ Model({
                 }
             },
         }),
-        callMainView: one('CallMainView', { identifying: true, inverse: 'callActionListView' }),
-        callView: one('CallView', { related: 'callMainView.callView', required: true }),
-        cameraButtonTitle: attr({ default: '',
+        callMainView: one("CallMainView", { identifying: true, inverse: "callActionListView" }),
+        callView: one("CallView", { related: "callMainView.callView", required: true }),
+        cameraButtonTitle: attr({
+            default: "",
             compute() {
                 if (this.messaging.rtc.sendUserVideo) {
                     return this.env._t("Stop camera");
@@ -103,7 +105,8 @@ Model({
                 }
             },
         }),
-        headphoneButtonTitle: attr({ default: '',
+        headphoneButtonTitle: attr({
+            default: "",
             compute() {
                 if (!this.messaging.rtc.currentRtcSession) {
                     return clear();
@@ -117,7 +120,9 @@ Model({
         }),
         isSmall: attr({
             compute() {
-                return Boolean(this.callView && this.callView.threadView.compact && !this.callView.isFullScreen);
+                return Boolean(
+                    this.callView && this.callView.threadView.compact && !this.callView.isFullScreen
+                );
             },
         }),
         microphoneButtonTitle: attr({
@@ -132,9 +137,10 @@ Model({
                 }
             },
         }),
-        moreButtonRef: attr({ ref: 'moreButton' }),
-        moreMenuPopoverView: one('PopoverView', { inverse: 'callActionListViewOwnerAsMoreMenu' }),
-        screenSharingButtonTitle: attr({ default: '',
+        moreButtonRef: attr({ ref: "moreButton" }),
+        moreMenuPopoverView: one("PopoverView", { inverse: "callActionListViewOwnerAsMoreMenu" }),
+        screenSharingButtonTitle: attr({
+            default: "",
             compute() {
                 if (this.messaging.rtc.sendDisplay) {
                     return this.env._t("Stop screen sharing");
@@ -143,6 +149,6 @@ Model({
                 }
             },
         }),
-        thread: one('Thread', { related: 'callMainView.thread', required: true }),
+        thread: one("Thread", { related: "callMainView.thread", required: true }),
     },
 });

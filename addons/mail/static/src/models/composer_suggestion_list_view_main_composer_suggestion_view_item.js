@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 /**
  * Models a relation between a ComposerSuggestionListView and a
@@ -8,10 +8,21 @@ import { one, Model } from '@mail/model';
  * suggestions.
  */
 Model({
-    name: 'ComposerSuggestionListViewMainComposerSuggestionViewItem',
+    name: "ComposerSuggestionListViewMainComposerSuggestionViewItem",
     fields: {
-        composerSuggestionListViewOwner: one('ComposerSuggestionListView', { identifying: true, inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems' }),
-        composerSuggestionView: one('ComposerSuggestionView', { default: {}, inverse: 'composerSuggestionListViewMainComposerSuggestionViewItemOwner', readonly: true, required: true }),
-        suggestable: one('ComposerSuggestable', { identifying: true, inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems' }),
+        composerSuggestionListViewOwner: one("ComposerSuggestionListView", {
+            identifying: true,
+            inverse: "composerSuggestionListViewMainComposerSuggestionViewItems",
+        }),
+        composerSuggestionView: one("ComposerSuggestionView", {
+            default: {},
+            inverse: "composerSuggestionListViewMainComposerSuggestionViewItemOwner",
+            readonly: true,
+            required: true,
+        }),
+        suggestable: one("ComposerSuggestable", {
+            identifying: true,
+            inverse: "composerSuggestionListViewMainComposerSuggestionViewItems",
+        }),
     },
 });

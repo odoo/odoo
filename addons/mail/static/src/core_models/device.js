@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { attr, Model } from '@mail/model';
+import { attr, Model } from "@mail/model";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { SIZES } from '@web/core/ui/ui_service';
+import { SIZES } from "@web/core/ui/ui_service";
 
 Model({
-    name: 'Device',
+    name: "Device",
     lifecycleHooks: {
         _created() {
             this._refresh();
             this._onResize = _.debounce(() => this._refresh(), 100);
         },
         _willDelete() {
-            browser.removeEventListener('resize', this._onResize);
+            browser.removeEventListener("resize", this._onResize);
         },
     },
     recordMethods: {
@@ -21,7 +21,7 @@ Model({
          * Called when messaging is started.
          */
         start() {
-            browser.addEventListener('resize', this._onResize);
+            browser.addEventListener("resize", this._onResize);
         },
         /**
          * @private
@@ -39,7 +39,10 @@ Model({
     fields: {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
-        hasCanvasFilterSupport: attr({ default: typeof document.createElement('canvas').getContext('2d').filter !== 'undefined' }),
+        hasCanvasFilterSupport: attr({
+            default:
+                typeof document.createElement("canvas").getContext("2d").filter !== "undefined",
+        }),
         hasRtcSupport: attr({
             compute() {
                 return Boolean(window.RTCPeerConnection && window.MediaStream);

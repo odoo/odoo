@@ -9,7 +9,7 @@ export const helpers = {
             return { userId: id };
         }
     },
-}
+};
 
 export function useOpenChat(resModel) {
     const messagingService = useService("messaging");

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'ComposerSuggestionListView',
-    template: 'mail.ComposerSuggestionListView',
+    name: "ComposerSuggestionListView",
+    template: "mail.ComposerSuggestionListView",
     recordMethods: {
         /**
          * Sets the first suggestion as active. Main and extra records are
@@ -28,7 +28,7 @@ Model({
          */
         setNextSuggestionViewActive() {
             const activeElementIndex = this.suggestionViews.findIndex(
-                suggestion => suggestion === this.activeSuggestionView
+                (suggestion) => suggestion === this.activeSuggestionView
             );
             if (activeElementIndex === this.suggestionViews.length - 1) {
                 // loop when reaching the end of the list
@@ -44,7 +44,7 @@ Model({
          */
         setPreviousSuggestionViewActive() {
             const activeElementIndex = this.suggestionViews.findIndex(
-                suggestion => suggestion === this.activeSuggestionView
+                (suggestion) => suggestion === this.activeSuggestionView
             );
             if (activeElementIndex === 0) {
                 // loop when reaching the start of the list
@@ -61,7 +61,8 @@ Model({
          * is highlighted in the UI and it will be selected when the
          * suggestion is confirmed by the user.
          */
-        activeSuggestionView: one('ComposerSuggestionView', { inverse: 'composerSuggestionListViewOwnerAsActiveSuggestionView',
+        activeSuggestionView: one("ComposerSuggestionView", {
+            inverse: "composerSuggestionListViewOwnerAsActiveSuggestionView",
             compute() {
                 if (this.suggestionViews.includes(this.rawActiveSuggestionView)) {
                     return this.rawActiveSuggestionView;
@@ -70,29 +71,48 @@ Model({
                 return firstSuggestionView;
             },
         }),
-        composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', { inverse: 'composerSuggestionListViewOwner',
-            compute() {
-                return this.composerViewOwner.extraSuggestions.map(suggestable => ({ suggestable }));
-            },
+        composerSuggestionListViewExtraComposerSuggestionViewItems: many(
+            "ComposerSuggestionListViewExtraComposerSuggestionViewItem",
+            {
+                inverse: "composerSuggestionListViewOwner",
+                compute() {
+                    return this.composerViewOwner.extraSuggestions.map((suggestable) => ({
+                        suggestable,
+                    }));
+                },
+            }
+        ),
+        composerSuggestionListViewMainComposerSuggestionViewItems: many(
+            "ComposerSuggestionListViewMainComposerSuggestionViewItem",
+            {
+                inverse: "composerSuggestionListViewOwner",
+                compute() {
+                    return this.composerViewOwner.mainSuggestions.map((suggestable) => ({
+                        suggestable,
+                    }));
+                },
+            }
+        ),
+        composerViewOwner: one("ComposerView", {
+            identifying: true,
+            inverse: "composerSuggestionListView",
         }),
-        composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', { inverse: 'composerSuggestionListViewOwner',
-            compute() {
-                return this.composerViewOwner.mainSuggestions.map(suggestable => ({ suggestable }));
-            },
-        }),
-        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'composerSuggestionListView' }),
         /**
          * Determines whether the currently active suggestion should be scrolled
          * into view.
          */
         hasToScrollToActiveSuggestionView: attr({ default: false }),
-        rawActiveSuggestionView: one('ComposerSuggestionView'),
-        suggestionViews: many('ComposerSuggestionView', {
+        rawActiveSuggestionView: one("ComposerSuggestionView"),
+        suggestionViews: many("ComposerSuggestionView", {
             compute() {
-                const mainSuggestionViews = this.composerSuggestionListViewMainComposerSuggestionViewItems.map(item => item.composerSuggestionView);
-                const extraSuggestionViews = this.composerSuggestionListViewExtraComposerSuggestionViewItems.map(item => item.composerSuggestionView);
+                const mainSuggestionViews = this.composerSuggestionListViewMainComposerSuggestionViewItems.map(
+                    (item) => item.composerSuggestionView
+                );
+                const extraSuggestionViews = this.composerSuggestionListViewExtraComposerSuggestionViewItems.map(
+                    (item) => item.composerSuggestionView
+                );
                 return mainSuggestionViews.concat(extraSuggestionViews);
             },
-        })
+        }),
     },
 });

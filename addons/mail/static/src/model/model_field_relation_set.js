@@ -1,16 +1,15 @@
 /** @odoo-module */
 
-import { decrement, increment } from '@mail/model/model_field_command';
-import { Listener } from '@mail/model/model_listener';
-import { followRelations } from '@mail/model/model_utils';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { decrement, increment } from "@mail/model/model_field_command";
+import { Listener } from "@mail/model/model_listener";
+import { followRelations } from "@mail/model/model_utils";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
 /**
  * Defines a set containing the relation records of the given field on the given
  * record. The behavior of this set depends on the field properties.
  */
 export class RelationSet {
-
     /**
      * @param {Record} record
      * @param {ModelField} field
@@ -53,7 +52,7 @@ export class RelationSet {
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sort of ${value} in ${this.field} of ${this.record}`,
-                onChange: info => {
+                onChange: (info) => {
                     // access all useful values of current record (and relations) to mark them as dependencies
                     this.record.modelManager.startListening(listener);
                     const compareDefinition = this.field.sort;
@@ -67,7 +66,7 @@ export class RelationSet {
                             const valA = followRelations(a, relatedPath);
                             const valB = followRelations(b, relatedPath);
                             switch (compareMethod) {
-                                case 'truthy-first': {
+                                case "truthy-first": {
                                     if (valA === valB) {
                                         break;
                                     }
@@ -79,7 +78,7 @@ export class RelationSet {
                                     }
                                     break;
                                 }
-                                case 'falsy-first': {
+                                case "falsy-first": {
                                     if (valA === valB) {
                                         break;
                                     }
@@ -91,8 +90,8 @@ export class RelationSet {
                                     }
                                     break;
                                 }
-                                case 'case-insensitive-asc': {
-                                    if (typeof valA !== 'string' || typeof valB !== 'string') {
+                                case "case-insensitive-asc": {
+                                    if (typeof valA !== "string" || typeof valB !== "string") {
                                         break;
                                     }
                                     const cleanedValA = cleanSearchTerm(valA);
@@ -102,23 +101,23 @@ export class RelationSet {
                                     }
                                     return cleanedValA < cleanedValB ? -1 : 1;
                                 }
-                                case 'smaller-first':
-                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
+                                case "smaller-first":
+                                    if (typeof valA !== "number" || typeof valB !== "number") {
                                         break;
                                     }
                                     if (valA === valB) {
                                         break;
                                     }
                                     return valA - valB;
-                                case 'greater-first':
-                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
+                                case "greater-first":
+                                    if (typeof valA !== "number" || typeof valB !== "number") {
                                         break;
                                     }
                                     if (valA === valB) {
                                         break;
                                     }
                                     return valB - valA;
-                                case 'most-recent-first':
+                                case "most-recent-first":
                                     if (!(valA instanceof Date) || !(valB instanceof Date)) {
                                         break;
                                     }
@@ -127,7 +126,9 @@ export class RelationSet {
                                     }
                                     return valB - valA;
                                 default:
-                                    throw Error(`sort compare method "${compareMethod}" is not supported.`);
+                                    throw Error(
+                                        `sort compare method "${compareMethod}" is not supported.`
+                                    );
                             }
                         }
                         return 0;
@@ -142,20 +143,23 @@ export class RelationSet {
                 },
             });
             this.sortListenerByValue.set(value, listener);
-            listener.onChange({ reason: 'initial call' });
+            listener.onChange({ reason: "initial call" });
         }
-        for (const { from: contributionFieldName, to: sumFieldName } of this.field.sumContributions) {
+        for (const { from: contributionFieldName, to: sumFieldName } of this.field
+            .sumContributions) {
             this.sumByValueByField.get(sumFieldName).set(value, 0);
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sum of field(${sumFieldName}) of ${this.record} from field(${contributionFieldName}) of ${value} through relation ${this.field}`,
-                onChange: info => {
+                onChange: (info) => {
                     // listen to the contribution to mark it as dependency
                     this.record.modelManager.startListening(listener);
                     const contribution = value[contributionFieldName];
                     this.record.modelManager.stopListening(listener);
                     // retrieve the previous contribution and update it
-                    const previousContribution = this.sumByValueByField.get(sumFieldName).get(value);
+                    const previousContribution = this.sumByValueByField
+                        .get(sumFieldName)
+                        .get(value);
                     this.sumByValueByField.get(sumFieldName).set(value, contribution);
                     this.record.modelManager._update(
                         this.record,
@@ -165,12 +169,12 @@ export class RelationSet {
                                 increment(contribution),
                             ],
                         },
-                        { allowWriteReadonly: true },
+                        { allowWriteReadonly: true }
                     );
                 },
             });
             this.sumListenerByValueByField.get(sumFieldName).set(value, listener);
-            listener.onChange({ reason: 'initial call' });
+            listener.onChange({ reason: "initial call" });
         }
     }
 
@@ -205,7 +209,11 @@ export class RelationSet {
             // remove contribution of current value
             const contribution = this.sumByValueByField.get(sumFieldName).get(value);
             this.sumByValueByField.get(sumFieldName).delete(value);
-            this.record.modelManager._update(this.record, { [sumFieldName]: decrement(contribution) }, { allowWriteReadonly: true });
+            this.record.modelManager._update(
+                this.record,
+                { [sumFieldName]: decrement(contribution) },
+                { allowWriteReadonly: true }
+            );
             // remove listener on current value
             const listener = this.sumListenerByValueByField.get(sumFieldName).get(value);
             this.sumListenerByValueByField.get(sumFieldName).delete(value);
@@ -231,5 +239,4 @@ export class RelationSet {
         }
         return this.set[Symbol.iterator]();
     }
-
 }

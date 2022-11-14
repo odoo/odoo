@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'mail/models/mail_link_preview', {
+patch(MockServer.prototype, "mail/models/mail_link_preview", {
     /**
      * Simulates the `_link_preview_format` method of `mail.link.preview`.
      *
@@ -19,7 +19,7 @@ patch(MockServer.prototype, 'mail/models/mail_link_preview', {
             og_mimetype: linkPreview.og_mimetype,
             og_title: linkPreview.og_title,
             og_type: linkPreview.og_type,
-            source_url: linkPreview.source_url
+            source_url: linkPreview.source_url,
         };
     },
 });

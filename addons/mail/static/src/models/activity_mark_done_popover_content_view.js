@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
-import { onMounted } from '@odoo/owl';
+import { onMounted } from "@odoo/owl";
 
 Model({
-    name: 'ActivityMarkDonePopoverContentView',
-    template: 'mail.ActivityMarkDonePopoverContentView',
+    name: "ActivityMarkDonePopoverContentView",
+    template: "mail.ActivityMarkDonePopoverContentView",
     componentSetup() {
         onMounted(this.onMounted);
     },
-    identifyingMode: 'xor',
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Handles blur on this feedback textarea.
@@ -62,7 +62,9 @@ Model({
             const reloadFunc = this.reloadFunc;
             const webRecord = this.webRecord;
             const thread = this.activity.thread;
-            const activityListViewOwner = this.activityListViewItemOwner && this.activityListViewItemOwner.activityListViewOwner;
+            const activityListViewOwner =
+                this.activityListViewItemOwner &&
+                this.activityListViewItemOwner.activityListViewOwner;
             const activity = this.activity;
             const feedback = this.feedbackTextareaRef.el.value;
             if (activityListViewOwner && activityListViewOwner.exists()) {
@@ -83,7 +85,7 @@ Model({
          * Handles keydown on this activity mark done.
          */
         onKeydown(ev) {
-            if (ev.key === 'Escape') {
+            if (ev.key === "Escape") {
                 this._close();
             }
         },
@@ -111,7 +113,8 @@ Model({
         },
     },
     fields: {
-        activity: one('Activity', { required: true,
+        activity: one("Activity", {
+            required: true,
             compute() {
                 if (this.activityListViewItemOwner) {
                     return this.activityListViewItemOwner.activity;
@@ -122,8 +125,11 @@ Model({
                 return clear();
             },
         }),
-        activityListViewItemOwner: one('ActivityListViewItem', { identifying: true, inverse: 'markDoneView', }),
-        activityViewOwner: one('ActivityView', {
+        activityListViewItemOwner: one("ActivityListViewItem", {
+            identifying: true,
+            inverse: "markDoneView",
+        }),
+        activityViewOwner: one("ActivityView", {
             compute() {
                 if (this.popoverViewOwner && this.popoverViewOwner.activityViewOwnerAsMarkDone) {
                     return this.popoverViewOwner.activityViewOwnerAsMarkDone;
@@ -131,7 +137,7 @@ Model({
                 return clear();
             },
         }),
-        feedbackTextareaRef: attr({ ref: 'feedbackTextarea' }),
+        feedbackTextareaRef: attr({ ref: "feedbackTextarea" }),
         hasHeader: attr({
             compute() {
                 return Boolean(this.popoverViewOwner);
@@ -145,7 +151,10 @@ Model({
                 return this.env._t("Mark Done");
             },
         }),
-        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'activityMarkDonePopoverContentView', }),
+        popoverViewOwner: one("PopoverView", {
+            identifying: true,
+            inverse: "activityMarkDonePopoverContentView",
+        }),
         reloadFunc: attr({
             compute() {
                 if (this.activityListViewItemOwner) {

@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import ActivityRecord from '@mail/js/views/activity/activity_record';
-import { ActivityCellViewContainer } from '@mail/backend_components/activity_cell_view/activity_cell_view_container';
+import ActivityRecord from "@mail/js/views/activity/activity_record";
+import { ActivityCellViewContainer } from "@mail/backend_components/activity_cell_view/activity_cell_view_container";
 
-import AbstractRendererOwl from 'web.AbstractRendererOwl';
-import core from 'web.core';
-import KanbanColumnProgressBar from 'web.KanbanColumnProgressBar';
-import { ComponentAdapter } from 'web.OwlCompatibility';
-import QWeb from 'web.QWeb';
-import session from 'web.session';
-import utils from 'web.utils';
+import AbstractRendererOwl from "web.AbstractRendererOwl";
+import core from "web.core";
+import KanbanColumnProgressBar from "web.KanbanColumnProgressBar";
+import { ComponentAdapter } from "web.OwlCompatibility";
+import QWeb from "web.QWeb";
+import session from "web.session";
+import utils from "web.utils";
 
-import { useState } from '@odoo/owl';
+import { useState } from "@odoo/owl";
 const _t = core._t;
 
 /**
@@ -20,7 +20,7 @@ const _t = core._t;
  */
 class ActivityRecordAdapter extends ComponentAdapter {
     renderWidget() {
-        _.invoke(_.pluck(this.widget.subWidgets, '$el'), 'detach');
+        _.invoke(_.pluck(this.widget.subWidgets, "$el"), "detach");
         this.widget._render();
     }
 
@@ -55,11 +55,13 @@ class KanbanColumnProgressBarAdapter extends ComponentAdapter {
         // but we don't need to listen to them in our case.
         if (this.el) {
             if (ev.name === "set_progress_bar_state") {
-                this.props.onSetProgressBarState(new CustomEvent("set-progress-bar-state", {
-                    bubbles: true,
-                    cancelable: true,
-                    detail: ev.data,
-                }));
+                this.props.onSetProgressBarState(
+                    new CustomEvent("set-progress-bar-state", {
+                        bubbles: true,
+                        cancelable: true,
+                        detail: ev.data,
+                    })
+                );
             }
             super._trigger_up(ev);
         }
@@ -69,12 +71,12 @@ class KanbanColumnProgressBarAdapter extends ComponentAdapter {
 class ActivityRenderer extends AbstractRendererOwl {
     setup() {
         super.setup(...arguments);
-        this.qweb = new QWeb(this.env.isDebug(), {_s: session.origin});
+        this.qweb = new QWeb(this.env.isDebug(), { _s: session.origin });
         this.qweb.add_template(utils.json_node_to_xml(this.props.templates));
         this.activeFilter = useState({
             state: null,
             activityTypeId: null,
-            resIds: []
+            resIds: [],
         });
         this.widgetComponents = {
             ActivityRecord,
@@ -92,8 +94,8 @@ class ActivityRenderer extends AbstractRendererOwl {
      * @returns filtered resIds first then the rest.
      */
     get activityResIds() {
-        const copiedActivityResIds = Array.from(this.props.activity_res_ids)
-        return copiedActivityResIds.sort((a, b) => this.activeFilter.resIds.includes(a) ? -1 : 0);
+        const copiedActivityResIds = Array.from(this.props.activity_res_ids);
+        return copiedActivityResIds.sort((a, b) => (this.activeFilter.resIds.includes(a) ? -1 : 0));
     }
 
     /**
@@ -119,7 +121,7 @@ class ActivityRenderer extends AbstractRendererOwl {
 
     getProgressBarColumnState(typeId) {
         const counts = { planned: 0, today: 0, overdue: 0 };
-        for (let activities of Object.values(this.props.grouped_activities)) {
+        for (const activities of Object.values(this.props.grouped_activities)) {
             if (typeId in activities) {
                 counts[activities[typeId].state] += 1;
             }
@@ -128,17 +130,17 @@ class ActivityRenderer extends AbstractRendererOwl {
             count: Object.values(counts).reduce((x, y) => x + y),
             fields: {
                 activity_state: {
-                    type: 'selection',
+                    type: "selection",
                     selection: [
-                        ['planned', _t('Planned')],
-                        ['today', _t('Today')],
-                        ['overdue', _t('Overdue')],
+                        ["planned", _t("Planned")],
+                        ["today", _t("Today")],
+                        ["overdue", _t("Overdue")],
                     ],
                 },
             },
             progressBarValues: {
-                field: 'activity_state',
-                colors: { planned: 'success', today: 'warning', overdue: 'danger' },
+                field: "activity_state",
+                colors: { planned: "success", today: "warning", overdue: "danger" },
                 counts: counts,
             },
         };
@@ -152,7 +154,7 @@ class ActivityRenderer extends AbstractRendererOwl {
      * @param {MouseEvent} ev
      */
     _onEmptyCellClicked(ev) {
-        this.trigger('empty_cell_clicked', {
+        this.trigger("empty_cell_clicked", {
             resId: parseInt(ev.currentTarget.dataset.resId, 10),
             activityTypeId: parseInt(ev.currentTarget.dataset.activityTypeId, 10),
         });
@@ -162,7 +164,7 @@ class ActivityRenderer extends AbstractRendererOwl {
      * @param {MouseEvent} ev
      */
     _onSendMailTemplateClicked(ev) {
-        this.trigger('send_mail_template', {
+        this.trigger("send_mail_template", {
             activityTypeID: parseInt(ev.currentTarget.dataset.activityTypeId, 10),
             templateID: parseInt(ev.currentTarget.dataset.templateId, 10),
         });
@@ -176,8 +178,11 @@ class ActivityRenderer extends AbstractRendererOwl {
             this.activeFilter.state = ev.detail.values.activeFilter;
             this.activeFilter.activityTypeId = ev.detail.columnID;
             this.activeFilter.resIds = Object.entries(this.props.grouped_activities)
-                .filter(([, resIds]) => ev.detail.columnID in resIds &&
-                    resIds[ev.detail.columnID].state === ev.detail.values.activeFilter.value)
+                .filter(
+                    ([, resIds]) =>
+                        ev.detail.columnID in resIds &&
+                        resIds[ev.detail.columnID].state === ev.detail.values.activeFilter.value
+                )
                 .map(([key]) => parseInt(key));
         } else {
             this.activeFilter.state = null;
@@ -196,6 +201,6 @@ ActivityRenderer.components = {
     ActivityRecordAdapter,
     KanbanColumnProgressBarAdapter,
 };
-ActivityRenderer.template = 'mail.ActivityRenderer';
+ActivityRenderer.template = "mail.ActivityRenderer";
 
 export default ActivityRenderer;

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 Model({
-    name: 'FollowerView',
-    template: 'mail.FollowerView',
+    name: "FollowerView",
+    template: "mail.FollowerView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -30,13 +30,18 @@ Model({
             const followerListMenuView = this.followerListMenuViewOwner;
             this.follower.remove();
             if (followerListMenuView.chatterOwner) {
-                followerListMenuView.chatterOwner.reloadParentView({ fieldNames: ['message_follower_ids'] });
+                followerListMenuView.chatterOwner.reloadParentView({
+                    fieldNames: ["message_follower_ids"],
+                });
             }
             followerListMenuView.hide();
         },
     },
     fields: {
-        follower: one('Follower', { identifying: true, inverse: 'followerViews' }),
-        followerListMenuViewOwner: one('FollowerListMenuView', { identifying: true, inverse: 'followerViews' }),
+        follower: one("Follower", { identifying: true, inverse: "followerViews" }),
+        followerListMenuViewOwner: one("FollowerListMenuView", {
+            identifying: true,
+            inverse: "followerViews",
+        }),
     },
 });

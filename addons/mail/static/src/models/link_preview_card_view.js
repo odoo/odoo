@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'LinkPreviewCardView',
-    template: 'mail.LinkPreviewCardView',
+    name: "LinkPreviewCardView",
+    template: "mail.LinkPreviewCardView",
     recordMethods: {
         /**
          * Handles mouse enter event for the container of this element.
@@ -27,8 +27,8 @@ Model({
     },
     fields: {
         isHovered: attr({ default: false }),
-        linkPreview: one('LinkPreview', { identifying: true, inverse: 'linkPreviewCardView' }),
-        linkPreviewAsideView: one('LinkPreviewAsideView', {
+        linkPreview: one("LinkPreview", { identifying: true, inverse: "linkPreviewCardView" }),
+        linkPreviewAsideView: one("LinkPreviewAsideView", {
             compute() {
                 if (!this.linkPreview.isDeletable) {
                     return clear();
@@ -36,13 +36,20 @@ Model({
                 if (this.messaging.device.isMobileDevice) {
                     return {};
                 }
-                if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
+                if (
+                    this.isHovered ||
+                    (this.linkPreviewAsideView &&
+                        this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)
+                ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'linkPreviewCardView',
+            inverse: "linkPreviewCardView",
         }),
-        linkPreviewListViewOwner: one('LinkPreviewListView', { identifying: true, inverse: 'linkPreviewAsCardViews' }),
+        linkPreviewListViewOwner: one("LinkPreviewListView", {
+            identifying: true,
+            inverse: "linkPreviewAsCardViews",
+        }),
     },
 });

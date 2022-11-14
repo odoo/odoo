@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, one, Model } from '@mail/model';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'ComposerTextInputView',
-    template: 'mail.ComposerTextInputView',
+    name: "ComposerTextInputView",
+    template: "mail.ComposerTextInputView",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
+        useComponentToModel({ fieldName: "component" });
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.
          */
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+        useUpdateToModel({ methodName: "onComponentUpdate" });
     },
     recordMethods: {
         onComponentUpdate() {
@@ -33,7 +33,7 @@ Model({
                     this.textareaRef.el.setSelectionRange(
                         this.owner.composer.textInputCursorStart,
                         this.owner.composer.textInputCursorEnd,
-                        this.owner.composer.textInputSelectionDirection,
+                        this.owner.composer.textInputSelectionDirection
                     );
                 }
                 this.owner.update({ hasToRestoreContent: false });
@@ -48,12 +48,12 @@ Model({
          * based on the text content. We need it to downsize the textarea
          * properly without flicker.
          */
-        mirroredTextareaRef: attr({ ref: 'mirroredTextarea' }),
-        owner: one('ComposerView', { identifying: true, inverse: 'textInput' }),
+        mirroredTextareaRef: attr({ ref: "mirroredTextarea" }),
+        owner: one("ComposerView", { identifying: true, inverse: "textInput" }),
         /**
          * Reference of the textarea. Useful to set height, selection and
          * content.
          */
-        textareaRef: attr({ ref: 'textarea' }),
+        textareaRef: attr({ ref: "textarea" }),
     },
 });

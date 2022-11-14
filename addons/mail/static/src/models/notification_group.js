@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, insert, many, one, Model } from '@mail/model';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'NotificationGroup',
+    name: "NotificationGroup",
     recordMethods: {
         /**
          * Cancel notifications of the group.
@@ -11,7 +11,7 @@ Model({
         notifyCancel() {
             this.messaging.rpc({
                 model: this.res_model,
-                method: 'notify_cancel_by_type',
+                method: "notify_cancel_by_type",
                 kwargs: { notification_type: this.notification_type },
             });
         },
@@ -40,17 +40,21 @@ Model({
          * @private
          */
         _openDocuments() {
-            if (this.notification_type !== 'email') {
+            if (this.notification_type !== "email") {
                 return;
             }
             this.env.services.action.doAction({
                 name: this.env._t("Mail Failures"),
-                type: 'ir.actions.act_window',
-                view_mode: 'kanban,list,form',
-                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                target: 'current',
+                type: "ir.actions.act_window",
+                view_mode: "kanban,list,form",
+                views: [
+                    [false, "kanban"],
+                    [false, "list"],
+                    [false, "form"],
+                ],
+                target: "current",
                 res_model: this.res_model,
-                domain: [['message_has_error', '=', true]],
+                domain: [["message_has_error", "=", true]],
                 context: { create: false },
             });
             if (this.messaging.device.isSmall) {
@@ -70,8 +74,10 @@ Model({
              */
             compute() {
                 const dates = this.notifications
-                    .filter(notification => notification.message && notification.message.momentDate)
-                    .map(notification => notification.message.momentDate);
+                    .filter(
+                        (notification) => notification.message && notification.message.momentDate
+                    )
+                    .map((notification) => notification.message.momentDate);
                 if (dates.length === 0) {
                     return clear();
                 }
@@ -79,30 +85,35 @@ Model({
             },
         }),
         notification_type: attr({ identifying: true }),
-        notifications: many('Notification', { inverse: 'notificationGroup' }),
-        notificationGroupViews: many('NotificationGroupView', { inverse: 'notificationGroup' }),
+        notifications: many("Notification", { inverse: "notificationGroup" }),
+        notificationGroupViews: many("NotificationGroupView", { inverse: "notificationGroup" }),
         res_id: attr({ identifying: true }),
         res_model: attr({ identifying: true }),
         res_model_name: attr(),
         /**
          * States the position of the group inside the notification list.
          */
-        sequence: attr({ default: 0,
+        sequence: attr({
+            default: 0,
             /**
              * Compute the position of the group inside the notification list.
              */
             compute() {
-                return -Math.max(...this.notifications.map(notification => notification.message.id));
+                return -Math.max(
+                    ...this.notifications.map((notification) => notification.message.id)
+                );
             },
         }),
         /**
          * Related thread when the notification group concerns a single thread.
          */
-        thread: one('Thread', {
+        thread: one("Thread", {
             compute() {
                 const notificationsThreadIds = this.notifications
-                    .filter(notification => notification.message && notification.message.originThread)
-                    .map(notification => notification.message.originThread.id);
+                    .filter(
+                        (notification) => notification.message && notification.message.originThread
+                    )
+                    .map((notification) => notification.message.originThread.id);
                 const threadIds = new Set(notificationsThreadIds);
                 if (threadIds.size !== 1) {
                     return clear();
@@ -116,8 +127,8 @@ Model({
     },
     onChanges: [
         {
-            dependencies: ['notifications'],
-            methodName: '_onChangeNotifications',
+            dependencies: ["notifications"],
+            methodName: "_onChangeNotifications",
         },
     ],
 });

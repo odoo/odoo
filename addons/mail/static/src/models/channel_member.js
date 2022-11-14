@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, one, many, Model } from '@mail/model';
+import { attr, clear, one, many, Model } from "@mail/model";
 
 Model({
-    name: 'ChannelMember',
+    name: "ChannelMember",
     fields: {
         avatarUrl: attr({
             compute() {
@@ -16,14 +16,19 @@ Model({
                 return clear();
             },
         }),
-        callParticipantCards: many('CallParticipantCard', { inverse: 'channelMember', isCausal: true }),
-        channel: one('Channel', { inverse: 'channelMembers', readonly: true, required: true }),
-        channelAsMemberOfCurrentUser: one('Channel', { inverse: 'memberOfCurrentUser',
+        callParticipantCards: many("CallParticipantCard", {
+            inverse: "channelMember",
+            isCausal: true,
+        }),
+        channel: one("Channel", { inverse: "channelMembers", readonly: true, required: true }),
+        channelAsMemberOfCurrentUser: one("Channel", {
+            inverse: "memberOfCurrentUser",
             compute() {
                 return this.isMemberOfCurrentUser ? this.channel : clear();
             },
         }),
-        channelAsOfflineMember: one('Channel', { inverse: 'orderedOfflineMembers',
+        channelAsOfflineMember: one("Channel", {
+            inverse: "orderedOfflineMembers",
             compute() {
                 if (this.persona.partner) {
                     return !this.persona.partner.isOnline ? this.channel : clear();
@@ -34,7 +39,8 @@ Model({
                 return clear();
             },
         }),
-        channelAsOnlineMember: one('Channel', { inverse: 'orderedOnlineMembers',
+        channelAsOnlineMember: one("Channel", {
+            inverse: "orderedOnlineMembers",
             compute() {
                 if (this.persona.partner) {
                     return this.persona.partner.isOnline ? this.channel : clear();
@@ -45,9 +51,10 @@ Model({
                 return clear();
             },
         }),
-        channelMemberViews: many('ChannelMemberView', { inverse: 'channelMember' }),
+        channelMemberViews: many("ChannelMemberView", { inverse: "channelMember" }),
         id: attr({ identifying: true }),
-        isMemberOfCurrentUser: attr({ default: false,
+        isMemberOfCurrentUser: attr({
+            default: false,
             compute() {
                 if (this.messaging.currentPartner) {
                     return this.messaging.currentPartner.persona === this.persona;
@@ -64,8 +71,10 @@ Model({
             },
         }),
         isTyping: attr({ default: false }),
-        otherMemberLongTypingInThreadTimers: many('OtherMemberLongTypingInThreadTimer', { inverse: 'member' }),
-        persona: one('Persona', { inverse: 'channelMembers', readonly: true, required: true }),
-        rtcSession: one('RtcSession', { inverse: 'channelMember' }),
+        otherMemberLongTypingInThreadTimers: many("OtherMemberLongTypingInThreadTimer", {
+            inverse: "member",
+        }),
+        persona: one("Persona", { inverse: "channelMembers", readonly: true, required: true }),
+        rtcSession: one("RtcSession", { inverse: "channelMember" }),
     },
 });

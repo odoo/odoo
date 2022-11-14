@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { Listener } from '@mail/model/model_listener';
+import { Listener } from "@mail/model/model_listener";
 
-import { onRendered, onWillDestroy, onWillRender, useComponent } from '@odoo/owl';
+import { onRendered, onWillDestroy, onWillRender, useComponent } from "@odoo/owl";
 
 /**
  * This hook provides support for automatically re-rendering when used records

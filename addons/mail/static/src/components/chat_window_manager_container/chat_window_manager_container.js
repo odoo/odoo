@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-import { Component } from '@odoo/owl';
+import { Component } from "@odoo/owl";
 
 export class ChatWindowManagerContainer extends Component {
-
     /**
      * @override
      */
@@ -20,5 +19,5 @@ export class ChatWindowManagerContainer extends Component {
 ChatWindowManagerContainer.props = {};
 
 Object.assign(ChatWindowManagerContainer, {
-    template: 'mail.ChatWindowManagerContainer',
+    template: "mail.ChatWindowManagerContainer",
 });

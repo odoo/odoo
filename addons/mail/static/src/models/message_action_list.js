@@ -1,14 +1,23 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'MessageActionList',
+    name: "MessageActionList",
     template: "mail.MessageActionList",
     fields: {
-        actionViewsCount: attr({ default: 0, readonly: true, sum: 'messageActionViews.actionViewCounterContribution' }),
-        actionsWithoutCompactCount: attr({ default: 0, readonly: true, sum: 'messageActions.isNonCompactActionContribution' }),
-        actionDelete: one('MessageAction', { inverse: 'messageActionListOwnerAsDelete',
+        actionViewsCount: attr({
+            default: 0,
+            readonly: true,
+            sum: "messageActionViews.actionViewCounterContribution",
+        }),
+        actionsWithoutCompactCount: attr({
+            default: 0,
+            readonly: true,
+            sum: "messageActions.isNonCompactActionContribution",
+        }),
+        actionDelete: one("MessageAction", {
+            inverse: "messageActionListOwnerAsDelete",
             compute() {
                 if (this.message && this.message.canBeDeleted) {
                     return {};
@@ -16,7 +25,8 @@ Model({
                 return clear();
             },
         }),
-        actionEdit: one('MessageAction', { inverse: 'messageActionListOwnerAsEdit',
+        actionEdit: one("MessageAction", {
+            inverse: "messageActionListOwnerAsEdit",
             compute() {
                 if (this.message && this.message.canBeDeleted) {
                     return {};
@@ -24,19 +34,26 @@ Model({
                 return clear();
             },
         }),
-        actionMarkAsRead: one('MessageAction', { inverse: 'messageActionListOwnerAsMarkAsRead',
+        actionMarkAsRead: one("MessageAction", {
+            inverse: "messageActionListOwnerAsMarkAsRead",
             compute() {
                 if (
-                    this.messaging && this.messaging.inbox &&
-                    this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread
+                    this.messaging &&
+                    this.messaging.inbox &&
+                    this.messageView &&
+                    this.messageView.messageListViewItemOwner &&
+                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                        .thread &&
+                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                        .thread === this.messaging.inbox.thread
                 ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        actionReaction: one('MessageAction', { inverse: 'messageActionListOwnerAsReaction',
+        actionReaction: one("MessageAction", {
+            inverse: "messageActionListOwnerAsReaction",
             compute() {
                 if (this.message && this.message.hasReactionIcon) {
                     return {};
@@ -44,30 +61,43 @@ Model({
                 return clear();
             },
         }),
-        actionReplyTo: one('MessageAction', { inverse: 'messageActionListOwnerAsReplyTo',
+        actionReplyTo: one("MessageAction", {
+            inverse: "messageActionListOwnerAsReplyTo",
             compute() {
                 if (
-                    this.messaging && this.messaging.inbox &&
-                    this.message && !this.message.isTemporary && !this.message.isTransient &&
-                    this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread && (
-                        this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread ||
-                        this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel
-                    )
+                    this.messaging &&
+                    this.messaging.inbox &&
+                    this.message &&
+                    !this.message.isTemporary &&
+                    !this.message.isTransient &&
+                    this.messageView &&
+                    this.messageView.messageListViewItemOwner &&
+                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                        .thread &&
+                    (this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner
+                        .thread === this.messaging.inbox.thread ||
+                        this.messageView.messageListViewItemOwner.messageListViewOwner
+                            .threadViewOwner.thread.channel)
                 ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        actionToggleCompact: one('MessageAction', { inverse: 'messageActionListOwnerAsToggleCompact',
+        actionToggleCompact: one("MessageAction", {
+            inverse: "messageActionListOwnerAsToggleCompact",
             compute() {
-                if (this.messageView.isInChatWindow && (this.actionsWithoutCompactCount > this.compactThreshold)) {
+                if (
+                    this.messageView.isInChatWindow &&
+                    this.actionsWithoutCompactCount > this.compactThreshold
+                ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        actionToggleStar: one('MessageAction', { inverse: 'messageActionListOwnerAsToggleStar',
+        actionToggleStar: one("MessageAction", {
+            inverse: "messageActionListOwnerAsToggleStar",
             compute() {
                 if (this.message && this.message.canStarBeToggled) {
                     return {};
@@ -76,7 +106,7 @@ Model({
             },
         }),
         compactThreshold: attr({ default: 2, readonly: true }),
-        firstActionView: one('MessageActionView', {
+        firstActionView: one("MessageActionView", {
             compute() {
                 if (this.actionViewsCount === 0) {
                     return clear();
@@ -85,7 +115,7 @@ Model({
             },
         }),
         isCompact: attr({ default: true }),
-        lastActionView: one('MessageActionView', {
+        lastActionView: one("MessageActionView", {
             compute() {
                 if (this.actionViewsCount === 0) {
                     return clear();
@@ -96,14 +126,18 @@ Model({
         /**
          * States the message on which this action message list operates.
          */
-        message: one('Message', { related: 'messageView.message' }),
-        messageActions: many('MessageAction', { inverse: 'messageActionListOwner', isCausal: true }),
-        messageActionViews: many('MessageActionView', { related: 'messageActions.messageActionView',
-            sort: [['smaller-first', 'messageAction.sequence']],
+        message: one("Message", { related: "messageView.message" }),
+        messageActions: many("MessageAction", {
+            inverse: "messageActionListOwner",
+            isCausal: true,
+        }),
+        messageActionViews: many("MessageActionView", {
+            related: "messageActions.messageActionView",
+            sort: [["smaller-first", "messageAction.sequence"]],
         }),
         /**
          * States the message view that controls this message action list.
          */
-        messageView: one('MessageView', { identifying: true, inverse: 'messageActionList' }),
+        messageView: one("MessageView", { identifying: true, inverse: "messageActionList" }),
     },
 });

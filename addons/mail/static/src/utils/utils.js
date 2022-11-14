@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { delay } from 'web.concurrency';
-import { unaccent } from 'web.utils';
+import { delay } from "web.concurrency";
+import { unaccent } from "web.utils";
 
 //------------------------------------------------------------------------------
 // Public
@@ -62,9 +62,4 @@ async function nextTick() {
 // Export
 //------------------------------------------------------------------------------
 
-export {
-    cleanSearchTerm,
-    isEventHandled,
-    markEventHandled,
-    nextTick,
-};
+export { cleanSearchTerm, isEventHandled, markEventHandled, nextTick };

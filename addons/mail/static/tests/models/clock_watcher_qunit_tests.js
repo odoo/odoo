@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { one, Patch } from '@mail/model';
+import { one, Patch } from "@mail/model";
 
 Patch({
-    name: 'ClockWatcher',
+    name: "ClockWatcher",
     fields: {
-        qunitTestOwner: one('QUnitTest', {
+        qunitTestOwner: one("QUnitTest", {
             identifying: true,
-            inverse: 'clockWatcher',
+            inverse: "clockWatcher",
         }),
     },
 });

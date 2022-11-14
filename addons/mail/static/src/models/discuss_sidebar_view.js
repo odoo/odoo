@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, one, Model } from '@mail/model';
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'DiscussSidebarView',
-    template: 'mail.DiscussSidebarView',
+    name: "DiscussSidebarView",
+    template: "mail.DiscussSidebarView",
     componentSetup() {
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+        useUpdateToModel({ methodName: "onComponentUpdate" });
     },
     recordMethods: {
         onComponentUpdate() {
@@ -17,11 +17,11 @@ Model({
         },
     },
     fields: {
-        owner: one('DiscussView', { identifying: true, inverse: 'sidebar' }),
+        owner: one("DiscussView", { identifying: true, inverse: "sidebar" }),
         /**
          * Reference to the quick search input. Useful to filter channels and
          * chats based on the content of the input.
          */
-        quickSearchInputRef: attr({ ref: 'quickSearchInput' }),
+        quickSearchInputRef: attr({ ref: "quickSearchInput" }),
     },
 });

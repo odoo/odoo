@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
-import { makeDeferred } from '@mail/utils/deferred';
+import { attr, many, one, Model } from "@mail/model";
+import { makeDeferred } from "@mail/utils/deferred";
 
-import { browser } from '@web/core/browser/browser';
+import { browser } from "@web/core/browser/browser";
 
-import { EventBus } from '@odoo/owl';
+import { EventBus } from "@odoo/owl";
 
 Model({
-    name: 'Messaging',
+    name: "Messaging",
     lifecycleHooks: {
         _created() {
             odoo.__DEBUG__.messaging = this;
@@ -33,23 +33,35 @@ Model({
                 const { args = [], method, model, kwargs = {} } = params;
                 const { domain, fields, groupBy, ...remainingKwargs } = kwargs;
 
-                const ormService = 'shadow' in options ? this.env.services.orm.silent : this.env.services.orm;
+                const ormService =
+                    "shadow" in options ? this.env.services.orm.silent : this.env.services.orm;
                 switch (method) {
-                    case 'create': {
+                    case "create": {
                         const { vals_list, ...createKwargs } = kwargs;
                         return ormService.create(model, args[0] || vals_list, createKwargs);
                     }
-                    case 'read':
+                    case "read":
                         return ormService.read(model, args[0], args[1] || fields, remainingKwargs);
-                    case 'read_group':
-                        return ormService.readGroup(model, args[0] || domain, args[1] || fields, args[2] || groupBy, remainingKwargs);
-                    case 'search':
+                    case "read_group":
+                        return ormService.readGroup(
+                            model,
+                            args[0] || domain,
+                            args[1] || fields,
+                            args[2] || groupBy,
+                            remainingKwargs
+                        );
+                    case "search":
                         return ormService.search(model, args[0] || domain, remainingKwargs);
-                    case 'search_read':
-                        return ormService.searchRead(model, args[0] || domain, args[1] || fields, remainingKwargs);
-                    case 'unlink':
+                    case "search_read":
+                        return ormService.searchRead(
+                            model,
+                            args[0] || domain,
+                            args[1] || fields,
+                            remainingKwargs
+                        );
+                    case "unlink":
                         return ormService.unlink(model, args[0], kwargs);
-                    case 'write': {
+                    case "write": {
                         const { vals, ...writeKwargs } = kwargs;
                         return ormService.write(model, args[0], args[1] || vals, writeKwargs);
                     }
@@ -71,27 +83,29 @@ Model({
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
          */
-        allRecords: many('Record', { inverse: 'messaging', isCausal: true }),
+        allRecords: many("Record", { inverse: "messaging", isCausal: true }),
         browser: attr({
             compute() {
                 return browser;
             },
         }),
-        device: one('Device', { default: {}, isCausal: true, readonly: true }),
+        device: one("Device", { default: {}, isCausal: true, readonly: true }),
         /**
          * Promise that will be resolved when messaging is initialized.
          */
-        initializedPromise: attr({ required: true,
+        initializedPromise: attr({
+            required: true,
             compute() {
                 return makeDeferred();
             },
         }),
         isInitialized: attr({ default: false }),
-        locale: one('Locale', { default: {}, isCausal: true, readonly: true }),
+        locale: one("Locale", { default: {}, isCausal: true, readonly: true }),
         /**
          * Determines the bus that is used to communicate messaging events.
          */
-        messagingBus: attr({ required: true,
+        messagingBus: attr({
+            required: true,
             compute() {
                 if (this.messagingBus) {
                     return; // avoid overwrite if already provided (example in tests)

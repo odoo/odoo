@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'DiscussPublicView',
-    template: 'mail.DiscussPublicView',
+    name: "DiscussPublicView",
+    template: "mail.DiscussPublicView",
     recordMethods: {
         /**
          * Creates and displays the thread view and clears the welcome view.
@@ -12,7 +12,7 @@ Model({
         async switchToThreadView() {
             this.update({
                 threadViewer: {
-                    extraClass: 'flex-grow-1',
+                    extraClass: "flex-grow-1",
                     hasMemberList: true,
                     hasThreadView: true,
                     hasTopbar: true,
@@ -22,9 +22,13 @@ Model({
             });
             if (this.isChannelTokenSecret) {
                 // Change the URL to avoid leaking the invitation link.
-                window.history.replaceState(window.history.state, null, `/discuss/channel/${this.channel.id}${window.location.search}`);
+                window.history.replaceState(
+                    window.history.state,
+                    null,
+                    `/discuss/channel/${this.channel.id}${window.location.search}`
+                );
             }
-            if (this.channel.defaultDisplayMode === 'video_full_screen') {
+            if (this.channel.defaultDisplayMode === "video_full_screen") {
                 await this.channel.toggleCall({ startWithVideo: true });
                 await this.threadView.callView.activateFullScreen();
             }
@@ -38,8 +42,10 @@ Model({
                 welcomeView: {
                     channel: this.channel,
                     isDoFocusGuestNameInput: true,
-                    originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
-                    pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
+                    originalGuestName:
+                        this.messaging.currentGuest && this.messaging.currentGuest.name,
+                    pendingGuestName:
+                        this.messaging.currentGuest && this.messaging.currentGuest.name,
                 },
             });
             if (this.welcomeView.callDemoView) {
@@ -52,21 +58,21 @@ Model({
         /**
          * States the channel linked to this discuss public view.
          */
-        channel: one('Thread', { readonly: true, required: true }),
+        channel: one("Thread", { readonly: true, required: true }),
         isChannelTokenSecret: attr({ default: true }),
         shouldAddGuestAsMemberOnJoin: attr({ default: false, readonly: true }),
         shouldDisplayWelcomeViewInitially: attr({ default: false, readonly: true }),
         /**
          * States the thread view linked to this discuss public view.
          */
-        threadView: one('ThreadView', { related: 'threadViewer.threadView' }),
+        threadView: one("ThreadView", { related: "threadViewer.threadView" }),
         /**
          * States the thread viewer linked to this discuss public view.
          */
-        threadViewer: one('ThreadViewer', { inverse: 'discussPublicView' }),
+        threadViewer: one("ThreadViewer", { inverse: "discussPublicView" }),
         /**
          * States the welcome view linked to this discuss public view.
          */
-        welcomeView: one('WelcomeView', { inverse: 'discussPublicView' }),
+        welcomeView: one("WelcomeView", { inverse: "discussPublicView" }),
     },
 });

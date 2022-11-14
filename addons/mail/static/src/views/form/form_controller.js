@@ -1,7 +1,10 @@
 /** @odoo-module */
 
 import { useModels } from "@mail/component_hooks/use_models";
-import { ChatterContainer, getChatterNextTemporaryId } from "@mail/components/chatter_container/chatter_container";
+import {
+    ChatterContainer,
+    getChatterNextTemporaryId,
+} from "@mail/components/chatter_container/chatter_container";
 import { WebClientViewAttachmentViewContainer } from "@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container";
 
 import { browser } from "@web/core/browser/browser";
@@ -15,7 +18,7 @@ import { evalDomain } from "@web/views/utils";
 
 import { MailFormCompiler } from "./form_compiler";
 
-import { onMounted, onWillDestroy, onWillUnmount } from '@odoo/owl';
+import { onMounted, onWillDestroy, onWillUnmount } from "@odoo/owl";
 
 patch(FormController.prototype, "mail", {
     setup() {
@@ -31,7 +34,9 @@ patch(FormController.prototype, "mail", {
                     return;
                 }
                 const messaging = this.env.services.messaging.modelManager.messaging;
-                this.chatter = messaging.models['Chatter'].insert({ id: getChatterNextTemporaryId() });
+                this.chatter = messaging.models["Chatter"].insert({
+                    id: getChatterNextTemporaryId(),
+                });
                 if (owl.status(this) === "destroyed") {
                     this.chatter.delete();
                 }
@@ -84,7 +89,7 @@ patch(FormController.prototype, "mail", {
         ) {
             return false;
         }
-        const thread = this.getMessaging().models['Thread'].insert({
+        const thread = this.getMessaging().models["Thread"].insert({
             id: this.model.root.resId,
             model: this.model.root.resModel,
         });

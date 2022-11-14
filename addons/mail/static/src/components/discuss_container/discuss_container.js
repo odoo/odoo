@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-import { Component, onWillDestroy } from '@odoo/owl';
+import { Component, onWillDestroy } from "@odoo/owl";
 
 export class DiscussContainer extends Component {
-
     /**
      * @override
      */
@@ -18,7 +17,7 @@ export class DiscussContainer extends Component {
             const initActiveId =
                 (action.context && action.context.active_id) ||
                 (action.params && action.params.default_active_id) ||
-                'mail.box_inbox';
+                "mail.box_inbox";
             this.discuss = this.messaging.discuss;
             this.discuss.update({
                 discussView: {
@@ -58,7 +57,6 @@ export class DiscussContainer extends Component {
             this.discuss.close();
         }
     }
-
 }
 
 Object.assign(DiscussContainer, {
@@ -68,5 +66,5 @@ Object.assign(DiscussContainer, {
         className: String,
         globalState: { type: Object, optional: 1 },
     },
-    template: 'mail.DiscussContainer',
+    template: "mail.DiscussContainer",
 });

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred';
+import { makeDeferred } from "@mail/utils/deferred";
 
 /**
  * Module that contains registry for adding new models or patching models.
@@ -42,10 +42,12 @@ function addContextToErrors(func, contextMessage) {
  * @param {Function} componentSetup The componentSetup function to be added.
  */
 function addComponentSetup(modelName, componentSetup) {
-    if (typeof componentSetup !== 'function') {
-        throw new Error(`Cannot add componentSetup to model ${modelName}: componentSetup must be a function (current type: "${typeof componentSetup}").`);
+    if (typeof componentSetup !== "function") {
+        throw new Error(
+            `Cannot add componentSetup to model ${modelName}: componentSetup must be a function (current type: "${typeof componentSetup}").`
+        );
     }
-    registry.get(modelName).set('componentSetup', componentSetup);
+    registry.get(modelName).set("componentSetup", componentSetup);
 }
 
 /**
@@ -60,11 +62,11 @@ function addFields(modelName, fields) {
         addContextToErrors(() => {
             assertNameIsAvailableOnRecords(fieldName, definition);
         }, `Cannot add field "${fieldName}" to model "${modelName}": `);
-        definition.get('fields').set(fieldName, field);
+        definition.get("fields").set(fieldName, field);
     }
 }
 
-const validHookNames = ['_created', '_willDelete'];
+const validHookNames = ["_created", "_willDelete"];
 
 /**
  * Adds the provided hooks to the model specified by the `modelName`.
@@ -78,10 +80,12 @@ function addLifecycleHooks(modelName, hooks) {
         addContextToErrors(() => {
             assertIsFunction(handler);
             if (!validHookNames.includes(name)) {
-                throw new Error(`unsupported hook name. Possible values: ${validHookNames.join(", ")}.`);
+                throw new Error(
+                    `unsupported hook name. Possible values: ${validHookNames.join(", ")}.`
+                );
             }
         }, `Cannot add lifecycle hook "${name}" to model "${modelName}": `);
-        definition.get('lifecycleHooks').set(name, handler);
+        definition.get("lifecycleHooks").set(name, handler);
     }
 }
 
@@ -102,7 +106,7 @@ function addModelGetters(modelName, modelGetters) {
             assertIsFunction(getter);
             assertNameIsAvailableOnModel(getterName, definition);
         }, `Cannot add model getter "${getterName}" to model "${modelName}": `);
-        definition.get('modelGetters').set(getterName, getter);
+        definition.get("modelGetters").set(getterName, getter);
     }
 }
 
@@ -119,7 +123,7 @@ function addModelMethods(modelName, modelMethods) {
             assertIsFunction(method);
             assertNameIsAvailableOnModel(name, definition);
         }, `Cannot add model method "${name}" to model "${modelName}": `);
-        definition.get('modelMethods').set(name, method);
+        definition.get("modelMethods").set(name, method);
     }
 }
 
@@ -132,37 +136,48 @@ function addModelMethods(modelName, modelMethods) {
 function addOnChanges(modelName, onChanges) {
     addContextToErrors(() => {
         for (const onChange of onChanges) {
-            if (!Object.prototype.hasOwnProperty.call(onChange, 'dependencies')) {
-                throw new Error("at least one onChange definition lacks dependencies (the list of fields to be watched for changes).");
+            if (!Object.prototype.hasOwnProperty.call(onChange, "dependencies")) {
+                throw new Error(
+                    "at least one onChange definition lacks dependencies (the list of fields to be watched for changes)."
+                );
             }
-            if (!Object.prototype.hasOwnProperty.call(onChange, 'methodName')) {
-                throw new Error("at least one onChange definition lacks a methodName (the name of the method to be called on change).");
+            if (!Object.prototype.hasOwnProperty.call(onChange, "methodName")) {
+                throw new Error(
+                    "at least one onChange definition lacks a methodName (the name of the method to be called on change)."
+                );
             }
             if (!Array.isArray(onChange.dependencies)) {
                 throw new Error("onChange dependencies must be an array of strings.");
             }
-            if (typeof onChange.methodName !== 'string') {
+            if (typeof onChange.methodName !== "string") {
                 throw new Error("onChange methodName must be a string.");
             }
-            const allowedKeys = ['dependencies', 'methodName'];
+            const allowedKeys = ["dependencies", "methodName"];
             for (const key of Object.keys(onChange)) {
                 if (!allowedKeys.includes(key)) {
-                    throw new Error(`unknown key "${key}" in onChange definition. Allowed keys: ${allowedKeys.join(", ")}.`);
+                    throw new Error(
+                        `unknown key "${key}" in onChange definition. Allowed keys: ${allowedKeys.join(
+                            ", "
+                        )}.`
+                    );
                 }
             }
             // paths of dependencies are splitted now to avoid having to do it
             // each time the path is followed.
             const splittedDependencies = [];
             for (const dependency of onChange.dependencies) {
-                if (typeof dependency !== 'string') {
+                if (typeof dependency !== "string") {
                     throw new Error("onChange dependencies must be an array of strings.");
                 }
-                splittedDependencies.push(dependency.split('.'));
+                splittedDependencies.push(dependency.split("."));
             }
             onChange.dependencies = splittedDependencies;
         }
     }, `Cannot add onChanges to model "${modelName}": `);
-    registry.get(modelName).get('onChanges').push(...onChanges);
+    registry
+        .get(modelName)
+        .get("onChanges")
+        .push(...onChanges);
 }
 
 /**
@@ -178,7 +193,7 @@ function addRecordMethods(modelName, recordMethods) {
             assertIsFunction(method);
             assertNameIsAvailableOnRecords(name, definition);
         }, `Cannot add record method "${name}" to model "${modelName}": `);
-        definition.get('recordMethods').set(name, method);
+        definition.get("recordMethods").set(name, method);
     }
 }
 
@@ -199,7 +214,7 @@ function addRecordGetters(modelName, recordGetters) {
             assertIsFunction(getter);
             assertNameIsAvailableOnRecords(getterName, definition);
         }, `Cannot add record getter "${getterName}" to model "${modelName}": `);
-        definition.get('recordGetters').set(getterName, getter);
+        definition.get("recordGetters").set(getterName, getter);
     }
 }
 
@@ -210,7 +225,7 @@ function addRecordGetters(modelName, recordGetters) {
  * @throws {Error} when `toAssert` is not typeof function.
  */
 function assertIsFunction(toAssert) {
-    if (typeof toAssert !== 'function') {
+    if (typeof toAssert !== "function") {
         throw new Error(`"${toAssert}" must be a function`);
     }
 }
@@ -223,7 +238,7 @@ function assertIsFunction(toAssert) {
  * @throws {Error} when `name` is already used as a key on the model.
  */
 function assertNameIsAvailableOnModel(name, modelDefinition) {
-    if (['modelGetters', 'modelMethods'].some(x => modelDefinition.get(x).has(name))) {
+    if (["modelGetters", "modelMethods"].some((x) => modelDefinition.get(x).has(name))) {
         throw new Error(`there is already a key with this name on the model.`);
     }
 }
@@ -236,41 +251,51 @@ function assertNameIsAvailableOnModel(name, modelDefinition) {
  * @throws {Error} when `name` is already used as a key on the records.
  */
 function assertNameIsAvailableOnRecords(name, modelDefinition) {
-    if (['fields', 'recordGetters', 'recordMethods'].some(x => modelDefinition.get(x).has(name))) {
+    if (
+        ["fields", "recordGetters", "recordMethods"].some((x) => modelDefinition.get(x).has(name))
+    ) {
         throw new Error(`there is already a key with this name on the records.`);
     }
 }
 
 function patchComponentSetup({ name, componentSetup }) {
-    const originalComponentSetup = registry.get(name).get('componentSetup');
+    const originalComponentSetup = registry.get(name).get("componentSetup");
     if (!originalComponentSetup) {
         addComponentSetup(name, componentSetup);
         return;
     }
-    if (typeof componentSetup !== 'function') {
-        throw new Error(`Cannot patch componentSetup of model ${name}: componentSetup must be a function (current type: "${typeof componentSetup}").`);
+    if (typeof componentSetup !== "function") {
+        throw new Error(
+            `Cannot patch componentSetup of model ${name}: componentSetup must be a function (current type: "${typeof componentSetup}").`
+        );
     }
-    registry.get(name).set('componentSetup', function () {
+    registry.get(name).set("componentSetup", function () {
         this._super = originalComponentSetup;
         return componentSetup.call(this);
-    })
+    });
 }
 
 function patchFields(patch) {
     const newFieldsToAdd = Object.create(null);
     for (const [fieldName, fieldData] of Object.entries(patch.fields)) {
-        const originalFieldDefinition = registry.get(patch.name).get('fields').get(fieldName);
+        const originalFieldDefinition = registry.get(patch.name).get("fields").get(fieldName);
         if (!originalFieldDefinition) {
             newFieldsToAdd[fieldName] = fieldData;
         } else {
-            for (const [attributeName, attributeData] of Object.entries(fieldData))
+            for (const [attributeName, attributeData] of Object.entries(fieldData)) {
                 switch (attributeName) {
-                    case 'compute':
+                    case "compute": {
                         if (!originalFieldDefinition.compute) {
-                            throw new Error(`Cannot patch compute of field ${patch.name}/${fieldName}: the field is not a compute in the original definition.`);
+                            throw new Error(
+                                `Cannot patch compute of field ${patch.name}/${fieldName}: the field is not a compute in the original definition.`
+                            );
                         }
-                        if (typeof attributeData !== 'function') {
-                            throw new Error(`Cannot patch compute of field ${patch.name}/${fieldName}: the compute must be a function (found: "${typeof attributeData}").`);
+                        if (typeof attributeData !== "function") {
+                            throw new Error(
+                                `Cannot patch compute of field ${
+                                    patch.name
+                                }/${fieldName}: the compute must be a function (found: "${typeof attributeData}").`
+                            );
                         }
                         const computeBeforePatch = originalFieldDefinition.compute;
                         originalFieldDefinition.compute = function () {
@@ -278,38 +303,56 @@ function patchFields(patch) {
                             return attributeData.call(this);
                         };
                         break;
-                    case 'sort':
+                    }
+                    case "sort":
                         if (originalFieldDefinition.sort) {
-                            if (typeof attributeData !== 'function') {
-                                throw new Error(`Cannot patch sorting rules of field ${patch.name}/${fieldName}: the value of 'sort' must be a function to apply to the sorting rules array (found: "${typeof attributeData}").`);
+                            if (typeof attributeData !== "function") {
+                                throw new Error(
+                                    `Cannot patch sorting rules of field ${
+                                        patch.name
+                                    }/${fieldName}: the value of 'sort' must be a function to apply to the sorting rules array (found: "${typeof attributeData}").`
+                                );
                             }
-                            originalFieldDefinition.sort = attributeData.call({ _super: originalFieldDefinition.sort });
+                            originalFieldDefinition.sort = attributeData.call({
+                                _super: originalFieldDefinition.sort,
+                            });
                         } else {
                             if (!Array.isArray(attributeData)) {
-                                throw new Error(`Cannot add sorting rules to field ${patch.name}/${fieldName}: sorting rules must be an array.`);
+                                throw new Error(
+                                    `Cannot add sorting rules to field ${patch.name}/${fieldName}: sorting rules must be an array.`
+                                );
                             }
                             originalFieldDefinition.sort = attributeData;
                         }
                         break;
-                    case 'fieldType':
-                        throw new Error(`Cannot patch field ${patch.name}/${fieldName}: patches do not need field type (attr, one, many).`);
+                    case "fieldType":
+                        throw new Error(
+                            `Cannot patch field ${patch.name}/${fieldName}: patches do not need field type (attr, one, many).`
+                        );
                     default:
-                        throw new Error(`Cannot patch field ${patch.name}/${fieldName}: unsupported field attribute "${attributeName}".`);
+                        throw new Error(
+                            `Cannot patch field ${patch.name}/${fieldName}: unsupported field attribute "${attributeName}".`
+                        );
                 }
+            }
         }
     }
     addFields(patch.name, newFieldsToAdd);
 }
 
 function patchLifecycleHooks(patch) {
-    const originalLifecycleHooksDefinition = registry.get(patch.name).get('lifecycleHooks');
+    const originalLifecycleHooksDefinition = registry.get(patch.name).get("lifecycleHooks");
     const newLifecycleHooksToAdd = Object.create(null);
     for (const [hookName, hookHandler] of Object.entries(patch.lifecycleHooks)) {
         if (!originalLifecycleHooksDefinition.has(hookName)) {
             newLifecycleHooksToAdd[hookName] = hookHandler;
         } else {
-            if (typeof hookHandler !== 'function') {
-                throw new Error(`Cannot patch hook "${hookName}" on model ${patch.name}: the hook handler must be a function (current type: "${typeof hookHandler}").`);
+            if (typeof hookHandler !== "function") {
+                throw new Error(
+                    `Cannot patch hook "${hookName}" on model ${
+                        patch.name
+                    }: the hook handler must be a function (current type: "${typeof hookHandler}").`
+                );
             }
             const hookHandlerBeforePatch = originalLifecycleHooksDefinition.get(hookName);
             originalLifecycleHooksDefinition.set(hookName, function () {
@@ -322,14 +365,18 @@ function patchLifecycleHooks(patch) {
 }
 
 function patchModelMethods(patch) {
-    const originalModelMethodsDefinition = registry.get(patch.name).get('modelMethods');
+    const originalModelMethodsDefinition = registry.get(patch.name).get("modelMethods");
     const newModelMethodsToAdd = Object.create(null);
     for (const [methodName, method] of Object.entries(patch.modelMethods)) {
         if (!originalModelMethodsDefinition.has(methodName)) {
             newModelMethodsToAdd[methodName] = method;
         } else {
-            if (typeof method !== 'function') {
-                throw new Error(`Cannot patch model method "${methodName}" on model ${patch.name}: the method must be a function (current type: "${typeof method}").`);
+            if (typeof method !== "function") {
+                throw new Error(
+                    `Cannot patch model method "${methodName}" on model ${
+                        patch.name
+                    }: the method must be a function (current type: "${typeof method}").`
+                );
             }
             const methodBeforePatch = originalModelMethodsDefinition.get(methodName);
             originalModelMethodsDefinition.set(methodName, function (...args) {
@@ -342,14 +389,18 @@ function patchModelMethods(patch) {
 }
 
 function patchRecordMethods(patch) {
-    const originalRecordMethods = registry.get(patch.name).get('recordMethods');
+    const originalRecordMethods = registry.get(patch.name).get("recordMethods");
     const newRecordMethodsToAdd = Object.create(null);
     for (const [methodName, method] of Object.entries(patch.recordMethods)) {
         if (!originalRecordMethods.has(methodName)) {
             newRecordMethodsToAdd[methodName] = method;
         } else {
-            if (typeof method !== 'function') {
-                throw new Error(`Cannot patch record method "${methodName}" on model ${patch.name}: the method must be a function (current type: "${typeof method}").`);
+            if (typeof method !== "function") {
+                throw new Error(
+                    `Cannot patch record method "${methodName}" on model ${
+                        patch.name
+                    }: the method must be a function (current type: "${typeof method}").`
+                );
             }
             const methodBeforePatch = originalRecordMethods.get(methodName);
             originalRecordMethods.set(methodName, function (...args) {
@@ -376,32 +427,65 @@ function patchRecordMethods(patch) {
  * @param {Object} [definition.recordMethods]
  * @param {string} [definition.template]
  */
-export function Model({ componentSetup, fields, identifyingMode = 'and', isLegacyComponent = false, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods, template }) {
+export function Model({
+    componentSetup,
+    fields,
+    identifyingMode = "and",
+    isLegacyComponent = false,
+    lifecycleHooks,
+    modelGetters,
+    modelMethods,
+    name,
+    onChanges,
+    recordGetters,
+    recordMethods,
+    template,
+}) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
     }
-    const sectionNames = ['name', 'template', 'componentSetup', 'identifyingMode', 'isLegacyComponent', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
-    const invalidSectionNames = Object.keys(arguments[0]).filter(x => !sectionNames.includes(x));
+    const sectionNames = [
+        "name",
+        "template",
+        "componentSetup",
+        "identifyingMode",
+        "isLegacyComponent",
+        "lifecycleHooks",
+        "modelMethods",
+        "modelGetters",
+        "recordMethods",
+        "recordGetters",
+        "fields",
+        "onChanges",
+    ];
+    const invalidSectionNames = Object.keys(arguments[0]).filter((x) => !sectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
-        throw new Error(`Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(", ")}`);
+        throw new Error(
+            `Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(
+                ", "
+            )}`
+        );
     }
-    registry.set(name, new Map([
-        ['name', name],
-        ['identifyingMode', identifyingMode],
-        ['isLegacyComponent', isLegacyComponent],
-        ['lifecycleHooks', new Map()],
-        ['modelMethods', new Map()],
-        ['modelGetters', new Map()],
-        ['recordMethods', new Map()],
-        ['recordGetters', new Map()],
-        ['fields', new Map()],
-        ['onChanges', []],
-    ]));
+    registry.set(
+        name,
+        new Map([
+            ["name", name],
+            ["identifyingMode", identifyingMode],
+            ["isLegacyComponent", isLegacyComponent],
+            ["lifecycleHooks", new Map()],
+            ["modelMethods", new Map()],
+            ["modelGetters", new Map()],
+            ["recordMethods", new Map()],
+            ["recordGetters", new Map()],
+            ["fields", new Map()],
+            ["onChanges", []],
+        ])
+    );
     if (template) {
-        registry.get(name).set('template', template);
+        registry.get(name).set("template", template);
         if (componentSetup) {
             addComponentSetup(name, componentSetup);
         }
@@ -429,14 +513,36 @@ export function Model({ componentSetup, fields, identifyingMode = 'and', isLegac
     }
 }
 
-export function Patch({ componentSetup, fields, lifecycleHooks, modelMethods, name, onChanges, recordMethods }) {
+export function Patch({
+    componentSetup,
+    fields,
+    lifecycleHooks,
+    modelMethods,
+    name,
+    onChanges,
+    recordMethods,
+}) {
     if (!name) {
         throw new Error("Patch is lacking the name of the model to be patched.");
     }
-    const allowedSectionNames = ['name', 'componentSetup', 'lifecycleHooks', 'modelMethods', 'recordMethods', 'fields', 'onChanges'];
-    const invalidSectionNames = Object.keys(arguments['0']).filter(x => !allowedSectionNames.includes(x));
+    const allowedSectionNames = [
+        "name",
+        "componentSetup",
+        "lifecycleHooks",
+        "modelMethods",
+        "recordMethods",
+        "fields",
+        "onChanges",
+    ];
+    const invalidSectionNames = Object.keys(arguments["0"]).filter(
+        (x) => !allowedSectionNames.includes(x)
+    );
     if (invalidSectionNames.length > 0) {
-        throw new Error(`Error while registering patch for model "${name}": patch definition contains unsupported key(s): ${invalidSectionNames.join(", ")}`);
+        throw new Error(
+            `Error while registering patch for model "${name}": patch definition contains unsupported key(s): ${invalidSectionNames.join(
+                ", "
+            )}`
+        );
     }
     patches.push({
         name,
@@ -452,13 +558,13 @@ export function Patch({ componentSetup, fields, lifecycleHooks, modelMethods, na
 export const patchesAppliedPromise = makeDeferred();
 
 (async function applyPatches() {
-    if (document.readyState !== 'complete') {
-        await new Promise(resolve => {
+    if (document.readyState !== "complete") {
+        await new Promise((resolve) => {
             /**
              * Called when all JS resources are loaded. This is useful to
              * ensure all definitions have been parsed before applying patches.
              */
-            window.addEventListener('load', resolve);
+            window.addEventListener("load", resolve);
         });
     }
     /**
@@ -467,11 +573,13 @@ export const patchesAppliedPromise = makeDeferred();
      * therefore they should be processed *at most* asynchronously at
      * "Promise time".
      */
-    await new Promise(resolve => setTimeout(resolve));
+    await new Promise((resolve) => setTimeout(resolve));
     for (const patch of patches) {
         const definition = registry.get(patch.name);
         if (!definition) {
-            throw new Error(`Cannot patch model "${patch.name}": there is no model registered under this name.`);
+            throw new Error(
+                `Cannot patch model "${patch.name}": there is no model registered under this name.`
+            );
         }
         if (patch.componentSetup) {
             patchComponentSetup(patch);

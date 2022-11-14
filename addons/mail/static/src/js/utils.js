@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import core from 'web.core';
-import { escape } from '@web/core/utils/strings';
+import core from "web.core";
+import { escape } from "@web/core/utils/strings";
 
 var _t = core._t;
 
@@ -19,12 +19,16 @@ function parseAndTransform(htmlString, transformFunction) {
     var string = htmlString.replace(/&lt;/g, openToken);
     var children;
     try {
-        children = $('<div>').html(string).contents();
+        children = $("<div>").html(string).contents();
     } catch {
-        children = $('<div>').html('<pre>' + string + '</pre>').contents();
+        children = $("<div>")
+            .html("<pre>" + string + "</pre>")
+            .contents();
     }
-    return _parseAndTransform(children, transformFunction)
-                .replace(new RegExp(openToken, "g"), "&lt;");
+    return _parseAndTransform(children, transformFunction).replace(
+        new RegExp(openToken, "g"),
+        "&lt;"
+    );
 }
 
 /**
@@ -55,25 +59,26 @@ var urlRegexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.
 function linkify(text, attrs) {
     attrs = attrs || {};
     if (attrs.target === undefined) {
-        attrs.target = '_blank';
+        attrs.target = "_blank";
     }
-    if (attrs.target === '_blank') {
-      attrs.rel = 'noreferrer noopener';
+    if (attrs.target === "_blank") {
+        attrs.rel = "noreferrer noopener";
     }
     attrs = _.map(attrs, function (value, key) {
         return key + '="' + _.escape(value) + '"';
-    }).join(' ');
+    }).join(" ");
     return text.replace(urlRegexp, function (url) {
-        var href = (!/^https?:\/\//i.test(url)) ? "http://" + url : url;
-        return '<a ' + attrs + ' href="' + href + '">' + url + '</a>';
+        var href = !/^https?:\/\//i.test(url) ? "http://" + url : url;
+        return "<a " + attrs + ' href="' + href + '">' + url + "</a>";
     });
 }
 
 function addLink(node, transformChildren) {
-    if (node.nodeType === 3) {  // text node
+    if (node.nodeType === 3) {
+        // text node
         const linkified = linkify(node.data);
         if (linkified !== node.data) {
-            const div = document.createElement('div');
+            const div = document.createElement("div");
             div.innerHTML = linkified;
             for (const childNode of [...div.childNodes]) {
                 node.parentNode.insertBefore(childNode, node);
@@ -83,7 +88,9 @@ function addLink(node, transformChildren) {
         }
         return node.textContent;
     }
-    if (node.tagName === "A") return node.outerHTML;
+    if (node.tagName === "A") {
+        return node.outerHTML;
+    }
     transformChildren();
     return node.outerHTML;
 }
@@ -94,39 +101,50 @@ function addLink(node, transformChildren) {
  */
 function htmlToTextContentInline(htmlString) {
     const fragment = document.createDocumentFragment();
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     fragment.appendChild(div);
-    htmlString = htmlString.replace(/<br\s*\/?>/gi,' ');
+    htmlString = htmlString.replace(/<br\s*\/?>/gi, " ");
     try {
         div.innerHTML = htmlString;
     } catch {
         div.innerHTML = `<pre>${htmlString}</pre>`;
     }
-    return div
-        .textContent
+    return div.textContent
         .trim()
-        .replace(/[\n\r]/g, '')
-        .replace(/\s\s+/g, ' ');
+        .replace(/[\n\r]/g, "")
+        .replace(/\s\s+/g, " ");
 }
 
 function stripHTML(node, transformChildren) {
-    if (node.nodeType === 3) return node.data;  // text node
-    if (node.tagName === "BR") return "\n";
+    if (node.nodeType === 3) {
+        return node.data;
+    } // text node
+    if (node.tagName === "BR") {
+        return "\n";
+    }
     return transformChildren();
 }
 
 function inline(node, transform_children) {
-    if (node.nodeType === 3) return node.data;
-    if (node.nodeType === 8) return "";
-    if (node.tagName === "BR") return " ";
-    if (node.tagName.match(/^(A|P|DIV|PRE|BLOCKQUOTE)$/)) return transform_children();
+    if (node.nodeType === 3) {
+        return node.data;
+    }
+    if (node.nodeType === 8) {
+        return "";
+    }
+    if (node.tagName === "BR") {
+        return " ";
+    }
+    if (node.tagName.match(/^(A|P|DIV|PRE|BLOCKQUOTE)$/)) {
+        return transform_children();
+    }
     node.innerHTML = transform_children();
     return node.outerHTML;
 }
 
 // Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
 function parseEmail(text) {
-    if (text){
+    if (text) {
         var result = text.match(/(.*)<(.*@.*)>/);
         if (result) {
             return [_.str.trim(result[1]), _.str.trim(result[2])];
@@ -148,11 +166,11 @@ function parseEmail(text) {
 function escapeAndCompactTextContent(content) {
     //Removing unwanted extra spaces from message
     let value = escape(content).trim();
-    value = value.replace(/(\r|\n){2,}/g, '<br/><br/>');
-    value = value.replace(/(\r|\n)/g, '<br/>');
+    value = value.replace(/(\r|\n){2,}/g, "<br/><br/>");
+    value = value.replace(/(\r|\n)/g, "<br/>");
 
     // prevent html space collapsing
-    value = value.replace(/ /g, '&nbsp;').replace(/([^>])&nbsp;([^<])/g, '$1 $2');
+    value = value.replace(/ /g, "&nbsp;").replace(/([^>])&nbsp;([^<])/g, "$1 $2");
     return value;
 }
 
@@ -160,12 +178,12 @@ function escapeAndCompactTextContent(content) {
 // TDE note : should be done server-side, in Python -> use mail.compose.message ?
 function getTextToHTML(text) {
     return text
-        .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
-        .replace(/[\n\r]/g,'<br/>');
+        .replace(/((?:https?|ftp):\/\/[\S]+)/g, '<a href="$1">$1</a> ')
+        .replace(/[\n\r]/g, "<br/>");
 }
 
 function timeFromNow(date) {
-    if (moment().diff(date, 'seconds') < 45) {
+    if (moment().diff(date, "seconds") < 45) {
         return _t("now");
     }
     return date.fromNow();

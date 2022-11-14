@@ -2,21 +2,23 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'CallSettingsMenu',
-    template: 'mail.CallSettingsMenu',
-    identifyingMode: 'xor',
+    name: "CallSettingsMenu",
+    template: "mail.CallSettingsMenu",
+    identifyingMode: "xor",
     lifecycleHooks: {
         async _created() {
-            browser.addEventListener('keydown', this._onKeyDown);
-            browser.addEventListener('keyup', this._onKeyUp);
-            this.update({ userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices() });
+            browser.addEventListener("keydown", this._onKeyDown);
+            browser.addEventListener("keyup", this._onKeyUp);
+            this.update({
+                userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices(),
+            });
         },
         _willDelete() {
-            browser.removeEventListener('keydown', this._onKeyDown);
-            browser.removeEventListener('keyup', this._onKeyUp);
+            browser.removeEventListener("keydown", this._onKeyDown);
+            browser.removeEventListener("keyup", this._onKeyUp);
         },
     },
     recordMethods: {
@@ -100,7 +102,7 @@ Model({
         },
     },
     fields: {
-        callView: one('CallView', {
+        callView: one("CallView", {
             compute() {
                 if (this.threadViewOwner) {
                     return this.threadViewOwner.callView;
@@ -111,8 +113,8 @@ Model({
                 return clear();
             },
         }),
-        chatWindowOwner: one('ChatWindow', { identifying: true, inverse: 'callSettingsMenu' }),
-        thread: one('Thread', {
+        chatWindowOwner: one("ChatWindow", { identifying: true, inverse: "callSettingsMenu" }),
+        thread: one("Thread", {
             compute() {
                 if (this.threadViewOwner) {
                     return this.threadViewOwner.thread;
@@ -123,8 +125,8 @@ Model({
                 return clear();
             },
         }),
-        threadViewOwner: one('ThreadView', { identifying: true, inverse: 'callSettingsMenu' }),
+        threadViewOwner: one("ThreadView", { identifying: true, inverse: "callSettingsMenu" }),
         userDevices: attr({ default: [] }),
-        userSetting: one('UserSetting', { related: 'messaging.userSetting' }),
+        userSetting: one("UserSetting", { related: "messaging.userSetting" }),
     },
 });

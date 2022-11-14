@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, Model } from '@mail/model';
+import { attr, clear, Model } from "@mail/model";
 
 Model({
-    name: 'Country',
+    name: "Country",
     fields: {
         code: attr(),
         flagUrl: attr({
