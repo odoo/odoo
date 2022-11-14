@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "description": "JS Config for better DX in javascript",
     "scripts": {
+        "format-mail": "prettier-eslint --write 'addons/mail/static/src/**/*.js'  'addons/mail/static/tests/**/*.js'  'addons/mail/static/old/**/*.js'",
         "format-web": "prettier-eslint --write 'addons/web/static/src/**/*.js'  'addons/web/static/tests/**/*.js' 'addons/web/doc/**/*.md'",
         "format-staged": "lint-staged",
         "lint-web": "prettier-eslint --list-different 'addons/web/static/src/**/*.js'  'addons/web/static/tests/**/*.js' 'addons/web/doc/**/*.md'",
