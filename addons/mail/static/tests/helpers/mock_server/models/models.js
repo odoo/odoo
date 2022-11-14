@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'mail/models/models', {
+patch(MockServer.prototype, "mail/models/models", {
     /**
      * Simulates `_mail_track` on `base`
      *
@@ -13,14 +13,25 @@ patch(MockServer.prototype, 'mail/models/models', {
      * @param {Object} record
      * @returns {Object}
      */
-    _mockMailBaseModel__MailTrack(model, trackedFieldNamesToField, initialTrackedFieldValues, record) {
+    _mockMailBaseModel__MailTrack(
+        model,
+        trackedFieldNamesToField,
+        initialTrackedFieldValues,
+        record
+    ) {
         const trackingValueIds = [];
         const changedFieldNames = [];
         for (const fname in trackedFieldNamesToField) {
             const initialValue = initialTrackedFieldValues[fname];
             const newValue = record[fname];
             if (initialValue !== newValue) {
-                const tracking = this._mockMailTrackingValue_CreateTrackingValues(initialValue, newValue, fname, trackedFieldNamesToField[fname], model);
+                const tracking = this._mockMailTrackingValue_CreateTrackingValues(
+                    initialValue,
+                    newValue,
+                    fname,
+                    trackedFieldNamesToField[fname],
+                    model
+                );
                 if (tracking) {
                     trackingValueIds.push(tracking);
                 }

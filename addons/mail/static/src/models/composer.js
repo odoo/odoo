@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
-import { sprintf } from '@web/core/utils/strings';
+import { attr, clear, many, one, Model } from "@mail/model";
+import { sprintf } from "@web/core/utils/strings";
 
 Model({
-    name: 'Composer',
-    identifyingMode: 'xor',
+    name: "Composer",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @private
@@ -26,9 +26,14 @@ Model({
         },
     },
     fields: {
-        activeThread: one('Thread', { required: true,
+        activeThread: one("Thread", {
+            required: true,
             compute() {
-                if (this.messageViewInEditing && this.messageViewInEditing.message && this.messageViewInEditing.message.originThread) {
+                if (
+                    this.messageViewInEditing &&
+                    this.messageViewInEditing.message &&
+                    this.messageViewInEditing.message.originThread
+                ) {
                     return this.messageViewInEditing.message.originThread;
                 }
                 if (this.thread) {
@@ -40,8 +45,9 @@ Model({
         /**
          * States which attachments are currently being created in this composer.
          */
-        attachments: many('Attachment', { inverse: 'composer' }),
-        canPostMessage: attr({ default: false,
+        attachments: many("Attachment", { inverse: "composer" }),
+        canPostMessage: attr({
+            default: false,
             compute() {
                 if (this.thread && !this.textInputContent && this.attachments.length === 0) {
                     return false;
@@ -49,14 +55,14 @@ Model({
                 return !this.hasUploadingAttachment && !this.isPostingMessage;
             },
         }),
-        composerViews: many('ComposerView', { inverse: 'composer', isCausal: true }),
+        composerViews: many("ComposerView", { inverse: "composer", isCausal: true }),
         /**
          * This field determines whether some attachments linked to this
          * composer are being uploaded.
          */
         hasUploadingAttachment: attr({
             compute() {
-                return this.attachments.some(attachment => attachment.isUploading);
+                return this.attachments.some((attachment) => attachment.isUploading);
             },
         }),
         /**
@@ -67,7 +73,7 @@ Model({
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
-        mentionedChannels: many('Thread', {
+        mentionedChannels: many("Thread", {
             /**
              * Detects if mentioned channels are still in the composer text input content
              * and removes them if not.
@@ -78,9 +84,8 @@ Model({
                 // channels have the same name
                 const namesIndex = {};
                 for (const channel of this.rawMentionedChannels) {
-                    const fromIndex = namesIndex[channel.name] !== undefined
-                        ? namesIndex[channel.name] + 1 :
-                        0;
+                    const fromIndex =
+                        namesIndex[channel.name] !== undefined ? namesIndex[channel.name] + 1 : 0;
                     const index = this.textInputContent.indexOf(`#${channel.name}`, fromIndex);
                     if (index === -1) {
                         continue;
@@ -91,7 +96,7 @@ Model({
                 return mentionedChannels;
             },
         }),
-        mentionedPartners: many('Partner', {
+        mentionedPartners: many("Partner", {
             /**
              * Detects if mentioned partners are still in the composer text input content
              * and removes them if not.
@@ -102,9 +107,8 @@ Model({
                 // partners have the same name
                 const namesIndex = {};
                 for (const partner of this.rawMentionedPartners) {
-                    const fromIndex = namesIndex[partner.name] !== undefined
-                        ? namesIndex[partner.name] + 1 :
-                        0;
+                    const fromIndex =
+                        namesIndex[partner.name] !== undefined ? namesIndex[partner.name] + 1 : 0;
                     const index = this.textInputContent.indexOf(`@${partner.name}`, fromIndex);
                     if (index === -1) {
                         continue;
@@ -115,7 +119,10 @@ Model({
                 return mentionedPartners;
             },
         }),
-        messageViewInEditing: one('MessageView', { identifying: true, inverse: 'composerForEditing' }),
+        messageViewInEditing: one("MessageView", {
+            identifying: true,
+            inverse: "composerForEditing",
+        }),
         /**
          * Placeholder displayed in the composer textarea when it's empty
          */
@@ -126,7 +133,10 @@ Model({
                 }
                 if (this.thread.channel) {
                     if (this.thread.channel.correspondent) {
-                        return sprintf(this.env._t("Message %s..."), this.thread.channel.correspondent.nameOrDisplayName);
+                        return sprintf(
+                            this.env._t("Message %s..."),
+                            this.thread.channel.correspondent.nameOrDisplayName
+                        );
                     }
                     return sprintf(this.env._t("Message #%s..."), this.thread.displayName);
                 }
@@ -136,14 +146,14 @@ Model({
                 return this.env._t("Send a message to followers...");
             },
         }),
-        rawMentionedChannels: many('Thread'),
-        rawMentionedPartners: many('Partner'),
+        rawMentionedChannels: many("Thread"),
+        rawMentionedPartners: many("Partner"),
         /**
          * Determines the extra `Partner` (on top of existing followers)
          * that will receive the message being composed by `this`, and that will
          * also be added as follower of `this.activeThread`.
          */
-        recipients: many('Partner', {
+        recipients: many("Partner", {
             compute() {
                 const recipients = [...this.mentionedPartners];
                 if (this.activeThread && !this.isLog) {
@@ -163,6 +173,6 @@ Model({
         /**
          * States the thread which this composer represents the state (if any).
          */
-        thread: one('Thread', { identifying: true, inverse: 'composer' }),
+        thread: one("Thread", { identifying: true, inverse: "composer" }),
     },
 });

@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
-import { sprintf } from '@web/core/utils/strings';
+import { sprintf } from "@web/core/utils/strings";
 
 Model({
-    name: 'SuggestedRecipientInfo',
+    name: "SuggestedRecipientInfo",
     fields: {
-        composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', { inverse: 'suggestedRecipientInfo' }),
+        composerSuggestedRecipientViews: many("ComposerSuggestedRecipientView", {
+            inverse: "suggestedRecipientInfo",
+        }),
         dialogText: attr({
             compute() {
                 return this.env._t("Please complete customer's information");
@@ -35,7 +37,8 @@ Model({
          * Determines whether `this` will be added to recipients when posting a
          * new message on `this.thread`.
          */
-        isSelected: attr({ default: true,
+        isSelected: attr({
+            default: true,
             /**
              * Prevents selecting a recipient that does not have a partner.
              */
@@ -55,13 +58,13 @@ Model({
          */
         name: attr({
             compute() {
-                return this.partner && this.partner.nameOrDisplayName || this.name;
+                return (this.partner && this.partner.nameOrDisplayName) || this.name;
             },
         }),
         /**
          * Determines the optional `Partner` associated to `this`.
          */
-        partner: one('Partner'),
+        partner: one("Partner"),
         /**
          * Determines why `this` is a suggestion for `this.thread`. It serves as
          * visual clue when displaying `this`.
@@ -70,7 +73,7 @@ Model({
         /**
          * Determines the `Thread` concerned by `this.`
          */
-        thread: one('Thread', { inverse: 'suggestedRecipientInfoList', required: true }),
+        thread: one("Thread", { inverse: "suggestedRecipientInfoList", required: true }),
         titleText: attr({
             compute() {
                 return sprintf(

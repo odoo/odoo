@@ -1,14 +1,19 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'ListFieldActivityView',
-    template: 'mail.ListFieldActivityView',
+    name: "ListFieldActivityView",
+    template: "mail.ListFieldActivityView",
     fields: {
-        activityButtonView: one('ActivityButtonView', { default: {}, inverse: 'listFieldActivityViewOwner', required: true }),
+        activityButtonView: one("ActivityButtonView", {
+            default: {},
+            inverse: "listFieldActivityViewOwner",
+            required: true,
+        }),
         id: attr({ identifying: true }),
-        summaryText: attr({ default: '',
+        summaryText: attr({
+            default: "",
             compute() {
                 if (this.thread.activities.length === 0) {
                     return clear();
@@ -25,7 +30,7 @@ Model({
                 return clear();
             },
         }),
-        thread: one('Thread', { required: true }),
+        thread: one("Thread", { required: true }),
         webRecord: attr({ required: true }),
     },
 });

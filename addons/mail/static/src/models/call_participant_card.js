@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { attr, clear, one, Model } from "@mail/model";
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
 Model({
-    name: 'CallParticipantCard',
-    template: 'mail.CallParticipantCard',
-    identifyingMode: 'xor',
+    name: "CallParticipantCard",
+    template: "mail.CallParticipantCard",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
-            if (isEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor')) {
+            if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
                 return;
             }
             if (this.rtcSession) {
@@ -24,13 +24,13 @@ Model({
                 return;
             }
             const channel = this.channelMember.channel.thread;
-            const channelData = await this.messaging.rpc(({
-                route: '/mail/rtc/channel/cancel_call_invitation',
+            const channelData = await this.messaging.rpc({
+                route: "/mail/rtc/channel/cancel_call_invitation",
                 params: {
                     channel_id: channel.id,
                     member_ids: [this.channelMember.id],
                 },
-            }));
+            });
             if (!channel.exists()) {
                 return;
             }
@@ -42,8 +42,10 @@ Model({
          * @param {MouseEvent} ev
          */
         async onClickVolumeAnchor(ev) {
-            markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
-            this.update({ callParticipantCardPopoverView: this.callParticipantCardPopoverView ? clear() : {} });
+            markEventHandled(ev, "CallParticipantCard.clickVolumeAnchor");
+            this.update({
+                callParticipantCardPopoverView: this.callParticipantCardPopoverView ? clear() : {},
+            });
         },
         /**
          * This listens to the right click event, and used to redirect the event
@@ -60,8 +62,9 @@ Model({
         },
     },
     fields: {
-        callParticipantCardPopoverView: one('PopoverView', { inverse: 'callParticipantCardOwner' }),
-        channelMember: one('ChannelMember', { inverse: 'callParticipantCards',
+        callParticipantCardPopoverView: one("PopoverView", { inverse: "callParticipantCardOwner" }),
+        channelMember: one("ChannelMember", {
+            inverse: "callParticipantCards",
             compute() {
                 if (this.sidebarViewTileOwner) {
                     return this.sidebarViewTileOwner.channelMember;
@@ -69,11 +72,15 @@ Model({
                 return this.mainViewTileOwner.channelMember;
             },
         }),
-        mainViewTileOwner: one('CallMainViewTile', { identifying: true, inverse: 'participantCard', }),
+        mainViewTileOwner: one("CallMainViewTile", {
+            identifying: true,
+            inverse: "participantCard",
+        }),
         /**
          * Determines if this card has to be displayed in a minimized form.
          */
-        isMinimized: attr({ default: false,
+        isMinimized: attr({
+            default: false,
             compute() {
                 return Boolean(this.callView && this.callView.isMinimized);
             },
@@ -81,15 +88,19 @@ Model({
         /**
          * Determines if the rtcSession is in a valid "talking" state.
          */
-        isTalking: attr({ default: false,
+        isTalking: attr({
+            default: false,
             compute() {
-                return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
+                return Boolean(
+                    this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute
+                );
             },
         }),
         /**
          * The callView that displays this card.
          */
-        callView: one('CallView', { inverse: 'participantCards',
+        callView: one("CallView", {
+            inverse: "participantCards",
             compute() {
                 if (this.sidebarViewTileOwner) {
                     return this.sidebarViewTileOwner.callSidebarViewOwner.callView;
@@ -97,9 +108,16 @@ Model({
                 return this.mainViewTileOwner.callMainViewOwner.callView;
             },
         }),
-        rtcSession: one('RtcSession', { inverse: 'callParticipantCards', related: 'channelMember.rtcSession' }),
-        sidebarViewTileOwner: one('CallSidebarViewTile', { identifying: true, inverse: 'participantCard' }),
-        callParticipantVideoView: one('CallParticipantVideoView', { inverse: 'callParticipantCardOwner',
+        rtcSession: one("RtcSession", {
+            inverse: "callParticipantCards",
+            related: "channelMember.rtcSession",
+        }),
+        sidebarViewTileOwner: one("CallSidebarViewTile", {
+            identifying: true,
+            inverse: "participantCard",
+        }),
+        callParticipantVideoView: one("CallParticipantVideoView", {
+            inverse: "callParticipantCardOwner",
             compute() {
                 if (this.rtcSession && this.rtcSession.videoStream) {
                     return {};
@@ -107,6 +125,6 @@ Model({
                 return clear();
             },
         }),
-        volumeMenuAnchorRef: attr({ ref: 'volumeMenuAnchor' }),
+        volumeMenuAnchorRef: attr({ ref: "volumeMenuAnchor" }),
     },
 });

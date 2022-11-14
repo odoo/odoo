@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'EmojiView',
-    template: 'mail.EmojiView',
+    name: "EmojiView",
+    template: "mail.EmojiView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -14,11 +14,15 @@ Model({
                 return;
             }
             if (this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
-                this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
+                this.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(
+                    ev
+                );
                 return;
             }
             if (this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
-                this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
+                this.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(
+                    ev
+                );
                 return;
             }
         },
@@ -42,7 +46,8 @@ Model({
         },
     },
     fields: {
-        emoji: one('Emoji', { inverse: 'emojiViews',
+        emoji: one("Emoji", {
+            inverse: "emojiViews",
             compute() {
                 if (this.emojiOrEmojiInCategory.emoji) {
                     return this.emojiOrEmojiInCategory.emoji;
@@ -53,15 +58,19 @@ Model({
                 return clear();
             },
         }),
-        emojiGridViewAsHovered: one('EmojiGridView', { inverse: 'hoveredEmojiView' }),
-        emojiOrEmojiInCategory: one('EmojiOrEmojiInCategory', { identifying: true, inverse: 'emojiViews' }),
-        emojiGridRowViewOwner: one('EmojiGridRowView', { identifying: true, inverse: 'items' }),
-        emojiPickerViewOwner: one('EmojiPickerView', {
+        emojiGridViewAsHovered: one("EmojiGridView", { inverse: "hoveredEmojiView" }),
+        emojiOrEmojiInCategory: one("EmojiOrEmojiInCategory", {
+            identifying: true,
+            inverse: "emojiViews",
+        }),
+        emojiGridRowViewOwner: one("EmojiGridRowView", { identifying: true, inverse: "items" }),
+        emojiPickerViewOwner: one("EmojiPickerView", {
             compute() {
                 return this.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner;
-            }
+            },
         }),
-        width: attr({ default: 0,
+        width: attr({
+            default: 0,
             compute() {
                 if (!this.emojiGridRowViewOwner.emojiGridViewOwner) {
                     return clear();

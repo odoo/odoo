@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'FollowerListMenuView',
-    template: 'mail.FollowerListMenuView',
+    name: "FollowerListMenuView",
+    template: "mail.FollowerListMenuView",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -37,7 +37,7 @@ Model({
         onKeydown(ev) {
             ev.stopPropagation();
             switch (ev.key) {
-                case 'Escape':
+                case "Escape":
                     ev.preventDefault();
                     this.hide();
                     break;
@@ -54,23 +54,28 @@ Model({
                 return;
             }
             // since dropdown is conditionally shown based on state, dropdownRef can be null
-            if (this.dropdownRef && this.dropdownRef.el && !this.dropdownRef.el.contains(ev.target)) {
+            if (
+                this.dropdownRef &&
+                this.dropdownRef.el &&
+                !this.dropdownRef.el.contains(ev.target)
+            ) {
                 this.hide();
             }
         },
     },
     fields: {
-        chatterOwner: one('Chatter', { identifying: true, inverse: 'followerListMenuView' }),
-        dropdownRef: attr({ ref: 'dropdown' }),
-        followerViews: many('FollowerView', { inverse: 'followerListMenuViewOwner',
+        chatterOwner: one("Chatter", { identifying: true, inverse: "followerListMenuView" }),
+        dropdownRef: attr({ ref: "dropdown" }),
+        followerViews: many("FollowerView", {
+            inverse: "followerListMenuViewOwner",
             compute() {
-                return this.chatterOwner.thread.followers.map(follower => ({ follower }));
+                return this.chatterOwner.thread.followers.map((follower) => ({ follower }));
             },
         }),
         isDisabled: attr({
             compute() {
                 return !this.chatterOwner.hasReadAccess;
-            }
+            },
         }),
         isDropdownOpen: attr({ default: false }),
     },

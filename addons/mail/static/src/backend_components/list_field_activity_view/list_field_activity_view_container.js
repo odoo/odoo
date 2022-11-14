@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 // ensure components are registered beforehand.
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
+import { Component, onWillDestroy, onWillUpdateProps } from "@odoo/owl";
 
 const getNextId = (function () {
     let tmpId = 0;
@@ -21,7 +21,6 @@ const getNextId = (function () {
  * records are ready before rendering ListFieldActivityView component.
  */
 export class ListFieldActivityViewContainer extends Component {
-
     /**
      * @override
      */
@@ -31,7 +30,7 @@ export class ListFieldActivityViewContainer extends Component {
         this.listFieldActivityView = undefined;
         this.listFieldActivityViewId = getNextId();
         this._insertFromProps(this.props);
-        onWillUpdateProps(nextProps => this._insertFromProps(nextProps));
+        onWillUpdateProps((nextProps) => this._insertFromProps(nextProps));
         onWillDestroy(() => this._deleteRecord());
     }
 
@@ -56,10 +55,10 @@ export class ListFieldActivityViewContainer extends Component {
             this._deleteRecord();
             return;
         }
-        const listFieldActivityView = messaging.models['ListFieldActivityView'].insert({
+        const listFieldActivityView = messaging.models["ListFieldActivityView"].insert({
             id: this.listFieldActivityViewId,
             thread: {
-                activities: props.value.records.map(activityData => {
+                activities: props.value.records.map((activityData) => {
                     return {
                         id: activityData.resId,
                     };
@@ -76,22 +75,21 @@ export class ListFieldActivityViewContainer extends Component {
         }
         this.render();
     }
-
 }
 
 Object.assign(ListFieldActivityViewContainer, {
     fieldDependencies: {
-        activity_exception_decoration: { type: 'selection' },
-        activity_exception_icon: { type: 'char' },
-        activity_state: { type: 'selection' },
-        activity_summary: { type: 'char' },
-        activity_type_icon: { type: 'char' },
-        activity_type_id: { type: 'many2one', relation: 'mail.activity.type' },
+        activity_exception_decoration: { type: "selection" },
+        activity_exception_icon: { type: "char" },
+        activity_state: { type: "selection" },
+        activity_summary: { type: "char" },
+        activity_type_icon: { type: "char" },
+        activity_type_id: { type: "many2one", relation: "mail.activity.type" },
     },
     props: {
         ...standardFieldProps,
     },
-    template: 'mail.ListFieldActivityViewContainer',
+    template: "mail.ListFieldActivityViewContainer",
 });
 
-registry.category('fields').add('list_activity', ListFieldActivityViewContainer);
+registry.category("fields").add("list_activity", ListFieldActivityViewContainer);

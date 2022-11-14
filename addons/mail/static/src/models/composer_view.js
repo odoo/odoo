@@ -1,26 +1,26 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, link, many, one, Model } from '@mail/model';
-import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, link, many, one, Model } from "@mail/model";
+import { addLink, escapeAndCompactTextContent, parseAndTransform } from "@mail/js/utils";
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
-import { escape, sprintf } from '@web/core/utils/strings';
-import { url } from '@web/core/utils/urls';
+import { escape, sprintf } from "@web/core/utils/strings";
+import { url } from "@web/core/utils/urls";
 
 Model({
-    name: 'ComposerView',
-    template: 'mail.ComposerView',
+    name: "ComposerView",
+    template: "mail.ComposerView",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
+        useComponentToModel({ fieldName: "component" });
     },
-    identifyingMode: 'xor',
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this.onClickCaptureGlobal, true);
+            document.addEventListener("click", this.onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this.onClickCaptureGlobal, true);
+            document.removeEventListener("click", this.onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -42,7 +42,9 @@ Model({
             if (this.emojisPopoverView && this.emojisPopoverView.contains(element)) {
                 return true;
             }
-            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+            return Boolean(
+                this.component && this.component.root.el && this.component.root.el.contains(element)
+            );
         },
         /**
          * Hides the composer, which only makes sense if the composer is
@@ -72,12 +74,16 @@ Model({
                 return; // not supported for non-thread composer (eg. messaging editing)
             }
             if (
-                this.suggestionModelName === 'ChannelCommand' ||
+                this.suggestionModelName === "ChannelCommand" ||
                 this._getCommandFromText(this.composer.textInputContent)
             ) {
                 return;
             }
-            if (this.composer.thread.typingMembers.includes(this.composer.thread.channel.memberOfCurrentUser)) {
+            if (
+                this.composer.thread.typingMembers.includes(
+                    this.composer.thread.channel.memberOfCurrentUser
+                )
+            ) {
                 this.composer.thread.refreshCurrentPartnerIsTyping();
             } else {
                 this.composer.thread.registerCurrentPartnerIsTyping();
@@ -89,7 +95,10 @@ Model({
          * @param {string} content
          */
         insertIntoTextInput(content) {
-            const partA = this.composer.textInputContent.slice(0, this.composer.textInputCursorStart);
+            const partA = this.composer.textInputContent.slice(
+                0,
+                this.composer.textInputCursorStart
+            );
             const partB = this.composer.textInputContent.slice(
                 this.composer.textInputCursorEnd,
                 this.composer.textInputContent.length
@@ -124,7 +133,7 @@ Model({
                 cursorPosition,
                 this.composer.textInputContent.length
             );
-            if (this.suggestionDelimiter === ':') {
+            if (this.suggestionDelimiter === ":") {
                 textLeft = this.composer.textInputContent.substring(
                     0,
                     this.suggestionDelimiterPosition
@@ -134,9 +143,10 @@ Model({
                     this.composer.textInputContent.length
                 );
             }
-            const recordReplacement = this.composerSuggestionListView.activeSuggestionView.mentionText;
+            const recordReplacement = this.composerSuggestionListView.activeSuggestionView
+                .mentionText;
             const updateData = {
-                textInputContent: textLeft + recordReplacement + ' ' + textRight,
+                textInputContent: textLeft + recordReplacement + " " + textRight,
                 textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
                 textInputCursorStart: textLeft.length + recordReplacement.length + 1,
             };
@@ -144,10 +154,18 @@ Model({
             // the mention will appear in the target channel, or be notified to
             // the target partner.
             if (this.composerSuggestionListView.activeSuggestionView.suggestable.thread) {
-                Object.assign(updateData, { rawMentionedChannels: link(this.composerSuggestionListView.activeSuggestionView.suggestable.thread) });
+                Object.assign(updateData, {
+                    rawMentionedChannels: link(
+                        this.composerSuggestionListView.activeSuggestionView.suggestable.thread
+                    ),
+                });
             }
             if (this.composerSuggestionListView.activeSuggestionView.suggestable.partner) {
-                Object.assign(updateData, { rawMentionedPartners: link(this.composerSuggestionListView.activeSuggestionView.suggestable.partner) });
+                Object.assign(updateData, {
+                    rawMentionedPartners: link(
+                        this.composerSuggestionListView.activeSuggestionView.suggestable.partner
+                    ),
+                });
             }
             this.composer.update(updateData);
             for (const composerView of this.composer.composerViews) {
@@ -196,7 +214,7 @@ Model({
             }
             // Let event be handled by bubbling handlers first
             await new Promise(this.messaging.browser.setTimeout);
-            if (isEventHandled(ev, 'MessageActionList.replyTo')) {
+            if (isEventHandled(ev, "MessageActionList.replyTo")) {
                 return;
             }
             if (this.exists()) {
@@ -297,11 +315,11 @@ Model({
          * @param {KeyboardEvent} ev
          */
         onKeydown(ev) {
-            if (ev.key === 'Escape') {
-                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+            if (ev.key === "Escape") {
+                if (isEventHandled(ev, "ComposerTextInput.closeSuggestions")) {
                     return;
                 }
-                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                if (isEventHandled(ev, "Composer.closeEmojisPopover")) {
                     return;
                 }
                 ev.preventDefault();
@@ -313,12 +331,12 @@ Model({
          * @param {KeyboardEvent} ev
          */
         onKeydownButtonEmojis(ev) {
-            if (ev.key === 'Escape' && this.emojisPopoverView) {
+            if (ev.key === "Escape" && this.emojisPopoverView) {
                 this.update({
                     doFocus: true,
                     emojisPopoverView: clear(),
                 });
-                markEventHandled(ev, 'Composer.closeEmojisPopover');
+                markEventHandled(ev, "Composer.closeEmojisPopover");
             }
         },
         /**
@@ -329,28 +347,28 @@ Model({
                 return;
             }
             switch (ev.key) {
-                case 'Escape':
+                case "Escape":
                     if (this.hasSuggestions) {
                         ev.preventDefault();
                         this.closeSuggestions();
-                        markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
+                        markEventHandled(ev, "ComposerTextInput.closeSuggestions");
                     }
                     break;
                 // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
-                case 'ArrowUp':
-                case 'PageUp':
-                case 'ArrowDown':
-                case 'PageDown':
-                case 'Home':
-                case 'End':
-                case 'Tab':
+                case "ArrowUp":
+                case "PageUp":
+                case "ArrowDown":
+                case "PageDown":
+                case "Home":
+                case "End":
+                case "Tab":
                     if (this.hasSuggestions) {
                         // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                         ev.preventDefault();
                     }
                     break;
                 // ENTER: submit the message only if the dropdown mention proposition is not displayed
-                case 'Enter':
+                case "Enter":
                     this.onKeydownTextareaEnter(ev);
                     break;
             }
@@ -367,7 +385,7 @@ Model({
                 return;
             }
             if (
-                this.sendShortcuts.includes('ctrl-enter') &&
+                this.sendShortcuts.includes("ctrl-enter") &&
                 !ev.altKey &&
                 ev.ctrlKey &&
                 !ev.metaKey &&
@@ -378,7 +396,7 @@ Model({
                 return;
             }
             if (
-                this.sendShortcuts.includes('enter') &&
+                this.sendShortcuts.includes("enter") &&
                 !ev.altKey &&
                 !ev.ctrlKey &&
                 !ev.metaKey &&
@@ -389,7 +407,7 @@ Model({
                 return;
             }
             if (
-                this.sendShortcuts.includes('meta-enter') &&
+                this.sendShortcuts.includes("meta-enter") &&
                 !ev.altKey &&
                 !ev.ctrlKey &&
                 ev.metaKey &&
@@ -401,85 +419,107 @@ Model({
             }
         },
         /**
-          * Key events management is performed in a Keyup to avoid intempestive RPC calls
-          *
-          * @param {KeyboardEvent} ev
-          */
+         * Key events management is performed in a Keyup to avoid intempestive RPC calls
+         *
+         * @param {KeyboardEvent} ev
+         */
         onKeyupTextarea(ev) {
             if (!this.exists()) {
                 return;
             }
             switch (ev.key) {
-                case 'Escape':
+                case "Escape":
                     // already handled in _onKeydownTextarea, break to avoid default
                     break;
                 // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
-                case 'Enter':
+                case "Enter":
                     if (this.hasSuggestions) {
                         this.insertSuggestion();
                         this.closeSuggestions();
                         this.update({ doFocus: true });
                     }
                     break;
-                case 'ArrowUp':
-                case 'PageUp':
-                    if (ev.key === 'ArrowUp' && !this.hasSuggestions && !this.composer.textInputContent && this.threadView) {
+                case "ArrowUp":
+                case "PageUp":
+                    if (
+                        ev.key === "ArrowUp" &&
+                        !this.hasSuggestions &&
+                        !this.composer.textInputContent &&
+                        this.threadView
+                    ) {
                         this.threadView.startEditingLastMessageFromCurrentUser();
                         break;
                     }
                     if (this.composerSuggestionListView) {
                         this.composerSuggestionListView.setPreviousSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                        this.composerSuggestionListView.update({
+                            hasToScrollToActiveSuggestionView: true,
+                        });
                     }
                     break;
-                case 'ArrowDown':
-                case 'PageDown':
-                    if (ev.key === 'ArrowDown' && !this.hasSuggestions && !this.composer.textInputContent && this.threadView) {
+                case "ArrowDown":
+                case "PageDown":
+                    if (
+                        ev.key === "ArrowDown" &&
+                        !this.hasSuggestions &&
+                        !this.composer.textInputContent &&
+                        this.threadView
+                    ) {
                         this.threadView.startEditingLastMessageFromCurrentUser();
                         break;
                     }
                     if (this.composerSuggestionListView) {
                         this.composerSuggestionListView.setNextSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                        this.composerSuggestionListView.update({
+                            hasToScrollToActiveSuggestionView: true,
+                        });
                     }
                     break;
-                case 'Home':
+                case "Home":
                     if (this.composerSuggestionListView) {
                         this.composerSuggestionListView.setFirstSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                        this.composerSuggestionListView.update({
+                            hasToScrollToActiveSuggestionView: true,
+                        });
                     }
                     break;
-                case 'End':
+                case "End":
                     if (this.composerSuggestionListView) {
                         this.composerSuggestionListView.setLastSuggestionViewActive();
-                        this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                        this.composerSuggestionListView.update({
+                            hasToScrollToActiveSuggestionView: true,
+                        });
                     }
                     break;
-                case 'Tab':
+                case "Tab":
                     if (this.composerSuggestionListView) {
                         if (ev.shiftKey) {
                             this.composerSuggestionListView.setPreviousSuggestionViewActive();
-                            this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                            this.composerSuggestionListView.update({
+                                hasToScrollToActiveSuggestionView: true,
+                            });
                         } else {
                             this.composerSuggestionListView.setNextSuggestionViewActive();
-                            this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
+                            this.composerSuggestionListView.update({
+                                hasToScrollToActiveSuggestionView: true,
+                            });
                         }
                     }
                     break;
-                case 'Alt':
-                case 'AltGraph':
-                case 'CapsLock':
-                case 'Control':
-                case 'Fn':
-                case 'FnLock':
-                case 'Hyper':
-                case 'Meta':
-                case 'NumLock':
-                case 'ScrollLock':
-                case 'Shift':
-                case 'ShiftSuper':
-                case 'Symbol':
-                case 'SymbolLock':
+                case "Alt":
+                case "AltGraph":
+                case "CapsLock":
+                case "Control":
+                case "Fn":
+                case "FnLock":
+                case "Hyper":
+                case "Meta":
+                case "NumLock":
+                case "ScrollLock":
+                case "Shift":
+                case "ShiftSuper":
+                case "Symbol":
+                case "SymbolLock":
                     // prevent modifier keys from resetting the suggestion state
                     break;
                 // Otherwise, check if a mention is typed
@@ -500,23 +540,23 @@ Model({
          * Open the full composer modal.
          */
         async openFullComposer() {
-            const attachmentIds = this.composer.attachments.map(attachment => attachment.id);
+            const attachmentIds = this.composer.attachments.map((attachment) => attachment.id);
             const context = {
                 default_attachment_ids: attachmentIds,
                 default_body: escapeAndCompactTextContent(this.composer.textInputContent),
                 default_is_log: this.composer.isLog,
                 default_model: this.composer.activeThread.model,
-                default_partner_ids: this.composer.recipients.map(partner => partner.id),
+                default_partner_ids: this.composer.recipients.map((partner) => partner.id),
                 default_res_id: this.composer.activeThread.id,
                 mail_post_autofollow: this.composer.activeThread.hasWriteAccess,
             };
 
             const action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.compose.message',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
+                type: "ir.actions.act_window",
+                res_model: "mail.compose.message",
+                view_mode: "form",
+                views: [[false, "form"]],
+                target: "new",
                 context: context,
             };
             const composer = this.composer;
@@ -527,7 +567,7 @@ Model({
                     }
                     composer._reset();
                     if (composer.activeThread) {
-                        composer.activeThread.fetchData(['messages']);
+                        composer.activeThread.fetchData(["messages"]);
                     }
                 },
             };
@@ -540,25 +580,31 @@ Model({
             const composer = this.composer;
             const postData = this._getMessageData();
             const params = {
-                'post_data': postData,
-                'thread_id': composer.thread.id,
-                'thread_model': composer.thread.model,
+                post_data: postData,
+                thread_id: composer.thread.id,
+                thread_model: composer.thread.model,
             };
             try {
                 composer.update({ isPostingMessage: true });
-                if (composer.thread.model === 'mail.channel') {
+                if (composer.thread.model === "mail.channel") {
                     Object.assign(postData, {
-                        subtype_xmlid: 'mail.mt_comment',
+                        subtype_xmlid: "mail.mt_comment",
                     });
                 } else {
                     Object.assign(postData, {
-                        subtype_xmlid: composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
+                        subtype_xmlid: composer.isLog ? "mail.mt_note" : "mail.mt_comment",
                     });
                     if (!composer.isLog) {
-                        params.context = { mail_post_autofollow: this.composer.activeThread.hasWriteAccess };
+                        params.context = {
+                            mail_post_autofollow: this.composer.activeThread.hasWriteAccess,
+                        };
                     }
                 }
-                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox.thread) {
+                if (
+                    this.threadView &&
+                    this.threadView.replyingToMessageView &&
+                    this.threadView.thread !== this.messaging.inbox.thread
+                ) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
                 const { threadView = {} } = this;
@@ -569,25 +615,31 @@ Model({
                 // unmounted while awaiting the prc promise. In this
                 // case, this would be undefined.
                 const messaging = this.messaging;
-                const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params });
+                const messageData = await this.messaging.rpc({
+                    route: `/mail/message/post`,
+                    params,
+                });
                 if (!messaging.exists()) {
                     return;
                 }
-                const message = messaging.models['Message'].insert(
-                    messaging.models['Message'].convertData(messageData)
+                const message = messaging.models["Message"].insert(
+                    messaging.models["Message"].convertData(messageData)
                 );
                 if (messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
-                    messaging.rpc({
-                        route: `/mail/link_preview`,
-                        params: {
-                            message_id: message.id
-                        }
-                    }, { shadow: true });
+                    messaging.rpc(
+                        {
+                            route: `/mail/link_preview`,
+                            params: {
+                                message_id: message.id,
+                            },
+                        },
+                        { shadow: true }
+                    );
                 }
                 for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
-                    threadView.addComponentHint('message-posted', { message });
+                    threadView.addComponentHint("message-posted", { message });
                 }
                 if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted) {
                     chatter.reloadParentView();
@@ -598,14 +650,17 @@ Model({
                     }
                     if (chatterThread.exists()) {
                         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-                        chatterThread.fetchData(['followers', 'messages', 'suggestedRecipients']);
+                        chatterThread.fetchData(["followers", "messages", "suggestedRecipients"]);
                     }
                 }
                 if (threadViewThread) {
                     if (threadViewThread === messaging.inbox.thread) {
                         messaging.notify({
-                            message: sprintf(messaging.env._t(`Message posted on "%s"`), message.originThread.displayName),
-                            type: 'info',
+                            message: sprintf(
+                                messaging.env._t(`Message posted on "%s"`),
+                                message.originThread.displayName
+                            ),
+                            type: "info",
                         });
                         if (this.exists()) {
                             this.delete();
@@ -646,7 +701,7 @@ Model({
                 if (this.composer.hasUploadingAttachment) {
                     this.messaging.notify({
                         message: this.env._t("Please wait while the file is uploading."),
-                        type: 'warning',
+                        type: "warning",
                     });
                 }
                 return;
@@ -658,7 +713,10 @@ Model({
             if (this.composer.thread.channel) {
                 const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
-                    await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
+                    await command.execute({
+                        channel: this.composer.thread,
+                        body: this.composer.textInputContent,
+                    });
                     if (this.composer.exists()) {
                         this.composer._reset();
                     }
@@ -673,7 +731,8 @@ Model({
          */
         updateTextInputHeight() {
             this.textInput.mirroredTextareaRef.el.value = this.composer.textInputContent;
-            this.textInput.textareaRef.el.style.height = this.textInput.mirroredTextareaRef.el.scrollHeight + 'px';
+            this.textInput.textareaRef.el.style.height =
+                this.textInput.mirroredTextareaRef.el.scrollHeight + "px";
         },
         /**
          * Update a posted message when the message is ready.
@@ -684,9 +743,11 @@ Model({
                 this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: {} });
                 return;
             }
-            let data = {
+            const data = {
                 body: this._generateMessageBody(),
-                attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
+                attachment_ids: composer.attachments
+                    .concat(this.messageViewInEditing.message.attachments)
+                    .map((attachment) => attachment.id),
             };
             const messageViewInEditing = this.messageViewInEditing;
             await messageViewInEditing.message.updateContent(data);
@@ -731,11 +792,10 @@ Model({
                 for (const source of emoji.sources) {
                     const escapedSource = String(source).replace(
                         /([.*+?=^!:${}()|[\]/\\])/g,
-                        '\\$1');
-                    const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
-                        'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.codepoints);
+                        "\\$1"
+                    );
+                    const regexp = new RegExp("(\\s|^)(" + escapedSource + ")(?=\\s|$)", "g");
+                    htmlString = htmlString.replace(regexp, "$1" + emoji.codepoints);
                 }
             }
             return htmlString;
@@ -757,9 +817,9 @@ Model({
                 const placeholder = `@-mention-partner-${partner.id}`;
                 const text = `@${escape(partner.name)}`;
                 mentions.push({
-                    class: 'o_mail_redirect',
+                    class: "o_mail_redirect",
                     id: partner.id,
-                    model: 'res.partner',
+                    model: "res.partner",
                     placeholder,
                     text,
                 });
@@ -769,15 +829,15 @@ Model({
                 const placeholder = `#-mention-channel-${channel.id}`;
                 const text = `#${escape(channel.name)}`;
                 mentions.push({
-                    class: 'o_channel_redirect',
+                    class: "o_channel_redirect",
                     id: channel.id,
-                    model: 'mail.channel',
+                    model: "mail.channel",
                     placeholder,
                     text,
                 });
                 body = body.replace(text, placeholder);
             }
-            const baseHREF = url('/web');
+            const baseHREF = url("/web");
             for (const mention of mentions) {
                 const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
                 const attClass = `class='${mention.class}'`;
@@ -790,8 +850,10 @@ Model({
             return body;
         },
         _generateMessageBody() {
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            const escapedAndCompactContent = escapeAndCompactTextContent(
+                this.composer.textInputContent
+            );
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, " ").trim();
             // This message will be received from the mail composer as html content
             // subtype but the urls will not be linkified. If the mail composer
             // takes the responsibility to linkify the urls we end up with double
@@ -809,14 +871,19 @@ Model({
          * @returns {ChannelCommand|undefined} command, if any in the content
          */
         _getCommandFromText(content) {
-            if (content.startsWith('/')) {
+            if (content.startsWith("/")) {
                 const firstWord = content.substring(1).split(/\s/)[0];
-                return this.messaging.commands.find(command => {
+                return this.messaging.commands.find((command) => {
                     if (command.name !== firstWord) {
                         return false;
                     }
                     if (command.channel_types) {
-                        return Boolean(this.composer.thread.channel) && command.channel_types.includes(this.composer.thread.channel.channel_type);
+                        return (
+                            Boolean(this.composer.thread.channel) &&
+                            command.channel_types.includes(
+                                this.composer.thread.channel.channel_type
+                            )
+                        );
                     }
                     return true;
                 });
@@ -831,10 +898,10 @@ Model({
          */
         _getMessageData() {
             return {
-                attachment_ids: this.composer.attachments.map(attachment => attachment.id),
+                attachment_ids: this.composer.attachments.map((attachment) => attachment.id),
                 body: this._generateMessageBody(),
-                message_type: 'comment',
-                partner_ids: this.composer.recipients.map(partner => partner.id),
+                message_type: "comment",
+                partner_ids: this.composer.recipients.map((partner) => partner.id),
             };
         },
         /**
@@ -868,7 +935,7 @@ Model({
             if (this.composer.textInputCursorStart > 0) {
                 candidatePositions.push(this.composer.textInputCursorStart - 1);
             }
-            const suggestionDelimiters = ['@', ':', '#', '/'];
+            const suggestionDelimiters = ["@", ":", "#", "/"];
             for (const candidatePosition of candidatePositions) {
                 if (
                     candidatePosition < 0 ||
@@ -877,7 +944,7 @@ Model({
                     continue;
                 }
                 const candidateChar = this.composer.textInputContent[candidatePosition];
-                if (candidateChar === '/' && candidatePosition !== 0) {
+                if (candidateChar === "/" && candidatePosition !== 0) {
                     continue;
                 }
                 if (!suggestionDelimiters.includes(candidateChar)) {
@@ -951,21 +1018,26 @@ Model({
                 return;
             }
             const model = this.messaging.models[this.suggestionModelName];
-            const [
-                mainSuggestedRecords,
-                extraSuggestedRecords = [],
-            ] = model.searchSuggestions(this.suggestionSearchTerm, { thread: this.composer.activeThread });
-            const sortFunction = model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.composer.activeThread });
+            const [mainSuggestedRecords, extraSuggestedRecords = []] = model.searchSuggestions(
+                this.suggestionSearchTerm,
+                { thread: this.composer.activeThread }
+            );
+            const sortFunction = model.getSuggestionSortFunction(this.suggestionSearchTerm, {
+                thread: this.composer.activeThread,
+            });
             mainSuggestedRecords.sort(sortFunction);
             extraSuggestedRecords.sort(sortFunction);
             // arbitrary limit to avoid displaying too many elements at once
             // ideally a load more mechanism should be introduced
             const limit = 8;
             mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
-            extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
+            extraSuggestedRecords.length = Math.min(
+                extraSuggestedRecords.length,
+                limit - mainSuggestedRecords.length
+            );
             this.update({
-                extraSuggestions: extraSuggestedRecords.map(record => record.suggestable),
-                mainSuggestions: mainSuggestedRecords.map(record => record.suggestable),
+                extraSuggestions: extraSuggestedRecords.map((record) => record.suggestable),
+                mainSuggestions: mainSuggestedRecords.map((record) => record.suggestable),
             });
             if (this.composerSuggestionListView) {
                 this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
@@ -987,21 +1059,20 @@ Model({
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
-        attachmentList: one('AttachmentList', { inverse: 'composerViewOwner',
+        attachmentList: one("AttachmentList", {
+            inverse: "composerViewOwner",
             compute() {
-                return (this.composer && this.composer.attachments.length > 0)
-                    ? {}
-                    : clear();
+                return this.composer && this.composer.attachments.length > 0 ? {} : clear();
             },
         }),
         /**
          * States the ref to the html node of the emojis button.
          */
-        buttonEmojisRef: attr({ ref: 'buttonEmojis' }),
+        buttonEmojisRef: attr({ ref: "buttonEmojis" }),
         /**
          * States the chatter which this composer allows editing (if any).
          */
-        chatter: one('Chatter', { identifying: true, inverse: 'composerView' }),
+        chatter: one("Chatter", { identifying: true, inverse: "composerView" }),
         /**
          * States the OWL component of this composer view.
          */
@@ -1009,7 +1080,9 @@ Model({
         /**
          * States the composer state that is displayed by this composer view.
          */
-        composer: one('Composer', { inverse: 'composerViews', required: true,
+        composer: one("Composer", {
+            inverse: "composerViews",
+            required: true,
             compute() {
                 if (this.threadView) {
                     // When replying to a message, always use the composer from that message's thread
@@ -1029,7 +1102,8 @@ Model({
                 return clear();
             },
         }),
-        composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', { inverse: 'composerViewOwner',
+        composerSuggestedRecipientListView: one("ComposerSuggestedRecipientListView", {
+            inverse: "composerViewOwner",
             compute() {
                 if (this.hasHeader && this.hasFollowers && !this.composer.isLog) {
                     return {};
@@ -1037,7 +1111,8 @@ Model({
                 return clear();
             },
         }),
-        composerSuggestionListView: one('ComposerSuggestionListView', { inverse: 'composerViewOwner',
+        composerSuggestionListView: one("ComposerSuggestionListView", {
+            inverse: "composerViewOwner",
             compute() {
                 if (this.hasSuggestions) {
                     return {};
@@ -1051,20 +1126,21 @@ Model({
         currentPartnerAvatar: attr({
             compute() {
                 if (this.messaging.currentUser) {
-                    return url('/web/image', {
-                        field: 'avatar_128',
+                    return url("/web/image", {
+                        field: "avatar_128",
                         id: this.messaging.currentUser.id,
-                        model: 'res.users',
+                        model: "res.users",
                     });
                 }
-                return '/web/static/img/user_menu_avatar.png';
+                return "/web/static/img/user_menu_avatar.png";
             },
         }),
         /**
          * Determines whether this composer should be focused at next render.
          */
         doFocus: attr(),
-        dropZoneView: one('DropZoneView', { inverse: 'composerViewOwner',
+        dropZoneView: one("DropZoneView", {
+            inverse: "composerViewOwner",
             compute() {
                 if (this.useDragVisibleDropZone.isVisible) {
                     return {};
@@ -1075,10 +1151,16 @@ Model({
         /**
          * Determines the emojis popover that is active on this composer view.
          */
-        emojisPopoverView: one('PopoverView', { inverse: 'composerViewOwnerAsEmoji' }),
-        extraSuggestions: many('ComposerSuggestable'),
-        fileUploader: one('FileUploader', { default: {}, inverse: 'composerView', readonly: true, required: true }),
-        hasCurrentPartnerAvatar: attr({ default: true,
+        emojisPopoverView: one("PopoverView", { inverse: "composerViewOwnerAsEmoji" }),
+        extraSuggestions: many("ComposerSuggestable"),
+        fileUploader: one("FileUploader", {
+            default: {},
+            inverse: "composerView",
+            readonly: true,
+            required: true,
+        }),
+        hasCurrentPartnerAvatar: attr({
+            default: true,
             compute() {
                 if (this.messageViewInEditing) {
                     return false;
@@ -1095,7 +1177,8 @@ Model({
                 return clear();
             },
         }),
-        hasDiscardButton: attr({ default: false,
+        hasDiscardButton: attr({
+            default: false,
             compute() {
                 if (this.messageViewInEditing) {
                     return false;
@@ -1107,12 +1190,16 @@ Model({
                     return clear();
                 }
                 if (this.threadView.threadViewer.discuss) {
-                    return this.threadView.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
+                    return (
+                        this.threadView.threadViewer.discuss.activeThread ===
+                        this.messaging.inbox.thread
+                    );
                 }
                 return clear();
             },
         }),
-        hasFollowers: attr({ default: false,
+        hasFollowers: attr({
+            default: false,
             compute() {
                 if (this.chatter) {
                     return true;
@@ -1127,9 +1214,9 @@ Model({
             compute() {
                 return Boolean(
                     this.hasThreadTyping ||
-                    this.composer.attachments.length > 0 ||
-                    this.messageViewInEditing ||
-                    !this.isCompact
+                        this.composer.attachments.length > 0 ||
+                        this.messageViewInEditing ||
+                        !this.isCompact
                 );
             },
         }),
@@ -1140,8 +1227,8 @@ Model({
             compute() {
                 return Boolean(
                     (this.hasThreadName && this.composer.thread) ||
-                    (this.hasFollowers && !this.composer.isLog) ||
-                    (this.threadView && this.threadView.replyingToMessageView)
+                        (this.hasFollowers && !this.composer.isLog) ||
+                        (this.threadView && this.threadView.replyingToMessageView)
                 );
             },
         }),
@@ -1150,7 +1237,8 @@ Model({
          * Useful to queue a new call if there is already one pending.
          */
         hasMentionRpcInProgress: attr({ default: false }),
-        hasMentionSuggestionsBelowPosition: attr({ default: false,
+        hasMentionSuggestionsBelowPosition: attr({
+            default: false,
             compute() {
                 if (this.chatter) {
                     return true;
@@ -1161,7 +1249,8 @@ Model({
                 return clear();
             },
         }),
-        hasSendButton: attr({ default: true,
+        hasSendButton: attr({
+            default: true,
             compute() {
                 if (this.messageViewInEditing) {
                     return false;
@@ -1176,12 +1265,14 @@ Model({
          * States whether there is any result currently found for the current
          * suggestion delimiter and search term, if applicable.
          */
-        hasSuggestions: attr({ default: false,
+        hasSuggestions: attr({
+            default: false,
             compute() {
                 return this.mainSuggestions.length > 0 || this.extraSuggestions.length > 0;
             },
         }),
-        hasThreadName: attr({ default: false,
+        hasThreadName: attr({
+            default: false,
             compute() {
                 if (this.threadView) {
                     return this.threadView.hasComposerThreadName;
@@ -1189,7 +1280,8 @@ Model({
                 return clear();
             },
         }),
-        hasThreadTyping: attr({ default: false,
+        hasThreadTyping: attr({
+            default: false,
             compute() {
                 if (this.threadView) {
                     return this.threadView.hasComposerThreadTyping;
@@ -1205,7 +1297,8 @@ Model({
          * it didn't have the focus anymore.
          */
         hasToRestoreContent: attr({ default: false }),
-        isCompact: attr({ default: true,
+        isCompact: attr({
+            default: true,
             compute() {
                 if (this.chatter) {
                     return false;
@@ -1216,7 +1309,8 @@ Model({
                 return clear();
             },
         }),
-        isExpandable: attr({ default: false,
+        isExpandable: attr({
+            default: false,
             compute() {
                 if (this.chatter) {
                     return true;
@@ -1231,8 +1325,10 @@ Model({
         isInDiscuss: attr({
             compute() {
                 return Boolean(
-                    (this.threadView && (this.threadView.threadViewer.discuss || this.threadView.threadViewer.discussPublicView)) ||
-                    (this.messageViewInEditing && this.messageViewInEditing.isInDiscuss)
+                    (this.threadView &&
+                        (this.threadView.threadViewer.discuss ||
+                            this.threadView.threadViewer.discussPublicView)) ||
+                        (this.messageViewInEditing && this.messageViewInEditing.isInDiscuss)
                 );
             },
         }),
@@ -1243,7 +1339,7 @@ Model({
             compute() {
                 return Boolean(
                     (this.threadView && this.threadView.threadViewer.chatWindow) ||
-                    (this.messageViewInEditing && this.messageViewInEditing.isInChatWindow)
+                        (this.messageViewInEditing && this.messageViewInEditing.isInChatWindow)
                 );
             },
         }),
@@ -1254,7 +1350,7 @@ Model({
             compute() {
                 return Boolean(
                     (this.threadView && this.threadView.threadViewer.chatter) ||
-                    (this.messageViewInEditing && this.messageViewInEditing.isInChatter)
+                        (this.messageViewInEditing && this.messageViewInEditing.isInChatter)
                 );
             },
         }),
@@ -1263,11 +1359,14 @@ Model({
          * whether the current partner is typing something.
          */
         textareaLastInputValue: attr({ default: "" }),
-        mainSuggestions: many('ComposerSuggestable'),
+        mainSuggestions: many("ComposerSuggestable"),
         /**
          * States the message view on which this composer allows editing (if any).
          */
-        messageViewInEditing: one('MessageView', { identifying: true, inverse: 'composerViewInEditing' }),
+        messageViewInEditing: one("MessageView", {
+            identifying: true,
+            inverse: "composerViewInEditing",
+        }),
         /**
          * Determines the next function to execute after the current mention
          * RPC is done, if any.
@@ -1282,7 +1381,7 @@ Model({
                     this.composer &&
                     this.composer.isLog &&
                     this.composer.activeThread &&
-                    this.composer.activeThread.model !== 'mail.channel'
+                    this.composer.activeThread.model !== "mail.channel"
                 ) {
                     return this.env._t("Log");
                 }
@@ -1294,13 +1393,14 @@ Model({
          * The format is an array of string that can contain 'enter',
          * 'ctrl-enter', and/or 'meta-enter'.
          */
-        sendShortcuts: attr({ default: [],
+        sendShortcuts: attr({
+            default: [],
             compute() {
                 if (this.chatter) {
-                    return ['ctrl-enter', 'meta-enter'];
+                    return ["ctrl-enter", "meta-enter"];
                 }
                 if (this.messageViewInEditing) {
-                    return ['enter'];
+                    return ["enter"];
                 }
                 if (this.threadView) {
                     if (!this.messaging.device) {
@@ -1312,14 +1412,12 @@ Model({
                     // the button or using the 'ctrl/meta enter' shortcut.
                     if (
                         this.messaging.device.isSmall ||
-                        (
-                            this.messaging.discuss.threadView === this.threadView &&
-                            this.messaging.discuss.activeThread === this.messaging.inbox.thread
-                        )
+                        (this.messaging.discuss.threadView === this.threadView &&
+                            this.messaging.discuss.activeThread === this.messaging.inbox.thread)
                     ) {
-                        return ['ctrl-enter', 'meta-enter'];
+                        return ["ctrl-enter", "meta-enter"];
                     }
-                    return ['enter'];
+                    return ["enter"];
                 }
                 return clear();
             },
@@ -1357,14 +1455,14 @@ Model({
         suggestionModelName: attr({
             compute() {
                 switch (this.suggestionDelimiter) {
-                    case '@':
-                        return 'Partner';
-                    case ':':
-                        return 'CannedResponse';
-                    case '/':
-                        return 'ChannelCommand';
-                    case '#':
-                        return 'Thread';
+                    case "@":
+                        return "Partner";
+                    case ":":
+                        return "CannedResponse";
+                    case "/":
+                        return "ChannelCommand";
+                    case "#":
+                        return "Thread";
                     default:
                         return clear();
                 }
@@ -1382,11 +1480,15 @@ Model({
                 ) {
                     return clear();
                 }
-                return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
+                return this.composer.textInputContent.substring(
+                    this.suggestionDelimiterPosition + 1,
+                    this.composer.textInputCursorStart
+                );
             },
         }),
-        textInput: one('ComposerTextInputView', { default: {}, inverse: 'owner' }),
-        threadTextualTypingStatusView: one('ThreadTextualTypingStatusView', { inverse: 'owner',
+        textInput: one("ComposerTextInputView", { default: {}, inverse: "owner" }),
+        threadTextualTypingStatusView: one("ThreadTextualTypingStatusView", {
+            inverse: "owner",
             compute() {
                 if (this.hasThreadTyping) {
                     return {};
@@ -1397,25 +1499,39 @@ Model({
         /**
          * States the thread view on which this composer allows editing (if any).
          */
-        threadView: one('ThreadView', { identifying: true, inverse: 'composerView' }),
-        useDragVisibleDropZone: one('UseDragVisibleDropZone', { default: {}, inverse: 'composerViewOwner', readonly: true, required: true }),
+        threadView: one("ThreadView", { identifying: true, inverse: "composerView" }),
+        useDragVisibleDropZone: one("UseDragVisibleDropZone", {
+            default: {},
+            inverse: "composerViewOwner",
+            readonly: true,
+            required: true,
+        }),
     },
     onChanges: [
         {
-            dependencies: ['composer'],
-            methodName: '_onChangeComposer',
+            dependencies: ["composer"],
+            methodName: "_onChangeComposer",
         },
         {
-            dependencies: ['composer.textInputContent', 'composer.textInputCursorEnd', 'composer.textInputCursorStart'],
-            methodName: '_onChangeDetectSuggestionDelimiterPosition',
+            dependencies: [
+                "composer.textInputContent",
+                "composer.textInputCursorEnd",
+                "composer.textInputCursorStart",
+            ],
+            methodName: "_onChangeDetectSuggestionDelimiterPosition",
         },
         {
-            dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'composer.activeThread'],
-            methodName: '_onChangeUpdateSuggestionList',
+            dependencies: [
+                "suggestionDelimiterPosition",
+                "suggestionModelName",
+                "suggestionSearchTerm",
+                "composer.activeThread",
+            ],
+            methodName: "_onChangeUpdateSuggestionList",
         },
         {
-            dependencies: ['suggestionDelimiterPosition'],
-            methodName: '_onSuggestionDelimiterPositionChanged',
+            dependencies: ["suggestionDelimiterPosition"],
+            methodName: "_onSuggestionDelimiterPositionChanged",
         },
     ],
 });

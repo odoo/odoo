@@ -14,13 +14,20 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
             sending events to the main thread on all tics when not necessary.
      * @param {number} [param0.processorOptions.volumeThreshold] the minimum value for audio detection
      */
-    constructor({ processorOptions: { frequencyRange, minimumActiveCycles = 10, postAllTics, volumeThreshold = 0.3 } }) {
+    constructor({
+        processorOptions: {
+            frequencyRange,
+            minimumActiveCycles = 10,
+            postAllTics,
+            volumeThreshold = 0.3,
+        },
+    }) {
         super();
 
         // timing variables
         this.processInterval = 50; // how many ms between each computation
         this.minimumActiveCycles = minimumActiveCycles;
-        this.intervalInFrames = this.processInterval / 1000 * globalThis.sampleRate;
+        this.intervalInFrames = (this.processInterval / 1000) * globalThis.sampleRate;
         this.nextUpdateFrame = this.processInterval;
 
         // process variables
@@ -36,7 +43,7 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
     process(inputs, outputs, parameters) {
         const input = inputs[0];
         if (input.length < 1) {
-        return;
+            return;
         }
         const samples = input[0];
 
@@ -48,15 +55,23 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
         this.nextUpdateFrame += this.intervalInFrames;
 
         // computes volume and threshold
-        const startIndex = _getFrequencyIndex(this.frequencyRange[0], globalThis.sampleRate, samples.length);
-        const endIndex = _getFrequencyIndex(this.frequencyRange[1], globalThis.sampleRate, samples.length);
+        const startIndex = _getFrequencyIndex(
+            this.frequencyRange[0],
+            globalThis.sampleRate,
+            samples.length
+        );
+        const endIndex = _getFrequencyIndex(
+            this.frequencyRange[1],
+            globalThis.sampleRate,
+            samples.length
+        );
         let sum = 0;
         for (let i = startIndex; i < endIndex; ++i) {
             sum += samples[i];
         }
         // Normalizing the volume so that volume mostly fits in the [0,1] range.
         const preNormalizationVolume = sum / (endIndex - startIndex);
-        const preLogarithmVolume = (preNormalizationVolume * 50) + 1;
+        const preLogarithmVolume = preNormalizationVolume * 50 + 1;
         if (preLogarithmVolume <= 0) {
             this.volume = 0;
         } else {
@@ -75,10 +90,10 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
             this.port.postMessage({ volume: this.volume, isAboveThreshold: this.isAboveThreshold });
             return true;
         }
-        this.postAllTics && this.port.postMessage({ volume: this.volume, isAboveThreshold: this.isAboveThreshold });
+        this.postAllTics &&
+            this.port.postMessage({ volume: this.volume, isAboveThreshold: this.isAboveThreshold });
         return true;
     }
-
 }
 
 /**
@@ -88,7 +103,7 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
  * @returns {number} the index of the targetFrequency within samplesSize
  */
 function _getFrequencyIndex(targetFrequency, sampleRate, samplesSize) {
-    const index = Math.round(targetFrequency / (sampleRate / 2) * samplesSize);
+    const index = Math.round((targetFrequency / (sampleRate / 2)) * samplesSize);
     return Math.min(Math.max(0, index), samplesSize);
 }
 

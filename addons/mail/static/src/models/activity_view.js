@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
-import { sprintf } from '@web/core/utils/strings';
+import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from "web.time";
+import { sprintf } from "@web/core/utils/strings";
 
 Model({
-    name: 'ActivityView',
-    template: 'mail.ActivityView',
+    name: "ActivityView",
+    template: "mail.ActivityView",
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.
@@ -15,11 +15,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onClickActivity(ev) {
-            if (
-                ev.target.tagName === 'A' &&
-                ev.target.dataset.oeId &&
-                ev.target.dataset.oeModel
-            ) {
+            if (ev.target.tagName === "A" && ev.target.dataset.oeId && ev.target.dataset.oeModel) {
                 this.messaging.openProfile({
                     id: Number(ev.target.dataset.oeId),
                     model: ev.target.dataset.oeModel,
@@ -67,7 +63,7 @@ Model({
         },
     },
     fields: {
-        activity: one('Activity', { identifying: true, inverse: 'activityViews' }),
+        activity: one("Activity", { identifying: true, inverse: "activityViews" }),
         /**
          * Determines whether the details are visible.
          */
@@ -83,8 +79,11 @@ Model({
                 return sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
             },
         }),
-        chatterOwner: one('Chatter', { identifying: true, inverse: 'activityViews' }),
-        clockWatcher: one('ClockWatcher', { default: { clock: { frequency: 60 * 1000 } }, inverse: 'activityViewOwner' }),
+        chatterOwner: one("Chatter", { identifying: true, inverse: "activityViews" }),
+        clockWatcher: one("ClockWatcher", {
+            default: { clock: { frequency: 60 * 1000 } },
+            inverse: "activityViewOwner",
+        }),
         /**
          * Compute the label for "when" the activity is due.
          */
@@ -96,10 +95,10 @@ Model({
                 if (!this.clockWatcher.clock.date) {
                     return clear();
                 }
-                const today = moment(this.clockWatcher.clock.date.getTime()).startOf('day');
+                const today = moment(this.clockWatcher.clock.date.getTime()).startOf("day");
                 const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
                 // true means no rounding
-                const diff = momentDeadlineDate.diff(today, 'days', true);
+                const diff = momentDeadlineDate.diff(today, "days", true);
                 if (diff === 0) {
                     return this.env._t("Today:");
                 } else if (diff === -1) {
@@ -113,9 +112,10 @@ Model({
                 }
             },
         }),
-        fileUploader: one('FileUploader', { inverse: 'activityView',
+        fileUploader: one("FileUploader", {
+            inverse: "activityView",
             compute() {
-                return this.activity.category === 'upload_file' ? {} : clear();
+                return this.activity.category === "upload_file" ? {} : clear();
             },
         }),
         /**
@@ -144,13 +144,14 @@ Model({
                 return momentDeadlineDate.format(datetimeFormat);
             },
         }),
-        mailTemplateViews: many('MailTemplateView', { inverse: 'activityViewOwner',
+        mailTemplateViews: many("MailTemplateView", {
+            inverse: "activityViewOwner",
             compute() {
-                return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
+                return this.activity.mailTemplates.map((mailTemplate) => ({ mailTemplate }));
             },
         }),
-        markDoneButtonRef: attr({ ref: 'markDoneButton' }),
-        markDonePopoverView: one('PopoverView', { inverse: 'activityViewOwnerAsMarkDone', }),
+        markDoneButtonRef: attr({ ref: "markDoneButton" }),
+        markDonePopoverView: one("PopoverView", { inverse: "activityViewOwnerAsMarkDone" }),
         /**
          * Label for mark as done. This is just for translations purpose.
          */

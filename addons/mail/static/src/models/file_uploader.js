@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
-import core from 'web.core';
+import core from "web.core";
 
 const getAttachmentNextTemporaryId = (function () {
     let tmpId = 0;
@@ -13,8 +13,8 @@ const getAttachmentNextTemporaryId = (function () {
 })();
 
 Model({
-    name: 'FileUploader',
-    identifyingMode: 'xor',
+    name: "FileUploader",
+    identifyingMode: "xor",
     recordMethods: {
         openBrowserFileUploader() {
             this.fileInput.click();
@@ -41,9 +41,9 @@ Model({
             if (this.chatterOwner && !this.chatterOwner.hasAttachmentBox) {
                 this.chatterOwner.openAttachmentBox();
             }
-            this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
+            this.messaging.messagingBus.trigger("o-file-uploader-upload", { files });
             // clear at the end because side-effect of emptying `files`
-            this.fileInput.value = '';
+            this.fileInput.value = "";
         },
         /**
          * @private
@@ -55,11 +55,11 @@ Model({
          */
         _createFormData({ composer, file, thread }) {
             const formData = new window.FormData();
-            formData.append('csrf_token', core.csrf_token);
-            formData.append('is_pending', Boolean(composer));
-            formData.append('thread_id', thread && thread.id);
-            formData.append('thread_model', thread && thread.model);
-            formData.append('ufile', file, file.name);
+            formData.append("csrf_token", core.csrf_token);
+            formData.append("is_pending", Boolean(composer));
+            formData.append("thread_id", thread && thread.id);
+            formData.append("thread_model", thread && thread.model);
+            formData.append("ufile", file, file.name);
             return formData;
         },
         /**
@@ -73,14 +73,14 @@ Model({
         _onAttachmentUploaded({ attachmentData, composer, thread }) {
             if (attachmentData.error || !attachmentData.id) {
                 this.messaging.notify({
-                    type: 'danger',
+                    type: "danger",
                     message: attachmentData.error,
                 });
                 return;
             }
-            return (composer || thread).messaging.models['Attachment'].insert({
+            return (composer || thread).messaging.models["Attachment"].insert({
                 composer: composer,
-                originThread: (!composer && thread) ? thread : undefined,
+                originThread: !composer && thread ? thread : undefined,
                 ...attachmentData,
             });
         },
@@ -91,29 +91,31 @@ Model({
          * @returns {Promise}
          */
         async _performUpload({ files }) {
-            const reloadFunc = this.activityListViewItemOwner && this.activityListViewItemOwner.reloadFunc;
-            const webRecord = this.activityListViewItemOwner && this.activityListViewItemOwner.webRecord;
+            const reloadFunc =
+                this.activityListViewItemOwner && this.activityListViewItemOwner.reloadFunc;
+            const webRecord =
+                this.activityListViewItemOwner && this.activityListViewItemOwner.webRecord;
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
-            const chatter = (
-                (this.chatterOwner) ||
-                (this.activityView && this.activityView.chatterOwner)
-            ); // save before async
-            const activity = (
-                this.activityView && this.activityView.activity ||
-                this.activityListViewItemOwner && this.activityListViewItemOwner.activity
-            ); // save before async
+            const chatter =
+                this.chatterOwner || (this.activityView && this.activityView.chatterOwner); // save before async
+            const activity =
+                (this.activityView && this.activityView.activity) ||
+                (this.activityListViewItemOwner && this.activityListViewItemOwner.activity); // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
-                uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
-                    composer,
-                    filename: file.name,
-                    id: getAttachmentNextTemporaryId(),
-                    isUploading: true,
-                    mimetype: file.type,
-                    name: file.name,
-                    originThread: (!composer && thread) ? thread : undefined,
-                }));
+                uploadingAttachments.set(
+                    file,
+                    this.messaging.models["Attachment"].insert({
+                        composer,
+                        filename: file.name,
+                        id: getAttachmentNextTemporaryId(),
+                        isUploading: true,
+                        mimetype: file.type,
+                        name: file.name,
+                        originThread: !composer && thread ? thread : undefined,
+                    })
+                );
             }
             const attachments = [];
             for (const file of files) {
@@ -126,11 +128,14 @@ Model({
                     return;
                 }
                 try {
-                    const response = await (composer || thread).messaging.browser.fetch('/mail/attachment/upload', {
-                        method: 'POST',
-                        body: this._createFormData({ composer, file, thread }),
-                        signal: uploadingAttachment.uploadingAbortController.signal,
-                    });
+                    const response = await (composer || thread).messaging.browser.fetch(
+                        "/mail/attachment/upload",
+                        {
+                            method: "POST",
+                            body: this._createFormData({ composer, file, thread }),
+                            signal: uploadingAttachment.uploadingAbortController.signal,
+                        }
+                    );
                     const attachmentData = await response.json();
                     if (uploadingAttachment.exists()) {
                         uploadingAttachment.delete();
@@ -138,10 +143,14 @@ Model({
                     if ((composer && !composer.exists()) || (thread && !thread.exists())) {
                         return;
                     }
-                    const attachment = this._onAttachmentUploaded({ attachmentData, composer, thread });
+                    const attachment = this._onAttachmentUploaded({
+                        attachmentData,
+                        composer,
+                        thread,
+                    });
                     attachments.push(attachment);
                 } catch (e) {
-                    if (e.name !== 'AbortError') {
+                    if (e.name !== "AbortError") {
                         throw e;
                     }
                 }
@@ -161,10 +170,13 @@ Model({
         },
     },
     fields: {
-        activityListViewItemOwner: one('ActivityListViewItem', { identifying: true, inverse: 'fileUploader' }),
-        activityView: one('ActivityView', { identifying: true, inverse: 'fileUploader' }),
-        chatterOwner: one('Chatter', { identifying: true, inverse: 'fileUploader' }),
-        composerView: one('ComposerView', { identifying: true, inverse: 'fileUploader' }),
+        activityListViewItemOwner: one("ActivityListViewItem", {
+            identifying: true,
+            inverse: "fileUploader",
+        }),
+        activityView: one("ActivityView", { identifying: true, inverse: "fileUploader" }),
+        chatterOwner: one("Chatter", { identifying: true, inverse: "fileUploader" }),
+        composerView: one("ComposerView", { identifying: true, inverse: "fileUploader" }),
         fileInput: attr({
             /**
              * Create an HTML element that will serve as file input.
@@ -172,14 +184,15 @@ Model({
              * use to trigger the file browser and start the upload process.
              */
             compute() {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
                 fileInput.multiple = true;
                 fileInput.onchange = this.onChangeAttachment;
                 return fileInput;
             },
         }),
-        thread: one('Thread', { required: true,
+        thread: one("Thread", {
+            required: true,
             compute() {
                 if (this.activityView) {
                     return this.activityView.activity.thread;
@@ -195,6 +208,6 @@ Model({
                 }
                 return clear();
             },
-        })
+        }),
     },
 });
