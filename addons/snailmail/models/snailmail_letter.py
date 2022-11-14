@@ -146,7 +146,19 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
+<<<<<<< HEAD
             pdf_bin, _ = report.with_context(snailmail_layout=not self.cover, lang='en_US')._render_qweb_pdf(self.res_id)
+||||||| parent of 9d85b91b9129... temp
+            paperformat = report.get_paperformat()
+            if (paperformat.format == 'custom' and paperformat.page_width != 210 and paperformat.page_height != 297) or paperformat.format != 'A4':
+                raise UserError(_("Please use an A4 Paper format."))
+            pdf_bin, unused_filetype = report.with_context(snailmail_layout=not self.cover, lang='en_US').render_qweb_pdf(self.res_id)
+=======
+            paperformat = report.get_paperformat()
+            if (paperformat.format == 'custom' and paperformat.page_width != 210 and paperformat.page_height != 297) or paperformat.format != 'A4':
+                raise UserError(_("Please use an A4 Paper format."))
+            pdf_bin, unused_filetype = report.with_context(snailmail_layout=not self.cover, lang='en_US')._render_qweb_pdf(self.res_id)
+>>>>>>> 9d85b91b9129... temp
             if self.cover:
                 pdf_bin = self._append_cover_page(pdf_bin)
             attachment = self.env['ir.attachment'].create({
