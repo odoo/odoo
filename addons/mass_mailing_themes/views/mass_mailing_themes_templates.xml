@@ -3,29 +3,29 @@
     <!-- Add themes in editor -->
     <template id="email_designer_snippets" inherit_id="mass_mailing.email_designer_snippets">
         <xpath expr="//div[@id='email_designer_themes']" position="inside">
-            <div data-name="newsletter" title="Event Promo" data-img="/mass_mailing_themes/static/src/img/theme_imgs/newsletter_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
-                <t t-call="mass_mailing_themes.theme_newsletter_template"/>
+            <div data-name="event" title="Event Promo" data-img="/mass_mailing_themes/static/src/img/theme_imgs/event_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_event_template"/>
             </div>
-            <div data-name="tech" title="Blogging" data-img="/mass_mailing_themes/static/src/img/theme_imgs/tech_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
-                <t t-call="mass_mailing_themes.theme_tech_template"/>
+            <div data-name="blogging" title="Blogging" data-img="/mass_mailing_themes/static/src/img/theme_imgs/blogging_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_blogging_template"/>
             </div>
-            <div data-name="vip" title="Coupon Code" data-img="/mass_mailing_themes/static/src/img/theme_imgs/vip_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
-                <t t-call="mass_mailing_themes.theme_vip_template"/>
+            <div data-name="coupon" title="Coupon Code" data-img="/mass_mailing_themes/static/src/img/theme_imgs/coupon_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_coupon_template"/>
             </div>
-            <div data-name="bold" title="Newsletter" data-img="/mass_mailing_themes/static/src/img/theme_imgs/bold_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
-                <t t-call="mass_mailing_themes.theme_bold_template"/>
+            <div data-name="magazine" title="Magazine" data-img="/mass_mailing_themes/static/src/img/theme_imgs/magazine_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_magazine_template"/>
             </div>
             <div data-name="bignews" title="Big News" data-img="/mass_mailing_themes/static/src/img/theme_imgs/bignews_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
                 <t t-call="mass_mailing_themes.theme_bignews_template"/>
             </div>
-            <div data-name="solar" title="Promotion Program" data-img="/mass_mailing_themes/static/src/img/theme_imgs/solar_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
-                <t t-call="mass_mailing_themes.theme_solar_template"/>
+            <div data-name="promotion" title="Promotion Program" data-img="/mass_mailing_themes/static/src/img/theme_imgs/promotion_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_promotion_template"/>
             </div>
         </xpath>
     </template>
 
-    <!-- Theme "Newsletter" default template -->
-    <template id="theme_newsletter_template">
+    <!-- Theme "Event" default template -->
+    <template id="theme_event_template">
         <style id="design-element">
             h3 {
                 color: #2b3b58;
@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <a style="text-decoration:none;float:none;" href="http://www.example.com" target="_blank">
-                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_logo.png" style="height: auto; max-width: 100%; width: 194px;"  width="194" alt="Your Logo" />
+                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_event/s_default_image_logo.png" style="height: auto; max-width: 100%; width: 194px;"  width="194" alt="Your Logo" />
                         </a>
                     </div>
                     <div class="col-lg-8 o_mail_header_social" style="text-align: right;" t-translation="off">
@@ -76,7 +76,7 @@
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
                         <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
                             <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch px-0">
-                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_media_list_1.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
+                                <img src="/mass_mailing_themes/static/src/img/theme_event/s_default_image_media_list_1.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
                             </div>
                             <div class="col-lg-7 s_media_list_body">
                                 <h3>Get 6-months' worth of knowledge
@@ -89,7 +89,7 @@
                     <div class="col-lg-12 s_media_list_item pt16 pb0" data-name="Media item">
                         <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
                             <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch px-0">
-                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_media_list_2.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
+                                <img src="/mass_mailing_themes/static/src/img/theme_event/s_default_image_media_list_2.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
                             </div>
                             <div class="col-lg-7 s_media_list_body">
                                 <h3>Meet (other) awesome members
@@ -102,7 +102,7 @@
                     <div class="col-lg-12 s_media_list_item pt16 pb0" data-name="Media item">
                         <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
                             <div class=" col-lg-5 s_media_list_img_wrapper align-self-stretch px-0">
-                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_media_list_3.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
+                                <img src="/mass_mailing_themes/static/src/img/theme_event/s_default_image_media_list_3.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
                             </div>
                             <div class="col-lg-7 s_media_list_body">
                                 <h3>An interactive, fun
@@ -146,8 +146,8 @@
         </div>
     </template>
 
-    <!-- Theme "Tech" default template -->
-    <template id="theme_tech_template">
+    <!-- Theme "Blogging" default template -->
+    <template id="theme_blogging_template">
         <style id="design-element">
             h1 {
                 font-weight: bolder;
@@ -184,7 +184,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
-                            <img border="0" width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_tech/tech_logo.png"/>
+                            <img border="0" width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_blogging/tech_logo.png"/>
                         </a>
                     </div>
                     <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
@@ -239,7 +239,7 @@
                     <div class="col-lg-12 s_media_list_item pb0 pt0" data-name="Media item">
                         <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
                             <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
-                                <img src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_media_list_1.jpg" class="s_media_list_img h-100 w-100"/>
+                                <img src="/mass_mailing_themes/static/src/img/theme_blogging/s_default_image_media_list_1.jpg" class="s_media_list_img h-100 w-100"/>
                             </div>
                             <div class="col-lg-8 s_media_list_body">
                                 <h3>The future of smartphone video production</h3>
@@ -262,7 +262,7 @@
                     <div class="col-lg-12 s_media_list_item pb0 pt0" data-name="Media item">
                         <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
                             <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
-                                <img src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_media_list_2.jpg" class="s_media_list_img h-100 w-100"/>
+                                <img src="/mass_mailing_themes/static/src/img/theme_blogging/s_default_image_media_list_2.jpg" class="s_media_list_img h-100 w-100"/>
                             </div>
                             <div class="col-lg-8 s_media_list_body pt16 pb16">
                                 <h3>5 Ways Drones Can Better Your Live Events</h3>
@@ -283,7 +283,7 @@
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
                         <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
                             <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
-                                <img src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_media_list_3.jpg" class="s_media_list_img h-100 w-100"/>
+                                <img src="/mass_mailing_themes/static/src/img/theme_blogging/s_default_image_media_list_3.jpg" class="s_media_list_img h-100 w-100"/>
                             </div>
                             <div class="col-lg-8 s_media_list_body">
                                 <h3>How to Code a Website Without Experience</h3>
@@ -316,8 +316,8 @@
         </div>
     </template>
 
-    <!-- Theme "vip" default template -->
-    <template id="theme_vip_template">
+    <!-- Theme "Coupon" default template -->
+    <template id="theme_coupon_template">
         <style id="design-element">
             h1 {
                 font-size: 48px;
@@ -366,7 +366,7 @@
                     </div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
                         <a style="text-decoration:none; text-align:center;" t-att-href="(company_id.website) or '#'" target="_blank">
-                            <img border="0" src="/mass_mailing_themes/static/src/img/theme_vip/vip_logo.png" style="height: auto; max-width: 100%; width: 105px;" width="105" />
+                            <img border="0" src="/mass_mailing_themes/static/src/img/theme_coupon/vip_logo.png" style="height: auto; max-width: 100%; width: 105px;" width="105" />
                         </a>
                     </div>
                     <div class="col-lg-4" style="text-align: center;">
@@ -377,7 +377,7 @@
             </div>
         </div>
         <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
-            <img src="/mass_mailing_themes/static/src/img/theme_vip/vip_banner_part1.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
+            <img src="/mass_mailing_themes/static/src/img/theme_coupon/vip_banner_part1.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
         </div>
         <div class="s_hr o_mail_snippet_general pt0 pb16" data-snippet="s_hr" data-name="Separator" style="background-color: rgb(36, 37, 48) !important;">
             <hr class="s_hr_1px s_hr_solid"/>
@@ -392,7 +392,7 @@
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
         <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
-            <img src="/mass_mailing_themes/static/src/img/theme_vip/vip_banner_part2.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
+            <img src="/mass_mailing_themes/static/src/img/theme_coupon/vip_banner_part2.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
         </div>
         <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-snippet="s_coupon_code" data-name="Promo Code" style="background-color: rgb(36, 37, 48) !important; text-align: center; padding-left: 15px; padding-right: 15px;">
             <p style="text-align: center;">Here's your coupon code*:</p>
@@ -459,8 +459,8 @@
         </div>
     </template>
 
-    <!-- Theme "Bold" default template -->
-    <template id="theme_bold_template">
+    <!-- Theme "Magazine" default template -->
+    <template id="theme_magazine_template">
         <style id="design-element">
             h1 {
                 font-weight: bolder;
@@ -515,7 +515,7 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-8 px-0">
-                        <img src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_image_text.jpg" class="img w-100"/>
+                        <img src="/mass_mailing_themes/static/src/img/theme_magazine/s_default_image_image_text.jpg" class="img w-100"/>
                     </div>
                     <div class="col-lg-4 o_cc pt0 pb0">
                         <h2 style="text-align: center;">IN THIS ISSUE</h2>
@@ -561,7 +561,7 @@
                     <div class="col-lg-6 o_cc">
                         <h3><font style="background-color: rgb(231, 148, 57);">TRAVEL</font></h3>
                         <a href="#">
-                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_product_2.jpg" alt="Man on a rock looking at mountains in the distance" style="width: 100% !important; padding: 15px 0px;"/>
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_magazine/s_default_image_product_2.jpg" alt="Man on a rock looking at mountains in the distance" style="width: 100% !important; padding: 15px 0px;"/>
                         </a>
                         <h2 style="text-align: left;">Destinations for an eco-holiday</h2>
                         <p style="text-align: left;">Bitten by the travel bug but looking to travel consciously? Eco-travel is the way forward.</p>
@@ -574,7 +574,7 @@
                     <div class="col-lg-6 o_cc">
                         <h3><font style="background-color: rgb(231, 99, 99);">LIFESTYLE</font></h3>
                         <a href="#">
-                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_product_1.jpg" alt="Woman having breakfast in bed" style="width: 100% !important; padding: 15px 0px;"/>
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_magazine/s_default_image_product_1.jpg" alt="Woman having breakfast in bed" style="width: 100% !important; padding: 15px 0px;"/>
                         </a>
                         <h2 style="text-align: left;">Top 5 energy-boosting morning routines</h2>
                         <p style="text-align: left;">Imagine waking up with more energy, more flexibility, with less stress and fewer instances of anxiously rushing out the door.</p>
@@ -604,7 +604,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 px-0">
-                        <img src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_image_text_2.jpg" class="img w-100"/>
+                        <img src="/mass_mailing_themes/static/src/img/theme_magazine/s_default_image_image_text_2.jpg" class="img w-100"/>
                     </div>
                 </div>
             </div>
@@ -754,8 +754,8 @@
         </div>
     </template>
 
-    <!-- Theme "solar" default template -->
-    <template id="theme_solar_template">
+    <!-- Theme "Promotion" default template -->
+    <template id="theme_promotion_template">
         <style id="design-element">
             h1 {
                 font-weight: bolder;
@@ -829,16 +829,16 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 pt16 pb16" style="text-align:center;">
-                        <img alt="Customer Service" src="/mass_mailing_themes/static/src/img/theme_solar/s_default_image_product_1.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
+                        <img alt="Customer Service" src="/mass_mailing_themes/static/src/img/theme_promotion/s_default_image_product_1.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
                         <h3>24/7 <br/>Customer Service</h3>
                     </div>
                     <div class="col-lg-4 pt16 pb16" style="text-align:center;">
-                        <img alt="Free Delivery" src="/mass_mailing_themes/static/src/img/theme_solar/s_default_image_product_2.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
+                        <img alt="Free Delivery" src="/mass_mailing_themes/static/src/img/theme_promotion/s_default_image_product_2.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
                         <h3 style="text-align:center;">Free delivery*</h3>
                         <p style="text-align:center;">*For orders over $39.</p>
                     </div>
                     <div class="col-lg-4 pt16 pb16" style="text-align:center;">
-                        <img alt="Easy Returns" src="/mass_mailing_themes/static/src/img/theme_solar/s_default_image_product_3.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
+                        <img alt="Easy Returns" src="/mass_mailing_themes/static/src/img/theme_promotion/s_default_image_product_3.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
                         <h3 style="text-align:center;">Easy Returns</h3>
                     </div>
                 </div>
