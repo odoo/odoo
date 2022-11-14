@@ -248,15 +248,14 @@ class Module(models.Model):
 
     @api.depends('icon')
     def _get_icon_image(self):
+        self.icon_image = ''
         for module in self:
-            module.icon_image = ''
+            if not module.id:
+                continue
             if module.icon:
-                path_parts = module.icon.split('/')
-                path = os.path.join(path_parts[1], *path_parts[2:])
-            elif module.id:
-                path = modules.module.get_module_icon_path(module)
+                path = os.path.join(module.icon.lstrip("/"))
             else:
-                path = ''
+                path = modules.module.get_module_icon_path(module)
             if path:
                 try:
                     with tools.file_open(path, 'rb') as image_file:
