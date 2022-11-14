@@ -23,13 +23,6 @@ class UtmCampaign(models.Model):
         ('manual', 'Manual'),
         ('clicks_ratio', 'Highest Click Rate')], string="SMS Winner Selection", default="clicks_ratio")
 
-    @api.depends('mailing_mail_ids', 'mailing_sms_ids')
-    def _compute_ab_testing_total_pc(self):
-        super()._compute_ab_testing_total_pc()
-        for campaign in self:
-            campaign.ab_testing_total_pc += sum([
-                mailing.ab_testing_pc for mailing in campaign.mailing_sms_ids.filtered('ab_testing_enabled')
-            ])
 
     @api.depends('mailing_sms_ids')
     def _compute_mailing_sms_count(self):
