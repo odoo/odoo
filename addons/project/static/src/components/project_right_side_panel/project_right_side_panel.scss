@@ -50,16 +50,26 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
                     }
                 }
 
-                @media screen and (max-width: 1600px) {
+                @include media-breakpoint-down(lg) {
                     .oe_stat_button {
                         flex-basis: 33.33%;
 
                         &:nth-child(3n):not(:last-child) {
-                            border-right-width: 0px !important;
+                            border-right-width: 0px;
                         }
 
                         &:nth-child(4n):not(:last-child){
                             border-right-width: 1px;
+                        }
+                    }
+                }
+
+                @include media-breakpoint-down(md) {
+                    .oe_stat_button {
+                        flex-basis: 50%;
+
+                        &:nth-child(2n) {
+                            border-right-width: 0px;
                         }
                     }
                 }
