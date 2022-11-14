@@ -141,6 +141,15 @@ def encode(s):
     assert isinstance(s, str)
     return s
 
+def duplicate_key(entry):
+    # TranslationFileReader only returns those three types
+    if entry['type'] == 'model':
+        return ('model', entry['name'], entry['imd_name'])
+    elif entry['type'] == 'model_terms':
+        return ('model_terms', entry['name'], entry['imd_name'], entry['src'])
+    elif entry['type'] == 'code':
+        return ('code', entry['src'])
+
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
@@ -630,6 +639,9 @@ class PoFileReader:
         if isinstance(source, str):
             self.pofile = polib.pofile(source)
             pot_path = get_pot_path(source)
+        elif isinstance(source, polib.POFile):
+            self.pofile = source
+            pot_path = None
         else:
             # either a BufferedIOBase or result from NamedTemporaryFile
             self.pofile = polib.pofile(source.read().decode())
@@ -645,7 +657,10 @@ class PoFileReader:
         for entry in self.pofile:
             if entry.obsolete:
                 continue
+            yield from PoFileReader.parse_entry(entry)
 
+    @staticmethod
+    def parse_entry(entry):
             # in case of moduleS keep only the first
             match = re.match(r"(module[s]?): (\w+)", entry.comment)
             _, module = match.groups()
@@ -699,6 +714,7 @@ class PoFileReader:
                     continue
                 _logger.error("malformed po file: unknown occurrence: %s", occurrence)
 
+
 def TranslationFileWriter(target, fileformat='po', lang=None):
     """ Iterate over translation file to return Odoo translation entries """
     if fileformat == 'csv':
@@ -734,6 +750,7 @@ class PoFileWriter:
         self.buffer = target
         self.lang = lang
         self.po = polib.POFile()
+        self.old_po = None
 
     def write_rows(self, rows):
         # we now group the translations by source. That means one translation per source.
@@ -773,6 +790,29 @@ class PoFileWriter:
             'Content-Transfer-Encoding': '',
             'Plural-Forms': '',
         }
+
+        if self.old_po:
+            all_keys = {duplicate_key(e) for e in PoFileReader(self.po)}
+            supermerge = polib.POEntry.merge
+            def mergeentry(self, other):
+                # extend occurences instead of overriding
+                occurrences = [
+                    o for o, e in zip(self.occurrences, PoFileReader.parse_entry(self))
+                    if duplicate_key(e) not in all_keys
+                ] + other.occurrences
+                supermerge(self, other)
+                self.occurrences = sorted(occurrences)
+            polib.POEntry.merge = mergeentry
+            self.old_po.merge(self.po)
+            polib.POEntry.merge = supermerge
+            # we don't want to comment out the entries that are not in the code anymore
+            # unless the entries are conflicting
+            for entry in self.old_po:
+                if not any(duplicate_key(e) in all_keys for e in PoFileReader.parse_entry(entry)):
+                    entry.obsolete = False
+            # merging appends at the end, but we want the result to be ordered
+            self.old_po.sort(key=lambda entry: entry.msgid)
+            self.po = self.old_po
 
         # buffer expects bytes
         self.buffer.write(str(self.po).encode())
@@ -820,14 +860,20 @@ class TarFileWriter:
         for mod, modrows in rows_by_module.items():
             with io.BytesIO() as buf:
                 po = PoFileWriter(buf, lang=self.lang)
+                filename = join(mod, 'i18n', '{basename}.{ext}'.format(
+                    basename=self.lang or mod,
+                    ext='po' if self.lang else 'pot',
+                ))
+                if not self.lang:
+                    try:
+                        with file_open(filename, mode='r') as fileobj:
+                            po.old_po = polib.pofile(fileobj.read())
+                    except FileNotFoundError:
+                        pass
                 po.write_rows(modrows)
                 buf.seek(0)
 
-                info = tarfile.TarInfo(
-                    join(mod, 'i18n', '{basename}.{ext}'.format(
-                        basename=self.lang or mod,
-                        ext='po' if self.lang else 'pot',
-                    )))
+                info = tarfile.TarInfo(filename)
                 # addfile will read <size> bytes from the buffer so
                 # size *must* be set first
                 info.size = len(buf.getvalue())
