@@ -512,7 +512,6 @@ export class KanbanRenderer extends Component {
      */
     sortRecordGroupEnter({ group }) {
         group.classList.add("o_kanban_hover");
-        group.classList.remove("bg-100");
     }
 
     /**
@@ -521,7 +520,6 @@ export class KanbanRenderer extends Component {
      */
     sortRecordGroupLeave({ group }) {
         group.classList.remove("o_kanban_hover");
-        group.classList.add("bg-100");
     }
 
     /**
