@@ -716,10 +716,10 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         line7 = self.create_bank_transaction(7, '2020-01-10', sequence=1)
         line8 = self.create_bank_transaction(8, '2020-01-10', sequence=2)
         line2 = self.create_bank_transaction(2, '2020-01-13')
-        _line6 = self.create_bank_transaction(6, '2020-01-11')
+        line6 = self.create_bank_transaction(6, '2020-01-11')
         line5 = self.create_bank_transaction(5, '2020-01-12', sequence=3)
         line4 = self.create_bank_transaction(4, '2020-01-12', sequence=2)
-        _line1 = self.create_bank_transaction(1, '2020-01-13')
+        line1 = self.create_bank_transaction(1, '2020-01-13')
         line3 = self.create_bank_transaction(3, '2020-01-12', sequence=1)
 
         self.assertRecordValues(
@@ -848,6 +848,40 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                 {'amount': 3, 'running_balance': 28, 'statement_id': statement1.id},
                 {'amount': 4, 'running_balance': 25, 'statement_id': statement1.id},
                 {'amount': 6, 'running_balance': 24, 'statement_id': False},
+                {'amount': 18, 'running_balance': 18, 'statement_id': False},
+            ],
+        )
+        line1.move_id.button_cancel()
+        line6.move_id.button_cancel()
+        line6.move_id.button_draft()
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 45, 'statement_id': False},
+                {'amount': 2, 'running_balance': 45, 'statement_id': statement1.id},
+                {'amount': 15, 'running_balance': 43, 'statement_id': False},
+                {'amount': 3, 'running_balance': 28, 'statement_id': statement1.id},
+                {'amount': 4, 'running_balance': 25, 'statement_id': statement1.id},
+                {'amount': 6, 'running_balance': 18, 'statement_id': False},
+                {'amount': 18, 'running_balance': 18, 'statement_id': False},
+            ],
+        )
+
+        # remove the anchor point
+        statement1.line_ids = False
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 42, 'statement_id': False},
+                {'amount': 2, 'running_balance': 42, 'statement_id': False},
+                {'amount': 15, 'running_balance': 40, 'statement_id': False},
+                {'amount': 3, 'running_balance': 25, 'statement_id': False},
+                {'amount': 4, 'running_balance': 22, 'statement_id': False},
+                {'amount': 6, 'running_balance': 18, 'statement_id': False},
                 {'amount': 18, 'running_balance': 18, 'statement_id': False},
             ],
         )
@@ -1064,3 +1098,75 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         self.assertEqual(len(all_statements), 6)
         self.assertEqual(all_statements.mapped('is_valid'), [True] * len(all_statements))
         self.assertEqual(all_statements.mapped('is_complete'), [True] * len(all_statements))
+
+    def test_statement_with_canceled_lines(self):
+        line1 = self.create_bank_transaction(1, '2020-01-10')
+        line2 = self.create_bank_transaction(2, '2020-01-11')
+        statement1 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set((line1 + line2).ids)],
+            'balance_start': 0,
+            'balance_end_real': 3,
+        })
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'date': fields.Date.from_string(line2.date),
+        }])
+        # test canceling a line
+        line2.move_id.button_cancel()
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+            'balance_end': 1,
+            'date': fields.Date.from_string(line1.date),
+        }])
+        # test add a line with same amount as a canceled line makes statement complete again
+        line3 = self.create_bank_transaction(2, '2020-01-12', statement=statement1)
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'balance_end': 3,
+            'date': fields.Date.from_string(line3.date),
+        }])
+        # test adding a draft line to a statement, nothing should be changed in statement
+        line4 = self.create_bank_transaction(4, '2020-01-13')
+        line4.move_id.button_cancel()
+        line4.move_id.button_draft()
+        statement1.line_ids |= line4
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'balance_end': 3,
+            'date': fields.Date.from_string(line3.date),
+        }])
+        # test split with canceled/draft lines
+        statement2 = self.env['account.bank.statement'].with_context({'split_line_id': line2.id}).create({})
+        self.assertRecordValues(statement1 + statement2, [{
+            'is_complete': True,
+            'balance_end': 3,
+            'balance_start': 1,
+            'line_ids': [line4.id, line3.id],
+        }, {
+            'is_complete': True,
+            'balance_start': 0,
+            'balance_end': 1,
+            'line_ids': [line1.id, line2.id],
+        }])
+
+        # test cancel/draft all statement lines
+        # line 4 is draft, and we cancel line 3 so the statement should be empty
+        line3.move_id.button_cancel()
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+            'balance_start': 1,
+            'balance_end': 1,
+        }])
+        # create a statement line with already canceled lines
+        statement3 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set((line3 + line4).ids)],
+        })
+        self.assertRecordValues(statement1 + statement3, [{
+            'is_complete': False,
+            'balance_start': 1,
+            'balance_end': 1,
+        }, {
+            'is_complete': False,
+            'balance_start': 0,  # no value is given for balance start and it is not a split
+            'balance_end': 0,
+        }])
