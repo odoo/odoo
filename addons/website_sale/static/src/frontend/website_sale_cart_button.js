@@ -39,14 +39,14 @@ export const WebsiteSaleCartButtonParent = {
 
     /**
      * Called when the button needs more information about the current context.
-     * The information is given via an object through the event, modified in place.
+     * The resolve function should be called with the product information.
      *
      * @param {HTMLElement} ev.data.el Element of the button requesting the information.
      * @param {HTMLElement} ev.data.target Target of the original event.
      * @param {HTMLElement} ev.data.currentTarget CurrentTarget of the original event.
-     * @param {Object} ev.data.productInfo Object to put the information to, initially empty.
+     * @param {Function} ev.data.resolve Caller promise to be resolved.
      */
-    getProductInfo(ev) {
+    async getProductInfo(ev) {
         throw new Error("not implemented by parent");
     },
 };
@@ -85,21 +85,22 @@ export const OwnedWebsiteSaleCartButton = Widget.extend({
      *  - combination
      *  - pricelist_id
      *
-     * @returns {Object} Information about the product to add.
+     * @returns {Promise<Object>} Information about the product to add.
      */
-    getProductInfo({ currentTarget, target }) {
-        const data = {
-            el: this.el,
-            target,
-            currentTarget,
-            productInfo: {},
-        };
-        this.trigger_up("get_product_info", data);
-        return data.productInfo;
+    async getProductInfo({ currentTarget, target }) {
+        return new Promise((resolve) => {
+            const data = {
+                el: this.el,
+                target,
+                currentTarget,
+                resolve,
+            };
+            this.trigger_up("get_product_info", data);
+        });
     },
 
-    onClick(ev) {
-        const productInfo = this.getProductInfo(ev);
+    async onClick(ev) {
+        const productInfo = await this.getProductInfo(ev);
         // TODO: we actually need either product_id or template + combination; both are fine
         if (!productInfo.product_id) {
             throw new Error(_t("The button does not have enough information to be able to add the product to cart."));

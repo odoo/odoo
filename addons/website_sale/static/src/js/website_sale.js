@@ -20,16 +20,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',
-        'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity',
-        'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
+        'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity', //cart
+        'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct', //cart
         'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'click .show_coupon': '_onClickShowCoupon', // checkout
+        'click .show_coupon': '_onClickShowCoupon', // checkout - cart
         'change select[name="country_id"]': '_onChangeCountry', // address
         'change #shipping_use_same': '_onChangeShippingUseSame', // checkout
-        'click .toggle_summary': '_onToggleSummary',
+        'click .toggle_summary': '_onToggleSummary', // cart
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
@@ -650,7 +650,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         const params = $.deparam(window.location.search.slice(1));
         if (params.attrib) {
             const attributeValuesPerAttribute = {};
-            for (const attrib of params.attrib) {
+            for (const attrib of params.attrib.split(',')) {
                 const [ptalId, ptavId] = attrib.split('-');
                 const attribValueSelector = `.js_variant_change[name="ptal-${ptalId}"][value="${ptavId}"]`;
                 const attribValue = this.el.querySelector(attribValueSelector);
