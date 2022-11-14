@@ -228,7 +228,7 @@ var PartnerAutocompleteMixin = {
      * @private
      */
     _getClearbitSuggestions: function (value) {
-        var url = 'https://autocomplete.clearbit.com/v1/companies/suggest?query=' + value;
+        var url = '/partner_autocomplete?query=' + value;
         var def = $.ajax({
             url: url,
             dataType: 'json',
