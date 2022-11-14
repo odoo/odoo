@@ -29,11 +29,17 @@ class ProductWishlist(models.Model):
             return self
 
         if request.website.is_public_user():
-            wish = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
+            wishlists = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
         else:
-            wish = self.search([("partner_id", "=", self.env.user.partner_id.id)])
+            wishlists = self.search([("partner_id", "=", self.env.user.partner_id.id)])
 
-        return wish.filtered(lambda x: x.sudo().product_id.product_tmpl_id.website_published and x.sudo().product_id.product_tmpl_id.sale_ok)
+        sudo_wishlist_templates = wishlists.sudo().mapped('product_id.product_tmpl_id')
+        wishlist_templates = self.env['product.template'].browse(sudo_wishlist_templates.ids)
+        wishlist_templates = wishlist_templates._filter_access_rules('read')
+
+        return wishlists.filtered(
+            lambda x: x.sudo().product_id.product_tmpl_id in wishlist_templates
+        )
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False):
