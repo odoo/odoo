@@ -893,11 +893,6 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
 }, {
     mobile: false,
     edition: "enterprise",
-    trigger: "button.o_switch_view.o_list",
-    content: _t("Move to the list view"),
-}, {
-    mobile: false,
-    edition: "enterprise",
     trigger: "button.o_list_button_add",
     content: _t("Create a new bank transaction"),
 }, {
