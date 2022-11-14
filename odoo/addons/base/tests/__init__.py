@@ -23,6 +23,7 @@ from . import test_ir_filters
 from . import test_ir_http
 from . import test_ir_mail_server
 from . import test_ir_model
+from . import test_ir_module
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_default
