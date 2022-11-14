@@ -9,3 +9,12 @@
 .o_field_highlight .o_field_widget .o_input, .o_field_highlight.o_field_widget .o_input {
     border-color: var(--o-input-border-color);
 }
+
+// field decoration classes (e.g. text-danger) are set on the field root node,
+// but bootstrap contextual classes do not work on input/textarea, so we have to
+// explicitely set their color to the one of their parent
+.o_field_widget {
+    input, textarea {
+        color: inherit;
+    }
+}
