@@ -86,3 +86,14 @@ class PosOrderLine(models.Model):
     coupon_id = fields.Many2one(
         "coupon.coupon", string="Coupon", help="Coupon that generated this reward.",
     )
+
+    def _order_line_fields(self, line, session_id=None):
+        result = super()._order_line_fields(line, session_id=session_id)
+        vals = result[2]
+        program = vals.get('program_id')
+        if program and isinstance(program, list):
+            vals['program_id'] = program[0]
+        coupon = vals.get('program_id')
+        if coupon and isinstance(coupon, list):
+            vals['coupon_id'] = coupon[0]
+        return result
