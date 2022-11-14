@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { attr, clear, Model } from '@mail/model';
+import { attr, clear, Model } from "@mail/model";
 
 /**
  * Models various user settings. It is used as a complement to
@@ -11,14 +11,14 @@ import { attr, clear, Model } from '@mail/model';
  * own settings.
  */
 Model({
-    name: 'UserSetting',
+    name: "UserSetting",
     lifecycleHooks: {
         _created() {
             this._loadLocalSettings();
-            browser.addEventListener('storage', this._onStorage);
+            browser.addEventListener("storage", this._onStorage);
         },
         _willDelete() {
-            browser.removeEventListener('storage', this._onStorage);
+            browser.removeEventListener("storage", this._onStorage);
             for (const timeout of Object.values(this.volumeSettingsTimeouts)) {
                 this.messaging.browser.clearTimeout(timeout);
             }
@@ -63,7 +63,7 @@ Model({
             if (!this.pushToTalkKey) {
                 return;
             }
-            const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split('.');
+            const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
             return {
                 shiftKey: !!shiftKey,
                 ctrlKey: !!ctrlKey,
@@ -73,8 +73,8 @@ Model({
         },
         pushToTalkKeyToString() {
             const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
-            const f = (k, name) => k ? name : '';
-            return `${f(ctrlKey, 'Ctrl + ')}${f(altKey, 'Alt + ')}${f(shiftKey, 'Shift + ')}${key}`;
+            const f = (k, name) => (k ? name : "");
+            return `${f(ctrlKey, "Ctrl + ")}${f(altKey, "Alt + ")}${f(shiftKey, "Shift + ")}${key}`;
         },
         /**
          * @param {String} audioInputDeviceId
@@ -83,7 +83,10 @@ Model({
             this.update({
                 audioInputDeviceId,
             });
-            browser.localStorage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
+            browser.localStorage.setItem(
+                "mail_user_setting_audio_input_device_id",
+                audioInputDeviceId
+            );
             await this.messaging.rtc.updateLocalAudioTrack(true);
         },
         /**
@@ -99,7 +102,9 @@ Model({
          * @param {event} ev
          */
         async setPushToTalkKey(ev) {
-            const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
+            const pushToTalkKey = `${ev.shiftKey || ""}.${ev.ctrlKey || ev.metaKey || ""}.${
+                ev.altKey || ""
+            }.${ev.key}`;
             this.update({ localPushToTalkKey: pushToTalkKey });
             if (this.messaging.currentUser) {
                 this._saveSettings();
@@ -120,7 +125,7 @@ Model({
                     ...this.volumeSettingsTimeouts,
                     [partnerId]: this.messaging.browser.setTimeout(
                         this._onSaveVolumeSettingTimeout.bind(this, { guestId, partnerId, volume }),
-                        5000,
+                        5000
                     ),
                 },
             });
@@ -130,7 +135,10 @@ Model({
          */
         async setThresholdValue(voiceActivationThreshold) {
             this.update({ voiceActivationThreshold });
-            browser.localStorage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold.toString());
+            browser.localStorage.setItem(
+                "mail_user_setting_voice_threshold",
+                voiceActivationThreshold.toString()
+            );
             await this.messaging.rtc.updateVoiceActivation();
         },
         async togglePushToTalk() {
@@ -157,7 +165,9 @@ Model({
                 "mail_user_setting_audio_input_device_id"
             );
             this.update({
-                voiceActivationThreshold: voiceActivationThresholdString ? parseFloat(voiceActivationThresholdString) : undefined,
+                voiceActivationThreshold: voiceActivationThresholdString
+                    ? parseFloat(voiceActivationThresholdString)
+                    : undefined,
                 audioInputDeviceId: audioInputDeviceId || undefined,
             });
         },
@@ -172,7 +182,7 @@ Model({
          * @param {Event} ev
          */
         async _onStorage(ev) {
-            if (ev.key === 'mail_user_setting_voice_threshold') {
+            if (ev.key === "mail_user_setting_voice_threshold") {
                 this.update({ voiceActivationThreshold: ev.newValue });
                 await this.messaging.rtc.updateVoiceActivation();
             }
@@ -187,15 +197,18 @@ Model({
             this.update({ globalSettingsTimeout: clear() });
             await this.messaging.rpc(
                 {
-                    model: 'res.users.settings',
-                    method: 'set_res_users_settings',
-                    args: [[this.messaging.currentUser.res_users_settings_id.id], {
-                        push_to_talk_key: this.pushToTalkKey,
-                        use_push_to_talk: this.usePushToTalk,
-                        voice_active_duration: this.voiceActiveDuration,
-                    }],
+                    model: "res.users.settings",
+                    method: "set_res_users_settings",
+                    args: [
+                        [this.messaging.currentUser.res_users_settings_id.id],
+                        {
+                            push_to_talk_key: this.pushToTalkKey,
+                            use_push_to_talk: this.usePushToTalk,
+                            voice_active_duration: this.voiceActiveDuration,
+                        },
+                    ],
                 },
-                { shadow: true },
+                { shadow: true }
             );
         },
         /**
@@ -213,8 +226,8 @@ Model({
             this.update({ volumeSettingsTimeouts: newVolumeSettingsTimeouts });
             await this.messaging.rpc(
                 {
-                    model: 'res.users.settings',
-                    method: 'set_volume_setting',
+                    model: "res.users.settings",
+                    method: "set_volume_setting",
                     args: [
                         [this.messaging.currentUser.res_users_settings_id.id],
                         partnerId,
@@ -224,7 +237,7 @@ Model({
                         guest_id: guestId,
                     },
                 },
-                { shadow: true },
+                { shadow: true }
             );
         },
         /**
@@ -235,7 +248,7 @@ Model({
             this.update({
                 globalSettingsTimeout: this.messaging.browser.setTimeout(
                     this._onSaveGlobalSettingsTimeout,
-                    2000,
+                    2000
                 ),
             });
         },
@@ -244,7 +257,7 @@ Model({
         /**
          * DeviceId of the audio input selected by the user
          */
-        audioInputDeviceId: attr({ default: '' }),
+        audioInputDeviceId: attr({ default: "" }),
         backgroundBlurAmount: attr({ default: 10 }),
         edgeBlurAmount: attr({ default: 10 }),
         globalSettingsTimeout: attr(),
@@ -258,7 +271,8 @@ Model({
         /**
          * String that encodes the push-to-talk key with its modifiers.
          */
-        pushToTalkKey: attr({ default: '',
+        pushToTalkKey: attr({
+            default: "",
             compute() {
                 if (this.localPushToTalkKey !== undefined) {
                     return this.localPushToTalkKey;
@@ -276,7 +290,8 @@ Model({
         /**
          * If true, push-to-talk will be used over voice activation.
          */
-        usePushToTalk: attr({ default: false,
+        usePushToTalk: attr({
+            default: false,
             compute() {
                 if (this.localUsePushToTalk !== undefined) {
                     return this.localUsePushToTalk;
@@ -298,7 +313,8 @@ Model({
          * Duration in milliseconds the voice remains active after releasing the
          * push-to-talk key.
          */
-        voiceActiveDuration: attr({ default: 0,
+        voiceActiveDuration: attr({
+            default: 0,
             compute() {
                 if (this.localVoiceActiveDuration !== undefined) {
                     return this.localVoiceActiveDuration;
@@ -316,8 +332,8 @@ Model({
     },
     onChanges: [
         {
-            dependencies: ['useBlur'],
-            methodName: '_onChangeUseBlur',
+            dependencies: ["useBlur"],
+            methodName: "_onChangeUseBlur",
         },
     ],
 });

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'CallDemoView',
-    template: 'mail.CallDemoView',
+    name: "CallDemoView",
+    template: "mail.CallDemoView",
     recordMethods: {
         /**
          * Stops recording user's microphone.
@@ -102,7 +102,7 @@ Model({
         /**
          * Ref to the audio element used for the audio feedback.
          */
-        audioRef: attr({ ref: 'audio' }),
+        audioRef: attr({ ref: "audio" }),
         /**
          * The MediaStream from the microphone.
          *
@@ -118,8 +118,8 @@ Model({
             compute() {
                 return Boolean(
                     navigator.mediaDevices &&
-                    navigator.mediaDevices.getUserMedia &&
-                    window.MediaStream
+                        navigator.mediaDevices.getUserMedia &&
+                        window.MediaStream
                 );
             },
         }),
@@ -142,7 +142,7 @@ Model({
         /**
          * Ref to the video element used for the video feedback.
          */
-        videoRef: attr({ ref: 'video' }),
+        videoRef: attr({ ref: "video" }),
         /**
          * The MediaStream from the camera.
          *
@@ -153,6 +153,6 @@ Model({
         /**
          * States the welcome view containing this media preview.
          */
-        welcomeView: one('WelcomeView', { identifying: true, inverse: 'callDemoView' }),
+        welcomeView: one("WelcomeView", { identifying: true, inverse: "callDemoView" }),
     },
 });

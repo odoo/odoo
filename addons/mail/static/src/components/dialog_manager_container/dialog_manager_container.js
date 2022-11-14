@@ -1,15 +1,14 @@
 /** @odoo-module **/
 
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-import { Component } from '@odoo/owl';
+import { Component } from "@odoo/owl";
 
 export class DialogManagerContainer extends Component {
-
     /**
      * @override
      */
-     setup() {
+    setup() {
         useMessagingContainer();
     }
 
@@ -20,5 +19,5 @@ export class DialogManagerContainer extends Component {
 DialogManagerContainer.props = {};
 
 Object.assign(DialogManagerContainer, {
-    template: 'mail.DialogManagerContainer',
+    template: "mail.DialogManagerContainer",
 });

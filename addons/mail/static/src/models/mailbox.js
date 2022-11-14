@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'Mailbox',
-    identifyingMode: 'xor',
+    name: "Mailbox",
+    identifyingMode: "xor",
     recordMethods: {
         _onChangeCounter() {
             if (this !== this.messaging.inbox) {
@@ -12,11 +12,12 @@ Model({
             }
             if (
                 this.thread.threadViews.length > 0 &&
-                this.previousValueOfInboxCounter > 0 && this.counter === 0
+                this.previousValueOfInboxCounter > 0 &&
+                this.counter === 0
             ) {
                 this.env.services.effect.add({
                     message: this.env._t("Congratulations, your inbox is empty!"),
-                    type: 'rainbow_man',
+                    type: "rainbow_man",
                 });
             }
             this.update({ previousValueOfInboxCounter: this.counter });
@@ -24,16 +25,18 @@ Model({
     },
     fields: {
         counter: attr({ default: 0 }),
-        discussMobileSelectionItems: many('DiscussMobileMailboxSelectionItemView', { inverse: 'mailbox' }),
+        discussMobileSelectionItems: many("DiscussMobileMailboxSelectionItemView", {
+            inverse: "mailbox",
+        }),
         fetchMessagesUrl: attr({
             compute() {
                 switch (this) {
                     case this.messaging.history:
-                        return '/mail/history/messages';
+                        return "/mail/history/messages";
                     case this.messaging.inbox:
-                        return '/mail/inbox/messages';
+                        return "/mail/inbox/messages";
                     case this.messaging.starred:
-                        return '/mail/starred/messages';
+                        return "/mail/starred/messages";
                     default:
                         return clear();
                 }
@@ -42,7 +45,8 @@ Model({
         /**
          * Useful to fill its inverse `Messaging/allMailboxes`.
          */
-        messagingAsAnyMailbox: one('Messaging', { inverse: 'allMailboxes',
+        messagingAsAnyMailbox: one("Messaging", {
+            inverse: "allMailboxes",
             compute() {
                 if (!this.messaging) {
                     return clear();
@@ -50,9 +54,9 @@ Model({
                 return this.messaging;
             },
         }),
-        messagingAsHistory: one('Messaging', { identifying: true, inverse: 'history' }),
-        messagingAsInbox: one('Messaging', { identifying: true, inverse: 'inbox' }),
-        messagingAsStarred: one('Messaging', { identifying: true, inverse: 'starred' }),
+        messagingAsHistory: one("Messaging", { identifying: true, inverse: "history" }),
+        messagingAsInbox: one("Messaging", { identifying: true, inverse: "inbox" }),
+        messagingAsStarred: one("Messaging", { identifying: true, inverse: "starred" }),
         name: attr({
             compute() {
                 switch (this) {
@@ -85,16 +89,17 @@ Model({
                 }
             },
         }),
-        thread: one('Thread', { inverse: 'mailbox',
+        thread: one("Thread", {
+            inverse: "mailbox",
             compute() {
                 const threadId = (() => {
                     switch (this) {
                         case this.messaging.history:
-                            return 'history';
+                            return "history";
                         case this.messaging.inbox:
-                            return 'inbox';
+                            return "inbox";
                         case this.messaging.starred:
-                            return 'starred';
+                            return "starred";
                     }
                 })();
                 if (!threadId) {
@@ -102,15 +107,15 @@ Model({
                 }
                 return {
                     id: threadId,
-                    model: 'mail.box',
+                    model: "mail.box",
                 };
             },
         }),
     },
     onChanges: [
         {
-            dependencies: ['counter'],
-            methodName: '_onChangeCounter',
+            dependencies: ["counter"],
+            methodName: "_onChangeCounter",
         },
     ],
 });

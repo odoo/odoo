@@ -1,17 +1,19 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'EmojiCategoryView',
-    template: 'mail.EmojiCategoryView',
+    name: "EmojiCategoryView",
+    template: "mail.EmojiCategoryView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         onClick() {
             this.emojiPickerViewOwner.reset();
-            this.emojiPickerViewOwner.emojiGridView.update({ categorySelectedByUser: this.viewCategory });
+            this.emojiPickerViewOwner.emojiGridView.update({
+                categorySelectedByUser: this.viewCategory,
+            });
         },
         /**
          * @param {MouseEvent} ev
@@ -33,14 +35,20 @@ Model({
         },
     },
     fields: {
-        category: one('EmojiCategory', { related: 'viewCategory.category' }),
-        emojiPickerViewOwner: one('EmojiPickerView', { identifying: true, inverse: 'emojiCategoryViews' }),
+        category: one("EmojiCategory", { related: "viewCategory.category" }),
+        emojiPickerViewOwner: one("EmojiPickerView", {
+            identifying: true,
+            inverse: "emojiCategoryViews",
+        }),
         isActive: attr({
             compute() {
                 return Boolean(this.viewCategory.emojiPickerViewAsActive);
             },
         }),
         isHovered: attr({ default: false }),
-        viewCategory: one('EmojiPickerView.Category', { identifying: true, inverse: 'emojiCategoryView' }),
+        viewCategory: one("EmojiPickerView.Category", {
+            identifying: true,
+            inverse: "emojiCategoryView",
+        }),
     },
 });

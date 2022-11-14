@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'DiscussView',
-    template: 'mail.DiscussView',
+    name: "DiscussView",
+    template: "mail.DiscussView",
     recordMethods: {
         clearIsAddingItem() {
             this.update({
@@ -35,8 +35,8 @@ Model({
          * @param {MouseEvent} ev
          */
         async onClickStartAMeetingButton(ev) {
-            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
-                default_display_mode: 'video_full_screen',
+            const meetingChannel = await this.messaging.models["Thread"].createGroupChat({
+                default_display_mode: "video_full_screen",
                 partners_to: [this.messaging.currentPartner.id],
             });
             meetingChannel.toggleCall({ startWithVideo: true });
@@ -110,9 +110,15 @@ Model({
          * Value that is used to create a channel from the sidebar.
          */
         addingChannelValue: attr({ default: "" }),
-        discuss: one('Discuss', { identifying: true, inverse: 'discussView' }),
-        historyView: one('DiscussSidebarMailboxView', { default: {}, inverse: 'discussViewOwnerAsHistory' }),
-        inboxView: one('DiscussSidebarMailboxView', { default: {}, inverse: 'discussViewOwnerAsInbox' }),
+        discuss: one("Discuss", { identifying: true, inverse: "discussView" }),
+        historyView: one("DiscussSidebarMailboxView", {
+            default: {},
+            inverse: "discussViewOwnerAsHistory",
+        }),
+        inboxView: one("DiscussSidebarMailboxView", {
+            default: {},
+            inverse: "discussViewOwnerAsInbox",
+        }),
         /**
          * Determines whether current user is adding a channel from the sidebar.
          */
@@ -121,29 +127,33 @@ Model({
          * Determines whether current user is adding a chat from the sidebar.
          */
         isAddingChat: attr({ default: false }),
-        mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', { inverse: 'discussViewOwnerAsMobileAddItemHeader',
+        mobileAddItemHeaderAutocompleteInputView: one("AutocompleteInputView", {
+            inverse: "discussViewOwnerAsMobileAddItemHeader",
+            compute() {
+                if (this.messaging.device.isSmall && (this.isAddingChannel || this.isAddingChat)) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        mobileMailboxSelectionView: one("DiscussMobileMailboxSelectionView", {
+            inverse: "owner",
             compute() {
                 if (
                     this.messaging.device.isSmall &&
-                    (this.isAddingChannel || this.isAddingChat)
+                    this.discuss.activeMobileNavbarTabId === "mailbox"
                 ) {
                     return {};
                 }
                 return clear();
             },
         }),
-        mobileMailboxSelectionView: one('DiscussMobileMailboxSelectionView', { inverse: 'owner',
-            compute() {
-                if (this.messaging.device.isSmall && this.discuss.activeMobileNavbarTabId === 'mailbox') {
-                    return {};
-                }
-                return clear();
-            },
+        orderedMailboxes: many("Mailbox", {
+            related: "messaging.allMailboxes",
+            sort: [["smaller-first", "sequence"]],
         }),
-        orderedMailboxes: many('Mailbox', { related: 'messaging.allMailboxes',
-            sort: [['smaller-first', 'sequence']],
-        }),
-        sidebar: one('DiscussSidebarView', { inverse: 'owner',
+        sidebar: one("DiscussSidebarView", {
+            inverse: "owner",
             compute() {
                 if (!this.messaging.device.isSmall) {
                     return {};
@@ -151,12 +161,15 @@ Model({
                 return clear();
             },
         }),
-        starredView: one('DiscussSidebarMailboxView', { default: {}, inverse: 'discussViewOwnerAsStarred' }),
+        starredView: one("DiscussSidebarMailboxView", {
+            default: {},
+            inverse: "discussViewOwnerAsStarred",
+        }),
     },
     onChanges: [
         {
-            dependencies: ['discuss.activeThread'],
-            methodName: '_onDiscussActiveThreadChanged',
+            dependencies: ["discuss.activeThread"],
+            methodName: "_onDiscussActiveThreadChanged",
         },
     ],
 });

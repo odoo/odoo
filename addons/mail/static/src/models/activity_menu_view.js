@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import { attr, many, Model } from '@mail/model';
+import { attr, many, Model } from "@mail/model";
 
-import session from 'web.session';
+import session from "web.session";
 
 Model({
-    name: 'ActivityMenuView',
+    name: "ActivityMenuView",
     lifecycleHooks: {
         _created() {
             this.fetchData();
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -21,13 +21,15 @@ Model({
         },
         async fetchData() {
             const data = await this.messaging.rpc({
-                model: 'res.users',
-                method: 'systray_get_activities',
+                model: "res.users",
+                method: "systray_get_activities",
                 args: [],
                 kwargs: { context: session.user_context },
             });
             this.update({
-                activityGroups: data.map(vals => this.messaging.models['ActivityGroup'].convertData(vals)),
+                activityGroups: data.map((vals) =>
+                    this.messaging.models["ActivityGroup"].convertData(vals)
+                ),
                 extraCount: 0,
             });
         },
@@ -63,12 +65,13 @@ Model({
         },
     },
     fields: {
-        activityGroups: many('ActivityGroup', {
-            sort: [['smaller-first', 'irModel.id']],
+        activityGroups: many("ActivityGroup", {
+            sort: [["smaller-first", "irModel.id"]],
         }),
-        activityGroupViews: many('ActivityGroupView', { inverse: 'activityMenuViewOwner',
+        activityGroupViews: many("ActivityGroupView", {
+            inverse: "activityMenuViewOwner",
             compute() {
-                return this.activityGroups.map(activityGroup => {
+                return this.activityGroups.map((activityGroup) => {
                     return {
                         activityGroup,
                     };
@@ -78,7 +81,10 @@ Model({
         component: attr(),
         counter: attr({
             compute() {
-                return this.activityGroups.reduce((total, group) => total + group.total_count, this.extraCount);
+                return this.activityGroups.reduce(
+                    (total, group) => total + group.total_count,
+                    this.extraCount
+                );
             },
         }),
         /**

@@ -1,28 +1,28 @@
 /** @odoo-module **/
 
-import { attr, decrement, increment, one, Model } from '@mail/model';
+import { attr, decrement, increment, one, Model } from "@mail/model";
 
 Model({
-    name: 'UseDragVisibleDropZone',
-    identifyingMode: 'xor',
+    name: "UseDragVisibleDropZone",
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('dragenter', this._onDragenterListener, true);
-            document.addEventListener('dragleave', this._onDragleaveListener, true);
-            document.addEventListener('drop', this._onDropListener);
+            document.addEventListener("dragenter", this._onDragenterListener, true);
+            document.addEventListener("dragleave", this._onDragleaveListener, true);
+            document.addEventListener("drop", this._onDropListener);
 
             // Thoses Events prevent the browser to open or download the file if
             // it's dropped outside of the dropzone
-            window.addEventListener('dragover', ev => ev.preventDefault());
-            window.addEventListener('drop', ev => ev.preventDefault());
+            window.addEventListener("dragover", (ev) => ev.preventDefault());
+            window.addEventListener("drop", (ev) => ev.preventDefault());
         },
         _willDelete() {
-            document.removeEventListener('dragenter', this._onDragenterListener, true);
-            document.removeEventListener('dragleave', this._onDragleaveListener, true);
-            document.removeEventListener('drop', this._onDropListener);
+            document.removeEventListener("dragenter", this._onDragenterListener, true);
+            document.removeEventListener("dragleave", this._onDragleaveListener, true);
+            document.removeEventListener("drop", this._onDropListener);
 
-            window.removeEventListener('dragover', ev => ev.preventDefault());
-            window.removeEventListener('drop', ev => ev.preventDefault());
+            window.removeEventListener("dragover", (ev) => ev.preventDefault());
+            window.removeEventListener("drop", (ev) => ev.preventDefault());
         },
     },
     recordMethods: {
@@ -38,7 +38,7 @@ Model({
             if (
                 this.dragCount === 0 &&
                 ev.dataTransfer &&
-                ev.dataTransfer.types.includes('Files')
+                ev.dataTransfer.types.includes("Files")
             ) {
                 this.update({ isVisible: true });
             }
@@ -66,8 +66,11 @@ Model({
         },
     },
     fields: {
-        chatterOwner: one('Chatter', { identifying: true, inverse: 'useDragVisibleDropZone' }),
-        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'useDragVisibleDropZone' }),
+        chatterOwner: one("Chatter", { identifying: true, inverse: "useDragVisibleDropZone" }),
+        composerViewOwner: one("ComposerView", {
+            identifying: true,
+            inverse: "useDragVisibleDropZone",
+        }),
         /**
          * Counts how many drag enter/leave happened globally. This is the only
          * way to know if a file has been dragged out of the browser window.

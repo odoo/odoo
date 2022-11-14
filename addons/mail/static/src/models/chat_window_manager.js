@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 export const BASE_VISUAL = {
     /**
@@ -41,8 +41,8 @@ export const BASE_VISUAL = {
 };
 
 Model({
-    name: 'ChatWindowManager',
-    template: 'mail.ChatWindowManager',
+    name: "ChatWindowManager",
+    template: "mail.ChatWindowManager",
     recordMethods: {
         /**
          * Close all chat windows.
@@ -98,19 +98,22 @@ Model({
          * @param {boolean} [param1.notifyServer]
          * @param {boolean} [param1.replaceNewMessage=false]
          */
-        openThread(thread, {
-            focus,
-            isFolded = false,
-            makeActive = false,
-            notifyServer,
-            replaceNewMessage = false
-        } = {}) {
+        openThread(
+            thread,
+            {
+                focus,
+                isFolded = false,
+                makeActive = false,
+                notifyServer,
+                replaceNewMessage = false,
+            } = {}
+        ) {
             if (notifyServer === undefined) {
                 notifyServer = !this.messaging.device.isSmall;
             }
             let chatWindow = thread.chatWindow;
             if (!chatWindow) {
-                chatWindow = this.messaging.models['ChatWindow'].insert({
+                chatWindow = this.messaging.models["ChatWindow"].insert({
                     isFolded,
                     manager: this,
                     thread,
@@ -129,7 +132,7 @@ Model({
             }
             // Flux specific: notify server of chat window being opened.
             if (notifyServer && !this.messaging.currentGuest) {
-                const foldState = chatWindow.isFolded ? 'folded' : 'open';
+                const foldState = chatWindow.isFolded ? "folded" : "open";
                 thread.notifyFoldStateToServer(foldState);
             }
         },
@@ -138,8 +141,8 @@ Model({
          * @param {ChatWindow} chatWindow2
          */
         swap(chatWindow1, chatWindow2) {
-            const index1 = this.chatWindows.findIndex(chatWindow => chatWindow === chatWindow1);
-            const index2 = this.chatWindows.findIndex(chatWindow => chatWindow === chatWindow2);
+            const index1 = this.chatWindows.findIndex((chatWindow) => chatWindow === chatWindow1);
+            const index2 = this.chatWindows.findIndex((chatWindow) => chatWindow === chatWindow2);
             if (index1 === -1 || index2 === -1) {
                 return;
             }
@@ -149,18 +152,18 @@ Model({
             this.update({ chatWindows: _newOrdered });
             for (const chatWindow of [chatWindow1, chatWindow2]) {
                 if (chatWindow.threadView) {
-                    chatWindow.threadView.addComponentHint('adjust-scroll');
+                    chatWindow.threadView.addComponentHint("adjust-scroll");
                 }
             }
         },
     },
     fields: {
-        allOrderedHidden: many('ChatWindow', {
+        allOrderedHidden: many("ChatWindow", {
             compute() {
                 return this.visual.hiddenChatWindows;
             },
         }),
-        allOrderedVisible: many('ChatWindow', {
+        allOrderedVisible: many("ChatWindow", {
             compute() {
                 return this.visual.visible.map(({ chatWindow }) => chatWindow);
             },
@@ -168,13 +171,14 @@ Model({
         /**
          * Amount of visible slots available for chat windows.
          */
-        availableVisibleSlots: attr({ default: 0,
+        availableVisibleSlots: attr({
+            default: 0,
             compute() {
                 return this.visual.availableVisibleSlots;
             },
         }),
         betweenGapWidth: attr({ default: 5 }),
-        chatWindows: many('ChatWindow', { inverse: 'manager', isCausal: true }),
+        chatWindows: many("ChatWindow", { inverse: "manager", isCausal: true }),
         chatWindowWidth: attr({ default: 340 }),
         endGapWidth: attr({
             compute() {
@@ -189,21 +193,26 @@ Model({
                 return this.allOrderedVisible.length > 0;
             },
         }),
-        hiddenChatWindowHeaderViews: many('ChatWindowHeaderView', {
+        hiddenChatWindowHeaderViews: many("ChatWindowHeaderView", {
             compute() {
                 if (this.allOrderedHidden.length > 0) {
-                    return this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: chatWindow }));
+                    return this.allOrderedHidden.map((chatWindow) => ({
+                        chatWindowOwner: chatWindow,
+                    }));
                 }
                 return clear();
             },
         }),
-        hiddenMenuView: one('ChatWindowHiddenMenuView', { inverse: 'owner',
+        hiddenMenuView: one("ChatWindowHiddenMenuView", {
+            inverse: "owner",
             compute() {
                 return this.visual.isHiddenMenuVisible ? {} : clear();
             },
         }),
-        hiddenMenuWidth: attr({ default: 170 /* max width, including width of dropup list items */ }),
-        lastVisible: one('ChatWindow', {
+        hiddenMenuWidth: attr({
+            default: 170 /* max width, including width of dropup list items */,
+        }),
+        lastVisible: one("ChatWindow", {
             compute() {
                 const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
                 if (!lastVisible) {
@@ -212,7 +221,7 @@ Model({
                 return lastVisible;
             },
         }),
-        newMessageChatWindow: one('ChatWindow', { inverse: 'managerAsNewMessage' }),
+        newMessageChatWindow: one("ChatWindow", { inverse: "managerAsNewMessage" }),
         startGapWidth: attr({
             compute() {
                 if (this.messaging.device.isSmall) {
@@ -224,7 +233,7 @@ Model({
         unreadHiddenConversationAmount: attr({
             compute() {
                 const allHiddenWithThread = this.allOrderedHidden.filter(
-                    chatWindow => chatWindow.thread
+                    (chatWindow) => chatWindow.thread
                 );
                 let amount = 0;
                 for (const chatWindow of allHiddenWithThread) {
@@ -235,9 +244,10 @@ Model({
                 return amount;
             },
         }),
-        visual: attr({ default: BASE_VISUAL,
+        visual: attr({
+            default: BASE_VISUAL,
             compute() {
-                let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
+                const visual = JSON.parse(JSON.stringify(BASE_VISUAL));
                 if (!this.messaging || !this.messaging.device) {
                     return visual;
                 }
@@ -247,12 +257,17 @@ Model({
                 if (!this.chatWindows.length) {
                     return visual;
                 }
-                const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
+                const relativeGlobalWindowWidth =
+                    this.messaging.device.globalWindowInnerWidth -
+                    this.startGapWidth -
+                    this.endGapWidth;
                 let maxAmountWithoutHidden = Math.floor(
-                    relativeGlobalWindowWidth / (this.chatWindowWidth + this.betweenGapWidth));
+                    relativeGlobalWindowWidth / (this.chatWindowWidth + this.betweenGapWidth)
+                );
                 let maxAmountWithHidden = Math.floor(
                     (relativeGlobalWindowWidth - this.hiddenMenuWidth - this.betweenGapWidth) /
-                    (this.chatWindowWidth + this.betweenGapWidth));
+                        (this.chatWindowWidth + this.betweenGapWidth)
+                );
                 if (this.messaging.device.isSmall) {
                     maxAmountWithoutHidden = 1;
                     maxAmountWithHidden = 1;
@@ -261,7 +276,8 @@ Model({
                     // all visible
                     for (let i = 0; i < this.chatWindows.length; i++) {
                         const chatWindow = this.chatWindows[i];
-                        const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
+                        const offset =
+                            this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
                         visual.visible.push({ chatWindow, offset });
                     }
                     visual.availableVisibleSlots = maxAmountWithoutHidden;
@@ -269,13 +285,16 @@ Model({
                     // some visible, some hidden
                     for (let i = 0; i < maxAmountWithHidden; i++) {
                         const chatWindow = this.chatWindows[i];
-                        const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
+                        const offset =
+                            this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
                         visual.visible.push({ chatWindow, offset });
                     }
                     if (this.chatWindows.length > maxAmountWithHidden) {
                         visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
-                        visual.hiddenMenuOffset = visual.visible[maxAmountWithHidden - 1].offset
-                            + this.chatWindowWidth + this.betweenGapWidth;
+                        visual.hiddenMenuOffset =
+                            visual.visible[maxAmountWithHidden - 1].offset +
+                            this.chatWindowWidth +
+                            this.betweenGapWidth;
                     }
                     for (let j = maxAmountWithHidden; j < this.chatWindows.length; j++) {
                         visual.hiddenChatWindows.push(this.chatWindows[j]);
@@ -286,7 +305,7 @@ Model({
                     visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
                     visual.hiddenMenuOffset = this.startGapWidth;
                     visual.hiddenChatWindows.push(...this.chatWindows);
-                    console.warn('cannot display any visible chat windows (screen is too small)');
+                    console.warn("cannot display any visible chat windows (screen is too small)");
                     visual.availableVisibleSlots = 0;
                 }
                 return visual;

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'MessageListView',
+    name: "MessageListView",
     recordMethods: {
         /**
          * Update the scroll position of the message list.
@@ -36,22 +36,22 @@ Model({
         adjustFromComponentHints() {
             for (const hint of this.threadViewOwner.componentHintList) {
                 switch (hint.type) {
-                    case 'change-of-thread-cache':
-                    case 'member-list-hidden':
-                    case 'adjust-scroll':
+                    case "change-of-thread-cache":
+                    case "member-list-hidden":
+                    case "adjust-scroll":
                         // thread just became visible, the goal is to restore its
                         // saved position if it exists or scroll to the end
                         this.adjustScrollFromModel();
                         break;
-                    case 'message-posted':
-                    case 'message-received':
-                    case 'messages-loaded':
-                    case 'new-messages-loaded':
+                    case "message-posted":
+                    case "message-received":
+                    case "messages-loaded":
+                    case "new-messages-loaded":
                         // messages have been added at the end, either scroll to the
                         // end or keep the current position
                         this.adjustScrollForExtraMessagesAtTheEnd();
                         break;
-                    case 'more-messages-loaded':
+                    case "more-messages-loaded":
                         // messages have been added at the start, keep the current
                         // position
                         this.adjustScrollForExtraMessagesAtTheStart();
@@ -66,9 +66,11 @@ Model({
                 return;
             }
             if (!this.threadViewOwner.hasAutoScrollOnMessageReceived) {
-                if (this.threadViewOwner.order === 'desc' && this.component._willPatchSnapshot) {
+                if (this.threadViewOwner.order === "desc" && this.component._willPatchSnapshot) {
                     const { scrollHeight, scrollTop } = this.component._willPatchSnapshot;
-                    this.setScrollTop(this.getScrollableElement().scrollHeight - scrollHeight + scrollTop);
+                    this.setScrollTop(
+                        this.getScrollableElement().scrollHeight - scrollHeight + scrollTop
+                    );
                 }
                 return;
             }
@@ -79,7 +81,7 @@ Model({
                 !this.getScrollableElement() ||
                 !this.hasScrollAdjust ||
                 !this.component._willPatchSnapshot ||
-                this.threadViewOwner.order === 'desc'
+                this.threadViewOwner.order === "desc"
             ) {
                 return;
             }
@@ -92,7 +94,8 @@ Model({
             }
             if (
                 this.threadViewOwner.threadCacheInitialScrollPosition !== undefined &&
-                this.getScrollableElement().scrollHeight === this.threadViewOwner.threadCacheInitialScrollHeight
+                this.getScrollableElement().scrollHeight ===
+                    this.threadViewOwner.threadCacheInitialScrollHeight
             ) {
                 this.setScrollTop(this.threadViewOwner.threadCacheInitialScrollPosition);
                 return;
@@ -108,7 +111,7 @@ Model({
                 this.threadViewOwner.lastMessageListViewItem.isPartiallyVisible()
             ) {
                 this.threadViewOwner.handleVisibleMessage(
-                    this.threadViewOwner.lastMessageListViewItem.message,
+                    this.threadViewOwner.lastMessageListViewItem.message
                 );
             }
         },
@@ -131,7 +134,8 @@ Model({
             }
             const loadMoreRect = loadMore.getBoundingClientRect();
             const elRect = this.getScrollableElement().getBoundingClientRect();
-            const isInvisible = loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
+            const isInvisible =
+                loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
             return !isInvisible;
         },
         onClickRetryLoadMoreMessages() {
@@ -164,7 +168,12 @@ Model({
             this.scrollThrottle.do();
         },
         scrollToEnd() {
-            this.setScrollTop(this.threadViewOwner.order === 'asc' ? this.getScrollableElement().scrollHeight - this.getScrollableElement().clientHeight : 0);
+            this.setScrollTop(
+                this.threadViewOwner.order === "asc"
+                    ? this.getScrollableElement().scrollHeight -
+                          this.getScrollableElement().clientHeight
+                    : 0
+            );
         },
         /**
          * @param {integer} value
@@ -188,7 +197,7 @@ Model({
                 return;
             }
             const scrollTop = this.getScrollableElement().scrollTop;
-            this.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
+            this.messaging.messagingBus.trigger("o-component-message-list-scrolled", {
                 orderedMessages: this.threadViewOwner.threadCache.orderedMessages,
                 scrollTop,
                 thread: this.threadViewOwner.thread,
@@ -207,11 +216,11 @@ Model({
             }
             this.threadViewOwner.threadViewer.saveThreadCacheScrollHeightAsInitial(
                 this.getScrollableElement().scrollHeight,
-                this.threadViewOwner.threadCache,
+                this.threadViewOwner.threadCache
             );
             this.threadViewOwner.threadViewer.saveThreadCacheScrollPositionsAsInitial(
                 scrollTop,
-                this.threadViewOwner.threadCache,
+                this.threadViewOwner.threadCache
             );
             if (
                 !this.isLastScrollProgrammatic &&
@@ -222,7 +231,7 @@ Model({
             }
             this.checkMostRecentMessageIsVisible();
             this.update({ isLastScrollProgrammatic: false });
-        }
+        },
     },
     fields: {
         clientHeight: attr(),
@@ -230,7 +239,8 @@ Model({
          * States the OWL component of this message list view
          */
         component: attr(),
-        hasScrollAdjust: attr({ default: true,
+        hasScrollAdjust: attr({
+            default: true,
             compute() {
                 if (this.threadViewOwner.threadViewer.chatter) {
                     return this.threadViewOwner.threadViewer.chatter.hasMessageListScrollAdjust;
@@ -250,7 +260,7 @@ Model({
                  * the threadView.
                  */
                 const endThreshold = 30;
-                if (this.threadViewOwner.order === 'asc') {
+                if (this.threadViewOwner.order === "asc") {
                     return this.scrollTop >= this.scrollHeight - this.clientHeight - endThreshold;
                 }
                 return this.scrollTop <= endThreshold;
@@ -272,20 +282,24 @@ Model({
         /**
          * States the message views used to display this thread view owner's messages.
          */
-        messageListViewItems: many('MessageListViewItem', { inverse: 'messageListViewOwner',
+        messageListViewItems: many("MessageListViewItem", {
+            inverse: "messageListViewOwner",
             compute() {
                 if (!this.threadViewOwner.threadCache) {
                     return clear();
                 }
                 const orderedMessages = this.threadViewOwner.threadCache.orderedNonEmptyMessages;
-                if (this.threadViewOwner.order === 'desc') {
+                if (this.threadViewOwner.order === "desc") {
                     orderedMessages.reverse();
                 }
                 const messageViewsData = [];
                 let prevMessage;
                 for (const message of orderedMessages) {
                     messageViewsData.push({
-                        isSquashed: this.threadViewOwner._shouldMessageBeSquashed(prevMessage, message),
+                        isSquashed: this.threadViewOwner._shouldMessageBeSquashed(
+                            prevMessage,
+                            message
+                        ),
                         message,
                     });
                     prevMessage = message;
@@ -294,13 +308,14 @@ Model({
             },
         }),
         scrollHeight: attr(),
-        scrollThrottle: one('Throttle', { inverse: 'messageListViewAsScroll',
+        scrollThrottle: one("Throttle", {
+            inverse: "messageListViewAsScroll",
             compute() {
                 return { func: () => this._onThrottledScroll() };
             },
         }),
         scrollTop: attr(),
-        thread: one('Thread', { related: 'threadViewOwner.thread' }),
-        threadViewOwner: one('ThreadView', { identifying: true, inverse: 'messageListView' }),
+        thread: one("Thread", { related: "threadViewOwner.thread" }),
+        threadViewOwner: one("ThreadView", { identifying: true, inverse: "messageListView" }),
     },
 });

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 Model({
-    name: 'CallInviteRequestPopup',
-    template: 'mail.CallInviteRequestPopup',
+    name: "CallInviteRequestPopup",
+    template: "mail.CallInviteRequestPopup",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -33,6 +33,6 @@ Model({
         },
     },
     fields: {
-        thread: one('Thread', { identifying: true, inverse: 'callInviteRequestPopup' }),
+        thread: one("Thread", { identifying: true, inverse: "callInviteRequestPopup" }),
     },
 });

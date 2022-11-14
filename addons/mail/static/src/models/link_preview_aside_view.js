@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { clear, one, Model } from '@mail/model';
+import { clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'LinkPreviewAsideView',
-    template: 'mail.LinkPreviewAsideView',
-    identifyingMode: 'xor',
+    name: "LinkPreviewAsideView",
+    template: "mail.LinkPreviewAsideView",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Handles the click on delete link preview and open the confirm dialog.
@@ -15,7 +15,7 @@ Model({
         },
     },
     fields: {
-        linkPreview: one('LinkPreview', {
+        linkPreview: one("LinkPreview", {
             compute() {
                 if (this.linkPreviewCardView) {
                     return this.linkPreviewCardView.linkPreview;
@@ -30,9 +30,21 @@ Model({
             },
             required: true,
         }),
-        linkPreviewCardView: one('LinkPreviewCardView', { identifying: true, inverse: 'linkPreviewAsideView' }),
-        linkPreviewDeleteConfirmDialog: one('Dialog', { inverse: 'linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm', isCausal: true }),
-        linkPreviewImageView: one('LinkPreviewImageView', { identifying: true, inverse: 'linkPreviewAsideView' }),
-        linkPreviewVideoView: one('LinkPreviewVideoView', { identifying: true, inverse: 'linkPreviewAsideView' }),
+        linkPreviewCardView: one("LinkPreviewCardView", {
+            identifying: true,
+            inverse: "linkPreviewAsideView",
+        }),
+        linkPreviewDeleteConfirmDialog: one("Dialog", {
+            inverse: "linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm",
+            isCausal: true,
+        }),
+        linkPreviewImageView: one("LinkPreviewImageView", {
+            identifying: true,
+            inverse: "linkPreviewAsideView",
+        }),
+        linkPreviewVideoView: one("LinkPreviewVideoView", {
+            identifying: true,
+            inverse: "linkPreviewAsideView",
+        }),
     },
 });

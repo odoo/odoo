@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 Model({
-    name: 'MailTemplateView',
-    template: 'mail.MailTemplateView',
+    name: "MailTemplateView",
+    template: "mail.MailTemplateView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -30,7 +30,7 @@ Model({
         },
     },
     fields: {
-        activity: one('Activity', {
+        activity: one("Activity", {
             compute() {
                 if (this.activityViewOwner) {
                     return this.activityViewOwner.activity;
@@ -38,10 +38,10 @@ Model({
                 if (this.activityListViewItemOwner) {
                     return this.activityListViewItemOwner.activity;
                 }
-            }
+            },
         }),
-        activityListViewItemOwner: one('ActivityListViewItem', { inverse: 'mailTemplateViews' }),
-        activityViewOwner: one('ActivityView', { inverse: 'mailTemplateViews' }),
-        mailTemplate: one('MailTemplate', { identifying: true }),
+        activityListViewItemOwner: one("ActivityListViewItem", { inverse: "mailTemplateViews" }),
+        activityViewOwner: one("ActivityView", { inverse: "mailTemplateViews" }),
+        mailTemplate: one("MailTemplate", { identifying: true }),
     },
 });

@@ -1,20 +1,20 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, many, one, Model } from '@mail/model';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'MessagingMenu',
-    template: 'mail.MessagingMenu',
+    name: "MessagingMenu",
+    template: "mail.MessagingMenu",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
+        useComponentToModel({ fieldName: "component" });
     },
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -66,16 +66,16 @@ Model({
          */
         onMobileNewMessageInputSource(req, res) {
             const value = _.escape(req.term);
-            this.messaging.models['Partner'].imSearch({
-                callback: partners => {
-                    const suggestions = partners.map(partner => {
+            this.messaging.models["Partner"].imSearch({
+                callback: (partners) => {
+                    const suggestions = partners.map((partner) => {
                         return {
                             id: partner.id,
                             value: partner.nameOrDisplayName,
                             label: partner.nameOrDisplayName,
                         };
                     });
-                    res(_.sortBy(suggestions, 'label'));
+                    res(_.sortBy(suggestions, "label"));
                 },
                 keyword: value,
                 limit: 10,
@@ -121,14 +121,14 @@ Model({
         },
     },
     fields: {
-        activeTab: one('MessagingMenuTabView', {
+        activeTab: one("MessagingMenuTabView", {
             compute() {
                 switch (this.activeTabId) {
-                    case 'all':
+                    case "all":
                         return this.allTab;
-                    case 'channel':
+                    case "channel":
                         return this.channelTab;
-                    case 'chat':
+                    case "chat":
                         return this.chatTab;
                 }
             },
@@ -137,8 +137,9 @@ Model({
          * Tab selected in the messaging menu.
          * Either 'all', 'chat' or 'channel'.
          */
-        activeTabId: attr({ default: 'all' }),
-        allTab: one('MessagingMenuTabView', { inverse: 'ownerAsAll',
+        activeTabId: attr({ default: "all" }),
+        allTab: one("MessagingMenuTabView", {
+            inverse: "ownerAsAll",
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
                     return {};
@@ -146,7 +147,8 @@ Model({
                 return clear();
             },
         }),
-        channelTab: one('MessagingMenuTabView', { inverse: 'ownerAsChannel',
+        channelTab: one("MessagingMenuTabView", {
+            inverse: "ownerAsChannel",
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
                     return {};
@@ -154,7 +156,8 @@ Model({
                 return clear();
             },
         }),
-        chatTab: one('MessagingMenuTabView', { inverse: 'ownerAsChat',
+        chatTab: one("MessagingMenuTabView", {
+            inverse: "ownerAsChat",
             compute() {
                 if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
                     return {};
@@ -175,12 +178,18 @@ Model({
                 }
                 const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
                 const unreadChannelsCounter = this.pinnedAndUnreadChannels.length;
-                const notificationGroupsCounter = this.messaging.models['NotificationGroup'].all().reduce(
-                    (total, group) => total + group.notifications.length,
-                    0
+                const notificationGroupsCounter = this.messaging.models["NotificationGroup"]
+                    .all()
+                    .reduce((total, group) => total + group.notifications.length, 0);
+                const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault
+                    ? 1
+                    : 0;
+                return (
+                    inboxCounter +
+                    unreadChannelsCounter +
+                    notificationGroupsCounter +
+                    notificationPemissionCounter
                 );
-                const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
-                return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
             },
         }),
         /**
@@ -191,7 +200,8 @@ Model({
          * Determine whether the messaging menu dropdown is open or not.
          */
         isOpen: attr({ default: false }),
-        notificationListView: one('NotificationListView', { inverse: 'messagingMenuOwner',
+        notificationListView: one("NotificationListView", {
+            inverse: "messagingMenuOwner",
             compute() {
                 return this.isOpen ? {} : clear();
             },
@@ -199,7 +209,8 @@ Model({
         /**
          * The navbar view on the messaging menu when in mobile.
          */
-        mobileMessagingNavbarView: one('MobileMessagingNavbarView', { inverse: 'messagingMenu',
+        mobileMessagingNavbarView: one("MobileMessagingNavbarView", {
+            inverse: "messagingMenu",
             compute() {
                 if (this.messaging.device && this.messaging.device.isSmall) {
                     return {};
@@ -207,9 +218,15 @@ Model({
                 return clear();
             },
         }),
-        mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', { inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
+        mobileNewMessageAutocompleteInputView: one("AutocompleteInputView", {
+            inverse: "messagingMenuOwnerAsMobileNewMessageInput",
             compute() {
-                if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isSmall && this.isMobileNewMessageToggled) {
+                if (
+                    this.isOpen &&
+                    this.messaging.isInitialized &&
+                    this.messaging.device.isSmall &&
+                    this.isMobileNewMessageToggled
+                ) {
                     return {};
                 }
                 return clear();
@@ -223,7 +240,10 @@ Model({
         /**
          * States all the pinned channels that have unread messages.
          */
-        pinnedAndUnreadChannels: many('Thread', { inverse: 'messagingMenuAsPinnedAndUnreadChannel', readonly: true }),
+        pinnedAndUnreadChannels: many("Thread", {
+            inverse: "messagingMenuAsPinnedAndUnreadChannel",
+            readonly: true,
+        }),
         /**
          * global JS generated ID for this record view. Useful to provide a
          * custom class to autocomplete input, so that click in an autocomplete
@@ -231,7 +251,7 @@ Model({
          */
         viewId: attr({
             compute() {
-                return _.uniqueId('o_messagingMenu_');
+                return _.uniqueId("o_messagingMenu_");
             },
         }),
     },

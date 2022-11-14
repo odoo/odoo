@@ -1,22 +1,29 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'ThreadTypingIconView',
-    template: 'mail.ThreadTypingIconView',
-    identifyingMode: 'xor',
+    name: "ThreadTypingIconView",
+    template: "mail.ThreadTypingIconView",
+    identifyingMode: "xor",
     fields: {
-        size: attr({ default: 'small',
+        size: attr({
+            default: "small",
             compute() {
                 if (this.threadTextualTypingStatusViewOwner) {
-                    return 'medium';
+                    return "medium";
                 }
                 return clear();
             },
         }),
-        threadIconViewOwner: one('ThreadIconView', { identifying: true, inverse: 'threadTypingIconView' }),
-        threadTextualTypingStatusViewOwner: one('ThreadTextualTypingStatusView', { identifying: true, inverse: 'threadTypingIconView' }),
+        threadIconViewOwner: one("ThreadIconView", {
+            identifying: true,
+            inverse: "threadTypingIconView",
+        }),
+        threadTextualTypingStatusViewOwner: one("ThreadTextualTypingStatusView", {
+            identifying: true,
+            inverse: "threadTypingIconView",
+        }),
         title: attr({
             compute() {
                 if (this.threadIconViewOwner) {

@@ -1,28 +1,27 @@
 /** @odoo-module **/
 
-import { useUpdate } from '@mail/component_hooks/use_update';
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useUpdate } from "@mail/component_hooks/use_update";
+import { registerMessagingComponent } from "@mail/utils/messaging_component";
 
 import { useService } from "@web/core/utils/hooks";
-import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-import { Component, useRef } from '@odoo/owl';
+import { Component, useRef } from "@odoo/owl";
 
 export class ComposerSuggestedRecipientView extends Component {
-
     /**
      * @override
      */
     setup() {
         super.setup();
-        this.id = _.uniqueId('o_ComposerSuggestedRecipientView_');
+        this.id = _.uniqueId("o_ComposerSuggestedRecipientView_");
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the checkbox. Useful to know whether it was checked or
          * not, to properly update the corresponding state in the record or to
          * prompt the user with the partner creation dialog.
          */
-        this._checkboxRef = useRef('checkbox');
+        this._checkboxRef = useRef("checkbox");
         this.dialogService = useService("dialog");
     }
 
@@ -70,13 +69,17 @@ export class ComposerSuggestedRecipientView extends Component {
             if (isChecked) {
                 this.dialogService.add(FormViewDialog, {
                     context: {
-                        active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread.id,
-                        active_model: 'mail.compose.message',
-                        default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo.email,
-                        default_name: this.composerSuggestedRecipientView.suggestedRecipientInfo.name,
-                        default_lang: this.composerSuggestedRecipientView.suggestedRecipientInfo.lang,
+                        active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread
+                            .id,
+                        active_model: "mail.compose.message",
+                        default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo
+                            .email,
+                        default_name: this.composerSuggestedRecipientView.suggestedRecipientInfo
+                            .name,
+                        default_lang: this.composerSuggestedRecipientView.suggestedRecipientInfo
+                            .lang,
                         force_email: true,
-                        ref: 'compound_context',
+                        ref: "compound_context",
                     },
                     onRecordSaved: () => this._onDialogSaved(),
                     resModel: "res.partner",
@@ -93,20 +96,19 @@ export class ComposerSuggestedRecipientView extends Component {
         if (!this.composerSuggestedRecipientView.exists()) {
             return;
         }
-        const thread = (
+        const thread =
             this.composerSuggestedRecipientView.suggestedRecipientInfo &&
-            this.composerSuggestedRecipientView.suggestedRecipientInfo.thread
-        );
+            this.composerSuggestedRecipientView.suggestedRecipientInfo.thread;
         if (!thread) {
             return;
         }
-        thread.fetchData(['suggestedRecipients']);
+        thread.fetchData(["suggestedRecipients"]);
     }
 }
 
 Object.assign(ComposerSuggestedRecipientView, {
     props: { record: Object },
-    template: 'mail.ComposerSuggestedRecipientView',
+    template: "mail.ComposerSuggestedRecipientView",
 });
 
 registerMessagingComponent(ComposerSuggestedRecipientView);

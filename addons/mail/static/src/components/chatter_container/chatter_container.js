@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
-import { clear } from '@mail/model';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
+import { clear } from "@mail/model";
 
-import { Component, onWillDestroy, onWillUpdateProps } from '@odoo/owl';
+import { Component, onWillDestroy, onWillUpdateProps } from "@odoo/owl";
 
 export const getChatterNextTemporaryId = (function () {
     let tmpId = 0;
@@ -22,7 +22,6 @@ export const getChatterNextTemporaryId = (function () {
  * this component delays the mounting of chatter until it becomes initialized.
  */
 export class ChatterContainer extends Component {
-
     /**
      * @override
      */
@@ -31,7 +30,7 @@ export class ChatterContainer extends Component {
         super.setup();
         this.localChatter = undefined;
         this._insertFromProps(this.props);
-        onWillUpdateProps(nextProps => {
+        onWillUpdateProps((nextProps) => {
             this._insertFromProps(nextProps);
         });
         onWillDestroy(() => this.deleteLocalChatter());
@@ -67,7 +66,10 @@ export class ChatterContainer extends Component {
         }
         const hasToCreateChatter = !props.chatter && !this.localChatter;
         if (hasToCreateChatter) {
-            this.localChatter = messaging.models['Chatter'].insert({ id: getChatterNextTemporaryId(), ...values });
+            this.localChatter = messaging.models["Chatter"].insert({
+                id: getChatterNextTemporaryId(),
+                ...values,
+            });
         }
         const chatter = props.chatter || this.localChatter;
         if (!hasToCreateChatter) {
@@ -98,7 +100,6 @@ export class ChatterContainer extends Component {
         }
         this.render();
     }
-
 }
 
 Object.assign(ChatterContainer, {
@@ -163,7 +164,7 @@ Object.assign(ChatterContainer, {
         webRecord: {
             type: Object,
             optional: true,
-        }
+        },
     },
-    template: 'mail.ChatterContainer',
+    template: "mail.ChatterContainer",
 });

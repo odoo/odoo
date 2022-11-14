@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, many, one, Model } from '@mail/model';
+import { attr, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'ActivityGroup',
+    name: "ActivityGroup",
     modelMethods: {
         convertData(data) {
             return {
@@ -28,16 +28,16 @@ Model({
          * @private
          */
         _onChangeTotalCount() {
-            if (this.type === 'activity' && this.total_count === 0) {
+            if (this.type === "activity" && this.total_count === 0) {
                 this.delete();
             }
         },
     },
     fields: {
         actions: attr(),
-        activityGroupViews: many('ActivityGroupView', { inverse: 'activityGroup' }),
+        activityGroupViews: many("ActivityGroupView", { inverse: "activityGroup" }),
         domain: attr(),
-        irModel: one('ir.model', { identifying: true, inverse: 'activityGroup' }),
+        irModel: one("ir.model", { identifying: true, inverse: "activityGroup" }),
         overdue_count: attr({ default: 0 }),
         planned_count: attr({ default: 0 }),
         today_count: attr({ default: 0 }),
@@ -46,8 +46,8 @@ Model({
     },
     onChanges: [
         {
-            dependencies: ['total_count', 'type'],
-            methodName: '_onChangeTotalCount',
+            dependencies: ["total_count", "type"],
+            methodName: "_onChangeTotalCount",
         },
     ],
 });

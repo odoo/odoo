@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, decrement, increment, one, Model } from '@mail/model';
+import { attr, decrement, increment, one, Model } from "@mail/model";
 
 Model({
-    name: 'DropZoneView',
-    template: 'mail.DropZoneView',
-    identifyingMode: 'xor',
+    name: "DropZoneView",
+    template: "mail.DropZoneView",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Shows a visual drop effect when dragging inside the dropzone.
@@ -44,7 +44,7 @@ Model({
          */
         onDragover(ev) {
             ev.preventDefault();
-            ev.dataTransfer.dropEffect = 'copy';
+            ev.dataTransfer.dropEffect = "copy";
         },
         /**
          * Removes the visual drop effect.
@@ -82,17 +82,17 @@ Model({
         _isDragSourceExternalFile(dataTransfer) {
             const dragDataType = dataTransfer.types;
             if (dragDataType.constructor === window.DOMStringList) {
-                return dragDataType.contains('Files');
+                return dragDataType.contains("Files");
             }
             if (dragDataType.constructor === Array) {
-                return dragDataType.includes('Files');
+                return dragDataType.includes("Files");
             }
             return false;
         },
     },
     fields: {
-        chatterOwner: one('Chatter', { identifying: true, inverse: 'dropZoneView' }),
-        composerViewOwner: one('ComposerView', { identifying: true, inverse: 'dropZoneView' }),
+        chatterOwner: one("Chatter", { identifying: true, inverse: "dropZoneView" }),
+        composerViewOwner: one("ComposerView", { identifying: true, inverse: "dropZoneView" }),
         /**
          * Counts how many drag enter/leave happened on self and children. This
          * ensures the drop effect stays active when dragging over a child.

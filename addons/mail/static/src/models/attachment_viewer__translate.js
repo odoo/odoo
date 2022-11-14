@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 /**
  * Tracked translate transformations on image visualisation. This is
@@ -10,11 +10,11 @@ import { attr, one, Model } from '@mail/model';
  * position changes while dragging)
  */
 Model({
-    name: 'AttachmentViewer.Translate',
+    name: "AttachmentViewer.Translate",
     fields: {
         dx: attr({ default: 0 }),
         dy: attr({ default: 0 }),
-        owner: one('AttachmentViewer', { identifying: true, inverse: 'translate' }),
+        owner: one("AttachmentViewer", { identifying: true, inverse: "translate" }),
         x: attr({ default: 0 }),
         y: attr({ default: 0 }),
     },

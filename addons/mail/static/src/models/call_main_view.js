@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, many, one, Model } from '@mail/model';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
-import { onMounted, onWillUnmount } from '@odoo/owl';
+import { onMounted, onWillUnmount } from "@odoo/owl";
 
 Model({
-    name: 'CallMainView',
-    template: 'mail.CallMainView',
+    name: "CallMainView",
+    template: "mail.CallMainView",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate' });
+        useComponentToModel({ fieldName: "component" });
+        useUpdateToModel({ methodName: "onComponentUpdate" });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.onResize());
             this.resizeObserver.observe(this.root.el);
@@ -92,7 +92,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onMouseleave(ev) {
-            if (ev.relatedTarget && ev.relatedTarget.closest('.o_CallActionListView_popover')) {
+            if (ev.relatedTarget && ev.relatedTarget.closest(".o_CallActionListView_popover")) {
                 // the overlay should not be hidden when the cursor leaves to enter the controller popover
                 return;
             }
@@ -108,7 +108,7 @@ Model({
             if (!this.exists()) {
                 return;
             }
-            if (isEventHandled(ev, 'CallMainView.MouseMoveOverlay')) {
+            if (isEventHandled(ev, "CallMainView.MouseMoveOverlay")) {
                 return;
             }
             this._showOverlay();
@@ -120,7 +120,7 @@ Model({
             if (!this.exists()) {
                 return;
             }
-            markEventHandled(ev, 'CallMainView.MouseMoveOverlay');
+            markEventHandled(ev, "CallMainView.MouseMoveOverlay");
             this.update({
                 showOverlay: true,
                 showOverlayTimer: clear(),
@@ -175,37 +175,52 @@ Model({
         /**
          * The model for the controller (buttons).
          */
-        callActionListView: one('CallActionListView', { default: {}, inverse: 'callMainView', readonly: true }),
-        callView: one('CallView', { identifying: true, inverse: 'callMainView' }),
+        callActionListView: one("CallActionListView", {
+            default: {},
+            inverse: "callMainView",
+            readonly: true,
+        }),
+        callView: one("CallView", { identifying: true, inverse: "callMainView" }),
         component: attr(),
         hasSidebarButton: attr({
             compute() {
-                return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
+                return Boolean(
+                    this.callView.activeRtcSession &&
+                        this.showOverlay &&
+                        !this.callView.threadView.compact
+                );
             },
         }),
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
-        isControllerFloating: attr({ default: false,
+        isControllerFloating: attr({
+            default: false,
             compute() {
-                return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
+                return Boolean(
+                    this.callView.isFullScreen ||
+                        (this.callView.activeRtcSession && !this.callView.threadView.compact)
+                );
             },
         }),
-        mainTiles: many('CallMainViewTile', { inverse: 'callMainViewOwner',
+        mainTiles: many("CallMainViewTile", {
+            inverse: "callMainViewOwner",
             compute() {
                 if (this.callView.activeRtcSession) {
                     return [{ channelMember: this.callView.activeRtcSession.channelMember }];
                 }
-                return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
+                return this.callView.filteredChannelMembers.map((channelMember) => ({
+                    channelMember,
+                }));
             },
         }),
         /**
          * Determines if we show the overlay with the control buttons.
          */
         showOverlay: attr({ default: true }),
-        showOverlayTimer: one('Timer', { inverse: 'callMainViewAsShowOverlay' }),
-        thread: one('Thread', { related: 'callView.thread', required: true }),
-        tileContainerRef: attr({ ref: 'tileContainer' }),
+        showOverlayTimer: one("Timer", { inverse: "callMainViewAsShowOverlay" }),
+        thread: one("Thread", { related: "callView.thread", required: true }),
+        tileContainerRef: attr({ ref: "tileContainer" }),
         tileHeight: attr({ default: 0 }),
         tileWidth: attr({ default: 0 }),
     },

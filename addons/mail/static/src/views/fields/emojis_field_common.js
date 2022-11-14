@@ -1,20 +1,22 @@
 /** @odoo-module **/
 
-import MailEmojisMixin from '@mail/js/emojis_mixin';
+import MailEmojisMixin from "@mail/js/emojis_mixin";
 
 const _onEmojiClickMixin = MailEmojisMixin.onEmojiClick;
-import { useRef, onMounted } from '@odoo/owl';
+import { useRef, onMounted } from "@odoo/owl";
 
 /*
  * Common code for EmojisTextField and EmojisCharField
  */
 export const EmojisFieldCommon = {
     _setupOverride() {
-        this.targetReadonlyElement = useRef('targetReadonlyElement');
-        this.emojisDropdown = useRef('emojisDropdown');
+        this.targetReadonlyElement = useRef("targetReadonlyElement");
+        this.emojisDropdown = useRef("emojisDropdown");
         if (this.props.readonly) {
             onMounted(() => {
-                this.targetReadonlyElement.el.innerHTML = this._formatText(this.targetReadonlyElement.el.textContent);
+                this.targetReadonlyElement.el.innerHTML = this._formatText(
+                    this.targetReadonlyElement.el.textContent
+                );
             });
         }
         this.onEmojiClick = this._onEmojiClick.bind(this);

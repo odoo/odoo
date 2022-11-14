@@ -1,22 +1,22 @@
 /** @odoo-module **/
 
-import '@mail/js/activity';
+import "@mail/js/activity";
 
-import BasicController from 'web.BasicController';
-import core from 'web.core';
-import { sprintf } from '@web/core/utils/strings';
+import BasicController from "web.BasicController";
+import core from "web.core";
+import { sprintf } from "@web/core/utils/strings";
 
-import { SelectCreateDialog } from '@web/views/view_dialogs/select_create_dialog';
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-import { Component } from '@odoo/owl';
+import { Component } from "@odoo/owl";
 var _t = core._t;
 
 var ActivityController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
-        empty_cell_clicked: '_onEmptyCell',
-        reload_data: '_onReloadData',
-        send_mail_template: '_onSendMailTemplate',
-        schedule_activity: '_onScheduleActivity',
+        empty_cell_clicked: "_onEmptyCell",
+        reload_data: "_onReloadData",
+        send_mail_template: "_onSendMailTemplate",
+        schedule_activity: "_onScheduleActivity",
     }),
 
     //--------------------------------------------------------------------------
@@ -58,7 +58,7 @@ var ActivityController = BasicController.extend({
      * @private
      */
     _onReloadData() {
-        this.trigger_up('reload');
+        this.trigger_up("reload");
     },
     /**
      * @private
@@ -73,11 +73,14 @@ var ActivityController = BasicController.extend({
             noCreate: !this.activeActions.create,
             multiSelect: false,
             context: state.context,
-            onSelected: async resIds => {
+            onSelected: async (resIds) => {
                 const messaging = await owl.Component.env.services.messaging.get();
-                const thread = messaging.models['Thread'].insert({ id: resIds[0], model: this.model.modelName });
+                const thread = messaging.models["Thread"].insert({
+                    id: resIds[0],
+                    model: this.model.modelName,
+                });
                 await messaging.openActivityForm({ thread });
-                this.trigger_up('reload');
+                this.trigger_up("reload");
             },
         });
     },
@@ -87,22 +90,25 @@ var ActivityController = BasicController.extend({
      */
     _onEmptyCell: function (ev) {
         var state = this.model.get(this.handle);
-        this.do_action({
-            type: 'ir.actions.act_window',
-            res_model: 'mail.activity',
-            view_mode: 'form',
-            view_type: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: ev.data.resId,
-                default_res_model: state.model,
-                default_activity_type_id: ev.data.activityTypeId,
+        this.do_action(
+            {
+                type: "ir.actions.act_window",
+                res_model: "mail.activity",
+                view_mode: "form",
+                view_type: "form",
+                views: [[false, "form"]],
+                target: "new",
+                context: {
+                    default_res_id: ev.data.resId,
+                    default_res_model: state.model,
+                    default_activity_type_id: ev.data.activityTypeId,
+                },
+                res_id: false,
             },
-            res_id: false,
-        }, {
-            on_close: this.reload.bind(this),
-        });
+            {
+                on_close: this.reload.bind(this),
+            }
+        );
     },
     /**
      * @private
@@ -123,7 +129,7 @@ var ActivityController = BasicController.extend({
         });
         this._rpc({
             model: this.model.modelName,
-            method: 'activity_send_mail',
+            method: "activity_send_mail",
             args: [resIDS, templateID],
         });
     },

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'Emoji',
+    name: "Emoji",
     recordMethods: {
         /**
          * Compares two strings
@@ -30,8 +30,9 @@ Model({
          * @returns {boolean}
          */
         _isStringInEmojiKeywords(string) {
-            for (let index in this.searchData) {
-                if (this._fuzzySearch(this.searchData[index], string)) { //If at least one correspondence is found, return true.
+            for (const index in this.searchData) {
+                if (this._fuzzySearch(this.searchData[index], string)) {
+                    //If at least one correspondence is found, return true.
                     return true;
                 }
             }
@@ -39,13 +40,15 @@ Model({
         },
     },
     fields: {
-        allEmojiInCategoryOfCurrent: many('EmojiInCategory', { inverse: 'emoji',
+        allEmojiInCategoryOfCurrent: many("EmojiInCategory", {
+            inverse: "emoji",
             compute() {
-                return this.emojiCategories.map(category => ({ category }));
+                return this.emojiCategories.map((category) => ({ category }));
             },
         }),
         codepoints: attr({ identifying: true }),
-        emojiCategories: many('EmojiCategory', { inverse: 'allEmojis',
+        emojiCategories: many("EmojiCategory", {
+            inverse: "allEmojis",
             compute() {
                 if (!this.emojiRegistry) {
                     return clear();
@@ -53,9 +56,11 @@ Model({
                 return [this.emojiDataCategory];
             },
         }),
-        emojiDataCategory: one('EmojiCategory'),
-        emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', { inverse: 'emoji' }),
-        emojiRegistry: one('EmojiRegistry', { inverse: 'allEmojis', required: true,
+        emojiDataCategory: one("EmojiCategory"),
+        emojiOrEmojiInCategory: many("EmojiOrEmojiInCategory", { inverse: "emoji" }),
+        emojiRegistry: one("EmojiRegistry", {
+            inverse: "allEmojis",
+            required: true,
             compute() {
                 if (!this.messaging) {
                     return clear();
@@ -63,7 +68,7 @@ Model({
                 return this.messaging.emojiRegistry;
             },
         }),
-        emojiViews: many('EmojiView', { inverse: 'emoji', readonly: true }),
+        emojiViews: many("EmojiView", { inverse: "emoji", readonly: true }),
         emoticons: attr(),
         keywords: attr(),
         name: attr({ readonly: true }),

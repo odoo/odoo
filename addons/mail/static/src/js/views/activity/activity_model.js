@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import BasicModel from 'web.BasicModel';
-import session from 'web.session';
+import BasicModel from "web.BasicModel";
+import session from "web.session";
 
 const ActivityModel = BasicModel.extend({
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -19,7 +18,7 @@ const ActivityModel = BasicModel.extend({
      */
     __get: function () {
         var result = this._super.apply(this, arguments);
-        if (result && result.model === this.modelName && result.type === 'list') {
+        if (result && result.model === this.modelName && result.type === "list") {
             _.extend(result, this.additionalData);
         }
         return result;
@@ -30,7 +29,7 @@ const ActivityModel = BasicModel.extend({
      */
     __load: function (params) {
         this.originalDomain = _.extend([], params.domain);
-        params.domain.push(['activity_ids', '!=', false]);
+        params.domain.push(["activity_ids", "!=", false]);
         this.domain = params.domain;
         this.modelName = params.modelName;
         params.groupedBy = [];
@@ -44,12 +43,12 @@ const ActivityModel = BasicModel.extend({
      * @param {Array[]} [params.domain]
      */
     __reload: function (handle, params) {
-        if (params && 'domain' in params) {
+        if (params && "domain" in params) {
             this.originalDomain = _.extend([], params.domain);
-            params.domain.push(['activity_ids', '!=', false]);
+            params.domain.push(["activity_ids", "!=", false]);
             this.domain = params.domain;
         }
-        if (params && 'groupBy' in params) {
+        if (params && "groupBy" in params) {
             params.groupBy = [];
         }
         var def = this._super.apply(this, arguments);
@@ -72,12 +71,12 @@ const ActivityModel = BasicModel.extend({
         var self = this;
         return this._rpc({
             model: "mail.activity",
-            method: 'get_activity_data',
+            method: "get_activity_data",
             kwargs: {
                 res_model: this.modelName,
                 domain: this.domain,
                 context: session.user_context,
-            }
+            },
         }).then(function (result) {
             self.additionalData = result;
         });

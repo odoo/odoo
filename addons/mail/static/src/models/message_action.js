@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'MessageAction',
-    identifyingMode: 'xor',
+    name: "MessageAction",
+    identifyingMode: "xor",
     fields: {
         isNonCompactActionContribution: attr({
             compute() {
@@ -14,7 +14,9 @@ Model({
                 return 1;
             },
         }),
-        messageActionListOwner: one('MessageActionList', { inverse: 'messageActions', required: true,
+        messageActionListOwner: one("MessageActionList", {
+            inverse: "messageActions",
+            required: true,
             compute() {
                 if (this.messageActionListOwnerAsDelete) {
                     return this.messageActionListOwnerAsDelete;
@@ -34,14 +36,36 @@ Model({
                 return clear();
             },
         }),
-        messageActionListOwnerAsDelete: one('MessageActionList', { identifying: true, inverse: 'actionDelete' }),
-        messageActionListOwnerAsEdit: one('MessageActionList', { identifying: true, inverse: 'actionEdit' }),
-        messageActionListOwnerAsMarkAsRead: one('MessageActionList', { identifying: true, inverse: 'actionMarkAsRead' }),
-        messageActionListOwnerAsReaction: one('MessageActionList', { identifying: true, inverse: 'actionReaction' }),
-        messageActionListOwnerAsReplyTo: one('MessageActionList', { identifying: true, inverse: 'actionReplyTo' }),
-        messageActionListOwnerAsToggleCompact: one('MessageActionList', { identifying: true, inverse: 'actionToggleCompact' }),
-        messageActionListOwnerAsToggleStar: one('MessageActionList', { identifying: true, inverse: 'actionToggleStar' }),
-        messageActionView: one('MessageActionView', { inverse: 'messageAction',
+        messageActionListOwnerAsDelete: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionDelete",
+        }),
+        messageActionListOwnerAsEdit: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionEdit",
+        }),
+        messageActionListOwnerAsMarkAsRead: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionMarkAsRead",
+        }),
+        messageActionListOwnerAsReaction: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionReaction",
+        }),
+        messageActionListOwnerAsReplyTo: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionReplyTo",
+        }),
+        messageActionListOwnerAsToggleCompact: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionToggleCompact",
+        }),
+        messageActionListOwnerAsToggleStar: one("MessageActionList", {
+            identifying: true,
+            inverse: "actionToggleStar",
+        }),
+        messageActionView: one("MessageActionView", {
+            inverse: "messageAction",
             compute() {
                 /**
                  * Case 0: Always display Reaction and ToggleCompact if they are existing.
@@ -53,8 +77,11 @@ Model({
                 if (
                     this.messageActionListOwnerAsReaction ||
                     this.messageActionListOwnerAsToggleCompact ||
-                    (this.messageActionListOwner && !this.messageActionListOwner.actionToggleCompact) ||
-                    (this.messageActionListOwner && this.messageActionListOwner.actionToggleCompact && !this.messageActionListOwner.isCompact)
+                    (this.messageActionListOwner &&
+                        !this.messageActionListOwner.actionToggleCompact) ||
+                    (this.messageActionListOwner &&
+                        this.messageActionListOwner.actionToggleCompact &&
+                        !this.messageActionListOwner.isCompact)
                 ) {
                     return {};
                 }

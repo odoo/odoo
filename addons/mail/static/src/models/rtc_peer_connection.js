@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'RtcPeerConnection',
+    name: "RtcPeerConnection",
     lifecycleHooks: {
         _willDelete() {
             this.peerConnection.close();
-        }
+        },
     },
     recordMethods: {
         /**
@@ -22,15 +22,15 @@ Model({
          * @private
          */
         _onChangeAcceptsVideoStream() {
-            const transceiver = this.getTransceiver('video');
+            const transceiver = this.getTransceiver("video");
             if (!transceiver) {
                 return;
             }
             const rtc = this.rtcSession.rtcAsConnectedSession;
             if (this.acceptsVideoStream) {
-                transceiver.direction = rtc.videoTrack ? 'sendrecv' : 'recvonly';
+                transceiver.direction = rtc.videoTrack ? "sendrecv" : "recvonly";
             } else {
-                transceiver.direction = rtc.videoTrack ? 'sendonly' : 'inactive';
+                transceiver.direction = rtc.videoTrack ? "sendonly" : "inactive";
             }
         },
     },
@@ -43,7 +43,10 @@ Model({
              * The download is allowed when there are views that display the video stream.
              */
             compute() {
-                return Boolean(this.rtcSession.callParticipantCards && this.rtcSession.callParticipantCards.length > 0);
+                return Boolean(
+                    this.rtcSession.callParticipantCards &&
+                        this.rtcSession.callParticipantCards.length > 0
+                );
             },
         }),
         /**
@@ -51,12 +54,12 @@ Model({
          * If unset, this RTC Session is not considered as connected
          */
         peerConnection: attr(),
-        rtcSession: one('RtcSession', { identifying: true, inverse: 'rtcPeerConnection' }),
+        rtcSession: one("RtcSession", { identifying: true, inverse: "rtcPeerConnection" }),
     },
     onChanges: [
         {
-            dependencies: ['acceptsVideoStream'],
-            methodName: '_onChangeAcceptsVideoStream',
+            dependencies: ["acceptsVideoStream"],
+            methodName: "_onChangeAcceptsVideoStream",
         },
     ],
 });

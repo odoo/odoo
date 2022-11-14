@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
 import { debounce } from "@web/core/utils/timing";
-import { FieldChar } from 'web.basic_fields';
+import { FieldChar } from "web.basic_fields";
 
 FieldChar.include({
-
     //--------------------------------------------------------------------------
     // Public
     //-------------------------------------------------------------------------
@@ -20,9 +19,11 @@ FieldChar.include({
         if (this.nodeOptions.keydown_debounce_delay === undefined) {
             this.nodeOptions.keydown_debounce_delay = 2000;
         }
-        this._triggerOnchange = debounce(this._triggerOnchange, this.nodeOptions.keydown_debounce_delay);
+        this._triggerOnchange = debounce(
+            this._triggerOnchange,
+            this.nodeOptions.keydown_debounce_delay
+        );
     },
-
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -55,6 +56,6 @@ FieldChar.include({
      * @private
      */
     _triggerOnchange: function () {
-        this.$input.trigger('change');
+        this.$input.trigger("change");
     },
 });
