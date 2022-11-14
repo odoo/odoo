@@ -213,7 +213,7 @@ var PaymentAdyen = PaymentInterface.extend({
         }).then(function (status) {
             var notification = status.latest_response;
             var order = self.pos.get_order();
-            var line = self.pending_adyen_line();
+            var line = self.pending_adyen_line() || resolve(false);
 
             if (notification && notification.SaleToPOIResponse.MessageHeader.ServiceID == self.most_recent_service_id) {
                 var response = notification.SaleToPOIResponse.PaymentResponse.Response;
