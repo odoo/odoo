@@ -82,6 +82,10 @@ class StockMoveLine(models.Model):
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
+    done_product_qty = fields.Float(
+        'Real done quantity', compute='_compute_product_qty',
+        digits=0, store=True, compute_sudo=True,
+        help='Quantity in the default UoM of the product')
 
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
@@ -908,3 +912,9 @@ class StockMoveLine(models.Model):
                 'message': _("The inventory adjustments have been reverted."),
             }
         }
+
+    @api.depends('product_id', 'qty_done', 'product_uom_id')
+    def _compute_product_qty(self):
+        for ml in self:
+            ml.done_product_qty = ml.product_uom_id._compute_quantity(
+                ml.qty_done, ml.product_id.uom_id, rounding_method='HALF-UP')
