@@ -522,7 +522,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Alert'),
                 priority: 100,
-                description: this.env._t('Insert an alert snippet.'),
+                description: this.env._t('Insert an alert snippet'),
                 fontawesome: 'fa-info',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
@@ -532,7 +532,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Rating'),
                 priority: 90,
-                description: this.env._t('Insert a rating snippet.'),
+                description: this.env._t('Insert a rating snippet'),
                 fontawesome: 'fa-star-half-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
@@ -542,7 +542,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Card'),
                 priority: 80,
-                description: this.env._t('Insert a card snippet.'),
+                description: this.env._t('Insert a card snippet'),
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
@@ -552,7 +552,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Share'),
                 priority: 70,
-                description: this.env._t('Insert a share snippet.'),
+                description: this.env._t('Insert a share snippet'),
                 fontawesome: 'fa-share-square-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
@@ -562,7 +562,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Text Highlight'),
                 priority: 60,
-                description: this.env._t('Insert a text Highlight snippet.'),
+                description: this.env._t('Insert a text Highlight snippet'),
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
@@ -572,7 +572,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Chart'),
                 priority: 50,
-                description: this.env._t('Insert a chart snippet.'),
+                description: this.env._t('Insert a chart snippet'),
                 fontawesome: 'fa-bar-chart',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
@@ -582,7 +582,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Progress Bar'),
                 priority: 40,
-                description: this.env._t('Insert a progress bar snippet.'),
+                description: this.env._t('Insert a progress bar snippet'),
                 fontawesome: 'fa-spinner',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
@@ -592,7 +592,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Badge'),
                 priority: 30,
-                description: this.env._t('Insert a badge snippet.'),
+                description: this.env._t('Insert a badge snippet'),
                 fontawesome: 'fa-tags',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
@@ -602,7 +602,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Blockquote'),
                 priority: 20,
-                description: this.env._t('Insert a blockquote snippet.'),
+                description: this.env._t('Insert a blockquote snippet'),
                 fontawesome: 'fa-quote-left',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
@@ -612,7 +612,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 category: this.env._t('Website'),
                 name: this.env._t('Separator'),
                 priority: 10,
-                description: this.env._t('Insert an horizontal separator sippet.'),
+                description: this.env._t('Insert an horizontal separator snippet'),
                 fontawesome: 'fa-minus',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
