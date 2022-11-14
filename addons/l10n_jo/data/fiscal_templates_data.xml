@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_fiscal_position_jordan" model="account.fiscal.position.template">
+            <field name="name">Jordan</field>
+            <field name="sequence">19</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.jo"/>
+            <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        </record>
+
+        <record id="account_fiscal_position_non_jordan" model="account.fiscal.position.template">
+            <field name="name">Non-Jordan</field>
+            <field name="sequence">20</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        </record>
+
+        <record id="account_fiscal_position_tax_non_jordan_01" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="jo_standard_sale_16"/>
+            <field name="tax_dest_id" ref="jo_zero_sale_export"/>
+            <field name="position_id" ref="account_fiscal_position_non_jordan"/>
+        </record>
+
+        <record id="account_fiscal_position_tax_non_jordan_02" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="jo_standard_purchase_16"/>
+            <field name="tax_dest_id" ref="jo_standard_purchase_import_other"/>
+            <field name="position_id" ref="account_fiscal_position_non_jordan"/>
+        </record>
+    </data>
+</odoo>
