@@ -238,15 +238,12 @@ class Module(models.Model):
 
     @api.depends('icon')
     def _get_icon_image(self):
+        self.icon_image = ''
         for module in self:
-            module.icon_image = ''
-            if module.icon:
-                path_parts = module.icon.split('/')
-                path = modules.get_module_resource(path_parts[1], *path_parts[2:])
-            elif module.id:
-                path = modules.module.get_module_icon(module.name)
-            else:
-                path = ''
+            if not module.id:
+                continue
+            icon = module.icon or modules.module.get_module_icon(module.name)
+            path = modules.get_module_resource(*icon.split("/")[1:])
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
