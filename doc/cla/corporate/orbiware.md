@@ -1,4 +1,4 @@
-Colombia, Nov 14 2022
+Colombia, 2022-11-14
 
 Orbiware agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
