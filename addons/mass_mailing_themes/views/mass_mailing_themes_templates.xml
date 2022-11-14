@@ -33,6 +33,9 @@
             <div data-name="roadshow2" title="Roadshow Follow-up" data-layout-styles="background-color: rgb(255, 255, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/roadshow_followup_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
                 <t t-call="mass_mailing_themes.theme_roadshow2_template"/>
             </div>
+            <div data-name="training" title="Training" data-layout-styles="background-color: rgb(220, 234, 255) !important;" data-img="/mass_mailing_themes/static/src/img/theme_imgs/training_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
+                <t t-call="mass_mailing_themes.theme_training_template"/>
+            </div>
         </xpath>
     </template>
 
@@ -1266,7 +1269,7 @@
             </div>
         </div>
     </template>
-    
+
     <!-- Roadshow 1 -->
     <template id="theme_roadshow1_template">
         <style id="design-element">
@@ -1482,6 +1485,158 @@
                 <p>Thank you, once again, for your attendance at yesterday's event.</p>
                 <p>--</p>
                 <p>[speaker] &amp; [speaker]</p>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Training -->
+    <template id="theme_training_template">
+        <style id="design-element">
+            * :not(.fa) {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif !important;
+            }
+            h1 {
+                color: rgb(255, 255, 255);
+                font-size: 39px;
+            }
+            h3 {
+                color: rgb(20, 102, 184);
+            }
+            p, p > *, li, li > * {
+                color: rgb(91, 119, 143);
+                font-size: 14px;
+            }
+            a:not(.btn), a.btn.btn-link {
+                color: rgb(20, 102, 184);
+            }
+            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
+                color: rgb(255, 255, 255);
+                background-color: rgb(67, 128, 219);
+                font-size: 14px;
+            }
+            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
+                color: rgb(255, 255, 255);
+                background-color: rgb(255, 152, 0);
+            }
+            hr {
+                border-top-color: rgb(67, 129, 219);
+                border-top-width: 2px;
+            }
+        </style>
+        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(220, 234, 255);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4 pt16 pb16" style="text-align: center;">
+                        <a style="text-decoration:none;" href="#" target="_blank">
+                            <font style="font-size: 24px; background-color: rgb(20, 102, 184);" class="text-o-color-4">A+</font> <font style="color: rgb(20, 102, 184); font-size: 24px;"><span style="font-weight: normal">Training</span></font>
+                        </a>
+                    </div>
+                    <div class="col-lg-4" style="text-align: right;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="s_picture o_mail_snippet_general pt48 px-3 o_cc o_cc2 pb0" data-snippet="s_picture" data-name="Picture" placeholder="Type &quot;/&quot; for commands" style="background-color: rgb(67, 128, 219);">
+            <img class="img-fluid o_we_custom_image" src="/web_editor/image_shape/mass_mailing_themes.s_default_image_block_image/web_editor/composition/composition_organic_line.svg?c1=%23FF9800" data-shape="web_editor/composition/composition_organic_line" data-file-name="picture-composition_organic_line.svg" data-shape-colors="#FF9800;;;;" data-original-mimetype="image/jpeg"/>
+        </div>
+        <div class="s_title o_mail_snippet_general pt32 pb0" data-snippet="s_title" data-name="Title" style="background-color: rgb(67, 128, 219);">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1 pb32">
+                        <h1>Train with the best developers</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_mail_block_event o_mail_snippet_general bg-white" data-snippet="s_event" data-name="Event">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="s_col_no_bgcolor pt32 offset-lg-1 col-lg-10 pb0" style="padding-left: 0px; padding-right: 0px;">
+                        <div class="card bg-white h-100 rounded border" style="border-radius: 5px !important; border-color: rgb(233, 236, 239) !important; border-width: 0px !important;">
+                            <div class="card-body">
+                                <div class="s_title o_mail_snippet_general pb0 pt0" data-snippet="s_title" data-name="Title">
+                                    <div class="container s_allow_columns">
+                                        <h3 class="card-title">Software development training</h3>
+                                    </div>
+                                </div>
+                                <p><span style="font-weight: bolder;">25 September 2022 - 4:30 PM</span></p>
+                                <p><i class="fa fa-map-marker"/> London, United Kingdom​</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1 pb0">
+                        <p>Software developer training can be expensive, so we've compiled a list of free courses that are perfect for non-Computer Science graduates who want to upskill and learn to code.</p>
+                        <p>Universities may give us a shiny degrees, but it does not give us the <span style="font-weight: bolder;">practical skills we need to start an innovative career in tech</span>.</p>
+                        <p>Getting practical experience can be as likely as getting struck by lightning – <span style="font-style: italic;">thank you, coronavirus</span> – but, you can take things into your own hands and use your free time to upskill.</p>
+                        <p><span style="font-weight: bolder;">And what better field to upskill in than software development?</span> Jobs have been steadily booming for years, and will continue to do so. By taking some of these free courses, you can make your CV more competitive and your portfolio more interesting.</p>
+                        <p></p>
+                        <p><a href="#" target="_blank" class="btn btn-primary flat btn-lg"><span style="font-weight: bolder;">Register now</span></a></p>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        <div class="container s_allow_columns">
+            <div class="row">
+                <div class="offset-lg-1 col-lg-10">
+                    <p><img src="/mass_mailing_themes/static/src/img/theme_training/s_default_image_block_banner.jpg" class="img img-fluid o_we_custom_image" data-original-id="347" data-original-src="/mass_mailing_themes/static/src/img/theme_training/s_default_image_block_banner.jpg" data-mimetype="image/jpeg" style="width: 658px;"/></p>
+                </div>
+            </div>
+        </div>
+        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(220, 234, 255);">
+            <div class="container">
+                <div class="row">
+                    <div class="oe_img_bg o_bg_img_center pb88 pt104" style="background-image: url('/mass_mailing_themes/static/src/img/theme_training/see_you_soon.svg');">
+                        <div class="o_we_bg_filter" style="background-image: linear-gradient(0deg, rgb(67, 128, 219) 0%, rgba(67, 128, 219, 0.4) 100%);"/>
+                        <h1 style="text-align: center;">See you soon !</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb0" data-snippet="s_text_block" data-name="Text" style="background-color: rgb(220, 234, 255);">
+            <div class="container s_allow_columns">
+                <p style="text-align: center">
+                    <span style="font-size: 10px;">
+                        <font style="color: rgb(112, 157, 225);" class="o_default_snippet_text">You are receiving this email because you showed an interest in our previous events
+                        </font>
+                    </span>
+                </p>
+                <div class="s_hr o_mail_snippet_general pt0 pb16" data-snippet="s_hr" data-name="Separator">
+                    <hr class="s_hr_1px s_hr_solid w-50" contenteditable="false"/>
+                </div>
+            </div>
+        </div>
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(220, 234, 255); text-align: center;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg o_mail_footer_social pt8 pb8">
+                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
+                            <span class="fa fa-facebook" contenteditable="false">​</span>
+                        </a>
+                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                            <span class="fa fa-linkedin" contenteditable="false">​</span>
+                        </a>
+                        <a style="margin-left:10px" aria-label="Twitter" title="Twitter" href="https://twitter.com/Odoo">
+                            <span class="fa fa-twitter" contenteditable="false">​</span>
+                        </a>
+                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                            <span class="fa fa-instagram" contenteditable="false">​</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="o_mail_footer_links">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link o_default_snippet_text">Unsubscribe</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg">
+                        <p><span style="font-size: 10px;">
+                            © 2022 All Rights Reserved
+                        </span></p>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
