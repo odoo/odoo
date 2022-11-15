@@ -24,7 +24,7 @@ class SaleOrderLine(models.Model):
 
     def name_get(self):
         res = super().name_get()
-        with_price_unit = self.env.context.get('with_price_unit')
+        with_price_unit = self._context.get('with_price_unit', self._context.get('is_timesheet'))
         if with_price_unit:
             names = dict(res)
             result = []
