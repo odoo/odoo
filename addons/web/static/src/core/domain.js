@@ -6,7 +6,7 @@ import { toPyValue } from "./py_js/py_utils";
 
 /**
  * @typedef {import("./py_js/py_parser").AST} AST
- * @typedef {[string, string, any]} Condition
+ * @typedef {[string | 0 | 1, string, any]} Condition
  * @typedef {("&" | "|" | "!" | Condition)[]} DomainListRepr
  * @typedef {DomainListRepr | string | Domain} DomainRepr
  */
@@ -109,7 +109,9 @@ export class Domain {
     }
 }
 
+/** @type {Condition} */
 const TRUE_LEAF = [1, "=", 1];
+/** @type {Condition} */
 const FALSE_LEAF = [0, "=", 1];
 const TRUE_DOMAIN = new Domain([TRUE_LEAF]);
 const FALSE_DOMAIN = new Domain([FALSE_LEAF]);
