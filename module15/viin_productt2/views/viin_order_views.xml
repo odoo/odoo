@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<record id="viin_order_view_form" model="ir.ui.view">
+		<field name="name">viin.order.form</field>
+		<field name="model">viin.order</field>
+		<field name="arch" type="xml">
+			<form string="Order Form">
+				<header>
+
+				</header>
+				<sheet>
+					<group>
+						<field name="customer_id" />
+					</group>
+					<group>
+						<field name="product_ids" />
+					</group>
+					<group>
+						<div class="text-warning">
+
+							<group>
+								<field name="total_price"  />
+							</group>
+						</div>
+					</group>
+					<group>
+						<field name="note" />
+					</group>
+
+				</sheet>
+
+
+			</form>
+		</field>
+	</record>
+
+	<record id="viin_order_view_tree" model="ir.ui.view">
+		<field name="name">viin.order.tree</field>
+		<field name="model">viin.order</field>
+		<field name="arch" type="xml">
+			<tree string="order Tree">
+				<field name="order_code" />
+				<field name="note" />
+			</tree>
+		</field>
+	</record>
+
+
+
+</odoo>
+

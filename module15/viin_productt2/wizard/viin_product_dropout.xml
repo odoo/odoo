@@ -1,0 +1,31 @@
+<odoo>
+	<record id="viin_product_dropout_wizard_action"
+		model="ir.actions.act_window">
+		<field name="name">Dropout Reason</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">viin.product.dropout.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+
+	<record id="viin_product_dropout_wizard_form" model="ir.ui.view">
+		<field name="name">viin.product.dropout.wizard.form</field>
+		<field name="model">viin.product.dropout.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Dropout Reason">
+				<group>
+					<field name="product_id" invisible="1" />
+					<field name="dropout_reason" />
+				</group>
+				<footer>
+					<button name="action_confirm" string="Confirm" type="object"
+						class="oe_highlight" />
+					<button special="cancel" string="Cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+
+
+
+</odoo>
