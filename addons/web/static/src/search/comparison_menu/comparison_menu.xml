@@ -12,6 +12,7 @@
                     class="o_menu_item"
                     t-att-class="{ selected: item.isActive }"
                     onSelected="() => this.onComparisonSelected(item.id)"
+                    checked="item.isActive"
                     parentClosingMode="'none'"
                     t-esc="item.description"
                 />
