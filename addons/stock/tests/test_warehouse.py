@@ -629,3 +629,35 @@ class TestWarehouse(TestStockCommon):
         wh.save()
         self.assertEqual(warehouse.int_type_id.barcode, 'CH-INTERNAL')
         self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'CH/INT/')
+
+    def test_inventory_adjustment_use_default_warehouse(self):
+        """If a default warehouse is assigned to a user, make sure it is used by default when making an adjustment."""
+        wh = Form(self.env['stock.warehouse'])
+        wh.name = "Anor Londo"
+        wh.code = "GWYN"
+        warehouse = wh.save()
+
+        quant_form = Form(self.env['stock.quant']._set_view_context())
+        self.assertNotEqual(quant_form.location_id.warehouse_id, warehouse)
+
+        self.env.user.property_warehouse_id = warehouse
+        quant_form = Form(self.env['stock.quant']._set_view_context())
+        self.assertEqual(quant_form.location_id.warehouse_id, warehouse)
+
+    def test_picking_use_default_warehouse(self):
+        """If a default warehouse is assigned to a user, make sure it is used by default when creating a picking."""
+        wh = Form(self.env['stock.warehouse'])
+        wh.name = "Anor Londo"
+        wh.code = "GWYN"
+        warehouse = wh.save()
+
+        picking_form = Form(self.env['stock.picking'].with_context({
+            'restricted_picking_type_code': 'incoming'
+        }))
+        self.assertNotEqual(picking_form.picking_type_id.warehouse_id, warehouse)
+
+        self.env.user.property_warehouse_id = warehouse
+        picking_form = Form(self.env['stock.picking'].with_context({
+            'restricted_picking_type_code': 'incoming'
+        }))
+        self.assertEqual(picking_form.picking_type_id.warehouse_id, warehouse)

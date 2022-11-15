@@ -274,6 +274,19 @@ class PickingType(models.Model):
         for record in self:
             record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
 
+    def _get_warehouse_picking_action(self, action_xmlid):
+        action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
+        context = {
+            'search_default_my_warehouse': self.env.user.has_default_warehouse(),
+        }
+
+        action_context = literal_eval(action['context'])
+        context = {**action_context, **context}
+        action['context'] = context
+        return action
+
+    def get_stock_picking_action_overview(self):
+        return self._get_warehouse_picking_action('stock.stock_picking_type_action')
 
 class Picking(models.Model):
     _name = "stock.picking"
@@ -288,6 +301,8 @@ class Picking(models.Model):
                 ('code', '=', picking_type_code),
                 ('company_id', '=', self.env.company.id),
             ])
+            if self.env.user.has_default_warehouse():
+                return picking_types.filtered(lambda p: p.warehouse_id == self.env.user.property_warehouse_id)[:1].id
             return picking_types[:1].id
 
     name = fields.Char(
@@ -1609,3 +1624,37 @@ class Picking(models.Model):
             body=message,
         )
         return True
+
+    def _get_warehouse_picking_action(self, name, name2, picking_type_code):
+        context = {
+            'contact_display': 'partner_address',
+            'default_company_id': self.env.context['allowed_company_ids'][0],
+            'restricted_picking_type_code': picking_type_code,
+            'search_default_my_warehouse': self.env.user.has_default_warehouse(),
+        }
+
+        return {
+            'name': name,
+            'res_model': 'stock.picking',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,kanban,form,calendar',
+            'domain': "[('picking_type_code', '=', '%s' )]" % picking_type_code,
+            'context': context,
+            'search_view_id': [self.env.ref('stock.view_picking_internal_search').id, 'search'],
+            'help': _("""
+                <p class="o_view_nocontent_smiling_face">
+                    No %s found. Let's create one!
+                </p><p>
+                    %s allow you to get products from a partner.
+                </p>
+            """ % (name2, name))
+        }
+
+    def action_get_warehouse_picking_tree_incoming(self):
+        return self._get_warehouse_picking_action('Receipts', 'receipt', 'incoming')
+
+    def action_get_warehouse_picking_tree_outgoing(self):
+        return self._get_warehouse_picking_action('Deliveries', 'delivery', 'outgoing')
+
+    def action_get_warehouse_picking_tree_internal(self):
+        return self._get_warehouse_picking_action('Internal transfers', 'internal transfer', 'internal')

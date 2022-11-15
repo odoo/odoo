@@ -378,6 +378,7 @@
                         groups="stock.group_tracking_lot"/>
                     <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
+                    <filter name="my_warehouse" string="My Warehouse" domain="[('picking_type_id.warehouse_id.user_ids', 'in', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" help="Draft Moves"/>
@@ -429,51 +430,30 @@
             </field>
         </record>
 
-        <record id="action_picking_tree_incoming" model="ir.actions.act_window">
+        <record id="action_picking_tree_incoming" model="ir.actions.server">
             <field name="name">Receipts</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming'}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No receipt found. Let's create one!
-                </p><p>
-                    Receipts allow you to get products from a partner.
-                </p>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_get_warehouse_picking_tree_incoming()
             </field>
         </record>
 
-        <record id="action_picking_tree_outgoing" model="ir.actions.act_window">
+        <record id="action_picking_tree_outgoing" model="ir.actions.server">
             <field name="name">Deliveries</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing'}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No delivery found. Let's create one!
-                </p><p>
-                    Deliveries allow you to send products from your stock to a partner.
-                </p>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_get_warehouse_picking_tree_outgoing()
             </field>
         </record>
 
-        <record id="action_picking_tree_internal" model="ir.actions.act_window">
+        <record id="action_picking_tree_internal" model="ir.actions.server">
             <field name="name">Internal Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain">[('picking_type_code', '=', 'internal')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'internal'}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No internal transfer found. Let's create one!
-                </p><p>
-                    Internal transfers allow you to move products from one location to another.
-                </p>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_get_warehouse_picking_tree_internal()
             </field>
         </record>
 

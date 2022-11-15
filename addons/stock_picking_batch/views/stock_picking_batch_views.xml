@@ -227,6 +227,7 @@
                 <field name="user_id"/>
                 <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                 <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
+                <filter name="my_warehouse" string="My Warehouse" domain="[('picking_type_id.warehouse_id.user_ids', 'in', [uid, False])]"/>
                 <separator/>
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]" help="Batch Transfers not finished"/>
@@ -264,7 +265,15 @@
           </p>
         </field>
     </record>
-    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
+    <record id="stock_picking_batch_server_action" model="ir.actions.server">
+            <field name="name">Batch Transfers</field>
+            <field name="model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_get_warehouse_picking_tree_batch()
+            </field>
+        </record>
+    <menuitem action="stock_picking_batch_server_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
 
     <record id="vpicktree_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.tree</field>

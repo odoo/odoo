@@ -16,6 +16,9 @@ class Users(models.Model):
         # be also applied in sale_stock/models/sale_order.py/_init_column.
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
+    def has_default_warehouse(self):
+        return bool(self.env.user.property_warehouse_id)
+
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['property_warehouse_id']

@@ -380,6 +380,7 @@ class StockQuant(models.Model):
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
+        ctx['search_default_my_warehouse'] = self.env.user.has_default_warehouse()
         if self.user_has_groups('stock.group_stock_user') and not self.user_has_groups('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         action = {
@@ -1096,6 +1097,9 @@ class StockQuant(models.Model):
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
                 self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=not self.env.context.get('always_show_loc', False))
+
+        if self.env.user.has_default_warehouse():
+            self = self.with_context(default_location_id=self.env.user.property_warehouse_id.lot_stock_id.id)
 
         # If user have rights to write on quant, we set quants in inventory mode.
         if self.user_has_groups('stock.group_stock_user'):

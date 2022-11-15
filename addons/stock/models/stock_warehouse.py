@@ -86,6 +86,7 @@ class Warehouse(models.Model):
     resupply_route_ids = fields.One2many(
         'stock.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
+    user_ids = fields.One2many('res.users', 'property_warehouse_id', 'Users')
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the warehouses.")
     _sql_constraints = [

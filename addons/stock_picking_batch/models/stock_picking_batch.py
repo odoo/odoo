@@ -345,3 +345,6 @@ class StockPickingBatch(models.Model):
         if self.picking_type_id.batch_max_pickings:
             res = res and (len(self.picking_ids) + 1 <= self.picking_type_id.batch_max_pickings)
         return res
+
+    def action_get_warehouse_picking_tree_batch(self):
+        return self.picking_type_id._get_warehouse_picking_action('stock_picking_batch.stock_picking_batch_action')

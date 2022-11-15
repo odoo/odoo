@@ -29,6 +29,7 @@
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <group expand='0' string='Filters'>
+                    <filter name="my_warehouse" string="My Warehouse" domain="[('location_id.warehouse_id.user_ids', 'in', uid)]"/>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
