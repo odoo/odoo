@@ -1161,6 +1161,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 try:
                     recs._fetch_field(self)
                 except AccessError:
+                    if len(recs) == 1:
+                        raise
                     record._fetch_field(self)
                 if not env.cache.contains(record, self):
                     raise MissingError("\n".join([

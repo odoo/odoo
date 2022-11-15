@@ -203,6 +203,7 @@ class IrRule(models.Model):
         resolution_info = _("Contact your administrator to request access if necessary.")
 
         if not self.env.user.has_group('base.group_no_one') or not self.env.user.has_group('base.group_user'):
+            records.invalidate_recordset()
             return AccessError(f"{operation_error}\n\n{resolution_info}")
 
         # This extended AccessError is only displayed in debug mode.
