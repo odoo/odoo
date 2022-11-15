@@ -184,11 +184,6 @@ class Project(models.Model):
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
-    @api.depends('sale_line_id.product_uom_qty', 'sale_line_id.product_uom')
-    def _compute_allocated_hours(self):
-        # TODO: remove in master
-        return
-
     @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
     def _compute_sale_order_count(self):
         billable_projects = self.filtered('allow_billable')
