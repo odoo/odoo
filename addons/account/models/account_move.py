@@ -3760,7 +3760,7 @@ class AccountMove(models.Model):
         else:
             # Else we find one that's eligible and assign it to the invoice
             for candidate_method, _candidate_name in self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-                if self.partner_bank_id._eligible_for_qr_code(candidate_method, self.partner_id, self.currency_id):
+                if self.partner_bank_id._eligible_for_qr_code(candidate_method, self.partner_id, self.currency_id, raises_error=False):
                     qr_code_method = candidate_method
                     break
 
