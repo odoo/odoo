@@ -3602,6 +3602,33 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_many2one .o-autocomplete--dropdown-item");
     });
 
+    QUnit.test("many2one: domain set in view and on field", async function (assert) {
+        assert.expect(2);
+        serverData.models.partner.fields.trululu.domain = "[('foo' ,'=', 'boum')]";
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" invisible="1"/>
+                    <field name="trululu" domain="[['foo', '=', 'blip']]"/>
+                </tree>`,
+            mockRPC(route, { kwargs, method }) {
+                if (method === "name_search") {
+                    // should only use the domain set in the view
+                    assert.deepEqual(kwargs.args, [["foo", "=", "blip"]]);
+                }
+            },
+        });
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        await click(target, ".o_field_many2one input");
+
+        assert.containsOnce(target, ".o_field_many2one .o-autocomplete--dropdown-item");
+    });
+
     QUnit.test("many2one: domain updated by an onchange", async function (assert) {
         assert.expect(2);
 
