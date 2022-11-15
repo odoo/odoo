@@ -16,9 +16,11 @@ class AccountInvoiceSend(models.TransientModel):
         res = super(AccountInvoiceSend, self).default_get(fields)
         invoice_ids = self.env['account.move'].browse(res['invoice_ids'])
         invoice_edi_not_valid = invoice_ids.filtered(lambda i: i.edi_state in ('to_send', 'to_cancel'))
+        invoice_edi_valid = invoice_ids - invoice_edi_not_valid
         if len(invoice_edi_not_valid) > 0:
             res['all_valid'] = False
             res['invalid_invoices_ids'] = invoice_edi_not_valid.ids
+            res['invoice_ids'] = invoice_edi_valid.ids
         return res
 
     def action_invalid_edi_moves(self):
@@ -35,5 +37,6 @@ class AccountInvoiceSend(models.TransientModel):
                 'create': False,
                 'delete': False,
                 'expand': True,
-            }
+                'edi_state': 'show',
+            },
         }

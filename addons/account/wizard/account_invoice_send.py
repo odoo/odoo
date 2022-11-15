@@ -59,7 +59,7 @@ class AccountInvoiceSend(models.TransientModel):
             move_types = False
 
             if len(wizard.invoice_ids) > 1:
-                moves = self.env['account.move'].browse(self.env.context.get('active_ids'))
+                moves = self.env['account.move'].browse(self.invoice_ids.ids)
 
                 # Get the move types of all selected moves and see if there is more than one of them.
                 # If so, we'll display a warning on the next window about it.
@@ -82,7 +82,7 @@ class AccountInvoiceSend(models.TransientModel):
     @api.onchange('is_email')
     def onchange_is_email(self):
         if self.is_email:
-            res_ids = self._context.get('active_ids')
+            res_ids = self.invoice_ids.ids
             if not self.composer_id:
                 self.composer_id = self.env['mail.compose.message'].create({
                     'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
@@ -90,6 +90,7 @@ class AccountInvoiceSend(models.TransientModel):
                 })
             else:
                 self.composer_id.composition_mode = 'comment' if len(res_ids) == 1 else 'mass_mail'
+                self.composer_id.res_id = self.invoice_ids.ids[0]
                 self.composer_id.template_id = self.template_id.id
                 self._compute_composition_mode()
             self.composer_id._onchange_template_id_wrapper()
@@ -99,7 +100,7 @@ class AccountInvoiceSend(models.TransientModel):
         for wizard in self:
             if wizard.is_email and len(wizard.invoice_ids) > 1:
                 invoices = self.env['account.move'].search([
-                    ('id', 'in', self.env.context.get('active_ids')),
+                    ('id', 'in', self.invoice_ids.ids),
                     ('partner_id.email', '=', False)
                 ])
                 if invoices:
@@ -138,7 +139,7 @@ class AccountInvoiceSend(models.TransientModel):
         # basically self.body (which could be manually edited) extracts self.template_id,
         # which is then not translated for each customer.
         if self.composition_mode == 'mass_mail' and self.template_id:
-            active_ids = self.env.context.get('active_ids', self.res_id)
+            active_ids = self.invoice_ids.ids
             active_records = self.env[self.model].browse(active_ids)
             langs = active_records.mapped('partner_id.lang')
             default_lang = get_lang(self.env)

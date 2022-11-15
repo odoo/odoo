@@ -15,7 +15,7 @@
             <field name="inherit_id" ref="account.view_out_invoice_tree" />
             <field name="arch" type="xml">
                 <field name="state" position="before">
-                    <field name="edi_state" optional="hide"/>
+                    <field name="edi_state" optional="context.get('edi_state', 'hide')"/>
                 </field>
             </field>
         </record>
