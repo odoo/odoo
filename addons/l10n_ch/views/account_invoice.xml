@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="l10n_ch_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode']" position="attributes">
+            <attribute name="t-if" add="and o.qr_code_method != 'ch_qr'" separator=" "/>
+        </xpath>
+    </template>
+</odoo>
