@@ -183,12 +183,12 @@ export const editorCommands = {
             container.replaceChildren(...p.childNodes);
         } else if (container.childElementCount > 1) {
             // Grab the content of the first child block and isolate it.
-            if (isBlock(container.firstChild)) {
+            if (isBlock(container.firstChild) && container.firstChild.nodeName !== 'TABLE') {
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
-            if (isBlock(container.lastChild)) {
+            if (isBlock(container.lastChild) && container.lastChild.nodeName !== 'TABLE') {
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
