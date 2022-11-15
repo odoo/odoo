@@ -77,12 +77,13 @@ function getSearchParams(props) {
 }
 
 /**
- * @template {Model} T
- * @param {new (env: Object, params: Object, services: Object) => T} ModelClass
+ * @template {typeof Model} T
+ * @param {T} ModelClass
  * @param {Object} params
  * @param {Object} [options]
  * @param {Function} [options.onUpdate]
- * @returns {T}
+ * @param {boolean} [options.ignoreUseSampleModel]
+ * @returns {InstanceType<T>}
  */
 export function useModel(ModelClass, params, options = {}) {
     const component = useComponent();

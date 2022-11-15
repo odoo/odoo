@@ -13,7 +13,7 @@ import { markRaw, reactive } from "@odoo/owl";
 /**
  *  @typedef {{
  *      add(
- *          Component: any,
+ *          Component: typeof import("@odoo/owl").Component,
  *          props: {},
  *          options?: DialogServiceInterfaceAddOptions
  *      ): () => void;
