@@ -267,6 +267,7 @@ class AccountMove(models.Model):
         comodel_name='account.move',
         string="Cash Basis Origin",
         readonly=1,
+        index=True,
         help="The journal entry from which this tax cash basis journal entry has been created.")
     tax_cash_basis_created_move_ids = fields.One2many(
         string="Cash Basis Entries",
