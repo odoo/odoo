@@ -2,10 +2,10 @@
 <templates>
     <t t-name="calendar.AttendeeCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary" owl="1">
         <DatePicker position="after">
-            <div class="o_calendar_sync text-center" groups="base.group_system">
+            <div id="calendar_sync_title" class="o_calendar_sync text-center" t-if="isSystemUser">
                 <span class="text-primary fs-6">Synchronize with:</span>
             </div>
-            <div id="calendar_sync" class="container inline btn-group justify-content-evenly align-items-center" groups="base.group_system">
+            <div id="calendar_sync" class="container inline btn-group justify-content-evenly align-items-center" t-if="isSystemUser">
                 <div id="google_calendar_sync" class="o_calendar_sync">
                     <button type="button" id="google_sync_activate" class="btn btn-muted" t-on-click="() => this.configureCalendarProviderSync('google')">
                         <b><i class='fa fa-plug'/> Google</b>
