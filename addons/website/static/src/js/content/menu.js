@@ -5,6 +5,7 @@ const config = require('web.config');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
+const weUtils = require('web_editor.utils');
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
@@ -714,6 +715,25 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
     },
 
+    /**
+     * @override
+     */
+    start() {
+        // This is a fix in stable to move the "call to action" button in the
+        // navbar for the "boxed" header when the "off-canvas" mobile menu is
+        // enabled. Without this, the "call to action" button is inaccessible in
+        // the "off-canvas" mobile menu.
+        this.offcanvasAndBoxedHeader = false;
+        // If mobile menu is "off-canvas" and header template is "boxed".
+        if (this.$target[0].querySelector('.o_offcanvas_menu_toggler')
+            && weUtils.getCSSVariableValue('header-template').includes('boxed')) {
+            this.navbarEl = this.$target[0].querySelector('#top_menu');
+            this.boxedHeaderCallToActionEl = this.$target[0].querySelector('#top_menu_collapse .oe_structure_solo');
+            this.offcanvasAndBoxedHeader = !!this.boxedHeaderCallToActionEl;
+        }
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -723,12 +743,20 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
      */
     _onCollapseShow() {
         this.el.classList.add('o_top_menu_collapse_shown');
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.add('nav-item');
+            this.navbarEl.append(this.boxedHeaderCallToActionEl);
+        }
     },
     /**
      * @private
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.remove('nav-item');
+            this.navbarEl.after(this.boxedHeaderCallToActionEl);
+        }
     },
 });
 
