@@ -4,6 +4,7 @@ odoo.define('web.FilterMenu', function (require) {
     const CustomFilterItem = require('web.CustomFilterItem');
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require('web.Model');
+    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
 
     const { Component } = owl;
 
@@ -52,7 +53,7 @@ odoo.define('web.FilterMenu', function (require) {
         }
     }
 
-    FilterMenu.components = { CustomFilterItem };
+    FilterMenu.components = { CustomFilterItem, DropdownItem: SearchDropdownItem };
     FilterMenu.props = { fields: Object };
     FilterMenu.template = "web.legacy.FilterMenu";
 
