@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("attachment_list_tests.js");
 
-        QUnit.test("simplest layout", async function (assert) {
+        QUnit.skipRefactoring("simplest layout", async function (assert) {
             assert.expect(8);
 
             const pyEnv = await startServer();
@@ -76,7 +76,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("simplest layout + editable", async function (assert) {
+        QUnit.skipRefactoring("simplest layout + editable", async function (assert) {
             assert.expect(7);
 
             const pyEnv = await startServer();
@@ -148,44 +148,47 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("layout with card details and filename and extension", async function (assert) {
-            assert.expect(2);
+        QUnit.skipRefactoring(
+            "layout with card details and filename and extension",
+            async function (assert) {
+                assert.expect(2);
 
-            const pyEnv = await startServer();
-            const channelId = pyEnv["mail.channel"].create({
-                channel_type: "channel",
-                name: "channel1",
-            });
-            const messageAttachmentId = pyEnv["ir.attachment"].create({
-                name: "test.txt",
-                mimetype: "text/plain",
-            });
-            pyEnv["mail.message"].create({
-                attachment_ids: [messageAttachmentId],
-                body: "<p>Test</p>",
-                model: "mail.channel",
-                res_id: channelId,
-            });
-            const { openDiscuss } = await start({
-                discuss: {
-                    context: { active_id: channelId },
-                },
-            });
-            await openDiscuss();
+                const pyEnv = await startServer();
+                const channelId = pyEnv["mail.channel"].create({
+                    channel_type: "channel",
+                    name: "channel1",
+                });
+                const messageAttachmentId = pyEnv["ir.attachment"].create({
+                    name: "test.txt",
+                    mimetype: "text/plain",
+                });
+                pyEnv["mail.message"].create({
+                    attachment_ids: [messageAttachmentId],
+                    body: "<p>Test</p>",
+                    model: "mail.channel",
+                    res_id: channelId,
+                });
+                const { openDiscuss } = await start({
+                    discuss: {
+                        context: { active_id: channelId },
+                    },
+                });
+                await openDiscuss();
 
-            assert.strictEqual(
-                document.querySelectorAll(`.o_AttachmentCard_details`).length,
-                1,
-                "attachment should have a details part"
-            );
-            assert.strictEqual(
-                document.querySelectorAll(`.o_AttachmentCard_extension`).length,
-                1,
-                "attachment should have its extension shown"
-            );
-        });
+                assert.strictEqual(
+                    document.querySelectorAll(`.o_AttachmentCard_details`).length,
+                    1,
+                    "attachment should have a details part"
+                );
+                assert.strictEqual(
+                    document.querySelectorAll(`.o_AttachmentCard_extension`).length,
+                    1,
+                    "attachment should have its extension shown"
+                );
+            }
+        );
 
-        QUnit.test("view attachment", async function (assert) {
+        QUnit.skipRefactoring("view attachment", async function (assert) {
             assert.expect(3);
 
             const pyEnv = await startServer();
@@ -228,7 +231,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("close attachment viewer", async function (assert) {
+        QUnit.skipRefactoring("close attachment viewer", async function (assert) {
             assert.expect(3);
 
             const pyEnv = await startServer();
@@ -274,7 +277,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "clicking on the delete attachment button multiple times should do the rpc only once",
             async function (assert) {
                 assert.expect(2);
@@ -317,7 +320,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] does not crash when the viewer is closed before image load",
             async function (assert) {
                 /**
@@ -368,7 +371,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("plain text file is viewable", async function (assert) {
+        QUnit.skipRefactoring("plain text file is viewable", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -400,7 +403,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("HTML file is viewable", async function (assert) {
+        QUnit.skipRefactoring("HTML file is viewable", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -431,7 +434,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("ODT file is not viewable", async function (assert) {
+        QUnit.skipRefactoring("ODT file is not viewable", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -462,7 +465,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("DOCX file is not viewable", async function (assert) {
+        QUnit.skipRefactoring("DOCX file is not viewable", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();

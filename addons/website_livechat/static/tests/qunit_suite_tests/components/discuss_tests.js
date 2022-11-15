@@ -9,7 +9,7 @@ QUnit.module('website_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_tests.js');
 
-QUnit.test('rendering of visitor banner', async function (assert) {
+QUnit.skipRefactoring('rendering of visitor banner', async function (assert) {
     assert.expect(13);
 
     const pyEnv = await startServer();
@@ -108,7 +108,7 @@ QUnit.test('rendering of visitor banner', async function (assert) {
     );
 });
 
-QUnit.test('livechat with non-logged visitor should show visitor banner', async function (assert) {
+QUnit.skipRefactoring('livechat with non-logged visitor should show visitor banner', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -147,7 +147,7 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
     );
 });
 
-QUnit.test('livechat with logged visitor should show visitor banner', async function (assert) {
+QUnit.skipRefactoring('livechat with logged visitor should show visitor banner', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -195,7 +195,7 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
     );
 });
 
-QUnit.test('livechat without visitor should not show visitor banner', async function (assert) {
+QUnit.skipRefactoring('livechat without visitor should not show visitor banner', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -228,7 +228,7 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
     );
 });
 
-QUnit.test('non-livechat channel should not show visitor banner', async function (assert) {
+QUnit.skipRefactoring('non-livechat channel should not show visitor banner', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();

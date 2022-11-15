@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.discuss" owl="1">
+    <div class="d-flex h-100 flex-grow-1">
+        <Sidebar />
+        <div t-if="thread" class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view" t-att-class="{'o-mail-with-composer': thread.type !== 'mailbox'}" t-ref="content">
+            <!-- top bar -->
+            <div class="px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
+                <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
+                <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
+                    <AutoresizeInput
+                        className="'o-mail-discuss-thread-name lead fw-bold flex-shrink-1'"
+                        disabled="!thread.isRenameable"
+                        onValidate.bind="renameThread"
+                        value="thread.name"
+                    />
+                    <t t-if="thread.isDescriptionChangeable">
+                        <div class="flex-shrink-0 mx-2 py-2 border-start"/>
+                        <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
+                        <AutoresizeInput
+                            className="'o-mail-discuss-thread-description flex-shrink-1'"
+                            onValidate.bind="updateThreadDescription"
+                            placeholder="autogrowDescriptionPlaceholder"
+                            value="thread.description or ''"
+                        />
+                    </t>
+                </div>
+                <div class="o-mail-discuss-actions flex-shrink-0 d-flex align-items-center ms-1">
+                    <t t-set="isEmpty" t-value="thread.messages.length === 0"/>
+                    <t t-if="thread.id === 'inbox'">
+                        <button class="btn btn-secondary" t-att-disabled="isEmpty" t-on-click="markAllAsRead">Mark all read</button>
+                    </t>
+                    <t t-if="thread.id === 'starred'">
+                        <button class="btn btn-secondary" t-att-disabled="isEmpty" t-on-click="unstarAll">Unstar all</button>
+                    </t>
+                    <t t-if="thread.type !== 'mailbox'">
+                        <button t-if="!thread.inCall" class="btn" title="Start a Call" t-on-click="startCall">
+                            <i class="fa fa-lg fa-phone text-700"/>
+                        </button>
+                        <button class="btn" t-ref="settings" title="Show Call Settings" t-on-click="toggleSettings">
+                            <i class="fa fa-lg fa-gear text-700"/>
+                        </button>
+                    </t>
+                </div>
+            </div>
+            <t t-if="thread.inCall">
+                <CallUI thread="thread"/>
+            </t>
+            <Thread id="thread.id" t-key="thread.id" messageHighlight="messageHighlight"/>
+            <t t-if="thread.type !== 'mailbox' or messaging.discuss.messageToReplyTo">
+                <Composer t-key="thread.id" composer="thread.composer" autofocus="true" highlightReplyTo="messageHighlight.highlightMessage" onDiscardCallback="() => messaging.cancelReplyTo()" dropzoneRef="contentRef"/>
+            </t>
+        </div>
+        <div t-if="!thread" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+            <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
+        </div>
+    </div>
+</t>
+
+</templates>

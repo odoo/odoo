@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import ActivityRecord from "@mail/js/views/activity/activity_record";
-import { ActivityCellViewContainer } from "@mail/backend_components/activity_cell_view/activity_cell_view_container";
+import { ActivityCell } from "@mail/new/views/activity/activity_cell";
 
 import AbstractRendererOwl from "web.AbstractRendererOwl";
 import core from "web.core";
@@ -197,7 +197,7 @@ class ActivityRenderer extends AbstractRendererOwl {
 }
 
 ActivityRenderer.components = {
-    ActivityCellViewContainer,
+    ActivityCell,
     ActivityRecordAdapter,
     KanbanColumnProgressBarAdapter,
 };

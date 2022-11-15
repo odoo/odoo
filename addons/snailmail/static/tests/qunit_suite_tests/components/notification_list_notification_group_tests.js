@@ -8,7 +8,7 @@ QUnit.module('snailmail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('notification_list_notification_group_tests.js');
 
-QUnit.test('mark as read', async function (assert) {
+QUnit.skipRefactoring('mark as read', async function (assert) {
     assert.expect(2);
 
     // Note: The server code is too complex to be rewritten in javascript.
@@ -48,7 +48,7 @@ QUnit.test('mark as read', async function (assert) {
     );
 });
 
-QUnit.test('notifications grouped by notification_type', async function (assert) {
+QUnit.skipRefactoring('notifications grouped by notification_type', async function (assert) {
     assert.expect(11);
 
     const pyEnv = await startServer();
@@ -153,7 +153,7 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
     );
 });
 
-QUnit.test('grouped notifications by document model', async function (assert) {
+QUnit.skipRefactoring('grouped notifications by document model', async function (assert) {
     // If all failures linked to a document model refers to different documents,
     // a single notification should group all failures that are linked to this
     // document model.

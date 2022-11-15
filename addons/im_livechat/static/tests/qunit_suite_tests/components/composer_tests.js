@@ -6,7 +6,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('composer_tests.js');
 
-QUnit.test('livechat: no add attachment button', async function (assert) {
+QUnit.skipRefactoring('livechat: no add attachment button', async function (assert) {
     // Attachments are not yet supported in livechat, especially from livechat
     // visitor PoV. This may likely change in the future with task-2029065.
     assert.expect(2);
@@ -27,7 +27,7 @@ QUnit.test('livechat: no add attachment button', async function (assert) {
     );
 });
 
-QUnit.test('livechat: disable attachment upload via drag and drop', async function (assert) {
+QUnit.skipRefactoring('livechat: disable attachment upload via drag and drop', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();

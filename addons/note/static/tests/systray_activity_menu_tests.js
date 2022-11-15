@@ -7,7 +7,7 @@ import testUtils from 'web.test_utils';
 QUnit.module('note', {}, function () {
 QUnit.module("ActivityMenu");
 
-QUnit.test('note activity menu widget: create note from activity menu', async function (assert) {
+QUnit.skipRefactoring('note activity menu widget: create note from activity menu', async function (assert) {
     assert.expect(15);
 
     const { click } = await start();

@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("call_main_view_tests.js");
 
-        QUnit.test("Join a call", async function (assert) {
+        QUnit.skipRefactoring("Join a call", async function (assert) {
             assert.expect(4);
 
             const pyEnv = await startServer();
@@ -39,7 +39,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("Leave a call", async function (assert) {
+        QUnit.skipRefactoring("Leave a call", async function (assert) {
             assert.expect(2);
 
             const pyEnv = await startServer();

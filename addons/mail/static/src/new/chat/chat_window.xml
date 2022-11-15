@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.chat_window" owl="1">
+    <div class="o-mail-chat-window position-absolute bottom-0 rounded-top-3 bg-view overflow-hidden d-flex flex-column"
+        t-attf-style="right:{{props.right}}px;"
+        t-att-class="{'o-folded': props.chatWindow.folded}"
+    >
+        <div class="o-mail-chat-window-header d-flex align-items-center cursor-pointer flex-shrink-0" t-on-click="toggleFold">
+            <t t-set="thread" t-value="messaging.threads[props.chatWindow.threadId]"/>
+            <span class="o-mail-chat-window-header-name ms-3">#<t t-esc="thread.name"/></span>
+            <div class="flex-grow-1"/>
+            <div t-if="!thread.inCall" class="o-mail-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Start a Call" t-on-click.stop="startCall">
+                <i class="fa fa-phone"/>
+            </div>
+            <div class="o-mail-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Show Call Settings" t-on-click.stop="toggleSettings">
+                <i class="fa fa-gear"/>
+            </div>
+            <div class="o-mail-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand">
+                <i class="fa fa-expand"/>
+            </div>
+            <div class="o-mail-command d-flex align-items-center h-100 px-3 opacity-50 opacity-100-hover" title="Close chat window" t-on-click.stop="close">
+                <i class="fa fa-close"></i>
+            </div>
+        </div>
+        <t t-if="!props.chatWindow.folded">
+            <div class="o-mail-chat-window-content d-flex flex-column h-100 overflow-auto" t-ref="content">
+                <t t-if="state.inSettings">
+                    <CallSettings />
+                </t>
+                <t t-else="">
+                    <t t-if="thread.inCall">
+                        <CallUI thread="thread" compact="true"/>
+                    </t>
+                    <Thread id="thread.id" t-key="thread.id" messageHighlight="messageHighlight"/>
+                    <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" highlightReplyTo="messageHighlight.highlightMessage" dropzoneRef="contentRef"/>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>

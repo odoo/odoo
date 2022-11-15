@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.link_preview_image" owl="1">
+        <div class="o-mail-link-preview-image position-relative mb-2" t-att-class="{ 'me-2': env.inChatter }" t-attf-class="{{ className }}">
+            <a t-if="imageUrl" t-att-href="imageUrl" target="_blank">
+                <img class="h-auto w-auto rounded" t-att-src="imageUrl"/>
+            </a>
+            <div t-if="props.canBeDeleted" class="o-mail-link-preview-image-aside position-absolute top-0 end-0 small">
+                <LinkPreviewAside className="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'" linkPreview="props.linkPreview"/>
+            </div>
+        </div>
+    </t>
+</templates>

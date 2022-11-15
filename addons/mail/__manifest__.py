@@ -125,7 +125,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
         'mail.assets_model_data': [
-            'mail/static/src/models_data/*.js',
+            'mail/static/src/new/composer/emoji_data.js',
         ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
@@ -181,6 +181,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web._assets_primary_variables': [
             'mail/static/src/scss/variables/primary_variables.scss',
+            'mail/static/src/new/primary_variables.scss',
         ],
         'web.assets_backend': [
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
@@ -201,13 +202,15 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
             'mail/static/src/views/**/*.xml',
-            'mail/static/src/views/**/*.scss',
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',
 
             # Don't include dark mode files in light mode
             ('remove', 'mail/static/src/components/*/*.dark.scss'),
+
+            'mail/static/src/new/**/*',
+            ('remove', 'mail/static/src/new/composer/emoji_data.js'),
         ],
         "web.dark_mode_assets_backend": [
             'mail/static/src/components/*/*.dark.scss',
@@ -228,6 +231,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.qunit_suite_tests': [
             'mail/static/tests/qunit_suite_tests/**/*.js',
+            'mail/static/tests/new/**/*.js',
         ],
         'web.qunit_mobile_suite_tests': [
             'mail/static/tests/qunit_mobile_suite_tests/**/*.js',

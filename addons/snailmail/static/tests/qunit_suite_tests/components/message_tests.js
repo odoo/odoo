@@ -12,7 +12,7 @@ QUnit.module('snailmail', {}, function () {
 QUnit.module('components', {}, async function() {
 QUnit.module('message_tests.js');
 
-QUnit.test('Sent', async function (assert) {
+QUnit.skipRefactoring('Sent', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -40,7 +40,7 @@ QUnit.test('Sent', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -84,7 +84,7 @@ QUnit.test('Sent', async function (assert) {
     );
 });
 
-QUnit.test('Canceled', async function (assert) {
+QUnit.skipRefactoring('Canceled', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -112,7 +112,7 @@ QUnit.test('Canceled', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -156,7 +156,7 @@ QUnit.test('Canceled', async function (assert) {
     );
 });
 
-QUnit.test('Pending', async function (assert) {
+QUnit.skipRefactoring('Pending', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -184,7 +184,7 @@ QUnit.test('Pending', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -228,7 +228,7 @@ QUnit.test('Pending', async function (assert) {
     );
 });
 
-QUnit.test('No Price Available', async function (assert) {
+QUnit.skipRefactoring('No Price Available', async function (assert) {
     assert.expect(10);
 
     const pyEnv = await startServer();
@@ -262,7 +262,7 @@ QUnit.test('No Price Available', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -314,7 +314,7 @@ QUnit.test('No Price Available', async function (assert) {
     );
 });
 
-QUnit.test('Credit Error', async function (assert) {
+QUnit.skipRefactoring('Credit Error', async function (assert) {
     assert.expect(11);
 
     const pyEnv = await startServer();
@@ -349,7 +349,7 @@ QUnit.test('Credit Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -406,7 +406,7 @@ QUnit.test('Credit Error', async function (assert) {
     );
 });
 
-QUnit.test('Trial Error', async function (assert) {
+QUnit.skipRefactoring('Trial Error', async function (assert) {
     assert.expect(11);
 
     const pyEnv = await startServer();
@@ -441,7 +441,7 @@ QUnit.test('Trial Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -498,7 +498,7 @@ QUnit.test('Trial Error', async function (assert) {
     );
 });
 
-QUnit.test('Format Error', async function (assert) {
+QUnit.skipRefactoring('Format Error', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -542,7 +542,7 @@ QUnit.test('Format Error', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(
@@ -570,7 +570,7 @@ QUnit.test('Format Error', async function (assert) {
     );
 });
 
-QUnit.test('Missing Required Fields', async function (assert) {
+QUnit.skipRefactoring('Missing Required Fields', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -614,7 +614,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_MessageView',
+        '.o-mail-message',
         "should display a message component"
     );
     assert.containsOnce(

@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("follower_subtype_tests.js");
 
-        QUnit.test("simplest layout of a followed subtype", async function (assert) {
+        QUnit.skipRefactoring("simplest layout of a followed subtype", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -70,7 +70,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("simplest layout of a not followed subtype", async function (assert) {
+        QUnit.skipRefactoring("simplest layout of a not followed subtype", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -112,7 +112,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("toggle follower subtype checkbox", async function (assert) {
+        QUnit.skipRefactoring("toggle follower subtype checkbox", async function (assert) {
             assert.expect(3);
 
             const pyEnv = await startServer();

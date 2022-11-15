@@ -11,7 +11,7 @@ QUnit.module('components', {}, function () {
 QUnit.module('chat_window_manager', {}, function () {
 QUnit.module('chat_window_manager_tests.js');
 
-QUnit.test('closing a chat window with no message from admin side unpins it', async function (assert) {
+QUnit.skipRefactoring('closing a chat window with no message from admin side unpins it', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();

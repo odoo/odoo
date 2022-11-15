@@ -18,156 +18,165 @@ QUnit.module("mail", {}, function () {
         QUnit.module("chatter", {}, function () {
             QUnit.module("chatter_tests.js");
 
-            QUnit.test("base rendering when chatter has no attachment", async function (assert) {
-                assert.expect(6);
+            QUnit.skipRefactoring(
+                "base rendering when chatter has no attachment",
+                async function (assert) {
+                    assert.expect(6);
 
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                for (let i = 0; i < 60; i++) {
-                    pyEnv["mail.message"].create({
-                        body: "not empty",
-                        model: "res.partner",
+                    const pyEnv = await startServer();
+                    const resPartnerId1 = pyEnv["res.partner"].create({});
+                    for (let i = 0; i < 60; i++) {
+                        pyEnv["mail.message"].create({
+                            body: "not empty",
+                            model: "res.partner",
+                            res_id: resPartnerId1,
+                        });
+                    }
+                    const { openView } = await start();
+                    await openView({
                         res_id: resPartnerId1,
+                        res_model: "res.partner",
+                        views: [[false, "form"]],
                     });
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o-mail-chatter`).length,
+                        1,
+                        "should have a chatter"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_ChatterTopbar`).length,
+                        1,
+                        "should have a chatter topbar"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
+                        0,
+                        "should not have an attachment box in the chatter"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_Chatter_thread`).length,
+                        1,
+                        "should have a thread in the chatter"
+                    );
+                    assert.containsOnce(
+                        document.body,
+                        `.o_Chatter_thread[data-thread-id="${resPartnerId1}"][data-thread-model="res.partner"]`,
+                        "chatter should have the right thread."
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o-mail-message`).length,
+                        30,
+                        "the first 30 messages of thread should be loaded"
+                    );
                 }
-                const { openView } = await start();
-                await openView({
-                    res_id: resPartnerId1,
-                    res_model: "res.partner",
-                    views: [[false, "form"]],
-                });
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
-                    1,
-                    "should have a chatter"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar`).length,
-                    1,
-                    "should have a chatter topbar"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
-                    0,
-                    "should not have an attachment box in the chatter"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter_thread`).length,
-                    1,
-                    "should have a thread in the chatter"
-                );
-                assert.containsOnce(
-                    document.body,
-                    `.o_Chatter_thread[data-thread-id="${resPartnerId1}"][data-thread-model="res.partner"]`,
-                    "chatter should have the right thread."
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_MessageView`).length,
-                    30,
-                    "the first 30 messages of thread should be loaded"
-                );
-            });
+            );
 
-            QUnit.test("base rendering when chatter has no record", async function (assert) {
-                assert.expect(9);
+            QUnit.skipRefactoring(
+                "base rendering when chatter has no record",
+                async function (assert) {
+                    assert.expect(9);
 
-                const { click, openView } = await start();
-                await openView({
-                    res_model: "res.partner",
-                    views: [[false, "form"]],
-                });
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
-                    1,
-                    "should have a chatter"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar`).length,
-                    1,
-                    "should have a chatter topbar"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
-                    0,
-                    "should not have an attachment box in the chatter"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter_thread`).length,
-                    1,
-                    "should have a thread in the chatter"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_MessageView`).length,
-                    1,
-                    "should have a message"
-                );
-                assert.strictEqual(
-                    document.querySelector(`.o_MessageView_content`).textContent,
-                    "Creating a new record...",
-                    "should have the 'Creating a new record ...' message"
-                );
-                assert.containsNone(
-                    document.body,
-                    ".o_MessageListView_loadMore",
-                    "should not have the 'load more' button"
-                );
+                    const { click, openView } = await start();
+                    await openView({
+                        res_model: "res.partner",
+                        views: [[false, "form"]],
+                    });
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o-mail-chatter`).length,
+                        1,
+                        "should have a chatter"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_ChatterTopbar`).length,
+                        1,
+                        "should have a chatter topbar"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
+                        0,
+                        "should not have an attachment box in the chatter"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_Chatter_thread`).length,
+                        1,
+                        "should have a thread in the chatter"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o-mail-message`).length,
+                        1,
+                        "should have a message"
+                    );
+                    assert.strictEqual(
+                        document.querySelector(`.o-mail-message-body`).textContent,
+                        "Creating a new record...",
+                        "should have the 'Creating a new record ...' message"
+                    );
+                    assert.containsNone(
+                        document.body,
+                        ".o_MessageListView_loadMore",
+                        "should not have the 'load more' button"
+                    );
 
-                await click(".o_MessageView");
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_MessageActionList`).length,
-                    1,
-                    "should action list in message"
-                );
-                assert.containsNone(
-                    document.body,
-                    ".o_MessageActionView",
-                    "should not have any action in action list of message"
-                );
-            });
+                    await click(".o-mail-message");
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_MessageActionList`).length,
+                        1,
+                        "should action list in message"
+                    );
+                    assert.containsNone(
+                        document.body,
+                        ".o_MessageActionView",
+                        "should not have any action in action list of message"
+                    );
+                }
+            );
 
-            QUnit.test("base rendering when chatter has attachments", async function (assert) {
-                assert.expect(3);
+            QUnit.skipRefactoring(
+                "base rendering when chatter has attachments",
+                async function (assert) {
+                    assert.expect(3);
 
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                pyEnv["ir.attachment"].create([
-                    {
-                        mimetype: "text/plain",
-                        name: "Blah.txt",
+                    const pyEnv = await startServer();
+                    const resPartnerId1 = pyEnv["res.partner"].create({});
+                    pyEnv["ir.attachment"].create([
+                        {
+                            mimetype: "text/plain",
+                            name: "Blah.txt",
+                            res_id: resPartnerId1,
+                            res_model: "res.partner",
+                        },
+                        {
+                            mimetype: "text/plain",
+                            name: "Blu.txt",
+                            res_id: resPartnerId1,
+                            res_model: "res.partner",
+                        },
+                    ]);
+                    const { openView } = await start();
+                    await openView({
                         res_id: resPartnerId1,
                         res_model: "res.partner",
-                    },
-                    {
-                        mimetype: "text/plain",
-                        name: "Blu.txt",
-                        res_id: resPartnerId1,
-                        res_model: "res.partner",
-                    },
-                ]);
-                const { openView } = await start();
-                await openView({
-                    res_id: resPartnerId1,
-                    res_model: "res.partner",
-                    views: [[false, "form"]],
-                });
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
-                    1,
-                    "should have a chatter"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar`).length,
-                    1,
-                    "should have a chatter topbar"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
-                    0,
-                    "should not have an attachment box in the chatter"
-                );
-            });
+                        views: [[false, "form"]],
+                    });
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o-mail-chatter`).length,
+                        1,
+                        "should have a chatter"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_ChatterTopbar`).length,
+                        1,
+                        "should have a chatter topbar"
+                    );
+                    assert.strictEqual(
+                        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
+                        0,
+                        "should not have an attachment box in the chatter"
+                    );
+                }
+            );
 
-            QUnit.test("show attachment box", async function (assert) {
+            QUnit.skipRefactoring("show attachment box", async function (assert) {
                 assert.expect(6);
 
                 const pyEnv = await startServer();
@@ -193,7 +202,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
+                    document.querySelectorAll(`.o-mail-chatter`).length,
                     1,
                     "should have a chatter"
                 );
@@ -226,7 +235,7 @@ QUnit.module("mail", {}, function () {
                 );
             });
 
-            QUnit.test("chatter: drop attachments", async function (assert) {
+            QUnit.skipRefactoring("chatter: drop attachments", async function (assert) {
                 assert.expect(4);
 
                 const pyEnv = await startServer();
@@ -249,7 +258,9 @@ QUnit.module("mail", {}, function () {
                         name: "text2.txt",
                     }),
                 ];
-                await afterNextRender(() => dragenterFiles(document.querySelector(".o_Chatter")));
+                await afterNextRender(() =>
+                    dragenterFiles(document.querySelector(".o-mail-chatter"))
+                );
                 assert.ok(document.querySelector(".o_Chatter_dropZone"), "should have a drop zone");
                 assert.strictEqual(
                     document.querySelectorAll(`.o_AttachmentBoxView`).length,
@@ -271,7 +282,9 @@ QUnit.module("mail", {}, function () {
                     "should have 2 attachments in the attachment box after files dropped"
                 );
 
-                await afterNextRender(() => dragenterFiles(document.querySelector(".o_Chatter")));
+                await afterNextRender(() =>
+                    dragenterFiles(document.querySelector(".o-mail-chatter"))
+                );
                 files = [
                     await createFile({
                         content: "hello, world",
@@ -294,7 +307,7 @@ QUnit.module("mail", {}, function () {
                 );
             });
 
-            QUnit.test(
+            QUnit.skipRefactoring(
                 "composer show/hide on log note/send message [REQUIRE FOCUS]",
                 async function (assert) {
                     assert.expect(10);
@@ -308,12 +321,13 @@ QUnit.module("mail", {}, function () {
                         views: [[false, "form"]],
                     });
                     assert.strictEqual(
-                        document.querySelectorAll(`.o_ChatterTopbar_buttonSendMessage`).length,
+                        document.querySelectorAll(`.o-mail-chatter-topbar-send-message-button`)
+                            .length,
                         1,
                         "should have a send message button"
                     );
                     assert.strictEqual(
-                        document.querySelectorAll(`.o_ChatterTopbar_buttonLogNote`).length,
+                        document.querySelectorAll(`.o-mail-chatter-topbar-log-note-button`).length,
                         1,
                         "should have a log note button"
                     );
@@ -323,7 +337,7 @@ QUnit.module("mail", {}, function () {
                         "should not have a composer"
                     );
 
-                    await click(`.o_ChatterTopbar_buttonSendMessage`);
+                    await click(`.o-mail-chatter-topbar-send-message-button`);
                     assert.strictEqual(
                         document.querySelectorAll(`.o_Chatter_composer`).length,
                         1,
@@ -335,7 +349,7 @@ QUnit.module("mail", {}, function () {
                         "composer 'send message' in chatter should have focus just after being displayed"
                     );
 
-                    await click(`.o_ChatterTopbar_buttonLogNote`);
+                    await click(`.o-mail-chatter-topbar-log-note-button`);
                     assert.strictEqual(
                         document.querySelectorAll(`.o_Chatter_composer`).length,
                         1,
@@ -347,21 +361,21 @@ QUnit.module("mail", {}, function () {
                         "composer 'log note' in chatter should have focus just after being displayed"
                     );
 
-                    await click(`.o_ChatterTopbar_buttonLogNote`);
+                    await click(`.o-mail-chatter-topbar-log-note-button`);
                     assert.strictEqual(
                         document.querySelectorAll(`.o_Chatter_composer`).length,
                         0,
                         "should have no composer anymore"
                     );
 
-                    await click(`.o_ChatterTopbar_buttonSendMessage`);
+                    await click(`.o-mail-chatter-topbar-send-message-button`);
                     assert.strictEqual(
                         document.querySelectorAll(`.o_Chatter_composer`).length,
                         1,
                         "should have a composer"
                     );
 
-                    await click(`.o_ChatterTopbar_buttonSendMessage`);
+                    await click(`.o-mail-chatter-topbar-send-message-button`);
                     assert.strictEqual(
                         document.querySelectorAll(`.o_Chatter_composer`).length,
                         0,
@@ -370,7 +384,7 @@ QUnit.module("mail", {}, function () {
                 }
             );
 
-            QUnit.test(
+            QUnit.skipRefactoring(
                 "should display subject when subject is not the same as the thread name",
                 async function (assert) {
                     assert.expect(2);
@@ -454,79 +468,85 @@ QUnit.module("mail", {}, function () {
 
                     assert.containsNone(
                         document.body,
-                        ".o_MessageView",
+                        ".o-mail-message",
                         "should display no messages"
                     );
                 }
             );
 
-            QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (assert) {
-                assert.expect(2);
+            QUnit.skipRefactoring(
+                'post message with "CTRL-Enter" keyboard shortcut',
+                async function (assert) {
+                    assert.expect(2);
 
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                const { click, insertText, openView } = await start();
-                await openView({
-                    res_id: resPartnerId1,
-                    res_model: "res.partner",
-                    views: [[false, "form"]],
-                });
-                assert.containsNone(
-                    document.body,
-                    ".o_MessageView",
-                    "should not have any message initially in chatter"
-                );
-
-                await click(".o_ChatterTopbar_buttonSendMessage");
-                await insertText(".o_ComposerTextInputView_textarea", "Test");
-                await afterNextRender(() => {
-                    const kevt = new window.KeyboardEvent("keydown", {
-                        ctrlKey: true,
-                        key: "Enter",
+                    const pyEnv = await startServer();
+                    const resPartnerId1 = pyEnv["res.partner"].create({});
+                    const { click, insertText, openView } = await start();
+                    await openView({
+                        res_id: resPartnerId1,
+                        res_model: "res.partner",
+                        views: [[false, "form"]],
                     });
-                    document.querySelector(".o_ComposerTextInputView_textarea").dispatchEvent(kevt);
-                });
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessageView",
-                    "should now have single message in chatter after posting message from pressing 'CTRL-Enter' in text input of composer"
-                );
-            });
+                    assert.containsNone(
+                        document.body,
+                        ".o-mail-message",
+                        "should not have any message initially in chatter"
+                    );
 
-            QUnit.test('post message with "META-Enter" keyboard shortcut', async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                const { click, insertText, openView } = await start();
-                await openView({
-                    res_id: resPartnerId1,
-                    res_model: "res.partner",
-                    views: [[false, "form"]],
-                });
-                assert.containsNone(
-                    document.body,
-                    ".o_MessageView",
-                    "should not have any message initially in chatter"
-                );
-
-                await click(".o_ChatterTopbar_buttonSendMessage");
-                await insertText(".o_ComposerTextInputView_textarea", "Test");
-                await afterNextRender(() => {
-                    const kevt = new window.KeyboardEvent("keydown", {
-                        key: "Enter",
-                        metaKey: true,
+                    await click(".o-mail-chatter-topbar-send-message-button");
+                    await insertText(".o-mail-composer-textarea", "Test");
+                    await afterNextRender(() => {
+                        const kevt = new window.KeyboardEvent("keydown", {
+                            ctrlKey: true,
+                            key: "Enter",
+                        });
+                        document.querySelector(".o-mail-composer-textarea").dispatchEvent(kevt);
                     });
-                    document.querySelector(".o_ComposerTextInputView_textarea").dispatchEvent(kevt);
-                });
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessageView",
-                    "should now have single message in channel after posting message from pressing 'META-Enter' in text input of composer"
-                );
-            });
+                    assert.containsOnce(
+                        document.body,
+                        ".o-mail-message",
+                        "should now have single message in chatter after posting message from pressing 'CTRL-Enter' in text input of composer"
+                    );
+                }
+            );
 
-            QUnit.test(
+            QUnit.skipRefactoring(
+                'post message with "META-Enter" keyboard shortcut',
+                async function (assert) {
+                    assert.expect(2);
+
+                    const pyEnv = await startServer();
+                    const resPartnerId1 = pyEnv["res.partner"].create({});
+                    const { click, insertText, openView } = await start();
+                    await openView({
+                        res_id: resPartnerId1,
+                        res_model: "res.partner",
+                        views: [[false, "form"]],
+                    });
+                    assert.containsNone(
+                        document.body,
+                        ".o-mail-message",
+                        "should not have any message initially in chatter"
+                    );
+
+                    await click(".o-mail-chatter-topbar-send-message-button");
+                    await insertText(".o-mail-composer-textarea", "Test");
+                    await afterNextRender(() => {
+                        const kevt = new window.KeyboardEvent("keydown", {
+                            key: "Enter",
+                            metaKey: true,
+                        });
+                        document.querySelector(".o-mail-composer-textarea").dispatchEvent(kevt);
+                    });
+                    assert.containsOnce(
+                        document.body,
+                        ".o-mail-message",
+                        "should now have single message in channel after posting message from pressing 'META-Enter' in text input of composer"
+                    );
+                }
+            );
+
+            QUnit.skipRefactoring(
                 'do not post message with "Enter" keyboard shortcut',
                 async function (assert) {
                     // Note that test doesn't assert Enter makes a newline, because this
@@ -544,18 +564,18 @@ QUnit.module("mail", {}, function () {
                     });
                     assert.containsNone(
                         document.body,
-                        ".o_MessageView",
+                        ".o-mail-message",
                         "should not have any message initially in chatter"
                     );
 
-                    await click(".o_ChatterTopbar_buttonSendMessage");
-                    await insertText(".o_ComposerTextInputView_textarea", "Test");
+                    await click(".o-mail-chatter-topbar-send-message-button");
+                    await insertText(".o-mail-composer-textarea", "Test");
                     const kevt = new window.KeyboardEvent("keydown", { key: "Enter" });
-                    document.querySelector(".o_ComposerTextInputView_textarea").dispatchEvent(kevt);
+                    document.querySelector(".o-mail-composer-textarea").dispatchEvent(kevt);
                     await nextAnimationFrame();
                     assert.containsNone(
                         document.body,
-                        ".o_MessageView",
+                        ".o-mail-message",
                         "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
                     );
                 }

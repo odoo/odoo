@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("discuss_pinned_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "sidebar: pinned channel 1: init with one pinned channel",
             async function (assert) {
                 assert.expect(2);
@@ -28,74 +28,80 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("sidebar: pinned channel 2: open pinned channel", async function (assert) {
-            assert.expect(1);
+        QUnit.skipRefactoring(
+            "sidebar: pinned channel 2: open pinned channel",
+            async function (assert) {
+                assert.expect(1);
 
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create({});
-            const { click, openDiscuss } = await start();
-            await openDiscuss();
+                const pyEnv = await startServer();
+                const mailChannelId1 = pyEnv["mail.channel"].create({});
+                const { click, openDiscuss } = await start();
+                await openDiscuss();
 
-            await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
-            assert.containsOnce(
-                document.body,
-                `.o_DiscussView_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-                "The channel #General is displayed in discuss"
-            );
-        });
+                await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
+                assert.containsOnce(
+                    document.body,
+                    `.o_DiscussView_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+                    "The channel #General is displayed in discuss"
+                );
+            }
+        );
 
-        QUnit.test("sidebar: pinned channel 3: open channel and leave it", async function (assert) {
-            assert.expect(6);
+        QUnit.skipRefactoring(
+            "sidebar: pinned channel 3: open channel and leave it",
+            async function (assert) {
+                assert.expect(6);
 
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            fold_state: "open",
-                            is_minimized: true,
-                            partner_id: pyEnv.currentPartnerId,
-                        },
+                const pyEnv = await startServer();
+                const mailChannelId1 = pyEnv["mail.channel"].create({
+                    channel_member_ids: [
+                        [
+                            0,
+                            0,
+                            {
+                                fold_state: "open",
+                                is_minimized: true,
+                                partner_id: pyEnv.currentPartnerId,
+                            },
+                        ],
                     ],
-                ],
-            });
-            const { click, openDiscuss } = await start({
-                async mockRPC(route, args) {
-                    if (args.method === "action_unfollow") {
-                        assert.step("action_unfollow");
-                        assert.deepEqual(
-                            args.args[0],
-                            [mailChannelId1],
-                            "The right id is sent to the server to remove"
-                        );
-                    }
-                },
-            });
-            await openDiscuss();
+                });
+                const { click, openDiscuss } = await start({
+                    async mockRPC(route, args) {
+                        if (args.method === "action_unfollow") {
+                            assert.step("action_unfollow");
+                            assert.deepEqual(
+                                args.args[0],
+                                [mailChannelId1],
+                                "The right id is sent to the server to remove"
+                            );
+                        }
+                    },
+                });
+                await openDiscuss();
 
-            await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
-            assert.verifySteps([], "action_unfollow is not called yet");
+                await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
+                assert.verifySteps([], "action_unfollow is not called yet");
 
-            await click(".o_DiscussSidebarCategoryItem_commandLeave");
-            assert.verifySteps(
-                ["action_unfollow"],
-                "action_unfollow has been called when leaving a channel"
-            );
-            assert.containsNone(
-                document.body,
-                `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
-                "The channel must have been removed from discuss sidebar"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_DiscussView_noThread",
-                "should have no thread opened in discuss"
-            );
-        });
+                await click(".o_DiscussSidebarCategoryItem_commandLeave");
+                assert.verifySteps(
+                    ["action_unfollow"],
+                    "action_unfollow has been called when leaving a channel"
+                );
+                assert.containsNone(
+                    document.body,
+                    `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
+                    "The channel must have been removed from discuss sidebar"
+                );
+                assert.containsOnce(
+                    document.body,
+                    ".o-mail-discuss-no-thread",
+                    "should have no thread opened in discuss"
+                );
+            }
+        );
 
-        QUnit.test("sidebar: unpin channel from bus", async function (assert) {
+        QUnit.skipRefactoring("sidebar: unpin channel from bus", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -130,7 +136,7 @@ QUnit.module("mail", {}, function () {
             });
             assert.containsOnce(
                 document.body,
-                ".o_DiscussView_noThread",
+                ".o-mail-discuss-no-thread",
                 "should have no thread opened in discuss"
             );
             assert.containsNone(
@@ -140,7 +146,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] sidebar: channel group_based_subscription: mandatorily pinned",
             async function (assert) {
                 assert.expect(2);

@@ -1,0 +1,23 @@
+.o-mail-link-preview-card {
+    max-width: $o-mail-link-preview-width;
+
+    .row {
+        min-height: $o-mail-link-preview-card-height;
+    }
+
+    &-hasMultineLines {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+
+        &.o-link-preview-card-description {
+            -webkit-line-clamp: 2;
+        }
+        &.o-link-preview-card-title {
+            -webkit-line-clamp: 3;
+        }
+    }
+
+    &-imageLinkWrap {
+        border-right: 1px solid $card-border-color;
+    }
+}

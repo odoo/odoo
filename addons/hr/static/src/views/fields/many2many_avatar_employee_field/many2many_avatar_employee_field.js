@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Many2ManyTagsAvatarUserField, KanbanMany2ManyTagsAvatarUserField } from "@mail/views/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import { Many2ManyTagsAvatarUserField, KanbanMany2ManyTagsAvatarUserField } from "@mail/new/views/fields/many2many_avatar_user_field/many2many_avatar_user_field";
 
 export class Many2ManyTagsAvatarEmployeeField extends Many2ManyTagsAvatarUserField {}
 Many2ManyTagsAvatarEmployeeField.additionalClasses = [...Many2ManyTagsAvatarUserField.additionalClasses, "o_field_many2many_avatar_user"];

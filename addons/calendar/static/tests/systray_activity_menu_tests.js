@@ -7,7 +7,7 @@ import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu');
 
-QUnit.test('activity menu widget:today meetings', async function (assert) {
+QUnit.skipRefactoring('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
 
     patchDate(2018, 3, 20, 6, 0, 0);

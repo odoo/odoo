@@ -11,51 +11,54 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_textual_typing_status_tests.js");
 
-        QUnit.test('receive other member typing status "is typing"', async function (assert) {
-            assert.expect(2);
+        QUnit.skipRefactoring(
+            'receive other member typing status "is typing"',
+            async function (assert) {
+                assert.expect(2);
 
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: resPartnerId1 }],
-                ],
-            });
-            const { messaging, openDiscuss } = await start({
-                discuss: {
-                    context: { active_id: mailChannelId1 },
-                },
-            });
-            await openDiscuss();
-
-            assert.strictEqual(
-                document.querySelector(".o_ThreadTextualTypingStatusView").textContent,
-                "",
-                "Should display no one is currently typing"
-            );
-
-            // simulate receive typing notification from demo
-            await afterNextRender(() =>
-                messaging.rpc({
-                    route: "/mail/channel/notify_typing",
-                    params: {
-                        channel_id: mailChannelId1,
-                        context: {
-                            mockedPartnerId: resPartnerId1,
-                        },
-                        is_typing: true,
+                const pyEnv = await startServer();
+                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
+                const mailChannelId1 = pyEnv["mail.channel"].create({
+                    channel_member_ids: [
+                        [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                        [0, 0, { partner_id: resPartnerId1 }],
+                    ],
+                });
+                const { messaging, openDiscuss } = await start({
+                    discuss: {
+                        context: { active_id: mailChannelId1 },
                     },
-                })
-            );
-            assert.strictEqual(
-                document.querySelector(".o_ThreadTextualTypingStatusView").textContent,
-                "Demo is typing...",
-                "Should display that demo user is typing"
-            );
-        });
+                });
+                await openDiscuss();
 
-        QUnit.test(
+                assert.strictEqual(
+                    document.querySelector(".o_ThreadTextualTypingStatusView").textContent,
+                    "",
+                    "Should display no one is currently typing"
+                );
+
+                // simulate receive typing notification from demo
+                await afterNextRender(() =>
+                    messaging.rpc({
+                        route: "/mail/channel/notify_typing",
+                        params: {
+                            channel_id: mailChannelId1,
+                            context: {
+                                mockedPartnerId: resPartnerId1,
+                            },
+                            is_typing: true,
+                        },
+                    })
+                );
+                assert.strictEqual(
+                    document.querySelector(".o_ThreadTextualTypingStatusView").textContent,
+                    "Demo is typing...",
+                    "Should display that demo user is typing"
+                );
+            }
+        );
+
+        QUnit.skipRefactoring(
             'receive other member typing status "is typing" then "no longer is typing"',
             async function (assert) {
                 assert.expect(3);
@@ -121,7 +124,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             'assume other member typing status becomes "no longer is typing" after 60 seconds without any updated typing status',
             async function (assert) {
                 assert.expect(3);
@@ -176,7 +179,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             'other member typing status "is typing" refreshes 60 seconds timer of assuming no longer typing',
             async function (assert) {
                 assert.expect(4);
@@ -251,7 +254,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             'receive several other members typing status "is typing"',
             async function (assert) {
                 assert.expect(6);

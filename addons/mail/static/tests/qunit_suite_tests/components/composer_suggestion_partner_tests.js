@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("composer_suggestion_partner_tests.js");
 
-        QUnit.test("partner mention suggestion displayed", async function (assert) {
+        QUnit.skipRefactoring("partner mention suggestion displayed", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -29,7 +29,7 @@ QUnit.module("mail", {}, function () {
                 },
             });
             await openDiscuss();
-            await insertText(".o_ComposerTextInputView_textarea", "@demo");
+            await insertText(".o-mail-composer-textarea", "@demo");
             assert.containsOnce(
                 document.body,
                 `.o_ComposerSuggestionView`,
@@ -37,7 +37,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("partner mention suggestion correct data", async function (assert) {
+        QUnit.skipRefactoring("partner mention suggestion correct data", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -60,7 +60,7 @@ QUnit.module("mail", {}, function () {
                 },
             });
             await openDiscuss();
-            await insertText(".o_ComposerTextInputView_textarea", "@demo");
+            await insertText(".o-mail-composer-textarea", "@demo");
             assert.containsOnce(
                 document.querySelector(".o_ComposerSuggestionView"),
                 ".o_PersonaImStatusIconView",
@@ -88,7 +88,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("partner mention suggestion active", async function (assert) {
+        QUnit.skipRefactoring("partner mention suggestion active", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -111,7 +111,7 @@ QUnit.module("mail", {}, function () {
                 },
             });
             await openDiscuss();
-            await insertText(".o_ComposerTextInputView_textarea", "@demo");
+            await insertText(".o-mail-composer-textarea", "@demo");
             assert.hasClass(
                 document.querySelector(".o_ComposerSuggestionView"),
                 "active",

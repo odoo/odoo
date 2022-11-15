@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("channel_invitation_form_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should display the channel invitation form after clicking on the invite button of a chat",
             async function (assert) {
                 assert.expect(1);
@@ -41,7 +41,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should be able to search for a new user to invite from an existing chat",
             async function (assert) {
                 assert.expect(1);
@@ -83,7 +83,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should be able to create a new group chat from an existing chat",
             async function (assert) {
                 assert.expect(1);
@@ -127,7 +127,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "Invitation form should display channel group restriction",
             async function (assert) {
                 assert.expect(1);

@@ -9,7 +9,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("follower_list_menu_tests.js");
 
-        QUnit.test("base rendering not editable", async function (assert) {
+        QUnit.skipRefactoring("base rendering not editable", async function (assert) {
             assert.expect(5);
 
             const { openView } = await start();
@@ -49,7 +49,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("base rendering editable", async function (assert) {
+        QUnit.skipRefactoring("base rendering editable", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -99,7 +99,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test('click on "add followers" button', async function (assert) {
+        QUnit.skipRefactoring('click on "add followers" button', async function (assert) {
             assert.expect(15);
 
             const pyEnv = await startServer();
@@ -222,7 +222,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("click on remove follower", async function (assert) {
+        QUnit.skipRefactoring("click on remove follower", async function (assert) {
             assert.expect(6);
 
             const pyEnv = await startServer();
@@ -282,7 +282,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             'Hide "Add follower" and subtypes edition/removal buttons except own user on read only record',
             async function (assert) {
                 assert.expect(5);
@@ -354,7 +354,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             'Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access',
             async function (assert) {
                 assert.expect(5);
@@ -426,7 +426,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             'Show "No Followers" dropdown-item if there are no followers and user dose not have write access',
             async function (assert) {
                 assert.expect(1);

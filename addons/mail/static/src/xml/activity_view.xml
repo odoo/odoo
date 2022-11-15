@@ -61,7 +61,7 @@
     <t t-set="isCellHidden" t-value="activeFilter.resIds.length and !activeFilter.resIds.includes(resId) and activeFilter.activityTypeId === type[0]"/>
     <td t-if="activityGroup.state and !isCellHidden" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
         t-attf-class="o_activity_summary_cell h-100 {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state.value : '' }}">
-        <ActivityCellViewContainer activityIds="activityGroup.ids" activityTypeId="type[0]" closestDeadline="activityGroup.o_closest_deadline" reloadFunc.bind="ev => this.trigger('reload_data')" resId="record.res_id" resModel="record.model"/>
+        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type[0]" closestDeadline="activityGroup.o_closest_deadline" reloadFunc.bind="ev => this.trigger('reload_data')" resId="record.res_id" resModel="record.model"/>
     </td>
     <td t-else="" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"

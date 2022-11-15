@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("follow_button_tests.js");
 
-        QUnit.test("base rendering not editable", async function (assert) {
+        QUnit.skipRefactoring("base rendering not editable", async function (assert) {
             assert.expect(2);
 
             const { openView, pyEnv } = await start();
@@ -27,7 +27,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("hover following button", async function (assert) {
+        QUnit.skipRefactoring("hover following button", async function (assert) {
             assert.expect(8);
 
             const pyEnv = await startServer();
@@ -95,7 +95,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test('click on "follow" button', async function (assert) {
+        QUnit.skipRefactoring('click on "follow" button', async function (assert) {
             assert.expect(4);
 
             const { click, openView, pyEnv } = await start();
@@ -128,7 +128,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test('click on "unfollow" button', async function (assert) {
+        QUnit.skipRefactoring('click on "unfollow" button', async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();

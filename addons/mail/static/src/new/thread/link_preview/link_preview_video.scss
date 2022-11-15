@@ -1,0 +1,31 @@
+.o-mail-link-preview-video {
+    max-width: $o-mail-link-preview-width;
+
+    .row {
+        min-height: $o-mail-link-preview-card-height;
+    }
+
+    &-hasMultineLines {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+
+        &.o-mail-link-preview-video-description {
+            -webkit-line-clamp: 2;
+        }
+        &.o-mail-link-preview-video-title {
+            -webkit-line-clamp: 3;
+        }
+    }
+
+    &-imageLinkWrap {
+        border-right: 1px solid $card-border-color;
+    }
+
+    &-playBtn {
+        background: #000000;
+
+        i {
+            color: #ffffff;
+        }
+    }
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.message" owl="1">
+    <div class="o-mail-message position-relative py-1 mt-1 px-3" t-att-class="{
+            'o-mail-is-author': message.isAuthor,
+            'o-highlighted bg-view shadow-lg': props.highlighted,
+            'opacity-50': props.grayedOut,
+        }"
+        t-att-data-message-id="message.id"
+        t-ref="ref"
+    >
+        <MessageInReplyTo t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
+        <div class="o-mail-message-core position-relative d-flex flex-shrink-0">
+            <div class="o-mail-message-sidebar d-flex flex-shrink-0 justify-content-center">
+                <div t-if="!props.squashed" class="o-mail-avatar-container position-relative bg-view">
+                    <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
+                        t-attf-src="/mail/channel/1/partner/{{message.author.id}}/avatar_128"
+                        t-att-class="{ 'cursor-pointer': props.hasActions and hasOpenChatFromAvatarClick }"
+                        t-on-click="openChatAvatar" />
+                    <PartnerImStatus partner="message.author" className="'position-absolute bottom-0 end-0'"/>
+                </div>
+            </div>
+            <div t-att-class="{ 'flex-grow-1': state.isEditing }">
+                <div t-if="!props.squashed" class="o-mail-msg-header d-flex flex-wrap align-items-baseline">
+                    <span class="o-mail-own-name">
+                        <strong class="o_redirect me-1 text-truncate" t-att-class="{ 'cursor-pointer': props.hasActions and props.hasOpenChatFromAvatarClick }" t-on-click="openChatAvatar">
+                        <t t-esc="message.author.name"/>
+                        </strong> -
+                    </span>
+                    <small class="text-muted opacity-50 ms-2" t-att-title="message.dateTimeStr">
+                        <RelativeTime datetime="message.dateTime" />
+                    </small>
+
+                    <small t-if="!isOriginThread" t-on-click.prevent="openRecord" class="o-mail-message-recod-name ms-1 text-500">
+                        <t t-if="message.resModel !== 'mail.channel'">
+                            on <a t-att-href="message.url"><t t-esc="message.recordName"/></a>
+                        </t>
+                        <t t-if="message.resModel === 'mail.channel'">
+                            (from <a t-att-href="message.url">#<t t-esc="message.recordName"/></a>)
+                        </t>
+                    </small>
+                </div>
+                <div t-if="!state.isEditing" class="o-mail-message-content d-flex">
+                    <t t-if="message.type === 'notification'">
+                        <t t-if="message.subtype_description">
+                            <p class="mb-0"><t t-esc="message.subtype_description"/></p>
+                        </t>
+                        <t t-if="message.trackingValues.length">
+                            <t t-call="mail.tracking_values"/>
+                        </t>
+                        <div t-if="message.body" class="o-mail-message-body text-break mb-0 px-3 bg-view">
+                            <t t-out="message.body"/>
+                        </div>
+                    </t>
+                    <t t-if="message.type !== 'notification'">
+                        <div t-att-class="{
+                            'p-1': message.isNote,
+                            'o-mail-message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3': !message.isNote,
+                            'flex-grow-1': state.isEditing,
+                        }">
+                            <t t-out="message.body"/>
+                        </div>
+                    </t>
+                    <div t-if="props.hasActions and !message.isTransient" class="o-mail-message-actions invisible">
+                        <div class="rounded-1 shadow-sm">
+                            <i class="cursor-pointer px-1 py-2 fa fa-lg"
+                                t-att-class="message.isStarred ? 'fa-star' : 'fa-star-o'"
+                                t-on-click="toggleStar"
+                                role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"/>
+                            <i class="cursor-pointer px-1 py-2 fa fa-lg fa-trash" t-if="canBeDeleted" t-on-click="onClickDelete"
+                                role="button" tabindex="0" title="Delete" aria-label="Delete"/>
+                            <i class="cursor-pointer px-1 py-2 fa fa-lg fa-pencil" t-if="canBeEdited" t-on-click="onClickEdit"
+                                role="button" tabindex="1" title="Edit" aria-label="Edit"/>
+                            <i class="cursor-pointer px-1 py-2 fa fa-lg fa-reply" t-if="canReplyTo" t-on-click.stop="onClickReplyTo"
+                                role="button" tabindex="1" title="Reply" aria-label="Reply"/>
+                        </div>
+                    </div>
+                </div>
+                <div t-else="" class="o-mail-message-editable-content flex-grow-1" t-att-class="{
+                    'p-1': message.isNote,
+                    'o-mail-message-body text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3': !message.isNote,
+                }">
+                    <Composer autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'"/>
+                </div>
+                <LinkPreviewList t-if="message.linkPreviews" linkPreviews="message.linkPreviews" canBeDeleted="canBeDeleted" />
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.tracking_values" owl="1">
+    <ul class="mb-0 ps-4">
+        <t t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
+            <li>
+                <span class="fw-bold" t-esc="trackingValue.oldValue.value"/>
+                <i class="fa fa-long-arrow-right mx-1 text-600" />
+                <span class="text-info fw-bold" t-esc="trackingValue.newValue.value"/> (<t t-esc="trackingValue.changedField"/>)
+            </li>
+        </t>
+    </ul>
+</t>
+</templates>

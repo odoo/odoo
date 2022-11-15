@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.autoresize_input" owl="1">
+    <input
+        class="o-mail-autoresize-input text-truncate border px-2 py-1"
+        t-att-class="{'bg-transparent border-transparent': !inputFocus.isFocus and !inputHover.isHover, 'border-dark': inputFocus.isFocus}"
+        t-attf-class="{{ props.className }}"
+        t-attf-placeholder="{{ props.placeholder }}"
+        t-att-disabled="props.disabled"
+        t-att-title="state.value"
+        t-model="state.value"
+        t-on-keydown="onKeydownInput"
+        t-ref="input"
+        type="text"
+    />
+</t>
+
+</templates>

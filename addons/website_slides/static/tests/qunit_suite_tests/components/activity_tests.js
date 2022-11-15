@@ -6,7 +6,7 @@ QUnit.module('website_slides', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('activity_tests.js');
 
-QUnit.test('grant course access', async function (assert) {
+QUnit.skipRefactoring('grant course access', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -44,7 +44,7 @@ QUnit.test('grant course access', async function (assert) {
     assert.verifySteps(['access_grant'], "Grant button should trigger the right rpc call");
 });
 
-QUnit.test('refuse course access', async function (assert) {
+QUnit.skipRefactoring('refuse course access', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();

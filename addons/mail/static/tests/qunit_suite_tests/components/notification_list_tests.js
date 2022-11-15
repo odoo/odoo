@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("notification_list_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "marked as read thread notifications are ordered by last message date",
             async function (assert) {
                 assert.expect(3);
@@ -52,7 +52,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "thread notifications are re-ordered on receiving a new message",
             async function (assert) {
                 assert.expect(4);

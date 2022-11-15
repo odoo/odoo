@@ -9,7 +9,7 @@ QUnit.module("mail", {}, function () {
         QUnit.module("file_uploader", {}, function () {
             QUnit.module("file_uploader_tests.js");
 
-            QUnit.test("no conflicts between file uploaders", async function (assert) {
+            QUnit.skipRefactoring("no conflicts between file uploaders", async function (assert) {
                 assert.expect(2);
 
                 const pyEnv = await startServer();
@@ -33,7 +33,9 @@ QUnit.module("mail", {}, function () {
                     content: "hello, world",
                     contentType: "text/plain",
                 });
-                await afterNextRender(() => dragenterFiles(document.querySelector(".o_Chatter")));
+                await afterNextRender(() =>
+                    dragenterFiles(document.querySelector(".o-mail-chatter"))
+                );
                 await afterNextRender(() =>
                     dropFiles(document.querySelector(".o_Chatter_dropZone"), [file1])
                 );
@@ -54,7 +56,7 @@ QUnit.module("mail", {}, function () {
                 );
                 await afterNextRender(() =>
                     dom.triggerEvent(
-                        document.querySelector(".o_ChatWindow .o_ComposerTextInputView_textarea"),
+                        document.querySelector(".o_ChatWindow .o-mail-composer-textarea"),
                         "keydown",
                         { key: "Enter" }
                     )

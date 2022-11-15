@@ -6,33 +6,36 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("chatter_suggested_recipients_tests.js");
 
-        QUnit.test("suggest recipient on 'Send message' composer", async function (assert) {
-            assert.expect(1);
+        QUnit.skipRefactoring(
+            "suggest recipient on 'Send message' composer",
+            async function (assert) {
+                assert.expect(1);
 
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({
-                display_name: "John Jane",
-                email: "john@jane.be",
-            });
-            const resFakeId1 = pyEnv["res.fake"].create({
-                email_cc: "john@test.be",
-                partner_ids: [resPartnerId1],
-            });
-            const { click, openView } = await start();
-            await openView({
-                res_id: resFakeId1,
-                res_model: "res.fake",
-                views: [[false, "form"]],
-            });
-            await click(`.o_ChatterTopbar_buttonSendMessage`);
-            assert.containsOnce(
-                document.body,
-                ".o_ComposerSuggestedRecipientListView",
-                "Should display a list of suggested recipients after opening the composer from 'Send message' button"
-            );
-        });
+                const pyEnv = await startServer();
+                const resPartnerId1 = pyEnv["res.partner"].create({
+                    display_name: "John Jane",
+                    email: "john@jane.be",
+                });
+                const resFakeId1 = pyEnv["res.fake"].create({
+                    email_cc: "john@test.be",
+                    partner_ids: [resPartnerId1],
+                });
+                const { click, openView } = await start();
+                await openView({
+                    res_id: resFakeId1,
+                    res_model: "res.fake",
+                    views: [[false, "form"]],
+                });
+                await click(`.o-mail-chatter-topbar-send-message-button`);
+                assert.containsOnce(
+                    document.body,
+                    ".o_ComposerSuggestedRecipientListView",
+                    "Should display a list of suggested recipients after opening the composer from 'Send message' button"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "with 3 or less suggested recipients: no 'show more' button",
             async function (assert) {
                 assert.expect(1);
@@ -52,7 +55,7 @@ QUnit.module("mail", {}, function () {
                     res_model: "res.fake",
                     views: [[false, "form"]],
                 });
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 assert.containsNone(
                     document.body,
                     ".o_ComposerSuggestedRecipientListView_showMore",
@@ -61,35 +64,38 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("display reason for suggested recipient on mouse over", async function (assert) {
-            assert.expect(1);
+        QUnit.skipRefactoring(
+            "display reason for suggested recipient on mouse over",
+            async function (assert) {
+                assert.expect(1);
 
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({
-                display_name: "John Jane",
-                email: "john@jane.be",
-            });
-            const resFakeId1 = pyEnv["res.fake"].create({ partner_ids: [resPartnerId1] });
-            const { click, openView } = await start();
-            await openView({
-                res_id: resFakeId1,
-                res_model: "res.fake",
-                views: [[false, "form"]],
-            });
-            await click(`.o_ChatterTopbar_buttonSendMessage`);
-            const partnerTitle = document
-                .querySelector(
-                    `.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"]`
-                )
-                .getAttribute("title");
-            assert.strictEqual(
-                partnerTitle,
-                "Add as recipient and follower (reason: Email partner)",
-                "must display reason for suggested recipient on mouse over"
-            );
-        });
+                const pyEnv = await startServer();
+                const resPartnerId1 = pyEnv["res.partner"].create({
+                    display_name: "John Jane",
+                    email: "john@jane.be",
+                });
+                const resFakeId1 = pyEnv["res.fake"].create({ partner_ids: [resPartnerId1] });
+                const { click, openView } = await start();
+                await openView({
+                    res_id: resFakeId1,
+                    res_model: "res.fake",
+                    views: [[false, "form"]],
+                });
+                await click(`.o-mail-chatter-topbar-send-message-button`);
+                const partnerTitle = document
+                    .querySelector(
+                        `.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"]`
+                    )
+                    .getAttribute("title");
+                assert.strictEqual(
+                    partnerTitle,
+                    "Add as recipient and follower (reason: Email partner)",
+                    "must display reason for suggested recipient on mouse over"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "suggested recipient without partner are unchecked by default",
             async function (assert) {
                 assert.expect(1);
@@ -102,7 +108,7 @@ QUnit.module("mail", {}, function () {
                     res_model: "res.fake",
                     views: [[false, "form"]],
                 });
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 const checkboxUnchecked = document.querySelector(
                     ".o_ComposerSuggestedRecipientView:not([data-partner-id]) input[type=checkbox]"
                 );
@@ -113,7 +119,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "suggested recipient with partner are checked by default",
             async function (assert) {
                 assert.expect(1);
@@ -130,7 +136,7 @@ QUnit.module("mail", {}, function () {
                     res_model: "res.fake",
                     views: [[false, "form"]],
                 });
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 const checkboxChecked = document.querySelector(
                     `.o_ComposerSuggestedRecipientView[data-partner-id="${resPartnerId1}"] input[type=checkbox]`
                 );
@@ -141,7 +147,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "more than 3 suggested recipients: display only 3 and 'show more' button",
             async function (assert) {
                 assert.expect(1);
@@ -165,7 +171,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 assert.containsOnce(
                     document.body,
                     ".o_ComposerSuggestedRecipientListView_showMore",
@@ -174,7 +180,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "more than 3 suggested recipients: show all of them on click 'show more' button",
             async function (assert) {
                 assert.expect(1);
@@ -198,7 +204,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 await click(`.o_ComposerSuggestedRecipientListView_showMore`);
                 assert.containsN(
                     document.body,
@@ -209,7 +215,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "more than 3 suggested recipients -> click 'show more' -> 'show less' button",
             async function (assert) {
                 assert.expect(1);
@@ -233,7 +239,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 await click(`.o_ComposerSuggestedRecipientListView_showMore`);
                 assert.containsOnce(
                     document.body,
@@ -243,7 +249,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "suggested recipients list display 3 suggested recipient and 'show more' button when 'show less' button is clicked",
             async function (assert) {
                 assert.expect(2);
@@ -267,7 +273,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(`.o_ChatterTopbar_buttonSendMessage`);
+                await click(`.o-mail-chatter-topbar-send-message-button`);
                 await click(`.o_ComposerSuggestedRecipientListView_showMore`);
                 await click(`.o_ComposerSuggestedRecipientListView_showLess`);
                 assert.containsN(
@@ -284,7 +290,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "suggested recipients should not be notified when posting an internal note",
             async function (assert) {
                 assert.expect(1);
@@ -311,9 +317,9 @@ QUnit.module("mail", {}, function () {
                     res_model: "res.fake",
                     views: [[false, "form"]],
                 });
-                await click(`.o_ChatterTopbar_buttonLogNote`);
-                await insertText(".o_ComposerTextInputView_textarea", "Dummy Message");
-                await click(".o_ComposerView_buttonSend");
+                await click(`.o-mail-chatter-topbar-log-note-button`);
+                await insertText(".o-mail-composer-textarea", "Dummy Message");
+                await click(".o-mail-composer-send-button");
             }
         );
     });

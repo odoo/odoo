@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("channel_member_list_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "there should be a button to show member list in the thread view topbar initially",
             async function (assert) {
                 assert.expect(1);
@@ -36,7 +36,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should show member list when clicking on show member list button in thread view topbar",
             async function (assert) {
                 assert.expect(1);
@@ -67,46 +67,49 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("should have correct members in member list", async function (assert) {
-            assert.expect(3);
+        QUnit.skipRefactoring(
+            "should have correct members in member list",
+            async function (assert) {
+                assert.expect(3);
 
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: resPartnerId1 }],
-                ],
-                channel_type: "group",
-            });
-            const { click, openDiscuss } = await start({
-                discuss: {
-                    context: {
-                        active_id: `mail.channel_${mailChannelId1}`,
+                const pyEnv = await startServer();
+                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
+                const mailChannelId1 = pyEnv["mail.channel"].create({
+                    channel_member_ids: [
+                        [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                        [0, 0, { partner_id: resPartnerId1 }],
+                    ],
+                    channel_type: "group",
+                });
+                const { click, openDiscuss } = await start({
+                    discuss: {
+                        context: {
+                            active_id: `mail.channel_${mailChannelId1}`,
+                        },
                     },
-                },
-            });
-            await openDiscuss();
-            await click(".o_ThreadViewTopbar_showMemberListButton");
-            assert.containsN(
-                document.body,
-                ".o_ChannelMemberView",
-                2,
-                "should have 2 members in member list"
-            );
-            assert.containsOnce(
-                document.body,
-                `.o_ChannelMemberView[data-partner-id="${pyEnv.currentPartnerId}"]`,
-                "should have current partner in member list (current partner is a member)"
-            );
-            assert.containsOnce(
-                document.body,
-                `.o_ChannelMemberView[data-partner-id="${resPartnerId1}"]`,
-                "should have 'Demo' in member list ('Demo' is a member)"
-            );
-        });
+                });
+                await openDiscuss();
+                await click(".o_ThreadViewTopbar_showMemberListButton");
+                assert.containsN(
+                    document.body,
+                    ".o_ChannelMemberView",
+                    2,
+                    "should have 2 members in member list"
+                );
+                assert.containsOnce(
+                    document.body,
+                    `.o_ChannelMemberView[data-partner-id="${pyEnv.currentPartnerId}"]`,
+                    "should have current partner in member list (current partner is a member)"
+                );
+                assert.containsOnce(
+                    document.body,
+                    `.o_ChannelMemberView[data-partner-id="${resPartnerId1}"]`,
+                    "should have 'Demo' in member list ('Demo' is a member)"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "there should be a button to hide member list in the thread view topbar when the member list is visible",
             async function (assert) {
                 assert.expect(1);
@@ -137,7 +140,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should show a button to load more members if they are not all loaded",
             async function (assert) {
                 assert.expect(1);
@@ -169,7 +172,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("Load more button should load more members", async function (assert) {
+        QUnit.skipRefactoring("Load more button should load more members", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -200,7 +203,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "chat with member should be opened after clicking on channel member",
             async function (assert) {
                 assert.expect(1);

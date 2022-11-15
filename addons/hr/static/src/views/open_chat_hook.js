@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { helpers } from "@mail/views/open_chat_hook";
+import { helpers } from "@mail/new/views/open_chat_hook";
 import { patch } from "@web/core/utils/patch";
 
 patch(helpers, "hr_m2x_avatar_employee", {

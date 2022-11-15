@@ -1,0 +1,22 @@
+$o-mail-notification-item-background-color: $o-view-background-color !default;
+$o-mail-notification-item-hover-background-color: darken(
+    $o-mail-notification-item-background-color,
+    7%
+) !default;
+
+.o-mail-messaging-menu {
+    width: 450px;
+    min-height: 50px;
+    max-height: Min(calc(100vh - 140px), 630px);
+    // z-index: 1055;
+    // left: auto;
+    // right: 0;
+}
+
+.o-mail-notification-item {
+    background-color: $o-mail-notification-item-background-color;
+
+    &:hover {
+        background-color: $o-mail-notification-item-hover-background-color;
+    }
+}

@@ -259,7 +259,8 @@ Patch({
             for (const guest of this.models["Guest"].all()) {
                 guestIds.push(guest.id);
             }
-            this.env.services["im_status"].registerToImStatus("res.partner", partnerIds);
+            // disabled to not affect new discuss code
+            // this.env.services["im_status"].registerToImStatus("res.partner", partnerIds);
             this.env.services["im_status"].registerToImStatus("mail.guest", guestIds);
         },
         /**

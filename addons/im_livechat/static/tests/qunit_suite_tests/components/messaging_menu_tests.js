@@ -10,7 +10,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('messaging_menu_tests.js');
 
-QUnit.test('livechats should be in "chat" filter', async function (assert) {
+QUnit.skipRefactoring('livechats should be in "chat" filter', async function (assert) {
     assert.expect(7);
 
     const pyEnv = await startServer();

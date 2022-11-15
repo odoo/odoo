@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.chat_window_container" owl="1">
+    <t t-foreach="chatWindows" t-as="chatWindow" t-key="chatWindow.threadId">
+        <ChatWindow chatWindow="chatWindow" right="10 + chatWindow_index * 350"/>
+    </t>
+</t>
+
+</templates>

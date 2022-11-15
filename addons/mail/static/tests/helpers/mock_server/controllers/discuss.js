@@ -86,6 +86,13 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                 args.context
             );
         }
+        if (route === "/mail/message/update_content") {
+            this.pyEnv["mail.message"].write([args.message_id], {
+                body: args.body,
+                attachment_ids: args.attachment_id,
+            });
+            return args;
+        }
         if (route === "/mail/read_subscription_data") {
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
@@ -409,11 +416,10 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             res["followers"] = followers;
         }
         if (request_list.includes("suggestedRecipients")) {
-            res[
-                "suggestedRecipients"
-            ] = this._mockMailThread_MessageGetSuggestedRecipients(thread_model, [thread.id])[
-                thread_id
-            ];
+            res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(
+                thread_model,
+                [thread.id]
+            )[thread_id];
         }
         return res;
     },

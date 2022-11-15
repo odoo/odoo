@@ -5,7 +5,7 @@ import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test
 QUnit.module('test_mail_full', {}, function () {
 QUnit.module('thread_needaction_preview_tests.js');
 
-QUnit.test('rating value displayed on the thread needaction preview', async function (assert) {
+QUnit.skipRefactoring('rating value displayed on the thread needaction preview', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();

@@ -18,11 +18,11 @@ tour.register(
     [
         {
             content: "Click on Send Message",
-            trigger: ".o_ChatterTopbar_buttonSendMessage",
+            trigger: ".o-mail-chatter-topbar-send-message-button",
         },
         {
             content: "Write something in composer",
-            trigger: ".o_ComposerTextInputView_textarea",
+            trigger: ".o-mail-composer-textarea",
             run: "text blahblah",
         },
         {
@@ -90,11 +90,11 @@ tour.register(
         },
         {
             content: "Check message is shown",
-            trigger: '.o_MessageView:contains("blahblah")',
+            trigger: '.o-mail-message:contains("blahblah")',
         },
         {
             content: "Check message contains the attachment",
-            trigger: '.o_MessageView .o_AttachmentCard_filename:contains("text.txt")',
+            trigger: '.o-mail-message .o_AttachmentCard_filename:contains("text.txt")',
         },
     ]
 );

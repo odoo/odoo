@@ -8,7 +8,7 @@ QUnit.module("mail", {}, function () {
         QUnit.module("discuss_mobile_mailbox_selection", {}, function () {
             QUnit.module("discuss_mobile_mailbox_selection_tests.js");
 
-            QUnit.test("select another mailbox", async function (assert) {
+            QUnit.skipRefactoring("select another mailbox", async function (assert) {
                 assert.expect(7);
 
                 patchUiSize({ height: 360, width: 640 });
@@ -57,7 +57,7 @@ QUnit.module("mail", {}, function () {
                 );
             });
 
-            QUnit.test(
+            QUnit.skipRefactoring(
                 'auto-select "Inbox" when discuss had channel as active thread',
                 async function (assert) {
                     assert.expect(3);

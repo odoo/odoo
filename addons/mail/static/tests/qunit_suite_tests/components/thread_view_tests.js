@@ -12,7 +12,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_view_tests.js");
 
-        QUnit.test("dragover files on thread with composer", async function (assert) {
+        QUnit.skipRefactoring("dragover files on thread with composer", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -34,7 +34,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("message list asc order", async function (assert) {
+        QUnit.skipRefactoring("message list asc order", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -79,7 +79,7 @@ QUnit.module("mail", {}, function () {
                 "load more link should NOT be after messages"
             );
             assert.strictEqual(
-                document.querySelectorAll(`.o_MessageView`).length,
+                document.querySelectorAll(`.o-mail-message`).length,
                 30,
                 "should have 30 messages at the beginning"
             );
@@ -98,7 +98,7 @@ QUnit.module("mail", {}, function () {
                 },
             });
             assert.strictEqual(
-                document.querySelectorAll(`.o_MessageView`).length,
+                document.querySelectorAll(`.o-mail-message`).length,
                 60,
                 "should have 60 messages after scrolled to top"
             );
@@ -110,13 +110,13 @@ QUnit.module("mail", {}, function () {
                 ).scrollTop = document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
             });
             assert.strictEqual(
-                document.querySelectorAll(`.o_MessageView`).length,
+                document.querySelectorAll(`.o-mail-message`).length,
                 60,
                 "scrolling to bottom should not trigger any message fetching"
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]",
             async function (assert) {
                 assert.expect(7);
@@ -185,8 +185,7 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-last-seen-by-current-partner-message-id-changed",
-                        func: () =>
-                            document.querySelector(".o_ComposerTextInputView_textarea").focus(),
+                        func: () => document.querySelector(".o-mail-composer-textarea").focus(),
                         message:
                             "should wait until last seen by current partner message id changed after focusing the thread",
                         predicate: ({ thread }) => {
@@ -201,7 +200,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]",
             async function (assert) {
                 assert.expect(3);
@@ -232,7 +231,7 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                document.querySelector(".o_ComposerTextInputView_textarea").focus();
+                document.querySelector(".o-mail-composer-textarea").focus();
                 // simulate receiving a message
                 await afterEvent({
                     eventName: "o-thread-last-seen-by-current-partner-message-id-changed",
@@ -263,7 +262,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "show message subject when subject is not the same as the thread name",
             async function (assert) {
                 assert.expect(3);
@@ -288,7 +287,7 @@ QUnit.module("mail", {}, function () {
                 await openDiscuss();
                 assert.containsOnce(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "should display a single message"
                 );
                 assert.containsOnce(
@@ -304,7 +303,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "do not show message subject when subject is the same as the thread name",
             async function (assert) {
                 assert.expect(1);
@@ -336,7 +335,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] new messages separator on posting message",
             async function (assert) {
                 // technical as we need to remove focus from text input to avoid `set_last_seen_message` call
@@ -378,7 +377,7 @@ QUnit.module("mail", {}, function () {
 
                 assert.containsOnce(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "should display one message in thread initially"
                 );
                 assert.containsNone(
@@ -387,15 +386,15 @@ QUnit.module("mail", {}, function () {
                     "should not display 'new messages' separator"
                 );
 
-                await insertText(".o_ComposerTextInputView_textarea", "hey !");
+                await insertText(".o-mail-composer-textarea", "hey !");
                 await afterNextRender(() => {
                     // need to remove focus from text area to avoid set_last_seen_message
-                    document.querySelector(".o_ComposerView_buttonSend").focus();
-                    document.querySelector(".o_ComposerView_buttonSend").click();
+                    document.querySelector(".o-mail-composer-send-button").focus();
+                    document.querySelector(".o-mail-composer-send-button").click();
                 });
                 assert.containsN(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     2,
                     "should display 2 messages (initial & newly posted), after posting a message"
                 );
@@ -407,7 +406,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "new messages separator on receiving new message [REQUIRE FOCUS]",
             async function (assert) {
                 assert.expect(6);
@@ -465,7 +464,7 @@ QUnit.module("mail", {}, function () {
                     "should not display 'new messages' separator"
                 );
 
-                document.querySelector(".o_ComposerTextInputView_textarea").blur();
+                document.querySelector(".o-mail-composer-textarea").blur();
                 // simulate receiving a message
                 await afterEvent({
                     eventName: "o-thread-view-hint-processed",
@@ -494,7 +493,7 @@ QUnit.module("mail", {}, function () {
                 });
                 assert.containsN(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     2,
                     "should now have 2 messages after receiving a new message"
                 );
@@ -506,7 +505,7 @@ QUnit.module("mail", {}, function () {
 
                 assert.containsOnce(
                     document.body,
-                    `.o_MessageListView_separatorNewMessages ~ .o_MessageView[data-message-id="${
+                    `.o_MessageListView_separatorNewMessages ~ .o-mail-message[data-message-id="${
                         mailMessageId1 + 1
                     }"]`,
                     "'new messages' separator should be shown above new message received"
@@ -515,8 +514,7 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-last-seen-by-current-partner-message-id-changed",
-                        func: () =>
-                            document.querySelector(".o_ComposerTextInputView_textarea").focus(),
+                        func: () => document.querySelector(".o-mail-composer-textarea").focus(),
                         message:
                             "should wait until last seen by current partner message id changed after focusing the thread",
                         predicate: ({ thread }) => {
@@ -532,7 +530,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("new messages separator on posting message", async function (assert) {
+        QUnit.skipRefactoring("new messages separator on posting message", async function (assert) {
             assert.expect(4);
 
             const pyEnv = await startServer();
@@ -568,11 +566,11 @@ QUnit.module("mail", {}, function () {
                 "should not display 'new messages' separator"
             );
 
-            await insertText(".o_ComposerTextInputView_textarea", "hey !");
-            await click(".o_ComposerView_buttonSend");
+            await insertText(".o-mail-composer-textarea", "hey !");
+            await click(".o-mail-composer-send-button");
             assert.containsOnce(
                 document.body,
-                ".o_MessageView",
+                ".o-mail-message",
                 "should have the message current partner just posted"
             );
             assert.containsNone(
@@ -582,7 +580,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("basic rendering of canceled notification", async function (assert) {
+        QUnit.skipRefactoring("basic rendering of canceled notification", async function (assert) {
             assert.expect(8);
 
             const pyEnv = await startServer();
@@ -667,7 +665,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)",
             async function (assert) {
                 assert.expect(2);
@@ -738,7 +736,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)",
             async function (assert) {
                 assert.expect(3);
@@ -824,7 +822,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "delete all attachments of message without content should no longer display the message",
             async function (assert) {
                 assert.expect(2);
@@ -860,7 +858,7 @@ QUnit.module("mail", {}, function () {
                 });
                 assert.containsOnce(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "there should be 1 message displayed initially"
                 );
 
@@ -874,13 +872,13 @@ QUnit.module("mail", {}, function () {
                 await click(".o_AttachmentDeleteConfirmView_confirmButton");
                 assert.containsNone(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "message should no longer be displayed after removing all its attachments (empty content)"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "delete all attachments of a message with some text content should still keep it displayed",
             async function (assert) {
                 assert.expect(2);
@@ -917,7 +915,7 @@ QUnit.module("mail", {}, function () {
                 });
                 assert.containsOnce(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "there should be 1 message displayed initially"
                 );
 
@@ -931,13 +929,13 @@ QUnit.module("mail", {}, function () {
                 await click(".o_AttachmentDeleteConfirmView_confirmButton");
                 assert.containsOnce(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "message should still be displayed after removing its attachments (non-empty content)"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "Post a message containing an email address followed by a mention on another line",
             async function (assert) {
                 assert.expect(1);
@@ -959,19 +957,19 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                await insertText(".o_ComposerTextInputView_textarea", "email@odoo.com\n");
-                await insertText(".o_ComposerTextInputView_textarea", "@Te");
+                await insertText(".o-mail-composer-textarea", "email@odoo.com\n");
+                await insertText(".o-mail-composer-textarea", "@Te");
                 await click(".o_ComposerSuggestionView");
-                await click(".o_ComposerView_buttonSend");
+                await click(".o-mail-composer-send-button");
                 assert.containsOnce(
-                    document.querySelector(`.o_MessageView_content`),
+                    document.querySelector(`.o-mail-message-body`),
                     `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
                     "Conversation should have a message that has been posted, which contains partner mention"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             `Mention a partner with special character (e.g. apostrophe ')`,
             async function (assert) {
                 assert.expect(1);
@@ -993,71 +991,74 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                await insertText(".o_ComposerTextInputView_textarea", "@Pyn");
+                await insertText(".o-mail-composer-textarea", "@Pyn");
                 await click(".o_ComposerSuggestionView");
-                await click(".o_ComposerView_buttonSend");
+                await click(".o-mail-composer-send-button");
                 assert.containsOnce(
-                    document.querySelector(`.o_MessageView_content`),
+                    document.querySelector(`.o-mail-message-body`),
                     `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
                     "Conversation should have a message that has been posted, which contains partner mention"
                 );
             }
         );
 
-        QUnit.test("mention 2 different partners that have the same name", async function (assert) {
-            assert.expect(3);
+        QUnit.skipRefactoring(
+            "mention 2 different partners that have the same name",
+            async function (assert) {
+                assert.expect(3);
 
-            const pyEnv = await startServer();
-            const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
-                {
-                    email: "partner1@example.com",
-                    name: "TestPartner",
-                },
-                {
-                    email: "partner2@example.com",
-                    name: "TestPartner",
-                },
-            ]);
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: resPartnerId1 }],
-                    [0, 0, { partner_id: resPartnerId2 }],
-                ],
-            });
-            const { click, insertText, openDiscuss } = await start({
-                discuss: {
-                    context: { active_id: mailChannelId1 },
-                },
-            });
-            await openDiscuss();
-            await insertText(".o_ComposerTextInputView_textarea", "@Te");
-            await afterNextRender(() =>
-                document.querySelectorAll(".o_ComposerSuggestionView")[0].click()
-            );
-            await insertText(".o_ComposerTextInputView_textarea", "@Te");
-            await afterNextRender(() =>
-                document.querySelectorAll(".o_ComposerSuggestionView")[1].click()
-            );
-            await click(".o_ComposerView_buttonSend");
-            assert.containsOnce(
-                document.body,
-                ".o_MessageView_content",
-                "should have one message after posting it"
-            );
-            assert.containsOnce(
-                document.querySelector(`.o_MessageView_content`),
-                `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
-                "message should contain the first partner mention"
-            );
-            assert.containsOnce(
-                document.querySelector(`.o_MessageView_content`),
-                `.o_mail_redirect[data-oe-id="${resPartnerId2}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
-                "message should also contain the second partner mention"
-            );
-        });
+                const pyEnv = await startServer();
+                const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+                    {
+                        email: "partner1@example.com",
+                        name: "TestPartner",
+                    },
+                    {
+                        email: "partner2@example.com",
+                        name: "TestPartner",
+                    },
+                ]);
+                const mailChannelId1 = pyEnv["mail.channel"].create({
+                    channel_member_ids: [
+                        [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                        [0, 0, { partner_id: resPartnerId1 }],
+                        [0, 0, { partner_id: resPartnerId2 }],
+                    ],
+                });
+                const { click, insertText, openDiscuss } = await start({
+                    discuss: {
+                        context: { active_id: mailChannelId1 },
+                    },
+                });
+                await openDiscuss();
+                await insertText(".o-mail-composer-textarea", "@Te");
+                await afterNextRender(() =>
+                    document.querySelectorAll(".o_ComposerSuggestionView")[0].click()
+                );
+                await insertText(".o-mail-composer-textarea", "@Te");
+                await afterNextRender(() =>
+                    document.querySelectorAll(".o_ComposerSuggestionView")[1].click()
+                );
+                await click(".o-mail-composer-send-button");
+                assert.containsOnce(
+                    document.body,
+                    ".o-mail-message-body",
+                    "should have one message after posting it"
+                );
+                assert.containsOnce(
+                    document.querySelector(`.o-mail-message-body`),
+                    `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+                    "message should contain the first partner mention"
+                );
+                assert.containsOnce(
+                    document.querySelector(`.o-mail-message-body`),
+                    `.o_mail_redirect[data-oe-id="${resPartnerId2}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+                    "message should also contain the second partner mention"
+                );
+            }
+        );
 
-        QUnit.test("mention a channel with space in the name", async function (assert) {
+        QUnit.skipRefactoring("mention a channel with space in the name", async function (assert) {
             assert.expect(2);
 
             const pyEnv = await startServer();
@@ -1070,11 +1071,11 @@ QUnit.module("mail", {}, function () {
                 },
             });
             await openDiscuss();
-            await insertText(".o_ComposerTextInputView_textarea", "#");
+            await insertText(".o-mail-composer-textarea", "#");
             await click(".o_ComposerSuggestionView");
-            await click(".o_ComposerView_buttonSend");
+            await click(".o-mail-composer-send-button");
             assert.containsOnce(
-                document.querySelector(".o_MessageView_content"),
+                document.querySelector(".o-mail-message-body"),
                 ".o_channel_redirect",
                 "message must contain a link to the mentioned channel"
             );
@@ -1085,7 +1086,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test('mention a channel with "&" in the name', async function (assert) {
+        QUnit.skipRefactoring('mention a channel with "&" in the name', async function (assert) {
             assert.expect(2);
 
             const pyEnv = await startServer();
@@ -1099,11 +1100,11 @@ QUnit.module("mail", {}, function () {
             });
             await openDiscuss();
 
-            await insertText(".o_ComposerTextInputView_textarea", "#");
+            await insertText(".o-mail-composer-textarea", "#");
             await click(".o_ComposerSuggestionView");
-            await click(".o_ComposerView_buttonSend");
+            await click(".o-mail-composer-send-button");
             assert.containsOnce(
-                document.querySelector(".o_MessageView_content"),
+                document.querySelector(".o-mail-message-body"),
                 ".o_channel_redirect",
                 "message should contain a link to the mentioned channel"
             );
@@ -1114,7 +1115,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "mention a channel on a second line when the first line contains #",
             async function (assert) {
                 assert.expect(2);
@@ -1129,12 +1130,12 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                await insertText(".o_ComposerTextInputView_textarea", "#blabla\n");
-                await insertText(".o_ComposerTextInputView_textarea", "#");
+                await insertText(".o-mail-composer-textarea", "#blabla\n");
+                await insertText(".o-mail-composer-textarea", "#");
                 await click(".o_ComposerSuggestionView");
-                await click(".o_ComposerView_buttonSend");
+                await click(".o-mail-composer-send-button");
                 assert.containsOnce(
-                    document.querySelector(".o_MessageView_content"),
+                    document.querySelector(".o-mail-message-body"),
                     ".o_channel_redirect",
                     "message should contain a link to the mentioned channel"
                 );
@@ -1146,7 +1147,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "mention a channel when replacing the space after the mention by another char",
             async function (assert) {
                 assert.expect(2);
@@ -1162,17 +1163,14 @@ QUnit.module("mail", {}, function () {
                 });
                 await openDiscuss();
 
-                await insertText(".o_ComposerTextInputView_textarea", "#");
+                await insertText(".o-mail-composer-textarea", "#");
                 await click(".o_ComposerSuggestionView");
-                const text = document.querySelector(`.o_ComposerTextInputView_textarea`).value;
-                document.querySelector(`.o_ComposerTextInputView_textarea`).value = text.slice(
-                    0,
-                    -1
-                );
-                await insertText(".o_ComposerTextInputView_textarea", ", test");
-                await click(".o_ComposerView_buttonSend");
+                const text = document.querySelector(`.o-mail-composer-textarea`).value;
+                document.querySelector(`.o-mail-composer-textarea`).value = text.slice(0, -1);
+                await insertText(".o-mail-composer-textarea", ", test");
+                await click(".o-mail-composer-send-button");
                 assert.containsOnce(
-                    document.querySelector(".o_MessageView_content"),
+                    document.querySelector(".o-mail-message-body"),
                     ".o_channel_redirect",
                     "message should contain a link to the mentioned channel"
                 );
@@ -1184,55 +1182,58 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("mention 2 different channels that have the same name", async function (assert) {
-            assert.expect(3);
+        QUnit.skipRefactoring(
+            "mention 2 different channels that have the same name",
+            async function (assert) {
+                assert.expect(3);
 
-            const pyEnv = await startServer();
-            const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
-                {
-                    channel_type: "channel",
-                    group_public_id: false,
-                    name: "my channel",
-                },
-                {
-                    channel_type: "channel",
-                    name: "my channel",
-                },
-            ]);
-            const { click, insertText, openDiscuss } = await start({
-                discuss: {
-                    context: { active_id: mailChannelId1 },
-                },
-            });
-            await openDiscuss();
-            document.querySelector(".o_ComposerTextInputView_textarea").focus();
-            await insertText(".o_ComposerTextInputView_textarea", "#my");
-            await afterNextRender(() =>
-                document.querySelectorAll(".o_ComposerSuggestionView")[0].click()
-            );
-            await insertText(".o_ComposerTextInputView_textarea", "#my");
-            await afterNextRender(() =>
-                document.querySelectorAll(".o_ComposerSuggestionView")[1].click()
-            );
-            await click(".o_ComposerView_buttonSend");
-            assert.containsOnce(
-                document.body,
-                ".o_MessageView_content",
-                "should have one message after posting it"
-            );
-            assert.containsOnce(
-                document.querySelector(`.o_MessageView_content`),
-                `.o_channel_redirect[data-oe-id="${mailChannelId1}"][data-oe-model="mail.channel"]:contains("#my channel")`,
-                "message should contain the first channel mention"
-            );
-            assert.containsOnce(
-                document.querySelector(`.o_MessageView_content`),
-                `.o_channel_redirect[data-oe-id="${mailChannelId2}"][data-oe-model="mail.channel"]:contains("#my channel")`,
-                "message should also contain the second channel mention"
-            );
-        });
+                const pyEnv = await startServer();
+                const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
+                    {
+                        channel_type: "channel",
+                        group_public_id: false,
+                        name: "my channel",
+                    },
+                    {
+                        channel_type: "channel",
+                        name: "my channel",
+                    },
+                ]);
+                const { click, insertText, openDiscuss } = await start({
+                    discuss: {
+                        context: { active_id: mailChannelId1 },
+                    },
+                });
+                await openDiscuss();
+                document.querySelector(".o-mail-composer-textarea").focus();
+                await insertText(".o-mail-composer-textarea", "#my");
+                await afterNextRender(() =>
+                    document.querySelectorAll(".o_ComposerSuggestionView")[0].click()
+                );
+                await insertText(".o-mail-composer-textarea", "#my");
+                await afterNextRender(() =>
+                    document.querySelectorAll(".o_ComposerSuggestionView")[1].click()
+                );
+                await click(".o-mail-composer-send-button");
+                assert.containsOnce(
+                    document.body,
+                    ".o-mail-message-body",
+                    "should have one message after posting it"
+                );
+                assert.containsOnce(
+                    document.querySelector(`.o-mail-message-body`),
+                    `.o_channel_redirect[data-oe-id="${mailChannelId1}"][data-oe-model="mail.channel"]:contains("#my channel")`,
+                    "message should contain the first channel mention"
+                );
+                assert.containsOnce(
+                    document.querySelector(`.o-mail-message-body`),
+                    `.o_channel_redirect[data-oe-id="${mailChannelId2}"][data-oe-model="mail.channel"]:contains("#my channel")`,
+                    "message should also contain the second channel mention"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "show empty placeholder when thread contains no message",
             async function (assert) {
                 assert.expect(2);
@@ -1263,13 +1264,13 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsNone(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "no message should be shown as thread does not contain any"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "show empty placeholder when thread contains only empty messages",
             async function (assert) {
                 assert.expect(2);
@@ -1304,13 +1305,13 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsNone(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "no message should be shown as thread contains only empty ones"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "message with subtype should be displayed (and not considered as empty)",
             async function (assert) {
                 assert.expect(2);
@@ -1344,18 +1345,18 @@ QUnit.module("mail", {}, function () {
                 });
                 assert.containsOnce(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "should display 1 message (message with subtype description 'task created')"
                 );
                 assert.strictEqual(
-                    document.body.querySelector(".o_MessageView_content").textContent,
+                    document.body.querySelector(".o-mail-message-body").textContent,
                     "Task created",
                     "message should have 'Task created' (from its subtype description)"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] message list with a full page of empty messages should show load more if there are other messages",
             async function (assert) {
                 // Technical assumptions :
@@ -1398,7 +1399,7 @@ QUnit.module("mail", {}, function () {
                 });
                 assert.containsNone(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     "No message should be shown as all 30 first messages are empty"
                 );
                 assert.containsOnce(
@@ -1409,7 +1410,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]",
             async function (assert) {
                 // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
@@ -1439,14 +1440,14 @@ QUnit.module("mail", {}, function () {
                 });
                 await openDiscuss();
                 // send a command that leads to receiving a transient message
-                await insertText(".o_ComposerTextInputView_textarea", "/who");
-                await click(".o_ComposerView_buttonSend");
+                await insertText(".o-mail-composer-textarea", "/who");
+                await click(".o-mail-composer-send-button");
                 const transientMessage =
                     messaging.discuss.threadViewer.threadView.messageListView
                         .messageListViewItems[0].message;
 
                 // composer is focused by default, we remove that focus
-                document.querySelector(".o_ComposerTextInputView_textarea").blur();
+                document.querySelector(".o-mail-composer-textarea").blur();
                 // simulate receiving a message
                 await afterNextRender(() =>
                     messaging.rpc({
@@ -1462,7 +1463,7 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsN(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     2,
                     "should display 2 messages (the transient & the received message), after posting a command"
                 );
@@ -1473,13 +1474,13 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsOnce(
                     document.body,
-                    `.o_MessageView[data-message-id="${transientMessage.id}"] + .o_MessageListView_separatorNewMessages`,
+                    `.o-mail-message[data-message-id="${transientMessage.id}"] + .o_MessageListView_separatorNewMessages`,
                     "separator should be shown just after transient message"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]",
             async function (assert) {
                 assert.expect(1);
@@ -1492,8 +1493,8 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                await insertText(".o_ComposerTextInputView_textarea", "Dummy Message");
-                await click(".o_ComposerView_buttonSend");
+                await insertText(".o-mail-composer-textarea", "Dummy Message");
+                await click(".o-mail-composer-send-button");
                 assert.hasClass(
                     document.querySelector(".o_ComposerView"),
                     "o-focused",
@@ -1502,34 +1503,37 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("failure on loading messages should display error", async function (assert) {
-            assert.expect(1);
+        QUnit.skipRefactoring(
+            "failure on loading messages should display error",
+            async function (assert) {
+                assert.expect(1);
 
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_type: "channel",
-                name: "General",
-            });
-            const { openDiscuss } = await start({
-                discuss: {
-                    context: { active_id: mailChannelId1 },
-                },
-                async mockRPC(route, args) {
-                    if (route === "/mail/channel/messages") {
-                        return Promise.reject();
-                    }
-                },
-            });
-            await openDiscuss({ waitUntilMessagesLoaded: false });
+                const pyEnv = await startServer();
+                const mailChannelId1 = pyEnv["mail.channel"].create({
+                    channel_type: "channel",
+                    name: "General",
+                });
+                const { openDiscuss } = await start({
+                    discuss: {
+                        context: { active_id: mailChannelId1 },
+                    },
+                    async mockRPC(route, args) {
+                        if (route === "/mail/channel/messages") {
+                            return Promise.reject();
+                        }
+                    },
+                });
+                await openDiscuss({ waitUntilMessagesLoaded: false });
 
-            assert.containsOnce(
-                document.body,
-                ".o_ThreadView_loadingFailed",
-                "should show loading error message"
-            );
-        });
+                assert.containsOnce(
+                    document.body,
+                    ".o_ThreadView_loadingFailed",
+                    "should show loading error message"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "failure on loading messages should prompt retry button",
             async function (assert) {
                 assert.expect(1);
@@ -1559,7 +1563,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "failure on loading more messages should not alter message list display",
             async function (assert) {
                 assert.expect(1);
@@ -1600,14 +1604,14 @@ QUnit.module("mail", {}, function () {
                 await click(".o_MessageListView_loadMore");
                 assert.containsN(
                     document.body,
-                    ".o_MessageView",
+                    ".o-mail-message",
                     30,
                     "should still show 30 messages as load more has failed"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "failure on loading more messages should display error and prompt retry button",
             async function (assert) {
                 assert.expect(3);
@@ -1664,7 +1668,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "Retry loading more messages on failed load more messages should load more messages",
             async function (assert) {
                 assert.expect(0);
@@ -1723,7 +1727,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "highlight the message mentioning the current user inside the channel",
             async function (assert) {
                 assert.expect(1);
@@ -1751,14 +1755,14 @@ QUnit.module("mail", {}, function () {
                 });
                 await openDiscuss();
                 assert.hasClass(
-                    document.querySelector(`.o_MessageListView .o_MessageView`),
+                    document.querySelector(`.o_MessageListView .o-mail-message`),
                     "o-highlighted",
                     "message should be highlighted"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "not highlighting the message if not mentioning the current user inside the channel",
             async function (assert) {
                 assert.expect(1);
@@ -1787,7 +1791,7 @@ QUnit.module("mail", {}, function () {
                 });
                 await openDiscuss();
                 assert.doesNotHaveClass(
-                    document.querySelector(`.o_MessageListView .o_MessageView`),
+                    document.querySelector(`.o_MessageListView .o-mail-message`),
                     "o-highlighted",
                     "message should not be highlighted"
                 );

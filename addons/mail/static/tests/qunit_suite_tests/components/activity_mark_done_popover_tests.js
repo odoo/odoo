@@ -8,58 +8,61 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("activity_mark_done_popover_tests.js");
 
-        QUnit.test("activity mark done popover simplest layout", async function (assert) {
-            assert.expect(6);
+        QUnit.skipRefactoring(
+            "activity mark done popover simplest layout",
+            async function (assert) {
+                assert.expect(6);
 
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({});
-            pyEnv["mail.activity"].create({
-                activity_category: "not_upload_file",
-                can_write: true,
-                res_id: resPartnerId1,
-                res_model: "res.partner",
-            });
-            const { click, openView } = await start();
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            await click(".o_ActivityView_markDoneButton");
+                const pyEnv = await startServer();
+                const resPartnerId1 = pyEnv["res.partner"].create({});
+                pyEnv["mail.activity"].create({
+                    activity_category: "not_upload_file",
+                    can_write: true,
+                    res_id: resPartnerId1,
+                    res_model: "res.partner",
+                });
+                const { click, openView } = await start();
+                await openView({
+                    res_model: "res.partner",
+                    res_id: resPartnerId1,
+                    views: [[false, "form"]],
+                });
+                await click(".o_ActivityView_markDoneButton");
 
-            assert.containsOnce(
-                document.body,
-                ".o_ActivityMarkDonePopoverContentView",
-                "Popover component should be present"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ActivityMarkDonePopoverContentView_feedback",
-                "Popover component should contain the feedback textarea"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ActivityMarkDonePopoverContentView_buttons",
-                "Popover component should contain the action buttons"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ActivityMarkDonePopoverContentView_doneScheduleNextButton",
-                "Popover component should contain the done & schedule next button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ActivityMarkDonePopoverContentView_doneButton",
-                "Popover component should contain the done button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ActivityMarkDonePopoverContentView_discardButton",
-                "Popover component should contain the discard button"
-            );
-        });
+                assert.containsOnce(
+                    document.body,
+                    ".o_ActivityMarkDonePopoverContentView",
+                    "Popover component should be present"
+                );
+                assert.containsOnce(
+                    document.body,
+                    ".o_ActivityMarkDonePopoverContentView_feedback",
+                    "Popover component should contain the feedback textarea"
+                );
+                assert.containsOnce(
+                    document.body,
+                    ".o_ActivityMarkDonePopoverContentView_buttons",
+                    "Popover component should contain the action buttons"
+                );
+                assert.containsOnce(
+                    document.body,
+                    ".o_ActivityMarkDonePopoverContentView_doneScheduleNextButton",
+                    "Popover component should contain the done & schedule next button"
+                );
+                assert.containsOnce(
+                    document.body,
+                    ".o-mail-activity-mark-as-done-button-done",
+                    "Popover component should contain the done button"
+                );
+                assert.containsOnce(
+                    document.body,
+                    ".o_ActivityMarkDonePopoverContentView_discardButton",
+                    "Popover component should contain the discard button"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "activity with force next mark done popover simplest layout",
             async function (assert) {
                 assert.expect(6);
@@ -103,7 +106,7 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsNone(
                     document.body,
-                    ".o_ActivityMarkDonePopoverContentView_doneButton",
+                    ".o-mail-activity-mark-as-done-button-done",
                     "Popover component should NOT contain the done button"
                 );
                 assert.containsOnce(
@@ -114,7 +117,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "activity mark done popover mark done without feedback",
             async function (assert) {
                 assert.expect(7);
@@ -153,7 +156,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
                 await click(".o_ActivityView_markDoneButton");
-                await click(".o_ActivityMarkDonePopoverContentView_doneButton");
+                await click(".o-mail-activity-mark-as-done-button-done");
                 assert.verifySteps(
                     ["action_feedback"],
                     "Mark done and schedule next button should call the right rpc"
@@ -161,57 +164,60 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("activity mark done popover mark done with feedback", async function (assert) {
-            assert.expect(7);
+        QUnit.skipRefactoring(
+            "activity mark done popover mark done with feedback",
+            async function (assert) {
+                assert.expect(7);
 
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({});
-            const mailActivityId1 = pyEnv["mail.activity"].create({
-                activity_category: "not_upload_file",
-                can_write: true,
-                res_id: resPartnerId1,
-                res_model: "res.partner",
-            });
-            const { click, openView } = await start({
-                async mockRPC(route, args) {
-                    if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                        assert.step("action_feedback");
-                        assert.strictEqual(args.args.length, 1);
-                        assert.strictEqual(args.args[0].length, 1);
-                        assert.strictEqual(args.args[0][0], mailActivityId1);
-                        assert.strictEqual(args.kwargs.attachment_ids.length, 0);
-                        assert.strictEqual(args.kwargs.feedback, "This task is done");
-                        // random value returned in order for the mock server to know that this route is implemented.
-                        return true;
-                    }
-                    if (route === "/web/dataset/call_kw/mail.activity/unlink") {
-                        // 'unlink' on non-existing record raises a server crash
-                        throw new Error(
-                            "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
-                        );
-                    }
-                },
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            await click(".o_ActivityView_markDoneButton");
+                const pyEnv = await startServer();
+                const resPartnerId1 = pyEnv["res.partner"].create({});
+                const mailActivityId1 = pyEnv["mail.activity"].create({
+                    activity_category: "not_upload_file",
+                    can_write: true,
+                    res_id: resPartnerId1,
+                    res_model: "res.partner",
+                });
+                const { click, openView } = await start({
+                    async mockRPC(route, args) {
+                        if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
+                            assert.step("action_feedback");
+                            assert.strictEqual(args.args.length, 1);
+                            assert.strictEqual(args.args[0].length, 1);
+                            assert.strictEqual(args.args[0][0], mailActivityId1);
+                            assert.strictEqual(args.kwargs.attachment_ids.length, 0);
+                            assert.strictEqual(args.kwargs.feedback, "This task is done");
+                            // random value returned in order for the mock server to know that this route is implemented.
+                            return true;
+                        }
+                        if (route === "/web/dataset/call_kw/mail.activity/unlink") {
+                            // 'unlink' on non-existing record raises a server crash
+                            throw new Error(
+                                "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
+                            );
+                        }
+                    },
+                });
+                await openView({
+                    res_model: "res.partner",
+                    res_id: resPartnerId1,
+                    views: [[false, "form"]],
+                });
+                await click(".o_ActivityView_markDoneButton");
 
-            const feedbackTextarea = document.querySelector(
-                ".o_ActivityMarkDonePopoverContentView_feedback"
-            );
-            feedbackTextarea.focus();
-            document.execCommand("insertText", false, "This task is done");
-            document.querySelector(".o_ActivityMarkDonePopoverContentView_doneButton").click();
-            assert.verifySteps(
-                ["action_feedback"],
-                "Mark done and schedule next button should call the right rpc"
-            );
-        });
+                const feedbackTextarea = document.querySelector(
+                    ".o_ActivityMarkDonePopoverContentView_feedback"
+                );
+                feedbackTextarea.focus();
+                document.execCommand("insertText", false, "This task is done");
+                document.querySelector(".o-mail-activity-mark-as-done-button-done").click();
+                assert.verifySteps(
+                    ["action_feedback"],
+                    "Mark done and schedule next button should call the right rpc"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "activity mark done popover mark done and schedule next",
             async function (assert) {
                 assert.expect(6);
@@ -273,7 +279,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] activity mark done & schedule next with new action",
             async function (assert) {
                 assert.expect(3);

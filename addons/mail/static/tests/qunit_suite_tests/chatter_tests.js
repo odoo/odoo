@@ -40,11 +40,8 @@ QUnit.module("mail", {}, function () {
             views: [[false, "list"]],
         });
 
-        assert.containsOnce(document.body, ".o_ActivityButtonView_icon.text-muted");
-        assert.strictEqual(
-            document.querySelector(".o_ListFieldActivityView_summary").innerText,
-            ""
-        );
+        assert.containsOnce(document.body, ".o-activity-button-icon.text-muted");
+        assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "");
 
         assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
     });
@@ -99,18 +96,15 @@ QUnit.module("mail", {}, function () {
         });
 
         const firstRow = document.querySelector(".o_data_row");
-        assert.containsOnce(firstRow, ".o_ActivityButtonView_icon.text-warning.fa-phone");
+        assert.containsOnce(firstRow, ".o-activity-button-icon.text-warning.fa-phone");
         assert.strictEqual(
-            firstRow.querySelector(".o_ListFieldActivityView_summary").innerText,
+            firstRow.querySelector(".o-list-activity-summary").innerText,
             "Call with Al"
         );
 
         const secondRow = document.querySelectorAll(".o_data_row")[1];
-        assert.containsOnce(secondRow, ".o_ActivityButtonView_icon.text-success.fa-clock-o");
-        assert.strictEqual(
-            secondRow.querySelector(".o_ListFieldActivityView_summary").innerText,
-            "Type 2"
-        );
+        assert.containsOnce(secondRow, ".o-activity-button-icon.text-success.fa-clock-o");
+        assert.strictEqual(secondRow.querySelector(".o-list-activity-summary").innerText, "Type 2");
 
         assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
     });
@@ -155,17 +149,14 @@ QUnit.module("mail", {}, function () {
             views: [[false, "list"]],
         });
 
-        assert.containsOnce(document.body, ".o_ActivityButtonView_icon.text-warning.fa-warning");
-        assert.strictEqual(
-            document.querySelector(".o_ListFieldActivityView_summary").innerText,
-            "Warning"
-        );
+        assert.containsOnce(document.body, ".o-activity-button-icon.text-warning.fa-warning");
+        assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "Warning");
 
         assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
     });
 
     QUnit.test("list activity widget: open dropdown", async function (assert) {
-        assert.expect(9);
+        assert.expect(7);
 
         const pyEnv = await startServer();
         const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv["mail.activity.type"].create([
@@ -247,25 +238,20 @@ QUnit.module("mail", {}, function () {
         });
 
         assert.strictEqual(
-            document.querySelector(".o_ListFieldActivityView_summary").innerText,
+            document.querySelector(".o-list-activity-summary").innerText,
             "Call with Al"
         );
 
-        await click(".o_ActivityButtonView"); // open the popover
-        await click(".o_ActivityListViewItem_markAsDone"); // mark the first activity as done
-        await click(".o_ActivityMarkDonePopoverContentView_doneButton"); // confirm
+        await click(".o-activity-button"); // open the popover
+        await click(".o-activity-list-popover-item-mark-as-done"); // mark the first activity as done
+        await click(".o-mail-activity-mark-as-done-button-done"); // confirm
 
-        assert.strictEqual(
-            document.querySelector(".o_ListFieldActivityView_summary").innerText,
-            "Meet FP"
-        );
+        assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "Meet FP");
 
         assert.verifySteps([
             "web_search_read",
             "activity_format",
             "action_feedback",
-            "/mail/thread/messages",
-            "/mail/thread/data",
             "web_search_read",
         ]);
     });

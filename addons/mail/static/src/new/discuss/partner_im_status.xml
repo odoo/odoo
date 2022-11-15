@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.partner_im_status" owl="1">
+        <div class="d-flex justify-content-center flex-shrink-0 align-items-center rounded-circle small o-mail-background-inherit" t-att-class="props.className">
+            <span t-if="props.partner.im_status" class="o-mail-partner-im-status d-flex flex-column fa-stack">
+                <i t-if="props.partner.im_status === 'online'" class="o-mail-partner-im-status-icon o-online fa fa-circle fa-stack-1x text-primary" title="Online" role="img" aria-label="User is online" />
+                <i t-if="props.partner.im_status === 'away'" class="o-mail-partner-im-status-icon o-away fa fa-circle fa-stack-1x text-warning" title="Idle" role="img" aria-label="User is idle" />
+                <i t-if="props.partner.im_status === 'offline'" class="o-mail-partner-im-status-icon o-offline fa fa-circle-o fa-stack-1x text-700" title="Offline" role="img" aria-label="User is offline" />
+                <i t-if="props.partner.im_status === 'bot'" class="o-mail-partner-im-status-icon o-bot fa fa-heart fa-stack-1x text-primary" title="Bot" role="img" aria-label="User is a bot"/>
+            </span>
+        </div>
+    </t>
+
+</templates>

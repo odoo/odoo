@@ -6,7 +6,7 @@ import FormView from "web.FormView";
 QUnit.module("website_livechat", {}, function () {
     QUnit.module("messaging_notification_handler_tests.js");
 
-    QUnit.test(
+    QUnit.skipRefactoring(
         "should open chat window on send chat request to website visitor",
         async function (assert) {
             assert.expect(3);
@@ -57,7 +57,7 @@ QUnit.module("website_livechat", {}, function () {
                 "chat window of livechat should be focused on open"
             );
             assert.strictEqual(
-                document.querySelector(".o_ChatWindowHeaderView_name").textContent,
+                document.querySelector(".o-mail-chat-window-header-name").textContent,
                 "Visitor #11",
                 "chat window of livechat should have name of visitor in the name"
             );

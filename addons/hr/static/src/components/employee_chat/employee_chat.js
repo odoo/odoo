@@ -3,7 +3,7 @@
 import { registry } from '@web/core/registry';
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { useOpenChat } from "@mail/views/open_chat_hook";
+import { useOpenChat } from "@mail/new/views/open_chat_hook";
 
 const { Component } = owl;
 

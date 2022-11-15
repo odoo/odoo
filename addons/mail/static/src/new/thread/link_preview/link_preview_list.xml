@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.link_preview_list" owl="1">
+
+        <div class="o-mail-link-preview-list d-flex flex-column mt-2" t-att-class="{ 'me-2 pe-4': env.inChatWindow and !env.alignedRight, 'ms-2 ps-4': env.inChatWindow and env.alignedRight }">
+            <div class="d-flex flex-grow-1 flex-wrap">
+                <LinkPreviewCard t-foreach="linkPreviewsCard" t-as="linkPreview" t-key="linkPreview.id" linkPreview="linkPreview" canBeDeleted="props.canBeDeleted"/>
+                <LinkPreviewImage t-foreach="linkPreviewsImage" t-as="linkPreview" t-key="linkPreview.id" linkPreview="linkPreview" canBeDeleted="props.canBeDeleted"/>
+                <LinkPreviewVideo t-foreach="linkPreviewsVideo" t-as="linkPreview" t-key="linkPreview.id" linkPreview="linkPreview" canBeDeleted="props.canBeDeleted"/>
+            </div>
+        </div>
+    </t>
+</templates>

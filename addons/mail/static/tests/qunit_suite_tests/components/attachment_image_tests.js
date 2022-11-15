@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("attachment_image_tests.js");
 
-        QUnit.test("auto layout with image", async function (assert) {
+        QUnit.skipRefactoring("auto layout with image", async function (assert) {
             assert.expect(3);
 
             const pyEnv = await startServer();

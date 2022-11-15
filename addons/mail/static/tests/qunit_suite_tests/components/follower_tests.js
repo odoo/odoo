@@ -9,7 +9,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("follower_tests.js");
 
-        QUnit.test("base rendering not editable", async function (assert) {
+        QUnit.skipRefactoring("base rendering not editable", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -59,7 +59,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("base rendering editable", async function (assert) {
+        QUnit.skipRefactoring("base rendering editable", async function (assert) {
             assert.expect(6);
 
             const pyEnv = await startServer();
@@ -105,7 +105,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("click on partner follower details", async function (assert) {
+        QUnit.skipRefactoring("click on partner follower details", async function (assert) {
             assert.expect(7);
 
             const pyEnv = await startServer();
@@ -160,7 +160,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("click on edit follower", async function (assert) {
+        QUnit.skipRefactoring("click on edit follower", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -213,7 +213,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("edit follower and close subtype dialog", async function (assert) {
+        QUnit.skipRefactoring("edit follower and close subtype dialog", async function (assert) {
             assert.expect(6);
 
             const pyEnv = await startServer();

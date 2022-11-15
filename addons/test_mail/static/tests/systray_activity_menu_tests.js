@@ -30,7 +30,7 @@ QUnit.module('systray_activity_menu_tests.js', {
     },
 });
 
-QUnit.test('activity menu widget: menu with no records', async function (assert) {
+QUnit.skipRefactoring('activity menu widget: menu with no records', async function (assert) {
     assert.expect(1);
 
     const { click } = await start({
@@ -44,7 +44,7 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
     assert.containsOnce(document.body, '.o_ActivityMenuView_noActivity');
 });
 
-QUnit.test('activity menu widget: activity menu with 2 models', async function (assert) {
+QUnit.skipRefactoring('activity menu widget: activity menu with 2 models', async function (assert) {
     assert.expect(10);
 
     const { click, env } = await start();
@@ -94,7 +94,7 @@ QUnit.test('activity menu widget: activity menu with 2 models', async function (
     await click('.o_ActivityMenuView_activityGroups > div[data-model_name="mail.test.activity"]');
 });
 
-QUnit.test('activity menu widget: activity view icon', async function (assert) {
+QUnit.skipRefactoring('activity menu widget: activity view icon', async function (assert) {
     assert.expect(14);
 
     patchWithCleanup(session, { uid: 10 });
@@ -144,7 +144,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     ]);
 });
 
-QUnit.test('activity menu widget: close on messaging menu click', async function (assert) {
+QUnit.skipRefactoring('activity menu widget: close on messaging menu click', async function (assert) {
     assert.expect(2);
 
     const { click } = await start();

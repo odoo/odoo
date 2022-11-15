@@ -17,7 +17,7 @@ const _lt = core._lt;
 // Activities Widget for Kanban views ('kanban_activity' widget)
 // -----------------------------------------------------------------------------
 const KanbanActivity = AbstractField.extend({
-    template: "mail.KanbanActivity",
+    template: "mail.LegacyKanbanActivity",
     events: {
         "change input.o_input_file": "_onFileChanged",
         "click .o_activity_template_preview": "_onPreviewMailTemplate",
@@ -503,7 +503,7 @@ const KanbanActivity = AbstractField.extend({
 // Activities Widget for List views ('list_activity' widget)
 // -----------------------------------------------------------------------------
 const ListActivity = KanbanActivity.extend({
-    template: "mail.ListActivity",
+    template: "mail.LegacyListActivity",
     events: Object.assign({}, KanbanActivity.prototype.events, {
         "click .dropdown-menu.o_activity": "_onDropdownClicked",
     }),

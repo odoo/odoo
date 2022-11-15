@@ -2,10 +2,12 @@
 
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { loadEmoji } from "@mail/new/composer/emoji_picker";
 import { nextTick } from "@mail/utils/utils";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
+import { registry } from "@web/core/registry";
 import { wowlServicesSymbol } from "@web/legacy/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { session as sessionInfo } from "@web/session";
@@ -13,7 +15,12 @@ import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helper
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
 import { App, EventBus } from "@odoo/owl";
+import { registryNamesToCloneWithCleanup } from "@web/../tests/helpers/mock_env";
 const { afterNextRender } = App;
+
+// load emoji data once, when the test suite starts.
+QUnit.begin(loadEmoji);
+registryNamesToCloneWithCleanup.push("mock_server_callbacks");
 
 //------------------------------------------------------------------------------
 // Private
@@ -117,7 +124,7 @@ function getMouseenter({ afterNextRender }) {
     };
 }
 
-function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props } = {}) {
+function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {}) {
     return async function openDiscuss({ waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
             // hardcoded actionId, required for discuss_container props validation.
@@ -127,58 +134,75 @@ function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props 
             tag: "mail.action_discuss",
             type: "ir.actions.client",
         };
+        let threadId = context.active_id || params.default_active_id || "inbox";
+        if (typeof threadId === "string" && threadId.includes("_")) {
+            threadId = parseInt(threadId.split("_")[1]);
+        }
+        // TODO-DISCUSS-REFACTORING: remove when activeId will be handled.
+        webClient.env.services["mail.messaging"].setDiscussThread(threadId);
         if (waitUntilMessagesLoaded) {
-            let threadId = context.active_id;
-            if (typeof threadId === "string") {
-                threadId = parseInt(threadId.split("_")[1]);
+            const messagesLoadedPromise = makeDeferred();
+            let loadMessageRoute = `/mail/${threadId}/messages`;
+            if (Number.isInteger(threadId)) {
+                loadMessageRoute = "/mail/channel/messages";
             }
-            return afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: () => doAction(webClient, actionOpenDiscuss, { props }),
-                    message: "should wait until discuss loaded its messages",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "messages-loaded" &&
-                            (!threadId || threadViewer.thread.id === threadId)
-                        );
-                    },
-                })
+            registry.category("mock_server_callbacks").add(
+                loadMessageRoute,
+                ({ channel_id: channelId = threadId }) => {
+                    if (channelId === threadId) {
+                        messagesLoadedPromise.resolve();
+                    }
+                },
+                { force: true }
             );
+            return afterNextRender(async () => {
+                await doAction(webClient, actionOpenDiscuss, { props });
+                await messagesLoadedPromise;
+            });
         }
         return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
 }
 
-function getOpenFormView(afterEvent, openView) {
+function getOpenFormView(openView) {
     return async function openFormView(
         action,
         { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}
     ) {
         action["views"] = [[false, "form"]];
         const func = () => openView(action, props);
-        const waitData = (func) =>
-            afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-loaded-data",
-                    func,
-                    message: "should wait until chatter loaded its data",
-                    predicate: ({ thread }) => {
-                        return thread.model === action.res_model && thread.id === action.res_id;
-                    },
-                })
+        const waitData = (func) => {
+            const dataLoadedPromise = makeDeferred();
+            registry.category("mock_server_callbacks").add(
+                "/mail/thread/data",
+                ({ thread_id: threadId, thread_model: threadModel }) => {
+                    if (threadId === action.res_id && threadModel === action.res_model) {
+                        dataLoadedPromise.resolve();
+                    }
+                },
+                { force: true }
             );
-        const waitMessages = (func) =>
-            afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-loaded-messages",
-                    func,
-                    message: "should wait until chatter loaded its messages",
-                    predicate: ({ thread }) => {
-                        return thread.model === action.res_model && thread.id === action.res_id;
-                    },
-                })
+            return afterNextRender(async () => {
+                await func();
+                await dataLoadedPromise;
+            });
+        };
+        const waitMessages = (func) => {
+            const messagesLoadedPromise = makeDeferred();
+            registry.category("mock_server_callbacks").add(
+                "/mail/thread/messages",
+                ({ thread_id: threadid, thread_model: threadModel }) => {
+                    if (threadid === action.res_id && threadModel === action.res_model) {
+                        messagesLoadedPromise.resolve();
+                    }
+                },
+                { force: true }
             );
+            return afterNextRender(async () => {
+                await func();
+                await messagesLoadedPromise;
+            });
+        };
         if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
             return waitData(() => waitMessages(func));
         }
@@ -290,9 +314,9 @@ async function start(param0 = {}) {
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
         mouseenter: getMouseenter({ afterNextRender }),
-        openDiscuss: getOpenDiscuss(afterEvent, webClient, discuss),
+        openDiscuss: getOpenDiscuss(webClient, discuss),
         openView,
-        openFormView: getOpenFormView(afterEvent, openView),
+        openFormView: getOpenFormView(openView),
         pyEnv,
         webClient,
     };

@@ -9,13 +9,13 @@ Model({
         async loadEmojiData() {
             this.update({ isLoading: true });
             await getBundle("mail.assets_model_data").then(loadBundle);
-            const { emojiCategoriesData, emojisData } = await odoo.runtimeImport(
-                "@mail/models_data/emoji_data"
+            const { categories, emojis } = await odoo.runtimeImport(
+                "@mail/new/composer/emoji_data"
             );
             if (!this.exists()) {
                 return;
             }
-            this._populateFromEmojiData(emojiCategoriesData, emojisData);
+            this._populateFromEmojiData(categories, emojis);
         },
         async _populateFromEmojiData(dataCategories, dataEmojis) {
             dataCategories.map((category) => {

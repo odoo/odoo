@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("discuss_message_edit_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "click on message edit button should open edit composer",
             async function (assert) {
                 assert.expect(1);
@@ -27,7 +27,7 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                await click(".o_MessageView");
+                await click(".o-mail-message");
                 await click(".o_MessageActionView_actionEdit");
                 assert.containsOnce(
                     document.body,

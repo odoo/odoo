@@ -582,3 +582,5 @@ export function setupQUnit() {
         onUnhandledRejection(originalError);
     });
 }
+
+QUnit.skipRefactoring = QUnit.skip;
