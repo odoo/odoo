@@ -80,6 +80,190 @@
                 (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
+    <record id="SWT3" model="account.tax.template">
+        <field name="name">3% WHT</field>
+        <field name="description">3%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-3</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT5" model="account.tax.template">
+        <field name="name">5% WHT</field>
+        <field name="description">5%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT10" model="account.tax.template">
+        <field name="name">10% WHT</field>
+        <field name="description">10%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT12" model="account.tax.template">
+        <field name="name">12% WHT</field>
+        <field name="description">12%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-12</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT15" model="account.tax.template">
+        <field name="name">15% WHT</field>
+        <field name="description">15%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-15</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT20" model="account.tax.template">
+        <field name="name">20% WHT</field>
+        <field name="description">20%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT25" model="account.tax.template">
+        <field name="name">25% WHT</field>
+        <field name="description">25%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-25</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
+    <record id="SWT30" model="account.tax.template">
+        <field name="name">30% WHT</field>
+        <field name="description">30%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke1120'),
+            }),
+        ]"/>
+    </record>
     <record id="PT16" model="account.tax.template">
         <field name="description">Purchases VAT (16%)</field>
         <field name="chart_template_id" ref="l10nke_chart_template"/>
@@ -159,5 +343,189 @@
                 (0,0, {'repartition_type': 'base'}),
                 (0,0, {'repartition_type': 'tax'}),
             ]"/>
+    </record>
+    <record id="PWT3" model="account.tax.template">
+        <field name="name">3% WHT</field>
+        <field name="description">3%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-3</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT5" model="account.tax.template">
+        <field name="name">5% WHT</field>
+        <field name="description">5%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT10" model="account.tax.template">
+        <field name="name">10% WHT</field>
+        <field name="description">10%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT12" model="account.tax.template">
+        <field name="name">12% WHT</field>
+        <field name="description">12%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-12</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT15" model="account.tax.template">
+        <field name="name">15% WHT</field>
+        <field name="description">15%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-15</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT20" model="account.tax.template">
+        <field name="name">20% WHT</field>
+        <field name="description">20%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT25" model="account.tax.template">
+        <field name="name">25% WHT</field>
+        <field name="description">25%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-25</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+    </record>
+    <record id="PWT30" model="account.tax.template">
+        <field name="name">30% WHT</field>
+        <field name="description">30%</field>
+        <field name="chart_template_id" ref="l10nke_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('ke2203'),
+            }),
+        ]"/>
     </record>
 </odoo>
