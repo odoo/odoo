@@ -141,7 +141,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         the formats we want to return the files for (in case we want to test specific formats).
         Other formats will still generate documents, they simply won't be returned.
         """
-        moves.edi_document_ids._process_documents_web_services(with_commit=False)
+        moves.edi_document_ids.with_context(skip_xsd=True)._process_documents_web_services(with_commit=False)
 
         documents_to_return = moves.edi_document_ids
         if formats_to_return != None:
