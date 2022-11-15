@@ -1610,13 +1610,12 @@ var SnippetsMenu = Widget.extend({
                 }
 
                 // First disable all editors...
-                for (let i = this.snippetEditors.length; i--;) {
-                    const editor = this.snippetEditors[i];
+                this.snippetEditors.map(async editor => {
                     editor.toggleOverlay(false, previewMode);
                     if (!previewMode) {
                         await editor.toggleOptions(false);
                     }
-                }
+                });
                 // ... if no editors are to be enabled, look if any have been
                 // enabled previously by a click
                 if (!editorToEnable) {
