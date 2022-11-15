@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="google_calendar.GoogleCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@id='calendar_sync_wrapper']" position="attributes">
+            <attribute name="t-if">true</attribute>
+        </xpath>
         <xpath expr="//div[@id='google_calendar_sync']" position="replace">
             <div id="google_calendar_sync" class="o_calendar_sync">
                 <button t-if="!model.googleIsSync" type="button" id="google_sync_pending" class="o_google_sync_button o_google_sync_pending btn btn-secondary btn" t-on-click="onGoogleSyncCalendar">
