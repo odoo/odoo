@@ -205,16 +205,11 @@
     // rules for fields borders: only on hover/focus by default
     // except when used with o_field_highlight (on parent or on the field)
     .o_input {
-        border-color: transparent;
         padding: $o-input-padding-y $o-input-padding-x;
-
-        &:hover, &:focus {
-            border-color: var(--o-input-border-color);
-        }
     }
 
-    &.o_field_invalid .o_input {
-        border-color: var(--o-input-border-color);
+    &:not(.o_field_highlight) .o_field_widget:not(.o_field_invalid) .o_input:not(:hover):not(:focus) {
+        --o-input-border-color: transparent;
     }
 
     .o_datepicker {
