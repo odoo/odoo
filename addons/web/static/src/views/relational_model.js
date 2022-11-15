@@ -751,8 +751,7 @@ export class Record extends DataPoint {
     getFieldDomain(fieldName) {
         const rawDomains = [
             this._domains[fieldName] || [],
-            this.fields[fieldName].domain || [],
-            this.activeFields[fieldName].domain,
+            this.activeFields[fieldName].domain || this.fields[fieldName].domain || [],
         ];
 
         const evalContext = this.evalContext;
