@@ -161,7 +161,7 @@ var MockServer = Class.extend({
         def = def.then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (debug) {
-                console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
+                console.log('%c[rpc] response ' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
         }, function (result) {
