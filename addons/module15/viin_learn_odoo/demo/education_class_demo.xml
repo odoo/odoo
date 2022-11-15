@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+    <record id="demo_education_class_12a1" model="education.class">
+        <field name="name">Class 12A1</field>
+        <field name="school_id" ref="main_school"/>
+        <field name="class_group_id" ref="demo_education_class_group_12"/>
+        <field name="teacher_ids" eval="[(6, 0, [ref('res_partner_teacher_tim'),
+                                                 ref('res_partner_teacher_john')])]"/>
+    </record>
+</odoo>
