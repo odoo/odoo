@@ -154,6 +154,9 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 'name': 'Steve',
             }).id
         })
+        # TOFIX: the test is actually broken because test_message cannot be
+        # read; this populates the cache to make it work, but that's cheating...
+        test_message.sudo().email_add_signature
         template_values = test_record._notify_by_email_prepare_rendering_context(test_message, {})
         self.assertNotEqual(escape(template_values['signature']), escape('<p>-- <br/>Steve</p>'))
 
