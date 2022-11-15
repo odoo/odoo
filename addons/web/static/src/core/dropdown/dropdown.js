@@ -147,6 +147,13 @@ export class Dropdown extends Component {
                 () => []
             );
 
+            useEffect(
+                (open) => {
+                    this.rootRef.el.parentElement.ariaExpanded = open ? "true" : "false";
+                },
+                () => [this.state.open]
+            );
+
             // Position menu relatively to parent element
             usePosition(() => this.rootRef.el.parentElement, positioningOptions);
         } else {

@@ -78,8 +78,6 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
     });
 
     QUnit.test("companies can be toggled: toggle a second company", async (assert) => {
-        assert.expect(10);
-
         const prom = makeDeferred();
         function onPushState(url) {
             assert.step(url.split("#")[1]);
@@ -98,6 +96,16 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id]", 3);
         assert.containsN(target, "[data-company-id] .fa-check-square", 1);
         assert.containsN(target, "[data-company-id] .fa-square-o", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll("[data-company-id] .toggle_company")].map(
+                (el) => el.ariaChecked
+            ),
+            ["true", "false", "false"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll("[data-company-id] .log_into")].map((el) => el.ariaPressed),
+            ["true", "false", "false"]
+        );
 
         /**
          *   [x] **Hermit**
@@ -108,6 +116,16 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsOnce(target, ".dropdown-menu", "dropdown is still opened");
         assert.containsN(target, "[data-company-id] .fa-check-square", 2);
         assert.containsN(target, "[data-company-id] .fa-square-o", 1);
+        assert.deepEqual(
+            [...target.querySelectorAll("[data-company-id] .toggle_company")].map(
+                (el) => el.ariaChecked
+            ),
+            ["true", "true", "false"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll("[data-company-id] .log_into")].map((el) => el.ariaPressed),
+            ["true", "false", "false"]
+        );
         await prom;
         assert.verifySteps(["cids=3%2C2"]);
     });
