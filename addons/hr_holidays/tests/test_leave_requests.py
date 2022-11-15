@@ -62,9 +62,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'requires_allocation': 'no',
             'leave_validation_type': 'manager',
         })
-
-        self.set_employee_create_date(self.employee_emp_id, '2010-02-03 00:00:00')
-        self.set_employee_create_date(self.employee_hruser_id, '2010-02-03 00:00:00')
+        self.holidays_type_4 = LeaveType.create({
+            'name': 'Limited with 2 approvals',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
+            'leave_validation_type': 'both',
+        })
+        self.holidays_support_document = LeaveType.create({
+            'name': 'Time off with support document',
+            'support_document': True,
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+        })
 
     def set_employee_create_date(self, id, newdate):
         """ This method is a hack in order to be able to define/redefine the create_date
@@ -820,3 +829,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
                 ml=20, lt=4, rl=16, vrl=16, vlt=4,
             )
+
+    def test_create_support_document_in_the_past(self):
+        with freeze_time('2022-10-19'):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_support_document.id,
+                'date_from': '2022-10-17',
+                'date_to': '2022-10-17',
+                'number_of_days': 1,
+                'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
+            })

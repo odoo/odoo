@@ -259,7 +259,7 @@ odoo.define('pos_coupon.pos', function (require) {
                 () => {
                     if (!this.pos.config.use_coupon_programs) return;
                     dp.add(this._getNewRewardLines()).then(([newRewardLines, rewardsContainer]) => {
-                        this.orderlines.add(newRewardLines);
+                        newRewardLines.forEach(line => this.add_orderline(line));
                         // We need this for the rendering of ActivePrograms component.
                         this.rewardsContainer = rewardsContainer;
                         // Send a signal that the rewardsContainer are updated.
@@ -329,8 +329,8 @@ odoo.define('pos_coupon.pos', function (require) {
             result.generated_coupons = this.generated_coupons;
             return result;
         },
-        add_product: function (product, options) {
-            _order_super.add_product.apply(this, [product, options]);
+        add_product: async function (product, options) {
+            await _order_super.add_product.apply(this, [product, options]);
             this.trigger('update-rewards');
         },
         get_last_orderline: function () {

@@ -932,8 +932,8 @@ class AccountJournal(models.Model):
         '''
         self.ensure_one()
         last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
-        last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
-        return last_st_line.statement_id
+        last_statement = self.env['account.bank.statement'].search(last_statement_domain, order='date desc, id desc', limit=1)
+        return last_statement
 
     def _get_available_payment_method_lines(self, payment_type):
         """

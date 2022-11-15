@@ -19,6 +19,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                 float_field: { string: "Float", type: "float", group_operator: 'sum' },
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
                 m2m: { string: "Many2Many", type: "many2many", store: true},
+                m2m_not_stored: { string: "Many2Many not stored", type: "many2many" },
             };
             patchWithCleanup(browser, {
                 setTimeout: (fn) => fn(),
@@ -43,7 +44,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
         });
 
         QUnit.test('simple rendering with no groupby', async function (assert) {
-            assert.expect(6);
+            assert.expect(3);
+
+            // Manually make m2m_not_stored to be sortable.
+            // Even if it's sortable, it should not be included in the add custom groupby options.
+            this.fields.m2m_not_stored.sortable = true;
 
             const params = {
                 cpModelConfig: { searchMenuTypes },
@@ -58,10 +63,10 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleAddCustomGroup(controlPanel);
 
             const optionEls = controlPanel.el.querySelectorAll('.o_add_custom_group_menu select option');
-            assert.strictEqual(optionEls[0].innerText.trim(), 'Birthday');
-            assert.strictEqual(optionEls[1].innerText.trim(), 'Date');
-            assert.strictEqual(optionEls[2].innerText.trim(), 'Foo');
-            assert.strictEqual(optionEls[3].innerText.trim(), 'Many2Many');
+            assert.deepEqual(
+                [...optionEls].map((el) => el.innerText.trim()),
+                ['Birthday', 'Date', 'Foo', 'Many2Many']
+            );
 
             controlPanel.destroy();
         });
