@@ -12,32 +12,32 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  *
  * OPTIONAL
  *
- * @property {boolean | () => boolean} [enable] whether the sortable system should
+ * @property {boolean | (() => boolean)} [enable] whether the sortable system should
  *  be enabled.
- * @property {string | () => string} [groups] defines parent groups of sortable
+ * @property {string | (() => string)} [groups] defines parent groups of sortable
  *  elements. This allows to add `onGroupEnter` and `onGroupLeave` callbacks to
  *  work on group elements during the dragging sequence.
- * @property {string | () => string} [handle] additional selector for when the dragging
+ * @property {string | (() => string)} [handle] additional selector for when the dragging
  *  sequence must be initiated when dragging on a certain part of the element.
- * @property {string | () => string} [ignore] selector targetting elements that must
+ * @property {string | (() => string)} [ignore] selector targetting elements that must
  *  initiate a drag.
- * @property {boolean | () => boolean} [connectGroups] whether elements can be dragged
+ * @property {boolean | (() => boolean)} [connectGroups] whether elements can be dragged
  *  accross different parent groups. Note that it requires a `groups` param to work.
- * @property {string | () => string} [cursor] cursor style during the dragging sequence.
+ * @property {string | (() => string)} [cursor] cursor style during the dragging sequence.
  *
  * HANDLERS (also optional)
  *
- * @property {({ element: HTMLElement, group: HTMLElement | null }) => any} [onDragStart]
+ * @property {(p: { element: HTMLElement, group: HTMLElement | null }) => any} [onDragStart]
  *  called when a dragging sequence is initiated.
- * @property {({ element: HTMLElement }) => any} [onElementEnter] called when the cursor
+ * @property {(p: { element: HTMLElement }) => any} [onElementEnter] called when the cursor
  *  enters another sortable element.
- * @property {({ element: HTMLElement }) => any} [onElementLeave] called when the cursor
+ * @property {(p: { element: HTMLElement }) => any} [onElementLeave] called when the cursor
  *  leaves another sortable element.
- * @property {({ group: HTMLElement }) => any} [onGroupEnter] (if a `groups` is specified):
+ * @property {(p: { group: HTMLElement }) => any} [onGroupEnter] (if a `groups` is specified):
  *  will be called when the cursor enters another group element.
- * @property {({ group: HTMLElement }) => any} [onGroupLeave] (if a `groups` is specified):
+ * @property {(p: { group: HTMLElement }) => any} [onGroupLeave] (if a `groups` is specified):
  *  will be called when the cursor leaves another group element.
- * @property {({ element: HTMLElement group: HTMLElement | null }) => any} [onDragEnd]
+ * @property {(p: { element: HTMLElement, group: HTMLElement | null }) => any} [onDragEnd]
  *  called when the dragging sequence ends, regardless of the reason.
  * @property {(params: DropParams) => any} [onDrop] called when the dragging sequence
  *  ends on a mouseup action AND the dragged element has been moved elsewhere. The

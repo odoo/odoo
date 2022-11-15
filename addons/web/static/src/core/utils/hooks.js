@@ -19,6 +19,10 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * }
  */
 
+/**
+ * @typedef {{ readonly el: HTMLElement | null; }} Ref
+ */
+
 // -----------------------------------------------------------------------------
 // useAutofocus
 // -----------------------------------------------------------------------------
@@ -30,7 +34,7 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * @param {Object} [params]
  * @param {string} [params.refName] override the ref name "autofocus"
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
- * @returns {Object} the element reference
+ * @returns {Ref} the element reference
  */
 export function useAutofocus({ refName, selectAll } = {}) {
     const comp = useComponent();
@@ -66,9 +70,9 @@ export function useAutofocus({ refName, selectAll } = {}) {
 /**
  * Ensures a bus event listener is attached and cleared the proper way.
  *
- * @param {EventBus} bus
+ * @param {import("@odoo/owl").EventBus} bus
  * @param {string} eventName
- * @param {Callback} callback
+ * @param {EventListener} callback
  */
 export function useBus(bus, eventName, callback) {
     const component = useComponent();
@@ -184,8 +188,9 @@ function _protectMethod(component, fn) {
 /**
  * Import a service into a component
  *
- * @param {string} serviceName
- * @returns {any}
+ * @template {keyof import("services").Services} K
+ * @param {K} serviceName
+ * @returns {import("services").Services[K]}
  */
 export function useService(serviceName) {
     const component = useComponent();
@@ -241,7 +246,7 @@ export function useChildRef() {
  * ForwardRef received as prop. @see useChildRef
  *
  * @param {string} refName name of the ref to forward
- * @returns {{el: HTMLelement | null}} the same ref that is forwarded to the
+ * @returns {Ref} the same ref that is forwarded to the
  *  parent
  */
 export function useForwardRefToParent(refName) {
@@ -255,6 +260,8 @@ export function useForwardRefToParent(refName) {
 /**
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.
+ *
+ * @returns {import("@web/core/dialog/dialog_service").DialogServiceInterface}
  */
 export function useOwnedDialogs() {
     const dialogService = useService("dialog");

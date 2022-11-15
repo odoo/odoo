@@ -7,7 +7,7 @@ export const nbsp = "\u00a0";
  * Note that it doesn't work for escaping node attributes.
  *
  * @param {string | number} [str] the string to escape
- * @returns an escaped string
+ * @returns {string} an escaped string
  */
 export function escape(str) {
     if (str === undefined) {
@@ -87,7 +87,7 @@ export function intersperse(str, indices, separator = "") {
  * If no value is given, the string will not be formatted.
  *
  * @param {string} s
- * @param {...string} ...values
+ * @param {any[]} values
  * @returns {string}
  */
 export function sprintf(s, ...values) {

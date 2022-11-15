@@ -17,7 +17,7 @@ import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
  * @property {string} message Message to be displayed on rainbowman card
  *
  * @typedef Custom
- * @property {Component} Component
+ * @property {typeof import("@odoo/owl").Component} Component
  * @property {any} [props]
  *
  * @typedef {Common & (Simple | Custom)} RainbowManProps

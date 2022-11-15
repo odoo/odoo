@@ -30,7 +30,7 @@ const effectRegistry = registry.category("effects");
  *    'fast' will make rainbowman dissapear quickly
  *    'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer)
  *    'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
- * @param {Component} [params.Component]
+ * @param {typeof import("@odoo/owl").Component} [params.Component]
  *    Custom Component class to instantiate inside the Rainbow Man
  * @param {Object} [params.props]
  *    If params.Component is given, its props can be passed with this argument

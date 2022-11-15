@@ -1,5 +1,21 @@
 /** @odoo-module **/
 
+/**
+ * @typedef {{
+ *   name: string;
+ *   patch: object;
+ *   pure: boolean;
+ * }} PatchDescription
+ */
+
+/**
+ * @typedef {{
+ *   original: object;
+ *   patches: PatchDescription[];
+ * }} ObjectPatchDescription
+ */
+
+/** @type {WeakMap<any, ObjectPatchDescription>} */
 const patchMap = new WeakMap();
 
 /**
@@ -8,9 +24,11 @@ const patchMap = new WeakMap();
  * If the intent is to patch a class, don't forget to patch the prototype, unless
  * you want to patch static properties/methods.
  *
- * @param {Object} obj Object to patch
+ * @template T
+ * @template {Partial<T>} U
+ * @param {T} obj Object to patch
  * @param {string} patchName
- * @param {Object} patchValue
+ * @param {U} patchValue
  * @param {{pure?: boolean}} [options]
  */
 export function patch(obj, patchName, patchValue, options = {}) {
@@ -109,7 +127,8 @@ export function patch(obj, patchName, patchValue, options = {}) {
  * We define here an unpatch function.  This is mostly useful if we want to
  * remove a patch.  For example, for testing purposes
  *
- * @param {Object} obj
+ * @template T
+ * @param {T} obj
  * @param {string} patchName
  */
 export function unpatch(obj, patchName) {

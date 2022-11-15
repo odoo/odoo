@@ -19,16 +19,11 @@ export function usePopover() {
         /**
          * Signals the manager to add a popover.
          *
-         * @param {string | HTMLElement}    target
-         * @param {any}                     Component
-         * @param {Object}                  props
-         * @param {Object}                  [options]
-         * @param {boolean}                 [options.closeOnClickAway=true]
-         * @param {function()}              [options.onClose]
-         * @param {function()}              [options.preventClose]
-         * @param {string}                  [options.popoverClass]
-         * @param {("top"|"bottom"|"left"|"right")}   [options.position]
-         * @returns {function()}
+         * @param {string | HTMLElement} target
+         * @param {typeof import("@odoo/owl").Component} Component
+         * @param {object} props
+         * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
+         * @returns {() => void}
          */
         add(target, Component, props, options = {}) {
             const newOptions = Object.create(options);
