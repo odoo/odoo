@@ -21,9 +21,9 @@
                 onUploadComplete.bind="onUploadComplete">
                 <t t-set-slot="toggler">
                     <t t-if="props.togglerTemplate" t-call="{{ props.togglerTemplate }}"/>
-                    <t t-else="" t-slot="toggler"/>
+                    <t t-else="" t-slot="default"/>
                 </t>
-                <t t-slot="default"/>
+                <t t-slot="extra"/>
             </FileUploader>
         </div>
     </t>
@@ -65,7 +65,7 @@
     <t t-name="account.AccountViewUploadButton" owl="1">
         <!-- No record is available so rely on the action context to contain the default_move_type -->
         <AccountFileUploader>
-            <t t-set-slot="toggler">
+            <t t-set-slot="default">
                 <button type="button" class="btn btn-secondary o_button_upload_bill">
                     Upload
                 </button>
@@ -83,7 +83,7 @@
             t-on-dragenter.stop.prevent="() => state.dropzoneVisible = true"
             t-ref="root">
             <AccountFileUploader record="props.record">
-                <t t-set-slot="default">
+                <t t-set-slot="extra">
                     <AccountDropZone
                         visible="state.dropzoneVisible"
                         hideZone="() => state.dropzoneVisible = false"/>
