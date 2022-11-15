@@ -44,7 +44,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
         # that the company actually uses USD
-        # We do an invalidate_cache so the cache is aware of it too. 
+        # We do an invalidate_cache so the cache is aware of it too.
         self.env.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.env.ref('base.USD').id, self.env.company.id])
@@ -129,7 +129,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'On Site Assistance',
                 'product_id': self.product_2.id,
                 'product_uom_qty': 30,
-                'product_uom': self.product_uom_hour.id,
+                'product_uom': self.product_uom_unit.id,
                 'price_unit': 38.25,
             })],
         })
