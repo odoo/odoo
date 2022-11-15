@@ -24,6 +24,10 @@ export class ProjectSharingFormController extends FormController {
     get actionMenuItems() {
         return {};
     }
+
+    get translateAlert() {
+        return null;
+    }
 }
 
 ProjectSharingFormController.components = {
