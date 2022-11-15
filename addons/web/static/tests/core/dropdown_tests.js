@@ -50,7 +50,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown").outerHTML,
-            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle" tabindex="0"></button></div>'
+            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle" tabindex="0" aria-expanded="false"></button></div>'
         );
         assert.containsOnce(target, "button.dropdown-toggle");
         assert.containsNone(target, ".dropdown-menu");
@@ -64,7 +64,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown-item").outerHTML,
-            '<span class="dropdown-item" tabindex="0">coucou</span>'
+            '<span class="dropdown-item" role="menuitem" tabindex="0">coucou</span>'
         );
     });
 
@@ -76,7 +76,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown-item").outerHTML,
-            '<a class="dropdown-item" tabindex="0" href="#">coucou</a>'
+            '<a class="dropdown-item" role="menuitem" tabindex="0" href="#">coucou</a>'
         );
     });
 
@@ -132,7 +132,6 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("menu can be toggled", async (assert) => {
-        assert.expect(5);
         const beforeOpenProm = makeDeferred();
         class Parent extends Component {
             constructor() {
@@ -150,11 +149,15 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(target, "button.dropdown-toggle");
         assert.verifySteps(["beforeOpen"]);
         assert.containsNone(target, ".dropdown-menu");
+        assert.strictEqual(target.querySelector("button.dropdown-toggle").ariaExpanded, "false");
         beforeOpenProm.resolve();
         await nextTick();
         assert.containsOnce(target, ".dropdown-menu");
+        assert.strictEqual(target.querySelector(".dropdown-menu").getAttribute("role"), "menu");
+        assert.strictEqual(target.querySelector("button.dropdown-toggle").ariaExpanded, "true");
         await click(target, "button.dropdown-toggle");
         assert.containsNone(target, ".dropdown-menu");
+        assert.strictEqual(target.querySelector("button.dropdown-toggle").ariaExpanded, "false");
     });
 
     QUnit.test("initial open state can be true", async (assert) => {
@@ -760,9 +763,11 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsOnce(target, ".dropdown");
         assert.containsNone(target, ".dropdown .dropdown-menu");
         assert.containsNone(target, ".dropdown button.dropdown-toggle");
+        assert.strictEqual(target.querySelector(".my_custom_toggler").ariaExpanded, "false");
         await click(target, ".my_custom_toggler");
         assert.containsOnce(target, ".dropdown .dropdown-menu");
         assert.containsN(target, ".dropdown .dropdown-menu .dropdown-item", 2);
+        assert.strictEqual(target.querySelector(".my_custom_toggler").ariaExpanded, "true");
     });
 
     QUnit.test("props toggler='parent': refocus toggler on close with keynav", async (assert) => {
