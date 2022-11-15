@@ -1035,6 +1035,40 @@ QUnit.test("press enter on command", async (assert) => {
     assert.verifySteps(["C2"]);
 });
 
+QUnit.debug("keyboard navigation scroll", async (assert) => {
+    const useTest = () => {
+        class myClass {
+            getValue() {
+                return "plop";
+            }
+
+            myFct() {
+                return this.getValue();
+            }
+        }
+        return new myClass();
+    };
+    class Parent extends Component {
+        setup() {
+            this.class = useTest();
+            this.myFct = () => this.class.myFct();
+        }
+    }
+    Parent.template = xml`<div><t t-esc="myFct()"></t></div>`;
+
+    class Parent2 extends Parent {
+        setup() {
+            super.setup();
+            const getValue = this.class.getValue;
+            this.class.getValue = () => {
+                return getValue() + "yop";
+            };
+        }
+    }
+
+    await mount(Parent2, target, { env });
+});
+
 QUnit.test("keyboard navigation scroll", async (assert) => {
     await mount(TestComponent, target, { env });
     const commands = [
