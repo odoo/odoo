@@ -16,11 +16,12 @@
         t-on-mouseenter="onTogglerMouseEnter"
         t-att-title="props.title"
         t-att-data-hotkey="props.hotkey"
+        t-att-aria-expanded="state.open ? 'true' : 'false'"
         t-ref="togglerRef"
       >
         <t t-slot="toggler" />
       </button>
-      <div t-if="state.open" class="o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
+      <div t-if="state.open" class="o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass" role="menu" t-ref="menuRef">
         <t t-slot="default" />
       </div>
     </div>
