@@ -171,5 +171,6 @@ options.registry.StepsConnector = options.Class.extend({
                 return `M ${0.05 * width} ${hHeight * 1.2} Q ${width / 2} ${hHeight * 1.8}, ${0.95 * width - 6} ${hHeight * 1.2}`;
             }
         }
+        return '';
     },
 });
