@@ -25,6 +25,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     ],
     'data': [
         'data/res.country.state.csv',
+        'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
     ],
     'demo': [

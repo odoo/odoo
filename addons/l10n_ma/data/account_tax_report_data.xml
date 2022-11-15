@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo auto_sequence="1">
     <record id="tax_report_vat" model="account.report">
         <field name="name">VAT Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
@@ -27,12 +27,10 @@
         </field>
         <field name="line_ids">
             <record id="tax_report_part_a" model="account.report.line">
-                <field name="sequence">1</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">A - Breakdown of total revenues</field>
                 <field name="children_ids">
                     <record id="tax_report_line_10" model="account.report.line">
-                        <field name="sequence">2</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">10 - Amount of the revenues realized, including non-taxable operations (excl. VAT)</field>
                         <field name="code">l10n_ma_vat_10</field>
@@ -45,7 +43,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_line_20" model="account.report.line">
-                                <field name="sequence">3</field>
                                 <field name="hierarchy_level">5</field>
                                 <field name="name">20 - Operations outside the scope of VAT</field>
                                 <field name="code">l10n_ma_vat_20</field>
@@ -58,7 +55,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_30" model="account.report.line">
-                                <field name="sequence">4</field>
                                 <field name="hierarchy_level">5</field>
                                 <field name="name">30 - Exempt operations without right of deduction (Article 91 of the CGI)</field>
                                 <field name="code">l10n_ma_vat_30</field>
@@ -71,7 +67,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_40" model="account.report.line">
-                                <field name="sequence">5</field>
                                 <field name="hierarchy_level">5</field>
                                 <field name="name">40 - Exempt operations with right of deduction (Article 92 of the CGI)</field>
                                 <field name="code">l10n_ma_vat_40</field>
@@ -84,7 +79,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_50" model="account.report.line">
-                                <field name="sequence">6</field>
                                 <field name="hierarchy_level">5</field>
                                 <field name="name">50 - Operations carried out under suspension of VAT (Article 94 of the CGI)</field>
                                 <field name="code">l10n_ma_vat_50</field>
@@ -97,7 +91,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_55" model="account.report.line">
-                                <field name="sequence">7</field>
                                 <field name="hierarchy_level">5</field>
                                 <field name="name">55 - Taxable operations made by mobile payment (Article 247 ter of the CGI)</field>
                                 <field name="code">l10n_ma_vat_55</field>
@@ -111,7 +104,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_56" model="account.report.line">
-                                <field name="sequence">8</field>
                                 <field name="hierarchy_level">5</field>
                                 <field name="name">56 - Exempt, out-of-scope or suspended operations by mobile payment</field>
                                 <field name="code">l10n_ma_vat_56</field>
@@ -127,7 +119,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_60" model="account.report.line">
-                        <field name="sequence">9</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">60 - Taxable revenues to be allocated (difference line 10 - (20 + 30 + 40 + 50)) (excl. VAT)</field>
                         <field name="code">l10n_ma_vat_60</field>
@@ -142,7 +133,6 @@
                 </field>
             </record>
             <record id="tax_report_part_b" model="account.report.line">
-                <field name="sequence">10</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">B - Breakdown of taxable revenues</field>
                 <field name="code">l10n_ma_vat_b</field>
@@ -160,7 +150,6 @@
                 </field>
                 <field name="children_ids">
                     <record id="tax_report_part_b_20" model="account.report.line">
-                        <field name="sequence">11</field>
                         <field name="hierarchy_level">1</field>
                         <field name="name">Standard rate of 20% with right to deduct</field>
                         <field name="code">l10n_ma_vat_b_20</field>
@@ -178,7 +167,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_line_80" model="account.report.line">
-                                <field name="sequence">12</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">80 - Production and distribution operations</field>
                                 <field name="code">l10n_ma_vat_80</field>
@@ -196,7 +184,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_81" model="account.report.line">
-                                <field name="sequence">13</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">81 - Services</field>
                                 <field name="code">l10n_ma_vat_81</field>
@@ -214,7 +201,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_82" model="account.report.line">
-                                <field name="sequence">14</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">82 - Liberal professions referred to in article 89-I-12°-(b) of the CGI</field>
                                 <field name="code">l10n_ma_vat_82</field>
@@ -232,7 +218,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_83" model="account.report.line">
-                                <field name="sequence">15</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">83 - Leasing operations</field>
                                 <field name="code">l10n_ma_vat_83</field>
@@ -250,7 +235,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_87" model="account.report.line">
-                                <field name="sequence">16</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">87 - Operations of real estate works companies</field>
                                 <field name="code">l10n_ma_vat_87</field>
@@ -268,7 +252,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_93" model="account.report.line">
-                                <field name="sequence">17</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">93 - Sales and delivery of used movable property</field>
                                 <field name="code">l10n_ma_vat_93</field>
@@ -286,7 +269,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_94" model="account.report.line">
-                                <field name="sequence">18</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">94 - Self-supply of constructions</field>
                                 <field name="code">l10n_ma_vat_94</field>
@@ -304,7 +286,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_95" model="account.report.line">
-                                <field name="sequence">19</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">95 - Margin regime referred to in articles 125 bis and 125 quater of the CGI</field>
                                 <field name="code">l10n_ma_vat_95</field>
@@ -322,7 +303,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_102" model="account.report.line">
-                                <field name="sequence">20</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">102 - Other</field>
                                 <field name="code">l10n_ma_vat_102</field>
@@ -342,7 +322,6 @@
                         </field>
                     </record>
                     <record id="tax_report_part_b_14" model="account.report.line">
-                        <field name="sequence">21</field>
                         <field name="hierarchy_level">1</field>
                         <field name="name">Reduced rate of 14%</field>
                         <field name="code">l10n_ma_vat_b_14</field>
@@ -360,7 +339,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_part_b_14_d" model="account.report.line">
-                                <field name="sequence">22</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">With right to deduct</field>
                                 <field name="code">l10n_ma_vat_b_14_d</field>
@@ -378,7 +356,6 @@
                                 </field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_84" model="account.report.line">
-                                        <field name="sequence">23</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">84 - Butter, excluding home-made butter referred to in Article 91 (I-A. 2°)</field>
                                         <field name="code">l10n_ma_vat_84</field>
@@ -396,7 +373,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_88" model="account.report.line">
-                                        <field name="sequence">24</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">88 - Passenger and freight transport operations, excluding rail transport</field>
                                         <field name="code">l10n_ma_vat_88</field>
@@ -414,7 +390,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_90" model="account.report.line">
-                                        <field name="sequence">25</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">90 - Electrical energy</field>
                                         <field name="code">l10n_ma_vat_90</field>
@@ -432,7 +407,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_104" model="account.report.line">
-                                        <field name="sequence">26</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">104 - Other</field>
                                         <field name="code">l10n_ma_vat_104</field>
@@ -452,7 +426,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_part_b_14_nd" model="account.report.line">
-                                <field name="sequence">27</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">Without right to deduct</field>
                                 <field name="code">l10n_ma_vat_b_14_nd</field>
@@ -470,7 +443,6 @@
                                 </field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_91" model="account.report.line">
-                                        <field name="sequence">28</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">91 - Services rendered by any soliciting agent or insurance broker in respect of contracts brought by him to an insurance company</field>
                                         <field name="code">l10n_ma_vat_91</field>
@@ -492,7 +464,6 @@
                         </field>
                     </record>
                     <record id="tax_report_part_b_10" model="account.report.line">
-                        <field name="sequence">29</field>
                         <field name="hierarchy_level">1</field>
                         <field name="name">Reduced rate of 10% with right to deduct</field>
                         <field name="code">l10n_ma_vat_b_10</field>
@@ -510,7 +481,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_line_76" model="account.report.line">
-                                <field name="sequence">30</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">76 - Photovoltaic panels</field>
                                 <field name="code">l10n_ma_vat_76</field>
@@ -528,7 +498,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_77" model="account.report.line">
-                                <field name="sequence">31</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">77 - Solar water heaters</field>
                                 <field name="code">l10n_ma_vat_77</field>
@@ -546,7 +515,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_78" model="account.report.line">
-                                <field name="sequence">32</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">78 - Feed for livestock and farmyard animals as well as oil cakes used in their manufacture, excluding other simple feed</field>
                                 <field name="code">l10n_ma_vat_78</field>
@@ -564,7 +532,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_79" model="account.report.line">
-                                <field name="sequence">33</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">79 - Equipment for exclusive agricultural use</field>
                                 <field name="code">l10n_ma_vat_79</field>
@@ -582,7 +549,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_85" model="account.report.line">
-                                <field name="sequence">34</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">85 - Wood in logs, debarked or simply squared, cork in its natural state, firewood in bundles or sawn to short lengths and charcoal</field>
                                 <field name="code">l10n_ma_vat_85</field>
@@ -600,7 +566,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_86" model="account.report.line">
-                                <field name="sequence">35</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">86 - Fishing gear and nets for professional marine fishermen</field>
                                 <field name="code">l10n_ma_vat_86</field>
@@ -618,7 +583,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_89" model="account.report.line">
-                                <field name="sequence">36</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">89 - Accommodation and catering operations as well as services provided by cafés</field>
                                 <field name="code">l10n_ma_vat_89</field>
@@ -636,7 +600,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_92" model="account.report.line">
-                                <field name="sequence">37</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">92 - Rental operations of buildings used as hotels</field>
                                 <field name="code">l10n_ma_vat_92</field>
@@ -654,7 +617,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_96" model="account.report.line">
-                                <field name="sequence">38</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">96 - Cooking salt (rock or sea salt)</field>
                                 <field name="code">l10n_ma_vat_96</field>
@@ -672,7 +634,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_97" model="account.report.line">
-                                <field name="sequence">39</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">97 - Milled rice and pasta</field>
                                 <field name="code">l10n_ma_vat_97</field>
@@ -690,7 +651,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_98" model="account.report.line">
-                                <field name="sequence">40</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">98 - Food fluid oils excluding palm oil</field>
                                 <field name="code">l10n_ma_vat_98</field>
@@ -708,7 +668,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_99" model="account.report.line">
-                                <field name="sequence">41</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">99 - Securities transactions</field>
                                 <field name="code">l10n_ma_vat_99</field>
@@ -726,7 +685,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_100" model="account.report.line">
-                                <field name="sequence">42</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">100 - Banking and credit transactions and exchange commissions</field>
                                 <field name="code">l10n_ma_vat_100</field>
@@ -744,7 +702,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_101" model="account.report.line">
-                                <field name="sequence">43</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">101 - Transactions involving shares and units shares</field>
                                 <field name="code">l10n_ma_vat_101</field>
@@ -762,7 +719,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_103" model="account.report.line">
-                                <field name="sequence">44</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">103 - Operations of sale and delivery of works and objects of art</field>
                                 <field name="code">l10n_ma_vat_103</field>
@@ -780,7 +736,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_105" model="account.report.line">
-                                <field name="sequence">45</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">105 - Operations of lawyers, interpreters, notaries, adouls, bailiffs and veterinarians</field>
                                 <field name="code">l10n_ma_vat_105</field>
@@ -798,7 +753,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_108" model="account.report.line">
-                                <field name="sequence">46</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">108 - Petroleum gas and other gaseous hydrocarbons</field>
                                 <field name="code">l10n_ma_vat_108</field>
@@ -816,7 +770,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_109" model="account.report.line">
-                                <field name="sequence">47</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">109 - Petroleum or shale oils, crude or refined</field>
                                 <field name="code">l10n_ma_vat_109</field>
@@ -834,7 +787,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_112" model="account.report.line">
-                                <field name="sequence">48</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">112 - Ticket sales operations for museums, cinema and theater</field>
                                 <field name="code">l10n_ma_vat_112</field>
@@ -852,7 +804,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_118" model="account.report.line">
-                                <field name="sequence">49</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">118 - Other</field>
                                 <field name="code">l10n_ma_vat_118</field>
@@ -872,7 +823,6 @@
                         </field>
                     </record>
                     <record id="tax_report_part_b_7" model="account.report.line">
-                        <field name="sequence">50</field>
                         <field name="hierarchy_level">1</field>
                         <field name="name">Reduced rate of 7% with right to deduct</field>
                         <field name="code">l10n_ma_vat_b_7</field>
@@ -890,7 +840,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_line_106" model="account.report.line">
-                                <field name="sequence">51</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">106 - Water delivered to the public distribution networks and sanitation services</field>
                                 <field name="code">l10n_ma_vat_106</field>
@@ -908,7 +857,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_107" model="account.report.line">
-                                <field name="sequence">52</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">107 - Rental of water and electricity meters</field>
                                 <field name="code">l10n_ma_vat_107</field>
@@ -926,7 +874,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_110" model="account.report.line">
-                                <field name="sequence">53</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">110 - Pharmaceutical products, raw materials and products used in their composition as well as non-returnable packaging of these products and materials</field>
                                 <field name="code">l10n_ma_vat_110</field>
@@ -944,7 +891,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_111" model="account.report.line">
-                                <field name="sequence">54</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">111 - School supplies, products and materials in their composition</field>
                                 <field name="code">l10n_ma_vat_111</field>
@@ -962,7 +908,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_113" model="account.report.line">
-                                <field name="sequence">55</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">113 - Refined or agglomerated sugar</field>
                                 <field name="code">l10n_ma_vat_113</field>
@@ -980,7 +925,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_114" model="account.report.line">
-                                <field name="sequence">56</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">114 - Canned sardines</field>
                                 <field name="code">l10n_ma_vat_114</field>
@@ -998,7 +942,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_115" model="account.report.line">
-                                <field name="sequence">57</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">115 - Milk powder</field>
                                 <field name="code">l10n_ma_vat_115</field>
@@ -1016,7 +959,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_116" model="account.report.line">
-                                <field name="sequence">58</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">116 - Household soap</field>
                                 <field name="code">l10n_ma_vat_116</field>
@@ -1034,7 +976,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_117" model="account.report.line">
-                                <field name="sequence">59</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">117 - Economy car and products and materials used in its in its manufacture</field>
                                 <field name="code">l10n_ma_vat_117</field>
@@ -1052,7 +993,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_119" model="account.report.line">
-                                <field name="sequence">60</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">119 - Other</field>
                                 <field name="code">l10n_ma_vat_119</field>
@@ -1072,7 +1012,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_120" model="account.report.line">
-                        <field name="sequence">61</field>
                         <field name="hierarchy_level">2</field>
                         <field name="name">120 - Reversal of VAT in different ways (cessation, regularization, ...)</field>
                         <field name="code">l10n_ma_vat_120</field>
@@ -1086,7 +1025,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_121" model="account.report.line">
-                        <field name="sequence">62</field>
                         <field name="hierarchy_level">2</field>
                         <field name="name">121 - Withholding tax on the amount of commissions allocated by insurance companies to their brokers</field>
                         <field name="code">l10n_ma_vat_121</field>
@@ -1100,7 +1038,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_122" model="account.report.line">
-                        <field name="sequence">63</field>
                         <field name="hierarchy_level">2</field>
                         <field name="name">122 - Withholding tax on interest paid by credit institutions</field>
                         <field name="code">l10n_ma_vat_122</field>
@@ -1114,7 +1051,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_123" model="account.report.line">
-                        <field name="sequence">64</field>
                         <field name="hierarchy_level">2</field>
                         <field name="name">123 - Withholding tax on proceeds from securitization transactions</field>
                         <field name="code">l10n_ma_vat_123</field>
@@ -1128,7 +1064,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_124" model="account.report.line">
-                        <field name="sequence">65</field>
                         <field name="hierarchy_level">2</field>
                         <field name="name">124 - Withholding tax on transactions carried out by non-residents for the benefit of Moroccan customers excluded from the scope of application of VAT</field>
                         <field name="code">l10n_ma_vat_124</field>
@@ -1144,12 +1079,10 @@
                 </field>
             </record>
             <record id="tax_report_part_c" model="account.report.line">
-                <field name="sequence">66</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">C - Operations carried out with non-resident taxpayers (Article 115 of the CGI)</field>
                 <field name="children_ids">
                     <record id="tax_report_line_129" model="account.report.line">
-                        <field name="sequence">67</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">129 - Operations with non-resident taxpayers</field>
                         <field name="code">l10n_ma_vat_129</field>
@@ -1169,7 +1102,6 @@
                 </field>
             </record>
             <record id="tax_report_line_130" model="account.report.line">
-                <field name="sequence">68</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">130 - Total VAT Payable</field>
                 <field name="code">l10n_ma_vat_130</field>
@@ -1193,7 +1125,6 @@
                 </field>
             </record>
             <record id="tax_report_part_d" model="account.report.line">
-                <field name="sequence">69</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">D - Breakdown of deductions</field>
                 <field name="code">l10n_ma_vat_d</field>
@@ -1206,7 +1137,6 @@
                 </field>
                 <field name="children_ids">
                     <record id="tax_report_part_d_1" model="account.report.line">
-                        <field name="sequence">70</field>
                         <field name="hierarchy_level">1</field>
                         <field name="name">1 - NON-FIXED ASSETS PURCHASES</field>
                         <field name="code">l10n_ma_vat_d_1</field>
@@ -1219,7 +1149,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_part_d_1_1" model="account.report.line">
-                                <field name="sequence">71</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">Services</field>
                                 <field name="code">l10n_ma_vat_d_1_1</field>
@@ -1232,7 +1161,6 @@
                                 </field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_140" model="account.report.line">
-                                        <field name="sequence">72</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">140 - Services (20%)</field>
                                         <field name="code">l10n_ma_vat_140</field>
@@ -1256,7 +1184,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_141" model="account.report.line">
-                                        <field name="sequence">73</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">141 - Transportation (14%)</field>
                                         <field name="code">l10n_ma_vat_141</field>
@@ -1280,7 +1207,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_142" model="account.report.line">
-                                        <field name="sequence">74</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">142 - Banking operation (10%)</field>
                                         <field name="code">l10n_ma_vat_142</field>
@@ -1304,7 +1230,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_143" model="account.report.line">
-                                        <field name="sequence">75</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">143 - Hotels for travelers, and all real estate for tourism purposes (10%)</field>
                                         <field name="code">l10n_ma_vat_143</field>
@@ -1328,7 +1253,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_144" model="account.report.line">
-                                        <field name="sequence">76</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">144 - Operations performed by lawyers, interpreters, notaries, adouls, bailiffs and veterinarians (10%)</field>
                                         <field name="code">l10n_ma_vat_144</field>
@@ -1352,7 +1276,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_153" model="account.report.line">
-                                        <field name="sequence">77</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">153 - Other services (10%)</field>
                                         <field name="code">l10n_ma_vat_153</field>
@@ -1378,7 +1301,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_part_d_1_2" model="account.report.line">
-                                <field name="sequence">78</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">Other non-fixed assets purchases</field>
                                 <field name="code">l10n_ma_vat_d_1_2</field>
@@ -1391,7 +1313,6 @@
                                 </field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_145" model="account.report.line">
-                                        <field name="sequence">79</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">145 - Import purchases (20%)</field>
                                         <field name="code">l10n_ma_vat_145</field>
@@ -1415,7 +1336,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_146" model="account.report.line">
-                                        <field name="sequence">80</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">146 - Domestic purchases (20%)</field>
                                         <field name="code">l10n_ma_vat_146</field>
@@ -1439,7 +1359,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_147" model="account.report.line">
-                                        <field name="sequence">81</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">147 - Import purchases (14%)</field>
                                         <field name="code">l10n_ma_vat_147</field>
@@ -1463,7 +1382,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_148" model="account.report.line">
-                                        <field name="sequence">82</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">148 - Domestic purchases (14%)</field>
                                         <field name="code">l10n_ma_vat_148</field>
@@ -1487,7 +1405,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_149" model="account.report.line">
-                                        <field name="sequence">83</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">149 - Import purchases (10%)</field>
                                         <field name="code">l10n_ma_vat_149</field>
@@ -1511,7 +1428,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_150" model="account.report.line">
-                                        <field name="sequence">84</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">150 - Domestic purchases (10%)</field>
                                         <field name="code">l10n_ma_vat_150</field>
@@ -1535,7 +1451,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_151" model="account.report.line">
-                                        <field name="sequence">85</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">151 - Import purchases (7%)</field>
                                         <field name="code">l10n_ma_vat_151</field>
@@ -1559,7 +1474,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_152" model="account.report.line">
-                                        <field name="sequence">86</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">152 - Domestic purchases (7%)</field>
                                         <field name="code">l10n_ma_vat_152</field>
@@ -1583,7 +1497,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_155" model="account.report.line">
-                                        <field name="sequence">87</field>
                                         <field name="hierarchy_level">2</field>
                                         <field name="name">155 - Contract work (20%)</field>
                                         <field name="code">l10n_ma_vat_155</field>
@@ -1607,7 +1520,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_156" model="account.report.line">
-                                        <field name="sequence">88</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">156 - Subcontracting (real estate work) (20%)</field>
                                         <field name="code">l10n_ma_vat_156</field>
@@ -1631,7 +1543,6 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_158" model="account.report.line">
-                                        <field name="sequence">89</field>
                                         <field name="hierarchy_level">2</field>
                                         <field name="name">158 - Undisclosed VAT (Article 125 ter of the CGI)</field>
                                         <field name="code">l10n_ma_vat_158</field>
@@ -1660,7 +1571,6 @@
                         </field>
                     </record>
                     <record id="tax_report_part_d_2" model="account.report.line">
-                        <field name="sequence">90</field>
                         <field name="hierarchy_level">1</field>
                         <field name="name">2 - FIXED ASSETS</field>
                         <field name="code">l10n_ma_vat_d_2</field>
@@ -1673,7 +1583,6 @@
                         </field>
                         <field name="children_ids">
                             <record id="tax_report_line_162" model="account.report.line">
-                                <field name="sequence">91</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">162 - Import purchases (20%)</field>
                                 <field name="code">l10n_ma_vat_162</field>
@@ -1697,7 +1606,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_163" model="account.report.line">
-                                <field name="sequence">92</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">163 - Domestic purchases (20%)</field>
                                 <field name="code">l10n_ma_vat_163</field>
@@ -1721,7 +1629,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_164" model="account.report.line">
-                                <field name="sequence">93</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">164 - Self-supply other than constructions (20%)</field>
                                 <field name="code">l10n_ma_vat_164</field>
@@ -1745,7 +1652,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_165" model="account.report.line">
-                                <field name="sequence">94</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">165 - Facilities and installations (20%)</field>
                                 <field name="code">l10n_ma_vat_165</field>
@@ -1769,7 +1675,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_166" model="account.report.line">
-                                <field name="sequence">95</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">166 - Constructions (20%)</field>
                                 <field name="code">l10n_ma_vat_166</field>
@@ -1793,7 +1698,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_167" model="account.report.line">
-                                <field name="sequence">96</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">167 - Self-supply of constructions (20%)</field>
                                 <field name="code">l10n_ma_vat_167</field>
@@ -1817,7 +1721,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_168" model="account.report.line">
-                                <field name="sequence">97</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">168 - Other fixed assets (14%)</field>
                                 <field name="code">l10n_ma_vat_168</field>
@@ -1841,7 +1744,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_160" model="account.report.line">
-                                <field name="sequence">98</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">160 - Other fixed assets (10%)</field>
                                 <field name="code">l10n_ma_vat_160</field>
@@ -1865,7 +1767,6 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_169" model="account.report.line">
-                                <field name="sequence">99</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">169 - Other fixed assets (7%)</field>
                                 <field name="code">l10n_ma_vat_169</field>
@@ -1893,7 +1794,6 @@
                 </field>
             </record>
             <record id="tax_report_line_182" model="account.report.line">
-                <field name="sequence">100</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">182 - Total deductions (lines 140 to 169)</field>
                 <field name="code">l10n_ma_vat_182</field>
@@ -1906,12 +1806,10 @@
                 </field>
             </record>
             <record id="tax_report_part_ded" model="account.report.line">
-                <field name="sequence">101</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">Deduction adjustments</field>
                 <field name="children_ids">
                     <record id="tax_report_line_170" model="account.report.line">
-                        <field name="sequence">102</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">170 - Credit from previous period</field>
                         <field name="code">l10n_ma_vat_170</field>
@@ -1936,7 +1834,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_180" model="account.report.line">
-                        <field name="sequence">103</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">180 - Additional deduction of the pro-rata regularization</field>
                         <field name="code">l10n_ma_vat_180</field>
@@ -1950,7 +1847,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_181" model="account.report.line">
-                        <field name="sequence">104</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">181 - Cumulative tax credit fraction</field>
                         <field name="code">l10n_ma_vat_181</field>
@@ -1964,7 +1860,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_185" model="account.report.line">
-                        <field name="sequence">105</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">185 - Amount of cancelled credit, remaining chargeable, not reimbursed for investment property</field>
                         <field name="code">l10n_ma_vat_185</field>
@@ -1978,7 +1873,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_186" model="account.report.line">
-                        <field name="sequence">106</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">186 - Amount claimed as reimbursement for investment property (Article 103 bis of the CGI)</field>
                         <field name="code">l10n_ma_vat_186</field>
@@ -1992,7 +1886,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_187" model="account.report.line">
-                        <field name="sequence">107</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">187 - Amount of reimbursement authorized (Article 103 of the CGI)</field>
                         <field name="code">l10n_ma_vat_187</field>
@@ -2008,7 +1901,6 @@
                 </field>
             </record>
             <record id="tax_report_line_190" model="account.report.line">
-                <field name="sequence">108</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">190 - Total deductible VAT ((182 to 185) - (186 and 187))</field>
                 <field name="code">l10n_ma_vat_190</field>
@@ -2021,12 +1913,10 @@
                 </field>
             </record>
             <record id="tax_report_part_results" model="account.report.line">
-                <field name="sequence">109</field>
                 <field name="hierarchy_level">0</field>
                 <field name="name">VAT Results</field>
                 <field name="children_ids">
                     <record id="tax_report_line_200" model="account.report.line">
-                        <field name="sequence">110</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">200 - Payable VAT (130 - 190)</field>
                         <field name="code">l10n_ma_vat_200</field>
@@ -2040,7 +1930,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_201" model="account.report.line">
-                        <field name="sequence">111</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">201 - Credit (190 - 130)</field>
                         <field name="code">l10n_ma_vat_201</field>
@@ -2054,7 +1943,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_202" model="account.report.line">
-                        <field name="sequence">112</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">202 - 15% reduction of the credit for the period ((182 + 180) - 130) x 15%</field>
                         <field name="code">l10n_ma_vat_202</field>
@@ -2068,7 +1956,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_203" model="account.report.line">
-                        <field name="sequence">113</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">203 - Credit to be carried forward (201 - 202)</field>
                         <field name="code">l10n_ma_vat_203</field>
@@ -2089,7 +1976,6 @@
                         </field>
                     </record>
                     <record id="tax_report_line_204" model="account.report.line">
-                        <field name="sequence">114</field>
                         <field name="hierarchy_level">3</field>
                         <field name="name">204 - Credit with payment including VAT due under articles 115, 116 and 117 of the CGI</field>
                         <field name="code">l10n_ma_vat_204</field>
