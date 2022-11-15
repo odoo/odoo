@@ -23,7 +23,7 @@
         <div class="d-flex" data-menu="company" t-att-data-company-id="company.id">
             <div
                 role="menuitemcheckbox"
-                t-att-aria-checked="isCompanySelected"
+                t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
                 t-att-aria-label="company.name"
                 t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + company.name + ' content.'"
                 tabindex="0"
@@ -38,7 +38,7 @@
 
             <div
                 role="button"
-                t-att-aria-pressed="isCurrent"
+                t-att-aria-pressed="isCurrent ? 'true' : 'false'"
                 t-att-aria-label="'Switch to ' + company.name "
                 t-att-title="'Switch to ' + company.name "
                 tabindex="0"

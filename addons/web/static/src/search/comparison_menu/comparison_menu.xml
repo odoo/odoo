@@ -9,6 +9,7 @@
             </t>
             <t t-foreach="items" t-as="item" t-key="item.id">
                 <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                    checked="item.isActive"
                     parentClosingMode="'none'"
                     t-esc="item.description"
                     onSelected="() => this.onComparisonSelected(item.id)"
