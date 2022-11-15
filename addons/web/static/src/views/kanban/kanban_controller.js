@@ -65,6 +65,7 @@ export class KanbanController extends Component {
                         this.model.root.offset = offset;
                         this.model.root.limit = limit;
                         await this.model.root.load();
+                        await this.onUpdatedPager();
                         this.render(true); // FIXME WOWL reactivity
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -118,6 +119,8 @@ export class KanbanController extends Component {
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
+
+    async onUpdatedPager() {}
 }
 
 KanbanController.template = `web.KanbanView`;
