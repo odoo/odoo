@@ -5,6 +5,7 @@ const config = require('web.config');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
+const weUtils = require('web_editor.utils');
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
@@ -723,6 +724,13 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
                     this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
                 }
             }
+            // Specific case with the "boxed" header template where the "call to
+            // action" button is inaccessible in the "off-canvas" mobile menu.
+            this.offcanvasAndBoxedHeader = false;
+            if (weUtils.getCSSVariableValue('header-template').includes('boxed')) {
+                this.boxedHeaderCallToActionEl = this.$target[0].querySelector('#top_menu_collapse .oe_structure_solo');
+                this.offcanvasAndBoxedHeader = !!this.boxedHeaderCallToActionEl;
+            }
         }
         return this._super(...arguments);
     },
@@ -742,6 +750,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.navbarEl.append(this.languageSelectorEl);
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.add('nav-item');
+            this.navbarEl.append(this.boxedHeaderCallToActionEl);
+        }
     },
     /**
      * @private
@@ -753,6 +765,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.languageSelectorEl.classList.remove('nav-item');
             this.navbarEl.after(this.languageSelectorEl);
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.remove('nav-item');
+            this.navbarEl.after(this.boxedHeaderCallToActionEl);
         }
     },
 });
