@@ -81,6 +81,7 @@
         'views/stock_location_views.xml',
         'views/stock_orderpoint_views.xml',
         'views/stock_storage_category_views.xml',
+        'views/res_users_views.xml',
         'views/res_config_settings_views.xml',
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
