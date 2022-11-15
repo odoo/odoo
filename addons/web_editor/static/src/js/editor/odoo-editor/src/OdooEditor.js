@@ -3212,6 +3212,44 @@ export class OdooEditor extends EventTarget {
                 list.replaceChildren(...rangeContent.childNodes);
                 rangeContent = list;
             }
+            if (rangeContent.firstChild.nodeName === 'TR' || rangeContent.firstChild.nodeName === 'TD') {
+                // We enter this case only if selection is within single table.
+                const table = closestElement(range.commonAncestorContainer, 'table');
+                const tableClone = table.cloneNode(true);
+                // A table is considered fully selected if it is nested inside a
+                // cell that is itself selected, or if all its own cells are
+                // selected.
+                const isTableFullySelected =
+                    table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
+                    [...table.querySelectorAll('td')]
+                        .filter(td => closestElement(td, 'table') === table)
+                        .every(td => td.classList.contains('o_selected_td'));
+                if (!isTableFullySelected(table)) {
+                    for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
+                        if (closestElement(td, 'table') === tableClone) { // ignore nested
+                            td.remove();
+                        }
+                    }
+                    for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
+                        if (closestElement(tr, 'table') === tableClone) { // ignore nested
+                            tr.remove();
+                        }
+                    }
+                }
+                // If it is fully selected, clone the whole table rather than
+                // just its rows.
+                rangeContent = tableClone;
+            }
+            if (rangeContent.firstChild.nodeName === 'TABLE') {
+                // Make sure the full leading table is copied.
+                rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
+                rangeContent.firstChild.remove();
+            }
+            if (rangeContent.lastChild.nodeName === 'TABLE') {
+                // Make sure the full trailing table is copied.
+                rangeContent.lastChild.before(closestElement(range.endContainer, 'table').cloneNode(true));
+                rangeContent.lastChild.remove();
+            }
 
             const dataHtmlElement = document.createElement('data');
             dataHtmlElement.append(rangeContent);
