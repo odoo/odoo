@@ -152,7 +152,7 @@
         <div id="o_wevent_tickets" class="bg-white shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <t t-if="len(event.event_ticket_ids) &gt; 1 or tickets.description">
+            <t t-if="len(event.event_ticket_ids) &gt; 1">
                 <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
                     <span class="py-2 o_wevent_registration_title text-left">Tickets</span>
                     <div class="o_wevent_price_range d-none"/>
@@ -226,6 +226,10 @@
                             <span t-if="tickets" t-field="tickets.name"/>
                             <span t-else="">Registration</span>
                         </h6>
+                        <t t-if="tickets.description">
+                            <small t-field="tickets.description" class="text-muted py-2"/>
+                            <br/>
+                        </t>
                         <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on
                             <span itemprop="priceValidUntil" t-esc="tickets.end_sale_datetime"
                                 t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>

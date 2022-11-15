@@ -396,7 +396,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.amount = wizard.source_amount
             else:
                 # Foreign currency on payment different than the one set on the journal entries.
-                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
+                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date or fields.Date.today())
                 wizard.amount = amount_payment_currency
 
     @api.depends('amount')
@@ -410,7 +410,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.payment_difference = wizard.source_amount - wizard.amount
             else:
                 # Foreign currency on payment different than the one set on the journal entries.
-                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
+                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date or fields.Date.today())
                 wizard.payment_difference = amount_payment_currency - wizard.amount
 
     # -------------------------------------------------------------------------

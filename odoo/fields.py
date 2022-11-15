@@ -192,6 +192,10 @@ class Field(MetaField('DummyField', (object,), {})):
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
 
+    :param bool recursive: whether the field has recursive dependencies (the field
+        ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
+        must be explicit to guarantee that recomputation is correct
+
     :param str inverse: name of a method that inverses the field (optional)
 
     :param str search: name of a method that implement search on the field (optional)
@@ -245,7 +249,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
-    invisible = False             # whether the field is invisible
+    invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -2258,7 +2262,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 

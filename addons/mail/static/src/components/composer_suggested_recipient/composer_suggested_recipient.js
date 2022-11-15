@@ -123,26 +123,13 @@ export class ComposerSuggestedRecipient extends Component {
 
     /**
      * @private
-     * @param {object} record the newly-created record
      */
-    _onDialogSaved(record) {
+    _onDialogSaved() {
         const thread = this.suggestedRecipientInfo && this.suggestedRecipientInfo.thread;
         if (!thread) {
             return;
         }
         thread.fetchAndUpdateSuggestedRecipients();
-        if (!this.suggestedRecipientInfo.partner) {
-            this.env.services.notification.notify({
-                title: this.env._t('Invalid Partner'),
-                message: this.env._t('The information you have entered does not match the existing contact information for this record. The partner was not created.'),
-                type: 'warning'
-            });
-            this.env.services.rpc({
-                args: [record.res_id],
-                model: 'res.partner',
-                method: 'unlink',
-            });
-        }
     }
 }
 

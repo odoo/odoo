@@ -25,8 +25,8 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Netta Waizer, 2022
 # hed shefer <hed@laylinetech.com>, 2022
-# Roy Sayag, 2022
 # Sagi Ahiel, 2022
+# Roy Sayag, 2022
 # NoaFarkash, 2022
 # 
 msgid ""
@@ -702,7 +702,7 @@ msgstr "? זה עלול להוביל לחוסר עקביות במלאי שלך."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type !"
-msgstr ""
+msgstr "ברקוד יכול להיות משויך לסוג חבילה אחד!"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -1309,7 +1309,7 @@ msgstr "קיבולת"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr ""
+msgstr "קיבולת לפי חבילה"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -1363,6 +1363,12 @@ msgstr "שנה את כמות המוצר "
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "שנה לשם טוב יותר "
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -1933,7 +1939,7 @@ msgstr "מלאי מחזורי"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Expressחיבור ל"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3677,7 +3683,7 @@ msgstr "יוני"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep Counted Quantity"
-msgstr ""
+msgstr "שמור כמות שנספרה "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4233,7 +4239,7 @@ msgstr "משקל מקסימלי"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Max Weight (kg)"
-msgstr ""
+msgstr "משקל מקסימלי (Kg)"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_max_weight
@@ -4696,7 +4702,7 @@ msgstr "מספר השגיאות"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_in
 msgid "Number of incoming stock moves in the past 12 months"
-msgstr ""
+msgstr "מספר תנועות המלאי הנכנסות ב-12 החודשים האחרונים"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4716,7 +4722,7 @@ msgstr "מספר הודעות עם שגיאת משלוח"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
-msgstr ""
+msgstr "מספר תנועות המלאי היוצאות ב-12 החודשים האחרונים"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -5128,7 +5134,7 @@ msgstr "שימוש בחבילה"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Package type"
-msgstr ""
+msgstr "סוג חבילה"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -6209,12 +6215,12 @@ msgstr ""
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr ""
+msgstr "דו\"ח עיתוד מלאי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr ""
+msgstr "חיפוש דו\"ח עיתוד מלאי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
@@ -6264,16 +6270,18 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
+"שמור רק אריזות מלאות: לא ישמור אריזות חלקיות. אם הלקוח מזמין 2 משטחים של 1000 יחידות כל אחד ויש לך רק 1600 במלאי, אז רק 1000 יישמרו\n"
+"שמירת אריזות חלקיות: לאפשר שמירת אריזות חלקיות. אם הלקוח מזמין 2 משטחים של 1000 יחידות כל אחד ויש לך רק 1600 במלאי, אז 1600 יישמרו"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
 msgid "Reserve Packagings"
-msgstr ""
+msgstr "אריזות שמורות"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr ""
+msgstr "אריזות לא שלמות "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -6910,7 +6918,7 @@ msgstr "הצג פעולות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_auto_reception_report
 msgid "Show Reception Report at Validation"
-msgstr ""
+msgstr "הצג דוח קבלה לאחר תיקוף"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -7250,7 +7258,7 @@ msgstr "תנועות מלאי שעובדו"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "סוג חבילת מלאי"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -7541,7 +7549,7 @@ msgstr ""
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr ""
+msgstr "התאריך הצפוי של ההעברה שנוצרה יחושב על סמך זמן אספקה ​​זה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -7789,7 +7797,7 @@ msgstr "השימוש באיתור זה אינו ניתן לשינוי כתצוג
 #, python-format
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
-msgstr ""
+msgstr "אצווה זו%(lot_name)sלא מותאמת עם המוצר%(product_name)s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -7849,6 +7857,9 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"מוצר זה היה בשימוש לפחות בתנועת מלאי אחת. לא מומלץ לשנות את סוג המוצר מכיוון"
+" שהוא עלול להוביל לחוסר עקביות. פתרון טוב יותר יכול להיות להעביר את המוצר "
+"לארכיון וליצור חדש במקום זאת."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8368,7 +8379,7 @@ msgstr "השתמש במסלולים שלך"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Used by"
-msgstr ""
+msgstr "היה בשימוש של"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
@@ -8839,6 +8850,12 @@ msgstr ""
 "הסוג, אתה צריך תחילה להסיר את השמירה של התנועה מהמלאי."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8888,6 +8905,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
+"לא ניתן לבטל תנועת מלאי שהוגדרה כ'בוצע'. צור החזרה על מנת להפוך את המהלכים "
+"שהתרחשו."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
