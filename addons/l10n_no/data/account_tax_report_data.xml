@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo auto_sequence="1">
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
@@ -11,19 +11,16 @@
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
-                <field name="sequence" eval="1"/>
             </record>
         </field>
         <field name="line_ids">
             <record id="tax_report_line_sales_goods_services_homeland" model="account.report.line">
                 <field name="name">Sales of goods and services in Norway</field>
-                <field name="sequence" eval="1"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_3" model="account.report.line">
                         <field name="name">3 Sales and withdrawals of goods and services (high rate 25%) - base</field>
                         <field name="code">BASE_3</field>
-                        <field name="sequence" eval="2"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_3_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -35,7 +32,6 @@
                     <record id="tax_report_line_code_3_tax" model="account.report.line">
                         <field name="name">3 Sales and withdrawals of goods and services (high rate 25%) - tax</field>
                         <field name="code">TAX_3</field>
-                        <field name="sequence" eval="3"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_3_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -47,7 +43,6 @@
                     <record id="tax_report_line_code_31" model="account.report.line">
                         <field name="name">31 Sales and withdrawals of goods and services (medium rate 15%) - base</field>
                         <field name="code">BASE_31</field>
-                        <field name="sequence" eval="4"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_31_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -59,7 +54,6 @@
                     <record id="tax_report_line_code_31_tax" model="account.report.line">
                         <field name="name">31 Sales and withdrawals of goods and services (medium rate 15%) - tax</field>
                         <field name="code">TAX_31</field>
-                        <field name="sequence" eval="5"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_31_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -71,7 +65,6 @@
                     <record id="tax_report_line_code_33" model="account.report.line">
                         <field name="name">33 Sales and withdrawals of goods and services (low rate 12%) - base</field>
                         <field name="code">BASE_33</field>
-                        <field name="sequence" eval="6"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_33_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -83,7 +76,6 @@
                     <record id="tax_report_line_code_33_tax" model="account.report.line">
                         <field name="name">33 Sales and withdrawals of goods and services (low rate 12%) - tax</field>
                         <field name="code">TAX_33</field>
-                        <field name="sequence" eval="7"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_33_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -95,7 +87,6 @@
                     <record id="tax_report_line_code_5" model="account.report.line">
                         <field name="name">5 Sales and purchases of goods and services exempt from VAT (0%)</field>
                         <field name="code">BASE_5</field>
-                        <field name="sequence" eval="8"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_5_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -107,7 +98,6 @@
                     <record id="tax_report_line_code_6" model="account.report.line">
                         <field name="name">6 Sales of goods and services exempt from the VAT Act (0%)</field>
                         <field name="code">BASE_6</field>
-                        <field name="sequence" eval="9"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_6_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -120,13 +110,11 @@
             </record>
             <record id="tax_report_line_sales_goods_services_abroad" model="account.report.line">
                 <field name="name">Sales of goods and services abroad</field>
-                <field name="sequence" eval="10"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_52" model="account.report.line">
                         <field name="name">52 Sales of goods and services abroad exempt from VAT (0%)</field>
                         <field name="code">BASE_52</field>
-                        <field name="sequence" eval="11"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_52_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -139,13 +127,11 @@
             </record>
             <record id="tax_report_line_purchases_goods_services_homeland" model="account.report.line">
                 <field name="name">Purchases of goods and services in Norway</field>
-                <field name="sequence" eval="12"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_1" model="account.report.line">
                         <field name="name">1 Purchases of goods and services with right of deduction (high rate 25%)</field>
                         <field name="code">TAX_1</field>
-                        <field name="sequence" eval="13"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_1_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -157,7 +143,6 @@
                     <record id="tax_report_line_code_11" model="account.report.line">
                         <field name="name">11 Purchases of goods and services with right of deduction (medium rate 15%)</field>
                         <field name="code">TAX_11</field>
-                        <field name="sequence" eval="14"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_11_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -169,7 +154,6 @@
                     <record id="tax_report_line_code_13" model="account.report.line">
                         <field name="name">13 Purchases of goods and services with right of deduction (low rate 12%)</field>
                         <field name="code">TAX_13</field>
-                        <field name="sequence" eval="15"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_13_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -182,13 +166,11 @@
             </record>
             <record id="tax_report_line_purchases_goods_abroad" model="account.report.line">
                 <field name="name">Purchases of goods from abroad (imports)</field>
-                <field name="sequence" eval="16"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_14" model="account.report.line">
                         <field name="name">14 Deduction on purchases of goods from abroad (VAT paid on importation, high rate 25%)</field>
                         <field name="code">TAX_14</field>
-                        <field name="sequence" eval="17"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_14_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -200,7 +182,6 @@
                     <record id="tax_report_line_code_15" model="account.report.line">
                         <field name="name">15 Deduction on purchases of goods from abroad (VAT paid on importation, medium rate 15%)</field>
                         <field name="code">TAX_15</field>
-                        <field name="sequence" eval="18"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_15_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -212,7 +193,6 @@
                     <record id="tax_report_line_code_81" model="account.report.line">
                         <field name="name">81 Purchase of goods from abroad with right of deduction (high rate 25%) - base</field>
                         <field name="code">BASE_81</field>
-                        <field name="sequence" eval="19"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_81_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -224,7 +204,6 @@
                     <record id="tax_report_line_code_81_tax" model="account.report.line">
                         <field name="name">81 Purchase of goods from abroad with right of deduction (high rate 25%) - tax</field>
                         <field name="code">TAX_81</field>
-                        <field name="sequence" eval="20"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_81_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -236,7 +215,6 @@
                     <record id="tax_report_line_code_82" model="account.report.line">
                         <field name="name">82 Purchase of goods from abroad without right of deduction (high rate 25%) - base</field>
                         <field name="code">BASE_82</field>
-                        <field name="sequence" eval="21"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_82_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -248,7 +226,6 @@
                     <record id="tax_report_line_code_82_tax" model="account.report.line">
                         <field name="name">82 Purchase of goods from abroad without right of deduction (high rate 25%) - tax</field>
                         <field name="code">TAX_82</field>
-                        <field name="sequence" eval="22"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_82_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -260,7 +237,6 @@
                     <record id="tax_report_line_code_83" model="account.report.line">
                         <field name="name">83 Purchase of goods from abroad with right of deduction (medium rate 15%) - base</field>
                         <field name="code">BASE_83</field>
-                        <field name="sequence" eval="23"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_83_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -272,7 +248,6 @@
                     <record id="tax_report_line_code_83_tax" model="account.report.line">
                         <field name="name">83 Purchase of goods from abroad with right of deduction (medium rate 15%) - tax</field>
                         <field name="code">TAX_83</field>
-                        <field name="sequence" eval="24"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_83_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -284,7 +259,6 @@
                     <record id="tax_report_line_code_84" model="account.report.line">
                         <field name="name">84 Purchases of goods from abroad that are not deductible (medium rate 15%) - base</field>
                         <field name="code">BASE_84</field>
-                        <field name="sequence" eval="25"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_84_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -296,7 +270,6 @@
                     <record id="tax_report_line_code_84_tax" model="account.report.line">
                         <field name="name">84 Purchases of goods from abroad that are not deductible (medium rate 15%) - tax</field>
                         <field name="code">TAX_84</field>
-                        <field name="sequence" eval="26"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_84_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -308,7 +281,6 @@
                     <record id="tax_report_line_code_85" model="account.report.line">
                         <field name="name">85 Purchases of goods from abroad on which VAT is not charged (zero rate 0%)</field>
                         <field name="code">BASE_85</field>
-                        <field name="sequence" eval="27"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_85_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -321,13 +293,11 @@
             </record>
             <record id="tax_report_line_purchases_services_abroad" model="account.report.line">
                 <field name="name">Purchases of services from abroad (imports)</field>
-                <field name="sequence" eval="28"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_86" model="account.report.line">
                         <field name="name">86 Purchase of services from abroad with right of deduction (high rate 25%) - base</field>
                         <field name="code">BASE_86</field>
-                        <field name="sequence" eval="29"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_86_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -339,7 +309,6 @@
                     <record id="tax_report_line_code_86_tax" model="account.report.line">
                         <field name="name">86 Purchase of services from abroad with right of deduction (high rate 25%) - tax</field>
                         <field name="code">TAX_86</field>
-                        <field name="sequence" eval="30"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_86_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -351,7 +320,6 @@
                     <record id="tax_report_line_code_87" model="account.report.line">
                         <field name="name">87 Purchase of services from abroad without deductibility (high rate 25%) - base</field>
                         <field name="code">BASE_87</field>
-                        <field name="sequence" eval="31"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_87_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -363,7 +331,6 @@
                     <record id="tax_report_line_code_87_tax" model="account.report.line">
                         <field name="name">87 Purchase of services from abroad without deductibility (high rate 25%) - tax</field>
                         <field name="code">TAX_87</field>
-                        <field name="sequence" eval="32"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_87_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -375,7 +342,6 @@
                     <record id="tax_report_line_code_88" model="account.report.line">
                         <field name="name">88 Purchase of services from abroad with right of deduction (low rate 12%) - base</field>
                         <field name="code">BASE_88</field>
-                        <field name="sequence" eval="33"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_88_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -387,7 +353,6 @@
                     <record id="tax_report_line_code_88_tax" model="account.report.line">
                         <field name="name">88 Purchase of services from abroad with right of deduction (low rate 12%) - tax</field>
                         <field name="code">TAX_88</field>
-                        <field name="sequence" eval="34"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_88_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -399,7 +364,6 @@
                     <record id="tax_report_line_code_89" model="account.report.line">
                         <field name="name">89 Purchase of services from abroad without deductibility (low rate 12%) - base</field>
                         <field name="code">BASE_89</field>
-                        <field name="sequence" eval="35"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_89_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -411,7 +375,6 @@
                     <record id="tax_report_line_code_89_tax" model="account.report.line">
                         <field name="name">89 Purchase of services from abroad without deductibility (low rate 12%) - tax</field>
                         <field name="code">TAX_89</field>
-                        <field name="sequence" eval="36"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_89_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -424,13 +387,11 @@
             </record>
             <record id="tax_report_line_fish_etc" model="account.report.line">
                 <field name="name">Fish, etc.</field>
-                <field name="sequence" eval="37"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_12" model="account.report.line">
                         <field name="name">12 Purchase of fish and other marine wildlife resources (11.11%)</field>
                         <field name="code">TAX_12</field>
-                        <field name="sequence" eval="38"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_12_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -442,7 +403,6 @@
                     <record id="tax_report_line_code_32" model="account.report.line">
                         <field name="name">32 Sale of fish and other marine wildlife resources (11.11%) - base</field>
                         <field name="code">BASE_32</field>
-                        <field name="sequence" eval="39"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_32_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -454,7 +414,6 @@
                     <record id="tax_report_line_code_32_tax" model="account.report.line">
                         <field name="name">32 Sale of fish and other marine wildlife resources (11.11%) - tax</field>
                         <field name="code">TAX_32</field>
-                        <field name="sequence" eval="40"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_32_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -467,13 +426,11 @@
             </record>
             <record id="tax_report_line_emission_and_gold" model="account.report.line">
                 <field name="name">Carbon credits and gold</field>
-                <field name="sequence" eval="41"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_51" model="account.report.line">
                         <field name="name">51 Sale of carbon credits and gold to traders (0%)</field>
                         <field name="code">BASE_51</field>
-                        <field name="sequence" eval="42"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_51_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -485,7 +442,6 @@
                     <record id="tax_report_line_code_91" model="account.report.line">
                         <field name="name">91 Purchase of carbon credits and gold with deductibility (high rate 25%) - base</field>
                         <field name="code">BASE_91</field>
-                        <field name="sequence" eval="43"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_91_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -497,7 +453,6 @@
                     <record id="tax_report_line_code_91_tax" model="account.report.line">
                         <field name="name">91 Purchase of carbon credits and gold with deductibility (high rate 25%) - tax</field>
                         <field name="code">TAX_91</field>
-                        <field name="sequence" eval="44"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_91_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -509,7 +464,6 @@
                     <record id="tax_report_line_code_92" model="account.report.line">
                         <field name="name">92 Purchase of carbon credits and gold without deductibility (high rate 25%) - base</field>
                         <field name="code">BASE_92</field>
-                        <field name="sequence" eval="45"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_92_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -521,7 +475,6 @@
                     <record id="tax_report_line_code_92_tax" model="account.report.line">
                         <field name="name">92 Purchase of carbon credits and gold without deductibility (high rate 25%) - tax</field>
                         <field name="code">TAX_92</field>
-                        <field name="sequence" eval="46"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_code_92_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -534,13 +487,11 @@
             </record>
             <record id="tax_report_line_sum" model="account.report.line">
                 <field name="name">Sum</field>
-                <field name="sequence" eval="47"/>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_to_be_paid" model="account.report.line">
                         <field name="name">Tax to pay</field>
                         <field name="code">SUM</field>
-                        <field name="sequence" eval="48"/>
                         <field name="expression_ids">
                             <record id="tax_report_line_to_be_paid_formula" model="account.report.expression">
                                 <field name="label">balance</field>
