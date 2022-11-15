@@ -102,7 +102,7 @@ class AccountReport(models.Model):
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'never'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_account_type = fields.Boolean(
         string="Account Types",
