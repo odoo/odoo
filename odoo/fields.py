@@ -1398,10 +1398,14 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
+        cur_field = record._fields[self.currency_field]
         if values and self.currency_field in values:
-            field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+            dummy = record.new({self.currency_field: values[self.currency_field]})
+            currency = dummy[self.currency_field]
+        elif values and cur_field.related and cur_field.related[0] in values:
+            rel_fname = cur_field.related[0]
+            dummy = record.new({rel_fname: values[rel_fname]})
+            currency = dummy[self.currency_field]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
