@@ -602,6 +602,10 @@ class ResPartner(models.Model):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
 
+    def format_vat_sm(self, vat):
+        stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact
+        return stdnum_vat_format('SM' + vat)[2:]
+
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False
         vat_country, vat_number = self._split_vat(vat)
