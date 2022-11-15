@@ -4,11 +4,12 @@ import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { useService } from "@web/core/utils/hooks";
 
 export class AttendeeCalendarController extends CalendarController {
-    setup() {
+    async setup() {
         super.setup();
         this.actionService = useService("action");
         this.user = useService("user");
         this.orm = useService("orm");
+        this.isSystemUser = await this.user.hasGroup('base.group_system');
     }
 
     onClickAddButton() {
