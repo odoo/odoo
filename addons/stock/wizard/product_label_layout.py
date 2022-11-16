@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from odoo import fields, models
+from odoo.tools import float_is_zero
 
 
 class ProductLabelLayout(models.TransientModel):
@@ -23,7 +24,7 @@ class ProductLabelLayout(models.TransientModel):
         if 'zpl' in self.print_format:
             xml_id = 'stock.label_product_product'
 
-        if self.picking_quantity == 'picking' and self.move_line_ids:
+        if self.picking_quantity == 'picking' and any(not float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) for ml in self.move_line_ids):
             qties = defaultdict(int)
             custom_barcodes = defaultdict(list)
             uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
