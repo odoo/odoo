@@ -626,12 +626,20 @@ class AccountMoveLine(models.Model):
                 date=date,
             )
         for line in self:
-            line.currency_rate = get_rate(
-                from_currency=line.company_currency_id,
-                to_currency=line.currency_id,
-                company=line.company_id,
-                date=line.move_id.date or fields.Date.context_today(line),
-            )
+            if line.currency_id == line.company_id.currency_id:
+                line.currency_rate = 1
+            elif line.move_id.is_invoice(include_receipts=True):
+                line.currency_rate = get_rate(
+                    from_currency=line.company_currency_id,
+                    to_currency=line.currency_id,
+                    company=line.company_id,
+                    date=line.move_id.date or fields.Date.context_today(line),
+                )
+            else:
+                # The rate can be set manually on journal entries, hence we approximate it
+                # We don't need the dependency because we get the rate after setting the amounts
+                # in this case.
+                line.currency_rate = line.amount_currency / (line.balance or 1)
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):

@@ -2668,8 +2668,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 12.5,     'credit': 0.0,      'amount_currency': 25.0,    'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
             {'debit': 0.0,      'credit': 12.5,     'amount_currency': -25.0,   'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
             # tax_1:
-            {'debit': 4.17,     'credit': 0.0,      'amount_currency': 8.333,   'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
-            {'debit': 0.0,      'credit': 4.17,     'amount_currency': -8.333,  'currency_id': currency_id,     'account_id': self.tax_account_1.id},
+            {'debit': 4.16,     'credit': 0.0,      'amount_currency': 8.333,   'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 4.16,     'amount_currency': -8.333,  'currency_id': currency_id,     'account_id': self.tax_account_1.id},
             # tax_2:
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.003,   'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': -0.003,  'currency_id': currency_id,     'account_id': self.tax_account_2.id},
@@ -2688,8 +2688,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -5.54,      -22.226),
-            (self.tax_account_1,                    -5.57,      -11.11),
+            (self.cash_basis_transfer_account,      -5.55,      -22.226),
+            (self.tax_account_1,                    -5.56,      -11.11),
             (self.tax_account_2,                    0.0,        -0.004),
         ])
 
@@ -2709,8 +2709,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 16.67,    'credit': 0.0,      'amount_currency': 33.331,  'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
             {'debit': 0.0,      'credit': 16.67,    'amount_currency': -33.331, 'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
             # tax_1:
-            {'debit': 5.56,     'credit': 0.0,      'amount_currency': 11.109,  'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
-            {'debit': 0.0,      'credit': 5.56,     'amount_currency': -11.109, 'currency_id': currency_id,     'account_id': self.tax_account_1.id},
+            {'debit': 5.55,     'credit': 0.0,      'amount_currency': 11.109,  'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 5.55,     'amount_currency': -11.109, 'currency_id': currency_id,     'account_id': self.tax_account_1.id},
             # tax_2:
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.003,   'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': -0.003,  'currency_id': currency_id,     'account_id': self.tax_account_2.id},
@@ -2740,8 +2740,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      5.57,       -0.002),
-            (self.tax_account_1,                    -16.68,     -33.328),
+            (self.cash_basis_transfer_account,      5.55,       -0.002),
+            (self.tax_account_1,                    -16.66,     -33.328),
             (self.tax_account_2,                    0.0,        -0.01),
         ])
 
@@ -2756,8 +2756,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(len(res.get('tax_cash_basis_moves', [])), 1)
         self.assertRecordValues(res['tax_cash_basis_moves'].line_ids, [
             # Base amount of tax_1 & tax_2:
-            {'debit': 0.01,     'credit': 0.0,      'amount_currency': 0.007,   'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
-            {'debit': 0.0,      'credit': 0.01,     'amount_currency': -0.007,  'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,     'credit': 0.0,       'amount_currency': 0.007,   'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -0.007,  'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
             # tax_1:
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.002,   'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': -0.002,  'currency_id': currency_id,     'account_id': self.tax_account_1.id},
@@ -2767,10 +2767,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         ])
 
         self.assertRecordValues(res['full_reconcile'].exchange_move_id.line_ids, [
-            {'account_id': self.cash_basis_base_account.id,     'debit': 16.71, 'credit': 0.0,      'tax_ids': taxes.ids,   'tax_line_id': False},
-            {'account_id': self.cash_basis_base_account.id,     'debit': 0.0,   'credit': 16.71,    'tax_ids': [],          'tax_line_id': False},
-            {'account_id': self.tax_account_1.id,               'debit': 5.58,  'credit': 0.0,      'tax_ids': [],          'tax_line_id': self.cash_basis_tax_a_third_amount.id},
-            {'account_id': self.cash_basis_transfer_account.id, 'debit': 0.0,   'credit': 5.58,     'tax_ids': [],          'tax_line_id': False},
+            {'account_id': self.cash_basis_base_account.id,     'debit': 16.7,  'credit': 0.0,      'tax_ids': taxes.ids,   'tax_line_id': False},
+            {'account_id': self.cash_basis_base_account.id,     'debit': 0.0,   'credit': 16.7,     'tax_ids': [],          'tax_line_id': False},
+            {'account_id': self.tax_account_1.id,               'debit': 5.56,  'credit': 0.0,      'tax_ids': [],          'tax_line_id': self.cash_basis_tax_a_third_amount.id},
+            {'account_id': self.cash_basis_transfer_account.id, 'debit': 0.0,   'credit': 5.56,     'tax_ids': [],          'tax_line_id': False},
             {'account_id': self.tax_account_2.id,               'debit': 0.0,   'credit': 0.01,     'tax_ids': [],          'tax_line_id': self.cash_basis_tax_tiny_amount.id},
             {'account_id': self.cash_basis_transfer_account.id, 'debit': 0.01,  'credit': 0.0,      'tax_ids': [],          'tax_line_id': False},
         ])
@@ -3272,7 +3272,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'tax_tag_ids': self.tax_tags[0].ids,
                 },
                 {
-                    'debit': 66.66,
+                    'debit': 66.67,
                     'credit': 0,
                     'amount_currency': 33.33,
                     'currency_id': rates_data['currency'].id,
@@ -3282,7 +3282,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 },
                 {
                     'debit': 0,
-                    'credit': 66.66,
+                    'credit': 66.67,
                     'amount_currency': -33.33,
                     'currency_id': rates_data['currency'].id,
                     'tax_ids': [],
@@ -3315,7 +3315,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 },
                 {
                     'debit': 0,
-                    'credit': 99.99,
+                    'credit': 100,
                     'amount_currency': -33.33,
                     'currency_id': rates_data['currency'].id,
                     'tax_ids': [],
@@ -3323,7 +3323,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'tax_tag_ids': [],
                 },
                 {
-                    'debit': 99.99,
+                    'debit': 100,
                     'credit': 0,
                     'amount_currency': 33.33,
                     'currency_id': rates_data['currency'].id,

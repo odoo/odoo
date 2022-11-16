@@ -129,7 +129,7 @@ class AccountPartialReconcile(models.Model):
                     Also, add the 'partials' keys being a list of dictionary, one for each partial to process:
                         * partial:          The account.partial.reconcile record.
                         * percentage:       The reconciled percentage represented by the partial.
-                        * payment_rate:     The applied rate of this partial.
+                        * rate_ratio:       The ratio of rates between the two partials from this move to the other one.
         '''
         tax_cash_basis_values_per_move = {}
 
@@ -158,22 +158,16 @@ class AccountPartialReconcile(models.Model):
 
                 partial_amount = 0.0
                 partial_amount_currency = 0.0
-                rate_amount = 0.0
-                rate_amount_currency = 0.0
 
                 if partial.debit_move_id.move_id == move:
                     partial_amount += partial.amount
                     partial_amount_currency += partial.debit_amount_currency
-                    rate_amount -= partial.credit_move_id.balance
-                    rate_amount_currency -= partial.credit_move_id.amount_currency
                     source_line = partial.debit_move_id
                     counterpart_line = partial.credit_move_id
 
                 if partial.credit_move_id.move_id == move:
                     partial_amount += partial.amount
                     partial_amount_currency += partial.credit_amount_currency
-                    rate_amount += partial.debit_move_id.balance
-                    rate_amount_currency += partial.debit_move_id.amount_currency
                     source_line = partial.credit_move_id
                     counterpart_line = partial.debit_move_id
 
@@ -181,11 +175,12 @@ class AccountPartialReconcile(models.Model):
                     # Will match when reconciling a refund with an invoice.
                     # In this case, we want to use the rate of each businness document to compute its cash basis entry,
                     # not the rate of what it's reconciled with.
-                    rate_amount = source_line.balance
-                    rate_amount_currency = source_line.amount_currency
-                    payment_date = move.date
+                    rate_ratio = 1
+                elif source_line.date < source_line.company_id._get_user_fiscal_lock_date():
+                    # TODO not sure about this, but test_caba_with_lock_date...
+                    rate_ratio = 1
                 else:
-                    payment_date = counterpart_line.date
+                    rate_ratio = source_line.currency_rate / (counterpart_line.currency_rate or 1)
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
@@ -202,26 +197,12 @@ class AccountPartialReconcile(models.Model):
                     # Percentage made on foreign currency.
                     percentage = partial_amount_currency / move_values['total_amount_currency']
 
-                if source_line.currency_id != counterpart_line.currency_id:
-                    # When the invoice and the payment are not sharing the same foreign currency, the rate is computed
-                    # on-the-fly using the payment date.
-                    payment_rate = self.env['res.currency']._get_conversion_rate(
-                        counterpart_line.company_currency_id,
-                        source_line.currency_id,
-                        counterpart_line.company_id,
-                        payment_date,
-                    )
-                elif rate_amount:
-                    payment_rate = rate_amount_currency / rate_amount
-                else:
-                    payment_rate = 0.0
-
                 tax_cash_basis_values_per_move[move.id] = move_values
 
                 partial_vals = {
                     'partial': partial,
                     'percentage': percentage,
-                    'payment_rate': payment_rate,
+                    'rate_ratio': rate_ratio,
                 }
 
                 # Add partials.
@@ -433,7 +414,7 @@ class AccountPartialReconcile(models.Model):
 
                     # Percentage expressed in the foreign currency.
                     amount_currency = line.currency_id.round(line.amount_currency * partial_values['percentage'])
-                    balance = partial_values['payment_rate'] and amount_currency / partial_values['payment_rate'] or 0.0
+                    balance = line.balance * partial_values['percentage'] * partial_values['rate_ratio']
 
                     # ==========================================================================
                     # Prepare the mirror cash basis journal item of the current line.
