@@ -497,7 +497,7 @@ class Team(models.Model):
             team = random.choices(population, weights=weights, k=1)[0]
 
             # filter remaining leads, remove team if no more leads for it
-            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids).exists()
+            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids) #.exists()
             if not teams_data[team]["leads"]:
                 population_index = population.index(team)
                 population.pop(population_index)
