@@ -129,12 +129,20 @@ def convert_column(cr, tablename, columnname, columntype):
 
 def convert_column_translatable(cr, tablename, columnname, columntype):
     """ Convert the column from/to a 'jsonb' translated field column. """
-    drop_index(cr, f"{tablename}_{columnname}_index", tablename)
+    translation_backup_columnname = f'_{columnname}_odoo_translation_backup'
     if columntype == "jsonb":
-        using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
+        if column_exists(cr, tablename, translation_backup_columnname):
+            # columnname is directly dropped without updating the translation_backup_columnname
+            cr.execute(f'ALTER TABLE {tablename} DROP COLUMN {columnname}')
+            rename_column(cr, tablename, translation_backup_columnname, columnname)
+        else:
+            drop_index(cr, f"{tablename}_{columnname}_index", tablename)
+            using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
+            _convert_column(cr, tablename, columnname, columntype, using)
     else:
-        using = f""""{columnname}"->>'en_US'"""
-    _convert_column(cr, tablename, columnname, columntype, using)
+        rename_column(cr, tablename, columnname, translation_backup_columnname)
+        create_column(cr, tablename, columnname, columntype)
+        cr.execute(f"""UPDATE {tablename} SET {columnname} = {translation_backup_columnname}->>'en_US'""")
 
 def _convert_column(cr, tablename, columnname, columntype, using):
     query = f'''

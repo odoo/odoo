@@ -483,6 +483,16 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
+        if update_module:
+            # remove backup column for translations
+            cr.execute(r"""
+                SELECT table_name, quote_ident(column_name)
+                FROM information_schema.columns
+                WHERE table_schema = 'public'
+                AND column_name LIKE '\_%_odoo_translation_backup'""")
+            for tablename, columnname in cr.fetchall():
+                cr.execute(f'ALTER TABLE "{tablename}" DROP COLUMN "{columnname}"')
+
         # check that all installed modules have been loaded by the registry after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
