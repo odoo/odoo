@@ -683,7 +683,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
-            db=self.env.cr.dbname,
+            db=os.environ.get('ODOO_PROFILER_DATABASE', self.env.cr.dbname),
             profile_session=self.profile_session,
             **kwargs)
 
