@@ -261,7 +261,7 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if total and mass_mailing.ab_testing_pc < 100:
+            if total and mass_mailing.ab_testing_enabled and mass_mailing.ab_testing_pc < 100:
                 total = max(int(total / 100.0 * mass_mailing.ab_testing_pc), 1)
             mass_mailing.total = total
 
