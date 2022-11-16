@@ -11,7 +11,7 @@ from odoo.modules import get_module_resource
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools.convert import xml_import
 from odoo.tools.misc import file_open
-from odoo.tools.translate import TranslationFileReader, _trans_load_data
+from odoo.tools.translate import TranslationImporter
 
 
 class TemplateResetMixin(models.AbstractModel):
@@ -61,7 +61,8 @@ class TemplateResetMixin(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _override_translation_term(self, module_name, xml_ids):
-        processed_base_langs = []
+        translation_importer = TranslationImporter(self.env.cr)
+
         for code, _ in self.env['res.lang'].get_installed():
             lang_code = tools.get_iso_codes(code)
             # In case of sub languages (e.g fr_BE), load the base language first, (e.g fr.po) and
@@ -72,30 +73,15 @@ class TemplateResetMixin(models.AbstractModel):
                 base_lang_code = lang_code.split('_')[0]
                 base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                 if base_trans_file:
-                    if base_lang_code not in processed_base_langs:
-                        processed_base_langs.append(base_lang_code)
-                        self._process_translation_data(base_trans_file, code, xml_ids)
+                    translation_importer.load_file(base_trans_file, code, xmlids=xml_ids)
 
             # Step 2: reset translation file with main language file (can possibly override the
             # terms coming from the base language)
             trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
             if trans_file:
-                self._process_translation_data(trans_file, code, xml_ids)
+                translation_importer.load_file(trans_file, code, xmlids=xml_ids)
 
-
-    def _process_translation_data(self, trans_file, lang, xml_ids):
-        """Load translations.
-
-        :param trans_file: path to a translation file to open, e.g. {addon_path}/mail/i18n/es.po
-        :param lang: language code of the translations contained in `trans_file`
-                     language must be present and activated in the database
-
-        :return Boolean: True if translation data is available and processed, False otherwise
-        """
-        with file_open(trans_file, mode='rb', filter_ext=(".po",)) as fileobj:
-            reader = TranslationFileReader(fileobj)
-            # Process a single PO entry
-            _trans_load_data(self.env.cr, reader, lang, overwrite=True, force_overwrite=True, xml_ids=xml_ids)
+        translation_importer.save(overwrite=True, force_overwrite=True)
 
     def reset_template(self):
         """Resets the Template with values given in source file. We ignore the case of
