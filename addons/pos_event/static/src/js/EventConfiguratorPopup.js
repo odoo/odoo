@@ -2,7 +2,7 @@
 
 import Registries from 'point_of_sale.Registries';
 import AbstractAwaitablePopup from 'point_of_sale.AbstractAwaitablePopup';
-const { useRef } = owl;
+const { useRef, useState } = owl;
 
 /**
  * props = {
@@ -17,16 +17,52 @@ const { useRef } = owl;
 export class EventConfiguratorPopup extends AbstractAwaitablePopup  {
     setup() {
         super.setup();
-        this.ticketsRef = Object.fromEntries(this.props.eventData.filter(data => data['event_registrations_open'])
-            .map(data => [data['id'], useRef(`${data['id']}-tickets`)]));
+        const openEvents = this.props.eventData.filter(data => data['event_registrations_open']);
+        this.ticketsRef = Object.fromEntries(openEvents.map(data => [data['id'], useRef(`${data['id']}-tickets`)]));
+        this.state = useState(Object.fromEntries(openEvents.map(data => [
+            data['id'], Object.fromEntries(data['tickets'].map(ticket => [ticket['id'], 0]))
+        ])));
+        this.currentEventId = null;
     }
-    _toggleEvent(eventId) {
-        for (const id in this.ticketsRef) {
-            if (id != eventId) {
-                this.ticketsRef[id].el.classList.remove('open');
-            }
+    _resetEventTickets(eventId) {
+        for (const ticketId in this.state[eventId]) {
+            this.state[eventId][ticketId] = 0;
         }
-        this.ticketsRef[eventId].el.classList.toggle('open'); // we want the opening effect to be the last
+    }
+    _onEventClick(eventId) {
+        if (this.currentEventId === eventId) {
+            this.ticketsRef[eventId].el.classList.remove('open');
+            this.currentEventId = null;
+            this._resetEventTickets(eventId)
+        } else {
+            if (this.currentEventId) {
+                this.ticketsRef[this.currentEventId].el.classList.remove('open');
+                this._resetEventTickets(this.currentEventId);
+            }
+            this.ticketsRef[eventId].el.classList.add('open');
+            this.currentEventId = eventId;
+        }
+    }
+    _onInputKeyPress(event) {
+        if (event.key.toLowerCase() === 'e' ) {
+            event.preventDefault();
+        }
+    }
+    _onMinusClick(eventId, ticketId) {
+        this.state[eventId][ticketId] = Math.max(0, this.state[eventId][ticketId] - 1);
+    }
+    _onPlusClick(eventId, ticketId) {
+        this.state[eventId][ticketId]++;
+    }
+    _onDeleteClick(eventId, ticketId) {
+        this.state[eventId][ticketId] = 0;
+    }
+    _canConfirm() {
+        if (this.currentEventId) {
+            const numberTicket = Object.values(this.state[this.currentEventId]).reduce((a, b) => a + b);
+            return numberTicket;
+        }
+        return false;
     }
 };
 

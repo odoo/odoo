@@ -73,12 +73,15 @@
 
 .pos .popup.event-configurator-popup .ticket {
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .pos .popup.event-configurator-popup .ticket .ticket-info {
     display: flex;
     flex-direction: column;
     text-align: left;
+    max-width: 80%;
 }
 
 .pos .popup.event-configurator-popup .ticket .ticket-info .ticket-name {
@@ -87,4 +90,29 @@
 
 .pos .popup.event-configurator-popup .ticket .ticket-info .ticket-description {
     font-size: 0.8em;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-quantity {
+    display: flex;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-quantity i {
+    margin: 10px;
+    cursor: pointer;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-quantity input {
+    width: 55px;
+    text-align: right;
+    font-size: 18px;
+    min-height: 0;
+}
+
+.pos .popup.event-configurator-popup .ticket .ticket-quantity .delete-cell {
+    width: 35px;
+}
+
+.pos .popup.event-configurator-popup .footer .disabled {
+    background-color: #e2e2e2;
+    cursor: unset;
 }

@@ -9,7 +9,7 @@
             <main class="body">
                 <t t-foreach="props.eventData" t-as="event" t-key="event.id">
                     <div class="event" t-att-class="{'disabled': !event.event_registrations_open}"
-                         t-on-click="() => event.event_registrations_open ? this._toggleEvent(event.id) : null">
+                         t-on-click="() => event.event_registrations_open ? this._onEventClick(event.id) : null">
                         <div class="event-title" t-out="event.name"/>
                         <div class="event-info">
                             <span>Start: <t t-out="event.date_begin"/></span>
@@ -24,16 +24,22 @@
                                 <span t-if="ticket.description" class="ticket-description" t-out="ticket.description"/>
                             </div>
                             <div class="ticket-quantity">
-                                <i class="fa fa-solid fa-circle-minus"/>
-                                <input/>
-                                <i class="fa fa-solid fa-circle-plus"></i>
+                                <i class="fa fa-minus-circle" role="img" t-on-click="() => this._onMinusClick(event.id, ticket.id)"/>
+                                <input type="number" t-model.number="state[event.id][ticket.id]" t-on-keypress="_onInputKeyPress"/>
+                                <i class="fa fa-plus-circle" role="img" t-on-click="() => this._onPlusClick(event.id, ticket.id)"/>
+                                <span class="delete-cell">
+                                    <i t-if="state[event.id][ticket.id]" class="fa fa-trash" role="img"
+                                       t-on-click="() => this._onDeleteClick(event.id, ticket.id)"
+                                    />
+                                </span>
                             </div>
                         </div>
                     </div>
                 </t>
             </main>
             <footer class="footer footer-flex">
-                <div class="button confirm highlight" t-on-click="confirm">
+                <t t-set="_canConfirm()" t-value="confirmable"/>
+                <div class="button confirm" t-att-class="{'highlight': confirmable, 'disabled': !confirmable}" t-on-click="confirm">
                     Ok
                 </div>
                 <div class="button cancel" t-on-click="cancel">
