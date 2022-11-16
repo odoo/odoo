@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+	<record id="viin_product_view_form" model="ir.ui.view">
+		<field name="name">viin.product.form</field>
+		<field name="model">viin.product</field>
+		<field name="arch" type="xml">
+			<form string="Product Form">
+				<header>
+					<button name="action_dropout" string="Dropout" type="object" />
+
+				</header>
+				<sheet>
+					<notebook>
+						<page string="General Information" name="general_information">
+
+							<group>
+								<group>
+									<field name="name" />
+									<field name="company_id" />
+									<field name="price" />
+									<field name="currency_id" />
+									<field name="date_of_manufacture" />
+									<field name="expiration_date" />
+								</group>
+								<group>
+									<field name="image" widget="image" class="oe_avatar"
+										options="{'preview_image': 'image'}" />
+
+								</group>
+							</group>
+							
+							<group>
+								<field name="note" />
+							</group>
+							<group>
+								<field name="description"
+									options="{'collaborative': true}" />
+							</group>
+
+
+						</page>
+						<page string="More Information" name="more_information">
+						<group>
+								<group>
+									<field name="category_ids" />
+								</group>
+								<group>
+									<field name="attach_file" widget="many2many_binary" />
+								</group>
+							</group>
+						</page>
+					</notebook>
+
+
+				</sheet>
+				<div class="o_attachment_preview"
+					options="{types: ['image', 'pdf'], 'order': 'desc'}" />
+				<div class="oe_chatter">
+					<!-- <field name="message_follower_ids" widget="mail_followers" /> <field 
+						name="activity_ids" widget="mail_activity" /> <field name="message_ids" widget="mail_thread" 
+						/> -->
+				</div>
+
+				<field name="dropout_reason" invisible="1" />
+
+			</form>
+		</field>
+	</record>
+	<record id="viin_product_view_tree" model="ir.ui.view">
+		<field name="name">viin.product.tree</field>
+		<field name="model">viin.product</field>
+		<field name="arch" type="xml">
+			<tree string="Product Tree">
+				<field name="product_code" />
+				<field name="name" />
+				<field name="price" />
+				<field name="total" />
+				<field name="expiration_date" />
+				<field name="date_of_manufacture" />
+				<field name="rating" />
+			</tree>
+		</field>
+	</record>
+	<record id="viin_product_view_kanban" model="ir.ui.view">
+		<field name="name">viin.product.kanban</field>
+		<field name="model">viin.product</field>
+		<field name="arch" type="xml">
+			<kanban string="Product Tree">
+				<templates>
+
+					<t t-name="kanban-box">
+
+						<div class="oe_kanban_card oe_kanban_global_click">
+							<div class="o_kanban_image mr-1">
+								<img
+									t-att-src="kanban_image('viin.product', 'image' , record.image)"
+									alt="Product" class="o_image_64_contain" />
+							</div>
+							<div class="oe_kanban_details">
+								<div class="o_kanban_record_top mb-0">
+									<div class="o_kanban_record_headings">
+										<strong class="o_kanban_record_title">
+											<field name="name" />
+										</strong>
+									</div>
+								</div>
+
+								<t t-if="product_code">
+									[
+									<field name="product_code" />
+									]
+								</t>
+
+								<div name="product_lst_price" class="mt-1 text-warning">
+									Price:
+									<field name="price" widget="monetary"
+										options="{'currency_field': 'currency_id', 'field_digits': True}" />
+								</div>
+							</div>
+						</div>
+					</t>
+				</templates>
+
+			</kanban>
+		</field>
+	</record>
+
+	<record id="viin_product_view_search" model="ir.ui.view">
+		<field name="name">viin.product.search</field>
+		<field name="model">viin.product</field>
+		<field name="arch" type="xml">
+			<search string="Products Search">
+				<field name="name"
+					filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]" />
+				<field name="company_id" />
+				<field name="total" />
+
+
+			</search>
+		</field>
+	</record>
+
+
+
+
+
+
+</odoo>
+

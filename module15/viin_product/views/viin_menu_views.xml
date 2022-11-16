@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+	
+
+	<record id="viin_product_action" model="ir.actions.act_window">
+		<field name="name">Viin product</field>
+		<field name="res_model">viin.product</field>
+		<field name="view_mode">tree,form,kanban</field>
+	</record>
+	<record id="viin_category_action" model="ir.actions.act_window">
+		<field name="name">Viin category</field>
+		<field name="res_model">viin.category</field>
+		<field name="view_mode">tree,form,kanban</field>
+	</record>
+	<record id="viin_attribute_action" model="ir.actions.act_window">
+		<field name="name">Viin attribute</field>
+		<field name="res_model">viin.productattribute</field>
+		<field name="view_mode">tree,form,kanban</field>
+	</record>
+	<record id="viin_supply_action" model="ir.actions.act_window">
+		<field name="name">Viin supply</field>
+		<field name="res_model">res.company</field>
+		<field name="view_mode">tree,form,kanban</field>
+	</record>
+	<record id="viin_customer_action" model="ir.actions.act_window">
+		<field name="name">Viin customer</field>
+		<field name="res_model">viin.customer</field>
+		<field name="view_mode">tree,form,kanban</field>
+	</record>
+	<record id="viin_order_action" model="ir.actions.act_window">
+		<field name="name">Viin order</field>
+		<field name="res_model">viin.order</field>
+		<field name="view_mode">tree,form,kanban</field>
+	</record>
+
+
+	<menuitem name="Viin Product Manager"
+		id="viin_product_menu_root" />
+	<menuitem id="viin_product_menu" action="viin_product_action"
+		parent="viin_product_menu_root" name="Products" sequence="0" />
+	<menuitem id="viin_category_menu"
+		action="viin_category_action" parent="viin_product_menu_root"
+		name="Category" sequence="1" />
+	<menuitem id="viin_customer_menu"
+		action="viin_customer_action" parent="viin_product_menu_root"
+		name="Customers" sequence="2" />
+	<menuitem id="viin_supply_menu" action="viin_supply_action"
+		parent="viin_product_menu_root" name="Supply" sequence="3" />
+	<menuitem id="viin_order_menu" action="viin_order_action"
+		parent="viin_product_menu_root" name="Order" sequence="4" />
+
+</odoo>
+

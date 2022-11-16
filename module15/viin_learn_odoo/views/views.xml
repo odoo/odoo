@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="viin_learn_odoo.list">
+      <field name="name">viin_learn_odoo list</field>
+      <field name="model">viin_learn_odoo.viin_learn_odoo</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="viin_learn_odoo.action_window">
+      <field name="name">viin_learn_odoo window</field>
+      <field name="res_model">viin_learn_odoo.viin_learn_odoo</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="viin_learn_odoo.action_server">
+      <field name="name">viin_learn_odoo server</field>
+      <field name="model_id" ref="model_viin_learn_odoo_viin_learn_odoo"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="viin_learn_odoo" id="viin_learn_odoo.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="viin_learn_odoo.menu_1" parent="viin_learn_odoo.menu_root"/>
+    <menuitem name="Menu 2" id="viin_learn_odoo.menu_2" parent="viin_learn_odoo.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="viin_learn_odoo.menu_1_list" parent="viin_learn_odoo.menu_1"
+              action="viin_learn_odoo.action_window"/>
+    <menuitem name="Server to list" id="viin_learn_odoo" parent="viin_learn_odoo.menu_2"
+              action="viin_learn_odoo.action_server"/>
+-->
+  </data>
+</odoo>

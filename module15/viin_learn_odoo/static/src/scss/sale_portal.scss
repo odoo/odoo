@@ -1,0 +1,42 @@
+/* ---- My Orders page ---- */
+
+.orders_vertical_align {
+    display: flex;
+    align-items: center;
+}
+
+.orders_label_text_align {
+    vertical-align: 15%;
+}
+
+/* ---- Order page ---- */
+
+.sale_tbody .o_line_note {
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.sale_tbody input.js_quantity {
+    min-width: 48px;
+    text-align: center;
+}
+
+.sale_tbody div.input-group.w-50.pull-right {
+    width: 100% !important;
+}
+
+.o_portal .sale_tbody .js_quantity_container {
+
+    .js_quantity {
+        padding: 0;
+    }
+
+    .input-group-text {
+        padding: 0.2rem 0.4rem;
+    }
+
+    @include media-breakpoint-down(sm) {
+        width: 100%;
+    }
+}

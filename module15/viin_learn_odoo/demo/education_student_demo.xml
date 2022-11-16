@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+    <record id="demo_education_student_groening" model="education.student">
+        <field name="name">Matt Groening</field>
+        <field name="gender">male</field>
+        <field name="student_code">MT001</field>
+        <field name="mobile">0912345612</field>
+        <field name="email">mattgroening@example.com</field>
+        <field name="dob">2008-08-22</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="state_id" ref="base.state_us_5"/>
+        <field name="nationality_id" ref="base.us"/>
+        <field name="class_group_id" ref="demo_education_class_group_12"/>
+        <field name="class_id" ref="demo_education_class_12a1"/>
+        <field name="student_level_id" ref="demo_student_level_high"/>
+        <field name="image_1920" type="base64" file="viin_education/static/img/groening.jpeg"/>
+    </record>
+   
+</odoo>

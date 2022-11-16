@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+	<record id="education_class_view_form" model="ir.ui.view">
+		<field name="name">education.class.form</field>
+		<field name="model">education.class</field>
+		<field name="arch" type="xml">
+			<form string="Class Form">
+				<header>
+
+					<button name="get_all_students" type="object" string="Log All Students" />
+					<button name="create_classes" type="object" string="Create Classes" />
+					<button name="change_class_name" type="object" string="Change Name" />
+
+
+				</header>
+				<sheet>
+					<group>
+						<group>
+							<field name="name" />
+						</group>
+						<group>
+							<field name="school_id" />
+						</group>
+					</group>
+
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="education_class_view_tree" model="ir.ui.view">
+		<field name="name">education.class.tree</field>
+		<field name="model">education.class</field>
+		<field name="arch" type="xml">
+			<tree string="Class Tree">
+				<field name="name" />
+
+			</tree>
+		</field>
+	</record>
+
+
+</odoo>
+
