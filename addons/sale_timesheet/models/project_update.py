@@ -47,12 +47,14 @@ class ProjectUpdate(models.Model):
             if sol.product_uom.category_id == company_uom.category_id or is_unit:
                 product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, company_uom, raise_if_failure=False)
                 qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, company_uom, raise_if_failure=False)
+                qty_invoiced = sol.product_uom._compute_quantity(sol.qty_invoiced, company_uom, raise_if_failure=False)
                 unit = sol.product_uom if is_unit else company_uom
                 services.append({
                     'name': name_by_sol[sol.id],
                     'sold_value': product_uom_qty,
                     'effective_value': qty_delivered,
                     'remaining_value': product_uom_qty - qty_delivered,
+                    'invoiced_value': qty_invoiced,
                     'unit': unit.name,
                     'is_unit': is_unit,
                     'is_hour': unit == product_uom_hour,
