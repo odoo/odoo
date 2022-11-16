@@ -18,11 +18,16 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="manager_id"/>
-                            <field name="parent_id"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="manager_id"/>
+                                <field name="parent_id"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                            <div>
+                                <widget name="hr_department_chart"/>
+                            </div>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
