@@ -445,6 +445,8 @@ odoo.define('website.s_website_form', function (require) {
                 });
 
                 // Update field color if invalid or erroneous
+                // TODO in master: remove `.form-control-file` just below as it
+                // will be useless since it became `form-control` in BS5.
                 const $controls = $field.find('.form-control, .form-select, .form-check-input, .form-control-file');
                 $field.removeClass('o_has_error');
                 $controls.removeClass('is-invalid');
