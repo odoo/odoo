@@ -4,6 +4,7 @@
 import logging
 
 from ast import literal_eval
+from collections import defaultdict
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
@@ -633,9 +634,20 @@ class StockQuant(models.Model):
         else:
             return reserved_quants
 
+        negative_reserved_quantity = defaultdict(float)
+        for quant in quants:
+            if float_compare(quant.quantity - quant.reserved_quantity, 0, precision_rounding=rounding) < 0:
+                negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)] += quant.quantity - quant.reserved_quantity
         for quant in quants:
             if float_compare(quantity, 0, precision_rounding=rounding) > 0:
                 max_quantity_on_quant = quant.quantity - quant.reserved_quantity
+                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
+                    continue
+                negative_quantity = negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)]
+                if negative_quantity:
+                    negative_qty_to_remove = min(abs(negative_quantity), max_quantity_on_quant)
+                    negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)] += negative_qty_to_remove
+                    max_quantity_on_quant -= negative_qty_to_remove
                 if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
                     continue
                 max_quantity_on_quant = min(max_quantity_on_quant, quantity)

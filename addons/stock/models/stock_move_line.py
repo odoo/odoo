@@ -287,32 +287,6 @@ class StockMoveLine(models.Model):
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
 
-            reserved_uom_qty = vals.get('reserved_uom_qty')
-            location = self.env['stock.location'].browse(vals.get('location_id'))
-            product = self.env['product.product'].browse(vals.get('product_id'))
-            move = self.env['stock.move'].browse(vals.get('move_id'))
-            if move:
-                bypass_reservation = not move._should_bypass_reservation()
-            else:
-                bypass_reservation = product.type == 'product' and not location.should_bypass_reservation()
-            if reserved_uom_qty and not self.env.context.get('bypass_reservation_update') and bypass_reservation:
-                ml_uom = self.env['uom.uom'].browse(vals.get('product_uom_id'))
-                lot = self.env['stock.lot'].browse(vals.get('lot_id'))
-                package = self.env['stock.quant.package'].browse(vals.get('package_id'))
-                owner = self.env['res.partner'].browse(vals.get('owner_id'))
-                reserved_qty = ml_uom._compute_quantity(reserved_uom_qty, product.uom_id, rounding_method='HALF-UP')
-                reserved_quants = False
-                try:
-                    with self.env.cr.savepoint():
-                        reserved_quants = self.env.context.get('reserved_quant', self.env['stock.quant'])._update_reserved_quantity(
-                            product, location, reserved_qty, lot_id=lot, package_id=package, owner_id=owner, strict=True)
-                except UserError:
-                    reserved_qty = 0
-
-                if not reserved_quants or float_compare(reserved_qty, sum(map(lambda q: q[1], reserved_quants)), product.uom_id.rounding) != 0:
-                    reserved_uom_qty = product.uom_id._compute_quantity(reserved_qty, ml_uom, rounding_method='HALF-UP')
-                    vals['reserved_uom_qty'] = reserved_uom_qty
-
         mls = super().create(vals_list)
 
         def create_move(move_line):
@@ -334,6 +308,26 @@ class StockMoveLine(models.Model):
                     create_move(move_line)
             else:
                 create_move(move_line)
+
+        for move_line in mls:
+            reserved_uom_qty = move_line.reserved_uom_qty
+            location = move_line.location_id
+            product = move_line.product_id
+            move = move_line.move_id
+            if move:
+                bypass_reservation = not move._should_bypass_reservation()
+            else:
+                bypass_reservation = product.type == 'product' and not location.should_bypass_reservation()
+            if reserved_uom_qty and not self.env.context.get('bypass_reservation_update') and bypass_reservation:
+                ml_uom = move_line.product_uom_id
+
+                reserved_qty = ml_uom._compute_quantity(reserved_uom_qty, product.uom_id, rounding_method='HALF-UP')
+                reserved_quants = self.env.context.get('reserved_quant', self.env['stock.quant'])._update_reserved_quantity(
+                    product, location, reserved_qty, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id, strict=True)
+
+                if not reserved_quants or float_compare(reserved_qty, sum(map(lambda q: q[1], reserved_quants)), product.uom_id.rounding) != 0:
+                    reserved_uom_qty = product.uom_id._compute_quantity(reserved_qty, ml_uom, rounding_method='HALF-UP')
+                    move_line.with_context(bypass_reservation=True).reserved_uom_qty = reserved_uom_qty
 
         for ml, vals in zip(mls, vals_list):
             if ml.move_id and \

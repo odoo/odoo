@@ -392,6 +392,7 @@ class TestInventory(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 4.0,
         })
+        quant.invalidate_recordset()
         move_out._action_confirm()
         move_out._action_assign()
         move_out.move_line_ids.qty_done = 4
