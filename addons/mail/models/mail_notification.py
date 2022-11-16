@@ -38,6 +38,7 @@ class MailNotification(models.Model):
         # generic
         ("unknown", "Unknown error"),
         # mail
+        ("mail_bounce", "Bounce"),
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email address"),
         ("mail_smtp", "Connection failed (outgoing mail server problem)"),
