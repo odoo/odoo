@@ -459,6 +459,11 @@ class Channel(models.Model):
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
                 subtype_id = self.env.ref('mail.mt_note').id
+        # messages posted from the backend by an internal user with no rating
+        # should have their state as "Employees Only" (eLearning)
+        author_user = self.env["res.users"].browse(kwargs.get("author_id", None)) or self.env.user
+        if author_user and author_user.has_group("base.group_user") and not kwargs.get("rating_value", False):
+            kwargs["is_internal"] = True
         return super(Channel, self).message_post(parent_id=parent_id, subtype_id=subtype_id, **kwargs)
 
     # ---------------------------------------------------------

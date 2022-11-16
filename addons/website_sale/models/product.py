@@ -394,6 +394,16 @@ class ProductTemplate(models.Model):
             if product.id:
                 product.website_url = "/shop/%s" % slug(product)
 
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        self.ensure_one()
+        # messages posted from the backend by an internal user with no rating
+        # should have their state as "Employees Only" (eCommerce)
+        author_user = self.env["res.users"].browse(kwargs.get("author_id", None)) or self.env.user
+        if author_user and author_user.has_group("base.group_user") and not kwargs.get("rating_value", False):
+            kwargs["is_internal"] = True
+        return super(ProductTemplate, self).message_post(**kwargs)
+
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------
