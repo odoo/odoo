@@ -65,6 +65,7 @@ For more specific needs, you may also assign custom-defined actions
         'wizard/mail_blacklist_remove_views.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mail_resend_message_views.xml',
+        'wizard/mail_resend_partner_views.xml',
         'wizard/mail_template_preview_views.xml',
         'wizard/mail_wizard_invite_views.xml',
         'wizard/mail_template_reset_views.xml',

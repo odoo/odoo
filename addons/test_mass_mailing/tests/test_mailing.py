@@ -117,6 +117,12 @@ class TestMassMailing(TestMassMailCommon):
         mailing.invalidate_recordset()
         self.assertMailingStatistics(mailing, expected=5, delivered=4, sent=5, opened=1, clicked=1, bounced=1)
         self.assertEqual(recipients[1].message_bounce, 1)
+        self.assertMailTraces([{
+            'email': 'test.record.01@test.example.com',
+            'failure_reason': 'This is the bounce email',
+            'failure_type': 'mail_bounce',
+            'trace_status': 'bounce',
+        }], mailing, recipients[1], check_mail=False)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')

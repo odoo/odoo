@@ -57,11 +57,13 @@ class MailThread(models.AbstractModel):
         super(MailThread, self)._routing_handle_bounce(email_message, message_dict)
 
         bounced_email = message_dict['bounced_email']
-        bounced_msg_id = message_dict['bounced_msg_id']
+        bounced_msg_ids = message_dict['bounced_msg_ids']
         bounced_partner = message_dict['bounced_partner']
 
-        if bounced_msg_id:
-            self.env['mailing.trace'].set_bounced(domain=[('message_id', 'in', bounced_msg_id)])
+        if bounced_msg_ids:
+            self.env['mailing.trace'].set_bounced(
+                domain=[('message_id', 'in', bounced_msg_ids)],
+                bounce_message=tools.html2plaintext(message_dict.get('body') or ''))
         if bounced_email:
             three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
             stats = self.env['mailing.trace'].search(['&', '&', ('trace_status', '=', 'bounce'), ('write_date', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('write_date')

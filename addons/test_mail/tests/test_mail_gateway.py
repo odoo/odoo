@@ -27,7 +27,7 @@ class TestEmailParsing(TestMailCommon):
         """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
         received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BINARY_OCTET_STREAM)
         with self.assertLogs('odoo.addons.mail.models.mail_thread', level="WARNING") as capture:
-            extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail)
+            extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail, {})
 
         self.assertEqual(len(extracted_mail['attachments']), 1)
         attachment = extracted_mail['attachments'][0]
@@ -102,7 +102,7 @@ class TestEmailParsing(TestMailCommon):
         )
         res = self.env['mail.thread'].message_parse(self.from_string(mail))
 
-        self.assertEqual(res['bounced_msg_id'], [msg_id], "Message-Id is not extracted from Text/RFC822-Headers attachment")
+        self.assertEqual(res['bounced_msg_ids'], [msg_id], "Message-Id is not extracted from Text/RFC822-Headers attachment")
 
     def test_message_parse_extract_bounce_rfc822_headers_qp(self):
         # Incoming bounce for unexisting Outlook address
@@ -126,7 +126,7 @@ class TestEmailParsing(TestMailCommon):
         msg = self.env['mail.thread']._message_parse_extract_bounce(self.from_string(incoming_bounce), msg_dict)
         self.assertEqual(msg['bounced_email'], partner.email, "The sender email should be correctly parsed")
         self.assertEqual(msg['bounced_partner'], partner, "A partner with this email should exist")
-        self.assertEqual(msg['bounced_msg_id'][0], message.message_id, "The sender message-id should correctly parsed")
+        self.assertEqual(msg['bounced_msg_ids'][0], message.message_id, "The sender message-id should correctly parsed")
         self.assertEqual(msg['bounced_message'], message, "An existing message with this message_id should exist")
 
     def test_message_parse_plaintext(self):
@@ -1017,6 +1017,33 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_missing_final_recipient(self):
+        """The Final-Recipient header is missing, the partner must be found thanks to the original mail message."""
+        email = test_mail_data.MAIL_BOUNCE.replace('Final-Recipient', 'XX')
+        email = email.replace('Original-Recipient', 'XX')
+
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+        # no notification to find, won't be able to find the correct recipient
+        extra = self.fake_email.message_id
+        record = self.format_and_process(email, self.partner_1.email_formatted, 'bounce.test@%test.com', subject='Undelivered Mail Returned to Sender', extra=extra)
+        self.assertFalse(record)
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+        # the partner will be found in the <mail.notification> res_partner_id
+        extra = self.fake_email.message_id
+        self.env['mail.notification'].create({
+            "res_partner_id": self.partner_1.id,
+            "mail_message_id": self.fake_email.id,
+        })
+        record = self.format_and_process(email, self.partner_1.email_formatted, 'bounce.test@%test.com', subject='Undelivered Mail Returned to Sender', extra=extra)
+        self.assertFalse(record)
+        self.assertEqual(self.partner_1.message_bounce, 1)
+        self.assertEqual(self.test_record.message_bounce, 1)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_multipart_alias(self):
         """ Multipart/report bounce correctly make related partner bounce """
         self.assertEqual(self.partner_1.message_bounce, 0)
@@ -1036,6 +1063,11 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.partner_1.message_bounce, 0)
         self.assertEqual(self.test_record.message_bounce, 0)
 
+        notification = self.env['mail.notification'].create({
+            'mail_message_id': self.fake_email.id,
+            'res_partner_id': self.partner_1.id,
+        })
+
         bounced_mail_id = 4442
         bounce_email_to = '%s@%s' % ('bounce.test', 'test.com')
         extra = self.fake_email.message_id
@@ -1043,6 +1075,12 @@ class TestMailgateway(TestMailCommon):
         self.assertFalse(record)
         self.assertEqual(self.partner_1.message_bounce, 1)
         self.assertEqual(self.test_record.message_bounce, 1)
+        self.assertIn(
+            'This is the mail system at host mail2.test.ironsky.',
+            notification.failure_reason,
+            msg='Should store the bounce email body on the notification')
+        self.assertEqual(notification.failure_type, 'mail_bounce')
+        self.assertEqual(notification.notification_status, 'bounce')
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_multipart_alias_whatever_from(self):
@@ -1069,6 +1107,17 @@ class TestMailgateway(TestMailCommon):
         self.assertFalse(record)
         self.assertEqual(self.partner_1.message_bounce, 0)
         self.assertEqual(self.test_record.message_bounce, 1)
+
+        # The local part of the FROM is not "MAILER-DAEMON", and the Content type is slightly
+        # different. Thanks to the report type, it still should be detected as a bounce email.
+        email = test_mail_data.MAIL_BOUNCE.replace('multipart/report;', 'multipart/report:')
+        email = email.replace('MAILER-DAEMON@mail2.test.ironsky', 'email@mail2.test.ironsky')
+        self.assertIn('report-type=delivery-status', email)
+        extra = self.fake_email.message_id
+        record = self.format_and_process(email, 'Whatever <what@ever.com>', 'groups@test.com', subject='Undelivered Mail Returned to Sender', extra=extra)
+        self.assertFalse(record)
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 2)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
     def test_message_process_bounce_records_channel(self):

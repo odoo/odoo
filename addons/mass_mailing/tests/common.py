@@ -112,6 +112,9 @@ class MassMailCase(MailCase, MockLinkTracker):
             if 'failure_type' in recipient_info or status in ('error', 'cancel', 'bounce'):
                 self.assertEqual(recipient_trace.failure_type, recipient_info['failure_type'])
 
+            if 'failure_reason' in recipient_info:
+                self.assertEqual(recipient_trace.failure_reason, recipient_info['failure_reason'])
+
             if check_mail:
                 if author is None:
                     author = self.env.user.partner_id
@@ -162,13 +165,14 @@ class MassMailCase(MailCase, MockLinkTracker):
             'to': 'bounce@test.example.com',  # TDE check: bounce alias ?
             'message_id': tools.generate_tracking_message_id('MailTest'),
             'bounced_partner': self.env['res.partner'].sudo(),
-            'bounced_message': self.env['mail.message'].sudo()
+            'bounced_message': self.env['mail.message'].sudo(),
+            'body': 'This is the bounce email',
         }
         if bounce_base_values:
             parsed_bounce_values.update(bounce_base_values)
         parsed_bounce_values.update({
             'bounced_email': trace.email,
-            'bounced_msg_id': [trace.message_id],
+            'bounced_msg_ids': [trace.message_id],
         })
         self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
 
