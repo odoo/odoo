@@ -64,14 +64,6 @@
             display: none;
         }
     }
-
-    .form-control-file.is-invalid {
-        // Note: BS5 use form-control on file inputs now, but this is kept as
-        // compatibility for now (also at the time this was done, Odoo 16.0 uses
-        // BS5 but not yet(?) form-control on file inputs).
-        padding-left: 3px;
-        border-left: 3px solid $form-feedback-invalid-color;
-    }
 }
 
 body:not(.editor_enable) .s_website_form[data-vcss="001"] {
