@@ -450,7 +450,7 @@ class Team(models.Model):
         # leads
         max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
         duplicates_lead_cache = dict()
-
+        Lead = self.env['crm.lead']
         # teams data
         teams_data, population, weights = dict(), list(), list()
         for team in self:
@@ -468,8 +468,8 @@ class Team(models.Model):
             # Fill duplicate cache: search for duplicate lead before the assignation
             # avoid to flush during the search at every assignation
             for lead in leads:
-                if lead not in duplicates_lead_cache:
-                    duplicates_lead_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
+                if lead.email_from not in duplicates_lead_cache:
+                    duplicates_lead_cache[lead.email_from] = Lead._get_lead_duplicates(email=lead.email_from)
 
             teams_data[team] = {
                 "team": team,
@@ -490,6 +490,8 @@ class Team(models.Model):
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
         leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
+
+
         while population:
             counter += 1
             team = random.choices(population, weights=weights, k=1)[0]
@@ -553,13 +555,13 @@ class Team(models.Model):
         leads_assigned = self.env['crm.lead']  # direct team assign
         leads_done_ids, leads_merged_ids, leads_dup_ids = set(), set(), set()  # classification
         leads_dups_dict = dict()  # lead -> its duplicate
+
         for lead in leads:
             if lead.id not in leads_done_ids:
-
                 # fill cache if not already done
-                if lead not in duplicates_cache:
-                    duplicates_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
-                lead_duplicates = duplicates_cache[lead].exists()
+                if lead.email_from not in duplicates_cache:
+                    duplicates_cache[lead.email_from] = lead._get_lead_duplicates(email=lead.email_from)
+                lead_duplicates = duplicates_cache[lead.email_from].exists()
 
                 if len(lead_duplicates) > 1:
                     leads_dups_dict[lead] = lead_duplicates
