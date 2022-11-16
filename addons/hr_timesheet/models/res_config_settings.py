@@ -18,15 +18,28 @@ class ResConfigSettings(models.TransientModel):
         help="This will set the unit of measure used in projects and tasks.\n"
              "If you use the timesheet linked to projects, don't "
              "forget to setup the right unit of measure in your employees.")
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', string="Encoding Unit",
-        related='company_id.timesheet_encode_uom_id', readonly=False)
     is_encode_uom_days = fields.Boolean(compute='_compute_is_encode_uom_days')
+    timesheet_encode_method = fields.Selection([
+        ('hours', 'Hours / Minutes'),
+        ('days', 'Days / Half-Days'),
+    ], string='Encoding Method', compute="_compute_timesheet_encode_method", inverse="_inverse_timesheet_encode_method", required=True)
 
-    @api.depends('timesheet_encode_uom_id')
-    def _compute_is_encode_uom_days(self):
-        product_uom_day = self.env.ref('uom.product_uom_day')
+    @api.depends('company_id')
+    def _compute_timesheet_encode_method(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
         for settings in self:
-            settings.is_encode_uom_days = settings.timesheet_encode_uom_id == product_uom_day
+            settings.timesheet_encode_method = 'days' if settings.company_id.timesheet_encode_uom_id == uom_day else 'hours'
+
+    def _inverse_timesheet_encode_method(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        for settings in self:
+            settings.company_id.timesheet_encode_uom_id = uom_day if settings.timesheet_encode_method == 'days' else uom_hour
+
+    @api.depends('timesheet_encode_method')
+    def _compute_is_encode_uom_days(self):
+        for settings in self:
+            settings.is_encode_uom_days = settings.timesheet_encode_method == 'days'
 
     @api.depends('module_hr_timesheet')
     def _compute_timesheet_modules(self):
