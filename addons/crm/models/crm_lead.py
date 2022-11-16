@@ -1450,16 +1450,20 @@ class Lead(models.Model):
         :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
+        messages_by_subject = {}
         for opportunity in opportunities:
             for message in opportunity.message_ids:
                 if message.subject:
                     subject = _("From %(source_name)s : %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
                 else:
                     subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
-                    'res_id': self.id,
-                    'subject': subject,
-                })
+                messages = messages_by_subject.setdefault(subject, message.browse())
+                messages |= message
+        for subject, messages in messages_by_subject.items():
+            messages.write({
+                'res_id': self.id,
+                'subject': subject,
+            })
 
         opportunities.activity_ids.write({
             'res_id': self.id,
