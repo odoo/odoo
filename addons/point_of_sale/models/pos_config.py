@@ -498,7 +498,7 @@ class PosConfig(models.Model):
             domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
         if not self.env['product.product'].search(domain):
             return {
-                'name': _("There is no products linked to your PoS"),
+                'name': _("There is no product linked to your PoS"),
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
