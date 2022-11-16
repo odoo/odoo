@@ -231,6 +231,28 @@ class TestExpenses(TestExpenseCommon):
             },
         ])
 
+    def test_expense_company_account(self):
+        """ Create an expense with payment mode 'Company' and post it (it should not fail) """
+        with Form(self.env['hr.expense']) as expense_form:
+            expense_form.name = 'Company expense'
+            expense_form.date = '2022-11-17'
+            expense_form.total_amount = 1000.0
+            expense_form.payment_mode = 'company_account'
+            expense_form.employee_id = self.expense_employee
+            expense_form.product_id = self.product_a
+            expense = expense_form.save()
+
+        with Form(self.env['hr.expense.sheet']) as expense_sheet_form:
+            # Use same values that will be used by action_submit_expenses
+            expense_sheet_form.employee_id = expense.employee_id
+            expense_sheet_form.name = expense.name
+            expense_sheet_form.expense_line_ids.add(expense)
+            expense_sheet = expense_sheet_form.save()
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
     def test_account_entry_multi_currency(self):
         """ Checking accounting move entries and analytic entries when submitting expense. With
             multi-currency. And taxes. """
