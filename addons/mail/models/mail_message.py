@@ -653,9 +653,9 @@ class Message(models.Model):
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
-        for elem in self:
-            if elem.is_thread_message():
-                elem._invalidate_documents()
+        messages_to_invalidate = self.filtered(lambda message: message.is_thread_message())
+        # batch is_thread_message() in order to avoid prefetch after each invalidation
+        messages_to_invalidate._invalidate_documents()
         return super(Message, self).unlink()
 
     @api.model
