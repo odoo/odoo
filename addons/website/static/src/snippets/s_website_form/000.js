@@ -445,7 +445,7 @@ odoo.define('website.s_website_form', function (require) {
                 });
 
                 // Update field color if invalid or erroneous
-                const $controls = $field.find('.form-control, .form-select, .form-check-input, .form-control-file');
+                const $controls = $field.find('.form-control, .form-select, .form-check-input');
                 $field.removeClass('o_has_error');
                 $controls.removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]) {
