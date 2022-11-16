@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from freezegun import freeze_time
+
 from odoo import exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import Form, users
@@ -98,6 +101,19 @@ class TestMailingListMerge(MassMailCommon):
         for list_id in self.mailing_list_3.ids:
             new = new.with_context(default_list_ids=[list_id])
             self.assertFalse(any(contact.opt_out for contact in new))
+
+        with freeze_time('2022-01-01 12:00'):
+            contact_form = Form(self.env['mailing.contact'])
+            contact_form.name = 'Contact_test'
+            with contact_form.subscription_list_ids.new() as subscription:
+                subscription.list_id = self.mailing_list_1
+                subscription.opt_out = True
+            with contact_form.subscription_list_ids.new() as subscription:
+                subscription.list_id = self.mailing_list_2
+                subscription.opt_out = False
+            contact = contact_form.save()
+        self.assertEqual(contact.subscription_list_ids[0].unsubscription_date, datetime(2022, 1, 1, 12, 0, 0))
+        self.assertFalse(contact.subscription_list_ids[1].unsubscription_date)
 
     @users('user_marketing')
     def test_mailing_list_contact_copy_in_context_of_mailing_list(self):
