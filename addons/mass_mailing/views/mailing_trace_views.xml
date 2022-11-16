@@ -90,6 +90,9 @@
                             <field name="sent_datetime" attrs="{'invisible' : [('sent_datetime', '=', False)]}"/>
                             <field name="links_click_datetime" attrs="{'invisible' : [('links_click_datetime', '=', False)]}"/>
                             <field name="open_datetime" attrs="{'invisible' : [('open_datetime', '=', False)]}"/>
+                            <field name="failure_reason"
+                                attrs="{'invisible' : [('failure_reason', '=', False)]}"
+                                class="o_text_overflow"/>
                             <field name="reply_datetime" attrs="{'invisible' : [('reply_datetime', '=', False)]}"/>
                         </group>
                         <group string="Mailing">
