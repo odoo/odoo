@@ -18,8 +18,17 @@
     #editable_select.form-control {
         height: auto;
 
-        .s_website_form_select_item.selected {
-            font-weight: bold;
+        .s_website_form_select_item {
+            &.selected {
+                font-weight: bold;
+            }
+            &:empty::before {
+                content: attr(data-empty-value);
+                pointer-events: none;
+                font-style: italic;
+                font-weight: normal;
+                opacity: 0.6;
+            }
         }
     }
 }
