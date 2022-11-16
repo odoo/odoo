@@ -25,6 +25,7 @@ class ProjectMilestone(models.Model):
     is_deadline_exceeded = fields.Boolean(compute="_compute_is_deadline_exceeded")
     is_deadline_future = fields.Boolean(compute="_compute_is_deadline_future")
     task_count = fields.Integer('# of Tasks', compute='_compute_task_count', groups='project.group_project_milestone')
+    done_task_count = fields.Integer('# of Done Tasks', compute='_compute_task_count', groups='project.group_project_milestone')
     can_be_marked_as_done = fields.Boolean(compute='_compute_can_be_marked_as_done', groups='project.group_project_milestone')
 
     @api.depends('is_reached')
@@ -45,10 +46,15 @@ class ProjectMilestone(models.Model):
 
     @api.depends('task_ids.milestone_id')
     def _compute_task_count(self):
-        task_read_group = self.env['project.task']._read_group([('milestone_id', 'in', self.ids), ('allow_milestones', '=', True)], ['milestone_id'], ['milestone_id'])
-        task_count_per_milestone = {res['milestone_id'][0]: res['milestone_id_count'] for res in task_read_group}
+        all_and_done_task_count_per_milestone = {
+            group['milestone_id'][0]: (group['milestone_id_count'], group['is_closed'].count(True))
+            for group in self.env['project.task']._read_group(
+                [('milestone_id', 'in', self.ids), ('allow_milestones', '=', True)],
+                ['milestone_id', 'is_closed:array_agg'], ['milestone_id']
+            )
+        }
         for milestone in self:
-            milestone.task_count = task_count_per_milestone.get(milestone.id, 0)
+            milestone.task_count, milestone.done_task_count = all_and_done_task_count_per_milestone.get(milestone.id, (0, 0))
 
     def _compute_can_be_marked_as_done(self):
         if not any(self._ids):
