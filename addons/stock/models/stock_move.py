@@ -817,7 +817,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return ['description_picking']
+        return ['description_picking', 'date_deadline']
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
