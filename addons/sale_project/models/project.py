@@ -146,7 +146,7 @@ class Project(models.Model):
         action['context'] = {
             'active_id': so_ids[0] if len(so_ids) == 1 else False,
             'active_ids': so_ids
-        }
+        } 
         if not self.has_any_so_to_invoice:
             action['context']['default_advance_payment_method'] = 'percentage'
         return action
