@@ -232,6 +232,7 @@ export class WebsitePreview extends Component {
 
     reloadIframe(url) {
         return new Promise((resolve, reject) => {
+            this.websiteService.websiteRootInstance = undefined;
             this.iframe.el.addEventListener('OdooFrameContentLoaded', resolve, { once: true });
             if (url) {
                 this.iframe.el.contentWindow.location = url;
@@ -311,6 +312,7 @@ export class WebsitePreview extends Component {
         this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
         this._replaceBrowserUrl();
         this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
+        this.iframe.el.contentWindow.addEventListener('pagehide', this._onPageHide.bind(this));
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
 
@@ -376,6 +378,8 @@ export class WebsitePreview extends Component {
             } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
                 ev.preventDefault();
                 this.router.redirect(href);
+            } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
+                this.websiteService.websiteRootInstance = undefined;
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {
@@ -392,7 +396,6 @@ export class WebsitePreview extends Component {
     }
 
     _onPageUnload() {
-        this.websiteService.websiteRootInstance = undefined;
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
         // underlying iframe, to avoid for white flashes (visible on
@@ -405,6 +408,14 @@ export class WebsitePreview extends Component {
             this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
         }
+    }
+    _onPageHide() {
+        // Normally, at this point, the websiteRootInstance is already set to
+        // `undefined`, as we want to do that as early as possible to prevent
+        // the editor to be in an unstable state. But some events not managed
+        // by the websitePreview could trigger a `pagehide`, so for safety,
+        // it is set to undefined again.
+        this.websiteService.websiteRootInstance = undefined;
     }
 }
 WebsitePreview.template = 'website.WebsitePreview';
