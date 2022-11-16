@@ -28,3 +28,6 @@ class TestWebsiteFormEditor(odoo.tests.HttpCase):
             mail.email_to,
             self.env.company.email,
             'The email was not edited, the form should still have been sent to the company email')
+
+    def test_website_form_conditional_required_checkboxes(self):
+        self.start_tour('/', 'website_form_conditional_required_checkboxes', login="admin")
