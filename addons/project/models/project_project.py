@@ -97,8 +97,7 @@ class Project(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
 
-    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True,
-        help="Name of your project. It can be anything you want e.g. the name of a customer or a service.")
+    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html(help="Description to provide more information and context about this project")
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
