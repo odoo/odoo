@@ -228,7 +228,9 @@
 }
 .oe-tablepicker-wrapper.oe-floating {
     padding: 3px;
-    z-index: 1051;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure tablepicker is visible in modals.
+    z-index: 1056;
     background-color: var(--oeTablepicker__wrapper-bg, $o-white);
 }
 .oe-tablepicker-row {
