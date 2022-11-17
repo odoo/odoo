@@ -590,6 +590,20 @@ class Channel(models.Model):
 
         return res
 
+    def unlink(self):
+        """" Necessary override to avoid cache issues in the ORM.
+        This signals the ORM to remove slides first to avoid having the SQL cascade the deletion,
+        which attempts to recompute slide statistics of removed slides and creates a cache failure.
+
+        Indeed, slides statistics are computed using a read_group which will try to flush the records
+        first and fail with a "Could not find all values of slide.slide.category_id to flush them".
+        (Fix suggested by the ORM team).
+
+        (See '_compute_slides_statistics' and '_compute_category_completion_time'). """
+
+        self.slide_ids.unlink()
+        return super().unlink()
+
     def toggle_active(self):
         """ Archiving/unarchiving a channel does it on its slides, too.
         1. When archiving
