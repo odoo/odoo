@@ -6,7 +6,6 @@ import { EmojisTextField} from '@mail/views/fields/emojis_text_field/emojis_text
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
-const DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
@@ -27,21 +26,6 @@ export class SmsWidget extends EmojisTextField {
     }
     get nbrSMS() {
         return this._countSMS(this.nbrChar, this.encoding);
-    }
-
-    /**
-     * Open a Model Field Selector in order to select fields
-     * and create a dynamic placeholder string with or without
-     * a default text value.
-     *
-     * @public
-     * @param {String} baseModel
-     * @param {Array} chain
-     *
-     */
-    async openDynamicPlaceholder(baseModel, chain = []) {
-        const modelSelector = await this._openNewModelSelector(baseModel, chain);
-        modelSelector.$el.css('margin-top', 4);
     }
 
     //--------------------------------------------------------------------------
@@ -108,16 +92,8 @@ export class SmsWidget extends EmojisTextField {
     async onInput(ev) {
         await this.props.update(this.targetEditElement.el.value);
         super.onInput(...arguments);
-        const key = ev.originalEvent ? ev.originalEvent.data : '';
-        if (this.props.dynamicPlaceholder && key === this.DYNAMIC_PLACEHOLDER_TRIGGER_KEY) {
-            const baseModel = this.recordData && this.recordData.mailing_model_real ? this.recordData.mailing_model_real : undefined;
-            if (baseModel) {
-                this.openDynamicPlaceholder(baseModel);
-            }
-        }
     }
-};
+}
 SmsWidget.template = 'sms.SmsWidget';
 SmsWidget.additionalClasses = [...(EmojisTextField.additionalClasses || []), 'o_field_text'];
-patch(SmsWidget.prototype, 'sms_widget_dynamic_placeholder_field_mixin', DynamicPlaceholderFieldMixin);
 registry.category("fields").add("sms_widget", SmsWidget);
