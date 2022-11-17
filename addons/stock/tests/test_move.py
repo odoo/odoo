@@ -4491,11 +4491,10 @@ class StockMove(TransactionCase):
         storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
-        scrap = self.env['stock.scrap'].create({
-            'product_id': self.product.id,
-            'product_uom_id':self.product.uom_id.id,
-            'scrap_qty': 1,
-        })
+        scrap_form = Form(self.env['stock.scrap'])
+        scrap_form.product_id = self.product
+        scrap_form.scrap_qty = 1
+        scrap = scrap_form.save()
         scrap.do_scrap()
         self.assertEqual(scrap.state, 'done')
         move = scrap.move_id
