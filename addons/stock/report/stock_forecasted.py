@@ -61,6 +61,10 @@ class ReplenishmentReport(models.AbstractModel):
             }
         }
 
+    @api.model
+    def _fields_for_serialized_moves(self):
+        return ['picking_id', 'state']
+
     def _serialize_docs(self, docs, product_template_ids=False, product_variant_ids=False):
         """
         Since conversion from report to owl client_action, adapt/override this method to make records available from js code.
@@ -93,8 +97,8 @@ class ReplenishmentReport(models.AbstractModel):
                     'name' : line['document_out']['name'],
                 } if line['document_out'] else False,
                 'uom_id' : line['uom_id'].read()[0],
-                'move_out' : line['move_out'].read()[0] if line['move_out'] else False,
-                'move_in' : line['move_in'].read()[0] if line['move_in'] else False,
+                'move_out' : line['move_out'].read(self._fields_for_serialized_moves())[0] if line['move_out'] else False,
+                'move_in' : line['move_in'].read(self._fields_for_serialized_moves())[0] if line['move_in'] else False,
                 'product': line['product'],
                 'replenishment_filled': line['replenishment_filled'],
                 'receipt_date': line['receipt_date'],

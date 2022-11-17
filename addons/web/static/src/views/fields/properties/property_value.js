@@ -332,6 +332,7 @@ PropertyValue.components = {
 };
 
 PropertyValue.props = {
+    id: { type: String, optional: true },
     type: { type: String, optional: true },
     comodel: { type: String, optional: true },
     domain: { type: String, optional: true },

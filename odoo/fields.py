@@ -306,6 +306,7 @@ class Field(MetaField('DummyField', (object,), {})):
     prefetch = True                     # the prefetch group (False means no group)
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
+    exportable = True
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
@@ -840,6 +841,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
+    _description_exportable = property(attrgetter('exportable'))
 
     def _description_depends(self, env):
         return env.registry.field_depends[self]
@@ -3172,6 +3174,11 @@ class Json(Field):
         if not value:
             return None
         return PsycopgJson(value)
+
+    def convert_to_export(self, value, record):
+        if not value:
+            return ''
+        return json.dumps(value)
 
 
 class Properties(Field):
