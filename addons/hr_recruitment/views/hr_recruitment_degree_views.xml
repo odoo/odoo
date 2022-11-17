@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="hr_recruitment_degree_tree">
+            <field name="name">hr.recruitment.degree.tree</field>
+            <field name="model">hr.recruitment.degree</field>
+            <field name="arch" type="xml">
+                <tree string="Degree" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_recruitment_degree_form">
+            <field name="name">hr.recruitment.degree.form</field>
+            <field name="model">hr.recruitment.degree</field>
+            <field name="arch" type="xml">
+                <form string="Degree">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence" groups="base.group_no_one"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_recruitment_degree_action" model="ir.actions.act_window">
+            <field name="name">Degree</field>
+            <field name="res_model">hr.recruitment.degree</field>
+            <field name="view_id" ref="hr_recruitment_degree_tree"/>
+        </record>
+    </data>
+</odoo>
