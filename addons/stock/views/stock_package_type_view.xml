@@ -14,24 +14,25 @@
                 </h1>
                 <group name="delivery">
                     <group>
-                        <label for="length_uom_name" string="Size"/>
+                        <label for="dimension_uom_id" string="Size"/>
                         <div class="o_row" name="size">
                             <field name="packaging_length" placeholder="Length"/>
                             <span>&#215;</span>
                             <field name="width" placeholder="Width"/>
                             <span>&#215;</span>
                             <field name="height" placeholder="Height"/>
-                            <span><field name="length_uom_name" help="Size: Length &#215; Width &#215; Height"/></span>
+                            <span><field name="dimension_uom_id" help="Size: Length &#215; Width &#215; Height"
+                                    attrs="{'required':['|', '|', ('width','>', 0), ('height', '>', 0), ('packaging_length', '>', 0)]}"/></span>
                         </div>
                         <label for="base_weight"/>
                         <div class="o_row" name="base_weight">
                             <field name="base_weight"/>
-                            <span><field name="weight_uom_name"/></span>
+                            <span><field name="weight_uom_id" attrs="{'required':['|', ('base_weight','>', 0), ('max_weight', '>', 0)]}"/></span>
                         </div>
                         <label for="max_weight"/>
                         <div class="o_row" name="max_weight">
                             <field name="max_weight"/>
-                            <span><field name="weight_uom_name"/></span>
+                            <span><field name="weight_uom_id" attrs="{'required':['|', ('base_weight','>', 0), ('max_weight', '>', 0)]}"/></span>
                         </div>
                         <field name="barcode"/>
                         <field name="company_id" groups="base.group_multi_company"/>

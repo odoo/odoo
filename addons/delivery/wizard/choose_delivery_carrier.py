@@ -9,9 +9,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
     _name = 'choose.delivery.carrier'
     _description = 'Delivery Carrier Selection Wizard'
 
-    def _get_default_weight_uom(self):
-        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
     order_id = fields.Many2one('sale.order', required=True, ondelete="cascade")
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', required=True)
     carrier_id = fields.Many2one(
@@ -28,7 +25,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     invoicing_message = fields.Text(compute='_compute_invoicing_message')
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
-    weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    weight_uom_name = fields.Char(related='order_id.weight_uom_id.display_name', string='Weight unit of measure')
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):

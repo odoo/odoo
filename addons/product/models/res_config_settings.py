@@ -25,14 +25,9 @@ class ResConfigSettings(models.TransientModel):
             ('advanced', 'Advanced price rules (discounts, formulas)')
             ], default='basic', string="Pricelists Method", config_parameter='product.product_pricelist_setting',
             help="Multiple prices: Pricelists with fixed price rules by product,\nAdvanced rules: enables advanced price rules for pricelists.")
-    product_weight_in_lbs = fields.Selection([
-        ('0', 'Kilograms'),
-        ('1', 'Pounds'),
-    ], 'Weight unit of measure', config_parameter='product.weight_in_lbs', default='0')
-    product_volume_volume_in_cubic_feet = fields.Selection([
-        ('0', 'Cubic Meters'),
-        ('1', 'Cubic Feet'),
-    ], 'Volume unit of measure', config_parameter='product.volume_in_cubic_feet', default='0')
+    company_weight_uom_id = fields.Many2one('uom.uom', string='Weight unit of measure', related='company_id.default_weight_uom_id', readonly=False)
+    company_volume_uom_id = fields.Many2one('uom.uom', string='Volume unit of measure', related='company_id.default_volume_uom_id', readonly=False)
+    company_dimension_uom_id = fields.Many2one('uom.uom', string='Dimension unit of measure', related='company_id.default_dimension_uom_id', readonly=False)
 
     @api.onchange('group_product_variant')
     def _onchange_group_product_variant(self):

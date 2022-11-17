@@ -12,14 +12,8 @@ class ChooseDeliveryPackage(models.TransientModel):
     picking_id = fields.Many2one('stock.picking', 'Picking')
     delivery_package_type_id = fields.Many2one('stock.package.type', 'Delivery Package Type', check_company=True)
     shipping_weight = fields.Float('Shipping Weight', compute='_compute_shipping_weight', store=True, readonly=False)
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    weight_uom_id = fields.Many2one(related='delivery_package_type_id.weight_uom_id', string='Weight unit of measure', readonly=True)
     company_id = fields.Many2one(related='picking_id.company_id')
-
-    @api.depends('delivery_package_type_id')
-    def _compute_weight_uom_name(self):
-        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        for package in self:
-            package.weight_uom_name = weight_uom_id.name
 
     @api.depends('delivery_package_type_id')
     def _compute_shipping_weight(self):
@@ -31,8 +25,11 @@ class ChooseDeliveryPackage(models.TransientModel):
             # Add package weights to shipping weight, package base weight is defined in package.type
             total_weight = rec.delivery_package_type_id.base_weight or 0.0
             for ml in move_line_ids:
-                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-                total_weight += qty * ml.product_id.weight
+                product_weight = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight
+                if rec.weight_uom_id:
+                    total_weight += ml.product_id.weight_uom_id._compute_quantity(product_weight, rec.weight_uom_id)
+                else:
+                    total_weight += product_weight
             rec.shipping_weight = total_weight
 
     @api.onchange('delivery_package_type_id', 'shipping_weight')

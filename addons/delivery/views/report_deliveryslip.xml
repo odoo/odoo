@@ -9,7 +9,7 @@
                 <strong>Total Weight:</strong>
                 <br/>
                 <span t-field="o.shipping_weight"/>
-                <span t-field="o.weight_uom_name"/>
+                <span t-field="o.weight_uom_id"/>
             </div>
             <div t-if="o.carrier_tracking_ref" class="col-auto">
                 <strong>Tracking Number:</strong>
@@ -44,13 +44,13 @@
                 <t t-if="package.shipping_weight">
                     <span> - Weight: </span>
                     <span t-field="package.shipping_weight"/>
-                    <span t-field="package.weight_uom_name"/>
+                    <span t-field="package.weight_uom_id"/>
                 </t>
                 <!-- otherwise default to calculated value -->
                 <t t-else="">
                     <span> - Weight (estimated): </span>
                     <span t-field="package.weight"/>
-                    <span t-field="package.weight_uom_name"/>
+                    <span t-field="package.weight_uom_id"/>
                 </t>
             </t>
         </xpath>
@@ -61,7 +61,7 @@
             <t t-if="o.weight_bulk">
                 <span> - Weight: </span>
                 <span t-field="o.weight_bulk"/>
-                <span t-field="o.weight_uom_name"/>
+                <span t-field="o.weight_uom_id"/>
             </t>
         </xpath>
     </template>

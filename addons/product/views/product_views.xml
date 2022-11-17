@@ -121,12 +121,12 @@
                                     <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="weight" class="oe_inline"/>
-                                        <field name="weight_uom_name"/>
+                                        <field name="weight_uom_id"/>
                                     </div>
                                     <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="volume" string="Volume" class="oe_inline"/>
-                                        <field name="volume_uom_name"/>
+                                        <field name="volume_uom_id"/>
                                     </div>
                                 </group>
                             </group>
@@ -279,12 +279,12 @@
                                 <label for="volume"/>
                                 <div class="o_row">
                                     <field name="volume"/>
-                                    <span><field name="volume_uom_name"/></span>
+                                    <span><field name="volume_uom_id"/></span>
                                 </div>
                                 <label for="weight"/>
                                 <div class="o_row">
                                     <field name="weight"/>
-                                    <span><field name="weight_uom_name"/></span>
+                                    <span><field name="weight_uom_id"/></span>
                                 </div>
                             </group>
                             <group name="packaging" string="Packaging" groups="product.group_stock_packaging">

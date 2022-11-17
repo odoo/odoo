@@ -10,7 +10,9 @@ class DeliveryPackage:
         self.order_id = order
         self.company_id = order and order.company_id or picking and picking.company_id
         self.commodities = commodities or []  # list of DeliveryCommodity objects
-        self.weight = weight
+        self.weight = weight  # weight is in package type weight uom
+        self.weight_uom_id = package_type.weight_uom_id
+        self.dimension_uom_id = package_type.dimension_uom_id
         self.dimension = {
             'length': package_type.packaging_length,
             'width': package_type.width,

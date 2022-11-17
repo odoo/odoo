@@ -55,7 +55,11 @@ class ProductProduct(models.Model):
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
+    volume_uom_id = fields.Many2one('uom.uom', default=lambda self: self.env.ref('uom.product_uom_cubic_meter'), string='Volume Unit of Measure',
+                                    domain=lambda self: [('category_id', '=', self.env.ref('uom.product_uom_categ_vol').id)])
     weight = fields.Float('Weight', digits='Stock Weight')
+    weight_uom_id = fields.Many2one('uom.uom', default=lambda self: self.env.ref('uom.product_uom_kgm'), string='Weight Unit of Measure',
+                                    domain=lambda self: [('category_id', '=', self.env.ref('uom.product_uom_categ_kgm').id)])
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
 

@@ -12,10 +12,10 @@
                 </t>
 ^FO310,200
                 <t t-if="package.shipping_weight">
-^A0N,44,33^FDShipping Weight: <t t-out="package.shipping_weight"/> <t t-out="package.weight_uom_name"/>^FS
+^A0N,44,33^FDShipping Weight: <t t-out="package.shipping_weight"/> <t t-out="package.weight_uom_id.display_name"/>^FS
                 </t>
                 <t t-else="">
-^A0N,44,33^FDWeight: <t t-out="package.weight"/> <t t-out="package.weight_uom_name"/>^FS
+^A0N,44,33^FDWeight: <t t-out="package.weight"/> <t t-out="package.weight_uom_id.display_name"/>^FS
                 </t>
             </t>
         </xpath>
@@ -37,15 +37,15 @@
         <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
             <t t-if="o.valid_sscc">
                 <!-- SSCC uses weight if necessary/available, standard barcode will not -->
-                <div t-if="o.shipping_weight" class="col-auto"><strong>Shipping Weight: </strong><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
-                <div t-elif="o.weight" class="col-auto"><strong>Weight: </strong><span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>
+                <div t-if="o.shipping_weight" class="col-auto"><strong>Shipping Weight: </strong><span t-field="o.shipping_weight"/> <span t-field="o.weight_uom_id"/></div>
+                <div t-elif="o.weight" class="col-auto"><strong>Weight: </strong><span t-field="o.weight"/> <span t-field="o.weight_uom_id"/></div>
             </t>
             <t t-else="">
                 <div t-if="o.shipping_weight" class="col-auto">
                     <strong>Shipping Weight:</strong>
                     <br/>
                     <span t-field="o.shipping_weight"/>
-                    <span t-out="env['product.template']._get_weight_uom_id_from_ir_config_parameter().display_name"/>
+                    <span t-field="o.weight_uom_id"/>
                 </div>
             </t>
         </xpath>
@@ -65,12 +65,12 @@
             </t>
         </xpath>
         <xpath expr="//div[@name='datamatrix_pack_type']" position="after">
-            <div t-if="o.shipping_weight" class="row">Shipping Weight: <span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
-            <div t-elif="o.weight" class="row">Weight: <span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>
+            <div t-if="o.shipping_weight" class="row">Shipping Weight: <span t-field="o.shipping_weight"/> <span t-field="o.weight_uom_id"/></div>
+            <div t-elif="o.weight" class="row">Weight: <span t-field="o.weight"/> <span t-field="o.weight_uom_id"/></div>
         </xpath>
         <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
             <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
-                <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Weight: </span><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
+                <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Weight: </span><span t-field="o.shipping_weight"/> <span t-field="o.weight_uom_id"/></div>
             </div>
         </xpath>
     </template>

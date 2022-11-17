@@ -241,12 +241,12 @@
                         <label for="weight" string="Weight"/>
                         <div>
                             <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
                         <label for="shipping_weight" string="Weight for shipping"/>
                         <div>
                             <field name="shipping_weight" class="oe_inline"/>
-                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
                     </group>
                 </xpath>
@@ -299,8 +299,8 @@
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
                         <field name="shipping_weight" class="oe_inline"/>
-                        <span><field name="weight_uom_name"/></span>
-                        <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
+                        <span><field name="weight_uom_id"/></span>
+                        <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_id" nolabel="1" class="oe_inline"/>)</span>
                     </div>
                 </field>
             </field>
@@ -354,7 +354,11 @@
                         <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
                     </xpath>
                     <field name="picking_policy" position="after">
-                        <field name="shipping_weight" readonly="True"/>
+                        <label for="shipping_weight"/>
+                        <div class="o_row" name="shipping_weight">
+                            <field name="shipping_weight" class="oe_inline" readonly="True"/>
+                            <field name="weight_uom_id" readonly="True"/>
+                        </div>
                     </field>
                 </data>
                 
