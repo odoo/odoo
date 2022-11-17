@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools.misc import file_open
 
 
@@ -56,6 +56,32 @@ class MailComposeMessage(models.TransientModel):
             })
         return mail_values_all
 
+    @api.depends('composition_mode', 'template_id', 'mass_mailing_id.keep_archives')
+    def _compute_auto_delete(self):
+        """Auto-delete emails if not keepings archives.
+
+        We assume keep_archives will be True if only the mailing name is set.
+        """
+        super()._compute_auto_delete()
+        for composer in self:
+            if composer.mass_mailing_id:
+                composer.auto_delete = not composer.mass_mailing_id.keep_archives
+            elif composer.mass_mailing_name:
+                composer.auto_delete = False
+
+    @api.depends('composition_mode', 'auto_delete')
+    def _compute_auto_delete_keep_log(self):
+        """Keep logs if keeping archives.
+
+        We assume keep_archives will be True if only the mailing name is set.
+        """
+        super()._compute_auto_delete_keep_log()
+        for composer in self:
+            if composer.mass_mailing_id:
+                composer.auto_delete_keep_log = composer.mass_mailing_id.keep_archives
+            elif composer.mass_mailing_name:
+                composer.auto_delete_keep_log = True
+
     def _get_done_emails(self, mail_values_dict):
         seen_list = super()._get_done_emails(mail_values_dict)
         if self.mass_mailing_id:
@@ -95,11 +121,12 @@ class MailComposeMessage(models.TransientModel):
             'attachment_ids': [(6, 0, self.attachment_ids.ids)],
             'body_html': self.body,
             'campaign_id': self.campaign_id.id,
+            'keep_archives': self.auto_delete_keep_log,
             'mailing_model_id': self.env['ir.model']._get(self.model).id,
             'mailing_domain': self.res_domain if self.res_domain else f"[('id', 'in', {self.res_ids})]",
             'name': self.mass_mailing_name,
             'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
-            'reply_to_mode': self.reply_to_mode,
+            'reply_to_mode': 'update' if self.auto_delete_keep_log else 'new',  # if creating a new mailing and not archiving, reply as mails
             'sent_date': now,
             'state': 'done',
             'subject': self.subject,
