@@ -3,6 +3,7 @@
 import { attr, clear, Patch } from '@mail/model';
 
 const { DateTime } = luxon;
+const urlRegExp = /http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%_+~#=~#?&/=\-;!.]{3,2000}/g;
 
 Patch({
     name: 'ActivityMenuView',
@@ -53,7 +54,7 @@ Patch({
             }
         },
         async saveNote() {
-            const note = this.noteInputRef.el.value.trim();
+            const note = this.noteInputRef.el.value.replace(urlRegExp, '<a href="$&">$&</a>').trim();
             if (!note) {
                 return;
             }
