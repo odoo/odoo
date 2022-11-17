@@ -166,14 +166,14 @@ function applyBinaryOp(ast, context) {
                 if (right instanceof PyDate || right instanceof PyDateTime) {
                     return right.add(left);
                 } else {
-                    throw NotSupportedError();
+                    throw new NotSupportedError();
                 }
             }
             if (timeDeltaOnRight) {
                 if (left instanceof PyDate || left instanceof PyDateTime) {
                     return left.add(right);
                 } else {
-                    throw NotSupportedError();
+                    throw new NotSupportedError();
                 }
             }
 
@@ -192,7 +192,7 @@ function applyBinaryOp(ast, context) {
                 } else if (left instanceof PyDate || left instanceof PyDateTime) {
                     return left.substract(right);
                 } else {
-                    throw NotSupportedError();
+                    throw new NotSupportedError();
                 }
             }
 

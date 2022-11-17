@@ -282,9 +282,9 @@ QUnit.module("domain", {}, () => {
             },
         });
         let domainStr =
-            "[('date','>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]";
+            "[('date','>=', (datetime.date.today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]";
         assert.deepEqual(new Domain(domainStr).toList(), [["date", ">=", "2013-03-25"]]);
-        domainStr = "[('date', '>=', context_today() - relativedelta(days=30))]";
+        domainStr = "[('date', '>=', datetime.date.today() - relativedelta(days=30))]";
         const domainList = new Domain(domainStr).toList(); // domain creation using `parseExpr` function since the parameter is a string.
         assert.deepEqual(
             domainList[0][2],
