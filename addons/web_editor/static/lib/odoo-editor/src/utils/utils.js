@@ -977,7 +977,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                     removeFormat(splitNode, formatSpec);
                 } else {
                     if (firstBlockOrClassHasFormat && !applyStyle) {
-                        formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+                        formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
                     } else if (!firstBlockOrClassHasFormat && applyStyle) {
                         const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
                         if (tag) {
