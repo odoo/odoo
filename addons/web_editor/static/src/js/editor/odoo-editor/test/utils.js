@@ -417,6 +417,7 @@ export async function click(el, options) {
         {
             clientX: pos.left + 1,
             clientY: pos.top + 1,
+            view: el.ownerDocument.defaultView,
         },
         options,
     );
