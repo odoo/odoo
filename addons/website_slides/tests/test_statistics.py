@@ -163,6 +163,7 @@ class TestSlideStatistics(common.SlidesCase):
 
         self.assertEqual(self.channel.total_slides, 3, 'The channel should contain 3 slides')
         self.assertEqual(category.total_slides, 2, 'The first category should contain 2 slides')
+        self.assertEqual(category.completion_time, 4.5, 'The first category should be 4.5 hours long')
         other_category = self.env['slide.slide'].with_user(self.user_officer).create({
             'name': 'Other Category',
             'channel_id': self.channel.id,

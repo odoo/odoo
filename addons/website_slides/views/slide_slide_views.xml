@@ -332,9 +332,13 @@
             <field name="arch" type="xml">
                 <search string="Search Contents">
                     <field name="name"/>
+                    <field name="channel_id"/>
+                    <field name="user_id"/>
+                    <field name="tag_ids"/>
+                    <filter name="filter_user_id_uid" string="My Content" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
                     <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
                     <filter name="not_published" string="Waiting for validation" domain="[('is_published', '=', False)]"/>
-                    <filter name="filter_user_id_uid" string="My Content" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">

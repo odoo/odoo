@@ -123,7 +123,7 @@ class Slide(models.Model):
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
-    completion_time = fields.Float('Duration', digits=(10, 4))
+    completion_time = fields.Float('Duration', digits=(10, 4), compute='_compute_category_completion_time', recursive=True, readonly=False, store=True)
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True)
@@ -378,7 +378,7 @@ class Slide(models.Model):
         for slide in self:
             slide.embed_count = mapped_data.get(slide.id, 0)
 
-    @api.depends('slide_ids.sequence', 'slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.is_category')
+    @api.depends('slide_ids.sequence', 'slide_ids.active', 'slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
         # Therefore, when updating the dict of one key, it updates the dict of all keys.
@@ -392,7 +392,7 @@ class Slide(models.Model):
 
         category_stats = self._compute_slides_statistics_category(res)
 
-        for record in self:
+        for record in self.filtered(lambda slide: slide.is_category):
             record.update(category_stats.get(record._origin.id, default_vals))
 
     def _compute_slides_statistics_category(self, read_group_res):
@@ -405,9 +405,18 @@ class Slide(models.Model):
             slide_category = res_group.get('slide_category')
             if slide_category:
                 slide_category_count = res_group.get('__count', 0)
-                result[cid]['nbr_%s' % slide_category] = slide_category_count
+                result[cid]['nbr_%s' % slide_category] += slide_category_count
                 result[cid]['total_slides'] += slide_category_count
+
         return result
+
+    @api.depends('slide_ids.sequence', 'slide_ids.active', 'slide_ids.completion_time', 'slide_ids.is_published', 'slide_ids.is_category')
+    def _compute_category_completion_time(self):
+        # We don't use read_group() function, otherwise we will have issue with flushing the
+        # data as completion_time is recursive and when it'll try to flush data before it is calculated
+        for category in self.filtered(lambda slide: slide.is_category):
+            filtered_slides = category.slide_ids.filtered(lambda slide: slide.is_published)
+            category.completion_time = sum(filtered_slides.mapped("completion_time"))
 
     @api.depends('slide_category', 'source_type', 'video_source_type')
     def _compute_slide_type(self):
@@ -1083,7 +1092,7 @@ class Slide(models.Model):
             if parsed_duration:
                 slide_metadata['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
                                                     (int(parsed_duration.group(2) or 0) / 60) + \
-                                                    (int(parsed_duration.group(3) or 0) / 3600)
+                                                    (round(int(parsed_duration.group(3) or 0) /60) / 60)
 
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
@@ -1223,9 +1232,9 @@ class Slide(models.Model):
                 slide_metadata['slide_type'] = 'google_drive_video'
 
         elif self.slide_category == 'video':
-            completion_time = float(
+            completion_time = round(float(
                 google_drive_values.get('videoMediaMetadata', {}).get('durationMillis', 0)
-                ) / (60 * 60 * 1000)  # millis to hours conversion
+                ) / (60 * 1000)) / 60  # millis to hours conversion rounded to the minute
             if completion_time:
                 slide_metadata['completion_time'] = completion_time
 
@@ -1285,7 +1294,7 @@ class Slide(models.Model):
 
         if vimeo_values.get('duration'):
             # seconds to hours conversion
-            slide_metadata['completion_time'] = vimeo_values.get('duration') / (60 * 60)
+            slide_metadata['completion_time'] = round(vimeo_values.get('duration') / 60) / 60
 
         thumbnail_url = vimeo_values.get('thumbnail_url')
         if thumbnail_url:
