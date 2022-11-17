@@ -324,7 +324,6 @@ export class FormController extends Component {
                 key: "delete",
                 description: this.env._t("Delete"),
                 callback: () => this.deleteRecord(),
-                skipSave: true,
             });
         }
         return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
