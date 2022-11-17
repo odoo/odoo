@@ -1564,7 +1564,7 @@ class Picking(models.Model):
             'target': 'new',
             'context': {
                 'default_product_ids': self.move_ids.product_id.ids,
-                'default_move_line_ids': self.move_line_ids.ids,
+                'default_move_ids': self.move_ids.ids,
                 'default_picking_quantity': 'picking'},
         }
 
