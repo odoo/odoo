@@ -1362,6 +1362,9 @@ class PosGlobalState extends PosModel {
     htmlToImgLetterRendering() {
         return false;
     }
+    doNotAllowRefundAndSales() {
+        return false;
+    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 Registries.Model.add(PosGlobalState);
@@ -2705,6 +2708,13 @@ class Order extends PosModel {
 
     fix_tax_included_price(line){
         line.set_unit_price(line.compute_fixed_price(line.price));
+    }
+
+    _isRefundAndSaleOrder() {
+        if (this.orderlines.length && this.orderlines[0].refunded_orderline_id) {
+            return true;
+        }
+        return false;
     }
 
     add_product(product, options){
