@@ -12,11 +12,11 @@
                 <t t-if="state.isDropdownOpen">
                     <div class="o_FollowerListMenu_dropdown dropdown-menu dropdown-menu-right" role="menu">
                         <t t-if="thread.channel_type !== 'chat'">
-                            <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddFollowers">
+                            <a class="o_FollowerListMenu_addFollowersButton dropdown-item btn" t-att-class="{'disabled': !thread.hasWriteAccess}" href="#" role="menuitem" t-on-click="_onClickAddFollowers">
                                 Add Followers
                             </a>
                         </t>
-                        <a class="o_FollowerListMenu_addChannelsButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddChannels">
+                        <a class="o_FollowerListMenu_addChannelsButton dropdown-item btn" t-att-class="{'disabled': !thread.hasWriteAccess}" href="#" role="menuitem" t-on-click="_onClickAddChannels">
                             Add Channels
                         </a>
                         <t t-if="thread.followers.length > 0">

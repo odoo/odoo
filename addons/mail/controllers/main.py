@@ -136,10 +136,30 @@ class MailController(http.Controller):
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
+    @classmethod
+    def _check_thread_message_post_access(cls, thread):
+        res = {'hasReadAccess': True, 'hasWriteAccess': False}
+        if thread:
+            try:
+                thread.check_access_rights("write")
+                thread.check_access_rule("write")
+                res['hasWriteAccess'] = True
+            except AccessError:
+                pass
+            res['canPostOnReadOnly'] = thread._mail_post_access == 'read'
+        else:
+            res['hasReadAccess'] = False
+        return res
+
+    @http.route('/mail/thread/check_message_post_access', methods=['POST'], type='json', auth='user')
+    def mail_thread_check_message_post_access(self, thread_model, thread_id, **kwargs):
+        thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        return self._check_thread_message_post_access(thread)
+
     @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        res = {}
         thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        res = self._check_thread_message_post_access(thread)
         if 'attachments' in request_list:
             res['attachments'] = thread.env['ir.attachment'].search([('res_id', '=', thread.id), ('res_model', '=', thread._name)], order='id desc')._attachment_format(commands=True)
         return res
@@ -147,16 +167,20 @@ class MailController(http.Controller):
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, res_model, res_id):
         request.env['mail.followers'].check_access_rights("read")
-        request.env[res_model].check_access_rights("read")
-        request.env[res_model].browse(res_id).check_access_rule("read")
+        try:
+            request.env[res_model].check_access_rights("write")
+            request.env[res_model].browse(res_id).check_access_rule("write")
+            is_editable = True
+        except AccessError:
+            is_editable = False
+            request.env[res_model].check_access_rights("read")
+            request.env[res_model].browse(res_id).check_access_rule("read")
         follower_recs = request.env['mail.followers'].search([('res_model', '=', res_model), ('res_id', '=', res_id)])
 
         followers = []
         follower_id = None
         for follower in follower_recs:
-            if follower.partner_id == request.env.user.partner_id:
-                follower_id = follower.id
-            followers.append({
+            follower_data = {
                 'id': follower.id,
                 'partner_id': follower.partner_id.id,
                 'channel_id': follower.channel_id.id,
@@ -164,10 +188,13 @@ class MailController(http.Controller):
                 'display_name': follower.display_name,
                 'email': follower.email,
                 'is_active': follower.is_active,
-                # When editing the followers, the "pencil" icon that leads to the edition of subtypes
-                # should be always be displayed and not only when "debug" mode is activated.
-                'is_editable': True
-            })
+            }
+            if follower.partner_id == request.env.user.partner_id:
+                follower_id = follower.id
+                follower_data['is_editable'] = True
+            else:
+                follower_data['is_editable'] = is_editable
+            followers.append(follower_data)
         return {
             'followers': followers,
             'subtypes': self.read_subscription_data(follower_id) if follower_id else None

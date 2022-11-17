@@ -12,7 +12,7 @@
                                 'o-active': chatter.isComposerVisible and chatter.composer and !chatter.composer.isLog,
                                 'o-bordered': chatter.hasExternalBorder,
                             }"
-                            t-att-disabled="chatter.isDisabled"
+                            t-att-disabled="chatter.isDisabled or !(chatter.thread.hasWriteAccess or (chatter.thread.hasReadAccess and chatter.thread.canPostOnReadOnly))"
                             t-on-click="_onClickSendMessage"
                         >
                             Send message
@@ -23,14 +23,14 @@
                                 'o-active': chatter.isComposerVisible and chatter.composer and chatter.composer.isLog,
                                 'o-bordered': chatter.hasExternalBorder,
                             }"
-                            t-att-disabled="chatter.isDisabled"
+                            t-att-disabled="chatter.isDisabled or !(chatter.thread.hasWriteAccess or (chatter.thread.hasReadAccess and chatter.thread.canPostOnReadOnly))"
                             t-on-click="_onClickLogNote"
                         >
                             Log note
                         </button>
                     </t>
                     <t t-if="chatter.hasActivities">
-                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled or !chatter.thread.hasWriteAccess" t-on-click="_onClickScheduleActivity">
                             <i class="fa fa-clock-o"/>
                             Schedule activity
                         </button>
@@ -50,7 +50,7 @@
                                 <t t-if="chatter.thread.channel_type !== 'chat'">
                                     <FollowButton
                                         class="o_ChatterTopbar_button o_ChatterTopbar_followButton"
-                                        isDisabled="chatter.isDisabled"
+                                        isDisabled="chatter.isDisabled or !chatter.thread.hasReadAccess"
                                         threadLocalId="chatter.thread.localId"
                                     />
                                 </t>

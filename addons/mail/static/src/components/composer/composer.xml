@@ -86,7 +86,7 @@
                         t-key="composer.localId"
                         t-ref="textInput"
                     />
-                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': env.messaging.device.isMobile }">
+                    <div class="o_Composer_buttons" t-if="!composer.thread or composer.thread.hasWriteAccess or (composer.thread.hasReadAccess and composer.thread.canPostOnReadOnly)" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': env.messaging.device.isMobile }">
                         <div class="o_Composer_toolButtons"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,

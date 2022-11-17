@@ -688,6 +688,9 @@ function factory(dependencies) {
             }
             const {
                 attachments: attachmentsData,
+                canPostOnReadOnly,
+                hasWriteAccess,
+                hasReadAccess,
             } = await this.env.services.rpc({
                 route: '/mail/thread/data',
                 params: {
@@ -699,7 +702,7 @@ function factory(dependencies) {
             if (!this.exists()) {
                 return;
             }
-            const values = {};
+            const values = { canPostOnReadOnly, hasReadAccess, hasWriteAccess };
             if (attachmentsData) {
                 Object.assign(values, {
                     areAttachmentsLoaded: true,
@@ -1832,6 +1835,7 @@ function factory(dependencies) {
             inverse: 'thread',
             isCausal: true,
         }),
+        canPostOnReadOnly: attr({ default: true }),
         channel_type: attr(),
         /**
          * States the `mail.chat_window` related to `this`. Serves as compute
@@ -1912,6 +1916,7 @@ function factory(dependencies) {
         hasActivities: attr({
             default: false,
         }),
+        hasReadAccess: attr({ default: true }),
         /**
          * Determine whether this thread has the seen indicators (V and VV)
          * enabled or not.
@@ -1925,6 +1930,7 @@ function factory(dependencies) {
                 'model',
             ],
         }),
+        hasWriteAccess: attr({ default: true }),
         id: attr(),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.

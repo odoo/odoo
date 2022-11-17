@@ -106,7 +106,7 @@ function factory(dependencies) {
          * @param {boolean} [param1.notifyServer]
          * @param {boolean} [param1.replaceNewMessage=false]
          */
-        openThread(thread, {
+        async openThread(thread, {
             isFolded = false,
             makeActive = false,
             notifyServer,
@@ -124,6 +124,16 @@ function factory(dependencies) {
                     manager: [['link', this]],
                     thread: [['link', thread]],
                 });
+                if (thread.model !== 'mail.channel') {
+                    const { canPostOnReadOnly, hasReadAccess, hasWriteAccess } = await this.env.services.rpc({
+                        route: '/mail/thread/check_message_post_access',
+                        params: {
+                            thread_id: thread.id,
+                            thread_model: thread.model,
+                        },
+                    }, { shadow: true });
+                    thread.update({ canPostOnReadOnly, hasReadAccess, hasWriteAccess });
+                }
             } else {
                 chatWindow.update({ isFolded });
             }

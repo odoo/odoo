@@ -29,7 +29,7 @@
                         t-on-o-attachment-removed="_onAttachmentRemoved"
                     />
                 </t>
-                <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
+                <button class="o_AttachmentBox_buttonAdd btn btn-link" t-att-disabled="thread and !thread.hasWriteAccess" type="button" t-on-click="_onClickAdd">
                     <i class="fa fa-plus-square"/>
                     Add attachments
                 </button>

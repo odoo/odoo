@@ -4,7 +4,7 @@
     <t t-name="mail.Follower" owl="1">
         <div class="o_Follower">
             <t t-if="follower">
-                <a class="o_Follower_details" t-att-class="{ 'o-inactive': !follower.isActive }" href="#" role="menuitem" t-on-click="_onClickDetails">
+                <a class="o_Follower_details" t-att-class="{ 'o-inactive': !follower.isActive, 'py-1': !follower.isEditable }" href="#" role="menuitem" t-on-click="_onClickDetails">
                     <img class="o_Follower_avatar" t-attf-src="/web/image/{{ follower.resModel }}/{{ follower.resId }}/image_128" alt=""/>
                     <span class="o_Follower_name" t-esc="follower.name or follower.displayName"/>
                 </a>

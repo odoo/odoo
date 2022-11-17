@@ -82,6 +82,9 @@ class ComposerTextInput extends Component {
         }
         if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
             if (this.composer.isLog) {
+                if (!(this.composer.thread.hasWriteAccess || (this.composer.thread.hasReadAccess && this.composer.thread.canPostOnReadOnly))) {
+                    return this.env._t("You cannot post on this Document...");
+                }
                 return this.env._t("Log an internal note...");
             }
             return this.env._t("Send a message to followers...");
