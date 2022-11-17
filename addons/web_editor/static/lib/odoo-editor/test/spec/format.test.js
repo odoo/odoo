@@ -497,6 +497,13 @@ describe('Format', () => {
                 contentAfter: `<p>${s(`ab[]cd`)}</p>`,
             });
         });
+        it('should do nothing when a block already has a line-through decoration', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p style="text-decoration: line-through;">a[b]c</p>`,
+                stepFunction: strikeThrough,
+                contentAfter: `<p style="text-decoration: line-through;">a[b]c</p>`,
+            });
+        });
     });
 
     describe('underline + strikeThrough', () => {
