@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError
@@ -11,111 +10,12 @@ from odoo.tools.translate import _
 
 from dateutil.relativedelta import relativedelta
 
-from lxml import etree
-
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
     ('1', 'Good'),
     ('2', 'Very Good'),
     ('3', 'Excellent')
 ]
-
-
-class RecruitmentSource(models.Model):
-    _name = "hr.recruitment.source"
-    _description = "Source of Applicants"
-    _inherit = ['utm.source.mixin']
-
-    email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
-    has_domain = fields.Char(compute='_compute_has_domain')
-    job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
-    alias_id = fields.Many2one('mail.alias', "Alias ID")
-    medium_id = fields.Many2one('utm.medium', default=lambda self: self.env.ref('utm.utm_medium_website'))
-
-    def _compute_has_domain(self):
-        self.has_domain = bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
-
-    def create_alias(self):
-        campaign = self.env.ref('hr_recruitment.utm_campaign_job')
-        medium = self.env.ref('utm.utm_medium_email')
-        for source in self:
-            vals = {
-                'alias_parent_thread_id': source.job_id.id,
-                'alias_model_id': self.env['ir.model']._get('hr.applicant').id,
-                'alias_parent_model_id': self.env['ir.model']._get('hr.job').id,
-                'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
-                'alias_defaults': {
-                    'job_id': source.job_id.id,
-                    'campaign_id': campaign.id,
-                    'medium_id': medium.id,
-                    'source_id': source.source_id.id,
-                },
-            }
-            source.alias_id = self.env['mail.alias'].create(vals)
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'tree' and not bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")):
-            email = arch.xpath("//field[@name='email']")[0]
-            email.getparent().remove(email)
-        return arch, view
-
-class RecruitmentStage(models.Model):
-    _name = "hr.recruitment.stage"
-    _description = "Recruitment Stages"
-    _order = 'sequence'
-
-    name = fields.Char("Stage Name", required=True, translate=True)
-    sequence = fields.Integer(
-        "Sequence", default=10)
-    job_ids = fields.Many2many(
-        'hr.job', string='Job Specific',
-        help='Specific jobs that uses this stage. Other jobs will not use this stage.')
-    requirements = fields.Text("Requirements")
-    template_id = fields.Many2one(
-        'mail.template', "Email Template",
-        help="If set, a message is posted on the applicant using the template when the applicant is set to the stage.")
-    fold = fields.Boolean(
-        "Folded in Kanban",
-        help="This stage is folded in the kanban view when there are no records in that stage to display.")
-    hired_stage = fields.Boolean('Hired Stage',
-        help="If checked, this stage is used to determine the hire date of an applicant")
-    legend_blocked = fields.Char(
-        'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
-    legend_done = fields.Char(
-        'Green Kanban Label', default=lambda self: _('Ready for Next Stage'), translate=True, required=True)
-    legend_normal = fields.Char(
-        'Grey Kanban Label', default=lambda self: _('In Progress'), translate=True, required=True)
-    is_warning_visible = fields.Boolean(compute='_compute_is_warning_visible')
-
-    @api.model
-    def default_get(self, fields):
-        if self._context and self._context.get('default_job_id') and not self._context.get('hr_recruitment_stage_mono', False):
-            context = dict(self._context)
-            context.pop('default_job_id')
-            self = self.with_context(context)
-        return super(RecruitmentStage, self).default_get(fields)
-
-    @api.depends('hired_stage')
-    def _compute_is_warning_visible(self):
-        applicant_data = self.env['hr.applicant']._read_group([('stage_id', 'in', self.ids)], ['stage_id'], 'stage_id')
-        applicants = dict((data['stage_id'][0], data['stage_id_count']) for data in applicant_data)
-        for stage in self:
-            if stage._origin.hired_stage and not stage.hired_stage and applicants.get(stage._origin.id):
-                stage.is_warning_visible = True
-            else:
-                stage.is_warning_visible = False
-
-class RecruitmentDegree(models.Model):
-    _name = "hr.recruitment.degree"
-    _description = "Applicant Degree"
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
-    ]
-
-    name = fields.Char("Degree Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=1)
 
 
 class Applicant(models.Model):
@@ -447,7 +347,7 @@ class Applicant(models.Model):
 <p class="o_view_nocontent_empty_folder">%(help_title)s</p>
 <p>%(para_1)s<br/>%(para_2)s</p>""") % {
             'help_title': _('No application yet'),
-            'para_1': _('Let people apply by email to save time.') ,
+            'para_1': _('Let people apply by email to save time.'),
             'para_2': _('Attachments, like resumes, get indexed automatically.'),
         }
 
@@ -700,7 +600,8 @@ class Applicant(models.Model):
         default_stage = dict()
         for job_id in self.mapped('job_id'):
             default_stage[job_id.id] = self.env['hr.recruitment.stage'].search(
-                ['|',
+                [
+                    '|',
                     ('job_ids', '=', False),
                     ('job_ids', '=', job_id.id),
                     ('fold', '=', False)
@@ -731,27 +632,3 @@ class Applicant(models.Model):
                 'default_applicant_ids': self.ids,
             }
         }
-
-
-class ApplicantCategory(models.Model):
-    _name = "hr.applicant.category"
-    _description = "Category of applicant"
-
-    def _get_default_color(self):
-        return randint(1, 11)
-
-    name = fields.Char("Tag Name", required=True)
-    color = fields.Integer(string='Color Index', default=_get_default_color)
-
-    _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
-
-class ApplicantRefuseReason(models.Model):
-    _name = "hr.applicant.refuse.reason"
-    _description = 'Refuse Reason of Applicant'
-
-    name = fields.Char('Description', required=True, translate=True)
-    template_id = fields.Many2one('mail.template', string='Email Template', domain="[('model', '=', 'hr.applicant')]")
-    active = fields.Boolean('Active', default=True)
