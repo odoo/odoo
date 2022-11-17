@@ -2373,6 +2373,15 @@ class Task(models.Model):
             res.update(super(Task, leftover)._notify_get_reply_to(default=default))
         return res
 
+    def _ensure_personal_stages(self):
+        user = self.env.user
+        ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
+        # In the case no stages have been found, we create the default stages for the user
+        if not ProjectTaskTypeSudo.search_count([('user_id', '=', user.id)], limit=1):
+            ProjectTaskTypeSudo.with_context(lang=user.lang, default_project_id=False).create(
+                self.with_context(lang=user.lang)._get_default_personal_stage_create_vals(user.id)
+            )
+
     def email_split(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
