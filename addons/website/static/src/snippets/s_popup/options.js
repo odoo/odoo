@@ -13,7 +13,6 @@ options.registry.SnippetPopup = options.Class.extend({
         this.$target.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
             ev.stopPropagation();
             this.onTargetHide();
-            this.trigger_up('snippet_option_visibility_update', {show: false});
         });
         this.$target.on('shown.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: true});
