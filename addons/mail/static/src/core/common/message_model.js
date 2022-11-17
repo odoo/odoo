@@ -189,7 +189,7 @@ export class Message {
     /**
     * Whether the message has notification statuses to display
     */
-    get hasStatusNotification() {
+    get hasStatusIndicator() {
         return this.notifications.length > 0;
     }
 
@@ -253,10 +253,18 @@ export class Message {
     /**
      * Computes the title of the notification icon
      */
-    get failureTitle() {
-        return this.failureNotifications.length > 0 ?
-               this.env._t("Failed Message")
-               : this.env._t("Fully Processed Message");
+    get statusIndicatorTitle() {
+        return this.failureNotifications.length > 0
+               ? _t("Failed Message")
+               : _t("Fully Processed Message");
+    }
+
+    get statusIndicatorIcon() {
+        return this.notifications.length ? this.notifications[0].icon : '';
+    }
+
+    get statusIndicatorLabel() {
+        return this.notifications.length ? this.notifications[0].label : '';
     }
 
     get editDatetimeHuge() {

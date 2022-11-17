@@ -327,6 +327,25 @@ class TestMassMailValues(MassMailCommon):
 
     @mute_logger('odoo.sql_db')
     @users('user_marketing')
+    def test_mailing_trace_computed_fields(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestMailing',
+            'subject': 'Test',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
+            'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)],
+            'keep_archives': True,
+        })
+
+        with self.mock_mail_gateway():
+            mailing.action_send_mail()
+
+        self.assertEqual(mailing.mailing_trace_ids.mail_message_id, self._new_mails.mail_message_id)
+        # test inverse compute while we're at it
+        self.assertEqual(mailing.mailing_trace_ids, self._new_mails.mail_message_id.mailing_trace_ids)
+
+    @mute_logger('odoo.sql_db')
+    @users('user_marketing')
     def test_mailing_trace_values(self):
         recipient = self.partner_employee
 

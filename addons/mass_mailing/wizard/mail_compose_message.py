@@ -27,6 +27,11 @@ class MailComposeMessage(models.TransientModel):
             self.mass_mailing_id = mass_mailing.id
         return super()._action_send_mail(auto_commit=auto_commit)
 
+    def _action_send_mail_create_notifications(self, *args):
+        # Notifications not needed, information gathered through traces
+        if not self._should_add_traces():
+            super()._action_send_mail_create_notifications(*args)
+
     def _should_add_traces(self):
         return self.composition_mode == 'mass_mail' and \
             (self.mass_mailing_name or self.mass_mailing_id) and \
@@ -57,7 +62,7 @@ class MailComposeMessage(models.TransientModel):
 
             mail_values.update({
                 'mailing_id': self.mass_mailing_id.id,
-                'mailing_trace_ids': [(0, 0, trace_values_all[res_id])] if res_id in trace_values_all else False,
+                'mailing_trace_ids': [(0, 0, trace_values) for trace_values in trace_values_all[res_id]] if res_id in trace_values_all else False,
             })
         return mail_values_all
 
@@ -111,7 +116,7 @@ class MailComposeMessage(models.TransientModel):
             traces_vals = [{
                 # if mail_to is void, keep falsy values to allow searching / debugging traces
                 'email': email,
-                'mass_mailing_id': self.mass_mailing.id,
+                'mass_mailing_id': self.mass_mailing_id.id,
                 'model': self.model,
                 'res_id': res_id,
             } for email in (recipients_info[res_id]['mail_to'] or [''])]
@@ -133,8 +138,8 @@ class MailComposeMessage(models.TransientModel):
         # add active_ids to domain so that it doesn't resend on records that were not selected
         if active_ids:
             active_ids_domain = [('id', 'in', active_ids)]
-            current_active_domain = literal_eval(self.active_domain) if self.active_domain else []
-            enhanced_active_domain = expression.AND([current_active_domain, active_ids_domain])
+            current_res_domain = literal_eval(self.mailing_domain) if self.res_domain else []
+            enhanced_res_domain = expression.AND([current_res_domain, active_ids_domain])
 
         return {
             'attachment_ids': [(6, 0, self.attachment_ids.ids)],
@@ -142,7 +147,7 @@ class MailComposeMessage(models.TransientModel):
             'campaign_id': self.campaign_id.id,
             'keep_archives': self.auto_delete_keep_log,
             'mailing_model_id': self.env['ir.model']._get(self.model).id,
-            'mailing_domain': enhanced_active_domain,
+            'mailing_domain': enhanced_res_domain,
             'name': self.mass_mailing_name,
             'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
             'reply_to_mode': 'update' if self.auto_delete_keep_log else 'new',  # if creating a new mailing and not archiving, reply as mails
@@ -151,3 +156,8 @@ class MailComposeMessage(models.TransientModel):
             'subject': self.subject,
             'user_id': next(iter(self.author_id.user_ids.ids), None),
         }
+
+    def _action_send_mail_create_notifications(self, *args):
+        # Notifications not needed, information gathered through traces
+        if not self._should_add_traces():
+            super()._action_send_mail_create_notifications(*args)

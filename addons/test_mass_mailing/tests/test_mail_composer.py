@@ -21,6 +21,37 @@ class TestMailComposerMassMailing(TestMailComposer):
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_composer_mass_mailing_traces(self):
+        """Check that mailings produce traces instead of notifications and that they behave similarly."""
+        # Ensure 2 records
+        self.assertEqual(len(self.test_records), 2)
+
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_records),
+        ).create({
+            'body': '<p>Test Body</p>',
+            'subject': 'Test Mailing Subject',
+            'mass_mailing_name': 'Test Mailing',
+            'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=True), self.mock_mail_app():
+            composer._action_send_mail()
+
+        record_mails = self._new_mails.exists().filtered(lambda mail: mail.mail_message_id.model == self.test_records._name)
+        record_messages = self._new_msgs.exists().filtered(lambda msg: msg.model == self.test_records._name)
+        record_traces = self.env['mailing.trace'].search([('mail_mail_id', 'in', self._new_mails.ids)])
+
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
+        self.assertEqual(len(record_mails), 2, 'Should not have deleted emails')
+        self.assertEqual(len(self._new_msgs), 3, 'Should have created 1 mail.message per target record + 1 to log the mailing')
+        self.assertEqual(self._new_msgs.exists(), self._new_msgs, 'Should not have deleted mail.message records')
+        self.assertEqual(len(record_messages), 2, 'Should have created 1 mail.message per target record')
+        self.assertFalse(self._new_notifs, 'Should not have created any mail.notification')
+        self.assertEqual(len(record_traces), 4, 'Should have created 1 mailing.trace record for each recipient for each record')
+
+    @users('employee')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_composer_mass_mailing_auto_delete_message(self):
         """Check that setting auto_delete_keep_log to False effectively removes the messages."""
         composer = self.env['mail.compose.message'].with_context(

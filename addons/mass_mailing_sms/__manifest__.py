@@ -31,6 +31,11 @@
         'data/mailing_list_demo.xml',
         'data/mailing_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'mass_mailing_sms/static/src/chatter/*',
+        ],
+    },
     'application': True,
     'license': 'LGPL-3',
 }

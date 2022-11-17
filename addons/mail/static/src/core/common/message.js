@@ -404,8 +404,8 @@ export class Message extends Component {
         this.state.isEditing = false;
     }
 
-    onClickNotification(ev) {
-        if (this.message.failureNotifications.length > 0) {
+    onClickStatusIndicator(ev) {
+        if (!this.message.isSuccess) {
             this.onClickFailure(ev);
         } else {
             this.popover.open(ev.target, { message: this.message });

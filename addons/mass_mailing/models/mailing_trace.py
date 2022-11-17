@@ -61,6 +61,7 @@ class MailingTrace(models.Model):
              'However the ID is needed for several action and controllers.',
         index='btree_not_null',
     )
+    mail_message_id = fields.Many2one('mail.message', compute='_compute_mail_message_id')
     email = fields.Char(string="Email", help="Normalized email address")
     message_id = fields.Char(string='Message-ID') # email Message-ID (RFC 2392)
     medium_id = fields.Many2one(related='mass_mailing_id.medium_id')
@@ -117,6 +118,13 @@ class MailingTrace(models.Model):
     def _compute_display_name(self):
         for trace in self:
             trace.display_name = f'{trace.trace_type}: {trace.mass_mailing_id.name} ({trace.id})'
+
+    @api.depends('mail_mail_id')
+    def _compute_mail_message_id(self):
+        for trace in self:
+            mail_mail_id = trace.sudo().mail_mail_id
+            if mail_mail_id:
+                trace.mail_message_id = mail_mail_id.mail_message_id.sudo(False)
 
     @api.model_create_multi
     def create(self, values_list):
@@ -176,3 +184,26 @@ class MailingTrace(models.Model):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'trace_status': 'cancel'})
         return traces
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
+
+    def _filtered_for_web_client(self):
+        """Return only the tracing results to show on the web client."""
+        def _filter_unimportant_traces(trace):
+            if trace.trace_status in ['bounce', 'error', 'cancel']:
+                return True
+            subtype = trace.mail_message_id.subtype_id
+            return not subtype or subtype.track_recipients
+
+        return self.filtered(_filter_unimportant_traces)
+
+    def _trace_format(self):
+        return [{'id': trace.id,
+                 'email': trace.email,
+                 'trace_type': trace.trace_type,
+                 'trace_status': trace.trace_status,
+                 'failure_type': trace.failure_type,
+                 'mailing_id': trace.mass_mailing_id.id,
+                 } for trace in self]
