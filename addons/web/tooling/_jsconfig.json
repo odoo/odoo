@@ -2,7 +2,10 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "baseUrl": ".",
+        "target": "ES2022",
+        "checkJs": true, 
         "noEmit": true,
+        "disableSizeLimit": true,
         "typeRoots": ["addons/web/tooling/types"],
         "paths": {
             "@web/*": ["addons/web/static/src/*"],
