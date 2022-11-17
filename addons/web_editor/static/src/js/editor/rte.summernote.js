@@ -369,7 +369,9 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         oStyle.anchor = false;
     }
 
-    if (oStyle.image || oStyle.anchor || (oStyle.range && !$(oStyle.range.sc).closest('.note-editable').length)) {
+    if (oStyle.image || oStyle.anchor || (oStyle.range
+        && (!$(oStyle.range.sc).closest('.note-editable').length
+        || !$(oStyle.range.sc).parent().is(':o_editable')))) {
         $airPopover.hide();
     } else {
         $airPopover.show();
