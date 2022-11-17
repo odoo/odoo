@@ -2782,6 +2782,103 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             (self.tax_account_2,                    -0.01,      -0.01),
         ])
 
+    def test_3way_payment(self):
+        self.env.company.tax_exigibility = True
+
+        invoice = self.env['account.move'].create({
+            'date': '2016-01-01',
+            'line_ids': [
+                Command.create({
+                    'balance': -300,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
+                }),
+                Command.create({
+                    'balance': -100,
+                    'account_id': self.cash_basis_transfer_account.id,
+                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
+                }),
+                Command.create({
+                    'balance': 400,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+            ],
+        })
+        payments = self.env['account.move'].create([{
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'line_ids': [
+                Command.create({
+                    'balance': -133.33,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+                Command.create({
+                    'balance': 133.33,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        }, {
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'line_ids': [
+                Command.create({
+                    'balance': -133.33,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+                Command.create({
+                    'balance': 133.33,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        }, {
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'line_ids': [
+                Command.create({
+                    'balance': -133.34,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+                Command.create({
+                    'balance': 133.34,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        }])
+        (invoice + payments).action_post()
+
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (self.cash_basis_transfer_account,      -100.00,   -100.00),
+            (self.tax_account_1,                       0.00,      0.00),
+        ])
+
+        (invoice + payments[0]).line_ids.filtered(
+            lambda line: line.account_id == self.extra_receivable_account_1
+        ).reconcile()
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (self.cash_basis_transfer_account,      -66.67,     -66.67),
+            (self.tax_account_1,                    -33.33,     -33.33),
+        ])
+
+        (invoice + payments[1]).line_ids.filtered(
+            lambda line: line.account_id == self.extra_receivable_account_1
+        ).reconcile()
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (self.cash_basis_transfer_account,      -33.34,     -33.34),
+            (self.tax_account_1,                    -66.66,     -66.66),
+        ])
+
+        (invoice + payments[2]).line_ids.filtered(
+            lambda line: line.account_id == self.extra_receivable_account_1
+        ).reconcile()
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (self.cash_basis_transfer_account,       -0.00,      -0.00),
+            (self.tax_account_1,                   -100.00,    -100.00),
+        ])
+
     def test_reconcile_cash_basis_exchange_difference_transfer_account_check_entries_1(self):
         ''' Test the generation of the exchange difference for a tax cash basis journal entry when the transfer
         account is not reconcilable.
