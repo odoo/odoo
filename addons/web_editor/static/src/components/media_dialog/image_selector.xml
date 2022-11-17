@@ -37,7 +37,8 @@
                         altDescription="attachment.altDescription"
                         model="attachment.res_model"
                         minRowHeight="MIN_ROW_HEIGHT"
-                        onImageClick="() => this.onClickAttachment(attachment)"/>
+                        onImageClick="() => this.onClickAttachment(attachment)"
+                        onLoaded="(imgEl) => this.onImageLoaded(imgEl, attachment)"/>
                 </t>
             </t>
             <t id="o_we_media_library_images" t-if="['all', 'media-library'].includes(state.searchService)">
@@ -50,7 +51,7 @@
                         minRowHeight="MIN_ROW_HEIGHT"
                         selected="this.selectedMediaIds.includes(media.id)"
                         onImageClick="() => this.onClickMedia(media)"
-                        onLoaded="(imgEl) => this.onLibraryImageLoaded(imgEl, media)"/>
+                        onLoaded="(imgEl) => this.onImageLoaded(imgEl, media)"/>
                 </t>
             </t>
             <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->

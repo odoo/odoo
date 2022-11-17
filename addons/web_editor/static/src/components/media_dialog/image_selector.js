@@ -274,6 +274,14 @@ export class ImageSelector extends FileSelector {
         }));
     }
 
+    async onImageLoaded(imgEl, attachment) {
+        this.debouncedScroll();
+
+        if (attachment.mediaType === 'libraryMedia') {
+            await this.onLibraryImageLoaded(imgEl, attachment);
+        }
+    }
+
     /**
      * This converts the colors of an svg coming from the media library to
      * the palette's ones, and make them dynamic.
