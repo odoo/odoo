@@ -4,6 +4,7 @@ import { useService } from '@web/core/utils/hooks';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { Dialog } from '@web/core/dialog/dialog';
 import { KeepLast } from "@web/core/utils/concurrency";
+import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from './search_media';
 
 import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
@@ -139,6 +140,8 @@ export class FileSelector extends Component {
         this.uploadService = useService('upload');
         this.keepLast = new KeepLast();
 
+        this.loadMoreButtonRef = useRef('load-more-button');
+
         this.state = useState({
             attachments: [],
             canLoadMoreAttachments: true,
@@ -151,6 +154,8 @@ export class FileSelector extends Component {
         onWillStart(async () => {
             this.state.attachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0);
         });
+
+        this.debouncedScroll = useDebounced(this.scrollToLoadMoreButton, 500);
     }
 
     get canLoadMore() {
@@ -200,7 +205,7 @@ export class FileSelector extends Component {
                     fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
                     order: 'id desc',
                     // Try to fetch first record of next page just to know whether there is a next page.
-                    limit: limit + 1,
+                    limit,
                     offset,
                 }
             );
@@ -217,11 +222,21 @@ export class FileSelector extends Component {
         return attachments;
     }
 
+    async handleLoadMore() {
+        await this.loadMore();
+        this.debouncedScroll();
+    }
+
     async loadMore() {
         return this.keepLast.add(this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.state.attachments.length)).then((newAttachments) => {
             // This is never reached if another search or loadMore occurred.
             this.state.attachments.push(...newAttachments);
         });
+    }
+
+    async handleSearch(needle) {
+        await this.search(needle);
+        this.debouncedScroll();
     }
 
     async search(needle) {
@@ -266,6 +281,16 @@ export class FileSelector extends Component {
         return this.props.media
             && this.constructor.tagNames.includes(this.props.media.tagName)
             && !this.selectedAttachmentIds.length;
+    }
+
+    /**
+     * This is used (debounced) to be called after loading an attachment.
+     * This way, the user can always see the "load more" button.
+     */
+    scrollToLoadMoreButton() {
+        if (this.state.needle || this.state.attachments.length > this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY) {
+            this.loadMoreButtonRef.el.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
+        }
     }
 }
 FileSelector.template = 'web_editor.FileSelector';
