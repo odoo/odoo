@@ -4,7 +4,6 @@
 
 // breadcrumbs: { type: Array, optional: true },
 // __getLocalState__: { type: CallbackRecorder, optional: true },
-// __getContext__: { type: CallbackRecorder, optional: true },
 // displayName: { type: String, optional: true },
 // noContentHelp: { type: String, optional: true },
 // searchViewId: { type: [Number, false], optional: true },

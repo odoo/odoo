@@ -58,11 +58,17 @@ export function useSetupAction(params = {}) {
         __beforeLeave__,
         __getGlobalState__,
         __getLocalState__,
-        __getContext__,
         __getOrderBy__,
     } = component.env;
 
-    const { beforeUnload, beforeLeave, getGlobalState, getLocalState, rootRef } = params;
+    const {
+        beforeUnload,
+        beforeLeave,
+        getGlobalState,
+        getLocalState,
+        rootRef,
+        getOrderBy,
+    } = params;
 
     if (beforeUnload) {
         useExternalListener(window, "beforeunload", beforeUnload);
@@ -148,10 +154,7 @@ export function useSetupAction(params = {}) {
             });
         }
     }
-    if (__getContext__ && params.getContext) {
-        useCallbackRecorder(__getContext__, params.getContext);
-    }
-    if (__getOrderBy__ && params.getOrderBy) {
+    if (__getOrderBy__ && getOrderBy) {
         useCallbackRecorder(__getOrderBy__, params.getOrderBy);
     }
 }

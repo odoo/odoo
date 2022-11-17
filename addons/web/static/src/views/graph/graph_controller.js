@@ -8,6 +8,7 @@ import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
+import { useContextProvider } from "@web/search/search_model";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -21,8 +22,8 @@ export class GraphController extends Component {
             getLocalState: () => {
                 return { metaData: this.model.metaData };
             },
-            getContext: () => this.getContext(),
         });
+        useContextProvider(() => this.getContext());
     }
 
     /**

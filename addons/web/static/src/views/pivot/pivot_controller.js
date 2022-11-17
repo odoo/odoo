@@ -10,6 +10,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 
 import { Component, useRef } from "@odoo/owl";
+import { useContextProvider } from "@web/search/search_model";
 
 export class PivotController extends Component {
     setup() {
@@ -22,8 +23,8 @@ export class PivotController extends Component {
                 const { data, metaData } = this.model;
                 return { data, metaData };
             },
-            getContext: () => this.getContext(),
         });
+        useContextProvider(() => this.getContext());
     }
     /**
      * @returns {Object}

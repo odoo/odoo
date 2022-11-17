@@ -3,7 +3,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { useEnrichWithActionLinks } from "@web/webclient/actions/reports/report_hook";
 
 import { Component, useRef, useSubEnv } from "@odoo/owl";
@@ -27,7 +26,6 @@ export class ReportAction extends Component {
                 ...this.env.config,
             },
         });
-        useSetupAction();
 
         this.action = useService("action");
         this.title = this.props.display_name || this.props.name;

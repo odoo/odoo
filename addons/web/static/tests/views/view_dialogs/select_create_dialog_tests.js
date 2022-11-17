@@ -12,7 +12,6 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { listView } from "@web/views/list/list_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import {
@@ -24,6 +23,7 @@ import {
     toggleMenuItem,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
+import { useContextProvider } from "@web/search/search_model";
 
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
@@ -359,9 +359,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         patchWithCleanup(listView.Controller.prototype, {
             setup() {
                 this._super(...arguments);
-                useSetupAction({
-                    getContext: () => ({ shouldBeInFilterContext: true }),
-                });
+                useContextProvider(() => ({ shouldBeInFilterContext: true }));
             },
         });
 

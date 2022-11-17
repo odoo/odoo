@@ -17,7 +17,7 @@ import {
 } from "./utils/dates";
 import { FACET_ICONS } from "./utils/misc";
 
-import { EventBus, toRaw } from "@odoo/owl";
+import { EventBus, toRaw, useEffect, useEnv } from "@odoo/owl";
 const { DateTime } = luxon;
 
 /**
@@ -178,6 +178,7 @@ export class SearchModel extends EventBus {
         this.comparisonOptions = getComparisonOptions();
         this.intervalOptions = getIntervalOptions();
         this.optionGenerators = getPeriodOptions(this.referenceMoment);
+        this.contextProviders = new Set();
     }
 
     /**
@@ -1751,8 +1752,11 @@ export class SearchModel extends EventBus {
      */
     _getIrFilterDescription(params = {}) {
         const { description, isDefault, isShared } = params;
-        const fns = this.env.__getContext__.callbacks;
-        const localContext = Object.assign({}, ...fns.map((fn) => fn()));
+        // FIXME: why do we not do this in get context or in _getContext?
+        const localContext = {};
+        for (const provider of this.contextProviders) {
+            Object.assign(localContext, provider());
+        }
         const gs = this.env.__getOrderBy__.callbacks;
         let localOrderBy;
         if (gs.length) {
@@ -2119,4 +2123,15 @@ export class SearchModel extends EventBus {
 
         this.searchPanelInfo = { ...searchPanelInfo, loaded: false, shouldReload: false };
     }
+}
+
+export function useContextProvider(provider) {
+    const { searchModel } = useEnv();
+    useEffect(
+        () => {
+            searchModel.contextProviders.add(provider);
+            () => searchModel.contextProviders.remove(provider);
+        },
+        () => []
+    );
 }

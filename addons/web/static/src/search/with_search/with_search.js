@@ -10,9 +10,6 @@ export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "order
 
 export class WithSearch extends Component {
     setup() {
-        if (!this.env.__getContext__) {
-            useSubEnv({ __getContext__: new CallbackRecorder() });
-        }
         if (!this.env.__getOrderBy__) {
             useSubEnv({ __getOrderBy__: new CallbackRecorder() });
         }

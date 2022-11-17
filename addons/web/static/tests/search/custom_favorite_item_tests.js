@@ -6,7 +6,6 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import {
     editFavoriteName,
     editSearch,
@@ -21,6 +20,7 @@ import {
 } from "./helpers";
 
 import { Component, xml } from "@odoo/owl";
+import { useContextProvider } from "@web/search/search_model";
 const serviceRegistry = registry.category("services");
 
 /**
@@ -161,11 +161,7 @@ QUnit.module("Search", (hooks) => {
 
         class TestComponent extends Component {
             setup() {
-                useSetupAction({
-                    getContext: () => {
-                        return { someKey: "foo" };
-                    },
-                });
+                useContextProvider(() => ({ someKey: "foo" }));
             }
         }
         TestComponent.components = { FavoriteMenu };
