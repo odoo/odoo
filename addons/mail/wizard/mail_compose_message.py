@@ -1215,10 +1215,10 @@ class MailComposer(models.TransientModel):
                 mail_values['failure_type'] = 'mail_dup'
             # void of falsy values -> error
             elif not mail_to:
-                mail_values['state'] = 'cancel'
+                mail_values['state'] = 'exception'
                 mail_values['failure_type'] = 'mail_email_missing'
             elif not mail_to_normalized or not email_re.findall(mail_to):
-                mail_values['state'] = 'cancel'
+                mail_values['state'] = 'exception'
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif done_emails is not None and not mailing_document_based:
                 done_emails.append(mail_to)
