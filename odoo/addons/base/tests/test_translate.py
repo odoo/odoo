@@ -241,6 +241,73 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(translations.get, source)
         self.assertEqual(result, expect)
 
+    def test_translate_xml_illegal_translations(self):
+        # attributes
+        make_xml = '<form string="{}">test</form>'.format
+        attr = 'Damien Roberts" <d.roberts@example.com>'
+        escaped_attr = 'Damien Roberts&quot; &lt;d.roberts@example.com&gt;'
+
+        # {legal: legal(not escaped attr)}
+        self.assertEqual(
+            xml_translate({'X': attr}.get, make_xml('X')),
+            make_xml(escaped_attr),
+            'attr should be translated and escaped',
+        )
+
+        # {legal(not escaped attr): legal}
+        self.assertEqual(
+            xml_translate({attr: 'X'}.get, make_xml(escaped_attr)),
+            make_xml('X'),
+            'attrs should be translated by using unescaped old terms',
+        )
+
+        # {illegal(escaped attr): legal}
+        self.assertEqual(
+            xml_translate({escaped_attr: 'X'}.get, make_xml(escaped_attr)),
+            make_xml(escaped_attr),
+            'attrs cannot be translated by using escaped old terms',
+        )
+
+        # text and elements
+        make_xml = '<form string="X">{}</form>'.format
+        term = '<i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"/>'
+
+        # {legal: legal}
+        valid = '<i class="fa fa-circle" role="img" aria-label="Non-valide" title="Non-valide"/>X'
+        self.assertEqual(
+            xml_translate({term: valid}.get, make_xml(term)),
+            make_xml(valid),
+            'content in inline-block should be treated as one term and translated',
+        )
+
+        # {legal: illegal(has no text)}
+        invalid = '<i class="fa fa-circle" role="img"/>'
+        self.assertEqual(
+            xml_translate({term: invalid}.get, make_xml(term)),
+            make_xml(term),
+            f'translation {invalid!r} has no text and should be dropped as a translation',
+        )
+        invalid = '  '
+        self.assertEqual(
+            xml_translate({term: invalid}.get, make_xml(term)),
+            make_xml(term),
+            f'translation {invalid!r} has no text and should be dropped as a translation',
+        )
+        invalid = '<i> </i>'
+        self.assertEqual(
+            xml_translate({term: invalid}.get, make_xml(term)),
+            make_xml(term),
+            f'translation {invalid!r} has no text and should be dropped as a translation',
+        )
+
+        # {legal: illegal(has non-translatable elements)}
+        invalid = '<div>X</div>'
+        self.assertEqual(
+            xml_translate({term: invalid}.get, make_xml(term)),
+            make_xml(term),
+            f'translation {invalid!r} has non-translatable elements(elements not in TRANSLATED_ELEMENTS)',
+        )
+
     def test_translate_html(self):
         """ Test html_translate(). """
         source = """<blockquote>A <h2>B</h2> C</blockquote>"""
@@ -822,7 +889,6 @@ class TestXMLTranslation(TransactionCase):
         self.assertIn("<i>", view.arch_db)
         self.assertIn("<i>", view_fr.arch_db)
 
-    # TODO 1. add method to translate html/xml field. 2. add tests new translation method
     def test_update_field_translations(self):
         archf = '<form string="X">%s<div>%s</div></form>'
         terms_en = ('Bread and cheese', 'Fork')
