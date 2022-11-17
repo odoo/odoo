@@ -179,7 +179,7 @@ GROUP BY partner.id, users.notification_type"""
         """
         # base query: fetch followers of given documents
         where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
-        where_params = list(itertools.chain.from_iterable((rm, tuple(rids)) for rm, rids in doc_data))
+        where_params = list(itertools.chain.from_iterable((res_model, tuple(res_id)) for res_model, res_id in doc_data))
 
         # additional: filter on optional pids
         sub_where = []
