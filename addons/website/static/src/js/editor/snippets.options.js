@@ -1,4 +1,3 @@
-/* globals google*/
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
@@ -314,6 +313,11 @@ const GPSPicker = InputUserValueWidget.extend({
     init() {
         this._super(...arguments);
         this._gmapCacheGPSToPlace = {};
+
+        // The google API will be loaded inside the website iframe. Let's try
+        // not having to load it in the backend too and just using the iframe
+        // google object instead.
+        this.contentWindow = this.$target[0].ownerDocument.defaultView;
     },
     /**
      * @override
@@ -352,8 +356,23 @@ const GPSPicker = InputUserValueWidget.extend({
             return;
         }
 
-        this._gmapAutocomplete = new google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
+        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+
+        // Without this, the google library injects elements inside the backend
+        // DOM but do not remove them once the editor is left. Notice that
+        // this is also done when the widget is destroyed for another reason
+        // than leaving the editor, but if the google API needs that container
+        // again afterwards, it will simply recreate it.
+        for (const el of document.body.querySelectorAll('.pac-container')) {
+            el.remove();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -398,9 +417,9 @@ const GPSPicker = InputUserValueWidget.extend({
         }
 
         const p = gps.substring(1).slice(0, -1).split(',');
-        const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
+        const location = new this.contentWindow.google.maps.LatLng(p[0] || 0, p[1] || 0);
         return new Promise(resolve => {
-            const service = new google.maps.places.PlacesService(document.createElement('div'));
+            const service = new this.contentWindow.google.maps.places.PlacesService(document.createElement('div'));
             service.nearbySearch({
                 // Do a 'nearbySearch' followed by 'getDetails' to avoid using
                 // GMap Geocoder which the user may not have enabled... but
@@ -409,13 +428,16 @@ const GPSPicker = InputUserValueWidget.extend({
                 location: location,
                 radius: 1,
             }, (results, status) => {
-                const GMAP_CRITICAL_ERRORS = [google.maps.places.PlacesServiceStatus.REQUEST_DENIED, google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR];
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                const GMAP_CRITICAL_ERRORS = [
+                    this.contentWindow.google.maps.places.PlacesServiceStatus.REQUEST_DENIED,
+                    this.contentWindow.google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR
+                ];
+                if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
                     service.getDetails({
                         placeId: results[0].place_id,
                         fields: ['geometry', 'formatted_address'],
                     }, (place, status) => {
-                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
                             this._gmapCacheGPSToPlace[gps] = place;
                             resolve(place);
                         } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
