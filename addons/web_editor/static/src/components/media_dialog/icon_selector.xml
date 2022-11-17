@@ -9,6 +9,10 @@
         </div>
         <div class="font-icons-icons">
             <t t-foreach="state.fonts" t-as="font" t-key="font.base">
+                <div t-if="!font.icons.length" class="o_nocontent_help">
+                    <p class="o_empty_folder_image">No pictograms found.</p>
+                    <p class="o_empty_folder_subtitle">Try searching with other keywords.</p>
+                </div>
                 <span t-foreach="font.icons" t-as="icon" t-key="icon.id"
                     t-att-title="icon.names[0]"
                     t-att-aria-label="icon.names[0]" role="img"
