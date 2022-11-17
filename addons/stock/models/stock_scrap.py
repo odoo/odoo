@@ -34,6 +34,7 @@ class StockScrap(models.Model):
         required=True, states={'done': [('readonly', True)]}, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
+        compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
         required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
@@ -61,6 +62,11 @@ class StockScrap(models.Model):
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
 
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for scrap in self:
+            scrap.product_uom_id = scrap.product_id.uom_id
+
     @api.depends('move_id', 'move_id.move_line_ids.qty_done')
     def _compute_scrap_qty(self):
         self.scrap_qty = 1
@@ -78,7 +84,6 @@ class StockScrap(models.Model):
         if self.product_id:
             if self.tracking == 'serial':
                 self.scrap_qty = 1
-            self.product_uom_id = self.product_id.uom_id.id
             # Check if we can get a more precise location instead of
             # the default location (a location corresponding to where the
             # reserved product is stored)
