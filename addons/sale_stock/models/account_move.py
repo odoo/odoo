@@ -62,9 +62,9 @@ class AccountMove(models.Model):
 
             # is it a stock return considering the document type (should it be it thought of as positively or negatively?)
             is_stock_return = (
-                    self.move_type == 'out_invoice' and (sml.location_id.usage, sml.location_dest_id.usage) == ('customer', 'internal')
-                    or
-                    self.move_type == 'out_refund' and (sml.location_id.usage, sml.location_dest_id.usage) == ('internal', 'customer')
+                self.move_type == 'out_invoice' and (sml.location_id.usage, sml.location_dest_id.usage) == ('customer', 'internal')
+                or
+                self.move_type == 'out_refund' and (sml.location_id.usage, sml.location_dest_id.usage) == ('internal', 'customer')
             )
             if is_stock_return:
                 returned_qty = min(qties_per_lot[sml.lot_id], qty_done)
