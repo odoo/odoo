@@ -3,7 +3,6 @@
         "moduleResolution": "node",
         "baseUrl": ".",
         "target": "ES2022",
-        "checkJs": true, 
         "noEmit": true,
         "disableSizeLimit": true,
         "typeRoots": ["addons/web/tooling/types"],
@@ -24,7 +23,7 @@
             "@pos/*": ["addons/pos/static/src/*"]
         }
     },
-    "include": ["**/*.js"],
+    "include": ["**/*.js", "**/*.ts"],
     "exclude": [
         "node_modules",
         "setup",
