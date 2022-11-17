@@ -198,6 +198,13 @@ class MailTestTicket(models.Model):
 
         return groups
 
+    def _message_get_default_recipients(self):
+        return {ticket.id: {
+            'partner_ids': [ticket.customer_id.id] if ticket.customer_id else [],
+            'email_to': ticket.email_from if not ticket.customer_id else False,
+            'email_cc': False}
+            for ticket in self}
+
     def _track_template(self, changes):
         res = super(MailTestTicket, self)._track_template(changes)
         record = self[0]

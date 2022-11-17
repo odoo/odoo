@@ -4,6 +4,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models, _
+from odoo import tools
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError
 from odoo.tools import html2plaintext, plaintext2html
@@ -46,6 +47,7 @@ class SendSMS(models.TransientModel):
         help='Indicates if the SMS composer targets a single specific recipient')
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document', default=True)
+    mass_notify = fields.Boolean('Create a notification for the messages', default=True)
     mass_force_send = fields.Boolean('Send directly', default=False)
     mass_use_blacklist = fields.Boolean('Use blacklist', default=True)
     # recipients
@@ -235,11 +237,55 @@ class SendSMS(models.TransientModel):
         records = records if records is not None else self._get_records()
 
         sms_record_values = self._prepare_mass_sms_values(records)
+
+        # create the messages for the chatter if logging
+        created_messages = self.env['mail.message']
+        if self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
+            author_id, email_from = self.env['mail.thread']._message_compute_author(raise_on_email=False)
+            base_message_values = {
+                'subject': None,
+                'author_id': author_id,
+                'email_from': email_from,
+                'message_type': 'sms',
+                'model': records._name,
+                'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                'is_internal': False,
+                'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
+                'email_add_signature': False,
+            }
+
+            message_create_values = [dict(base_message_values,
+                                          body=sms_record_values[record.id]['body'],
+                                          res_id=record.id,
+                                          message_id=tools.generate_tracking_message_id(record.name),
+                                          ) for record in records]
+
+            created_messages = records._message_create(message_create_values)
+
+            # update dictionaries to link the corresponding message, if any
+            record_to_message = {
+                message.res_id: message.id
+                for message in created_messages
+            }
+            for key, value in sms_record_values.items():
+                value.update({'mail_message_id': record_to_message[key]})
+
+        # create SMS
         sms_all = self._prepare_mass_sms(records, sms_record_values)
 
-        if sms_all and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
-            log_values = self._prepare_mass_log_values(records, sms_record_values)
-            records._message_log_batch(**log_values)
+        if self.mass_notify:
+            # create notifications for tracking in chatter
+            self.env['mail.notification'].create([{
+                'author_id': message.author_id.id,
+                'mail_message_id': message.id,
+                'res_partner_id': message.sms_id.partner_id.id or None,
+                'sms_number': message.sms_id.number,
+                'sms_id': message.sms_id.id,
+                'notification_type': 'sms',
+                'is_read': True,  # discard Inbox notification
+                'notification_status': 'ready' if message.sms_id.state == 'outgoing' else 'exception',
+                'failure_type': '' if message.sms_id.state == 'outgoing' else message.sms_id.failure_type,
+            } for message in created_messages])
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
@@ -332,11 +378,6 @@ class SendSMS(models.TransientModel):
             result[record_id] = plaintext2html(html2plaintext(sms_values['body']))
         return result
 
-    def _prepare_mass_log_values(self, records, sms_records_values):
-        return {
-            'bodies': self._prepare_log_body_values(sms_records_values),
-            'message_type': 'sms',
-        }
 
     # ------------------------------------------------------------
     # Tools

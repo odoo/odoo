@@ -751,11 +751,18 @@ class MailThread(models.AbstractModel):
                 self.env['mail.notification'].sudo().search([
                     ('mail_message_id', '=', bounced_message.id),
                     ('res_partner_id', 'in', bounced_partner.ids)]
-                ).write({
-                    'failure_reason': html2plaintext(message_dict.get('body') or ''),
-                    'failure_type': 'mail_bounce',
-                    'notification_status': 'bounce',
-                })
+                ).write({'notification_status': 'bounce'})
+            if bounced_message:
+                self.env['mail.notification'].sudo().search(
+                    expression.AND([
+                        [('mail_message_id', '=', bounced_message.id)],
+                        expression.OR([[('res_partner_id', 'in', bounced_partner.ids)],
+                                       [('unpartnered_email', '=', bounced_email)]])
+                    ])).write({
+                        'failure_reason': html2plaintext(message_dict.get('body') or ''),
+                        'failure_type': 'mail_bounce',
+                        'notification_status': 'bounce',
+                    })
 
         if bounced_record:
             _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email from %s replying to %s (model %s ID %s)',
@@ -3029,7 +3036,8 @@ class MailThread(models.AbstractModel):
           records formatted like [
           {
             'active': partner.active;
-            'id': id of the res.partner being recipient to notify;
+            'id': id of the res.partner being recipient to notify, if a real partner;
+            'unpartnered_email': email to send the message to, if no partner;
             'is_follower': follows the message related document;
             'lang': its lang;
             'groups': res.group IDs if linked to a user;
@@ -3057,8 +3065,8 @@ class MailThread(models.AbstractModel):
         :param bool send_after_commit: if force_send, tells to send emails after
           the transaction has been committed using a post-commit hook;
         """
-        partners_data = [r for r in recipients_data if r['notif'] == 'email']
-        if not partners_data:
+        recipient_data = [r for r in recipients_data if r['notif'] == 'email']
+        if not recipient_data:
             return True
 
         base_mail_values = self._notify_by_email_get_base_mail_values(
@@ -3081,7 +3089,7 @@ class MailThread(models.AbstractModel):
         recipients_max = 50
         for _lang, render_values, recipients_group in self._notify_get_classified_recipients_iterator(
             message,
-            partners_data,
+            recipient_data,
             msg_vals=msg_vals,
             model_description=model_description,
             force_email_company=force_email_company,
@@ -3095,25 +3103,34 @@ class MailThread(models.AbstractModel):
                 msg_vals=msg_vals,
                 render_values=render_values,
             )
-            recipients_ids = recipients_group.pop('recipients')
 
+            # generate notification email content
+            recipients_ids = recipients_group.pop('recipients')
+            recipients_emails = recipients_group.pop('unpartnered_emails')
+            recipients_data = [(None, partner) for partner in recipients_ids]
+            recipients_data += [(addr, None) for addr in recipients_emails]
             # create email
-            for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
+            for recipients_data_chunk in split_every(recipients_max, recipients_data):
+                recipients_ids_chunk = [partner for _, partner in recipients_data_chunk if partner]
+                unpartnered_emails_chunk = [email for email, _ in recipients_data_chunk if email]
                 mail_values = self._notify_by_email_get_final_mail_values(
                     recipients_ids_chunk,
+                    unpartnered_emails_chunk,
                     base_mail_values,
                     additional_values={'body_html': mail_body}
                 )
                 new_email = SafeMail.create(mail_values)
 
-                if new_email and recipients_ids_chunk:
+                if new_email and recipients_data_chunk:
                     tocreate_recipient_ids = list(recipients_ids_chunk)
                     if resend_existing:
-                        existing_notifications = self.env['mail.notification'].sudo().search([
-                            ('mail_message_id', '=', message.id),
-                            ('notification_type', '=', 'email'),
-                            ('res_partner_id', 'in', tocreate_recipient_ids)
-                        ])
+                        existing_notifications = self.env['mail.notification'].sudo().search(
+                            expression.AND([
+                                [('mail_message_id', '=', message.id),
+                                 ('notification_type', '=', 'email')],
+                                expression.OR([[('res_partner_id', 'in', tocreate_recipient_ids)],
+                                               [('unpartnered_email', 'in', unpartnered_emails_chunk)]])
+                            ]))
                         if existing_notifications:
                             tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.mapped('res_partner_id.id')]
                             existing_notifications.write({
@@ -3427,13 +3444,14 @@ class MailThread(models.AbstractModel):
             base_mail_values['headers'] = repr(headers)
         return base_mail_values
 
-    def _notify_by_email_get_final_mail_values(self, recipient_ids, mail_values,
+    def _notify_by_email_get_final_mail_values(self, recipient_ids, unpartnered_emails, mail_values,
                                                additional_values=None):
         """ Perform final formatting of values to create notification emails.
-        Basic method just set the recipient partners as mail_mail recipients.
-        Override to generate other mail values like email_to or email_cc.
+        Basic method just set the recipient partners as mail_mail recipients and/or email_to.
+        Override to generate other mail values like email_cc.
 
         :param list recipient_ids: res.partner IDs to notify;
+        :param list unpartnered_emails: email addresses to notify;
         :param dict mail_values: notification mail values;
         :param dict additional_values: optional additional values to add (ease
           custom calls and inheritance);
@@ -3442,6 +3460,7 @@ class MailThread(models.AbstractModel):
         """
         final_mail_values = dict(mail_values)
         final_mail_values['recipient_ids'] = [Command.link(pid) for pid in recipient_ids]
+        final_mail_values['email_to'] = ','.join([email for email in unpartnered_emails])
         if additional_values:
             final_mail_values.update(additional_values)
         return final_mail_values
@@ -3639,6 +3658,7 @@ class MailThread(models.AbstractModel):
             group_data.setdefault('has_button_access', is_thread_message)
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('recipients', [])
+            group_data.setdefault('unpartnered_emails', [])
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
@@ -3699,14 +3719,17 @@ class MailThread(models.AbstractModel):
         for recipient_data in recipients_data:
             for _group_name, group_func, group_data in groups:
                 if group_data['active'] and group_func(recipient_data):
-                    group_data['recipients'].append(recipient_data['id'])
+                    if recipient_data.get('id'):
+                        group_data['recipients'].append(recipient_data['id'])
+                    else:
+                        group_data['unpartnered_emails'].append(recipient_data['unpartnered_email'])
                     break
 
         # filter out groups without recipients
         return [
             group_data
             for _group_name, _group_func, group_data in groups
-            if group_data['recipients']
+            if group_data['recipients'] or group_data['unpartnered_emails']
         ]
 
     def _notify_get_action_link(self, link_type, **kwargs):

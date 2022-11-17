@@ -19,6 +19,7 @@ class MailMessage(models.Model):
     ], ondelete={'sms': lambda recs: recs.write({'message_type': 'email'})})
     has_sms_error = fields.Boolean(
         'Has SMS error', compute='_compute_has_sms_error', search='_search_has_sms_error')
+    sms_id = fields.One2many('sms.sms', 'mail_message_id')
 
     def _compute_has_sms_error(self):
         sms_error_from_notification = self.env['mail.notification'].sudo().search([

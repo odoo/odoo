@@ -53,6 +53,7 @@ patch(MockServer.prototype, "mail/models/mail_notification", {
                 res_partner_id: partner
                     ? [partner && partner.id, partner && partner.display_name]
                     : undefined,
+                unpartnered_email: notification.unpartnered_email,
             };
         });
     },

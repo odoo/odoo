@@ -87,7 +87,7 @@ class MailMail(models.Model):
                 )
         return email_list
 
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
+    def _postprocess_sent_message(self, success_pids, success_email_addrs, failure_reason=False, failure_type=None):
         mail_sent = not failure_type  # we consider that a recipient error is a failure with mass mailling and show them as failed
         for mail in self:
             if mail.mailing_id:
@@ -95,4 +95,4 @@ class MailMail(models.Model):
                     mail.mailing_trace_ids.set_sent()
                 elif mail_sent is False and mail.mailing_trace_ids:
                     mail.mailing_trace_ids.set_failed(failure_type=failure_type)
-        return super()._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)
+        return super()._postprocess_sent_message(success_pids, success_email_addrs, failure_reason=failure_reason, failure_type=failure_type)

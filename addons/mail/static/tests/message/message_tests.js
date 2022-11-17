@@ -846,6 +846,12 @@ QUnit.test("Notification Sent", async (assert) => {
         notification_type: "email",
         res_partner_id: partnerId,
     });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "email",
+        unpartnered_email: 'testEmail@test.lan',
+    });
     const { openView } = await start();
     await openView({
         res_id: threadId,
@@ -862,26 +868,17 @@ QUnit.test("Notification Sent", async (assert) => {
     assert.containsOnce($, ".o-mail-MessageNotificationPopover i");
     assert.hasClass($(".o-mail-MessageNotificationPopover i"), "fa-check");
     assert.containsOnce($, ".o-mail-MessageNotificationPopover:contains(Someone)");
+    assert.containsOnce($, ".o-mail-MessageNotificationPopover:contains(testEmail)");
 });
 
-QUnit.test("Notification Error", async (assert) => {
-    const pyEnv = await startServer();
-    const [threadId, partnerId] = pyEnv["res.partner"].create([
-        {},
-        { name: "Someone", partner_share: true },
-    ]);
-    const messageId = pyEnv["mail.message"].create({
-        body: "not empty",
-        message_type: "email",
-        model: "res.partner",
-        res_id: threadId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "exception",
-        notification_type: "email",
-        res_partner_id: partnerId,
-    });
+/**
+ * Separate common function to ensure the behaviour of
+ * partner notifications and unpartnered email notifications is the same
+ * @param {*} assert
+ * @param {*} threadId
+ * @param {*} messageId
+ */
+async function testNotificationError(assert, threadId, messageId) {
     const openResendActionDef = makeDeferred();
     const { env, openView } = await start();
     await openView({
@@ -904,6 +901,45 @@ QUnit.test("Notification Error", async (assert) => {
     click(".o-mail-Message-notification").then(() => {});
     await openResendActionDef;
     assert.verifySteps(["do_action"]);
+}
+
+QUnit.test("Notification Error", async function (assert) {
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv["res.partner"].create([
+        {},
+        { name: "Someone", partner_share: true },
+    ]);
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        res_id: threadId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "exception",
+        notification_type: "email",
+        res_partner_id: partnerId,
+    });
+    await testNotificationError(assert, threadId, messageId);
+});
+
+QUnit.test('Unpartnered Email Notification Error', async function (assert) {
+    const pyEnv = await startServer();
+    const [threadId] = pyEnv["res.partner"].create([{}]);
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        res_id: threadId,
+    });
+    pyEnv['mail.notification'].create({
+        mail_message_id: messageId,
+        notification_status: 'exception',
+        notification_type: 'email',
+        unpartnered_email: "test@test.lan",
+    });
+    await testNotificationError(assert, threadId, messageId);
 });
 
 QUnit.test(

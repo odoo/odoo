@@ -3,6 +3,7 @@
 
 import ast
 import base64
+from collections import defaultdict
 import datetime
 import logging
 
@@ -500,17 +501,17 @@ class MailComposer(models.TransientModel):
             if composer.template_id:
                 composer.auto_delete = composer.template_id.auto_delete
             else:
-                composer.auto_delete = composer.composition_mode == 'comment'
+                composer.auto_delete = True
 
-    @api.depends('composition_mode', 'auto_delete')
+    @api.depends('composition_mode')
     def _compute_auto_delete_keep_log(self):
         """ Keep logs is used only in email mode. It is used to keep the core
         message when unlinking sent emails. It allows to keep the message as
         a trace in the record's chatter. In other modes it has no use and
-        can be set to False. When auto_delete is turned off it has no usage. """
+        can be set to False. It also indicates whether notifications should
+        be created for email mode. """
         toreset = self.filtered(
-            lambda comp: comp.composition_mode != 'mass_mail' or
-                            not comp.auto_delete
+            lambda comp: comp.composition_mode != 'mass_mail'
         )
         toreset.auto_delete_keep_log = False
         (self - toreset).auto_delete_keep_log = True
@@ -681,6 +682,7 @@ class MailComposer(models.TransientModel):
             iter_mails_sudo = self.env['mail.mail'].sudo()
             for _res_id, mail_values in mail_values_all.items():
                 iter_mails_sudo += mails_sudo.create(mail_values)
+            self._action_send_mail_create_notifications(iter_mails_sudo)
             mails_sudo += iter_mails_sudo
 
             records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
@@ -701,6 +703,104 @@ class MailComposer(models.TransientModel):
                 iter_mails_sudo_tosend.send(auto_commit=auto_commit)
 
         return mails_sudo
+
+    def _action_send_mail_create_notifications(self, batch_mails_sudo):
+        """Create notifications for the mails of the batch."""
+        # create mapping from email to partner
+        def parse_email_strings(emails_strings):
+            """Transform multiple email lists into a list of normalized emails.
+
+            :emails_strings [str]: List of strings representing comma-separated emails
+            :return (set[str], set[str]): Set of normalized emails, Set of invalid emails
+            """
+            ret_emails = set()
+            for emails_string in emails_strings:
+                emails = tools.email_split(emails_string)
+                for email in emails:
+                    normalized_email = tools.email_normalize(email)
+                    if normalized_email:
+                        # implies some invalid emails are removed without notification
+                        # this is fine because _message_get_default_recipients typically already uses email_normalized anyway
+                        ret_emails.add(normalized_email)
+            return ret_emails
+        # translate mail state to notification state
+        mail_to_notification_state = defaultdict(lambda: 'ready', {'cancel': 'canceled', 'exception': 'exception'})
+
+        notified_mails_sudo = batch_mails_sudo.filtered('is_notification')
+
+        email_tos = parse_email_strings(notified_mails_sudo.mapped('email_to'))
+        email_ccs = parse_email_strings(notified_mails_sudo.mapped('email_cc'))
+        emails = email_tos | email_ccs
+        email_partner_ids = self.env['res.partner'].search([('email', 'in', list(emails))])
+        email_to_partner = {partner.email: partner for partner in email_partner_ids}
+
+        notif_create_values = []
+
+        # Get partners from email_to and email_cc and create notif values
+        for mail in notified_mails_sudo:
+            partners_to_add = self.env['res.partner']
+            new_email_to = []
+            new_email_cc = []
+            # If an email has a partner, add them as recipient.
+            # Otherwise add the email back in the list it came from.
+            for email in parse_email_strings([(mail.email_to or '')]):
+                partner = email_to_partner.get(email)
+                if partner:
+                    partners_to_add |= partner
+                else:
+                    new_email_to.append(email)
+            for email in parse_email_strings([(mail.email_cc or '')]):
+                partner = email_to_partner.get(email)
+                if partner:
+                    partners_to_add |= partner
+                else:
+                    new_email_cc.append(email)
+
+            new_email_to_string = ','.join(new_email_to)
+            new_email_cc_string = ','.join(new_email_cc)
+            mail.update({'recipient_ids': [Command.link(partner_id) for partner_id in partners_to_add.ids],
+                         'email_to': new_email_to_string,
+                         'email_cc': new_email_cc_string})
+
+            mail_notif_create_values = []
+            # partnerless
+            mail_notif_create_values += [{
+                'author_id': mail.mail_message_id.author_id.id,
+                'mail_message_id': mail.mail_message_id.id,
+                'unpartnered_email': address,
+                'notification_type': 'email',
+                'mail_mail_id': mail.id,
+                'is_read': True,  # discard Inbox notification
+                'notification_status': mail_to_notification_state[mail.state],
+                'failure_type': mail.failure_type,
+            } for address in new_email_to + new_email_cc]
+            # partnered
+            mail_notif_create_values += [{
+                'author_id': mail.mail_message_id.author_id.id,
+                'mail_message_id': mail.mail_message_id.id,
+                'res_partner_id': recipient.id,
+                'notification_type': 'email',
+                'mail_mail_id': mail.id,
+                'is_read': True,
+                'notification_status': mail_to_notification_state[mail.state],
+                'failure_type': mail.failure_type,
+            } for recipient in mail.recipient_ids]
+
+            if not mail_notif_create_values:
+                mail_notif_create_values.append({
+                    'author_id': mail.mail_message_id.author_id.id,
+                    'mail_message_id': mail.mail_message_id.id,
+                    'notification_type': 'email',
+                    'mail_mail_id': mail.id,
+                    'is_read': True,
+                    'notification_status': mail_to_notification_state[mail.state],
+                    'failure_type': mail.failure_type,
+                    'unpartnered_email': 'No Valid Email Found',
+                })
+
+            notif_create_values += mail_notif_create_values
+
+        self.env['mail.notification'].sudo().create(notif_create_values)
 
     def action_save_as_template(self):
         """ hit save as template button: current form value will be a new
