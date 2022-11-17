@@ -317,6 +317,10 @@
         </form>
     </t>
     <t t-name="wysiwyg.widgets.font-icons.icons">
+        <div t-if="!iconsParser.length" class="o_nocontent_help">
+            <p class="o_empty_folder_image">No pictograms found.</p>
+            <p class="o_empty_folder_subtitle">Try searching with other keywords.</p>
+        </div>
         <t t-as="data" t-foreach="iconsParser">
             <span t-foreach="data.cssData" t-as="cssData"
                 t-att-data-id="cssData.names[0]"
