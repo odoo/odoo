@@ -285,11 +285,15 @@ class StockMove(models.Model):
                     product_id_to_product[values['product_id']] = product
                     values['location_dest_id'] = mo.production_location_id.id
                     values['price_unit'] = product.standard_price
+                    if not values.get('location_id'):
+                        values['location_id'] = mo.location_src_id.id
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
                 values['date'] = mo._get_date_planned_finished()
                 values['date_deadline'] = mo.date_deadline
+                if not values.get('location_dest_id'):
+                    values['location_dest_id'] = mo.location_dest_id.id
         return super().create(vals_list)
 
     def write(self, vals):
