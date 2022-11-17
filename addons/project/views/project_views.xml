@@ -1770,8 +1770,17 @@
             <field name="view_id" ref="view_task_all_calendar"/>
         </record>
 
+        <record id="action_server_view_my_task" model="ir.actions.server">
+            <field name="name">menu view My Tasks</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="state">code</field>
+            <field name="code">
+                model._ensure_personal_stages(); action = env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
+            </field>
+        </record>
+
         <menuitem name="My Tasks" id="menu_project_management" parent="menu_main_pm"
-            action="action_view_my_task" sequence="2" groups="group_project_user"/>
+            action="action_server_view_my_task" sequence="2" groups="group_project_user"/>
 
         <menuitem name="All Tasks" id="menu_project_management_all_tasks" parent="menu_main_pm"
             action="action_view_all_task" sequence="2" groups="group_project_user"/>
