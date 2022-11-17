@@ -47,17 +47,17 @@
                         <group>
                             <group>
                                 <field name="product_id" context="{'default_detailed_type': 'product'}"/>
+                                <field name="tracking" invisible="1"/>
                                 <label for="scrap_qty"/>
                                 <div class="o_row">
-                                    <field name="scrap_qty"/>
+                                    <field name="scrap_qty" attrs="{'readonly': [('tracking', '=', 'serial')]}"/>
                                     <field name="product_uom_category_id" invisible="1"/>
-                                    <field name="product_uom_id" groups="uom.group_uom" force_save="1"/>
+                                    <field name="product_uom_id" attrs="{'readonly': [('tracking', '=', 'serial')]}" groups="uom.group_uom" force_save="1"/>
                                 </div>
+                                <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': ['|',('product_id', '=', False),('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>
                             <group>
                                 <field name="company_id" invisible="1"/>
-                                <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': ['|',('product_id', '=', False),('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
-                                <field name="tracking" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                                 <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
@@ -160,20 +160,19 @@
                         <group>
                             <field name="state" invisible="1"/>
                             <field name="product_id" options="{'no_create': True}" domain="[('id', 'in', context.get('product_ids', []))]"/>
+                            <field name="tracking" invisible="1"/>
                             <label for="scrap_qty"/>
                             <div class="o_row">
-                                <field name="scrap_qty"
-                                    attrs="{'readonly': [('tracking', '=', 'serial')]}"/>
+                                <field name="scrap_qty" attrs="{'readonly': [('tracking', '=', 'serial')]}"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="product_uom_id" attrs="{'readonly': [('tracking', '=', 'serial')]}" groups="uom.group_uom"/>
                             </div>
-                        </group>
-                        <group>
-                            <field name="picking_id" invisible="1"/>
-                            <field name="tracking" invisible="1"/>
                             <field name="lot_id" groups="stock.group_production_lot"
                                 context="{'default_company_id': company_id, 'default_product_id': product_id}"
                                 attrs="{'invisible': ['|',('product_id', '=', False),('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}"/>
+                        </group>
+                        <group>
+                            <field name="picking_id" invisible="1"/>
                             <field name="package_id" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
                             <field name="company_id" invisible="1"/>
