@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -437,25 +438,27 @@ class Applicant(models.Model):
     def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
             alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
+        elif self.env.context.get('default_job_id'):
+            alias_id = self.env['hr.job'].browse(self.env.context['default_job_id']).alias_id
         else:
             alias_id = False
 
-        nocontent_values = {
+        nocontent_body = Markup("""
+<p class="o_view_nocontent_empty_folder">%(help_title)s</p>
+<p>%(para_1)s<br/>%(para_2)s</p>""") % {
             'help_title': _('No application yet'),
             'para_1': _('Let people apply by email to save time.') ,
             'para_2': _('Attachments, like resumes, get indexed automatically.'),
         }
-        nocontent_body = """
-            <p class="o_view_nocontent_empty_folder">%(help_title)s</p>
-            <p>%(para_1)s<br/>%(para_2)s</p>"""
 
         if alias_id and alias_id.alias_domain and alias_id.alias_name:
             email = alias_id.display_name
-            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-            nocontent_values['email_link'] = email_link
-            nocontent_body += """<p class="o_copy_paste_email oe_view_nocontent_alias">%(email_link)s</p>"""
+            nocontent_body += Markup('<p class="o_copy_paste_email oe_view_nocontent_alias">%(helper_email)s <a href="mailto:%(email)s">%(email)s</a></p>') % {
+                'helper_email': _("Create new applications by sending an email to"),
+                'email': email
+            }
 
-        return super().get_empty_list_help(nocontent_body % nocontent_values)
+        return super().get_empty_list_help(nocontent_body)
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
