@@ -21,6 +21,9 @@
                         hasBackground="false"
                         partnerLocalId="record.localId"
                     />
+                    <div class="o_user_menu">
+                        <img class="rounded-circle o_user_avatar " t-att-src="record.avatarUrl" />
+                    </div>
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.nameOrDisplayName"/></span>
                     <t t-if="record.email">
                         <span class="o_ComposerSuggestion_part2 text-truncate">(<t t-esc="record.email"/>)</span>
