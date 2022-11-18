@@ -295,7 +295,7 @@
         <div
           t-foreach="getClickableCells()"
           t-as="clickableCell"
-          t-key="clickableCell.cell.id"
+          t-key="clickableCell.tKey"
           class="o-dashboard-clickable-cell"
           t-on-click="() => this.selectClickableCell(clickableCell)"
           t-on-contextmenu.prevent=""
@@ -1356,7 +1356,6 @@
 
   <t t-name="o-spreadsheet-LinkDisplay" owl="1">
     <div class="o-link-tool">
-      <t t-set="link" t-value="cell.link"/>
       <!-- t-key to prevent owl from re-using the previous img element when the link changes.
     The wrong/previous image would be displayed while the new one loads -->
       <img
@@ -1371,14 +1370,14 @@
         target="_blank"
         t-on-click.prevent="openLink"
         t-att-title="link.url">
-        <t t-esc="cell.urlRepresentation"/>
+        <t t-esc="getUrlRepresentation(link)"/>
       </a>
       <a
         t-else=""
         class="o-link"
         t-on-click.prevent="openLink"
-        t-att-title="cell.urlRepresentation">
-        <t t-esc="cell.urlRepresentation"/>
+        t-att-title="getUrlRepresentation(link)">
+        <t t-esc="getUrlRepresentation(link)"/>
       </a>
       <span
         t-if="!env.model.getters.isReadonly()"
@@ -1406,19 +1405,19 @@
       <div class="o-section">
         <div class="o-section-title">Text</div>
         <div class="d-flex">
-          <input type="text" class="o-input flex-grow-1" t-model="state.link.label"/>
+          <input type="text" class="o-input flex-grow-1" t-model="link.label"/>
         </div>
 
         <div class="o-section-title mt-3">Link</div>
         <div class="o-link-url">
-          <t t-if="state.isUrlEditable">
-            <input type="text" t-ref="urlInput" t-model="state.link.url"/>
+          <t t-if="link.isUrlEditable">
+            <input type="text" t-ref="urlInput" t-model="link.url"/>
           </t>
           <t t-else="">
-            <input type="text" t-att-value="state.urlRepresentation" disabled="1"/>
+            <input type="text" t-att-value="getUrlRepresentation(link)" disabled="1"/>
           </t>
-          <button t-if="state.link.url" t-on-click="removeLink" class="o-remove-url">✖</button>
-          <button t-if="!state.link.url" t-on-click.stop="openMenu" class="o-special-link">
+          <button t-if="link.url" t-on-click="removeLink" class="o-remove-url">✖</button>
+          <button t-if="!link.url" t-on-click.stop="openMenu" class="o-special-link">
             <t t-call="o-spreadsheet-Icon.LIST"/>
           </button>
         </div>
@@ -1432,7 +1431,7 @@
       />
       <div class="o-buttons">
         <button t-on-click="cancel" class="o-button o-cancel">Cancel</button>
-        <button t-on-click="save" class="o-button o-save" t-att-disabled="!state.link.url">
+        <button t-on-click="save" class="o-button o-save" t-att-disabled="!link.url">
           Confirm
         </button>
       </div>
@@ -2786,6 +2785,7 @@
             /
             <t t-esc="env.model.getters.getSearchMatches().length"/>
           </div>
+          <div t-elif="!pendingSearch and state.toSearch !== ''" class="o-input-count">0 / 0</div>
         </div>
         <div>
           <!-- TODO: go through this css, the group misses a padding and could profit from BootStrap -->

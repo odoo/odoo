@@ -6,7 +6,14 @@ import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
 import { addGlobalFilter, selectCell, setCellContent } from "../utils/commands";
-import { getCell, getCellContent, getCellFormula, getCells, getCellValue } from "../utils/getters";
+import {
+    getCell,
+    getCellContent,
+    getCellFormula,
+    getCells,
+    getCellValue,
+    getEvaluatedCell,
+} from "../utils/getters";
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
 
@@ -33,7 +40,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             model: "documents.document",
             columns: ["handler"],
         });
-        assert.strictEqual(getCellValue(model, "A2", "Spreadsheet"));
+        assert.strictEqual(getCellValue(model, "A2"), "Spreadsheet");
     });
 
     QUnit.test("Return name_get of many2one field", async (assert) => {
@@ -81,14 +88,14 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getCell(model, "G2").format, undefined);
         assert.strictEqual(getCell(model, "G3").format, undefined);
 
-        assert.strictEqual(getCell(model, "A2").evaluated.format, "0");
-        assert.strictEqual(getCell(model, "B2").evaluated.format, "#,##0.00");
-        assert.strictEqual(getCell(model, "C2").evaluated.format, undefined);
-        assert.strictEqual(getCell(model, "D2").evaluated.format, "m/d/yyyy");
-        assert.strictEqual(getCell(model, "E2").evaluated.format, "m/d/yyyy hh:mm:ss");
-        assert.strictEqual(getCell(model, "F2").evaluated.format, undefined);
-        assert.strictEqual(getCell(model, "G2").evaluated.format, "#,##0.00[$€]");
-        assert.strictEqual(getCell(model, "G3").evaluated.format, "[$$]#,##0.00");
+        assert.strictEqual(getEvaluatedCell(model, "A2").format, "0");
+        assert.strictEqual(getEvaluatedCell(model, "B2").format, "#,##0.00");
+        assert.strictEqual(getEvaluatedCell(model, "C2").format, undefined);
+        assert.strictEqual(getEvaluatedCell(model, "D2").format, "m/d/yyyy");
+        assert.strictEqual(getEvaluatedCell(model, "E2").format, "m/d/yyyy hh:mm:ss");
+        assert.strictEqual(getEvaluatedCell(model, "F2").format, undefined);
+        assert.strictEqual(getEvaluatedCell(model, "G2").format, "#,##0.00[$€]");
+        assert.strictEqual(getEvaluatedCell(model, "G3").format, "[$$]#,##0.00");
     });
 
     QUnit.test("can select a List from cell formula", async function (assert) {
@@ -193,10 +200,10 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             undefined
         );
         assert.strictEqual(getCellValue(model, "A1"), forbiddenFieldName);
-        const A2 = getCell(model, "A2");
-        assert.equal(A2.evaluated.type, "error");
+        const A2 = getEvaluatedCell(model, "A2");
+        assert.equal(A2.type, "error");
         assert.equal(
-            A2.evaluated.error.message,
+            A2.error.message,
             `The field ${forbiddenFieldName} does not exist or you do not have access to that field`
         );
     });
@@ -359,25 +366,25 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         model.dispatch("REMOVE_ODOO_LIST", { listId: "1" });
         assert.strictEqual(model.getters.getListIds().length, 0);
-        const B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error.message, `There is no list with id "1"`);
-        assert.equal(B4.evaluated.value, `#ERROR`);
+        const B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error.message, `There is no list with id "1"`);
+        assert.equal(B4.value, `#ERROR`);
     });
 
     QUnit.test("Can undo/redo a delete list", async function (assert) {
         const { model } = await createSpreadsheetWithList();
-        const value = getCell(model, "B4").evaluated.value;
+        const value = getEvaluatedCell(model, "B4").value;
         model.dispatch("REMOVE_ODOO_LIST", { listId: "1" });
         model.dispatch("REQUEST_UNDO");
         assert.strictEqual(model.getters.getListIds().length, 1);
-        let B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error, undefined);
-        assert.equal(B4.evaluated.value, value);
+        let B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error, undefined);
+        assert.equal(B4.value, value);
         model.dispatch("REQUEST_REDO");
         assert.strictEqual(model.getters.getListIds().length, 0);
-        B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error.message, `There is no list with id "1"`);
-        assert.equal(B4.evaluated.value, `#ERROR`);
+        B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error.message, `There is no list with id "1"`);
+        assert.equal(B4.value, `#ERROR`);
     });
 
     QUnit.test("can edit list domain", async (assert) => {

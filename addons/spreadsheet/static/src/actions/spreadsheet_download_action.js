@@ -37,12 +37,8 @@ async function waitForDataLoaded(model) {
         let interval = undefined;
         interval = browser.setInterval(() => {
             for (const sheetId of model.getters.getSheetIds()) {
-                for (const cell of Object.values(model.getters.getCells(sheetId))) {
-                    if (
-                        cell.evaluated &&
-                        cell.evaluated.type === "error" &&
-                        cell.evaluated.error.message === _t("Data is loading")
-                    ) {
+                for (const cell of Object.values(model.getters.getEvaluatedCells(sheetId))) {
+                    if (cell.type === "error" && cell.error.message === _t("Data is loading")) {
                         model.dispatch("EVALUATE_CELLS");
                         return;
                     }
