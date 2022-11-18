@@ -6,6 +6,7 @@ import pytz
 import threading
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
+from markupsafe import Markup
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -1254,10 +1255,12 @@ class Lead(models.Model):
             ('alias_parent_model_id.model', '=', 'crm.team'),
             ('alias_force_thread_id', '=', False)
         ], limit=1)
+
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
-            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
+            email = f'{alias_record.alias_name}@{alias_record.alias_domain}'
+            sub_title = Markup(_('Use the top left <i>Create</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
+                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (email, email),
+            }
         return super().get_empty_list_help(
             f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
         )

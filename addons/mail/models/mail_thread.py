@@ -28,7 +28,7 @@ from markupsafe import Markup
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
-from odoo.tools import is_html_empty
+from odoo.tools import is_html_empty, html_escape
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -367,28 +367,24 @@ class MailThread(models.AbstractModel):
                 alias = aliases[0]
 
         if alias:
-            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.display_name}
+            email_link = Markup("<a href='mailto:%s'>%s</a>") % (alias.display_name, alias.display_name)
             if nothing_here:
-                return super().get_empty_list_help("<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
-                    'dyn_help': _("Add a new %(document)s or send an email to %(email_link)s",
-                        document=document_name,
-                        email_link=email_link,
-                    )
-                })
+                dyn_help = _("Add a new %(document)s or send an email to %(email_link)s",
+                             document=html_escape(document_name),
+                             email_link=email_link,
+                            )
+                return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
             # do not add alias two times if it was added previously
             if "oe_view_nocontent_alias" not in help_message:
-                return super().get_empty_list_help("%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
-                    'static_help': help_message,
-                    'dyn_help': _("Create new %(document)s by sending an email to %(email_link)s",
-                        document=document_name,
-                        email_link=email_link,
-                    )
-                })
+                dyn_help = _("Create new %(document)s by sending an email to %(email_link)s",
+                             document=html_escape(document_name),
+                             email_link=email_link,
+                            )
+                return super().get_empty_list_help(f"{help_message}<p class='oe_view_nocontent_alias'>{dyn_help}</p>")
 
         if nothing_here:
-            return super().get_empty_list_help("<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
-                'dyn_help': _("Create new %(document)s", document=document_name),
-            })
+            dyn_help = _("Create new %(document)s", document=html_escape(document_name))
+            return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
 
         return super().get_empty_list_help(help_message)
 
