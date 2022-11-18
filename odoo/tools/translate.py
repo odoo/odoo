@@ -1508,13 +1508,14 @@ class CodeTranslations:
 code_translations = CodeTranslations()
 
 
-def _get_translation_upgrade_queries(cr, field):
+def _get_translation_upgrade_queries(cr, field, model=None):
     """ Return a pair of lists ``migrate_queries, cleanup_queries`` of SQL queries. The queries in
     ``migrate_queries`` do migrate the data from table ``_ir_translation`` to the corresponding
     field's column, while the queries in ``cleanup_queries`` remove the corresponding data from
     table ``_ir_translation``.
     """
-    Model = odoo.registry(cr.dbname)[field.model_name]
+    Model = model or odoo.registry(cr.dbname)[field.model_name]
+    assert Model._name == field.model_name
     translation_name = f"{field.model_name},{field.name}"
     migrate_queries = []
     cleanup_queries = []
