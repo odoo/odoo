@@ -31,6 +31,7 @@ export class MrpTimer extends Component {
             duration:
                 this.props.value !== undefined ? this.props.value : this.props.record.data.duration,
         });
+        this.lastDateTime = Date.now();
         useInputField({
             getValue: () => this.durationFormatted,
             refName: "numpadDecimal",
@@ -49,6 +50,7 @@ export class MrpTimer extends Component {
             }
             if (this.ongoing) {
                 this._runTimer();
+                this._runSleepTimer();
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -61,14 +63,15 @@ export class MrpTimer extends Component {
             if (rerun) {
                 this.state.duration = nextProps.value;
                 this._runTimer();
+                this._runSleepTimer()
             }
         });
         onWillDestroy(() => clearTimeout(this.timer));
     }
 
     get durationFormatted() {
-        if(this.props.value!=this.state.duration && this.props.record && this.props.record.isDirty){
-            this.state.duration=this.props.value
+        if(this.props.value != this.state.duration && this.props.record && this.props.record.isDirty){
+            this.state.duration = this.props.value;
         }
         return formatMinutes(this.state.duration);
     }
@@ -80,6 +83,18 @@ export class MrpTimer extends Component {
                 this._runTimer();
             }
         }, 1000);
+    }
+
+    //updates the time when the computer wakes from sleep mode
+    _runSleepTimer() {
+        this.timer = setTimeout(async () => {
+            let diff = Date.now() - this.lastDateTime - 10000;
+            if (diff > 1000) {
+                this.state.duration += diff / (1000 * 60);
+            }
+            this.lastDateTime = Date.now();
+            this._runSleepTimer();
+        }, 10000);
     }
 }
 

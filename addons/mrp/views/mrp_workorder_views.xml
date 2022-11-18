@@ -63,6 +63,9 @@
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <tree editable="bottom" multi_edit="1">
+                <header>
+                    <button name="action_mark_as_done" type="object" string="Mark as done" class="btn-outline-primary"/>
+                </header>
                 <field name="consumption" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="is_produced" invisible="1"/>
@@ -119,7 +122,7 @@
                 <attribute name="sample">1</attribute>
             </xpath>
             <field name="workcenter_id" position="after">
-                <field name="production_id"/>
+                <field name="production_id" optional="hide"/>
             </field>
             <field name="state" position="attributes">
                 <attribute name="attrs">{'invisible': [('production_state', '=', 'draft')]}</attribute>
@@ -152,7 +155,6 @@
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
-                <field name="qty_producing" invisible="1"/>
                 <group>
                     <group attrs="{'invisible': [('date_planned_start', '=', False)]}">
                         <label for="date_planned_start" string="Planned Date"/>
@@ -175,25 +177,11 @@
                     </group>
                 </group>
                 <notebook>
-                <page string="Components" name="components">
-                    <field name="move_raw_ids" readonly="1">
-                        <tree>
-                            <field name="state" invisible="1"/>
-                            <field name="product_type" invisible="1"/>
-                            <field name="product_id"/>
-                            <field name="product_qty" string="To Consume"/>
-                            <field name="reserved_availability" string ="Reserved"/>
-                            <field name="quantity_done" string="Consumed"/>
-                            <field name="product_qty_available" string="On Hand" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
-                            <field name="product_virtual_available" string="Forecasted" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
-                        </tree>
-                    </field>
-                </page>
-                <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
+                    <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <tree editable="bottom">
                                 <field name="user_id"/>
-                                <field name="duration" widget="float_time" sum="Total duration"/>
+                                <field name="duration" widget="float_time" sum="Total duration" attrs="{'readonly': [('id', '!=', False)]}"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="workcenter_id" invisible="1"/>
@@ -217,6 +205,20 @@
                                 </group>
                             </form>
                         </field>
+                </page>
+                <page string="Components" name="components">
+                    <field name="move_raw_ids" readonly="1">
+                        <tree>
+                            <field name="state" invisible="1"/>
+                            <field name="product_type" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="product_qty" string="To Consume"/>
+                            <field name="reserved_availability" string ="Reserved"/>
+                            <field name="quantity_done" string="Consumed"/>
+                            <field name="product_qty_available" string="On Hand" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
+                            <field name="product_virtual_available" string="Forecasted" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
+                        </tree>
+                    </field>
                 </page>
                 <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False), ('worksheet_google_slide', '=', False), ('operation_note', '=', False)]}">
                     <field name="worksheet_type" invisible="1"/>
