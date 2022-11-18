@@ -1968,14 +1968,6 @@ class Application:
                 return
             ProxyFix(fake_app)(environ, fake_start_response)
 
-        # Some URLs in website are concatenated, first url ends with /,
-        # second url starts with /, resulting url contains two following
-        # slashes that must be merged.
-        if environ['REQUEST_METHOD'] == 'GET' and '//' in environ['PATH_INFO']:
-            response = werkzeug.utils.redirect(
-                environ['PATH_INFO'].replace('//', '/'), 301)
-            return response(environ, start_response)
-
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = (

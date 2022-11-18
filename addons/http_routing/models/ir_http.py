@@ -421,6 +421,13 @@ class IrHttp(models.AbstractModel):
             and getattr(request, 'is_frontend_multilang', True)
         )
 
+        # Some URLs in website are concatenated, first url ends with /,
+        # second url starts with /, resulting url contains two following
+        # slashes that must be merged.
+        if allow_redirect and '//' in path:
+            new_url = path.replace('//', '/')
+            werkzeug.exceptions.abort(request.redirect(new_url, code=301, local=True))
+
         # There is no user on the environment yet but the following code
         # requires one to set the lang on the request. Temporary grant
         # the public user. Don't try it at home!

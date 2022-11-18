@@ -19,8 +19,7 @@ from .test_common import TestHttpBase
 class TestHttpMisc(TestHttpBase):
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
-        self.assertEqual(res.status_code, 301)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/greeting')
+        self.assertEqual(res.status_code, 404)
 
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
