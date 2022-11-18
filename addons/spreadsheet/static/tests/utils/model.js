@@ -52,9 +52,9 @@ export async function createModelWithDataSource(params = {}) {
 export async function waitForDataSourcesLoaded(model) {
     function readAllCellsValue() {
         for (const sheetId of model.getters.getSheetIds()) {
-            const cells = model.getters.getCells(sheetId);
+            const cells = model.getters.getEvaluatedCells(sheetId);
             for (const cellId in cells) {
-                cells[cellId].evaluated.value;
+                cells[cellId].value;
             }
         }
     }
