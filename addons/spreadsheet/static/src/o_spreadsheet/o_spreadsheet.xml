@@ -183,6 +183,7 @@
         t-on-keyup="onKeyup"
         t-on-click.stop="onClick"
         t-on-blur="onBlur"
+        t-on-paste.stop=""
       />
 
       <div
@@ -590,6 +591,14 @@
           onComposerUnmounted="() => this.focus()"
           onComposerContentFocused="props.onComposerContentFocused"
           focus="props.focusComposer"
+        />
+      </t>
+      <t else="1">
+        <input
+          class="position-absolute"
+          style="z-index:-1000;"
+          t-on-input="onInput"
+          t-ref="hiddenInput"
         />
       </t>
       <canvas t-ref="canvas"/>
