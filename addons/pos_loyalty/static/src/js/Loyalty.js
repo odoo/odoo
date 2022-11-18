@@ -377,6 +377,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         const orderLines = super.get_orderlines(...arguments).filter((line) => !line.is_reward_line);
         return orderLines[orderLines.length - 1];
     }
+    set_pricelist(pricelist) {
+        super.set_pricelist(...arguments);
+        this._updateRewards();
+    }
     set_orderline_options(line, options) {
         super.set_orderline_options(...arguments);
         if (options && options.is_reward_line) {
