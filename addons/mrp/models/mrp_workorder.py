@@ -879,3 +879,12 @@ class MrpWorkorder(models.Model):
         for time in self.time_ids.filtered(lambda time: not time.date_end):
             duration += (datetime.now() - time.date_start).total_seconds() / 60
         return duration
+
+    def action_mark_as_done(self):
+        for wo in self:
+            if wo.working_state == 'blocked':
+                raise UserError(_('Some workorders require another workorder to be completed first'))
+            if wo.duration == 0.0:
+                wo.duration = wo.duration_expected
+                wo.duration_percent = 100
+            wo.state = 'done'
