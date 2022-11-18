@@ -37168,15 +37168,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
-                env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
-                    env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
-                });
-            }
-            else if (result.isCancelledBecause(78 /* CommandResult.MergeInFilter */)) {
-                env.raiseError(AddMergeInteractiveContent.MergeInFilter);
-            }
+        if (result.isCancelledBecause(78 /* CommandResult.MergeInFilter */)) {
+            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
+        }
+        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
+            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
+                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
+            });
         }
     }
 
@@ -42034,8 +42032,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-16T08:24:09.314Z';
-    exports.__info__.hash = 'bd9787b';
+    exports.__info__.date = '2022-11-18T08:45:53.198Z';
+    exports.__info__.hash = 'a17522c';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
