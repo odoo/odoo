@@ -969,6 +969,7 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onDragAndDropStart: function () {
+        this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
         var self = this;
