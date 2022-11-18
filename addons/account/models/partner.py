@@ -668,6 +668,35 @@ class ResPartner(models.Model):
                 _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 
     @api.model
+    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
+        """ Checks a VAT number syntactically to ensure its validity upon saving.
+
+        :param vat_number: a string with the VAT number to check.
+        :param default_country: a res.country object
+        :param partner_is_company: True if the partner is a company, else False.
+            .. deprecated:: 16.0
+                Will be removed in 16.2
+
+        :return: The country code (in lower case) of the country the VAT number
+                 was validated for, if it was validated. False if it could not be validated
+                 against the provided or guessed country. None if no country was available
+                 for the check, and no conclusion could be made with certainty.
+        """
+        return default_country.code.lower()
+
+    @api.model
+    def _build_vat_error_message(self, country_code, wrong_vat, record_label):
+        """ Prepare an error message for the VAT number that failed validation
+
+        :param country_code: string of lowercase country code
+        :param wrong_vat: the vat number that was validated
+        :param record_label: a string to desribe the record that failed a VAT validation check
+
+        :return: The error message string
+        """
+        return ""
+
+    @api.model
     def get_partner_localisation_fields_required_to_invoice(self, country_id):
         """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
         This is required for some flows that would allow a user to request an invoice from the portal.
