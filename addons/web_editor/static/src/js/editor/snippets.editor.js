@@ -931,7 +931,9 @@ var SnippetEditor = Widget.extend({
             // resizing the grid and the dropzone.
             self.dragState.dragHelperEl.remove();
             self.dragState.backgroundGridEl.remove();
+            self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
             gridUtils._resizeGrid(rowEl);
+            self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
             const rowCount = parseInt(rowEl.dataset.rowCount);
             previousDropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
         }
@@ -1002,8 +1004,10 @@ var SnippetEditor = Widget.extend({
             if (allowGridMode) {
                 // Toggle grid mode if it is not already on.
                 if (!rowEl.classList.contains('o_grid_mode')) {
+                    this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
                     const containerEl = rowEl.parentNode;
                     gridUtils._toggleGridMode(containerEl);
+                    this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
                 }
 
                 // Computing the moving column width and height in terms of columns
@@ -1222,6 +1226,7 @@ var SnippetEditor = Widget.extend({
                     const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
                     $dropzone[0].style.gridRowEnd = rowCount + 1;
 
+                    self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
                     // Setting the moving grid item, the background grid and
                     // the drag helper z-indexes. The grid item z-index is set
                     // to its original one if we are in its starting grid, or
@@ -1245,6 +1250,7 @@ var SnippetEditor = Widget.extend({
                     self.$target[0].style.position = 'absolute';
                     self.$target[0].style.removeProperty('grid-area');
                     rowEl.style.position = 'relative';
+                    self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
 
                     // Storing useful information and adding an event listener.
                     self.dragState.startingHeight = rowEl.clientHeight;
@@ -1276,7 +1282,9 @@ var SnippetEditor = Widget.extend({
                         // resizing the grid and the dropzone.
                         self.dragState.dragHelperEl.remove();
                         self.dragState.backgroundGridEl.remove();
+                        self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
                         gridUtils._resizeGrid(rowEl);
+                        self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
                         const rowCount = parseInt(rowEl.dataset.rowCount);
                         dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
                     }
@@ -1337,11 +1345,15 @@ var SnippetEditor = Widget.extend({
             gridUtils._gridCleanUp(rowEl, this.$target[0]);
             this.dragState.dragHelperEl.remove();
             this.dragState.backgroundGridEl.remove();
+            this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
             gridUtils._resizeGrid(rowEl);
+            this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         } else if (this.$target[0].classList.contains('o_grid_item') && this.dropped) {
             // Case when dropping a grid item in a non-grid dropzone.
             this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
+            this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
             this.$target[0].style.removeProperty('grid-area');
+            this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         }
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
@@ -1366,9 +1378,11 @@ var SnippetEditor = Widget.extend({
                     }
 
                     // Placing it in the top left corner.
+                    this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
                     this.$target[0].style.gridArea = `1 / 1 / ${1 + this.dragState.columnRowCount} / ${1 + this.dragState.columnColCount}`;
                     const rowCount = Math.max(rowEl.dataset.rowCount, 1 + this.dragState.columnRowCount);
                     rowEl.dataset.rowCount = rowCount;
+                    this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
 
                     // Setting the grid item z-index.
                     if (rowEl === this.dragState.startingGrid) {
@@ -1381,8 +1395,10 @@ var SnippetEditor = Widget.extend({
                         // Case when a grid column is dropped near a non-grid
                         // dropzone.
                         this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
+                        this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
                         this.$target[0].style.removeProperty('z-index');
                         this.$target[0].style.removeProperty('grid-area');
+                        this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
                     }
                 }
 
