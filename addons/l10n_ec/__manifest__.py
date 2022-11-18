@@ -27,7 +27,7 @@ Master Data:
 * Chart of Accounts, based on recomendation by Super Cías
 * Ecuadorian Taxes, Tax Tags, and Tax Groups
 * Ecuadorian Fiscal Positions
-* Document types (there are about 41 purchase documents types in Ecuador)
+* Document types (there are about 41 purchase documents.py types in Ecuador)
 * Identification types
 * Ecuador banks
 * Partners: Consumidor Final, SRI, IESS, and also basic VAT validation

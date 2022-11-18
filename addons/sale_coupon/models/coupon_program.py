@@ -9,7 +9,7 @@ class CouponProgram(models.Model):
 
     order_count = fields.Integer(compute='_compute_order_count')
 
-    # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
+    # The api.depends is handled in `def modified` of `sale_coupon/models/operation_reference.py`
     def _compute_order_count(self):
         for program in self:
             program.order_count = self.env['sale.order.line'].sudo().search_count([('product_id', '=', program.discount_line_product_id.id)])
@@ -207,7 +207,7 @@ class CouponProgram(models.Model):
         # remove least interesting programs
         return self - (programs - most_interesting_program)
 
-    # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
+    # The api.depends is handled in `def modified` of `sale_coupon/models/operation_reference.py`
     def _compute_total_order_count(self):
         super(CouponProgram, self)._compute_total_order_count()
         for program in self:

@@ -7,6 +7,6 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     def _localization_use_documents(self):
-        """ This method is to be inherited by localizations and return True if localization use documents """
+        """ This method is to be inherited by localizations and return True if localization use documents.py """
         self.ensure_one()
         return False

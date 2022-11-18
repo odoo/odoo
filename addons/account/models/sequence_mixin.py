@@ -49,7 +49,7 @@ class SequenceMixin(models.AbstractModel):
 
     @api.constrains(lambda self: (self._sequence_field, self._sequence_date_field))
     def _constrains_date_sequence(self):
-        # Make it possible to bypass the constraint to allow edition of already messed up documents.
+        # Make it possible to bypass the constraint to allow edition of already messed up documents.py.
         # /!\ Do not use this to completely disable the constraint as it will make this mixin unreliable.
         constraint_date = fields.Date.to_date(self.env['ir.config_parameter'].sudo().get_param(
             'sequence.mixin.constraint_start_date',

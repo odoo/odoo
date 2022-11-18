@@ -2976,18 +2976,18 @@ class AccountMove(models.Model):
         return self.action_post()
 
     def _post(self, soft=True):
-        """Post/Validate the documents.
+        """Post/Validate the documents.py.
 
-        Posting the documents will give it a number, and check that the document is
+        Posting the documents.py will give it a number, and check that the document is
         complete (some fields might not be required if not posted but are required
         otherwise).
         If the journal is locked with a hash table, it will be impossible to change
         some fields afterwards.
 
-        :param soft (bool): if True, future documents are not immediately posted,
+        :param soft (bool): if True, future documents.py are not immediately posted,
             but are set to be auto posted automatically at the set accounting date.
-            Nothing will be performed on those documents before the accounting date.
-        :return Model<account.move>: the documents that have been posted
+            Nothing will be performed on those documents.py before the accounting date.
+        :return Model<account.move>: the documents.py that have been posted
         """
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))

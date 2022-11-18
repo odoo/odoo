@@ -83,7 +83,7 @@ COUNTRY_EAS = {
 
 class AccountEdiCommon(models.AbstractModel):
     _name = "account.edi.common"
-    _description = "Common functions for EDI documents: generate the data, the constraints, etc"
+    _description = "Common functions for EDI documents.py: generate the data, the constraints, etc"
 
     # -------------------------------------------------------------------------
     # HELPERS

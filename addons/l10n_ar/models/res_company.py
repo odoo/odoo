@@ -31,7 +31,7 @@ class ResCompany(models.Model):
         remaining.l10n_ar_company_requires_vat = False
 
     def _localization_use_documents(self):
-        """ Argentinean localization use documents """
+        """ Argentinean localization use documents.py """
         self.ensure_one()
         return self.account_fiscal_country_id.code == "AR" or super()._localization_use_documents()
 

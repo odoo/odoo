@@ -29,7 +29,7 @@ class AccountMove(models.Model):
         compute='_compute_edi_error_message')
     edi_web_services_to_process = fields.Text(
         compute='_compute_edi_web_services_to_process',
-        help="Technical field to display the documents that will be processed by the CRON")
+        help="Technical field to display the documents.py that will be processed by the CRON")
     edi_show_cancel_button = fields.Boolean(
         compute='_compute_edi_show_cancel_button')
     edi_show_abandon_cancel_button = fields.Boolean(
@@ -462,9 +462,9 @@ class AccountMove(models.Model):
         return res
 
     def _update_payments_edi_documents(self):
-        ''' Update the edi documents linked to the current journal entries. These journal entries must be linked to an
+        ''' Update the edi documents.py linked to the current journal entries. These journal entries must be linked to an
         account.payment of an account.bank.statement.line. This additional method is needed because the payment flow is
-        not the same as the invoice one. Indeed, the edi documents must be updated when the reconciliation with some
+        not the same as the invoice one. Indeed, the edi documents.py must be updated when the reconciliation with some
         invoices is changing.
         '''
         edi_document_vals_list = []
@@ -689,7 +689,7 @@ class AccountMoveLine(models.Model):
         # OVERRIDE
         # In some countries, the payments must be sent to the government under some condition. One of them could be
         # there is at least one reconciled invoice to the payment. Then, we need to update the state of the edi
-        # documents during the reconciliation.
+        # documents.py during the reconciliation.
         all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
         payments = all_lines.move_id.filtered(lambda move: move.payment_id or move.statement_line_id)
 

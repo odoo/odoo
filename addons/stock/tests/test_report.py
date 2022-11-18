@@ -649,7 +649,7 @@ class TestReports(TestReportsCommon):
         pickings = self.env['stock.picking'].search([('product_id', '=', self.product.id)])
         receipt = pickings.filtered(lambda p: p.picking_type_id.id == self.picking_type_in.id)
 
-        # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.
+        # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.py.
         self.assertEqual(len(lines), 1, "The report must have only 1 line.")
         self.assertEqual(lines[0]['document_in'].id, receipt.id, "The report must only show the receipt.")
         self.assertEqual(lines[0]['document_out'], False)

@@ -75,7 +75,7 @@ def _fix_multiple_roots(node):
     roots once parsed separately.
 
     XML nodes should have one root only, but we'd like to support
-    direct multiple roots in our partial documents (like inherited view architectures).
+    direct multiple roots in our partial documents.py (like inherited view architectures).
     As a convention we'll surround multiple root with a container "data" element, to be
     ignored later when parsing.
     """

@@ -7,7 +7,7 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
-        # OVERRIDE to embed some EDI documents inside the PDF.
+        # OVERRIDE to embed some EDI documents.py inside the PDF.
         if self.model == 'account.move' and res_ids and len(res_ids) == 1 and pdf_content:
             invoice = self.env['account.move'].browse(res_ids)
             if invoice.is_sale_document() and invoice.state != 'draft':

@@ -57,8 +57,8 @@ class FetchmailServer(models.Model):
     password = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
     object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
                                                                                 "corresponding to this document type. This will create "
-                                                                                "new documents for new conversations, or attach follow-up "
-                                                                                "emails to the existing conversations (documents).")
+                                                                                "new documents.py for new conversations, or attach follow-up "
+                                                                                "emails to the existing conversations (documents.py).")
     priority = fields.Integer(string='Server Priority', readonly=True, states={'draft': [('readonly', False)]}, help="Defines the order of processing, lower values mean higher priority", default=5)
     message_ids = fields.One2many('mail.mail', 'fetchmail_server_id', string='Messages', readonly=True)
     configuration = fields.Text('Configuration', readonly=True)

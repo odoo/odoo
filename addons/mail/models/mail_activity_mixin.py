@@ -17,7 +17,7 @@ class MailActivityMixin(models.AbstractModel):
     management on a model. It works like the mail.thread mixin. It defines
     an activity_ids one2many field toward activities using res_id and res_model_id.
     Various related / computed fields are also added to have a global status of
-    activities on documents.
+    activities on documents.py.
 
     Activities come with a new JS widget for the form view. It is integrated in the
     Chatter widget although it is a separate widget. It displays activities linked

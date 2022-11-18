@@ -46,7 +46,7 @@ class ResCompany(models.Model):
     # Economic and Administrative Index
     l10n_it_has_eco_index = fields.Boolean(default=False,
         help="The seller/provider is a company listed on the register of companies and as\
-        such must also indicate the registration data on all documents (art. 2250, Italian\
+        such must also indicate the registration data on all documents.py (art. 2250, Italian\
         Civil Code)")
     l10n_it_eco_index_office = fields.Many2one('res.country.state', domain="[('country_id','=','IT')]",
         string="Province of the register-of-companies office")

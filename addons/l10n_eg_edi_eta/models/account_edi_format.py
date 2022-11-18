@@ -73,7 +73,7 @@ class AccountEdiFormat(models.Model):
         invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_id.raw)
         request_url = '/api/v1.0/documentsubmissions'
         request_data = {
-            'body': json.dumps({'documents': [invoice_json['request']]}, ensure_ascii=False, indent=4).encode('utf-8'),
+            'body': json.dumps({'documents.py': [invoice_json['request']]}, ensure_ascii=False, indent=4).encode('utf-8'),
             'header': {'Content-Type': 'application/json', 'Authorization': 'Bearer %s' % access_data.get('access_token')}
         }
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'POST', production_enviroment=invoice.company_id.l10n_eg_production_env)
@@ -105,7 +105,7 @@ class AccountEdiFormat(models.Model):
         access_data = self._l10n_eg_eta_get_access_token(invoice)
         if access_data.get('error'):
             return access_data
-        request_url = f'/api/v1/documents/state/{url_quote(invoice.l10n_eg_uuid)}/state'
+        request_url = f'/api/v1/documents.py/state/{url_quote(invoice.l10n_eg_uuid)}/state'
         request_data = {
             'body': json.dumps({'status': 'cancelled', 'reason': 'Cancelled'}),
             'header': {'Content-Type': 'application/json', 'Authorization': 'Bearer %s' % access_data.get('access_token')}
@@ -168,7 +168,7 @@ class AccountEdiFormat(models.Model):
         access_data = self._l10n_eg_eta_get_access_token(invoice)
         if access_data.get('error'):
             return access_data
-        request_url = f'/api/v1.0/documents/{url_quote(invoice.l10n_eg_uuid)}/pdf'
+        request_url = f'/api/v1.0/documents.py/{url_quote(invoice.l10n_eg_uuid)}/pdf'
         request_data = {'body': None, 'header': {'Content-Type': 'application/json', 'Authorization': 'Bearer %s' % access_data.get('access_token')}}
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'GET', production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):

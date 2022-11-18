@@ -3567,7 +3567,7 @@ Fields:
             return
         _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
         raise MissingError(
-            _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
+            _('One of the documents.py you are trying to access has been deleted, please try again after refreshing.')
             + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
                 _('Document type:'), self._name, _('Operation:'), operation,
                 _('Records:'), invalid.ids[:6], _('User:'), self._uid,

@@ -16,7 +16,7 @@ try:
     from pdfminer.pdfpage import PDFPage
 except ImportError:
     PDFResourceManager = PDFPageInterpreter = TextConverter = PDFPage = None
-    _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer' Python library cannot be found on the system. "
+    _logger.warning("Attachment indexation of PDF documents.py is unavailable because the 'pdfminer' Python library cannot be found on the system. "
                     "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)")
 
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
@@ -38,7 +38,7 @@ class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
     def _index_docx(self, bin_data):
-        '''Index Microsoft .docx documents'''
+        '''Index Microsoft .docx documents.py'''
         buf = u""
         f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
@@ -53,7 +53,7 @@ class IrAttachment(models.Model):
         return buf
 
     def _index_pptx(self, bin_data):
-        '''Index Microsoft .pptx documents'''
+        '''Index Microsoft .pptx documents.py'''
 
         buf = u""
         f = io.BytesIO(bin_data)
@@ -71,7 +71,7 @@ class IrAttachment(models.Model):
         return buf
 
     def _index_xlsx(self, bin_data):
-        '''Index Microsoft .xlsx documents'''
+        '''Index Microsoft .xlsx documents.py'''
 
         buf = u""
         f = io.BytesIO(bin_data)
@@ -87,7 +87,7 @@ class IrAttachment(models.Model):
         return buf
 
     def _index_opendoc(self, bin_data):
-        '''Index OpenDocument documents (.odt, .ods...)'''
+        '''Index OpenDocument documents.py (.odt, .ods...)'''
 
         buf = u""
         f = io.BytesIO(bin_data)
@@ -103,7 +103,7 @@ class IrAttachment(models.Model):
         return buf
 
     def _index_pdf(self, bin_data):
-        '''Index PDF documents'''
+        '''Index PDF documents.py'''
         if PDFResourceManager is None:
             return
         buf = u""

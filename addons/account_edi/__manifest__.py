@@ -7,7 +7,7 @@ Electronic Data Interchange
 EDI is the electronic interchange of business information using a standardized format.
 
 This is the base module for import and export of invoices in various EDI formats, and the
-the transmission of said documents to various parties involved in the exchange (other company,
+the transmission of said documents.py to various parties involved in the exchange (other company,
 governements, etc.)
     """,
     'version' : '1.0',

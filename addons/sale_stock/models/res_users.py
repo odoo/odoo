@@ -13,7 +13,7 @@ class Users(models.Model):
         if self.property_warehouse_id:
             return self.property_warehouse_id
         # !!! Any change to the following search domain should probably
-        # be also applied in sale_stock/models/sale_order.py/_init_column.
+        # be also applied in sale_stock/models/operation_reference.py/_init_column.
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
     @property

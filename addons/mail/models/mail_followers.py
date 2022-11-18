@@ -9,8 +9,8 @@ from odoo import api, fields, models, Command
 
 class Followers(models.Model):
     """ mail_followers holds the data related to the follow mechanism inside
-    Odoo. Partners can choose to follow documents (records) of any kind
-    that inherits from mail.thread. Following documents allow to receive
+    Odoo. Partners can choose to follow documents.py (records) of any kind
+    that inherits from mail.thread. Following documents.py allow to receive
     notifications for new messages. A subscription is characterized by:
 
     :param: res_model: model of the followed objects
@@ -38,9 +38,9 @@ class Followers(models.Model):
     is_active = fields.Boolean('Is Active', related='partner_id.active')
 
     def _invalidate_documents(self, vals_list=None):
-        """ Invalidate the cache of the documents followed by ``self``.
+        """ Invalidate the cache of the documents.py followed by ``self``.
 
-        Modifying followers change access rights to individual documents. As the
+        Modifying followers change access rights to individual documents.py. As the
         cache may contain accessible/inaccessible data, one has to refresh it.
         """
         to_invalidate = defaultdict(list)
@@ -160,10 +160,10 @@ GROUP BY partner.id, users.notification_type"""
         return res
 
     def _get_subscription_data(self, doc_data, pids, include_pshare=False, include_active=False):
-        """ Private method allowing to fetch follower data from several documents of a given model.
+        """ Private method allowing to fetch follower data from several documents.py of a given model.
         Followers can be filtered given partner IDs and channel IDs.
 
-        :param doc_data: list of pair (res_model, res_ids) that are the documents from which we
+        :param doc_data: list of pair (res_model, res_ids) that are the documents.py from which we
           want to have subscription data;
         :param pids: optional partner to filter; if None take all, otherwise limitate to pids
         :param include_pshare: optional join in partner to fetch their share status
@@ -177,7 +177,7 @@ GROUP BY partner.id, users.notification_type"""
           share status of partner (returned only if include_pshare is True)
           active flag status of partner (returned only if include_active is True)
         """
-        # base query: fetch followers of given documents
+        # base query: fetch followers of given documents.py
         where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
         where_params = list(itertools.chain.from_iterable((rm, tuple(rids)) for rm, rids in doc_data))
 
@@ -216,7 +216,7 @@ GROUP BY fol.id%s%s""" % (
     def _insert_followers(self, res_model, res_ids,
                           partner_ids, subtypes=None,
                           customer_ids=None, check_existing=True, existing_policy='skip'):
-        """ Main internal method allowing to create or update followers for documents, given a
+        """ Main internal method allowing to create or update followers for documents.py, given a
         res_model and the document res_ids. This method does not handle access rights. This is the
         role of the caller to ensure there is no security breach.
 
@@ -290,7 +290,7 @@ GROUP BY fol.id%s%s""" % (
           is a dict whose keys are channel IDs and value subtype IDs for that
           channel.
         :param check_existing: if True, check for existing followers for given
-          documents and handle them according to existing_policy parameter.
+          documents.py and handle them according to existing_policy parameter.
           Setting to False allows to save some computation if caller is sure
           there are no conflict for followers;
         :param existing policy: if check_existing, tells what to do with already

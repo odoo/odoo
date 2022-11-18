@@ -184,7 +184,7 @@ class EventRegistration(models.Model):
 
           * in attendee mode: keep registration partner only if partner phone and
             email match. Indeed lead are synchronized with their contact and it
-            would imply rewriting on partner, and therefore on other documents;
+            would imply rewriting on partner, and therefore on other documents.py;
           * in batch mode: if a customer is found use it as main contact. Registrations
             details are included in lead description;
 

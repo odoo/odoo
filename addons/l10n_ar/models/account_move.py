@@ -36,17 +36,17 @@ class AccountMove(models.Model):
 
     @api.constrains('move_type', 'journal_id')
     def _check_moves_use_documents(self):
-        """ Do not let to create not invoices entries in journals that use documents """
+        """ Do not let to create not invoices entries in journals that use documents.py """
         not_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.journal_id.type in ['sale', 'purchase'] and x.l10n_latam_use_documents and not x.is_invoice())
         if not_invoices:
-            raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
+            raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents.py as these are just for Invoices."))
 
     @api.constrains('move_type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
         """ LATAM module define that we are not able to use debit_note or invoice document types in an invoice refunds,
         However for Argentinian Document Type's 99 (internal type = invoice) we are able to used in a refund invoices.
 
-        In this method we exclude the argentinian documents that can be used as invoice and refund from the generic
+        In this method we exclude the argentinian documents.py that can be used as invoice and refund from the generic
         constraint """
         docs_used_for_inv_and_ref = self.filtered(
             lambda x: x.country_code == 'AR' and
@@ -111,7 +111,7 @@ class AccountMove(models.Model):
         # check vat on companies thats has it (Responsable inscripto)
         for inv in self.filtered(lambda x: x.company_id.l10n_ar_company_requires_vat):
             purchase_aliquots = 'not_zero'
-            # we require a single vat on each invoice line except from some purchase documents
+            # we require a single vat on each invoice line except from some purchase documents.py
             if inv.move_type in ['in_invoice', 'in_refund'] and inv.l10n_latam_document_type_id.purchase_aliquots == 'zero':
                 purchase_aliquots = 'zero'
             for line in inv.mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
@@ -234,7 +234,7 @@ class AccountMove(models.Model):
                                  self.journal_id.l10n_ar_afip_pos_number, number)
 
     def _get_starting_sequence(self):
-        """ If use documents then will create a new starting sequence using the document type code prefix and the
+        """ If use documents.py then will create a new starting sequence using the document type code prefix and the
         journal document number with a 8 padding number """
         if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "AR":
             if self.l10n_latam_document_type_id:

@@ -88,7 +88,7 @@ class TestIrAttachment(TransactionCase):
 
     def test_07_write_mimetype(self):
         """
-        Tests the consistency of documents' mimetypes
+        Tests the consistency of documents.py' mimetypes
         """
 
         Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)

@@ -112,7 +112,7 @@ class PaymentToken(models.Model):
     def get_linked_records_info(self):
         """ Return a list of information about records linked to the current token.
 
-        For a module to implement payments and link documents to a token, it must override this
+        For a module to implement payments and link documents.py to a token, it must override this
         method and add information about linked records to the returned list.
 
         The information must be structured as a dict with the following keys:
@@ -123,7 +123,7 @@ class PaymentToken(models.Model):
 
         Note: self.ensure_one()
 
-        :return: The list of information about linked documents
+        :return: The list of information about linked documents.py
         :rtype: list
         """
         self.ensure_one()

@@ -195,7 +195,7 @@ class AccountMove(models.Model):
         )
 
     def _get_starting_sequence(self):
-        """If use documents then will create a new starting sequence using the document type code prefix and the
+        """If use documents.py then will create a new starting sequence using the document type code prefix and the
         journal document number with a 8 padding number"""
         if (
             self.journal_id.l10n_latam_use_documents

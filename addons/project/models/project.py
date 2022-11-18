@@ -334,7 +334,7 @@ class Project(models.Model):
             "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
-    doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
+    doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents.py attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))

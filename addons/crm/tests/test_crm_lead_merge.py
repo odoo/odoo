@@ -253,7 +253,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         """
         self.env['crm.lead'].browse(self.lead_w_partner_company.ids).write({'type': 'opportunity'})
 
-        # create side documents
+        # create side documents.py
         attachments = self.env['ir.attachment'].create([
             {'name': '%02d.txt' % idx,
              'datas': base64.b64encode(b'Att%02d' % idx),
@@ -273,7 +273,7 @@ class TestLeadMerge(TestLeadMergeCommon):
             'opportunity_id': lead_1.id,
         })
 
-        # run merge and check documents are moved to the master record
+        # run merge and check documents.py are moved to the master record
         merge = self.env['crm.merge.opportunity'].with_context({
             'active_model': 'crm.lead',
             'active_ids': self.leads.ids,

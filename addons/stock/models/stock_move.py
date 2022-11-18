@@ -463,7 +463,7 @@ class StockMove(models.Model):
                 move.forecast_availability, move.forecast_expected_date = forecast_info[move]
 
     def _set_date_deadline(self, new_deadline):
-        # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
+        # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents.py)
         already_propagate_ids = self.env.context.get('date_deadline_propagate_ids', set()) | set(self.ids)
         self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
         for move in self:
@@ -608,18 +608,18 @@ class StockMove(models.Model):
         return res
 
     def _delay_alert_get_documents(self):
-        """Returns a list of recordset of the documents linked to the stock.move in `self` in order
-        to post the delay alert next activity. These documents are deduplicated. This method is meant
+        """Returns a list of recordset of the documents.py linked to the stock.move in `self` in order
+        to post the delay alert next activity. These documents.py are deduplicated. This method is meant
         to be overridden by other modules, each of them adding an element by type of recordset on
         this list.
 
-        :return: a list of recordset of the documents linked to `self`
+        :return: a list of recordset of the documents.py linked to `self`
         :rtype: list
         """
         return list(self.mapped('picking_id'))
 
     def _propagate_date_log_note(self, move_orig):
-        """Post a deadline change alert log note on the documents linked to `self`."""
+        """Post a deadline change alert log note on the documents.py linked to `self`."""
         # TODO : get the end document (PO/SO/MO)
         doc_orig = move_orig._delay_alert_get_documents()
         documents = self._delay_alert_get_documents()

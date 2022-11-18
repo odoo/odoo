@@ -410,9 +410,9 @@ class ProcurementGroup(models.Model):
         """Fulfil `procurements` with the help of stock rules.
 
         Procurements are needs of products at a certain location. To fulfil
-        these needs, we need to create some sort of documents (`stock.move`
+        these needs, we need to create some sort of documents.py (`stock.move`
         by default, but extensions of `_run_` methods allow to create every
-        type of documents).
+        type of documents.py).
 
         :param procurements: the description of the procurement
         :type list: list of `~odoo.addons.stock.models.stock_rule.ProcurementGroup.Procurement`

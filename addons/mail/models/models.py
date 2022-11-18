@@ -86,14 +86,14 @@ class BaseModel(models.AbstractModel):
 
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Returns the preferred reply-to email address when replying to a thread
-        on documents. This method is a generic implementation available for
+        on documents.py. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
         not inheriting from mail.thread.
 
         Reply-to is formatted like "MyCompany MyDocument <reply.to@domain>".
         Heuristic it the following:
          * search for specific aliases as they always have priority; it is limited
-           to aliases linked to documents (like project alias for task for example);
+           to aliases linked to documents.py (like project alias for task for example);
          * use catchall address;
          * use default;
 

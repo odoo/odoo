@@ -66,13 +66,13 @@ class AccountEdiDocument(models.Model):
         }
 
     def _prepare_jobs(self):
-        """Creates a list of jobs to be performed by '_process_job' for the documents in self.
-        Each document represent a job, BUT if multiple documents have the same state, edi_format_id,
+        """Creates a list of jobs to be performed by '_process_job' for the documents.py in self.
+        Each document represent a job, BUT if multiple documents.py have the same state, edi_format_id,
         doc_type (invoice or payment) and company_id AND the edi_format_id supports batching, they are grouped
         into a single job.
 
-        :returns:         A list of tuples (documents, doc_type)
-        * documents:      The documents related to this job. If edi_format_id does not support batch, length is one
+        :returns:         A list of tuples (documents.py, doc_type)
+        * documents.py:      The documents.py related to this job. If edi_format_id does not support batch, length is one
         * doc_type:       Are the moves of this job invoice or payments ?
         """
 
@@ -115,7 +115,7 @@ class AccountEdiDocument(models.Model):
         """Post or cancel move_id (invoice or payment) by calling the related methods on edi_format_id.
         Invoices are processed before payments.
 
-        :param documents: The documents related to this job. If edi_format_id does not support batch, length is one
+        :param documents: The documents.py related to this job. If edi_format_id does not support batch, length is one
         :param doc_type:  Are the moves of this job invoice or payments ?
         """
         def _postprocess_post_edi_results(documents, edi_result):
@@ -208,14 +208,14 @@ class AccountEdiDocument(models.Model):
                 _postprocess_cancel_edi_results(documents, edi_result)
 
     def _process_documents_no_web_services(self):
-        """ Post and cancel all the documents that don't need a web service.
+        """ Post and cancel all the documents.py that don't need a web service.
         """
         jobs = self.filtered(lambda d: not d.edi_format_id._needs_web_services())._prepare_jobs()
         for documents, doc_type in jobs:
             self._process_job(documents, doc_type)
 
     def _process_documents_web_services(self, job_count=None, with_commit=True):
-        ''' Post and cancel all the documents that need a web service.
+        ''' Post and cancel all the documents.py that need a web service.
 
         :param job_count:   The maximum number of jobs to process if specified.
         :param with_commit: Flag indicating a commit should be made between each job.
@@ -238,7 +238,7 @@ class AccountEdiDocument(models.Model):
 
             except OperationalError as e:
                 if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                    _logger.debug('Another transaction already locked documents.py rows. Cannot process documents.py.')
                     if not with_commit:
                         raise UserError(_('This document is being sent by another process already. '))
                     continue

@@ -52,7 +52,7 @@ PdfFileWriter = BrandedFileWriter
 
 
 def merge_pdf(pdf_data):
-    ''' Merge a collection of PDF documents in one.
+    ''' Merge a collection of PDF documents.py in one.
     Note that the attachments are not merged.
     :param list pdf_data: a list of PDF datastrings
     :return: a unique merged PDF datastring

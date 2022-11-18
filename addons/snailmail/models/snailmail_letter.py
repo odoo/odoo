@@ -165,7 +165,7 @@ class SnailmailLetter(models.Model):
         :return: Dict in the form:
         {
             account_token: string,    //IAP Account token of the user
-            documents: [{
+            documents.py: [{
                 pages: int,
                 pdf_bin: pdf file
                 res_id: int (client-side res_id),
@@ -259,7 +259,7 @@ class SnailmailLetter(models.Model):
         return {
             'account_token': account_token,
             'dbuuid': dbuuid,
-            'documents': documents,
+            'documents.py': documents,
             'options': {
                 'color': self and self[0].color,
                 'cover': self and self[0].cover,
@@ -333,7 +333,7 @@ class SnailmailLetter(models.Model):
             'total_cost': total_cost,
             'credit_error': credit_error,
             'request': {
-                'documents': documents,
+                'documents.py': documents.py,
                 'options': options
                 }
             }
@@ -345,12 +345,12 @@ class SnailmailLetter(models.Model):
         try:
             response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
         except AccessError as ae:
-            for doc in params['documents']:
+            for doc in params['documents.py']:
                 letter = self.browse(doc['letter_id'])
                 letter.state = 'error'
                 letter.error_code = 'UNKNOWN_ERROR'
             raise ae
-        for doc in response['request']['documents']:
+        for doc in response['request']['documents.py']:
             if doc.get('sent') and response['request_code'] == 200:
                 note = _('The document was correctly sent by post.<br>The tracking id is %s', doc['send_id'])
                 letter_data = {'info_msg': note, 'state': 'sent', 'error_code': False}

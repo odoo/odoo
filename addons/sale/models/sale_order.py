@@ -960,7 +960,7 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ Implementation of additionnal mecanism of Sales Order confirmation.
             This method should be extended when the confirmation should generated
-            other documents. In this method, the SO are in 'sale' state (not yet 'done').
+            other documents.py. In this method, the SO are in 'sale' state (not yet 'done').
         """
         # create an analytic account if at least an expense product
         for order in self:

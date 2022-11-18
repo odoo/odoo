@@ -10,7 +10,7 @@ class L10nLatamDocumentType(models.Model):
         selection='_get_l10n_ar_letters',
         string='Letters',
         help='Letters defined by the AFIP that can be used to identify the'
-        ' documents presented to the government and that depends on the'
+        ' documents.py presented to the government and that depends on the'
         ' operation type, the responsibility of both the issuer and the'
         ' receptor of the document')
     purchase_aliquots = fields.Selection(

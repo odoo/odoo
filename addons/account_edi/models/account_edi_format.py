@@ -114,7 +114,7 @@ class AccountEdiFormat(models.Model):
     def _is_embedding_to_invoice_pdf_needed(self):
         """ Indicate if the EDI must be embedded inside the PDF report.
 
-        :returns: True if the documents need to be embedded, False otherwise.
+        :returns: True if the documents.py need to be embedded, False otherwise.
         """
         # TO OVERRIDE
         return False
@@ -135,8 +135,8 @@ class AccountEdiFormat(models.Model):
         return {'name': attachment.name, 'datas': datas}
 
     def _support_batching(self, move, state, company):
-        """ Indicate if we can send multiple documents in the same time to the web services.
-        If True, the _post_%s_edi methods will get multiple documents in the same time.
+        """ Indicate if we can send multiple documents.py in the same time to the web services.
+        If True, the _post_%s_edi methods will get multiple documents.py in the same time.
         Otherwise, these methods will be called with only one record at a time.
 
         :param move:    The move that we are trying to batch.

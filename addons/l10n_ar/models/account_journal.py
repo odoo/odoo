@@ -18,7 +18,7 @@ class AccountJournal(models.Model):
         domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
     l10n_ar_share_sequences = fields.Boolean(
-        'Unified Book', help='Use same sequence for documents with the same letter')
+        'Unified Book', help='Use same sequence for documents.py with the same letter')
 
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """

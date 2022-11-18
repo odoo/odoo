@@ -414,7 +414,7 @@ class PaymentTransaction(models.Model):
         (6, 0, ids) X2M command as value, the prefix is computed based on the invoice name(s).
         Otherwise, an empty string is returned.
 
-        Note: This method should be called in sudo mode to give access to documents (INV, SO, ...).
+        Note: This method should be called in sudo mode to give access to documents.py (INV, SO, ...).
 
         :param str provider: The provider of the acquirer handling the transaction
         :param str separator: The custom separator used to separate data references
@@ -894,7 +894,7 @@ class PaymentTransaction(models.Model):
                 self.env.cr.rollback()
 
     def _reconcile_after_done(self):
-        """ Post relevant fiscal documents and create missing payments.
+        """ Post relevant fiscal documents.py and create missing payments.
 
         As there is nothing to reconcile for validation transactions, no payment is created for
         them. This is also true for validations with a validity check (transfer of a small amount
@@ -957,7 +957,7 @@ class PaymentTransaction(models.Model):
     #=== BUSINESS METHODS - LOGGING ===#
 
     def _log_sent_message(self):
-        """ Log in the chatter of relevant documents that the transactions have been initiated.
+        """ Log in the chatter of relevant documents.py that the transactions have been initiated.
 
         :return: None
         """
@@ -966,7 +966,7 @@ class PaymentTransaction(models.Model):
             tx._log_message_on_linked_documents(message)
 
     def _log_received_message(self):
-        """ Log in the chatter of relevant documents that the transactions have been received.
+        """ Log in the chatter of relevant documents.py that the transactions have been received.
 
         A transaction is 'received' when a response is received from the provider of the acquirer
         handling the transaction.
@@ -980,8 +980,8 @@ class PaymentTransaction(models.Model):
     def _log_message_on_linked_documents(self, message):
         """ Log a message on the payment and the invoices linked to the transaction.
 
-        For a module to implement payments and link documents to a transaction, it must override
-        this method and call super, then log the message on documents linked to the transaction.
+        For a module to implement payments and link documents.py to a transaction, it must override
+        this method and call super, then log the message on documents.py linked to the transaction.
 
         Note: self.ensure_one()
 

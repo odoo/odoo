@@ -1518,7 +1518,7 @@ class MailThread(models.AbstractModel):
         return self.env['res.partner'].search(domain)
 
     def _mail_find_user_for_gateway(self, email, alias=None):
-        """ Utility method to find user from email address that can create documents
+        """ Utility method to find user from email address that can create documents.py
         in the target model. Purpose is to link document creation to users whenever
         possible, for example when creating document through mailgateway.
 
@@ -2046,7 +2046,7 @@ class MailThread(models.AbstractModel):
         return self.sudo()._message_create(message_values)
 
     def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):
-        """ Shortcut allowing to post notes on a batch of documents. It achieve the
+        """ Shortcut allowing to post notes on a batch of documents.py. It achieve the
         same purpose as _message_log, done in batch to speedup quick note log.
 
           :param bodies: dict {record_id: body}
@@ -2724,7 +2724,7 @@ class MailThread(models.AbstractModel):
         using the auto subscription mechanism linked to updated values.
 
         Default value of this method is to return the new responsible of
-        documents. This is done using relational fields linking to res.users
+        documents.py. This is done using relational fields linking to res.users
         with track_visibility set. Since OpenERP v7 it is considered as being
         responsible for the document and therefore standard behavior is to
         subscribe the user and send him a notification.

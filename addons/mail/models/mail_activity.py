@@ -14,7 +14,7 @@ from odoo.tools.misc import clean_context
 
 class MailActivity(models.Model):
     """ An actual activity to perform. Activities are linked to
-    documents using res_id and res_model_id fields. Activities have a deadline
+    documents.py using res_id and res_model_id fields. Activities have a deadline
     that can be used in kanban view to display a status. Once done activities
     are unlinked and a message is posted. This message has a new activity_type_id
     field that indicates the activity linked to the message. """
@@ -193,12 +193,12 @@ class MailActivity(models.Model):
 
         Access on activities are the following :
 
-          * create: (``mail_post_access`` or write) right on related documents;
-          * read: read rights on related documents;
+          * create: (``mail_post_access`` or write) right on related documents.py;
+          * read: read rights on related documents.py;
           * write: access rule OR
-                   (``mail_post_access`` or write) rights on related documents);
+                   (``mail_post_access`` or write) rights on related documents.py);
           * unlink: access rule OR
-                    (``mail_post_access`` or write) rights on related documents);
+                    (``mail_post_access`` or write) rights on related documents.py);
         """
         # compute remaining for hand-tailored rules
         remaining = self - valid
@@ -210,7 +210,7 @@ class MailActivity(models.Model):
         for activity in remaining_sudo:
             # write / unlink: if not updating self or assigned, limit to automated activities to avoid
             # updating other people's activities. As unlinking a document bypasses access rights checks
-            # on related activities this will not prevent people from deleting documents with activities
+            # on related activities this will not prevent people from deleting documents.py with activities
             # create / read: just check rights on related document
             activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
         for doc_model, doc_ids in activity_to_documents.items():

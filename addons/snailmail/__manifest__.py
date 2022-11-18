@@ -2,7 +2,7 @@
 {
     'name': "Snail Mail",
     'description': """
-Allows users to send documents by post
+Allows users to send documents.py by post
 =====================================================
         """,
     'category': 'Hidden/Tools',

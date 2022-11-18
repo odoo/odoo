@@ -152,7 +152,7 @@ class TestPartner(MailCommon):
         p2_msg_ids_init = p2.message_ids
         p3 = Partner.create({'name': 'Other (dup email)', 'email': 'test1@test.example.com'})
 
-        # add some mail related documents
+        # add some mail related documents.py
         p1.message_subscribe(partner_ids=p3.ids)
         p1_act1 = p1.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
         p1_msg1 = p1.message_post(
@@ -178,7 +178,7 @@ class TestPartner(MailCommon):
         # check destination and removal
         self.assertFalse(p1.exists())
         self.assertTrue(p2.exists())
-        # check mail documents have been moved
+        # check mail documents.py have been moved
         self.assertEqual(p2.activity_ids, p1_act1)
         # TDE note: currently not working as soon as there is a single partner duplicated -> should be improved
         # self.assertEqual(p2.message_follower_ids.partner_id, self.partner_admin + p3)

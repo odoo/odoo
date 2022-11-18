@@ -83,12 +83,12 @@ class AccountMove(models.Model):
                 if tax_payer_type in ['1', '3']:
                     if latam_document_type_code in ['70', '71']:
                         raise ValidationError(_('The tax payer type of this supplier is not entitled to deliver '
-                                                'fees documents'))
+                                                'fees documents.py'))
                     if latam_document_type_code in ['110', '111', '112']:
                         raise ValidationError(_('The tax payer type of this supplier is not entitled to deliver '
-                                                'imports documents'))
+                                                'imports documents.py'))
                 if tax_payer_type == '4' or country_id.code != "CL":
-                    raise ValidationError(_('You need a journal without the use of documents for foreign '
+                    raise ValidationError(_('You need a journal without the use of documents.py for foreign '
                                             'suppliers'))
 
     @api.onchange('journal_id')
@@ -104,7 +104,7 @@ class AccountMove(models.Model):
         return '%s %06d' % (self.l10n_latam_document_type_id.doc_code_prefix, number)
 
     def _get_starting_sequence(self):
-        """ If use documents then will create a new starting sequence using the document type code prefix and the
+        """ If use documents.py then will create a new starting sequence using the document type code prefix and the
         journal document number with a 6 padding number """
         if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "CL":
             if self.l10n_latam_document_type_id:

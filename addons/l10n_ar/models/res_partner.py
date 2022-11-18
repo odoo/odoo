@@ -29,7 +29,7 @@ class ResPartner(models.Model):
         ' type of operations and requirements they need.')
     l10n_ar_special_purchase_document_type_ids = fields.Many2many(
         'l10n_latam.document.type', 'res_partner_document_type_rel', 'partner_id', 'document_type_id',
-        string='Other Purchase Documents', help='Set here if this partner can issue other documents further than'
+        string='Other Purchase Documents', help='Set here if this partner can issue other documents.py further than'
         ' invoices, credit notes and debit notes')
 
     @api.depends('l10n_ar_vat')
@@ -59,7 +59,7 @@ class ResPartner(models.Model):
 
     @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_vat(self):
-        """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
+        """ Since we validate more documents.py than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
         extend this method in order to process it. """
         # NOTE by the moment we include the CUIT (VAT AR) validation also here because we extend the messages
         # errors to be more friendly to the user. In a future when Odoo improve the base_vat message errors

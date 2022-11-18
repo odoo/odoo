@@ -1182,10 +1182,10 @@ class Picking(models.Model):
     def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
         """ Generic method to log activity. To use with
         _log_activity method. It either log on uppermost
-        ongoing documents or following documents. This method
-        find all the documents and responsible for which a note
+        ongoing documents.py or following documents.py. This method
+        find all the documents.py and responsible for which a note
         has to be log. It also generate a rendering_context in
-        order to render a specific note by documents containing
+        order to render a specific note by documents.py containing
         only the information relative to the document it. For example
         we don't want to notify a picking on move that it doesn't
         contain.
@@ -1197,8 +1197,8 @@ class Picking(models.Model):
         records that are register in the key of 'orig_obj_changes'
         eg: 'move_dest_ids' if we use move as record (previous example)
             - 'UP' if we want to log on the upper most ongoing
-            documents.
-            - 'DOWN' if we want to log on following documents.
+            documents.py.
+            - 'DOWN' if we want to log on following documents.py.
         :param sorted_method method, groupby_method: Only need when
         stream is 'DOWN', it should sort/group by tuple(object on
         which the activity is log, the responsible for this object)
@@ -1221,7 +1221,7 @@ class Picking(models.Model):
         elif stream == 'UP':
             # When using upstream document it is required to define
             # _get_upstream_documents_and_responsibles on
-            # destination objects in order to ascend documents.
+            # destination objects in order to ascend documents.py.
             grouped_moves = {}
             for visited_move in origin_objects.mapped(stream_field):
                 for document, responsible, visited in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name]):
@@ -1250,8 +1250,8 @@ class Picking(models.Model):
         return documents
 
     def _log_activity(self, render_method, documents):
-        """ Log a note for each documents, responsible pair in
-        documents passed as argument. The render_method is then
+        """ Log a note for each documents.py, responsible pair in
+        documents.py passed as argument. The render_method is then
         call in order to use a template and render it with a
         rendering_context.
 
@@ -1260,12 +1260,12 @@ class Picking(models.Model):
         If used with _log_activity_get_documents. In 'DOWN' stream
         cases the rendering_context will be a dict with format:
         {'stream_object': ('orig_object', new_qty, old_qty)}
-        'UP' stream will add all the documents browsed in order to
+        'UP' stream will add all the documents.py browsed in order to
         get the final/upstream document present in the key.
         :param render_method method: a static function that will generate
         the html note to log on the activity. The render_method should
         use the args:
-            - rendering_context dict: value of the documents argument
+            - rendering_context dict: value of the documents.py argument
         the render_method should return a string with an html format
         :param stream string:
         """

@@ -11,7 +11,7 @@ class AccountChartTemplate(models.Model):
         """ We add use_documents or not depending on the context"""
         journal_data = super()._prepare_all_journals(acc_template_ref, company, journals_dict)
 
-        # if chart has localization, then we use documents by default
+        # if chart has localization, then we use documents.py by default
         if company._localization_use_documents():
             for vals_journal in journal_data:
                 if vals_journal['type'] in ['sale', 'purchase']:

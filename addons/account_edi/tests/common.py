@@ -201,7 +201,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         """ Generates and returns EDI files for the specified moves.
         formats_to_return is an optional parameter used to pass a set of codes from
         the formats we want to return the files for (in case we want to test specific formats).
-        Other formats will still generate documents, they simply won't be returned.
+        Other formats will still generate documents.py, they simply won't be returned.
         """
         moves.edi_document_ids._process_documents_web_services(with_commit=False)
 

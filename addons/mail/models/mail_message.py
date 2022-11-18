@@ -1095,7 +1095,7 @@ class Message(models.Model):
         return res_id and model and message_type != 'user_notification'
 
     def _invalidate_documents(self, model=None, res_id=None):
-        """ Invalidate the cache of the documents followed by ``self``. """
+        """ Invalidate the cache of the documents.py followed by ``self``. """
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id

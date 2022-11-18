@@ -354,7 +354,7 @@ class TestMessageAccess(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_access_search(self):
-        # Data: various author_ids, partner_ids, documents
+        # Data: various author_ids, partner_ids, documents.py
         msg1 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A', 'subtype_id': self.ref('mail.mt_comment')})
         msg2 = self.env['mail.message'].create({

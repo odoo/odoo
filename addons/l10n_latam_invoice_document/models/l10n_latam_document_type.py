@@ -11,7 +11,7 @@ class L10nLatamDocumentType(models.Model):
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        default=10, required=True, help='To set in which order show the documents type taking into account the most'
+        default=10, required=True, help='To set in which order show the documents.py type taking into account the most'
         ' commonly used first')
     country_id = fields.Many2one(
         'res.country', required=True, index=True, help='Country in which this type of document is valid')
@@ -24,7 +24,7 @@ class L10nLatamDocumentType(models.Model):
     internal_type = fields.Selection(
         [('invoice', 'Invoices'), ('debit_note', 'Debit Notes'), ('credit_note', 'Credit Notes')], index=True,
         help='Analog to odoo account.move.move_type but with more options allowing to identify the kind of document we are'
-        ' working with. (not only related to account.move, could be for documents of other models like stock.picking)')
+        ' working with. (not only related to account.move, could be for documents.py of other models like stock.picking)')
 
     def _format_document_number(self, document_number):
         """ Method to be inherited by different localizations. The purpose of this method is to allow:

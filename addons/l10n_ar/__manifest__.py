@@ -25,7 +25,7 @@ Demo data for testing:
   * (AR) Monotributo
 
 * Journal sales configured to Pre printed and Expo invoices in all companies
-* Invoices and other documents examples already validated in “(AR) Responsable Inscripto” company
+* Invoices and other documents.py examples already validated in “(AR) Responsable Inscripto” company
 * Partners example for the different responsibility types:
 
   * ADHOC (IVA Responsable Inscripto)

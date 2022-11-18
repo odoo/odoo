@@ -30,7 +30,7 @@ class SendSMS(models.TransientModel):
 
         return result
 
-    # documents
+    # documents.py
     composition_mode = fields.Selection([
         ('numbers', 'Send to numbers'),
         ('comment', 'Post on a document'),

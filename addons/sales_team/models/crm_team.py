@@ -21,7 +21,7 @@ class CrmTeam(models.Model):
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=None, domain=None):
-        """ Compute default team id for sales related documents. Note that this
+        """ Compute default team id for sales related documents.py. Note that this
         method is not called by default_get as it takes some additional
         parameters and is meant to be called by other default methods.
 
@@ -118,7 +118,7 @@ class CrmTeam(models.Model):
     member_warning = fields.Text('Membership Issue Warning', compute='_compute_member_warning')
     crm_team_member_ids = fields.One2many(
         'crm.team.member', 'crm_team_id', string='Sales Team Members',
-        help="Add members to automatically assign their documents to this sales team.")
+        help="Add members to automatically assign their documents.py to this sales team.")
     crm_team_member_all_ids = fields.One2many(
         'crm.team.member', 'crm_team_id', string='Sales Team Members (incl. inactive)',
         context={'active_test': False})

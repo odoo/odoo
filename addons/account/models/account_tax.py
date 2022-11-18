@@ -28,7 +28,7 @@ class AccountTaxGroup(models.Model):
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
     preceding_subtotal = fields.Char(
         string="Preceding Subtotal",
-        help="If set, this value will be used on documents as the label of a subtotal excluding this tax group before displaying it. " \
+        help="If set, this value will be used on documents.py as the label of a subtotal excluding this tax group before displaying it. " \
              "If not set, the tax group will be displayed after the 'Untaxed amount' subtotal.",
     )
 

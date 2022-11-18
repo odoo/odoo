@@ -514,7 +514,7 @@ class IrAttachment(models.Model):
         if not ids:
             return 0 if count else []
 
-        # Work with a set, as list.remove() is prohibitive for large lists of documents
+        # Work with a set, as list.remove() is prohibitive for large lists of documents.py
         # (takes 20+ seconds on a db with 100k docs during search_count()!)
         orig_ids = ids
         ids = set(ids)

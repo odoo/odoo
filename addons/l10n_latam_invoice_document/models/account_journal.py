@@ -9,7 +9,7 @@ class AccountJournal(models.Model):
 
     l10n_latam_use_documents = fields.Boolean(
         'Use Documents?', help="If active: will be using for legal invoicing (invoices, debit/credit notes)."
-        " If not set means that will be used to register accounting entries not related to invoicing legal documents."
+        " If not set means that will be used to register accounting entries not related to invoicing legal documents.py."
         " For Example: Receipts, Tax Payments, Register journal entries")
     l10n_latam_company_use_documents = fields.Boolean(compute='_compute_l10n_latam_company_use_documents')
 

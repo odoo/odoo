@@ -45,7 +45,7 @@ copyright = u'2012, Xavier Morel'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
-# built documents.
+# built documents.py.
 #
 # The short X.Y version.
 version = '0.6'
@@ -66,7 +66,7 @@ release = '0.6'
 # directories to ignore when looking for source files.
 exclude_patterns = ['_build']
 
-# The reST default role (used for this markup: `text`) to use for all documents.
+# The reST default role (used for this markup: `text`) to use for all documents.py.
 #default_role = None
 
 # Default sphinx domain
@@ -106,7 +106,7 @@ html_theme = 'default'
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 
-# The name for this set of Sphinx documents.  If None, it defaults to
+# The name for this set of Sphinx documents.py.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = None
 
@@ -196,7 +196,7 @@ latex_documents = [
 # the title page.
 #latex_logo = None
 
-# For "manual" documents, if this is true, then toplevel headings are parts,
+# For "manual" documents.py, if this is true, then toplevel headings are parts,
 # not chapters.
 #latex_use_parts = False
 

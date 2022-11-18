@@ -27,7 +27,7 @@ _ooxml_dirs = {
 def _check_ooxml(data):
     with io.BytesIO(data) as f, zipfile.ZipFile(f) as z:
         filenames = z.namelist()
-        # OOXML documents should have a [Content_Types].xml file for early
+        # OOXML documents.py should have a [Content_Types].xml file for early
         # check that we're interested in this thing at all
         if '[Content_Types].xml' not in filenames:
             return False

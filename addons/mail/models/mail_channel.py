@@ -28,7 +28,7 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 
 class Channel(models.Model):
     """ A mail.channel is a discussion group that may behave like a listener
-    on documents. """
+    on documents.py. """
     _description = 'Discussion Channel'
     _name = 'mail.channel'
     _mail_flat_thread = False

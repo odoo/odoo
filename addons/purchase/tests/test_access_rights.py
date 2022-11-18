@@ -99,7 +99,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
     def test_read_purchase_order_2(self):
         """ Check that a 2 purchase users with open the vendor bill the same
-        way even with a 'own documents only' record rule. """
+        way even with a 'own documents.py only' record rule. """
 
         # edit the account.move record rule for purchase user in order to ensure
         # a user can only see his own invoices
