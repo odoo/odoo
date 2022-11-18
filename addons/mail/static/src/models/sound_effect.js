@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, Model } from "@mail/model";
+import { attr, clear, Model } from "@mail/model";
 
 Model({
     name: "SoundEffect",
@@ -20,15 +20,14 @@ Model({
             }
             if (!this.audio) {
                 const audio = new window.Audio();
-                const ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-                audio.src = this.path + ext;
                 this.update({ audio });
+                audio.src = this.source;
             }
             this.audio.pause();
             this.audio.currentTime = 0;
             this.audio.loop = loop;
             this.audio.volume = volume !== undefined ? volume : this.defaultVolume;
-            Promise.resolve(this.audio.play()).catch(() => {});
+            Promise.resolve(this.audio.play()).catch(e => this._onAudioPlayError(e));
         },
         /**
          * Resets the audio to the start of the track and pauses it.
@@ -38,6 +37,29 @@ Model({
                 this.audio.pause();
                 this.audio.currentTime = 0;
             }
+        },
+        /**
+         * @private
+         * @param {DOMException} error
+         */
+        _onAudioPlayError(error) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ audioPlayError: error });
+            // error on play can trigger fallback to .mp3; retry in case this
+            // solved the problem.
+            Promise.resolve(this.audio.play()).catch(() => { });
+        },
+        /**
+         * @private
+         */
+        _onSourceChanged() {
+            if (!this.audio) {
+                return;
+            }
+            this.audio.src = this.source;
+            this.audio.load();
         },
     },
     fields: {
@@ -49,13 +71,41 @@ Model({
          * then cached.
          */
         audio: attr(),
+        audioPlayError: attr(),
         /**
          * The default volume to play this sound effect, when unspecified.
          */
         defaultVolume: attr({ default: 1 }),
+        extension: attr({
+            compute() {
+                if (!this.audio) {
+                    return clear();
+                }
+                // If the device has tried to play audio and failed, perhaps ogg
+                // is not supported -> fallback to mp3.
+                if (this.audioPlayError && this.audioPlayError.name === "NotSupportedError") {
+                    return ".mp3";
+                }
+                return this.audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
+            },
+        }),
         /**
          * Path to the audio file.
          */
         path: attr({ identifying: true }),
+        source: attr({
+            compute() {
+                if (!this.extension) {
+                    return clear();
+                }
+                return `${this.path}${this.extension}`;
+            },
+        }),
     },
+    onChanges: [
+        {
+            dependencies: ["source"],
+            methodName: "_onSourceChanged",
+        },
+    ],
 });
