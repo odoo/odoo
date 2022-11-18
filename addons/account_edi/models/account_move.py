@@ -563,6 +563,7 @@ class AccountMove(models.Model):
         '''
         to_cancel_documents = self.env['account.edi.document']
         for move in self:
+            move._check_fiscalyear_lock_date()
             is_move_marked = False
             for doc in move.edi_document_ids:
                 if doc.edi_format_id._needs_web_services() \
