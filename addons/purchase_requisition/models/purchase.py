@@ -198,6 +198,7 @@ class PurchaseOrder(models.Model):
         ctx = dict(
             self.env.context,
             search_default_groupby_product=True,
+            purchase_order_id=self.id,
         )
         view_id = self.env.ref('purchase_requisition.purchase_order_line_compare_tree').id
         return {
