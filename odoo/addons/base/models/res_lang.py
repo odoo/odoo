@@ -7,6 +7,7 @@ import locale
 import logging
 import re
 from operator import itemgetter
+from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -259,6 +260,18 @@ class Lang(models.Model):
         """ Return the installed languages as a list of (code, name) sorted by name. """
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+
+    @api.model
+    @tools.ormcache()
+    def get_installed_inheritance(self):
+        """ inheritance: {'en': ['en_US', 'en_UK'], 'en_US': ['en_US'], 'en_UK': ['en_UK']} """
+        langs = self.with_context(active_test=True).search([]).mapped('code')
+        inheritance = defaultdict(list)
+        for lang in langs:
+            base = lang.split('_')[0]
+            inheritance[base].append(lang)
+        inheritance.update({lang: [lang] for lang in langs})
+        return inheritance
 
     def toggle_active(self):
         super().toggle_active()

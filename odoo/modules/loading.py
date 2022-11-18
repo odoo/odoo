@@ -226,7 +226,17 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
             if package.state == 'to upgrade':
                 # upgrading the module information
-                module.write(module.get_values_from_terp(package.data))
+                values, translations = module.get_values_from_terp(package.data)
+                module.write(values)
+
+                lang_inheritance = module.env['res.lang'].get_installed_inheritance()
+                for field_name, translation in translations.items():
+                    translation = {
+                        inherit: translation[ori]
+                        for ori, inherits in lang_inheritance.items() if ori in translation
+                        for inherit in inherits
+                    }
+                    module.update_field_translations(field_name, translation)
             load_data(cr, idref, mode, kind='data', package=package)
             demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode)
             cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))

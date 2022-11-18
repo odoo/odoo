@@ -728,8 +728,12 @@ class Module(models.Model):
 
     @staticmethod
     def get_values_from_terp(terp):
+        translations = defaultdict(dict)
+        for field_name in ('description', 'shortdesc', 'summary'):
+            if isinstance(terp.get(field_name), dict):
+                translations[field_name] = terp.get(field_name)
         return {
-            'description': terp.get('description', ''),
+            'description': translations['description'].pop('en_US', terp.get('description', '')),
             'shortdesc': terp.get('name', ''),
             'author': terp.get('author', 'Unknown'),
             'maintainer': terp.get('maintainer', False),
@@ -740,10 +744,10 @@ class Module(models.Model):
             'application': terp.get('application', False),
             'auto_install': terp.get('auto_install', False) is not False,
             'icon': terp.get('icon', False),
-            'summary': terp.get('summary', ''),
+            'summary': translations['summary'].pop('en_US', terp.get('summary', '')),
             'url': terp.get('url') or terp.get('live_test_url', ''),
             'to_buy': False
-        }
+        }, translations
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -767,12 +771,13 @@ class Module(models.Model):
         default_version = modules.adapt_version('1.0')
         known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
+        lang_inheritance = self.env['res.lang'].get_installed_inheritance()
 
         # iterate through detected modules and update/create them in db
         for mod_name in modules.get_modules():
             mod = known_mods_names.get(mod_name)
             terp = self.get_module_info(mod_name)
-            values = self.get_values_from_terp(terp)
+            values, translations = self.get_values_from_terp(terp)
 
             if mod:
                 updated_values = {}
@@ -793,6 +798,13 @@ class Module(models.Model):
                 state = "uninstalled" if terp.get('installable', True) else "uninstallable"
                 mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
+            for field_name, translation in translations.items():
+                translation = {
+                    inherit: translation[ori]
+                    for ori, inherits in lang_inheritance.items() if ori in translation
+                    for inherit in inherits
+                }
+                mod.update_field_translations(field_name, translation)
 
             mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
             mod._update_exclusions(terp.get('excludes', []))

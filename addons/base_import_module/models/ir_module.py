@@ -40,7 +40,7 @@ class IrModule(models.Model):
         terp = load_manifest(module, mod_path=path)
         if not terp:
             return False
-        values = self.get_values_from_terp(terp)
+        values, translations = self.get_values_from_terp(terp)
         if 'version' in terp:
             values['latest_version'] = terp['version']
 
@@ -64,8 +64,16 @@ class IrModule(models.Model):
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(dict(name=module, state='installed', imported=True, **values))
+            mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
+        lang_inheritance = self.env['res.lang'].get_installed_inheritance()
+        for field_name, translation in translations.items():
+            translation = {
+                inherit: translation[ori]
+                for ori, inherits in lang_inheritance.items() if ori in translation
+                for inherit in inherits
+            }
+            mod.update_field_translations(field_name, translation)
 
         for kind in ['data', 'init_xml', 'update_xml']:
             for filename in terp[kind]:

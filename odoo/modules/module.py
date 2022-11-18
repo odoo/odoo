@@ -49,6 +49,7 @@ _DEFAULT_MANIFEST = {
     'pre_init_hook': '',
     'sequence': 100,
     'snippet_lists': {},  # website themes
+    'shortdesc': '',
     'summary': '',
     'test': [],
     'update_xml': [],

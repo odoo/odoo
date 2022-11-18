@@ -60,6 +60,7 @@ class TestModuleManifest(BaseCase):
             'pre_init_hook': '',
             'sequence': 100,
             'snippet_lists': {},
+            'shortdesc': '',
             'summary': '',
             'test': [],
             'update_xml': [],
