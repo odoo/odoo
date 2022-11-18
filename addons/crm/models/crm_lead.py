@@ -1234,13 +1234,13 @@ class Lead(models.Model):
         }
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         """ This method returns the action helpers for the leads. If help is already provided
             on the action, the same is returned. Otherwise, we build the help message which
             contains the alias responsible for creating the lead (if available) and return it.
         """
-        if not is_html_empty(help):
-            return help
+        if not is_html_empty(help_message):
+            return help_message
 
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
@@ -1258,7 +1258,9 @@ class Lead(models.Model):
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
             sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+        return super().get_empty_list_help(
+            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
+        )
 
     # ------------------------------------------------------------
     # BUSINESS
