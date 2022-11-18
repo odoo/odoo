@@ -300,7 +300,7 @@ class AccountBankStatement(models.Model):
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
             if statement.journal_id.type == 'bank':
                 # Attach report to the Bank statement
-                content, content_type = self.env.ref('account.action_report_account_statement').render_qweb_pdf(statement.id)
+                content, content_type = self.env.ref('account.action_report_account_statement').render_qweb_pdf(statement.ids)
                 self.env['ir.attachment'].create({
                     'name': statement.name and _("Bank Statement %s.pdf") % statement.name or _("Bank Statement.pdf"),
                     'type': 'binary',
