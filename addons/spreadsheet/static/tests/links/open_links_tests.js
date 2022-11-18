@@ -6,13 +6,14 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { selectCell } from "@spreadsheet/../tests/utils/commands";
 import { viewService } from "@web/views/view_service";
 import { ormService } from "@web/core/orm_service";
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getEvaluatedCell } from "../utils/getters";
 
 const { Model } = spreadsheet;
+const { urlRepresentation, openLink } = spreadsheet.links;
 
 function beforeEach() {
     registry
@@ -24,7 +25,7 @@ function beforeEach() {
     registry.category("services").add("orm", ormService, { force: true }); // #action-serv-leg-compat-js-class
 }
 
-QUnit.module("spreadsheet_dashboard > link", { beforeEach });
+QUnit.module("spreadsheet > link", { beforeEach });
 
 QUnit.test("click a web link", async (assert) => {
     patchWithCleanup(window, {
@@ -40,8 +41,10 @@ QUnit.test("click a web link", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { mode: "dashboard", evalContext: { env } });
-    selectCell(model, "A1");
+    const model = new Model(data, { evalContext: { env } });
+    const cell = getEvaluatedCell(model, "A1");
+    assert.strictEqual(urlRepresentation(cell.link, model.getters), "https://odoo.com");
+    openLink(cell.link, env);
     assert.verifySteps(["https://odoo.com"]);
 });
 
@@ -65,8 +68,10 @@ QUnit.test("click a menu link", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { mode: "dashboard", evalContext: { env } });
-    selectCell(model, "A1");
+    const model = new Model(data, { evalContext: { env } });
+    const cell = getEvaluatedCell(model, "A1");
+    assert.strictEqual(urlRepresentation(cell.link, model.getters), "menu with xmlid");
+    openLink(cell.link, env);
     assert.verifySteps(["action1"]);
 });
 
@@ -107,7 +112,9 @@ QUnit.test("click a menu link", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { mode: "dashboard", evalContext: { env } });
-    selectCell(model, "A1");
+    const model = new Model(data, { evalContext: { env } });
+    const cell = getEvaluatedCell(model, "A1");
+    assert.strictEqual(urlRepresentation(cell.link, model.getters), "an odoo view");
+    openLink(cell.link, env);
     assert.verifySteps(["do-action"]);
 });

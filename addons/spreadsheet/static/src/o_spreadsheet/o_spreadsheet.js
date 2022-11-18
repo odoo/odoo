@@ -404,9 +404,7 @@
     const FORBIDDEN_SHEET_CHARS = ["'", "*", "?", "/", "\\", "[", "]"];
     const FORBIDDEN_IN_EXCEL_REGEX = /'|\*|\?|\/|\\|\[|\]/;
     // Cells
-    const NULL_FORMAT = undefined;
     const FORMULA_REF_IDENTIFIER = "|";
-    const LOADING = "Loading...";
     const DEFAULT_ERROR_MESSAGE = _lt("Invalid expression");
     // Components
     var ComponentsImportance;
@@ -1008,11 +1006,7 @@
         };
     }
     const O_SPREADSHEET_LINK_PREFIX = "o-spreadsheet://";
-    function isMarkdownSheetLink(str) {
-        if (!isMarkdownLink(str)) {
-            return false;
-        }
-        const { url } = parseMarkdownLink(str);
+    function isSheetUrl(url) {
         return url.startsWith(O_SPREADSHEET_LINK_PREFIX);
     }
     function buildSheetLink(sheetId) {
@@ -1021,7 +1015,7 @@
     /**
      * Parse a sheet link and return the sheet id
      */
-    function parseSheetLink(sheetLink) {
+    function parseSheetUrl(sheetLink) {
         if (sheetLink.startsWith(O_SPREADSHEET_LINK_PREFIX)) {
             return sheetLink.substr(O_SPREADSHEET_LINK_PREFIX.length);
         }
@@ -1559,6 +1553,75 @@
     }
 
     /**
+     * This regexp is supposed to be as close as possible as the numberRegexp, but
+     * its purpose is to be used by the tokenizer.
+     *
+     * - it tolerates extra characters at the end. This is useful because the tokenizer
+     *   only needs to find the number at the start of a string
+     * - it does not accept "," as thousand separator, because when we tokenize a
+     *   formula, commas are used to separate arguments
+     * - it does not support % symbol, in formulas % is an operator
+     */
+    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
+    const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
+    const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
+    const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
+    const pPercentFormat = "(\\s*%)?"; // pattern that match percent symbol between zero and one time
+    const pNumber = "(\\s*" + pIntegerAndDecimals + "|" + pOnlyDecimals + ")" + pScientificFormat + pPercentFormat;
+    const pMinus = "(\\s*-)?"; // pattern that match negative symbol between zero and one time
+    const pCurrencyFormat = "(\\s*[\\$€])?";
+    const p1 = pMinus + pCurrencyFormat + pNumber;
+    const p2 = pMinus + pNumber + pCurrencyFormat;
+    const p3 = pCurrencyFormat + pMinus + pNumber;
+    const pNumberExp = "^((" + [p1, p2, p3].join(")|(") + "))$";
+    const numberRegexp = new RegExp(pNumberExp, "i");
+    /**
+     * Return true if the argument is a "number string".
+     *
+     * Note that "" (empty string) does not count as a number string
+     */
+    function isNumber(value) {
+        if (!value)
+            return false;
+        // TO DO: add regexp for DATE string format (ex match: "28 02 2020")
+        return numberRegexp.test(value.trim());
+    }
+    const invaluableSymbolsRegexp = /[,\$€]+/g;
+    /**
+     * Convert a string into a number. It assumes that the string actually represents
+     * a number (as determined by the isNumber function)
+     *
+     * Note that it accepts "" (empty string), even though it does not count as a
+     * number from the point of view of the isNumber function.
+     */
+    function parseNumber(str) {
+        // remove invaluable characters
+        str = str.replace(invaluableSymbolsRegexp, "");
+        let n = Number(str);
+        if (isNaN(n) && str.includes("%")) {
+            n = Number(str.split("%")[0]);
+            if (!isNaN(n)) {
+                return n / 100;
+            }
+        }
+        return n;
+    }
+    function percentile(values, percent, isInclusive) {
+        const sortedValues = [...values].sort((a, b) => a - b);
+        let percentIndex = (sortedValues.length + (isInclusive ? -1 : 1)) * percent;
+        if (!isInclusive) {
+            percentIndex--;
+        }
+        if (Number.isInteger(percentIndex)) {
+            return sortedValues[percentIndex];
+        }
+        const indexSup = Math.ceil(percentIndex);
+        const indexLow = Math.floor(percentIndex);
+        return (sortedValues[indexSup] * (percentIndex - indexLow) +
+            sortedValues[indexLow] * (indexSup - percentIndex));
+    }
+
+    /**
      *  Constant used to indicate the maximum of digits that is possible to display
      *  in a cell with standard size.
      */
@@ -1566,6 +1629,31 @@
     //from https://stackoverflow.com/questions/721304/insert-commas-into-number-string @Thomas/Alan Moore
     const thousandsGroupsRegexp = /(\d+?)(?=(\d{3})+(?!\d)|$)/g;
     const zeroRegexp = /0/g;
+    // TODO in the future : remove these constants MONTHS/DAYS, and use a library such as luxon to handle it
+    // + possibly handle automatic translation of day/month
+    const MONTHS = {
+        0: "January",
+        1: "February",
+        2: "March",
+        3: "April",
+        4: "May",
+        5: "June",
+        6: "July",
+        7: "August",
+        8: "September",
+        9: "October",
+        10: "November",
+        11: "December",
+    };
+    const DAYS$1 = {
+        0: "Sunday",
+        1: "Monday",
+        2: "Tuesday",
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday",
+    };
     // -----------------------------------------------------------------------------
     // FORMAT REPRESENTATION CACHE
     // -----------------------------------------------------------------------------
@@ -1724,8 +1812,9 @@
         return strDate + (strDate && strTime ? " " : "") + strTime;
     }
     function formatJSDate(jsDate, format) {
-        const sep = format.match(/\/|-|\s/)[0];
-        const parts = format.split(sep);
+        var _a;
+        const sep = (_a = format.match(/\/|-|\s/)) === null || _a === void 0 ? void 0 : _a[0];
+        const parts = sep ? format.split(sep) : [format];
         return parts
             .map((p) => {
             switch (p) {
@@ -1733,10 +1822,23 @@
                     return jsDate.getDate();
                 case "dd":
                     return jsDate.getDate().toString().padStart(2, "0");
+                case "ddd":
+                    return DAYS$1[jsDate.getDay()].slice(0, 3);
+                case "dddd":
+                    return DAYS$1[jsDate.getDay()];
                 case "m":
                     return jsDate.getMonth() + 1;
                 case "mm":
                     return String(jsDate.getMonth() + 1).padStart(2, "0");
+                case "mmm":
+                    return MONTHS[jsDate.getMonth()].slice(0, 3);
+                case "mmmm":
+                    return MONTHS[jsDate.getMonth()];
+                case "mmmmm":
+                    return MONTHS[jsDate.getMonth()].slice(0, 1);
+                case "yy":
+                    const fullYear = String(jsDate.getFullYear()).replace("-", "").padStart(2, "0");
+                    return fullYear.slice(fullYear.length - 2);
                 case "yyyy":
                     return jsDate.getFullYear();
                 default:
@@ -1780,6 +1882,29 @@
     function createDefaultFormat(value) {
         let { decimalDigits } = splitNumber(value, 10);
         return decimalDigits ? "0." + "0".repeat(decimalDigits.length) : "0";
+    }
+    function detectFormat(content) {
+        if (isDateTime(content)) {
+            const internalDate = parseDateTime(content);
+            return internalDate.format;
+        }
+        if (!isNumber(content)) {
+            return undefined;
+        }
+        const digitBase = content.includes(".") ? "0.00" : "0";
+        const matchedCurrencies = content.match(/[\$€]/);
+        if (matchedCurrencies) {
+            const matchedFirstDigit = content.match(/[\d]/);
+            const currency = "[$" + matchedCurrencies.values().next().value + "]";
+            if (matchedFirstDigit.index < matchedCurrencies.index) {
+                return "#,##" + digitBase + currency;
+            }
+            return currency + "#,##" + digitBase;
+        }
+        if (content.includes("%")) {
+            return digitBase + "%";
+        }
+        return undefined;
     }
     function createLargeNumberFormat(format, magnitude, postFix) {
         const internalFormat = parseFormat(format || "#,##0");
@@ -1963,75 +2088,6 @@
             format += currentFormat;
         }
         return format;
-    }
-
-    /**
-     * This regexp is supposed to be as close as possible as the numberRegexp, but
-     * its purpose is to be used by the tokenizer.
-     *
-     * - it tolerates extra characters at the end. This is useful because the tokenizer
-     *   only needs to find the number at the start of a string
-     * - it does not accept "," as thousand separator, because when we tokenize a
-     *   formula, commas are used to separate arguments
-     * - it does not support % symbol, in formulas % is an operator
-     */
-    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
-    const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
-    const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
-    const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
-    const pPercentFormat = "(\\s*%)?"; // pattern that match percent symbol between zero and one time
-    const pNumber = "(\\s*" + pIntegerAndDecimals + "|" + pOnlyDecimals + ")" + pScientificFormat + pPercentFormat;
-    const pMinus = "(\\s*-)?"; // pattern that match negative symbol between zero and one time
-    const pCurrencyFormat = "(\\s*[\\$€])?";
-    const p1 = pMinus + pCurrencyFormat + pNumber;
-    const p2 = pMinus + pNumber + pCurrencyFormat;
-    const p3 = pCurrencyFormat + pMinus + pNumber;
-    const pNumberExp = "^((" + [p1, p2, p3].join(")|(") + "))$";
-    const numberRegexp = new RegExp(pNumberExp, "i");
-    /**
-     * Return true if the argument is a "number string".
-     *
-     * Note that "" (empty string) does not count as a number string
-     */
-    function isNumber(value) {
-        if (!value)
-            return false;
-        // TO DO: add regexp for DATE string format (ex match: "28 02 2020")
-        return numberRegexp.test(value.trim());
-    }
-    const invaluableSymbolsRegexp = /[,\$€]+/g;
-    /**
-     * Convert a string into a number. It assumes that the string actually represents
-     * a number (as determined by the isNumber function)
-     *
-     * Note that it accepts "" (empty string), even though it does not count as a
-     * number from the point of view of the isNumber function.
-     */
-    function parseNumber(str) {
-        // remove invaluable characters
-        str = str.replace(invaluableSymbolsRegexp, "");
-        let n = Number(str);
-        if (isNaN(n) && str.includes("%")) {
-            n = Number(str.split("%")[0]);
-            if (!isNaN(n)) {
-                return n / 100;
-            }
-        }
-        return n;
-    }
-    function percentile(values, percent, isInclusive) {
-        const sortedValues = [...values].sort((a, b) => a - b);
-        let percentIndex = (sortedValues.length + (isInclusive ? -1 : 1)) * percent;
-        if (!isInclusive) {
-            percentIndex--;
-        }
-        if (Number.isInteger(percentIndex)) {
-            return sortedValues[percentIndex];
-        }
-        const indexSup = Math.ceil(percentIndex);
-        const indexLow = Math.floor(percentIndex);
-        return (sortedValues[indexSup] * (percentIndex - indexLow) +
-            sortedValues[indexLow] * (indexSup - percentIndex));
     }
 
     class RangeImpl {
@@ -2865,83 +2921,608 @@
     }
 
     /**
-     * An AutofillModifierImplementation is used to describe how to handle a
-     * AutofillModifier.
+     * Add the `https` prefix to the url if it's missing
      */
-    const autofillModifiersRegistry = new Registry();
-    autofillModifiersRegistry
-        .add("INCREMENT_MODIFIER", {
-        apply: (rule, data) => {
-            var _a;
-            rule.current += rule.increment;
-            const content = rule.current.toString();
-            const tooltipValue = formatValue(rule.current, (_a = data.cell) === null || _a === void 0 ? void 0 : _a.format);
+    function withHttps(url) {
+        return !/^https?:\/\//i.test(url) ? `https://${url}` : url;
+    }
+    const urlRegistry = new Registry();
+    function createWebLink(url, label) {
+        url = withHttps(url);
+        return {
+            url,
+            label: label || url,
+            isExternal: true,
+            isUrlEditable: true,
+        };
+    }
+    urlRegistry.add("sheet_URL", {
+        match: (url) => isSheetUrl(url),
+        createLink: (url, label) => {
             return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content: tooltipValue } } : undefined,
+                label,
+                url,
+                isExternal: false,
+                isUrlEditable: false,
             };
         },
-    })
-        .add("COPY_MODIFIER", {
-        apply: (rule, data, getters) => {
-            var _a, _b;
-            const content = ((_a = data.cell) === null || _a === void 0 ? void 0 : _a.content) || "";
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content: (_b = data.cell) === null || _b === void 0 ? void 0 : _b.formattedValue } } : undefined,
-            };
+        urlRepresentation(url, getters) {
+            const sheetId = parseSheetUrl(url);
+            return getters.tryGetSheetName(sheetId) || _lt("Invalid sheet");
         },
-    })
-        .add("FORMULA_MODIFIER", {
-        apply: (rule, data, getters, direction) => {
-            rule.current += rule.increment;
-            let x = 0;
-            let y = 0;
-            switch (direction) {
-                case 0 /* DIRECTION.UP */:
-                    x = 0;
-                    y = -rule.current;
-                    break;
-                case 1 /* DIRECTION.DOWN */:
-                    x = 0;
-                    y = rule.current;
-                    break;
-                case 2 /* DIRECTION.LEFT */:
-                    x = -rule.current;
-                    y = 0;
-                    break;
-                case 3 /* DIRECTION.RIGHT */:
-                    x = rule.current;
-                    y = 0;
-                    break;
-            }
-            if (!data.cell || !data.cell.isFormula()) {
-                return { cellData: {} };
-            }
-            const sheetId = data.sheetId;
-            const ranges = getters.createAdaptedRanges(data.cell.dependencies, x, y, sheetId);
-            const content = getters.buildFormulaContent(sheetId, data.cell, ranges);
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell.style,
-                    format: data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content } } : undefined,
-            };
+        open(url, env) {
+            const sheetId = parseSheetUrl(url);
+            env.model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: env.model.getters.getActiveSheetId(),
+                sheetIdTo: sheetId,
+            });
         },
+        sequence: 0,
     });
+    const WebUrlSpec = {
+        createLink: createWebLink,
+        match: (url) => isWebLink(url),
+        open: (url) => window.open(url, "_blank"),
+        urlRepresentation: (url) => url,
+        sequence: 0,
+    };
+    function findMatchingSpec(url) {
+        return (urlRegistry
+            .getAll()
+            .sort((a, b) => a.sequence - b.sequence)
+            .find((urlType) => urlType.match(url)) || WebUrlSpec);
+    }
+    function urlRepresentation(link, getters) {
+        return findMatchingSpec(link.url).urlRepresentation(link.url, getters);
+    }
+    function openLink(link, env) {
+        findMatchingSpec(link.url).open(link.url, env);
+    }
+    function detectLink(value) {
+        if (typeof value !== "string") {
+            return undefined;
+        }
+        if (isMarkdownLink(value)) {
+            const { label, url } = parseMarkdownLink(value);
+            return findMatchingSpec(url).createLink(url, label);
+        }
+        else if (isWebLink(value)) {
+            return createWebLink(value);
+        }
+        return undefined;
+    }
+
+    // HELPERS
+    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
+    function assert(condition, message) {
+        if (!condition()) {
+            throw new Error(message);
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // FORMAT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
+    function toNumber(value) {
+        switch (typeof value) {
+            case "number":
+                return value;
+            case "boolean":
+                return value ? 1 : 0;
+            case "string":
+                if (isNumber(value) || value === "") {
+                    return parseNumber(value);
+                }
+                const internalDate = parseDateTime(value);
+                if (internalDate) {
+                    return internalDate.value;
+                }
+                throw new Error(expectNumberValueError(value));
+            default:
+                return 0;
+        }
+    }
+    function strictToNumber(value) {
+        if (value === "") {
+            throw new Error(expectNumberValueError(value));
+        }
+        return toNumber(value);
+    }
+    function toString(value) {
+        switch (typeof value) {
+            case "string":
+                return value;
+            case "number":
+                return value.toString();
+            case "boolean":
+                return value ? "TRUE" : "FALSE";
+            default:
+                return "";
+        }
+    }
+    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
+    function normalizeString(str) {
+        return str
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    }
+    /**
+     * Normalize a value.
+     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
+     */
+    function normalizeValue(value) {
+        return typeof value === "string" ? normalizeString(value) : value;
+    }
+    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
+    function toBoolean(value) {
+        switch (typeof value) {
+            case "boolean":
+                return value;
+            case "string":
+                if (value) {
+                    let uppercaseVal = value.toUpperCase();
+                    if (uppercaseVal === "TRUE") {
+                        return true;
+                    }
+                    if (uppercaseVal === "FALSE") {
+                        return false;
+                    }
+                    throw new Error(expectBooleanValueError(value));
+                }
+                else {
+                    return false;
+                }
+            case "number":
+                return value ? true : false;
+            default:
+                return false;
+        }
+    }
+    function strictToBoolean(value) {
+        if (value === "") {
+            throw new Error(expectBooleanValueError(value));
+        }
+        return toBoolean(value);
+    }
+    function toJsDate(value) {
+        return numberToJsDate(toNumber(value));
+    }
+    // -----------------------------------------------------------------------------
+    // VISIT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function visitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        cellCb(arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                dataCb(arg);
+            }
+        }
+    }
+    function visitAny(args, cb) {
+        visitArgs(args, cb, cb);
+    }
+    function visitNumbers(args, cb) {
+        visitArgs(args, (cellValue) => {
+            if (typeof cellValue === "number") {
+                cb(cellValue);
+            }
+        }, (argValue) => {
+            cb(strictToNumber(argValue));
+        });
+    }
+    // -----------------------------------------------------------------------------
+    // REDUCE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function reduceArgs(args, cellCb, dataCb, initialValue) {
+        let val = initialValue;
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        val = cellCb(val, arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                val = dataCb(val, arg);
+            }
+        }
+        return val;
+    }
+    function reduceAny(args, cb, initialValue) {
+        return reduceArgs(args, cb, cb, initialValue);
+    }
+    function reduceNumbers(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (typeof ArgValue === "number") {
+                return cb(acc, ArgValue);
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, strictToNumber(argValue));
+        }, initialValue);
+    }
+    function reduceNumbersTextAs0(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (ArgValue !== undefined && ArgValue !== null) {
+                if (typeof ArgValue === "number") {
+                    return cb(acc, ArgValue);
+                }
+                else if (typeof ArgValue === "boolean") {
+                    return cb(acc, toNumber(ArgValue));
+                }
+                else {
+                    return cb(acc, 0);
+                }
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, toNumber(argValue));
+        }, initialValue);
+    }
+    // -----------------------------------------------------------------------------
+    // CONDITIONAL EXPLORE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    /**
+     * This function allows to visit arguments and stop the visit if necessary.
+     * It is mainly used to bypass argument evaluation for functions like OR or AND.
+     */
+    function conditionalVisitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        if (!cellCb(arg[x][y]))
+                            return;
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                if (!dataCb(arg))
+                    return;
+            }
+        }
+    }
+    function conditionalVisitBoolean(args, cb) {
+        return conditionalVisitArgs(args, (ArgValue) => {
+            if (typeof ArgValue === "boolean") {
+                return cb(ArgValue);
+            }
+            if (typeof ArgValue === "number") {
+                return cb(ArgValue ? true : false);
+            }
+            return true;
+        }, (argValue) => {
+            if (argValue !== undefined && argValue !== null) {
+                return cb(strictToBoolean(argValue));
+            }
+            return true;
+        });
+    }
+    function getPredicate(descr, isQuery) {
+        let operator;
+        let operand;
+        let subString = descr.substring(0, 2);
+        if (subString === "<=" || subString === ">=" || subString === "<>") {
+            operator = subString;
+            operand = descr.substring(2);
+        }
+        else {
+            subString = descr.substring(0, 1);
+            if (subString === "<" || subString === ">" || subString === "=") {
+                operator = subString;
+                operand = descr.substring(1);
+            }
+            else {
+                operator = "=";
+                operand = descr;
+            }
+        }
+        if (isNumber(operand)) {
+            operand = toNumber(operand);
+        }
+        else if (operand === "TRUE" || operand === "FALSE") {
+            operand = toBoolean(operand);
+        }
+        const result = { operator, operand };
+        if (typeof operand === "string") {
+            if (isQuery) {
+                operand += "*";
+            }
+            result.regexp = operandToRegExp(operand);
+        }
+        return result;
+    }
+    function operandToRegExp(operand) {
+        let exp = "";
+        let predecessor = "";
+        for (let char of operand) {
+            if (char === "?" && predecessor !== "~") {
+                exp += ".";
+            }
+            else if (char === "*" && predecessor !== "~") {
+                exp += ".*";
+            }
+            else {
+                if (char === "*" || char === "?") {
+                    //remove "~"
+                    exp = exp.slice(0, -1);
+                }
+                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
+                    exp += "\\";
+                }
+                exp += char;
+            }
+            predecessor = char;
+        }
+        return new RegExp("^" + exp + "$", "i");
+    }
+    function evaluatePredicate(value, criterion) {
+        const { operator, operand } = criterion;
+        if (value === undefined || operand === undefined) {
+            return false;
+        }
+        if (typeof operand === "number" && operator === "=") {
+            return toString(value) === toString(operand);
+        }
+        if (operator === "<>" || operator === "=") {
+            let result;
+            if (typeof value === typeof operand) {
+                if (typeof value === "string" && criterion.regexp) {
+                    result = criterion.regexp.test(value);
+                }
+                else {
+                    result = value === operand;
+                }
+            }
+            else {
+                result = false;
+            }
+            return operator === "=" ? result : !result;
+        }
+        if (typeof value === typeof operand) {
+            switch (operator) {
+                case "<":
+                    return value < operand;
+                case ">":
+                    return value > operand;
+                case "<=":
+                    return value <= operand;
+                case ">=":
+                    return value >= operand;
+            }
+        }
+        return false;
+    }
+    /**
+     * Functions used especially for predicate evaluation on ranges.
+     *
+     * Take ranges with same dimensions and take predicates, one for each range.
+     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
+     * range correspond to the associated predicate, then the function uses a callback
+     * function with the parameters "i" and "j".
+     *
+     * Syntax:
+     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
+     *
+     * - range1 (range): The range to check against predicate1.
+     * - predicate1 (string): The pattern or test to apply to range1.
+     * - range2: (range, repeatable) ranges to check.
+     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
+     *
+     * - cb(i: number, j: number) => void: the callback function.
+     *
+     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
+     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
+     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
+     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
+     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
+     */
+    function visitMatchingRanges(args, cb, isQuery = false) {
+        const countArg = args.length;
+        if (countArg % 2 === 1) {
+            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
+        }
+        const dimRow = args[0].length;
+        const dimCol = args[0][0].length;
+        let predicates = [];
+        for (let i = 0; i < countArg - 1; i += 2) {
+            const criteriaRange = args[i];
+            if (!Array.isArray(criteriaRange) ||
+                criteriaRange.length !== dimRow ||
+                criteriaRange[0].length !== dimCol) {
+                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
+            }
+            const description = toString(args[i + 1]);
+            predicates.push(getPredicate(description, isQuery));
+        }
+        for (let i = 0; i < dimRow; i++) {
+            for (let j = 0; j < dimCol; j++) {
+                let validatedPredicates = true;
+                for (let k = 0; k < countArg - 1; k += 2) {
+                    const criteriaValue = args[k][i][j];
+                    const criterion = predicates[k / 2];
+                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
+                    if (!validatedPredicates) {
+                        break;
+                    }
+                }
+                if (validatedPredicates) {
+                    cb(i, j);
+                }
+            }
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // COMMON FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function getNormalizedValueFromColumnRange(range, index) {
+        return normalizeValue(range[0][index]);
+    }
+    function getNormalizedValueFromRowRange(range, index) {
+        return normalizeValue(range[index][0]);
+    }
+    /**
+     * Perform a dichotomic search on an array and return the index of the nearest match.
+     *
+     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
+     * element of the array match the target, the method will return the first match if the array is sorted
+     * in descending order, and the last match if the array is in ascending order.
+     *
+     *
+     * @param data the array in which to search.
+     * @param target the value to search.
+     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
+     * @param sortOrder whether the array is sorted in ascending or descending order.
+     * @param rangeLength the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     */
+    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
+        if (target === null || target === undefined) {
+            return -1;
+        }
+        const targetType = typeof target;
+        let matchVal = undefined;
+        let matchValIndex = undefined;
+        let indexLeft = 0;
+        let indexRight = rangeLength - 1;
+        let indexMedian;
+        let currentIndex;
+        let currentVal;
+        let currentType;
+        while (indexRight - indexLeft >= 0) {
+            indexMedian = Math.floor((indexLeft + indexRight) / 2);
+            currentIndex = indexMedian;
+            currentVal = getValueInData(data, currentIndex);
+            currentType = typeof currentVal;
+            // 1 - linear search to find value with the same type
+            while (indexLeft < currentIndex && targetType !== currentType) {
+                currentIndex--;
+                currentVal = getValueInData(data, currentIndex);
+                currentType = typeof currentVal;
+            }
+            if (currentType !== targetType || currentVal === undefined) {
+                indexLeft = indexMedian + 1;
+                continue;
+            }
+            // 2 - check if value match
+            if (mode === "strict" && currentVal === target) {
+                matchVal = currentVal;
+                matchValIndex = currentIndex;
+            }
+            else if (mode === "nextSmaller" && currentVal <= target) {
+                if (matchVal === undefined ||
+                    matchVal < currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            else if (mode === "nextGreater" && currentVal >= target) {
+                if (matchVal === undefined ||
+                    matchVal > currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            // 3 - give new indexes for the Binary search
+            if ((sortOrder === "asc" && currentVal > target) ||
+                (sortOrder === "desc" && currentVal <= target)) {
+                indexRight = currentIndex - 1;
+            }
+            else {
+                indexLeft = indexMedian + 1;
+            }
+        }
+        // note that valMinIndex could be 0
+        return matchValIndex !== undefined ? matchValIndex : -1;
+    }
+    /**
+     * Perform a linear search and return the index of the match.
+     * -1 is returned if no value is found.
+     *
+     * Example:
+     * - [3, 6, 10], 3 => 0
+     * - [3, 6, 10], 6 => 1
+     * - [3, 6, 10], 9 => -1
+     * - [3, 6, 10], 2 => -1
+     *
+     * @param data the array to search in.
+     * @param target the value to search in the array.
+     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
+     * element from the target and "nextSmaller" the next smaller
+     * @param numberOfValues the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     * @param reverseSearch if true, search in the array starting from the end.
+
+     */
+    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
+        if (target === null || target === undefined)
+            return -1;
+        const getValue = reverseSearch
+            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
+            : getValueInData;
+        let closestMatch = undefined;
+        let closestMatchIndex = -1;
+        for (let i = 0; i < numberOfValues; i++) {
+            const value = getValue(data, i);
+            if (value === target) {
+                return reverseSearch ? numberOfValues - i - 1 : i;
+            }
+            if (mode === "nextSmaller") {
+                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
+                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
+            }
+            else if (mode === "nextGreater") {
+                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
+                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
+            }
+        }
+        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
+    }
+    function compareCellValues(left, right) {
+        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
+        if (typeOrder === 0) {
+            if (typeof left === "string" && typeof right === "string") {
+                typeOrder = left.localeCompare(right);
+            }
+            else if (typeof left === "number" && typeof right === "number") {
+                typeOrder = left - right;
+            }
+            else if (typeof left === "boolean" && typeof right === "boolean") {
+                typeOrder = Number(left) - Number(right);
+            }
+        }
+        return typeOrder;
+    }
 
     var CellValueType;
     (function (CellValueType) {
@@ -3198,6 +3779,235 @@
         LAYERS[LAYERS["Headers"] = 7] = "Headers";
     })(LAYERS || (LAYERS = {}));
 
+    function evaluateLiteral(content, format) {
+        return createEvaluatedCell(parseLiteral(content || ""), format);
+    }
+    function parseLiteral(content) {
+        if (content.startsWith("=")) {
+            throw new Error(`Cannot parse "${content}" because it's not a literal value. It's a formula`);
+        }
+        if (isNumber(content) || isDateTime(content)) {
+            return toNumber(content);
+        }
+        else if (isBoolean(content)) {
+            return content.toUpperCase() === "TRUE" ? true : false;
+        }
+        return content;
+    }
+    function createEvaluatedCell(value, format) {
+        const link = detectLink(value);
+        if (link) {
+            return {
+                ..._createEvaluatedCell(parseLiteral(link.label), format || detectFormat(link.label)),
+                link,
+            };
+        }
+        return _createEvaluatedCell(value, format);
+    }
+    function _createEvaluatedCell(value, format) {
+        try {
+            for (const builder of builders) {
+                const evaluateCell = builder(value, format);
+                if (evaluateCell) {
+                    return evaluateCell;
+                }
+            }
+            return textCell((value || "").toString(), format);
+        }
+        catch (error) {
+            return errorCell((value || "").toString(), new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
+        }
+    }
+    function textCell(value, format) {
+        return {
+            type: CellValueType.text,
+            value,
+            format,
+            isAutoSummable: true,
+            defaultAlign: "left",
+            formattedValue: formatValue(value, format),
+        };
+    }
+    function numberCell(value, format) {
+        return {
+            type: CellValueType.number,
+            value: value || 0,
+            format,
+            isAutoSummable: true,
+            defaultAlign: "right",
+            formattedValue: formatValue(value, format),
+        };
+    }
+    const EMPTY_EVALUATED_CELL = {
+        type: CellValueType.empty,
+        value: "",
+        format: undefined,
+        isAutoSummable: true,
+        defaultAlign: "left",
+        formattedValue: "",
+    };
+    function emptyCell(format) {
+        if (format === undefined) {
+            // share the same object to save memory
+            return EMPTY_EVALUATED_CELL;
+        }
+        return {
+            type: CellValueType.empty,
+            value: "",
+            format,
+            isAutoSummable: true,
+            defaultAlign: "left",
+            formattedValue: "",
+        };
+    }
+    function dateTimeCell(value, format) {
+        const formattedValue = formatValue(value, format);
+        return {
+            type: CellValueType.number,
+            value,
+            format,
+            isAutoSummable: false,
+            defaultAlign: "right",
+            formattedValue,
+        };
+    }
+    function booleanCell(value, format) {
+        const formattedValue = value ? "TRUE" : "FALSE";
+        return {
+            type: CellValueType.boolean,
+            value,
+            format,
+            isAutoSummable: false,
+            defaultAlign: "center",
+            formattedValue,
+        };
+    }
+    function errorCell(content, error) {
+        return {
+            type: CellValueType.error,
+            value: error.errorType,
+            error,
+            isAutoSummable: false,
+            defaultAlign: "center",
+            formattedValue: error.errorType,
+        };
+    }
+    const builders = [
+        function createEmpty(value, format) {
+            if (value === "") {
+                return emptyCell(format);
+            }
+            return undefined;
+        },
+        function createDateTime(value, format) {
+            if (!!format && typeof value === "number" && isDateTimeFormat(format)) {
+                return dateTimeCell(value, format);
+            }
+            return undefined;
+        },
+        function createNumber(value, format) {
+            if (typeof value === "number") {
+                return numberCell(value, format);
+            }
+            else if (value === null) {
+                return numberCell(0, format);
+            }
+            return undefined;
+        },
+        function createBoolean(value, format) {
+            if (typeof value === "boolean") {
+                return booleanCell(value, format);
+            }
+            return undefined;
+        },
+    ];
+
+    /**
+     * An AutofillModifierImplementation is used to describe how to handle a
+     * AutofillModifier.
+     */
+    const autofillModifiersRegistry = new Registry();
+    autofillModifiersRegistry
+        .add("INCREMENT_MODIFIER", {
+        apply: (rule, data) => {
+            var _a;
+            rule.current += rule.increment;
+            const content = rule.current.toString();
+            const tooltipValue = formatValue(rule.current, (_a = data.cell) === null || _a === void 0 ? void 0 : _a.format);
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: content ? { props: { content: tooltipValue } } : undefined,
+            };
+        },
+    })
+        .add("COPY_MODIFIER", {
+        apply: (rule, data, getters) => {
+            var _a, _b, _c;
+            const content = ((_a = data.cell) === null || _a === void 0 ? void 0 : _a.content) || "";
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: content
+                    ? {
+                        props: {
+                            content: evaluateLiteral((_b = data.cell) === null || _b === void 0 ? void 0 : _b.content, (_c = data.cell) === null || _c === void 0 ? void 0 : _c.format).formattedValue,
+                        },
+                    }
+                    : undefined,
+            };
+        },
+    })
+        .add("FORMULA_MODIFIER", {
+        apply: (rule, data, getters, direction) => {
+            rule.current += rule.increment;
+            let x = 0;
+            let y = 0;
+            switch (direction) {
+                case 0 /* DIRECTION.UP */:
+                    x = 0;
+                    y = -rule.current;
+                    break;
+                case 1 /* DIRECTION.DOWN */:
+                    x = 0;
+                    y = rule.current;
+                    break;
+                case 2 /* DIRECTION.LEFT */:
+                    x = -rule.current;
+                    y = 0;
+                    break;
+                case 3 /* DIRECTION.RIGHT */:
+                    x = rule.current;
+                    y = 0;
+                    break;
+            }
+            const cell = data.cell;
+            if (!cell || !cell.isFormula) {
+                return { cellData: {} };
+            }
+            const sheetId = data.sheetId;
+            const ranges = getters.createAdaptedRanges(cell.dependencies, x, y, sheetId);
+            const content = getters.buildFormulaContent(sheetId, cell, ranges);
+            return {
+                cellData: {
+                    border: data.border,
+                    style: cell.style,
+                    format: cell.format,
+                    content,
+                },
+                tooltip: content ? { props: { content } } : undefined,
+            };
+        },
+    });
+
     const autofillRulesRegistry = new Registry();
     /**
      * Get the consecutive xc that are of type "number" or "date".
@@ -3210,8 +4020,9 @@
             if (x === cell) {
                 found = true;
             }
-            if ((x === null || x === void 0 ? void 0 : x.evaluated.type) === CellValueType.number) {
-                group.push(x.evaluated.value);
+            const cellValue = evaluateLiteral(x === null || x === void 0 ? void 0 : x.content);
+            if (cellValue.type === CellValueType.number) {
+                group.push(cellValue.value);
             }
             else {
                 if (found) {
@@ -3239,7 +4050,7 @@
         .add("simple_value_copy", {
         condition: (cell, cells) => {
             var _a;
-            return cells.length === 1 && !cell.isFormula() && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
+            return cells.length === 1 && !cell.isFormula && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
         },
         generateRule: () => {
             return { type: "COPY_MODIFIER" };
@@ -3247,21 +4058,21 @@
         sequence: 10,
     })
         .add("copy_text", {
-        condition: (cell) => !cell.isFormula() && cell.evaluated.type === CellValueType.text,
+        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
         generateRule: () => {
             return { type: "COPY_MODIFIER" };
         },
         sequence: 20,
     })
         .add("update_formula", {
-        condition: (cell) => cell.isFormula(),
+        condition: (cell) => cell.isFormula,
         generateRule: (_, cells) => {
             return { type: "FORMULA_MODIFIER", increment: cells.length, current: 0 };
         },
         sequence: 30,
     })
         .add("increment_number", {
-        condition: (cell) => cell.evaluated.type === CellValueType.number,
+        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
         generateRule: (cell, cells) => {
             const group = getGroup(cell, cells);
             let increment = 1;
@@ -3271,10 +4082,11 @@
             else if (group.length > 2) {
                 increment = getAverageIncrement(group) * group.length;
             }
+            const evaluation = evaluateLiteral(cell.content);
             return {
                 type: "INCREMENT_MODIFIER",
                 increment,
-                current: cell.evaluated.type === CellValueType.number ? cell.evaluated.value : 0,
+                current: evaluation.type === CellValueType.number ? evaluation.value : 0,
             };
         },
         sequence: 40,
@@ -3417,12 +4229,11 @@
     };
     const ErrorToolTipPopoverBuilder = {
         onHover: (position, getters) => {
-            const cell = getters.getCell(getters.getActiveSheetId(), position.col, position.row);
-            if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.error &&
-                cell.evaluated.error.logLevel > CellErrorLevel.silent) {
+            const cell = getters.getEvaluatedCell(position);
+            if (cell.type === CellValueType.error && cell.error.logLevel > CellErrorLevel.silent) {
                 return {
                     isOpen: true,
-                    props: { text: cell.evaluated.error.message },
+                    props: { text: cell.error.message },
                     Component: ErrorToolTip,
                     cellCorner: "TopRight",
                 };
@@ -3593,7 +4404,7 @@
             }
             const cellValues = (filter.filteredZone ? positions(filter.filteredZone) : [])
                 .filter(({ row }) => !this.env.model.getters.isRowHidden(sheetId, row))
-                .map(({ col, row }) => { var _a; return (_a = this.env.model.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.formattedValue; });
+                .map(({ col, row }) => this.env.model.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue);
             const filterValues = this.env.model.getters.getFilterValues(sheetId, position.col, position.row);
             const strValues = [...cellValues, ...filterValues];
             const normalizedFilteredValues = filterValues.map(toLowerCase);
@@ -4165,14 +4976,20 @@
         get cell() {
             const { col, row } = this.props.cellPosition;
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getCell(sheetId, col, row);
-            if (cell === null || cell === void 0 ? void 0 : cell.isLink()) {
-                return cell;
+            return this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+        }
+        get link() {
+            if (this.cell.link) {
+                return this.cell.link;
             }
+            const { col, row } = this.props.cellPosition;
             throw new Error(`LinkDisplay Component can only be used with link cells. ${toXC(col, row)} is not a link.`);
         }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
+        }
         openLink() {
-            this.cell.action(this.env);
+            openLink(this.link, this.env);
         }
         edit() {
             const { col, row } = this.props.cellPosition;
@@ -4185,13 +5002,13 @@
         unlink() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const { col, row } = this.props.cellPosition;
-            const style = this.cell.style;
+            const style = this.env.model.getters.getCellComputedStyle(sheetId, col, row);
             const textColor = (style === null || style === void 0 ? void 0 : style.textColor) === LINK_COLOR ? undefined : style === null || style === void 0 ? void 0 : style.textColor;
             this.env.model.dispatch("UPDATE_CELL", {
                 col,
                 row,
                 sheetId,
-                content: this.cell.link.label,
+                content: this.link.label,
                 style: { ...style, textColor, underline: undefined },
             });
         }
@@ -4202,9 +5019,9 @@
     const LinkCellPopoverBuilder = {
         onHover: (position, getters) => {
             const sheetId = getters.getActiveSheetId();
-            const cell = getters.getCell(sheetId, position.col, position.row);
+            const cell = getters.getEvaluatedCell(position);
             const shouldDisplayLink = !getters.isDashboard() &&
-                (cell === null || cell === void 0 ? void 0 : cell.isLink()) &&
+                cell.link &&
                 getters.isVisibleInViewport(sheetId, position.col, position.row);
             if (!shouldDisplayLink)
                 return { isOpen: false };
@@ -4300,11 +5117,7 @@
         return sheets.map((sheet, i) => createFullMenuItem(sheet.id, {
             name: sheet.name,
             sequence: i,
-            action: () => ({
-                link: { label: sheet.name, url: buildSheetLink(sheet.id) },
-                urlRepresentation: sheet.name,
-                isUrlEditable: false,
-            }),
+            action: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
         }));
     });
 
@@ -4388,7 +5201,7 @@
         constructor() {
             super(...arguments);
             this.menuItems = linkMenuRegistry.getAll();
-            this.state = owl.useState(this.defaultState);
+            this.link = owl.useState(this.defaultState);
             this.menu = owl.useState({
                 isOpen: false,
             });
@@ -4402,18 +5215,18 @@
         get defaultState() {
             const { col, row } = this.props.cellPosition;
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getCell(sheetId, col, row);
-            if (cell === null || cell === void 0 ? void 0 : cell.isLink()) {
+            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+            if (cell.link) {
                 return {
-                    link: { url: cell.link.url, label: cell.formattedValue },
-                    urlRepresentation: cell.urlRepresentation,
-                    isUrlEditable: cell.isUrlEditable,
+                    url: cell.link.url,
+                    label: cell.formattedValue,
+                    isUrlEditable: cell.link.isUrlEditable,
                 };
             }
             return {
-                link: { url: "", label: (cell === null || cell === void 0 ? void 0 : cell.formattedValue) || "" },
+                label: cell.formattedValue,
+                url: "",
                 isUrlEditable: true,
-                urlRepresentation: "",
             };
         }
         get menuPosition() {
@@ -4423,29 +5236,34 @@
             };
         }
         onSpecialLink(ev) {
-            const { detail } = ev;
-            this.state.link.url = detail.link.url;
-            this.state.link.label = detail.link.label;
-            this.state.isUrlEditable = detail.isUrlEditable;
-            this.state.urlRepresentation = detail.urlRepresentation;
+            const { detail: markdownLink } = ev;
+            const link = detectLink(markdownLink);
+            if (!link) {
+                return;
+            }
+            this.link.url = link.url;
+            this.link.label = link.label;
+            this.link.isUrlEditable = link.isUrlEditable;
+        }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
         }
         openMenu() {
             this.menu.isOpen = true;
         }
         removeLink() {
-            this.state.link.url = "";
-            this.state.urlRepresentation = "";
-            this.state.isUrlEditable = true;
+            this.link.url = "";
+            this.link.isUrlEditable = true;
         }
         save() {
             var _a, _b;
             const { col, row } = this.props.cellPosition;
-            const label = this.state.link.label || this.state.link.url;
+            const label = this.link.label || this.link.url;
             this.env.model.dispatch("UPDATE_CELL", {
                 col: col,
                 row: row,
                 sheetId: this.env.model.getters.getActiveSheetId(),
-                content: markdownLink(label, this.state.link.url),
+                content: markdownLink(label, this.link.url),
             });
             (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
         }
@@ -4456,7 +5274,7 @@
         onKeyDown(ev) {
             switch (ev.key) {
                 case "Enter":
-                    if (this.state.link.url) {
+                    if (this.link.url) {
                         this.save();
                     }
                     ev.stopPropagation();
@@ -4492,12 +5310,6 @@
         .add("LinkCell", LinkCellPopoverBuilder)
         .add("LinkEditor", LinkEditorPopoverBuilder)
         .add("FilterMenu", FilterMenuPopoverBuilder);
-
-    /**
-     * This registry is intended to map a cell content (raw string) to
-     * an instance of a cell.
-     */
-    const cellRegistry = new Registry();
 
     /**
      * Registry intended to support usual currencies. It is mainly used to create
@@ -4613,15 +5425,12 @@
         CellValueType.text,
         CellValueType.boolean,
     ];
-    function convertCell(cell, index) {
-        return {
-            index,
-            type: cell ? cell.evaluated.type : CellValueType.empty,
-            value: cell ? cell.evaluated.value : "",
-        };
-    }
     function sortCells(cells, sortDirection, emptyCellAsZero) {
-        const cellsWithIndex = cells.map(convertCell);
+        const cellsWithIndex = cells.map((cell, index) => ({
+            index,
+            type: cell.type,
+            value: cell.value,
+        }));
         let emptyCells = cellsWithIndex.filter((x) => x.type === CellValueType.empty);
         let nonEmptyCells = cellsWithIndex.filter((x) => x.type !== CellValueType.empty);
         if (emptyCellAsZero) {
@@ -5285,19 +6094,15 @@
                 Math.max(0, (scrollableViewportHeight - DEFAULT_FIGURE_HEIGHT) / 2),
         }; // Position at the center of the scrollable viewport
         let title = "";
-        const cells = env.model.getters.getCellsInZone(sheetId, {
+        const cells = env.model.getters.getEvaluatedCellsInZone(sheetId, {
             ...dataSetZone,
             bottom: dataSetZone.top,
         });
-        const dataSetsHaveTitle = !!cells.find((cell) => cell && cell.evaluated.type !== CellValueType.number);
+        const dataSetsHaveTitle = cells.some((cell) => cell.type !== CellValueType.number && cell.type !== CellValueType.empty);
         if (dataSetsHaveTitle) {
-            const texts = cells.reduce((acc, cell) => {
-                const text = cell && cell.evaluated.type !== CellValueType.error && env.model.getters.getCellText(cell);
-                if (text) {
-                    acc.push(text);
-                }
-                return acc;
-            }, []);
+            const texts = cells
+                .filter((cell) => cell.type !== CellValueType.error && cell.type !== CellValueType.empty)
+                .map((cell) => cell.formattedValue);
             const lastElement = texts.splice(-1)[0];
             title = texts.join(", ");
             if (lastElement) {
@@ -6930,22 +7735,21 @@
     // Scorecard
     // ---------------------------------------------------------------------------
     function getBaselineText(baseline, keyValue, baselineMode) {
-        const baselineEvaluated = baseline === null || baseline === void 0 ? void 0 : baseline.evaluated;
-        if (!baseline || baselineEvaluated === undefined) {
+        if (!baseline) {
             return "";
         }
         else if (baselineMode === "text" ||
             (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number ||
-            baselineEvaluated.type !== CellValueType.number) {
+            baseline.type !== CellValueType.number) {
             return baseline.formattedValue;
         }
         else {
-            let diff = keyValue.value - baselineEvaluated.value;
+            let diff = keyValue.value - baseline.value;
             if (baselineMode === "percentage" && diff !== 0) {
-                diff = (diff / baselineEvaluated.value) * 100;
+                diff = (diff / baseline.value) * 100;
             }
-            if (baselineMode !== "percentage" && baselineEvaluated.format) {
-                return formatValue(diff, baselineEvaluated.format);
+            if (baselineMode !== "percentage" && baseline.format) {
+                return formatValue(diff, baseline.format);
             }
             const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
             return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
@@ -6997,7 +7801,7 @@
                 return [];
             }
             const dataRange = getters.getRangeFromSheetXC(ds.dataRange.sheetId, dataXC);
-            return getters.getRangeValues(dataRange);
+            return getters.getRangeValues(dataRange).map((value) => (value === "" ? undefined : value));
         }
         return [];
     }
@@ -7073,10 +7877,13 @@
         };
     }
     function getLabelFormat(getters, range) {
-        var _a;
         if (!range)
             return undefined;
-        return (_a = getters.getCell(range.sheetId, range.zone.left, range.zone.top)) === null || _a === void 0 ? void 0 : _a.evaluated.format;
+        return getters.getEvaluatedCell({
+            sheetId: range.sheetId,
+            col: range.zone.left,
+            row: range.zone.top,
+        }).format;
     }
     function getChartLabelValues(getters, dataSets, labelRange) {
         let labels = { values: [], formattedValues: [] };
@@ -7084,9 +7891,7 @@
             if (!labelRange.invalidXc && !labelRange.invalidSheetName) {
                 labels = {
                     formattedValues: getters.getRangeFormattedValues(labelRange),
-                    values: getters
-                        .getRangeValues(labelRange)
-                        .map((val) => (val !== undefined && val !== null ? String(val) : "")),
+                    values: getters.getRangeValues(labelRange).map((val) => String(val)),
                 };
             }
         }
@@ -7114,7 +7919,11 @@
             if (ds.labelCell) {
                 const labelRange = ds.labelCell;
                 const cell = labelRange
-                    ? getters.getCell(labelRange.sheetId, labelRange.zone.left, labelRange.zone.top)
+                    ? getters.getEvaluatedCell({
+                        sheetId: labelRange.sheetId,
+                        col: labelRange.zone.left,
+                        row: labelRange.zone.top,
+                    })
                     : undefined;
                 label =
                     cell && labelRange
@@ -7613,14 +8422,18 @@
         let cellFormatter = null;
         let displayValue = false;
         if (dataRange !== undefined) {
-            const cell = getters.getCell(dataRange.sheetId, dataRange.zone.left, dataRange.zone.top);
-            if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number) {
+            const cell = getters.getEvaluatedCell({
+                sheetId: dataRange.sheetId,
+                col: dataRange.zone.left,
+                row: dataRange.zone.top,
+            });
+            if (cell.type === CellValueType.number) {
                 // in gauge graph "datasets.value" is used to calculate the angle of the
                 // needle in the graph. To prevent the needle from making 360° turns, we
                 // clip the value between a min and a max. This min and this max are slightly
                 // smaller and slightly larger than minRange and maxRange to mark the fact
                 // that the needle is out of the range limits
-                needleValue = clip(cell === null || cell === void 0 ? void 0 : cell.evaluated.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
+                needleValue = clip(cell.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
                 cellFormatter = () => getters.getRangeFormattedValues(dataRange)[0];
                 displayValue = true;
             }
@@ -7898,11 +8711,14 @@
         return !chart.labelsAsText && canBeLinearChart(chart, getters);
     }
     function canBeDateChart(chart, getters) {
-        var _a;
         if (!chart.labelRange || !chart.dataSets || !canBeLinearChart(chart, getters)) {
             return false;
         }
-        const labelFormat = (_a = getters.getCell(chart.labelRange.sheetId, chart.labelRange.zone.left, chart.labelRange.zone.top)) === null || _a === void 0 ? void 0 : _a.evaluated.format;
+        const labelFormat = getters.getEvaluatedCell({
+            sheetId: chart.labelRange.sheetId,
+            col: chart.labelRange.zone.left,
+            row: chart.labelRange.zone.top,
+        }).format;
         return Boolean(labelFormat && timeFormatMomentCompatible.test(labelFormat));
     }
     function canBeLinearChart(chart, getters) {
@@ -8286,28 +9102,49 @@
         let formattedKeyValue = "";
         let keyValueCell;
         if (chart.keyValue) {
-            const keyValueZone = chart.keyValue.zone;
-            keyValueCell = getters.getCell(chart.keyValue.sheetId, keyValueZone.left, keyValueZone.top);
-            keyValue = (keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated.value) ? String(keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated.value) : "";
-            formattedKeyValue = (keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.formattedValue) || "";
+            const keyValuePosition = {
+                sheetId: chart.keyValue.sheetId,
+                col: chart.keyValue.zone.left,
+                row: chart.keyValue.zone.top,
+            };
+            keyValueCell = getters.getEvaluatedCell(keyValuePosition);
+            keyValue = String(keyValueCell.value);
+            formattedKeyValue = keyValueCell.formattedValue;
         }
         let baselineCell;
-        if (chart.baseline) {
-            const baselineZone = chart.baseline.zone;
-            baselineCell = getters.getCell(chart.baseline.sheetId, baselineZone.left, baselineZone.top);
+        const baseline = chart.baseline;
+        if (baseline) {
+            const baselinePosition = {
+                sheetId: chart.baseline.sheetId,
+                col: chart.baseline.zone.left,
+                row: chart.baseline.zone.top,
+            };
+            baselineCell = getters.getEvaluatedCell(baselinePosition);
         }
         const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
-            baselineDisplay: getBaselineText(baselineCell, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
-            baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
-            baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
+            baselineDisplay: getBaselineText(baselineCell, keyValueCell, chart.baselineMode),
+            baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
+            baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: _t(chart.baselineDescr || ""),
             fontColor: chartFontColor(background),
             background,
-            baselineStyle: chart.baselineMode !== "percentage" ? baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.style : undefined,
-            keyValueStyle: keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.style,
+            baselineStyle: chart.baselineMode !== "percentage" && baseline
+                ? getters.getCellStyle({
+                    sheetId: baseline.sheetId,
+                    col: baseline.zone.left,
+                    row: baseline.zone.top,
+                })
+                : undefined,
+            keyValueStyle: chart.keyValue
+                ? getters.getCellStyle({
+                    sheetId: chart.keyValue.sheetId,
+                    col: chart.keyValue.zone.left,
+                    row: chart.keyValue.zone.top,
+                })
+                : undefined,
         };
     }
 
@@ -9904,14 +10741,13 @@
             };
         }
         getCommonFormat() {
-            var _a;
             const selectedZones = this.env.model.getters.getSelectedZones();
             const sheetId = this.env.model.getters.getActiveSheetId();
             const cells = selectedZones
-                .map((zone) => this.env.model.getters.getCellsInZone(sheetId, zone))
+                .map((zone) => this.env.model.getters.getEvaluatedCellsInZone(sheetId, zone))
                 .flat();
-            const firstFormat = (_a = cells[0]) === null || _a === void 0 ? void 0 : _a.format;
-            return cells.every((cell) => (cell === null || cell === void 0 ? void 0 : cell.format) === firstFormat) ? firstFormat : undefined;
+            const firstFormat = cells[0].format;
+            return cells.every((cell) => cell.format === firstFormat) ? firstFormat : undefined;
         }
         currencyDisplayName(currency) {
             return currency.name + (currency.code ? ` (${currency.code})` : "");
@@ -9966,6 +10802,9 @@
         get hasSearchResult() {
             return this.env.model.getters.getCurrentSelectedMatchIndex() !== null;
         }
+        get pendingSearch() {
+            return this.debounceTimeoutId !== undefined;
+        }
         setup() {
             this.showFormulaState = this.env.model.getters.shouldShowFormulas();
             owl.onMounted(() => this.focusInput());
@@ -10015,8 +10854,11 @@
             });
         }
         debouncedUpdateSearch() {
-            clearTimeout(this.inDebounce);
-            this.inDebounce = setTimeout(() => this.updateSearch.call(this), 400);
+            clearTimeout(this.debounceTimeoutId);
+            this.debounceTimeoutId = setTimeout(() => {
+                this.updateSearch();
+                this.debounceTimeoutId = undefined;
+            }, 400);
         }
         replace() {
             this.env.model.dispatch("REPLACE_SEARCH", {
@@ -10883,538 +11725,6 @@
             previousArgOptional = current.optional;
             previousArgDefault = current.default;
         }
-    }
-
-    // HELPERS
-    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
-    function assert(condition, message) {
-        if (!condition()) {
-            throw new Error(message);
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // FORMAT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
-    function toNumber(value) {
-        switch (typeof value) {
-            case "number":
-                return value;
-            case "boolean":
-                return value ? 1 : 0;
-            case "string":
-                if (isNumber(value) || value === "") {
-                    return parseNumber(value);
-                }
-                const internalDate = parseDateTime(value);
-                if (internalDate) {
-                    return internalDate.value;
-                }
-                throw new Error(expectNumberValueError(value));
-            default:
-                return 0;
-        }
-    }
-    function strictToNumber(value) {
-        if (value === "") {
-            throw new Error(expectNumberValueError(value));
-        }
-        return toNumber(value);
-    }
-    function toString(value) {
-        switch (typeof value) {
-            case "string":
-                return value;
-            case "number":
-                return value.toString();
-            case "boolean":
-                return value ? "TRUE" : "FALSE";
-            default:
-                return "";
-        }
-    }
-    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
-    function normalizeString(str) {
-        return str
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-    }
-    /**
-     * Normalize a value.
-     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
-     */
-    function normalizeValue(value) {
-        return typeof value === "string" ? normalizeString(value) : value;
-    }
-    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
-    function toBoolean(value) {
-        switch (typeof value) {
-            case "boolean":
-                return value;
-            case "string":
-                if (value) {
-                    let uppercaseVal = value.toUpperCase();
-                    if (uppercaseVal === "TRUE") {
-                        return true;
-                    }
-                    if (uppercaseVal === "FALSE") {
-                        return false;
-                    }
-                    throw new Error(expectBooleanValueError(value));
-                }
-                else {
-                    return false;
-                }
-            case "number":
-                return value ? true : false;
-            default:
-                return false;
-        }
-    }
-    function strictToBoolean(value) {
-        if (value === "") {
-            throw new Error(expectBooleanValueError(value));
-        }
-        return toBoolean(value);
-    }
-    function toJsDate(value) {
-        return numberToJsDate(toNumber(value));
-    }
-    // -----------------------------------------------------------------------------
-    // VISIT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function visitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        cellCb(arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                dataCb(arg);
-            }
-        }
-    }
-    function visitAny(args, cb) {
-        visitArgs(args, cb, cb);
-    }
-    function visitNumbers(args, cb) {
-        visitArgs(args, (cellValue) => {
-            if (typeof cellValue === "number") {
-                cb(cellValue);
-            }
-        }, (argValue) => {
-            cb(strictToNumber(argValue));
-        });
-    }
-    // -----------------------------------------------------------------------------
-    // REDUCE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function reduceArgs(args, cellCb, dataCb, initialValue) {
-        let val = initialValue;
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        val = cellCb(val, arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                val = dataCb(val, arg);
-            }
-        }
-        return val;
-    }
-    function reduceAny(args, cb, initialValue) {
-        return reduceArgs(args, cb, cb, initialValue);
-    }
-    function reduceNumbers(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (typeof ArgValue === "number") {
-                return cb(acc, ArgValue);
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, strictToNumber(argValue));
-        }, initialValue);
-    }
-    function reduceNumbersTextAs0(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (ArgValue !== undefined && ArgValue !== null) {
-                if (typeof ArgValue === "number") {
-                    return cb(acc, ArgValue);
-                }
-                else if (typeof ArgValue === "boolean") {
-                    return cb(acc, toNumber(ArgValue));
-                }
-                else {
-                    return cb(acc, 0);
-                }
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, toNumber(argValue));
-        }, initialValue);
-    }
-    // -----------------------------------------------------------------------------
-    // CONDITIONAL EXPLORE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    /**
-     * This function allows to visit arguments and stop the visit if necessary.
-     * It is mainly used to bypass argument evaluation for functions like OR or AND.
-     */
-    function conditionalVisitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        if (!cellCb(arg[x][y]))
-                            return;
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                if (!dataCb(arg))
-                    return;
-            }
-        }
-    }
-    function conditionalVisitBoolean(args, cb) {
-        return conditionalVisitArgs(args, (ArgValue) => {
-            if (typeof ArgValue === "boolean") {
-                return cb(ArgValue);
-            }
-            if (typeof ArgValue === "number") {
-                return cb(ArgValue ? true : false);
-            }
-            return true;
-        }, (argValue) => {
-            if (argValue !== undefined && argValue !== null) {
-                return cb(strictToBoolean(argValue));
-            }
-            return true;
-        });
-    }
-    function getPredicate(descr, isQuery) {
-        let operator;
-        let operand;
-        let subString = descr.substring(0, 2);
-        if (subString === "<=" || subString === ">=" || subString === "<>") {
-            operator = subString;
-            operand = descr.substring(2);
-        }
-        else {
-            subString = descr.substring(0, 1);
-            if (subString === "<" || subString === ">" || subString === "=") {
-                operator = subString;
-                operand = descr.substring(1);
-            }
-            else {
-                operator = "=";
-                operand = descr;
-            }
-        }
-        if (isNumber(operand)) {
-            operand = toNumber(operand);
-        }
-        else if (operand === "TRUE" || operand === "FALSE") {
-            operand = toBoolean(operand);
-        }
-        const result = { operator, operand };
-        if (typeof operand === "string") {
-            if (isQuery) {
-                operand += "*";
-            }
-            result.regexp = operandToRegExp(operand);
-        }
-        return result;
-    }
-    function operandToRegExp(operand) {
-        let exp = "";
-        let predecessor = "";
-        for (let char of operand) {
-            if (char === "?" && predecessor !== "~") {
-                exp += ".";
-            }
-            else if (char === "*" && predecessor !== "~") {
-                exp += ".*";
-            }
-            else {
-                if (char === "*" || char === "?") {
-                    //remove "~"
-                    exp = exp.slice(0, -1);
-                }
-                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
-                    exp += "\\";
-                }
-                exp += char;
-            }
-            predecessor = char;
-        }
-        return new RegExp("^" + exp + "$", "i");
-    }
-    function evaluatePredicate(value, criterion) {
-        const { operator, operand } = criterion;
-        if (value === undefined || operand === undefined) {
-            return false;
-        }
-        if (typeof operand === "number" && operator === "=") {
-            return toString(value) === toString(operand);
-        }
-        if (operator === "<>" || operator === "=") {
-            let result;
-            if (typeof value === typeof operand) {
-                if (typeof value === "string" && criterion.regexp) {
-                    result = criterion.regexp.test(value);
-                }
-                else {
-                    result = value === operand;
-                }
-            }
-            else {
-                result = false;
-            }
-            return operator === "=" ? result : !result;
-        }
-        if (typeof value === typeof operand) {
-            switch (operator) {
-                case "<":
-                    return value < operand;
-                case ">":
-                    return value > operand;
-                case "<=":
-                    return value <= operand;
-                case ">=":
-                    return value >= operand;
-            }
-        }
-        return false;
-    }
-    /**
-     * Functions used especially for predicate evaluation on ranges.
-     *
-     * Take ranges with same dimensions and take predicates, one for each range.
-     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
-     * range correspond to the associated predicate, then the function uses a callback
-     * function with the parameters "i" and "j".
-     *
-     * Syntax:
-     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
-     *
-     * - range1 (range): The range to check against predicate1.
-     * - predicate1 (string): The pattern or test to apply to range1.
-     * - range2: (range, repeatable) ranges to check.
-     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
-     *
-     * - cb(i: number, j: number) => void: the callback function.
-     *
-     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
-     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
-     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
-     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
-     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
-     */
-    function visitMatchingRanges(args, cb, isQuery = false) {
-        const countArg = args.length;
-        if (countArg % 2 === 1) {
-            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
-        }
-        const dimRow = args[0].length;
-        const dimCol = args[0][0].length;
-        let predicates = [];
-        for (let i = 0; i < countArg - 1; i += 2) {
-            const criteriaRange = args[i];
-            if (!Array.isArray(criteriaRange) ||
-                criteriaRange.length !== dimRow ||
-                criteriaRange[0].length !== dimCol) {
-                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
-            }
-            const description = toString(args[i + 1]);
-            predicates.push(getPredicate(description, isQuery));
-        }
-        for (let i = 0; i < dimRow; i++) {
-            for (let j = 0; j < dimCol; j++) {
-                let validatedPredicates = true;
-                for (let k = 0; k < countArg - 1; k += 2) {
-                    const criteriaValue = args[k][i][j];
-                    const criterion = predicates[k / 2];
-                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
-                    if (!validatedPredicates) {
-                        break;
-                    }
-                }
-                if (validatedPredicates) {
-                    cb(i, j);
-                }
-            }
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // COMMON FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function getNormalizedValueFromColumnRange(range, index) {
-        return normalizeValue(range[0][index]);
-    }
-    function getNormalizedValueFromRowRange(range, index) {
-        return normalizeValue(range[index][0]);
-    }
-    /**
-     * Perform a dichotomic search on an array and return the index of the nearest match.
-     *
-     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
-     * element of the array match the target, the method will return the first match if the array is sorted
-     * in descending order, and the last match if the array is in ascending order.
-     *
-     *
-     * @param data the array in which to search.
-     * @param target the value to search.
-     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
-     * @param sortOrder whether the array is sorted in ascending or descending order.
-     * @param rangeLength the number of elements to consider in the search array.
-     * @param getValueInData function returning the element at index i in the search array.
-     */
-    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
-        if (target === null || target === undefined) {
-            return -1;
-        }
-        const targetType = typeof target;
-        let matchVal = undefined;
-        let matchValIndex = undefined;
-        let indexLeft = 0;
-        let indexRight = rangeLength - 1;
-        let indexMedian;
-        let currentIndex;
-        let currentVal;
-        let currentType;
-        while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.floor((indexLeft + indexRight) / 2);
-            currentIndex = indexMedian;
-            currentVal = getValueInData(data, currentIndex);
-            currentType = typeof currentVal;
-            // 1 - linear search to find value with the same type
-            while (indexLeft < currentIndex && targetType !== currentType) {
-                currentIndex--;
-                currentVal = getValueInData(data, currentIndex);
-                currentType = typeof currentVal;
-            }
-            if (currentType !== targetType || currentVal === undefined) {
-                indexLeft = indexMedian + 1;
-                continue;
-            }
-            // 2 - check if value match
-            if (mode === "strict" && currentVal === target) {
-                matchVal = currentVal;
-                matchValIndex = currentIndex;
-            }
-            else if (mode === "nextSmaller" && currentVal <= target) {
-                if (matchVal === undefined ||
-                    matchVal < currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
-                    matchVal = currentVal;
-                    matchValIndex = currentIndex;
-                }
-            }
-            else if (mode === "nextGreater" && currentVal >= target) {
-                if (matchVal === undefined ||
-                    matchVal > currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
-                    matchVal = currentVal;
-                    matchValIndex = currentIndex;
-                }
-            }
-            // 3 - give new indexes for the Binary search
-            if ((sortOrder === "asc" && currentVal > target) ||
-                (sortOrder === "desc" && currentVal <= target)) {
-                indexRight = currentIndex - 1;
-            }
-            else {
-                indexLeft = indexMedian + 1;
-            }
-        }
-        // note that valMinIndex could be 0
-        return matchValIndex !== undefined ? matchValIndex : -1;
-    }
-    /**
-     * Perform a linear search and return the index of the match.
-     * -1 is returned if no value is found.
-     *
-     * Example:
-     * - [3, 6, 10], 3 => 0
-     * - [3, 6, 10], 6 => 1
-     * - [3, 6, 10], 9 => -1
-     * - [3, 6, 10], 2 => -1
-     *
-     * @param data the array to search in.
-     * @param target the value to search in the array.
-     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
-     * element from the target and "nextSmaller" the next smaller
-     * @param numberOfValues the number of elements to consider in the search array.
-     * @param getValueInData function returning the element at index i in the search array.
-     * @param reverseSearch if true, search in the array starting from the end.
-
-     */
-    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
-        if (target === null || target === undefined)
-            return -1;
-        const getValue = reverseSearch
-            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
-            : getValueInData;
-        let closestMatch = undefined;
-        let closestMatchIndex = -1;
-        for (let i = 0; i < numberOfValues; i++) {
-            const value = getValue(data, i);
-            if (value === target) {
-                return reverseSearch ? numberOfValues - i - 1 : i;
-            }
-            if (mode === "nextSmaller") {
-                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
-                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
-                    closestMatch = value;
-                    closestMatchIndex = i;
-                }
-            }
-            else if (mode === "nextGreater") {
-                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
-                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
-                    closestMatch = value;
-                    closestMatchIndex = i;
-                }
-            }
-        }
-        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
-    }
-    function compareCellValues(left, right) {
-        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
-        if (typeOrder === 0) {
-            if (typeof left === "string" && typeof right === "string") {
-                typeOrder = left.localeCompare(right);
-            }
-            else if (typeof left === "number" && typeof right === "number") {
-                typeOrder = left - right;
-            }
-            else if (typeof left === "boolean" && typeof right === "boolean") {
-                typeOrder = Number(left) - Number(right);
-            }
-        }
-        return typeOrder;
     }
 
     // -----------------------------------------------------------------------------
@@ -18165,7 +18475,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             case "OPERATOR":
                 return OP_PRIORITY[token.value] || 15;
         }
-        throw new Error(_lt("Unknown token: %s", token.value));
+        throw new BadExpressionError(_lt("Unknown token: %s", token.value));
     }
     function parsePrefix(current, tokens) {
         var _a, _b, _c, _d;
@@ -18180,7 +18490,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return { type: "STRING", value: removeStringQuotes(current.value) };
             case "FUNCTION":
                 if (tokens.shift().type !== "LEFT_PAREN") {
-                    throw new Error(_lt("Wrong function call"));
+                    throw new BadExpressionError(_lt("Wrong function call"));
                 }
                 else {
                     const args = [];
@@ -18208,7 +18518,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                     const closingToken = tokens.shift();
                     if (!closingToken || closingToken.type !== "RIGHT_PAREN") {
-                        throw new Error(_lt("Wrong function call"));
+                        throw new BadExpressionError(_lt("Wrong function call"));
                     }
                     return { type: "FUNCALL", value: current.value, args };
                 }
@@ -18236,14 +18546,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
                             throw new UnknownFunctionError(current.value);
                         }
-                        throw new Error(_lt("Invalid formula"));
+                        throw new BadExpressionError(_lt("Invalid formula"));
                     }
                     return { type: "STRING", value: current.value };
                 }
             case "LEFT_PAREN":
                 const result = parseExpression(tokens, 5);
                 if (!tokens.length || tokens[0].type !== "RIGHT_PAREN") {
-                    throw new Error(_lt("Unmatched left parenthesis"));
+                    throw new BadExpressionError(_lt("Unmatched left parenthesis"));
                 }
                 tokens.shift();
                 return result;
@@ -18255,7 +18565,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         operand: parseExpression(tokens, OP_PRIORITY[current.value]),
                     };
                 }
-                throw new Error(_lt("Unexpected token: %s", current.value));
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
         }
     }
     function parseInfix(left, current, tokens) {
@@ -18279,12 +18589,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 };
             }
         }
-        throw new Error(DEFAULT_ERROR_MESSAGE);
+        throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
     }
     function parseExpression(tokens, bp) {
         const token = tokens.shift();
         if (!token) {
-            throw new Error(DEFAULT_ERROR_MESSAGE);
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
         }
         let expr = parsePrefix(token, tokens);
         while (tokens[0] && bindingPower(tokens[0]) > bp) {
@@ -18305,7 +18615,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         const result = parseExpression(tokens, 0);
         if (tokens.length) {
-            throw new Error(DEFAULT_ERROR_MESSAGE);
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
         }
         return result;
     }
@@ -18594,10 +18904,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const ast = parseTokens([...tokens]);
             let nextId = 1;
             if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new Error(_lt("Invalid formula"));
+                throw new BadExpressionError(_lt("Invalid formula"));
             }
             if (ast.type === "UNKNOWN") {
-                throw new Error(_lt("Invalid formula"));
+                throw new BadExpressionError(_lt("Invalid formula"));
             }
             const compiledAST = compileAST(ast);
             const code = splitCodeLines([
@@ -18627,17 +18937,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 // check if arguments are supplied in the correct quantities
                 const nbrArg = currentFunctionArguments.length;
                 if (nbrArg < functionDefinition.minArgRequired) {
-                    throw new Error(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
                 }
                 if (nbrArg > functionDefinition.maxArgPossible) {
-                    throw new Error(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
                 }
                 const repeatingArg = functionDefinition.nbrArgRepeating;
                 if (repeatingArg > 1) {
                     const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
                     const nbrRepeatingArg = nbrArg - argBeforeRepeat;
                     if (nbrRepeatingArg % repeatingArg !== 0) {
-                        throw new Error(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
+                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
                     }
                 }
                 let listArgs = [];
@@ -18663,7 +18973,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             t === "RANGE<STRING>");
                         if (isRangeOnly) {
                             if (currentArg.type !== "REFERENCE") {
-                                throw new Error(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
+                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
                             }
                         }
                         const compiledAST = compileAST(currentArg, isLazy, isMeta, hasRange, {
@@ -18698,7 +19008,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 let id, fnName, statement;
                 if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
                     if (isMeta) {
-                        throw new Error(_lt(`Argument must be a reference to a cell or range.`));
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
                     }
                 }
                 if (ast.debug) {
@@ -19176,8 +19486,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 case "START_EDITION":
                     if (cmd.selection) {
-                        const cell = this.getters.getActiveCell();
-                        const content = cmd.text || (cell === null || cell === void 0 ? void 0 : cell.composerContent) || "";
+                        const sheetId = this.getters.getActiveSheetId();
+                        const content = cmd.text || this.getComposerContent({ sheetId, ...this.getters.getPosition() });
                         return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
                     }
                     else {
@@ -19314,8 +19624,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getCurrentContent() {
             if (this.mode === "inactive") {
-                const cell = this.getters.getActiveCell();
-                return (cell === null || cell === void 0 ? void 0 : cell.composerContent) || "";
+                const sheetId = this.getters.getActiveSheetId();
+                return this.getComposerContent({ sheetId, ...this.getters.getPosition() });
             }
             return this.currentContent;
         }
@@ -19434,17 +19744,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         startEdition(str, selection) {
             var _a;
-            const cell = this.getters.getActiveCell();
-            if (str && ((_a = cell === null || cell === void 0 ? void 0 : cell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
+            const evaluatedCell = this.getters.getActiveCell();
+            if (str && ((_a = evaluatedCell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
                 selection = selection || { start: str.length, end: str.length };
                 str = `${str}%`;
             }
-            this.initialContent = (cell === null || cell === void 0 ? void 0 : cell.composerContent) || "";
-            this.mode = "editing";
+            const sheetId = this.getters.getActiveSheetId();
             const { col, row } = this.getters.getPosition();
             this.col = col;
+            this.sheetId = sheetId;
             this.row = row;
-            this.sheetId = this.getters.getActiveSheetId();
+            this.initialContent = this.getComposerContent({ sheetId, col, row });
+            this.mode = "editing";
             this.setContent(str || this.initialContent, selection);
             this.colorIndexByRange = {};
             const zone = positionToZone({ col: this.col, row: this.row });
@@ -19455,7 +19766,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         stopEdition() {
             if (this.mode !== "inactive") {
-                const activeSheetId = this.getters.getActiveSheetId();
                 this.cancelEdition();
                 const { col, row } = this.getters.getMainCellPosition(this.sheetId, this.col, this.row);
                 let content = this.currentContent;
@@ -19464,7 +19774,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return;
                 }
                 if (content) {
-                    const cell = this.getters.getCell(activeSheetId, col, row);
+                    const sheetId = this.getters.getActiveSheetId();
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
                     if (content.startsWith("=")) {
                         const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
                         const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
@@ -19473,7 +19784,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             content += concat(new Array(missing).fill(")"));
                         }
                     }
-                    else if (cell === null || cell === void 0 ? void 0 : cell.isLink()) {
+                    else if (cell.link) {
                         content = markdownLink(content, cell.link.url);
                     }
                     this.dispatch("UPDATE_CELL", {
@@ -19507,6 +19818,38 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     sheetIdTo: this.sheetId,
                 });
             }
+        }
+        getComposerContent({ sheetId, col, row }) {
+            const { col: mainCol, row: mainRow } = this.getters.getMainCellPosition(sheetId, col, row);
+            const cell = this.getters.getCell(sheetId, mainCol, mainRow);
+            if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
+                return cell.content;
+            }
+            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell({
+                sheetId,
+                col: mainCol,
+                row: mainRow,
+            });
+            switch (type) {
+                case CellValueType.text:
+                case CellValueType.empty:
+                    return value;
+                case CellValueType.boolean:
+                    return formattedValue;
+                case CellValueType.error:
+                    return (cell === null || cell === void 0 ? void 0 : cell.content) || "";
+                case CellValueType.number:
+                    if (format && isDateTimeFormat(format)) {
+                        return formattedValue;
+                    }
+                    return this.numberComposerContent(value, format);
+            }
+        }
+        numberComposerContent(value, format) {
+            if (format === null || format === void 0 ? void 0 : format.includes("%")) {
+                return `${value * 100}%`;
+            }
+            return formatValue(value);
         }
         /**
          * Reset the current content to the active cell content
@@ -20532,11 +20875,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get containerStyle() {
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
-            let style = {};
-            if (cell) {
-                const cellPosition = this.env.model.getters.getCellPosition(cell.id);
-                style = this.env.model.getters.getCellComputedStyle(cellPosition.sheetId, cellPosition.col, cellPosition.row);
-            }
+            const position = this.env.model.getters.getPosition();
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const cellPosition = this.env.model.getters.getMainCellPosition(sheetId, position.col, position.row);
+            const style = this.env.model.getters.getCellComputedStyle(sheetId, cellPosition.col, cellPosition.row);
             // position style
             const { x: left, y: top, width, height } = this.rect;
             // color style
@@ -20550,7 +20892,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             // align style
             let textAlign = "left";
             if (!isFormula) {
-                textAlign = style.align || (cell === null || cell === void 0 ? void 0 : cell.defaultAlign) || "left";
+                textAlign = style.align || cell.defaultAlign;
             }
             return `
       left: ${left - 1}px;
@@ -22293,7 +22635,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.keyDownMapping = {
                 ENTER: () => {
                     const cell = this.env.model.getters.getActiveCell();
-                    !cell || cell.isEmpty()
+                    cell.type === CellValueType.empty
                         ? this.props.onGridComposerCellFocused()
                         : this.props.onComposerContentFocused();
                 },
@@ -22301,7 +22643,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 "SHIFT+TAB": () => this.env.model.selection.moveAnchorCell("left", "one"),
                 F2: () => {
                     const cell = this.env.model.getters.getActiveCell();
-                    !cell || cell.isEmpty()
+                    cell.type === CellValueType.empty
                         ? this.props.onGridComposerCellFocused()
                         : this.props.onComposerContentFocused();
                 },
@@ -22528,8 +22870,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onCellDoubleClicked(col, row) {
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getCell(sheetId, col, row);
-            if (!cell || cell.isEmpty()) {
+            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+            if (cell.type === CellValueType.empty) {
                 this.props.onGridComposerCellFocused();
             }
             else {
@@ -22678,395 +23020,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onComposerContentFocused: Function,
         onGridComposerCellFocused: Function,
     };
-
-    /**
-     * Abstract base implementation of a cell.
-     * Concrete cell classes are responsible to build the raw cell `content` based on
-     * whatever data they have (formula, string, ...).
-     */
-    class AbstractCell {
-        constructor(id, lazyEvaluated, properties) {
-            this.id = id;
-            this.style = properties.style;
-            this.format = properties.format;
-            this.lazyEvaluated = lazyEvaluated.map((evaluated) => ({
-                ...evaluated,
-                format: properties.format || evaluated.format,
-            }));
-        }
-        isFormula() {
-            return false;
-        }
-        isLink() {
-            return false;
-        }
-        isEmpty() {
-            return false;
-        }
-        get evaluated() {
-            return this.lazyEvaluated();
-        }
-        get formattedValue() {
-            return formatValue(this.evaluated.value, this.evaluated.format);
-        }
-        get composerContent() {
-            return this.content;
-        }
-        get defaultAlign() {
-            switch (this.evaluated.type) {
-                case CellValueType.number:
-                case CellValueType.empty:
-                    return "right";
-                case CellValueType.boolean:
-                case CellValueType.error:
-                    return "center";
-                case CellValueType.text:
-                    return "left";
-            }
-        }
-        /**
-         * Only empty cells, text cells and numbers are valid
-         */
-        get isAutoSummable() {
-            var _a;
-            switch (this.evaluated.type) {
-                case CellValueType.empty:
-                case CellValueType.text:
-                    return true;
-                case CellValueType.number:
-                    return !((_a = this.evaluated.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
-                case CellValueType.error:
-                case CellValueType.boolean:
-                    return false;
-            }
-        }
-    }
-    class EmptyCell extends AbstractCell {
-        constructor(id, properties = {}) {
-            super(id, lazy({ value: "", type: CellValueType.empty }), properties);
-            this.content = "";
-        }
-        isEmpty() {
-            return true;
-        }
-    }
-    class NumberCell extends AbstractCell {
-        constructor(id, value, properties = {}) {
-            super(id, lazy({ value, type: CellValueType.number }), properties);
-            this.content = formatValue(this.evaluated.value);
-        }
-        get composerContent() {
-            var _a;
-            if ((_a = this.format) === null || _a === void 0 ? void 0 : _a.includes("%")) {
-                return `${this.evaluated.value * 100}%`;
-            }
-            return super.composerContent;
-        }
-    }
-    class BooleanCell extends AbstractCell {
-        constructor(id, value, properties = {}) {
-            super(id, lazy({ value, type: CellValueType.boolean }), properties);
-            this.content = this.evaluated.value ? "TRUE" : "FALSE";
-        }
-    }
-    class TextCell extends AbstractCell {
-        constructor(id, value, properties = {}) {
-            super(id, lazy({ value, type: CellValueType.text }), properties);
-            this.content = this.evaluated.value;
-        }
-    }
-    /**
-     * A date time cell is a number cell with a required
-     * date time format.
-     */
-    class DateTimeCell extends NumberCell {
-        constructor(id, value, properties) {
-            super(id, value, properties);
-            this.format = properties.format;
-        }
-        get composerContent() {
-            return formatValue(this.evaluated.value, this.format);
-        }
-    }
-    class LinkCell extends AbstractCell {
-        constructor(id, content, properties = {}) {
-            var _a;
-            const link = parseMarkdownLink(content);
-            properties = {
-                ...properties,
-                style: {
-                    ...properties.style,
-                    textColor: ((_a = properties.style) === null || _a === void 0 ? void 0 : _a.textColor) || LINK_COLOR,
-                },
-            };
-            link.label = _t(link.label);
-            super(id, lazy({ value: link.label, type: CellValueType.text }), properties);
-            this.link = link;
-            this.content = content;
-        }
-        isLink() {
-            return true;
-        }
-        get composerContent() {
-            return this.link.label;
-        }
-    }
-    /**
-     * Simple web link cell
-     */
-    class WebLinkCell extends LinkCell {
-        constructor(id, content, properties = {}) {
-            super(id, content, properties);
-            this.link.url = this.withHttp(this.link.url);
-            this.link.isExternal = true;
-            this.content = markdownLink(this.link.label, this.link.url);
-            this.urlRepresentation = this.link.url;
-            this.isUrlEditable = true;
-        }
-        action(env) {
-            window.open(this.link.url, "_blank");
-        }
-        /**
-         * Add the `https` prefix to the url if it's missing
-         */
-        withHttp(url) {
-            return !/^https?:\/\//i.test(url) ? `https://${url}` : url;
-        }
-    }
-    /**
-     * Link redirecting to a given sheet in the workbook.
-     */
-    class SheetLinkCell extends LinkCell {
-        constructor(id, content, properties = {}, sheetName) {
-            super(id, content, properties);
-            this.sheetName = sheetName;
-            this.sheetId = parseSheetLink(this.link.url);
-            this.isUrlEditable = false;
-        }
-        action(env) {
-            env.model.dispatch("ACTIVATE_SHEET", {
-                sheetIdFrom: env.model.getters.getActiveSheetId(),
-                sheetIdTo: this.sheetId,
-            });
-        }
-        get urlRepresentation() {
-            return this.sheetName(this.sheetId) || _lt("Invalid sheet");
-        }
-    }
-    class FormulaCell extends AbstractCell {
-        constructor(buildFormulaString, id, compiledFormula, dependencies, properties) {
-            super(id, lazy({ value: LOADING, type: CellValueType.text }), properties);
-            this.buildFormulaString = buildFormulaString;
-            this.compiledFormula = compiledFormula;
-            this.dependencies = dependencies;
-        }
-        get content() {
-            return this.buildFormulaString(this);
-        }
-        isFormula() {
-            return true;
-        }
-        assignEvaluation(lazyEvaluationResult) {
-            this.lazyEvaluated = lazyEvaluationResult.map((evaluationResult) => {
-                if (evaluationResult instanceof EvaluationError) {
-                    return {
-                        value: evaluationResult.errorType,
-                        type: CellValueType.error,
-                        error: evaluationResult,
-                    };
-                }
-                const { value, format } = evaluationResult;
-                switch (typeof value) {
-                    case "number":
-                        return {
-                            value: value || 0,
-                            format,
-                            type: CellValueType.number,
-                        };
-                    case "boolean":
-                        return {
-                            value,
-                            format,
-                            type: CellValueType.boolean,
-                        };
-                    case "string":
-                        return {
-                            value,
-                            format,
-                            type: CellValueType.text,
-                        };
-                    case "object": // null
-                        return {
-                            value: 0,
-                            format,
-                            type: CellValueType.number,
-                        };
-                    default:
-                        // cannot happen with Typescript compiler watching
-                        // but possible in a vanilla javascript code base
-                        return {
-                            value: "",
-                            type: CellValueType.empty,
-                        };
-                }
-            });
-        }
-    }
-    /**
-     * Cell containing a formula which could not be compiled
-     * or a content which could not be parsed.
-     */
-    class ErrorCell extends AbstractCell {
-        /**
-         * @param id
-         * @param content Invalid formula string
-         * @param error Compilation or parsing error
-         * @param properties
-         */
-        constructor(id, content, error, properties) {
-            super(id, lazy({
-                value: error.errorType,
-                type: CellValueType.error,
-                error,
-            }), properties);
-            this.content = content;
-        }
-    }
-
-    cellRegistry
-        .add("Formula", {
-        sequence: 10,
-        match: (content) => content.startsWith("="),
-        createCell: (id, content, properties, sheetId, getters) => {
-            const compiledFormula = compile(content);
-            const dependencies = compiledFormula.dependencies.map((xc) => getters.getRangeFromSheetXC(sheetId, xc));
-            return new FormulaCell((cell) => getters.buildFormulaContent(sheetId, cell), id, compiledFormula, dependencies, properties);
-        },
-    })
-        .add("Empty", {
-        sequence: 20,
-        match: (content) => content === "",
-        createCell: (id, content, properties) => new EmptyCell(id, properties),
-    })
-        .add("NumberWithDateTimeFormat", {
-        sequence: 25,
-        match: (content, format) => !!format && isNumber(content) && isDateTimeFormat(format),
-        createCell: (id, content, properties) => {
-            const format = properties.format;
-            return new DateTimeCell(id, parseNumber(content), { ...properties, format });
-        },
-    })
-        .add("Number", {
-        sequence: 30,
-        match: (content) => isNumber(content),
-        createCell: (id, content, properties) => {
-            if (!properties.format) {
-                properties.format = detectNumberFormat(content);
-            }
-            return new NumberCell(id, parseNumber(content), properties);
-        },
-    })
-        .add("Boolean", {
-        sequence: 40,
-        match: (content) => isBoolean(content),
-        createCell: (id, content, properties) => {
-            return new BooleanCell(id, content.toUpperCase() === "TRUE" ? true : false, properties);
-        },
-    })
-        .add("DateTime", {
-        sequence: 50,
-        match: (content) => isDateTime(content),
-        createCell: (id, content, properties) => {
-            const internalDate = parseDateTime(content);
-            const format = properties.format || internalDate.format;
-            return new DateTimeCell(id, internalDate.value, { ...properties, format });
-        },
-    })
-        .add("MarkdownSheetLink", {
-        sequence: 60,
-        match: (content) => isMarkdownSheetLink(content),
-        createCell: (id, content, properties, sheetId, getters) => {
-            return new SheetLinkCell(id, content, properties, (sheetId) => getters.tryGetSheetName(sheetId));
-        },
-    })
-        .add("MarkdownLink", {
-        sequence: 70,
-        match: (content) => isMarkdownLink(content),
-        createCell: (id, content, properties) => {
-            return new WebLinkCell(id, content, properties);
-        },
-    })
-        .add("WebLink", {
-        sequence: 80,
-        match: (content) => isWebLink(content),
-        createCell: (id, content, properties) => {
-            return new WebLinkCell(id, markdownLink(content, content), properties);
-        },
-    });
-    /**
-     * Return a factory function which can instantiate cells of
-     * different types, based on a raw content.
-     *
-     * ```
-     * // the createCell function can be used to instantiate new cells
-     * const createCell = cellFactory(getters);
-     * const cell = createCell(id, cellContent, cellProperties, sheetId)
-     * ```
-     */
-    function cellFactory(getters) {
-        const builders = cellRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
-        return function createCell(id, content, properties, sheetId) {
-            const builder = builders.find((factory) => factory.match(content, properties.format));
-            if (!builder) {
-                return new TextCell(id, content, properties);
-            }
-            try {
-                return builder.createCell(id, content, properties, sheetId, getters);
-            }
-            catch (error) {
-                return new ErrorCell(id, content, error instanceof EvaluationError
-                    ? error
-                    : new BadExpressionError(error.message || DEFAULT_ERROR_MESSAGE), properties);
-            }
-        };
-    }
-    function detectNumberFormat(content) {
-        const digitBase = content.includes(".") ? "0.00" : "0";
-        const matchedCurrencies = content.match(/[\$€]/);
-        if (matchedCurrencies) {
-            const matchedFirstDigit = content.match(/[\d]/);
-            const currency = "[$" + matchedCurrencies.values().next().value + "]";
-            if (matchedFirstDigit.index < matchedCurrencies.index) {
-                return "#,##" + digitBase + currency;
-            }
-            return currency + "#,##" + digitBase;
-        }
-        if (content.includes("%")) {
-            return digitBase + "%";
-        }
-        return undefined;
-    }
-
-    /**
-     * Parse a string representing a primitive cell value
-     */
-    function parsePrimitiveContent(content) {
-        if (content === "") {
-            return "";
-        }
-        else if (isNumber(content)) {
-            return parseNumber(content);
-        }
-        else if (isBoolean(content)) {
-            return content.toUpperCase() === "TRUE" ? true : false;
-        }
-        else if (isDateTime(content)) {
-            return parseDateTime(content).value;
-        }
-        else {
-            return content;
-        }
-    }
 
     /**
      * Represent a raw XML string
@@ -27202,12 +27155,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             super(...arguments);
             this.nextId = 1;
             this.cells = {};
-            this.createCell = cellFactory(this.getters);
         }
         adaptRanges(applyChange, sheetId) {
             for (const sheet of Object.keys(this.cells)) {
                 for (const cell of Object.values(this.cells[sheet] || {})) {
-                    if (cell.isFormula()) {
+                    if (cell.isFormula) {
                         for (const range of cell.dependencies) {
                             if (!sheetId || range.sheetId === sheetId) {
                                 const change = applyChange(range);
@@ -27368,20 +27320,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const style = (cellData.style && normalizedStyles[cellData.style]) || undefined;
             const format = (cellData.format && normalizedFormats[cellData.format]) || undefined;
             const cellId = this.getNextUid();
-            const properties = { format, style };
-            return this.createCell(cellId, (cellData === null || cellData === void 0 ? void 0 : cellData.content) || "", properties, sheetId);
+            return this.createCell(cellId, (cellData === null || cellData === void 0 ? void 0 : cellData.content) || "", format, style, sheetId);
         }
         exportForExcel(data) {
             this.export(data);
-            for (let sheet of data.sheets) {
-                for (const xc in sheet.cells) {
-                    const { col, row } = toCartesian(xc);
-                    const cell = this.getters.getCell(sheet.id, col, row);
-                    const exportedCellData = sheet.cells[xc];
-                    exportedCellData.value = cell.evaluated.value;
-                    exportedCellData.isFormula = cell.isFormula();
-                }
-            }
         }
         // ---------------------------------------------------------------------------
         // GETTERS
@@ -27420,8 +27362,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getFormulaCellContent(sheetId, cell) {
             return this.buildFormulaContent(sheetId, cell);
         }
-        getCellStyle(cell) {
-            return (cell && cell.style) || {};
+        getCellStyle({ sheetId, col, row }) {
+            var _a;
+            return ((_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.style) || {};
         }
         /**
          * Converts a zone to a XC coordinate system
@@ -27529,7 +27472,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             else {
                 style = before ? before.style : undefined;
             }
-            let format = ("format" in after ? after.format : before && before.format) || NULL_FORMAT;
+            let format = ("format" in after ? after.format : before && before.format) || detectFormat(afterContent);
             /* Read the following IF as:
              * we need to remove the cell if it is completely empty, but we can know if it completely empty if:
              * - the command says the new content is empty and has no border/format/style
@@ -27538,7 +27481,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              *     - or there was a cell at this place, but it's an empty cell and the command says border/format/style is empty
              *  */
             if (((hasContent && !afterContent && !after.formula) ||
-                (!hasContent && (!before || before.isEmpty()))) &&
+                (!hasContent && (!before || before.content === ""))) &&
                 !style &&
                 !format) {
                 if (before) {
@@ -27553,18 +27496,85 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             const cellId = (before === null || before === void 0 ? void 0 : before.id) || this.getNextUid();
-            const didContentChange = hasContent;
-            const properties = { format, style };
-            const cell = this.createCell(cellId, afterContent, properties, sheetId);
-            if (before && !didContentChange && cell.isFormula()) {
-                // content is not re-evaluated if the content did not change => reassign the value manually
-                // TODO this plugin should not care about evaluation
-                // and evaluation should not depend on implementation details here.
-                // Task 2813749
-                cell.assignEvaluation(lazy(before.evaluated));
-            }
+            const cell = this.createCell(cellId, afterContent, format, style, sheetId);
             this.history.update("cells", sheetId, cell.id, cell);
             this.dispatch("UPDATE_CELL_POSITION", { cellId: cell.id, col, row, sheetId });
+        }
+        createCell(id, content, format, style, sheetId) {
+            if (!content.startsWith("=")) {
+                return this.createLiteralCell(id, content, format, style);
+            }
+            try {
+                return this.createFormulaCell(id, content, format, style, sheetId);
+            }
+            catch (error) {
+                return this.createErrorFormula(id, content, format, style, error);
+            }
+        }
+        createLiteralCell(id, content, format, style) {
+            return {
+                id,
+                content,
+                style,
+                format,
+                isFormula: false,
+            };
+        }
+        createFormulaCell(id, content, format, style, sheetId) {
+            const compiledFormula = compile(content);
+            if (compiledFormula.dependencies.length) {
+                return this.createFormulaCellWithDependencies(id, compiledFormula, format, style, sheetId);
+            }
+            return {
+                id,
+                content,
+                style,
+                format,
+                isFormula: true,
+                compiledFormula,
+                dependencies: [],
+            };
+        }
+        /**
+         * Create a new formula cell with the content
+         * being a computed property to rebuild the dependencies XC.
+         */
+        createFormulaCellWithDependencies(id, compiledFormula, format, style, sheetId) {
+            const dependencies = compiledFormula.dependencies.map((xc) => this.getters.getRangeFromSheetXC(sheetId, xc));
+            const buildFormulaContent = this.buildFormulaContent.bind(this);
+            // Only for formulas with dependencies because
+            // **the closure is expensive memory-wise**
+            return {
+                id,
+                get content() {
+                    return buildFormulaContent(sheetId, {
+                        dependencies: this.dependencies,
+                        compiledFormula: this.compiledFormula,
+                    });
+                },
+                style,
+                format,
+                isFormula: true,
+                compiledFormula,
+                dependencies,
+            };
+        }
+        createErrorFormula(id, content, format, style, error) {
+            return {
+                id,
+                content,
+                style,
+                format,
+                isFormula: true,
+                compiledFormula: {
+                    dependencies: [],
+                    tokens: tokenize(content),
+                    execute: function () {
+                        throw error;
+                    },
+                },
+                dependencies: [],
+            };
         }
         checkCellOutOfSheet(sheetId, col, row) {
             const sheet = this.getters.tryGetSheet(sheetId);
@@ -29165,7 +29175,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (let col = left; col <= right; col++) {
                     if (col !== left || row !== top) {
                         const cell = this.getters.getCell(sheetId, col, row);
-                        if (cell && !cell.isEmpty()) {
+                        if (cell && cell.content !== "") {
                             return true;
                         }
                     }
@@ -29607,9 +29617,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getSheetName(sheetId) {
             return this.getSheet(sheetId).name;
         }
-        getCellsInZone(sheetId, zone) {
-            return positions(zone).map(({ col, row }) => this.getCell(sheetId, col, row));
-        }
         /**
          * Return the sheet name or undefined if the sheet doesn't exist.
          */
@@ -29657,16 +29664,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return undefined;
             }
             return this.getters.getCellById(cellId);
-        }
-        /**
-         * Returns all the cells of a col
-         */
-        getColCells(sheetId, col) {
-            return this.getSheet(sheetId)
-                .rows.map((row) => row.cells[col])
-                .filter(isDefined$1)
-                .map((cellId) => this.getters.getCellById(cellId))
-                .filter(isDefined$1);
         }
         getColsZone(sheetId, start, end) {
             return {
@@ -29748,9 +29745,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Check if a zone only contains empty cells
          */
         isEmpty(sheetId, zone) {
-            return this.getCellsInZone(sheetId, zone)
-                .flat()
-                .every((cell) => !cell || cell.isEmpty());
+            return positions(zone)
+                .map(({ col, row }) => this.getCell(sheetId, col, row))
+                .every((cell) => !cell || cell.content === "");
         }
         updateCellPosition(cmd) {
             const { sheetId, cellId, col, row } = cmd;
@@ -30232,9 +30229,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getEvaluationSheets",
         "doesHeaderExist",
         "getCell",
-        "getCellsInZone",
         "getCellPosition",
-        "getColCells",
         "getColsZone",
         "getRowCells",
         "getRowsZone",
@@ -30481,19 +30476,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let col = zone.left;
             let row = zone.bottom;
             if (col > 0) {
-                let left = this.getters.getCell(sheetId, col - 1, row);
-                while (left && !left.isEmpty()) {
+                let left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
+                while (left.type !== CellValueType.empty) {
                     row += 1;
-                    left = this.getters.getCell(sheetId, col - 1, row);
+                    left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
                 }
             }
             if (row === zone.bottom) {
                 col = zone.right;
                 if (col <= this.getters.getNumberCols(sheetId)) {
-                    let right = this.getters.getCell(sheetId, col + 1, row);
-                    while (right && !right.isEmpty()) {
+                    let right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
+                    while (right.type !== CellValueType.empty) {
                         row += 1;
-                        right = this.getters.getCell(sheetId, col + 1, row);
+                        right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
                     }
                 }
             }
@@ -30728,8 +30723,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @see getAutomaticSumZone
          */
         findSuitableZoneToSum(sheet, col, row) {
-            const topCell = this.getters.getCell(sheet.id, col, row - 1);
-            const leftCell = this.getters.getCell(sheet.id, col - 1, row);
+            const topCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col, row: row - 1 });
+            const leftCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col: col - 1, row });
             if (this.isNumber(leftCell) && !this.isNumber(topCell)) {
                 return this.findHorizontalZone(sheet, col, row);
             }
@@ -30773,9 +30768,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @returns the starting position of the valid zone or Infinity if the zone is not valid.
          */
         reduceZoneStart(sheet, zone, end) {
-            const cells = this.getters.getCellsInZone(sheet.id, zone);
+            const cells = this.getters.getEvaluatedCellsInZone(sheet.id, zone);
             const cellPositions = range(end, -1, -1);
-            const invalidCells = cellPositions.filter((position) => { var _a; return cells[position] && !((_a = cells[position]) === null || _a === void 0 ? void 0 : _a.isAutoSummable); });
+            const invalidCells = cellPositions.filter((position) => cells[position] && !cells[position].isAutoSummable);
             const maxValidPosition = Math.max(...invalidCells);
             const numberSequences = groupConsecutive(cellPositions.filter((position) => this.isNumber(cells[position])));
             const firstSequence = numberSequences[0] || [];
@@ -30789,8 +30784,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isNumber(cell) {
             var _a;
-            return ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number &&
-                !((_a = cell.evaluated.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT)));
+            return cell.type === CellValueType.number && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
         }
         isZoneValid(zone) {
             return zone.bottom >= zone.top && zone.right >= zone.left;
@@ -30953,7 +30947,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.getters.isVisibleInViewport(sheetId, this.persistentPopover.col, this.persistentPopover.row)) {
                 const mainPosition = this.getters.getMainCellPosition(sheetId, this.persistentPopover.col, this.persistentPopover.row);
                 const popover = (_b = (_a = cellPopoverRegistry
-                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, mainPosition, this.getters);
+                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, { sheetId, ...mainPosition }, this.getters);
                 return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
                     ? { isOpen: false }
                     : {
@@ -30969,7 +30963,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
             const popover = cellPopoverRegistry
                 .getAll()
-                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, mainPosition, this.getters); })
+                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, { sheetId, ...mainPosition }, this.getters); })
                 .find((popover) => popover === null || popover === void 0 ? void 0 : popover.isOpen);
             return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
                 ? { isOpen: false }
@@ -31092,6 +31086,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (let col of columnsIndex) {
                     cellsInRow.push({
                         cell: getters.getCell(sheetId, col, row),
+                        evaluatedCell: getters.getEvaluatedCell({ sheetId, col, row }),
                         border: getters.getCellBorder(sheetId, col, row) || undefined,
                         position: { col, row, sheetId },
                     });
@@ -31333,7 +31328,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         pasteCell(origin, target, operation, clipboardOption) {
             const { sheetId, col, row } = target;
-            const targetCell = this.getters.getCell(sheetId, col, row);
+            const targetCell = this.getters.getEvaluatedCell(target);
             if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== "onlyValue") {
                 const targetBorders = this.getters.getCellBorder(sheetId, col, row);
                 const originBorders = origin.border;
@@ -31350,17 +31345,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.dispatch("UPDATE_CELL", {
                         ...target,
                         style: origin.cell.style,
-                        format: origin.cell.evaluated.format || origin.cell.format,
+                        format: origin.evaluatedCell.format,
                     });
                     return;
                 }
                 if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyValue") {
-                    const content = formatValue(origin.cell.evaluated.value);
+                    const content = formatValue(origin.evaluatedCell.value);
                     this.dispatch("UPDATE_CELL", { ...target, content });
                     return;
                 }
                 let content = origin.cell.content;
-                if (origin.cell.isFormula() && operation === "COPY") {
+                if (origin.cell.isFormula && operation === "COPY") {
                     const offsetX = col - origin.position.col;
                     const offsetY = row - origin.position.row;
                     content = this.getUpdatedContent(sheetId, origin.cell, offsetX, offsetY, operation);
@@ -31444,7 +31439,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return (this.cells
                 .map((cells) => {
                 return cells
-                    .map((c) => c.cell ? this.getters.getCellText(c.cell, this.getters.shouldShowFormulas()) : "")
+                    .map((c) => c.cell ? this.getters.getCellText(c.position, this.getters.shouldShowFormulas()) : "")
                     .join("\t");
             })
                 .join("\n") || "\t");
@@ -31980,6 +31975,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor(getters, state, dispatch, config, selection) {
             super(getters, state, dispatch, config, selection);
             this.isUpToDate = false;
+            this.evaluatedCells = {};
             this.evalContext = config.evalContext;
         }
         // ---------------------------------------------------------------------------
@@ -32003,6 +31999,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         finalize() {
             if (!this.isUpToDate) {
                 this.evaluate();
+                this.isUpToDate = true;
             }
         }
         // ---------------------------------------------------------------------------
@@ -32010,7 +32007,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         evaluateFormula(formulaString, sheetId = this.getters.getActiveSheetId()) {
             const compiledFormula = compile(formulaString);
-            const params = this.getCompilationParameters(() => { });
+            const params = this.getCompilationParameters((cell) => this.getEvaluatedCell(this.getters.getCellPosition(cell.id)));
             const ranges = [];
             for (let xc of compiledFormula.dependencies) {
                 ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
@@ -32025,8 +32022,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (sheet === undefined)
                 return [];
             return this.getters
-                .getCellsInZone(sheet.id, range.zone)
-                .map((cell) => (cell === null || cell === void 0 ? void 0 : cell.formattedValue) || "");
+                .getEvaluatedCellsInZone(sheet.id, range.zone)
+                .map((cell) => cell.formattedValue);
         }
         /**
          * Return the value of each cell in the range.
@@ -32035,11 +32032,52 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheet = this.getters.tryGetSheet(range.sheetId);
             if (sheet === undefined)
                 return [];
-            return this.getters.getCellsInZone(sheet.id, range.zone).map((cell) => cell === null || cell === void 0 ? void 0 : cell.evaluated.value);
+            return this.getters.getEvaluatedCellsInZone(sheet.id, range.zone).map((cell) => cell.value);
+        }
+        getEvaluatedCell({ sheetId, col, row }) {
+            var _a, _b, _c;
+            const cell = this.getters.getCell(sheetId, col, row);
+            if (cell === undefined) {
+                return createEvaluatedCell("");
+            }
+            // the cell might have been created by a command in the current
+            // dispatch but the evaluation is not done yet.
+            return ((_c = (_b = (_a = this.evaluatedCells[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) === null || _b === void 0 ? void 0 : _b[row]) === null || _c === void 0 ? void 0 : _c.call(_b)) || createEvaluatedCell("");
+        }
+        getEvaluatedCells(sheetId) {
+            const rawCells = this.getters.getCells(sheetId) || {};
+            const record = {};
+            for (let cellId of Object.keys(rawCells)) {
+                const position = this.getters.getCellPosition(cellId);
+                record[cellId] = this.getEvaluatedCell(position);
+            }
+            return record;
+        }
+        /**
+         * Returns all the evaluated cells of a col
+         */
+        getColEvaluatedCells(sheetId, col) {
+            var _a;
+            return Object.values(((_a = this.evaluatedCells[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) || [])
+                .filter(isDefined$1)
+                .map((lazyCell) => lazyCell());
+        }
+        getEvaluatedCellsInZone(sheetId, zone) {
+            return positions(zone).map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }));
         }
         // ---------------------------------------------------------------------------
         // Evaluator
         // ---------------------------------------------------------------------------
+        setEvaluatedCell(cellId, evaluatedCell) {
+            const { col, row, sheetId } = this.getters.getCellPosition(cellId);
+            if (!this.evaluatedCells[sheetId]) {
+                this.evaluatedCells[sheetId] = {};
+            }
+            if (!this.evaluatedCells[sheetId][col]) {
+                this.evaluatedCells[sheetId][col] = {};
+            }
+            this.evaluatedCells[sheetId][col][row] = evaluatedCell;
+        }
         *getAllCells() {
             // use a generator function to avoid re-building a new object
             for (const sheetId of this.getters.getSheetIds()) {
@@ -32050,54 +32088,62 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         evaluate() {
-            const compilationParameters = this.getCompilationParameters(computeCell);
-            const visited = {};
-            for (const cell of this.getAllCells()) {
-                computeCell(cell);
-            }
-            this.isUpToDate = true;
-            function handleError(e) {
+            this.evaluatedCells = {};
+            const cellsBeingComputed = new Set();
+            const computeCell = (cell) => {
+                var _a, _b;
+                const cellId = cell.id;
+                const { col, row, sheetId } = this.getters.getCellPosition(cellId);
+                const lazyEvaluation = (_b = (_a = this.evaluatedCells[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) === null || _b === void 0 ? void 0 : _b[row];
+                if (lazyEvaluation) {
+                    return lazyEvaluation; // already computed
+                }
+                return lazy(() => {
+                    try {
+                        switch (cell.isFormula) {
+                            case true:
+                                return computeFormulaCell(cell);
+                            case false:
+                                return evaluateLiteral(cell.content, cell.format);
+                        }
+                    }
+                    catch (e) {
+                        return handleError(e, cell);
+                    }
+                });
+            };
+            const handleError = (e, cell) => {
                 if (!(e instanceof Error)) {
                     e = new Error(e);
                 }
                 const msg = (e === null || e === void 0 ? void 0 : e.errorType) || CellErrorType.GenericError;
                 // apply function name
                 const __lastFnCalled = compilationParameters[2].__lastFnCalled || "";
-                return new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
-            }
-            function computeCell(cell) {
-                if (!cell.isFormula()) {
-                    return;
+                const error = new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
+                return errorCell(cell.content, error);
+            };
+            const computeFormulaCell = (cellData) => {
+                const cellId = cellData.id;
+                if (cellsBeingComputed.has(cellId)) {
+                    throw new CircularDependencyError();
                 }
-                const cellId = cell.id;
-                const computedCell = lazy(() => {
-                    compilationParameters[2].__originCellXC = () => {
-                        // compute the value lazily for performance reasons
-                        const position = compilationParameters[2].getters.getCellPosition(cellId);
-                        return toXC(position.col, position.row);
-                    };
-                    if (cellId in visited) {
-                        if (visited[cellId] === null) {
-                            return new CircularDependencyError();
-                        }
-                        return cell.evaluated;
-                    }
-                    visited[cellId] = null;
-                    try {
-                        const computedCell = cell.compiledFormula.execute(cell.dependencies, ...compilationParameters);
-                        visited[cellId] = true;
-                        if (Array.isArray(computedCell.value)) {
-                            // if a value returns an array (like =A1:A3)
-                            throw new Error(_lt("This formula depends on invalid values"));
-                        }
-                        return { value: computedCell.value, format: cell.format || computedCell.format };
-                    }
-                    catch (error) {
-                        visited[cellId] = true;
-                        return handleError(error);
-                    }
-                });
-                cell.assignEvaluation(computedCell);
+                compilationParameters[2].__originCellXC = () => {
+                    // compute the value lazily for performance reasons
+                    const position = compilationParameters[2].getters.getCellPosition(cellId);
+                    return toXC(position.col, position.row);
+                };
+                cellsBeingComputed.add(cellId);
+                const computedCell = cellData.compiledFormula.execute(cellData.dependencies, ...compilationParameters);
+                cellsBeingComputed.delete(cellId);
+                if (Array.isArray(computedCell.value)) {
+                    // if a value returns an array (like =A1:A3)
+                    throw new Error(_lt("This formula depends on invalid values"));
+                }
+                return createEvaluatedCell(computedCell.value, cellData.format || computedCell.format);
+            };
+            const compilationParameters = this.getCompilationParameters((cell) => computeCell(cell)());
+            for (const cell of this.getAllCells()) {
+                this.setEvaluatedCell(cell.id, computeCell(cell));
             }
         }
         /**
@@ -32117,7 +32163,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     throw new Error(_lt("Invalid sheet name"));
                 }
                 cell = getters.getCell(range.sheetId, range.zone.left, range.zone.top);
-                if (!cell || cell.isEmpty()) {
+                if (!cell || cell.content === "") {
                     // magic "empty" value
                     // Returning {value: null} instead of undefined will ensure that we don't
                     // fall back on the default value of the argument provided to the formula's compute function
@@ -32125,12 +32171,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 return getEvaluatedCell(cell);
             }
-            function getEvaluatedCell(cell) {
-                if (cell.evaluated.type === CellValueType.error) {
-                    throw new EvaluationError(cell.evaluated.value, cell.evaluated.error.message, cell.evaluated.error.logLevel);
+            const getEvaluatedCell = (cell) => {
+                const evaluatedCell = computeCell(cell);
+                if (evaluatedCell.type === CellValueType.error) {
+                    throw evaluatedCell.error;
                 }
-                return cell.evaluated;
-            }
+                return evaluatedCell;
+            };
             /**
              * Return the values of the cell(s) used in reference, but always in the format of a range even
              * if a single cell is referenced. It is a list of col values. This is useful for the formulas that describe parameters as
@@ -32193,8 +32240,41 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return [refFn, range, evalContext];
         }
+        // ---------------------------------------------------------------------------
+        // Export
+        // ---------------------------------------------------------------------------
+        exportForExcel(data) {
+            for (let sheet of data.sheets) {
+                for (const xc in sheet.cells) {
+                    const { col, row } = toCartesian(xc);
+                    const cell = this.getters.getCell(sheet.id, col, row);
+                    if (cell) {
+                        const exportedCellData = sheet.cells[xc];
+                        exportedCellData.value = this.getEvaluatedCell({ sheetId: sheet.id, col, row }).value;
+                        exportedCellData.isFormula = cell.isFormula && !this.isBadExpression(cell.content);
+                    }
+                }
+            }
+        }
+        isBadExpression(formula) {
+            try {
+                compile(formula);
+                return false;
+            }
+            catch (error) {
+                return true;
+            }
+        }
     }
-    EvaluationPlugin.getters = ["evaluateFormula", "getRangeFormattedValues", "getRangeValues"];
+    EvaluationPlugin.getters = [
+        "evaluateFormula",
+        "getRangeFormattedValues",
+        "getRangeValues",
+        "getEvaluatedCell",
+        "getEvaluatedCells",
+        "getColEvaluatedCells",
+        "getEvaluatedCellsInZone",
+    ];
 
     class EvaluationChartPlugin extends UIPlugin {
         constructor() {
@@ -32274,57 +32354,51 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              */
             this.rulePredicate = {
                 CellIsRule: (cell, rule) => {
-                    if (cell && cell.evaluated.type === CellValueType.error) {
+                    if (cell.type === CellValueType.error) {
                         return false;
                     }
-                    const values = rule.values.map(parsePrimitiveContent);
+                    const values = rule.values.map(parseLiteral);
                     switch (rule.operator) {
                         case "IsEmpty":
-                            return !isDefined$1(cell) || cell.evaluated.value.toString().trim() === "";
+                            return cell.value.toString().trim() === "";
                         case "IsNotEmpty":
-                            return isDefined$1(cell) && cell.evaluated.value.toString().trim() !== "";
+                            return cell.value.toString().trim() !== "";
                         case "BeginsWith":
-                            if (!cell && values[0] === "") {
+                            if (values[0] === "") {
                                 return false;
                             }
-                            return (isDefined$1(cell) && (cell === null || cell === void 0 ? void 0 : cell.evaluated.value.toString().startsWith(values[0].toString())));
+                            return cell.value.toString().startsWith(values[0].toString());
                         case "EndsWith":
-                            if (!cell && values[0] === "") {
+                            if (values[0] === "") {
                                 return false;
                             }
-                            return isDefined$1(cell) && cell.evaluated.value.toString().endsWith(values[0].toString());
+                            return cell.value.toString().endsWith(values[0].toString());
                         case "Between":
-                            return (isDefined$1(cell) &&
-                                cell.evaluated.value >= values[0] &&
-                                cell.evaluated.value <= values[1]);
+                            return cell.value >= values[0] && cell.value <= values[1];
                         case "NotBetween":
-                            return !(isDefined$1(cell) &&
-                                cell.evaluated.value >= values[0] &&
-                                cell.evaluated.value <= values[1]);
+                            return !(cell.value >= values[0] && cell.value <= values[1]);
                         case "ContainsText":
-                            return (isDefined$1(cell) && cell.evaluated.value.toString().indexOf(values[0].toString()) > -1);
+                            return cell.value.toString().indexOf(values[0].toString()) > -1;
                         case "NotContains":
-                            return (!isDefined$1(cell) ||
-                                !cell.evaluated.value ||
-                                cell.evaluated.value.toString().indexOf(values[0].toString()) == -1);
+                            return !cell.value || cell.value.toString().indexOf(values[0].toString()) == -1;
                         case "GreaterThan":
-                            return isDefined$1(cell) && cell.evaluated.value > values[0];
+                            return cell.value > values[0];
                         case "GreaterThanOrEqual":
-                            return isDefined$1(cell) && cell.evaluated.value >= values[0];
+                            return cell.value >= values[0];
                         case "LessThan":
-                            return isDefined$1(cell) && cell.evaluated.value < values[0];
+                            return cell.value < values[0];
                         case "LessThanOrEqual":
-                            return isDefined$1(cell) && cell.evaluated.value <= values[0];
+                            return cell.value <= values[0];
                         case "NotEqual":
-                            if (!isDefined$1(cell) && values[0] === "") {
+                            if (values[0] === "") {
                                 return false;
                             }
-                            return isDefined$1(cell) && cell.evaluated.value !== values[0];
+                            return cell.value !== values[0];
                         case "Equal":
-                            if (!cell && values[0] === "") {
+                            if (values[0] === "") {
                                 return true;
                             }
-                            return isDefined$1(cell) && cell.evaluated.value === values[0];
+                            return cell.value === values[0];
                         default:
                             console.warn(_lt("Not implemented operator %s for kind of conditional formatting:  %s", rule.operator, rule.type));
                     }
@@ -32370,6 +32444,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         getCellComputedStyle(sheetId, col, row) {
             var _a;
+            // TODO move this getter out of CF: it also depends on filters and link
             const cell = this.getters.getCell(sheetId, col, row);
             const styles = this.computedStyles[sheetId];
             const cfStyle = styles && ((_a = styles[col]) === null || _a === void 0 ? void 0 : _a[row]);
@@ -32377,6 +32452,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ...cell === null || cell === void 0 ? void 0 : cell.style,
                 ...cfStyle,
             };
+            const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            if (evaluatedCell.link && !computedStyle.textColor) {
+                computedStyle.textColor = LINK_COLOR;
+            }
             if (this.getters.isFilterHeader(sheetId, col, row)) {
                 computedStyle.bold = true;
             }
@@ -32403,11 +32482,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         computeStyles() {
             var _a;
-            const activeSheetId = this.getters.getActiveSheetId();
-            this.computedStyles[activeSheetId] = {};
-            this.computedIcons[activeSheetId] = {};
-            const computedStyle = this.computedStyles[activeSheetId];
-            for (let cf of this.getters.getConditionalFormats(activeSheetId).reverse()) {
+            const sheetId = this.getters.getActiveSheetId();
+            this.computedStyles[sheetId] = {};
+            this.computedIcons[sheetId] = {};
+            const computedStyle = this.computedStyles[sheetId];
+            for (let cf of this.getters.getConditionalFormats(sheetId).reverse()) {
                 try {
                     switch (cf.rule.type) {
                         case "ColorScaleRule":
@@ -32422,11 +32501,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             break;
                         default:
                             for (let ref of cf.ranges) {
-                                const zone = this.getters.getRangeFromSheetXC(activeSheetId, ref).zone;
+                                const zone = this.getters.getRangeFromSheetXC(sheetId, ref).zone;
                                 for (let row = zone.top; row <= zone.bottom; row++) {
                                     for (let col = zone.left; col <= zone.right; col++) {
                                         const pr = this.rulePredicate[cf.rule.type];
-                                        let cell = this.getters.getCell(activeSheetId, col, row);
+                                        let cell = this.getters.getEvaluatedCell({ sheetId, col, row });
                                         if (pr && pr(cell, cf.rule)) {
                                             if (!computedStyle[col])
                                                 computedStyle[col] = [];
@@ -32447,8 +32526,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         parsePoint(range, threshold, functionName) {
             const sheetId = this.getters.getActiveSheetId();
             const rangeValues = this.getters
-                .getRangeValues(this.getters.getRangeFromSheetXC(sheetId, range))
-                .filter(this.isCellValueNumber);
+                .getEvaluatedCellsInZone(sheetId, this.getters.getRangeFromSheetXC(sheetId, range).zone)
+                .filter((cell) => cell.type === CellValueType.number)
+                .map((cell) => cell.value);
             switch (threshold.type) {
                 case "value":
                     const result = functionName === "max" ? Math.max(...rangeValues) : Math.min(...rangeValues);
@@ -32477,17 +32557,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 lowerInflectionPoint > upperInflectionPoint) {
                 return;
             }
-            const activeSheetId = this.getters.getActiveSheetId();
-            const zone = this.getters.getRangeFromSheetXC(activeSheetId, range).zone;
-            const computedIcons = this.computedIcons[activeSheetId];
+            const sheetId = this.getters.getActiveSheetId();
+            const zone = this.getters.getRangeFromSheetXC(sheetId, range).zone;
+            const computedIcons = this.computedIcons[sheetId];
             const iconSet = [rule.icons.upper, rule.icons.middle, rule.icons.lower];
             for (let row = zone.top; row <= zone.bottom; row++) {
                 for (let col = zone.left; col <= zone.right; col++) {
-                    const cell = this.getters.getCell(activeSheetId, col, row);
-                    if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) !== CellValueType.number) {
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (cell.type !== CellValueType.number) {
                         continue;
                     }
-                    const icon = this.computeIcon(cell.evaluated.value, upperInflectionPoint, rule.upperInflectionPoint.operator, lowerInflectionPoint, rule.lowerInflectionPoint.operator, iconSet);
+                    const icon = this.computeIcon(cell.value, upperInflectionPoint, rule.upperInflectionPoint.operator, lowerInflectionPoint, rule.lowerInflectionPoint.operator, iconSet);
                     if (!computedIcons[col]) {
                         computedIcons[col] = [];
                     }
@@ -32517,9 +32597,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 (midValue && (minValue >= midValue || midValue >= maxValue))) {
                 return;
             }
-            const activeSheetId = this.getters.getActiveSheetId();
-            const zone = this.getters.getRangeFromSheetXC(activeSheetId, range).zone;
-            const computedStyle = this.computedStyles[activeSheetId];
+            const sheetId = this.getters.getActiveSheetId();
+            const zone = this.getters.getRangeFromSheetXC(sheetId, range).zone;
+            const computedStyle = this.computedStyles[sheetId];
             const colorCellArgs = [];
             if (rule.midpoint && midValue) {
                 colorCellArgs.push({
@@ -32542,9 +32622,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             for (let row = zone.top; row <= zone.bottom; row++) {
                 for (let col = zone.left; col <= zone.right; col++) {
-                    const cell = this.getters.getCell(activeSheetId, col, row);
-                    if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number) {
-                        const value = clip(cell.evaluated.value, minValue, maxValue);
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (cell.type === CellValueType.number) {
+                        const value = clip(cell.value, minValue, maxValue);
                         let color;
                         if (colorCellArgs.length === 2 && midValue) {
                             color =
@@ -32626,9 +32706,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 }
             }
-        }
-        isCellValueNumber(value) {
-            return typeof value === "number";
         }
     }
     EvaluationConditionalFormatPlugin.getters = ["getConditionalIcon", "getCellComputedStyle"];
@@ -32785,12 +32862,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.hiddenRows = hiddenRows;
         }
         getCellValueAsString(sheetId, col, row) {
-            var _a;
-            const value = (_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
-            return (value === null || value === void 0 ? void 0 : value.toLowerCase()) || "";
+            const value = this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
+            return value.toLowerCase();
         }
         exportForExcel(data) {
-            var _a;
             for (const sheetData of data.sheets) {
                 for (const tableData of sheetData.filterTables) {
                     const tableZone = toZone(tableData.range);
@@ -32803,15 +32878,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             continue;
                         const valuesInFilterZone = filter.filteredZone
                             ? positions(filter.filteredZone)
-                                .map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
-                                .filter(isDefined$1)
+                                .map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId: sheetData.id, col, row }))
+                                .filter((cell) => cell.type !== CellValueType.empty)
+                                .map((cell) => cell.formattedValue)
                             : [];
                         // In xlsx, filtered values = values that are displayed, not values that are hidden
                         const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
                         filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
                         // In xlsx, filter header should ALWAYS be a string and should be unique
-                        const headerPosition = { col: filter.col, row: filter.zoneWithHeaders.top };
-                        const headerString = (_a = this.getters.getCell(sheetData.id, headerPosition.col, headerPosition.row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
+                        const headerPosition = {
+                            col: filter.col,
+                            row: filter.zoneWithHeaders.top,
+                            sheetId: sheetData.id,
+                        };
+                        const headerString = this.getters.getEvaluatedCell(headerPosition).formattedValue;
                         const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
                         headerNames.push(headerName);
                         sheetData.cells[toXC(headerPosition.col, headerPosition.row)] = {
@@ -32965,20 +33045,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Find matches using the current regex
          */
         findMatches() {
-            const activeSheetId = this.getters.getActiveSheetId();
-            const cells = this.getters.getCells(activeSheetId);
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = this.getters.getCells(sheetId);
             const matches = [];
             if (this.toSearch) {
                 for (const cell of Object.values(cells)) {
+                    const { col, row } = this.getters.getCellPosition(cell.id);
                     if (cell &&
                         this.currentSearchRegex &&
-                        this.currentSearchRegex.test(this.searchOptions.searchFormulas
-                            ? cell.isFormula()
-                                ? cell.content
-                                : String(cell.evaluated.value)
-                            : String(cell.evaluated.value))) {
-                        const position = this.getters.getCellPosition(cell.id);
-                        const match = { col: position.col, row: position.row, selected: false };
+                        this.currentSearchRegex.test(this.getSearchableString({ sheetId, col, row }))) {
+                        const match = { col, row, selected: false };
                         matches.push(match);
                     }
                 }
@@ -33046,14 +33122,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const matches = this.searchMatches;
             const selectedMatch = matches[this.selectedMatchIndex];
             const sheetId = this.getters.getActiveSheetId();
-            const cellToReplace = this.getters.getCell(sheetId, selectedMatch.col, selectedMatch.row);
-            const toReplace = this.toReplace(cellToReplace, sheetId);
-            if (!cellToReplace || !toReplace) {
+            const cell = this.getters.getCell(sheetId, selectedMatch.col, selectedMatch.row);
+            if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && !this.searchOptions.searchFormulas) {
                 this.selectNextCell(Direction.next);
             }
             else {
                 const replaceRegex = new RegExp(this.currentSearchRegex.source, this.currentSearchRegex.flags + "g");
-                const newContent = toReplace.toString().replace(replaceRegex, replaceWith);
+                const toReplace = this.getSearchableString({
+                    sheetId,
+                    col: selectedMatch.col,
+                    row: selectedMatch.row,
+                });
+                const newContent = toReplace.replace(replaceRegex, replaceWith);
                 this.dispatch("UPDATE_CELL", {
                     sheetId: this.getters.getActiveSheetId(),
                     col: selectedMatch.col,
@@ -33073,20 +33153,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.replace(replaceWith);
             }
         }
-        /**
-         * Determines if the content, the value or nothing should be replaced,
-         * based on the search and replace options
-         */
-        toReplace(cell, sheetId) {
-            if (cell) {
-                if (this.searchOptions.searchFormulas && cell.isFormula()) {
-                    return cell.content;
-                }
-                else if (this.searchOptions.searchFormulas || !cell.isFormula()) {
-                    return cell.evaluated.value.toString();
-                }
+        getSearchableString({ sheetId, col, row }) {
+            const cell = this.getters.getCell(sheetId, col, row);
+            if (this.searchOptions.searchFormulas && (cell === null || cell === void 0 ? void 0 : cell.isFormula)) {
+                return cell.content;
             }
-            return null;
+            return this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
         }
         // ---------------------------------------------------------------------------
         // Grid rendering
@@ -33162,11 +33234,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let zone of zones) {
                 for (let row = zone.top; row <= zone.bottom; row++) {
                     for (let col = zone.left; col <= zone.right; col++) {
-                        const cell = this.getters.getCell(sheetId, col, row);
-                        if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number &&
-                            !((_a = cell.evaluated.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT)) // reject dates
+                        const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                        if (cell.type === CellValueType.number &&
+                            !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT)) // reject dates
                         ) {
-                            return cell.evaluated.format || createDefaultFormat(cell.evaluated.value);
+                            return cell.format || createDefaultFormat(cell.value);
                         }
                     }
                 }
@@ -33688,34 +33760,47 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             ctx.stroke();
         }
-        hasContent(col, row) {
-            const sheetId = this.getters.getActiveSheetId();
-            const cell = this.getters.getCell(sheetId, col, row);
-            return (cell && !cell.isEmpty()) || this.getters.isInMerge(sheetId, col, row);
-        }
         findNextEmptyCol(base, max, row) {
+            const sheetId = this.getters.getActiveSheetId();
             let col = base;
-            while (col < max && !this.hasContent(col + 1, row)) {
+            while (col < max) {
+                const nextCell = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
+                const nextCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col + 1, row);
+                if (nextCell.type !== CellValueType.empty ||
+                    this.getters.isInMerge(sheetId, col + 1, row) ||
+                    (nextCellBorder === null || nextCellBorder === void 0 ? void 0 : nextCellBorder.left)) {
+                    return col;
+                }
                 col++;
             }
             return col;
         }
         findPreviousEmptyCol(base, min, row) {
+            const sheetId = this.getters.getActiveSheetId();
             let col = base;
-            while (col > min && !this.hasContent(col - 1, row)) {
+            while (col > min) {
+                const previousCell = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
+                const previousCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col - 1, row);
+                if (previousCell.type !== CellValueType.empty ||
+                    this.getters.isInMerge(sheetId, col + 1, row) ||
+                    (previousCellBorder === null || previousCellBorder === void 0 ? void 0 : previousCellBorder.right)) {
+                    return col;
+                }
                 col--;
             }
             return col;
         }
-        computeCellAlignment(cell, isOverflowing) {
-            if (cell.isFormula() && this.getters.shouldShowFormulas()) {
+        computeCellAlignment({ sheetId, col, row }, isOverflowing) {
+            const cell = this.getters.getCell(sheetId, col, row);
+            if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && this.getters.shouldShowFormulas()) {
                 return "left";
             }
-            const { align } = this.getters.getCellStyle(cell);
-            if (isOverflowing && cell.evaluated.type === CellValueType.number) {
+            const { align } = this.getters.getCellStyle({ sheetId, col, row });
+            const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            if (isOverflowing && evaluatedCell.type === CellValueType.number) {
                 return align !== "center" ? "left" : align;
             }
-            return align || cell.defaultAlign;
+            return align || evaluatedCell.defaultAlign;
         }
         createZoneBox(sheetId, zone) {
             const visibleCols = this.getters.getSheetViewVisibleCols();
@@ -33723,7 +33808,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const right = visibleCols[visibleCols.length - 1];
             const col = zone.left;
             const row = zone.top;
-            const cell = this.getters.getCell(sheetId, col, row);
+            const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
             const showFormula = this.getters.shouldShowFormulas();
             const { x, y, width, height } = this.getters.getVisibleRect(zone);
             const box = {
@@ -33734,7 +33819,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 border: this.getters.getCellBorderWithFilterBorder(sheetId, col, row) || undefined,
                 style: this.getters.getCellComputedStyle(sheetId, col, row),
             };
-            if (!cell) {
+            if (cell.type === CellValueType.empty) {
                 return box;
             }
             /** Icon CF */
@@ -33753,23 +33838,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             box.isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
             const headerIconWidth = box.isFilterHeader ? ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
-            const text = this.getters.getCellText(cell, showFormula);
-            const textWidth = this.getters.getTextWidth(cell);
-            const wrapping = this.getters.getCellStyle(cell).wrapping || "overflow";
+            const position = { sheetId, col, row };
+            const text = this.getters.getCellText(position, showFormula);
+            const textWidth = this.getters.getTextWidth(position);
+            const wrapping = this.getters.getCellStyle(position).wrapping || "overflow";
             const multiLineText = wrapping === "wrap"
-                ? this.getters.getCellMultiLineText(cell, width - 2 * MIN_CELL_TEXT_MARGIN)
+                ? this.getters.getCellMultiLineText(position, width - 2 * MIN_CELL_TEXT_MARGIN)
                 : [text];
             const contentWidth = iconBoxWidth + textWidth + headerIconWidth;
-            const align = this.computeCellAlignment(cell, contentWidth > width);
+            const align = this.computeCellAlignment(position, contentWidth > width);
             box.content = {
                 multiLineText,
                 width: wrapping === "overflow" ? textWidth : width,
                 align,
             };
             /** Error */
-            if (cell.evaluated.type === CellValueType.error &&
-                cell.evaluated.error.logLevel > CellErrorLevel.silent) {
-                box.error = cell.evaluated.error.message;
+            if (cell.type === CellValueType.error && cell.error.logLevel > CellErrorLevel.silent) {
+                box.error = cell.error.message;
             }
             /** ClipRect */
             const isOverflowing = contentWidth > width || fontSizePX > height;
@@ -34121,8 +34206,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getActiveCell() {
             const sheetId = this.getters.getActiveSheetId();
             const { col, row } = this.gridSelection.anchor.cell;
-            const { col: mainCol, row: mainRow } = this.getters.getMainCellPosition(sheetId, col, row);
-            return this.getters.getCell(sheetId, mainCol, mainRow);
+            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            return this.getters.getEvaluatedCell({ sheetId, ...mainPosition });
         }
         getActiveCols() {
             const activeCols = new Set();
@@ -34149,8 +34234,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return activeRows;
         }
         getCurrentStyle() {
-            const cell = this.getters.getActiveCell();
-            return cell ? this.getters.getCellStyle(cell) : {};
+            const zone = this.getters.getSelectedZone();
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getters.getCellStyle({ sheetId, col: zone.left, row: zone.top });
         }
         getSelectedZones() {
             return deepCopy(this.gridSelection.zones);
@@ -34184,14 +34270,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getStatisticFnResults() {
             // get deduplicated cells in zones
             const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getCellsInZone(this.getters.getActiveSheetId(), zone))
+                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
                 .flat()
-                .filter((cell) => cell !== undefined));
+                .filter((cell) => cell.type !== CellValueType.empty));
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
-                cellsTypes.add(cell.evaluated.type);
-                cellsValues.push(cell.evaluated.value);
+                cellsTypes.add(cell.type);
+                cellsValues.push(cell.value);
             }
             let statisticFnResults = {};
             for (let fn of selectionStatisticFunctions) {
@@ -34214,10 +34300,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             const cellPositions = this.gridSelection.zones.map(positions).flat();
             for (const { col, row } of cellPositions) {
-                const cell = this.getters.getCell(sheetId, col, row);
-                if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number) {
+                const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                if (cell.type === CellValueType.number) {
                     n++;
-                    aggregate += cell.evaluated.value;
+                    aggregate += cell.value;
                 }
             }
             return n < 2 ? null : formatValue(aggregate);
@@ -36295,17 +36381,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const { left, right, top, bottom } = expandedZone;
                 for (let c = left; c <= right; c++) {
                     for (let r = top; r <= bottom; r++) {
-                        const { col: mainCellCol, row: mainCellRow } = this.getters.getMainCellPosition(sheetId, c, r);
-                        cell = this.getters.getCell(sheetId, mainCellCol, mainCellRow);
-                        if (cell === null || cell === void 0 ? void 0 : cell.formattedValue) {
+                        const { col, row } = this.getters.getMainCellPosition(sheetId, c, r);
+                        cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                        if (cell.formattedValue) {
                             return true;
                         }
                     }
                 }
             }
             else {
-                for (let cell of this.getters.getCellsInZone(sheetId, expandedZone)) {
-                    if (cell === null || cell === void 0 ? void 0 : cell.formattedValue) {
+                for (let cell of this.getters.getEvaluatedCellsInZone(sheetId, expandedZone)) {
+                    if (cell.formattedValue) {
                         return true;
                     }
                 }
@@ -36418,10 +36504,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          *  For the second criteria, we ignore columns on which the cell below is empty.
          *
          */
-        hasHeader(items) {
+        hasHeader(sheetId, items) {
             if (items[0].length === 1)
                 return false;
-            let cells = items.map((col) => col.map((cell) => (cell === null || cell === void 0 ? void 0 : cell.evaluated.type) || CellValueType.empty));
+            let cells = items.map((col) => col.map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }).type));
             // ignore left-most column when topLeft cell is empty
             const topLeft = cells[0][0];
             if (topLeft === CellValueType.empty) {
@@ -36442,18 +36528,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let sortingCol = this.getters.getMainCellPosition(sheetId, anchor.col, anchor.row).col; // fetch anchor
             let sortZone = Object.assign({}, zone);
             // Update in case of merges in the zone
-            let cells = this.mainCells(sheetId, zone);
-            if (!options.sortHeaders && this.hasHeader(cells)) {
+            let cellPositions = this.mainCells(sheetId, zone);
+            if (!options.sortHeaders && this.hasHeader(sheetId, cellPositions)) {
                 sortZone.top += stepY;
             }
-            cells = this.mainCells(sheetId, sortZone);
-            const sortingCells = cells[sortingCol - sortZone.left];
-            const sortedIndexOfSortTypeCells = sortCells(sortingCells, sortDirection, Boolean(options.emptyCellAsZero));
+            cellPositions = this.mainCells(sheetId, sortZone);
+            const sortingCells = cellPositions[sortingCol - sortZone.left];
+            const sortedIndexOfSortTypeCells = sortCells(sortingCells.map((position) => this.getters.getEvaluatedCell(position)), sortDirection, Boolean(options.emptyCellAsZero));
             const sortedIndex = sortedIndexOfSortTypeCells.map((x) => x.index);
-            const [width, height] = [cells.length, cells[0].length];
+            const [width, height] = [cellPositions.length, cellPositions[0].length];
+            const updateCellCommands = [];
             for (let c = 0; c < width; c++) {
                 for (let r = 0; r < height; r++) {
-                    let cell = cells[c][sortedIndex[r]];
+                    let { col, row, sheetId } = cellPositions[c][sortedIndex[r]];
+                    const cell = this.getters.getCell(sheetId, col, row);
                     let newCol = sortZone.left + c * stepX;
                     let newRow = sortZone.top + r * stepY;
                     let newCellValues = {
@@ -36461,11 +36549,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         col: newCol,
                         row: newRow,
                         content: "",
-                        value: "",
                     };
                     if (cell) {
                         let content = cell.content;
-                        if (cell.isFormula()) {
+                        if (cell.isFormula) {
                             const position = this.getters.getCellPosition(cell.id);
                             const offsetY = newRow - position.row;
                             // we only have a vertical offset
@@ -36475,9 +36562,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         newCellValues.style = cell.style;
                         newCellValues.content = content;
                         newCellValues.format = cell.format;
-                        newCellValues.value = cell.evaluated.value;
                     }
-                    this.dispatch("UPDATE_CELL", newCellValues);
+                    updateCellCommands.push(newCellValues);
+                }
+                for (const cmd of updateCellCommands) {
+                    this.dispatch("UPDATE_CELL", cmd);
                 }
             }
         }
@@ -36504,7 +36593,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const colCells = [];
                 cells.push(colCells);
                 for (const row of rows) {
-                    colCells.push(this.getters.getCell(sheetId, col, row));
+                    colCells.push({ sheetId, col, row });
                 }
             }
             return cells;
@@ -36589,14 +36678,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Getters
         // ---------------------------------------------------------------------------
         getCellWidth(sheetId, { col, row }) {
-            const cell = this.getters.getCell(sheetId, col, row);
-            let contentWidth = 0;
-            if (cell) {
-                contentWidth += this.getTextWidth(cell);
-            }
+            const position = { sheetId, col, row };
+            let contentWidth = this.getTextWidth(position);
             const icon = this.getters.getConditionalIcon(col, row);
             if (icon) {
-                contentWidth += computeIconWidth(this.getters.getCellStyle(cell));
+                contentWidth += computeIconWidth(this.getters.getCellStyle(position));
             }
             const isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
             if (isFilterHeader) {
@@ -36604,7 +36690,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             if (contentWidth > 0) {
                 contentWidth += 2 * PADDING_AUTORESIZE_HORIZONTAL;
-                if (this.getters.getCellStyle(cell).wrapping === "wrap") {
+                if (this.getters.getCellStyle(position).wrapping === "wrap") {
                     const zone = positionToZone({ col, row });
                     const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), zone.left);
                     return Math.min(colWidth, contentWidth);
@@ -36612,22 +36698,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return contentWidth;
         }
-        getTextWidth(cell) {
-            const text = this.getters.getCellText(cell, this.getters.shouldShowFormulas());
-            const { sheetId, col, row } = this.getters.getCellPosition(cell.id);
+        getTextWidth(position) {
+            const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
+            const { sheetId, col, row } = position;
             return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(sheetId, col, row));
         }
-        getCellText(cell, showFormula = false) {
-            if (showFormula && (cell.isFormula() || cell.evaluated.type === CellValueType.error)) {
+        getCellText({ sheetId, col, row }, showFormula = false) {
+            const cell = this.getters.getCell(sheetId, col, row);
+            if (showFormula && (cell === null || cell === void 0 ? void 0 : cell.isFormula)) {
                 return cell.content;
             }
             else {
-                return cell.formattedValue;
+                return this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
             }
         }
-        getCellMultiLineText(cell, width) {
-            const style = this.getters.getCellStyle(cell);
-            const text = this.getters.getCellText(cell);
+        getCellMultiLineText(position, width) {
+            const style = this.getters.getCellStyle(position);
+            const text = this.getters.getCellText(position);
             const words = text.split(" ");
             const brokenText = [];
             let textLine = "";
@@ -36798,10 +36885,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     const clickableCellRegistry = new Registry();
     clickableCellRegistry.add("link", {
-        condition: (cell) => cell.isLink(),
-        action: (cell, env) => {
-            cell.action(env);
-        },
+        condition: (position, env) => !!env.model.getters.getEvaluatedCell(position).link,
+        action: (position, env) => openLink(env.model.getters.getEvaluatedCell(position).link, env),
         sequence: 5,
     });
 
@@ -37029,6 +37114,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     cursor: pointer;
   }
 `;
+    let tKey = 1;
     class SpreadsheetDashboard extends owl.Component {
         setup() {
             const gridRef = owl.useRef("grid");
@@ -37078,41 +37164,42 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.env.model.getters.getActiveSheetId();
             for (const col of this.env.model.getters.getSheetViewVisibleCols()) {
                 for (const row of this.env.model.getters.getSheetViewVisibleRows()) {
-                    const cell = this.env.model.getters.getCell(sheetId, col, row);
-                    if (cell) {
-                        const action = this.getClickableAction(cell);
-                        if (!action) {
-                            continue;
-                        }
-                        let zone;
-                        if (this.env.model.getters.isInMerge(sheetId, col, row)) {
-                            zone = this.env.model.getters.getMerge(sheetId, col, row);
-                        }
-                        else {
-                            zone = positionToZone({ col, row });
-                        }
-                        const rect = this.env.model.getters.getVisibleRect(zone);
-                        cells.push({
-                            coordinates: rect,
-                            cell,
-                            action,
-                        });
+                    const action = this.getClickableAction({ sheetId, col, row });
+                    if (!action) {
+                        continue;
                     }
+                    let zone;
+                    if (this.env.model.getters.isInMerge(sheetId, col, row)) {
+                        zone = this.env.model.getters.getMerge(sheetId, col, row);
+                    }
+                    else {
+                        zone = positionToZone({ col, row });
+                    }
+                    const rect = this.env.model.getters.getVisibleRect(zone);
+                    cells.push({
+                        coordinates: rect,
+                        position: { col, row },
+                        action,
+                        // we can't rely on position only because a row or a column could
+                        // be inserted at any time.
+                        tKey: `${tKey}-${col}-${row}`,
+                    });
                 }
             }
+            tKey++;
             return cells;
         }
-        getClickableAction(cell) {
+        getClickableAction(position) {
             for (const items of clickableCellRegistry.getAll().sort((a, b) => a.sequence - b.sequence)) {
-                if (items.condition(cell, this.env)) {
+                if (items.condition(position, this.env)) {
                     return items.action;
                 }
             }
             return false;
         }
         selectClickableCell(clickableCell) {
-            const { cell, action } = clickableCell;
-            action(cell, this.env);
+            const { position, action } = clickableCell;
+            action({ ...position, sheetId: this.env.model.getters.getActiveSheetId() }, this.env);
         }
         onClosePopover() {
             this.env.model.dispatch("CLOSE_CELL_POPOVER");
@@ -37418,15 +37505,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
-                env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
-                    env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
-                });
-            }
-            else if (result.isCancelledBecause(78 /* CommandResult.MergeInFilter */)) {
-                env.raiseError(AddMergeInteractiveContent.MergeInFilter);
-            }
+        if (result.isCancelledBecause(78 /* CommandResult.MergeInFilter */)) {
+            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
+        }
+        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
+            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
+                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
+            });
         }
     }
 
@@ -37793,7 +37878,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.redoTool = this.env.model.getters.canRedo();
             this.paintFormatTool = this.env.model.getters.isPaintingFormat();
             const cell = this.env.model.getters.getActiveCell();
-            if (cell && cell.format) {
+            if (cell.format) {
                 const currentFormat = this.commonFormats.find((f) => f.value === cell.format);
                 this.currentFormatName = currentFormat ? currentFormat.name : "";
             }
@@ -37801,7 +37886,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.currentFormatName = "automatic";
             }
             this.style = { ...this.env.model.getters.getCurrentStyle() };
-            this.style.align = this.style.align || (cell === null || cell === void 0 ? void 0 : cell.defaultAlign);
+            this.style.align = this.style.align || cell.defaultAlign;
             this.fillColor = this.style.fillColor || "#ffffff";
             this.textColor = this.style.textColor || "#000000";
             this.menus = topbarMenuRegistry
@@ -40308,8 +40393,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         isCellEmpty({ col, row }, sheetId = this.getters.getActiveSheetId()) {
             const mainCellPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            const cell = this.getters.getCell(sheetId, mainCellPosition.col, mainCellPosition.row);
-            return !cell || cell.isEmpty();
+            const cell = this.getters.getEvaluatedCell({ sheetId, ...mainCellPosition });
+            return cell.type === CellValueType.empty;
         }
         /** Computes the next cell position in the given direction by crossing through merges and skipping hidden cells.
          *
@@ -41540,8 +41625,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const content = (_a = cells[xc]) === null || _a === void 0 ? void 0 : _a.content;
             if (content && isMarkdownLink(content)) {
                 const { label, url } = parseMarkdownLink(content);
-                if (isMarkdownSheetLink(content)) {
-                    const sheetId = parseSheetLink(url);
+                if (isSheetUrl(url)) {
+                    const sheetId = parseSheetUrl(url);
                     const sheet = data.sheets.find((sheet) => sheet.id === sheetId);
                     const location = sheet ? `${sheet.name}!A1` : INCORRECT_RANGE_STRING;
                     linkNodes.push(escapeXml /*xml*/ `
@@ -41550,7 +41635,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 else {
                     const linkRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
-                        target: url,
+                        target: withHttps(url),
                         type: XLSX_RELATION_TYPE.hyperlink,
                         targetMode: "External",
                     });
@@ -42217,11 +42302,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         clickableCellRegistry,
         otRegistry,
         inverseCommandRegistry,
-        cellRegistry,
+        urlRegistry,
         cellPopoverRegistry,
-    };
-    const cellTypes = {
-        LinkCell,
     };
     const helpers = {
         args,
@@ -42237,9 +42319,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         UuidGenerator,
         formatValue,
         computeTextWidth,
-        isMarkdownLink,
-        parseMarkdownLink,
-        markdownLink,
         createEmptyWorkbookData,
         getDefaultChartJsRuntime,
         chartFontColor,
@@ -42251,6 +42330,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         rgbaToHex,
         colorToRGBA,
         positionToZone,
+    };
+    const links = {
+        isMarkdownLink,
+        parseMarkdownLink,
+        markdownLink,
+        openLink,
+        urlRepresentation,
     };
     const components = {
         ChartPanel,
@@ -42286,7 +42372,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     exports.__info__ = __info__;
     exports.addFunction = addFunction;
     exports.astToFormula = astToFormula;
-    exports.cellTypes = cellTypes;
     exports.compile = compile;
     exports.components = components;
     exports.convertAstNodes = convertAstNodes;
@@ -42295,6 +42380,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     exports.functionCache = functionCache;
     exports.helpers = helpers;
     exports.invalidateEvaluationCommands = invalidateEvaluationCommands;
+    exports.links = links;
     exports.load = load;
     exports.parse = parse;
     exports.readonlyAllowedCommands = readonlyAllowedCommands;
@@ -42305,8 +42391,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-16T08:24:59.755Z';
-    exports.__info__.hash = '1b4fac5';
+    exports.__info__.date = '2022-11-18T08:57:24.801Z';
+    exports.__info__.hash = '9616681';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
