@@ -275,6 +275,10 @@ odoo.define('pos_coupon.pos', function (require) {
             }
             return [...nonRewardLines, ...rewardLines];
         }
+        set_pricelist(pricelist) {
+            super.set_pricelist(...arguments);
+            this._updateRewards();
+        }
         _getRegularOrderlines() {
             const orderlines = this.get_orderlines();
             return orderlines.filter((line) => !line.is_program_reward && !line.refunded_orderline_id);
