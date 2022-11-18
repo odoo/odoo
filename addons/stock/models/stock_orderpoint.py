@@ -11,7 +11,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import add, float_compare, frozendict, split_every
+from odoo.tools import float_compare, frozendict, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -335,24 +335,22 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
         to_refill = defaultdict(float)
-        all_product_ids = self._get_orderpoint_products()
+        all_product_ids = self._get_orderpoint_products().ids
         all_replenish_location_ids = self.env['stock.location'].search([('replenish_location', '=', True)])
         ploc_per_day = defaultdict(set)
-        product_loc_by_qty = {}
         # For each replenish location get products with negative virtual_available aka forecast
-        for loc in all_replenish_location_ids:
-            quantities = all_product_ids.with_context(location=loc.id).mapped('virtual_available')
-            for product, quantity in zip(all_product_ids, quantities):
-                if float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) >= 0:
-                    continue
-                product_loc_by_qty[(product, loc)] = quantity
-
-        # group product by lead_days and location in order to read virtual_available
-        # in batch
-        for (product, loc), qty in product_loc_by_qty.items():
-            rules = product._get_rules_from_location(loc)
-            lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
-            ploc_per_day[(lead_days, loc)].add(product.id)
+        for products in map(self.env['product.product'].browse, split_every(5000, all_product_ids)):
+            for loc in all_replenish_location_ids:
+                quantities = products.with_context(location=loc.id).mapped('virtual_available')
+                for product, quantity in zip(products, quantities):
+                    if float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) >= 0:
+                        continue
+                    # group product by lead_days and location in order to read virtual_available
+                    # in batch
+                    rules = product._get_rules_from_location(loc)
+                    lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
+                    ploc_per_day[(lead_days, loc)].add(product.id)
+            products.invalidate_recordset()
 
         # recompute virtual_available with lead days
         today = fields.datetime.now().replace(hour=23, minute=59, second=59)
@@ -365,6 +363,7 @@ class StockWarehouseOrderpoint(models.Model):
             for qty in qties:
                 if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) < 0:
                     to_refill[(qty['id'], loc.id)] = qty['virtual_available']
+            products.invalidate_recordset()
         if not to_refill:
             return action
 
