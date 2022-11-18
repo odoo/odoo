@@ -3359,6 +3359,7 @@ exports.Order = Backbone.Model.extend({
             self.fix_tax_included_price(line);
         });
         this.trigger('change');
+        this.trigger('update-rewards')
     },
     remove_orderline: function( line ){
         this.assert_editable();
