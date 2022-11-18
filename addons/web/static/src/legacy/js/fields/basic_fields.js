@@ -3004,7 +3004,7 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: async function (event) {
         event.stopPropagation();
-        if (!this.$input.prop('disabled')) {
+        if (!this.$input.prop('disabled') && this.mode !== "readonly") {
             await this._setValue(!this.value);
             this._render();
         }
