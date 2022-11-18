@@ -1283,11 +1283,11 @@ class ProductTemplate(models.Model):
         return {}
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         self = self.with_context(
             empty_list_help_document_name=_("product"),
         )
-        return super(ProductTemplate, self).get_empty_list_help(help)
+        return super(ProductTemplate, self).get_empty_list_help(help_message)
 
     @api.model
     def get_import_templates(self):

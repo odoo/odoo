@@ -644,11 +644,11 @@ class ProductProduct(models.Model):
         return prices
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         self = self.with_context(
             empty_list_help_document_name=_("product"),
         )
-        return super(ProductProduct, self).get_empty_list_help(help)
+        return super(ProductProduct, self).get_empty_list_help(help_message)
 
     def get_product_multiline_description_sale(self):
         """ Compute a multiline description of this product, in the context of sales
