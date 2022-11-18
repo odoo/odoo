@@ -2,6 +2,7 @@
 
 {
     'name': 'Lunch',
+    'shortdesc': {'en_US': 'Lunch', 'fr': 'Déjeuner'},
     'sequence': 300,
     'version': '1.0',
     'depends': ['mail'],
