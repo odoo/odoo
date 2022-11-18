@@ -2806,6 +2806,9 @@
         return errors;
     }
     function validateBaseType(key, value, type) {
+        if (key === 'digits') {
+            return null;
+        }
         if (typeof type === "function") {
             if (typeof value === "object") {
                 if (!(value instanceof type)) {
