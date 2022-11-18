@@ -73,6 +73,7 @@ class PosOrder(models.Model):
         :type order_line: pos.order.line.
         :returns: dict -- dict representing the order line's values.
         """
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
         order_line["product_id"] = order_line["product_id"][0]
         order_line["server_id"] = order_line["id"]
 
