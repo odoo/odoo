@@ -434,7 +434,7 @@ class Applicant(models.Model):
             self._update_employee_from_applicant()
         return res
 
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
             alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
         else:
@@ -453,9 +453,9 @@ class Applicant(models.Model):
             email = alias_id.display_name
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
             nocontent_values['email_link'] = email_link
-            nocontent_body += """<p class="o_copy_paste_email">%(email_link)s</p>"""
+            nocontent_body += """<p class="o_copy_paste_email oe_view_nocontent_alias">%(email_link)s</p>"""
 
-        return nocontent_body % nocontent_values
+        return super().get_empty_list_help(nocontent_body % nocontent_values)
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
