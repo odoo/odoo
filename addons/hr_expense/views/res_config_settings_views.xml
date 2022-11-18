@@ -15,22 +15,22 @@
                                 id="create_expense_setting"
                                 title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the category's internal reference or the category name, the corresponding category will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
                                 <div class="o_setting_left_pane">
-                                    <field name="use_mailgateway"/>
+                                    <field name="hr_expense_use_mailgateway"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Incoming Emails" for="use_mailgateway"/>
+                                    <label string="Incoming Emails" for="hr_expense_use_mailgateway"/>
                                     <div class="text-muted">
                                         Create expenses from incoming emails
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': ['|', ('use_mailgateway', '=',  False), ('alias_domain', 'in', ['localhost', '', False])]}">
+                                    <div class="content-group" attrs="{'invisible': ['|', ('hr_expense_use_mailgateway', '=',  False), ('alias_domain', 'in', ['localhost', '', False])]}">
                                         <div class="mt16">
-                                            <label for="expense_alias_prefix" string="Alias" class="o_light_label"/>
-                                            <field name="expense_alias_prefix" class="oe_inline"/>
+                                            <label for="hr_expense_alias_prefix" string="Alias" class="o_light_label"/>
+                                            <field name="hr_expense_alias_prefix" class="oe_inline"/>
                                             <span>@</span>
-                                            <field name="alias_domain" class="oe_inline" readonly="1" force_save="1"/>
+                                            <field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </div>
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': ['|', ('use_mailgateway', '=',  False), ('alias_domain', 'not in', ['localhost', '', False])]}">
+                                    <div class="content-group" attrs="{'invisible': ['|', ('hr_expense_use_mailgateway', '=',  False), ('alias_domain', 'not in', ['localhost', '', False])]}">
                                         <div class="mt16">
                                             <button type="action" name="base_setup.action_general_configuration" icon="fa-arrow-right" string="Setup your domain alias" class="btn-link"/>
                                         </div>

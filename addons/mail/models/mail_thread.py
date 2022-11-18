@@ -338,14 +338,14 @@ class MailThread(models.AbstractModel):
         return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
         that adds alias information. """
         model = self._context.get('empty_list_help_model')
         res_id = self._context.get('empty_list_help_id')
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         document_name = self._context.get('empty_list_help_document_name', _('document'))
-        nothing_here = not help
+        nothing_here = is_html_empty(help_message)
         alias = None
 
         if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
@@ -369,28 +369,28 @@ class MailThread(models.AbstractModel):
         if alias:
             email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.display_name}
             if nothing_here:
-                return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
+                return super().get_empty_list_help("<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
                     'dyn_help': _("Add a new %(document)s or send an email to %(email_link)s",
                         document=document_name,
                         email_link=email_link,
                     )
-                }
+                })
             # do not add alias two times if it was added previously
-            if "oe_view_nocontent_alias" not in help:
-                return "%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
-                    'static_help': help,
+            if "oe_view_nocontent_alias" not in help_message:
+                return super().get_empty_list_help("%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
+                    'static_help': help_message,
                     'dyn_help': _("Create new %(document)s by sending an email to %(email_link)s",
                         document=document_name,
                         email_link=email_link,
                     )
-                }
+                })
 
         if nothing_here:
-            return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
+            return super().get_empty_list_help("<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
                 'dyn_help': _("Create new %(document)s", document=document_name),
-            }
+            })
 
-        return help
+        return super().get_empty_list_help(help_message)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
