@@ -3,7 +3,7 @@
 from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -122,6 +122,9 @@ class PurchaseOrder(models.Model):
                 for order_line in order.order_line:
                     order_line.move_ids._action_cancel()
                     if order_line.move_dest_ids:
+                        moves_to_unlink = order_line.move_dest_ids.filtered(lambda m: len(m.created_purchase_line_ids.ids) > 1)
+                        if moves_to_unlink:
+                            moves_to_unlink.created_purchase_line_ids = [Command.unlink(order_line.id)]
                         move_dest_ids = order_line.move_dest_ids
                         if order_line.propagate_cancel:
                             move_dest_ids._action_cancel()
@@ -292,7 +295,7 @@ class PurchaseOrderLine(models.Model):
 
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
-    move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+    move_dest_ids = fields.Many2many('stock.move', 'stock_move_created_purchase_line_rel', 'created_purchase_line_id', 'move_id', 'Downstream moves alt')
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
@@ -385,6 +388,12 @@ class PurchaseOrderLine(models.Model):
 
     def unlink(self):
         self.move_ids._action_cancel()
+
+        # Unlink move_dests that have other created_purchase_line_ids instead of cancelling them
+        for line in self:
+            moves_to_unlink = line.move_dest_ids.filtered(lambda m: len(m.created_purchase_line_ids.ids) > 1)
+            if moves_to_unlink:
+                moves_to_unlink.created_purchase_line_ids = [Command.unlink(line.id)]
 
         ppg_cancel_lines = self.filtered(lambda line: line.propagate_cancel)
         ppg_cancel_lines.move_dest_ids._action_cancel()
@@ -560,7 +569,7 @@ class PurchaseOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):
                 values.append(val)
-            line.move_dest_ids.created_purchase_line_id = False
+            line.move_dest_ids.created_purchase_line_ids = [Command.clear()]
 
         return self.env['stock.move'].create(values)
 
