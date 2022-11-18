@@ -258,7 +258,7 @@
             </t>
         </template>
 
-        <template id="document_tax_totals">
+        <template id="document_tax_totals_template">
             <!--
                 Generic template to display tax totals in pdf reports.
                 Used by invoices, SO and PO.
@@ -298,6 +298,9 @@
                 </td>
             </tr>
         </template>
+
+         <!-- Allow edits (e.g. studio) without changing the often inherited base template -->
+        <template id="document_tax_totals" inherit_id="account.document_tax_totals_template" primary="True"></template>
 
         <template id="tax_groups_totals">
             <!--
