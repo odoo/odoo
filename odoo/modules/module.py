@@ -8,7 +8,6 @@ import functools
 import importlib
 import logging
 import os
-import pkg_resources
 import re
 import sys
 import warnings
@@ -17,7 +16,6 @@ from os.path import join as opj, normpath
 import odoo
 import odoo.tools as tools
 import odoo.release as release
-from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -92,6 +90,8 @@ def initialize_sys_path():
     Setup the addons path ``odoo.addons.__path__`` with various defaults
     and explicit directories.
     """
+    odoo.addons.__path__ = list(odoo.addons.__path__)
+
     # hook odoo.addons on data dir
     dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
@@ -110,8 +110,7 @@ def initialize_sys_path():
 
     # hook odoo.upgrade on upgrade-path
     from odoo import upgrade
-    legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
-    for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
+    for up in tools.config['upgrade_path'].split(','):
         up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
         if up not in upgrade.__path__:
             upgrade.__path__.append(up)

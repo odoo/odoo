@@ -30,7 +30,7 @@ from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import wraps
-from itertools import islice, groupby as itergroupby
+from itertools import islice, groupby as itergroupby, chain
 from operator import itemgetter
 
 import babel
@@ -160,9 +160,6 @@ def file_path(file_path, filter_ext=('',)):
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
-    root_path = os.path.abspath(config['root_path'])
-    addons_paths = odoo.addons.__path__ + [root_path]
-    is_abs = os.path.isabs(file_path)
     normalized_path = os.path.normpath(os.path.normcase(file_path))
 
     if filter_ext and not normalized_path.lower().endswith(filter_ext):
@@ -173,7 +170,9 @@ def file_path(file_path, filter_ext=('',)):
     if normalized_path.startswith('addons' + os.sep):
         normalized_path = normalized_path[7:]
 
-    for addons_dir in addons_paths:
+    root_path = os.path.abspath(config['root_path'])
+    is_abs = os.path.isabs(file_path)
+    for addons_dir in chain(odoo.addons.__path__, [root_path]):
         # final path sep required to avoid partial match
         parent_path = os.path.normpath(os.path.normcase(addons_dir)) + os.sep
         fpath = (normalized_path if is_abs else

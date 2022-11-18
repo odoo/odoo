@@ -3,17 +3,15 @@
 
 """ OpenERP core library."""
 
-
 #----------------------------------------------------------
 # odoo must be a namespace package for odoo.addons to become one too
 # https://packaging.python.org/guides/packaging-namespace-packages/
 #----------------------------------------------------------
-import pkgutil
+# Static analysis tools w/ pkgutil namespaces may fail to pattern match if
+# processing is applied (PY-57467) so process separately
+__path__ = __import__('pkgutil').extend_path(__path__, __name__)
 import os.path
-__path__ = [
-    os.path.abspath(path)
-    for path in pkgutil.extend_path(__path__, __name__)
-]
+__path__ = [os.path.abspath(path) for path in __path__]
 
 import sys
 assert sys.version_info > (3, 7), "Outdated python version detected, Odoo requires Python >= 3.7 to run."

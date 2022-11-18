@@ -122,6 +122,7 @@ class configmanager(object):
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         group.add_option("--upgrade-path", dest="upgrade_path",
                          help="specify an additional upgrade path.",
+                         default=self._get_default_upgrade_path(),
                          action="callback", callback=self._check_upgrade_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
@@ -581,6 +582,12 @@ class configmanager(object):
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
+
+    def _get_default_upgrade_path(self):
+        return os.path.abspath(os.path.join(
+            os.path.dirname(odoo.__file__),
+            'addons', 'base', 'maintenance', 'migrations',
+        ))
 
     def _check_upgrade_path(self, option, opt, value, parser):
         upgrade_path = []
