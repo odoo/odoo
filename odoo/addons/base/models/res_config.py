@@ -447,7 +447,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     'other':   ['other_field', ...],
                 }
         """
-        IrModule = self.env['ir.module.module']
+        IrModule = self.env['ir.module.module'].sudo()
         IrModelData = self.env['ir.model.data']
         Groups = self.env['res.groups']
 
@@ -458,9 +458,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if fnames is None:
             fnames = self._fields.keys()
 
-        defaults, groups, modules, configs, others = [], [], [], [], []
-        for name in fnames:
-            field = self._fields[name]
+        defaults, groups, module_names, configs, others = [], [], [], [], []
+        for name, field in self._fields.items():
             if name.startswith('default_'):
                 if not hasattr(field, 'default_model'):
                     raise Exception("Field %s without attribute 'default_model'" % field)
@@ -476,14 +475,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             elif name.startswith('module_'):
                 if field.type not in ('boolean', 'selection'):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
-                module = IrModule._get(name[7:])
-                modules.append((name, module))
+                module_names.append(name[7:])
             elif hasattr(field, 'config_parameter'):
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
                     raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
                 configs.append((name, field.config_parameter))
             else:
                 others.append(name)
+        # retrieve all modules at once, and build the list 'modules' from it
+        name2module = {module.name: module for module in IrModule.search([('name', 'in', module_names)])}
+        modules = [('module_' + name, name2module.get(name, IrModule)) for name in module_names]
 
         return {'default': defaults, 'group': groups, 'module': modules, 'config': configs, 'other': others}
 
