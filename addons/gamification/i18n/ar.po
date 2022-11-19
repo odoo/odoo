@@ -168,6 +168,16 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>تذكير</strong><br/>\n"
+"    لم تقم بتحديث تقدمك للهدف <t t-out=\"object.definition_id.name or ''\"/> (النسبة الحالية <t t-out=\"object.completeness or ''\"/>%) لمدة <t t-out=\"object.remind_update_delay or ''\"/> أيام. لا تنسَ القيام بذلك.\n"
+"    <br/><br/>\n"
+"    شكراً لك،\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
+"    </t>\n"
+"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view

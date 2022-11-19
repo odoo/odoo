@@ -8,6 +8,7 @@
 # Dylan Kiss, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2022
+# Jinjiu Liu, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -2251,8 +2252,8 @@ msgid ""
 "{new_date}</li></ul>"
 msgstr ""
 "Er zijn aanpassingen gemaakt voor deze factuur:<ul><li>%(link1)s annuleert "
-"{percent:.2f}%% van {amount}</li><li>%(link0)s stelt het uit naar {new_date "
-"}</li></ul>"
+"{percent:.2f}%% van {amount}</li><li>%(link0)s stelt het uit naar "
+"{new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -9544,8 +9545,7 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
-"Voor geen van deze typen %(journal_types)s is in het bedrijf "
-"%(company_name)seen dagboek gevonden"
+"Geen %(journal_types)s dagboek gevonden in het bedrijf %(company_name)s"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -10876,6 +10876,12 @@ msgstr "Periode"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
 msgstr "Periode vergelijking"
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr "Maak nieuwe rekeningen aan vanuit het grootboekrekeningen-menu."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
