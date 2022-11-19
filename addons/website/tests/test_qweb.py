@@ -77,7 +77,7 @@ class TestQwebProcessAtt(TransactionCase):
 
     def test_process_att_with_request_lang(self):
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
-            self._test_att('/', {'href': '/fr/'})
+            self._test_att('/', {'href': '/fr'})
             self._test_att('/en/', {'href': '/'})
             self._test_att('/fr/', {'href': '/fr/'})
             self._test_att('/fr', {'href': '/fr'})
