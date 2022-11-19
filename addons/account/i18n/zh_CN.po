@@ -7,15 +7,15 @@
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # liAnGjiA <liangjia@qq.com>, 2022
 # keecome <7017511@qq.com>, 2022
+# Martin Trigaux, 2022
 # 宇洛 李, 2022
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2022
 # lonely落叶 <liu--qiong@hotmail.com>, 2022
 # YIMIN XUAN, 2022
 # 226408 台北 <226408@so8d.com>, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
-# Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2561,23 +2561,23 @@ msgstr "分析成本"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr "分析分布模型"
+msgstr "分析分配模型"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr "分析分布模型"
+msgstr "分析分配模型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_stored_char
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr "分析分布存储字符"
+msgstr "分析分配存储字符"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
 msgid "Analytic Filter"
-msgstr "分析过滤器"
+msgstr "分析筛选"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
@@ -2755,7 +2755,7 @@ msgstr "附件"
 #: model:ir.model.fields,field_description:account.field_res_company__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件数量"
+msgstr "附件计数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__attachment_ids
@@ -6153,7 +6153,7 @@ msgstr "填写该行的详细信息。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
-msgstr "过滤器多缸"
+msgstr "筛选多缸"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -6984,8 +6984,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
-"如果设置，此帐户在报告和过滤器中将属于非贸易应收/应付。\n"
-"如果不设置，此帐户将在报告和过滤器中属于贸易应收/应付。"
+"如果设置，此帐户在报告和筛选中将属于非贸易应收/应付。\n"
+"如果不设置，此帐户将在报告和筛选中属于贸易应收/应付。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7472,7 +7472,7 @@ msgstr "结算单分析"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__invoice_count
 msgid "Invoice Count"
-msgstr "结算单笔数"
+msgstr "结算单计数"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9597,7 +9597,7 @@ msgstr "在此合作伙伴上设置的一个或多个银行账户也被其他人
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr "一条或多条线需要 100% 的分析分布。"
+msgstr "一条或多条线需要 100% 的分析分配。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10511,6 +10511,12 @@ msgstr "期间"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
 msgstr "期间比较"
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr "从科目表菜单创建新科目。"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -11537,7 +11543,7 @@ msgstr "SEPA借记交易(SDD)"
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "短信发送错误"
+msgstr "短信息发送错误"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -12623,7 +12629,7 @@ msgstr "税计算的舍入方法"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "税付实现制分录"
+msgstr "收付实现制税分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
@@ -13544,7 +13550,7 @@ msgstr "此会计凭证包含公司所有科目的期初余额。"
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr "创建此税项收付实现制会计凭证的会计凭证。"
+msgstr "创建此收付实现制税会计凭证的会计凭证。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -13618,7 +13624,7 @@ msgid ""
 "The order in which distribution lines are displayed and matched. For refunds"
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
-msgstr "显示和匹配分布行的顺序。为使退款通知正常工作，结算单分配行应按与其对应的贷方单分配行相同的顺序排列。"
+msgstr "显示和匹配分配行的顺序。为使退款通知正常工作，结算单分配行应按与其对应的贷方单分配行相同的顺序排列。"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -13938,7 +13944,7 @@ msgstr "税务组必须与使用它的税务组具有相同的国家/地区id。
 msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
-msgstr "要在结算单上应用此分布的税集。与refund_tax_id"
+msgstr "要在结算单上应用此分配的税集。与refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -14144,7 +14150,7 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
-"这个虚拟字段允许我们在“名称”字段上使用另一种搜索方法。与“过滤器域”相比，这允许在如何搜索“名称”方面有更大的自由度。请参阅“_search_name”和“_parse_name_search”了解为什么使用"
+"这个虚拟字段允许我们在“名称”字段上使用另一种搜索方法。与“筛选域”相比，这允许在如何搜索“名称”方面有更大的自由度。请参阅“_search_name”和“_parse_name_search”了解为什么使用"
 " '过滤域'。"
 
 #. module: account

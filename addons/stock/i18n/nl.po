@@ -3828,7 +3828,7 @@ msgstr "Voorraadfrequentie (dagen)"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Voorraadverschillenlocatie"
+msgstr "Verschillenlocatie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -4602,7 +4602,7 @@ msgstr "Maart"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Zet op gereed voor uitvoeren"
+msgstr "Marker als nog te doen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -7509,7 +7509,7 @@ msgstr "Toon partijtekst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr "Toon Markeer als te doen"
+msgstr "Toon Markeer als nog te doen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -9639,6 +9639,12 @@ msgstr ""
 "reservering voor deze voorraad beweging eerst ongedaan moeten maken."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9659,6 +9665,12 @@ msgstr "Je mag geen negatieve waardes ingeven."
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Er kunnen alleen regels met de status 'Nieuw' worden verwijderd."
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:0
+#, python-format
+msgid "You can only enter positive quantities."
+msgstr "Je kunt alleen positieve waardes ingeven."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9824,7 +9836,7 @@ msgid ""
 "\"view\" (%s)."
 msgstr ""
 "Je kunt geen producten meenemen van, of afleveren op een locatie van het "
-"type \"view\" (%s)."
+"type \"weervave\" (%s)."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

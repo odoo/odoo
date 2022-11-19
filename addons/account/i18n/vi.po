@@ -363,7 +363,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear\n"
+"        Xin chào\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
@@ -371,20 +371,20 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Here is your\n"
+"        Đây là\n"
 "        <t t-if=\"object.name\">\n"
-"            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            ghi chú tín dụng<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            credit note\n"
+"            ghi chú tín dụng\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (với mã là: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        kèm số tiền là <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
+"        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -500,6 +500,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Thân mến<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Cảm ơn bạn đã thanh toán.\n"
+"        Đây là biên lai thanh toán của bạn<span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> số tiền\n"
+"        là <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> từ <t t-out=\"object.company_id.name or ''\">BizApps</t>.\n"
+"        <br/><br/>\n"
+"        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào.\n"
+"        <br/><br/>\n"
+"        Trân trọng,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1267,6 +1283,9 @@ msgid ""
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
 msgstr ""
+"Ghi nhận thanh toán tiền cho phép bạn quản lý các bút toán tiền mặt trong sổ nhật ký tiền mặt\n"
+"                của bạn. Tính năng này cung cấp một cách quản lý dễ dàng để theo dõi các thanh toán tiền\n"
+"                mặt trong hoạt động hằng ngày."
 
 #. module: account
 #: code:addons/account/models/res_partner_bank.py:0
@@ -1281,6 +1300,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Sao kê ngân hàng là bản tóm tắt tất cả các giao dịch tài chính\n"
+"                xảy ra trong một khoảng thời gian nhất định trên một tài khoản ngân hàng. Bạn\n"
+"                sẽ nhận được điều này định kỳ từ ngân hàng của bạn."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -1805,6 +1827,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
+"Tài khoản: Đăng các bút toán nháp có bật auto_post và ngày hạch toán đến hôm"
+" nay"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2198,6 +2222,8 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "domains"
 msgstr ""
+"Các thẻ bổ sung sẽ được chỉ định bởi dòng phân vùng lại này để sử dụng trong"
+" các miền"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2820,7 +2846,7 @@ msgstr "Tệp đính kèm"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
 msgid "Auditable"
-msgstr ""
+msgstr "Có thể kiểm tra"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__8
@@ -3643,13 +3669,13 @@ msgstr "Giảm thuế giảm giá tiền mặt"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr ""
+msgstr "Tài khoản chiết khấu tiền mặt tăng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr ""
+msgstr "Tài khoản Giảm giá khoản tiền lỗ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3973,6 +3999,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
+"Danh sách các trường được phân tách bằng dấu phẩy từ account.move.line (Chi "
+"tiết bút toán). Khi được cài, dòng này sẽ tạo các dòng con được nhóm theo "
+"các phím đó."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -6101,8 +6130,8 @@ msgid ""
 "Error when reading the original PDF for: %r.\n"
 "Please make sure the file is valid."
 msgstr ""
-"Error when reading the original PDF for: %r.\n"
-"Please make sure the file is valid."
+"Lỗi khi đọc PDF gốc cho: %r.\n"
+"Vui lòng đảm bảo tệp hợp lệ."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -6651,6 +6680,10 @@ msgid ""
 "allowed as value in case the carryover destination requires more complex "
 "logic."
 msgstr ""
+"Công thức ở dạng line_code.expression_label. Điều này cho phép đặt mục tiêu "
+"của việc chuyển đổi cho biểu thức này (on a _carryover_*-labeled "
+"expression), trong trường hợp nó khác với dòng mẹ. 'custom' cũng được phép "
+"làm giá trị trong trường hợp đích chuyển tiếp yêu cầu logic phức tạp hơn."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
@@ -7160,6 +7193,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
+"Nếu được đặt, tài khoản này sẽ thuộc về Phải thu/Phải trả phi thương mại trong các báo cáo và bộ lọc.\n"
+"Nếu không, tài khoản này sẽ thuộc về Phải thu/Phải trả thương mại trong các báo cáo và bộ lọc."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7593,18 +7628,21 @@ msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
 msgstr ""
+"Trường nội bộ để rút ngắn việc tạo expression_ids cho công cụ account_codes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the aggregation engine"
 msgstr ""
+"Trường nội bộ để rút ngắn việc tạo expression_ids cho công cụ tổng hợp"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the domain engine"
 msgstr ""
+"Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ lọc"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8003,6 +8041,8 @@ msgid ""
 "When checked, 0 values will not show when displaying this expression's "
 "value."
 msgstr ""
+"Khi được chọn, các giá trị 0 sẽ không hiển thị khi hiển thị giá trị của biểu"
+" thức này."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -8946,6 +8986,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Thủ công: Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
+"Nhà cung cấp thanh toán: Mỗi nhà cung cấp thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên/đến thẻ nhờ mã thông báo thanh toán được lưu bởi đối tác khi mua hoặc đăng ký trực tuyến.\n"
+"Gửi tiền hàng loạt: Thu thập một số séc của khách hàng cùng một lúc tạo và gửi tiền gửi hàng loạt cho ngân hàng của bạn. Module account_batch_payment là cần thiết.\n"
+"SEPA Direct Debit: Được trả tiền trong khu vực SEPA nhờ nhiệm vụ mà đối tác của bạn sẽ cấp cho bạn. Module account_sepa là cần thiết.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -10601,7 +10645,7 @@ msgstr "Chi tiết thời hạn thanh toán"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_tree
 msgid "Payment Terms"
-msgstr "Điều khoản thanh toán"
+msgstr "Các điều khoản thanh toán"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -10790,6 +10834,12 @@ msgstr "Chu kỳ"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
 msgstr "Kỳ so sánh"
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr "Vui lòng tạo tài khoản mới từ menu Hệ thống tài khoản."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -11959,7 +12009,7 @@ msgstr "Tìm kiếm Sổ phụ ngân hàng"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__search_bar
 msgid "Search Bar"
-msgstr ""
+msgstr "Thanh tim kiêm"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -12811,7 +12861,7 @@ msgstr "Chuỗi thành Hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
 msgid "Subformula"
-msgstr ""
+msgstr "Công thức con"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -13240,6 +13290,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Biểu thức báo cáo thuế '+' thẻ sẽ được chỉ định để di chuyển các dòng theo "
+"dòng phân vùng lại này"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13247,6 +13299,8 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Biểu thức báo cáo thuế '-' thẻ sẽ được chỉ định để di chuyển các dòng theo "
+"dòng phân vùng lại này"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
@@ -14591,6 +14645,10 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
+"Trường giả này cho phép chúng tôi sử dụng một phương pháp tìm kiếm khác trên"
+" trường 'name'.Điều này cho phép tự do hơn về cách tìm kiếm 'name' để so "
+"sánh với 'filter_domain'.Xem '_search_name' và '_parse_name_search' vì lý do"
+" tại sao điều này là không thể với'filter_domain'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

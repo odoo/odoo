@@ -48,7 +48,7 @@ msgstr "%(user)s将成本从%(previous)s改为%(new_price)s-%(product)s"
 msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
-msgstr "%(user)s将股票估值从%(previous)s改为%(new_value)s-%(product)s"
+msgstr "%(user)s将库存计价从%(previous)s变更为%(new_value)s-%(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -188,12 +188,12 @@ msgstr "找不到产品%s的库存出库库科目。 在处理此作业之前，
 msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
-msgstr "更改您的成本方法是一个重要的更改, 将影响您的库存评估。是否确实要进行此更改？"
+msgstr "更改您的成本方法是一个重要的更改, 将影响您的库存计价。是否确实要进行此更改？"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr "选择一个日期，可获得该日期的估价"
+msgstr "选择一个日期，可获得该日期的计价"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -239,7 +239,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"所有传入库存变动的对应会计分录将过帐在此帐户中，除非有特定的估值科目\n"
+"所有传入库存变动的对应会计分录将过帐在此帐户中，除非有特定的计价科目\n"
 "                设置在源库位。这是此类别中所有产品的默认值。也可以直接设置每个产品。"
 
 #. module: stock_account
@@ -275,7 +275,7 @@ msgstr "当前数量"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Current Value"
-msgstr "当前值"
+msgstr "当前价值"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -288,7 +288,7 @@ msgstr "日期"
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
-msgstr "在自动库存评估的情况下创建会计凭证的日期。 如果为空，将使用库存日期。"
+msgstr "在自动库存计价的情况下创建会计凭证的日期。 如果为空，将使用库存日期。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -354,7 +354,7 @@ msgstr "ID"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Incoming"
-msgstr "入库"
+msgstr "入向"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -383,7 +383,7 @@ msgstr "结算单明细"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr "使用发票货币更正金额"
+msgstr "使用结算单币种更正结算单金额"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -443,13 +443,13 @@ msgstr "手动"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr "手动库存估值。%s."
+msgstr "手动库存计价。%s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr "手动库存估值:没有给出理由。"
+msgstr "手动库存计价:没有给出理由。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -461,7 +461,7 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"手动：盘点存货的会计凭证不会自动过账。\n"
+"手动：库存计价的会计凭证不会自动建立。\n"
 "自动化：当产品进入或离开公司时，自动创建一个会计凭证来评估库存."
 
 #. module: stock_account
@@ -487,7 +487,7 @@ msgstr "其他信息"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Outgoing"
-msgstr "发出"
+msgstr "出向"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -505,7 +505,7 @@ msgstr "产品类别"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "产品移动(移库明细)"
+msgstr "产品移动(库存移动明细)"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -528,7 +528,7 @@ msgstr "产品变体"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr "手动修改产品值（从 %s 到%s）"
+msgstr "手动修改产品价值（从 %s 到%s）"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -538,7 +538,7 @@ msgstr "数量"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr "库存估价层数量"
+msgstr "库存计价层数量"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -553,7 +553,7 @@ msgstr "原因"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr "重新估值的原因"
+msgstr "重新计价的原因"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -612,9 +612,9 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"标准价格：产品按照产品定义的标准成本进行估价。\n"
-"         平均成本（AVCO）：产品以加权平均成本估值。\n"
-"         先入先出（First In First Out，简称FIFO）：假设那些先进入公司的产品估值，它们也会先离开。"
+"标准价格：按照产品上定义的标准成本对产品进行计价。\n"
+"         平均成本（AVCO）：以加权平均成本对产品进行计价。\n"
+"         先入先出（简称FIFO）：那些先进入公司的产品，它们也会先离开。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -714,7 +714,7 @@ msgstr ""
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
-msgstr "库存出库和/或入库账户不能与库存估值账户相同。"
+msgstr "库存出库和/或入库账户不能与库存计价账户相同。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -762,7 +762,7 @@ msgstr "凭证处于不一致的状态:它们不属于同一个来源或目标�
 msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
-msgstr "没有库存估值。当存在影响库存估值的产品变动时，会创建库存估值。"
+msgstr "没有计价层。当存在影响库存计价的产品移动时，会创建计价层。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -871,7 +871,7 @@ msgstr "指定日期的计价"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr "产品类别的评估方法更改 %s: 从 %s 到 %s."
+msgstr "产品类别的计价方法更改 %s: 从 %s 到 %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -901,7 +901,7 @@ msgstr "警告"
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr "在产品上启用自动库存评估后，此账户将保留产品的当前值。"
+msgstr "在产品上启用自动库存计价后，此账户将保留产品的当前值。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -910,8 +910,8 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存评估时，所有外发库存凭证的对应会计分录将在此帐户中过帐，\n"
-"               除非在目的地设置了特定的评估帐户。 这是此类别中所有产品的默认值。\n"
+"在进行自动库存计价时，所有外发库存凭证的对应会计分录将在此帐户中过帐，\n"
+"               除非在目的地设置了特定的计价帐户。 这是此类别中所有产品的默认值。\n"
 "                它也可以直接在每个产品上设置。"
 
 #. module: stock_account
@@ -919,7 +919,7 @@ msgstr ""
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "在进行自动库存评估时，这是会计日记账，其中处理库存凭证时将自动过账条目。"
+msgstr "在进行自动库存计价时，这是会计日记账，其中处理库存凭证时将自动过账条目。"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -953,7 +953,7 @@ msgstr "您不能在自动估价中更新产品的成本，因为这将导致创
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "您没有在产品类别中定义任何输入评估账户。您必须在处理此作业之前定义一个。"
+msgstr "您没有在产品类别中定义任何输入计价账户。您必须在处理此作业之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -980,7 +980,7 @@ msgstr "没有在产品类别中设置库存日记账，检查是否安装科目
 msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "您没有在您的产品类别中定义任何库存评估账户。 处理此作业之前，您必须定义一个。"
+msgstr "您没有在您的产品类别中定义任何库存计价账户。 处理此作业之前，您必须定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
