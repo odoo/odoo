@@ -20,7 +20,7 @@
         <field name="name">pos.bill.tree</field>
         <field name="model">pos.bill</field>
         <field name="arch" type="xml">
-            <tree string="Bills" create="1" delete="1">
+            <tree string="Bills" editable="bottom" create="1" delete="1">
                 <field name="name" />
                 <field name="value" />
                 <field name="pos_config_ids" widget="many2many_tags" />
