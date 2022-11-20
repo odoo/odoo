@@ -26,7 +26,7 @@
 # roye w <159820@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# rsh <263737@qq.com>, 2019
+# Sage.rsh <263737@qq.com>, 2019
 # Martin Trigaux, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
@@ -36,11 +36,11 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ryan ryan <itechr@outlook.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Chris H, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7080,6 +7080,12 @@ msgid ""
 msgstr "您无法更改当前在库存移动中保留的产品类型。 如果您需要更改类型，则应先取消保留库存的移动。"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "不能变更产品的类型，因为它早已使用。"
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7334,15 +7340,6 @@ msgstr "您需要在生成更多序列号之前设置序列号。"
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "你需要为产品%s提供批次 / 序列号。"
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr "您不应使用计划的内部转移在两个仓库之间移动某些产品。相反，使用立即内部转移或补给路线。"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

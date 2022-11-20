@@ -7382,6 +7382,12 @@ msgstr ""
 "reservering voor deze voorraad beweging eerst ongedaan moeten maken."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7686,18 +7692,6 @@ msgstr "U moet een serienummer instellen voordat u er meer genereert."
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "U moet een partij/serienummer opgeven voor het product %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Je moet een geplande interne verplaatsing niet gebruiken om bepaalde "
-"producten tussen twee magazijnen te verplaatsen. Gebruik in plaats daarvan "
-"een directe interne verplaatsing of de herbevoorradingsroute."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

@@ -7,7 +7,8 @@
 # Jorunn D. Newth, 2019
 # Martin Trigaux, 2020
 # Jens Nymoen <jens@nettimport.no>, 2021
-# Marius Stedjan <marius@stedjan.com>, 2021
+# Marius Stedjan <marius@stedjan.com>, 2022
+# Henning Fyllingsnes, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2021\n"
+"Last-Translator: Henning Fyllingsnes, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -602,7 +603,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_tag_slide_tag_unique
 msgid "A tag must be unique!"
-msgstr "Tagger må være unike!"
+msgstr "Etiketter må være unike!"
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_1
@@ -1150,7 +1151,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Compose Email"
-msgstr "Skriv epostmelding"
+msgstr "Skriv e-postmelding"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
@@ -1628,17 +1629,17 @@ msgstr "Rediger"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
 msgid "Email"
-msgstr "Epost"
+msgstr "E-post"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid "Email template to send slide publication through email"
-msgstr "Mal for å sende presentasjonspublisering via epost"
+msgstr "Mal for å sende presentasjonspublisering via e-post"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
 msgid "Email template used when sharing a slide"
-msgstr "Epostmal som brukes ved deling av presentasjoner"
+msgstr "E-postmal som brukes ved deling av presentasjoner"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
@@ -3201,6 +3202,12 @@ msgid "Security Token"
 msgstr "Sikkerhets-token"
 
 #. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
 msgstr "Velg side å starte med"
@@ -3220,7 +3227,7 @@ msgstr "Send"
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Send Email"
-msgstr "Send epost"
+msgstr "Send e-post"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
@@ -3312,7 +3319,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
 msgid "Short Description"
-msgstr ""
+msgstr "Kort beskrivelse"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_4
@@ -3504,7 +3511,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
-msgstr "Tag"
+msgstr "Etikett"
 
 #. module: website_slides
 #. openerp-web
@@ -3520,12 +3527,12 @@ msgstr "Tag"
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_data_other
 #, python-format
 msgid "Tags"
-msgstr "Tagger"
+msgstr "Etiketter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Tags..."
-msgstr "Tagger..."
+msgstr "Etiketter..."
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_1_gard1
@@ -3819,7 +3826,7 @@ msgstr "Last opp presentasjon"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Upload a document"
-msgstr ""
+msgstr "Last opp et dokument"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
@@ -3838,7 +3845,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Uploading document ..."
-msgstr ""
+msgstr "Laster opp dokument..."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id

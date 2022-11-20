@@ -16,9 +16,9 @@
 # Paolo Valier, 2019
 # Martin Trigaux, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
 # BigBlu <paolo.moroni@air-srl.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,13 +26,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: BigBlu <paolo.moroni@air-srl.com>, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web
 #. openerp-web
@@ -192,7 +192,7 @@ msgstr "\"%s\" non è convertibile né a data, né a data/ora e neppure a orario
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "(change)"
-msgstr ""
+msgstr "(cambio)"
 
 #. module: web
 #. openerp-web
@@ -559,6 +559,9 @@ msgid ""
 "JavaScript file served from a different origin. (Opening your browser "
 "console might give you a hint on the error.)"
 msgstr ""
+"Si è verificato un errore CORS sconosciuto. È causato probabilmente da un "
+"file JavaScript di altra provenienza. (L'apertura della console del browser "
+"potrebbe fornire un aiuto sull'errore)."
 
 #. module: web
 #. openerp-web
@@ -577,6 +580,7 @@ msgstr "Qualsiasi"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -804,7 +808,7 @@ msgstr "Byte|KB|MB|GB|TB|PB|EB|ZB|YB"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "CLEAR"
-msgstr ""
+msgstr "CANCELLA"
 
 #. module: web
 #. openerp-web
@@ -831,6 +835,7 @@ msgstr "Nella vista calendario non è stato definito l'attributo \"data_start\".
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/signature.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
@@ -1468,7 +1473,7 @@ msgstr "Modifica colonna"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit ControlPanelView"
-msgstr ""
+msgstr "Modifica vista pannello di controllo"
 
 #. module: web
 #. openerp-web
@@ -1743,7 +1748,7 @@ msgstr "modulo"
 #: code:addons/web/static/src/js/views/qweb/qweb_view.js:0
 #, python-format
 msgid "Freedom View"
-msgstr ""
+msgstr "Vista libertà"
 
 #. module: web
 #. openerp-web
@@ -1823,7 +1828,7 @@ msgstr "Instradamento HTTP"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Handle"
-msgstr ""
+msgstr "Maniglia"
 
 #. module: web
 #. openerp-web
@@ -2531,7 +2536,7 @@ msgstr "Nessuno"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Not Set"
-msgstr ""
+msgstr "Non impostato"
 
 #. module: web
 #. openerp-web
@@ -3217,7 +3222,7 @@ msgstr "Esegui test JS"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "SEE RESULT"
-msgstr ""
+msgstr "VEDI RISULTATO"
 
 #. module: web
 #. openerp-web
@@ -3457,7 +3462,7 @@ msgstr "Imposta una foto di copertina"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Set a timezone on your user"
-msgstr ""
+msgstr "Imposta un fuso orario sul tuo utente"
 
 #. module: web
 #. openerp-web
@@ -3653,6 +3658,8 @@ msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
+"Il contenuto di questa cella è troppo lungo per un file XLSX (più di %s "
+"caratteri). Utilizza il formato CSV per questa esportazione per favore."
 
 #. module: web
 #. openerp-web
@@ -3908,7 +3915,7 @@ msgstr "Traceback:"
 #: code:addons/web/static/src/js/widgets/translation_dialog.js:0
 #, python-format
 msgid "Translate: "
-msgstr ""
+msgstr "Traduci:"
 
 #. module: web
 #. openerp-web
@@ -4006,7 +4013,7 @@ msgstr "Non definito"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unfold"
-msgstr "Deminimizza"
+msgstr "Espandi"
 
 #. module: web
 #. openerp-web
@@ -4027,7 +4034,7 @@ msgstr "Tipo non letterale sconosciuto "
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Unlink row "
-msgstr ""
+msgstr "Scollegamento riga"
 
 #. module: web
 #. openerp-web
@@ -4156,7 +4163,7 @@ msgstr "Errore di validazione"
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "Variazione"
 
 #. module: web
 #. openerp-web
@@ -4700,7 +4707,7 @@ msgstr "numero non valido"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not in"
-msgstr ""
+msgstr "non in"
 
 #. module: web
 #. openerp-web
