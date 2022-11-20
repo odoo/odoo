@@ -495,24 +495,24 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
-"        Hello,\n"
+"        Xin chào,\n"
 "        <br/><br/>\n"
-"        Your\n"
+"        Bạn\n"
 "        % if ctx.get('proforma'):\n"
-"            Pro forma invoice for ${doc_name} <strong>${object.name}</strong>\n"
+"            Hóa đơn dự thảo cho ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
+"                (liên quan: ${object.origin} )\n"
 "            % endif\n"
-"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> is available.\n"
+"            với số tiền <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> đang sẳn sàng.\n"
 "        % else:\n"
 "            ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
+"                (liên quan: ${object.origin} )\n"
 "            % endif\n"
-"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> is ready for review.\n"
+"            với số tiền <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> đang được xử lý.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
+"        Đừng ngần ngại liên hệ chùng tôi, nếu bạn có thắc mắc.\n"
 "        <br/>\n"
 "    </p>\n"
 "</div>\n"
@@ -962,7 +962,7 @@ msgstr "Thêm khu vực"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Add several variants to an order from a grid"
+msgstr "Thêm biết thể cho một đơn hàng bằng khung lưới"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -1376,8 +1376,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
-"Creation date of draft/sent orders,\n"
-"Confirmation date of confirmed orders."
+"Ngày tạo/gửi đơn hàng,\n"
+"Ngày xác nhận của đơn hàng."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -1699,7 +1699,7 @@ msgstr "Loại hiển thị"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr "Do you want to apply this discount to all order lines?"
+msgstr "Bạn muốn áp dụng chiếc khấu này cho tất cả các dòng?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2826,7 +2826,7 @@ msgstr "Đơn hàng bán bổ sung"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr "Đơn đặt hàng được ký bởi %s"
+msgstr "Đơn hàng được ký bởi %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -4068,7 +4068,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr "The order is not in a state requiring customer signature."
+msgstr "Đơn hàng không ở trạng thái yêu cầu khách hàng ký xác nhận."
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -4084,7 +4084,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr "The ordered quantity has been updated."
+msgstr "Số lượng đặt hàng đã được cập nhật."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -4296,8 +4296,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
-"To speed up order confirmation, we can activate electronic signatures or "
-"payments."
+"Để tăng tốc độ xác nhận đơn hàng, bạn có thể kích hoạt ký điện tử hoặc thanh"
+" toán điện tử."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4542,7 +4542,8 @@ msgstr "Lịch sử thông tin liên lạc website"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write <b>your own email address</b> here in order to test the flow."
-msgstr "Write <b>your own email address</b> here in order to test the flow."
+msgstr ""
+"Viết <b>địa chỉ mail của bạn</b> ở đơn hàng này để kiểm thử qui trình."
 
 #. module: sale
 #. openerp-web

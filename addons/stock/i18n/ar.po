@@ -37,8 +37,8 @@
 # Paul Andrawes, 2021
 # Farid Fox, 2022
 # Mohamed Sallam, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Samer Ali, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Samer Ali, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1443,7 +1443,7 @@ msgstr "عدد عمليات الانتقاء المنتظرة "
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
 msgid "Count Sheet"
-msgstr ""
+msgstr "ورقة التعداد "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -1705,7 +1705,7 @@ msgstr "معالجة التاريخ "
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
 msgid "Date Promise to the customer on the top level document (SO/PO)"
-msgstr ""
+msgstr "التاريخ المعطى للعميل في مستند المستوى الأعلى (أمر البيع/أمر الشراء) "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
@@ -1992,7 +1992,7 @@ msgstr "الوصف في الشحنات الواردة"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description picking"
-msgstr ""
+msgstr "وصف عملية الانتقاء "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -2079,7 +2079,7 @@ msgstr "تجاهل"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
 msgid "Display Assign Serial"
-msgstr ""
+msgstr "عرض الرقم التسلسلي للإسناد "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete
@@ -7844,6 +7844,12 @@ msgstr ""
 "النوع، ينبغي إلغاء حجز حركة المخزون أولًا."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "لا يمكنك تغيير نوع منتج قد تم استخدامه بالفعل. "
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8081,6 +8087,7 @@ msgstr ""
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
 msgstr ""
+"You have to define a groupby and sorted method and pass them as arguments."
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
