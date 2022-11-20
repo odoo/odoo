@@ -6,9 +6,9 @@
 # Martin Trigaux, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
 # 226408 台北 <226408@so8d.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # 徐 文郁, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
 "PO-Revision-Date: 2022-06-17 09:55+0000\n"
-"Last-Translator: 徐 文郁, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8902,6 +8902,12 @@ msgid ""
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
 msgstr "您无法更改当前在库存移动中保留的产品类型。 如果您需要更改类型，则应先取消保留库存的移动。"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "不能变更产品的类型，因为它早已使用。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
